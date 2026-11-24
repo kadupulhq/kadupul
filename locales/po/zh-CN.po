@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "开发、贡献和发布决策由 %sKadupul 组织%s管理。"
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "如需文档和支持，请访问 %sKadupul 项目%s。"
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul 是一个用于网络监控和时序绘图的独立开源项目。"
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -79,7 +79,7 @@ msgstr "聚合预览 [%s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "聚合预览 [%s]"
+msgstr "聚合预览不存在"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -1428,9 +1428,8 @@ msgid "Notice: Kadupul Daemon PID["
 msgstr "注意：Kadupul 守护进程 PID["
 
 #: cactid.php
-#, fuzzy
 msgid "WARNING: Kadupul Daemon PID["
-msgstr "警告：Kadupul守护进程PID["
+msgstr "警告：Kadupul 守护进程 PID["
 
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
@@ -1980,11 +1979,11 @@ msgstr "白名单中不存在输入字符串.运行CLI脚本input_whitelist.php�
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "输入白名单已生效。更改此数据输入方法后，必须同时使用 --audit 和 --update 选项重新运行输入白名单 CLI 脚本 (cli/input_whitelist.php)，数据源才会被再次查询。"
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "输入字符串包含危险的 Shell 字符"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2040,9 +2039,8 @@ msgid "Update RRA"
 msgstr "更新 RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "更新这个字段"
+msgstr "更新白名单"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2083,7 +2081,7 @@ msgstr "关联的图形/数据模板 [编辑: %s]"
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "关联的图形/数据模板 [编辑: %s]"
+msgstr "关联的图形/数据模板 [新建]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2594,7 +2592,7 @@ msgstr "点击 '继续' 复制下面的数据模板. 您可以选择更改新数
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "自定义数据[数据输入: %s]"
+msgstr "自定义数据警告消息"
 
 #: data_templates.php
 #, php-format
@@ -3168,7 +3166,7 @@ msgstr "选择一个图形模板,然后点击 '继续' 以更改以下图形的�
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "选择一个图表模板应用到这个图表。 请注意，您只能将图形模板更改为百会之百兼容的图形模板，这意味着它包含相同的数据源。"
+msgstr "选择要应用到此图形的图形模板。请注意，您只能将图形模板更改为 100%% 兼容的图形模板，即包含相同数据源的模板。"
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3284,7 +3282,7 @@ msgstr "[自定义图形列表应用 - 过滤器从列表]"
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "用户组管理 [编辑: %s]"
+msgstr "图形管理 [非基于设备]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3870,7 +3868,7 @@ msgstr "1 兆字节"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "%d 线程"
+msgstr "1 个线程"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -3971,11 +3969,11 @@ msgstr "聚合"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "告警事件"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "告警规则"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -6232,7 +6230,7 @@ msgstr "请为项目选择树."
 
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "为此数据源选择一个名称. 它可以包含替换变量,如| host_description | 或| query_fieldName |. 有关支持的替换标签的完整列表,请参阅Kadupul文档."
+msgstr "为此数据源选择一个名称。它可以包含替换变量，例如 |host_description| 或 |query_fieldName|。有关支持的替换标签的完整列表，请参阅 Kadupul 文档。"
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6260,7 +6258,7 @@ msgstr "选择用于此数据查询图形模板项目的图形模板."
 
 #: include/global_form.php
 msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "选择用于从设备收集数据的收集数据器或采集器."
+msgstr "选择用于从此设备收集数据的 Kadupul 数据收集器/轮询器。"
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -7089,7 +7087,7 @@ msgstr "用于所有新图形模板的默认图形宽度."
 
 #: include/global_form.php
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
-msgstr "该算法确保您始终拥有一个网格,有足够但不是太多的网格线,并且网格是度量标准. 此参数还可以确保即使图形从69.998变为70.001,也可以显示足够的小数.<br> <strong>注意:</ strong>此参数可能会影响--alt-autoscale选项."
+msgstr "该算法可确保始终显示网格、网格线数量适中，且网格符合公制刻度。此参数还可确保即使图形范围在 69.998 到 70.001 之间时也能显示足够的小数位数。<br><strong>注意：</strong>此参数可能会干扰 --alt-autoscale 选项。"
 
 #: include/global_form.php
 msgid "The amount of time in seconds between expected updates."
@@ -7197,7 +7195,7 @@ msgstr "颜色的名称."
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "图形上打印的名称. 它可以包含替换变量,如| host_description | 或| query_fieldName |. 有关支持的替换标签的完整列表,请参阅Kadupul文档."
+msgstr "显示在图形上的名称。它可以包含替换变量，例如 |host_description| 或 |query_fieldName|。有关支持的替换标签的完整列表，请参阅 Kadupul 文档。"
 
 #: include/global_form.php
 msgid "The new Title of the aggregated Graph."
@@ -7297,7 +7295,7 @@ msgstr "使用--alt-autoscale-min(接受上限)"
 
 #: include/global_form.php
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "使用<br> --alt-autoscale缩放到绝对最小值和最大值<br> --alt-autoscale-max使用给定的下限值缩放到最大值<br> --alt-autoscale-min to 缩放至最小值,使用给定上限<br> <br> - 自动缩放(带有限制)使用下限和上限进行缩放(RRDtool默认值)<br>"
+msgstr "使用 <br> --alt-autoscale 缩放到绝对最小值和最大值 <br> --alt-autoscale-max 使用给定的下限缩放到最大值 <br> --alt-autoscale-min 使用给定的上限缩放到最小值 <br> --alt-autoscale（带限制）同时使用下限和上限进行缩放（RRDtool 默认值）<br>"
 
 #: include/global_form.php
 msgid "Use Logarithmic y-axis scaling"
@@ -7439,7 +7437,7 @@ msgstr "%d进程"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d 条规则"
 
 #: include/global_settings.php
 #, php-format
@@ -7561,11 +7559,11 @@ msgstr "在此天数之后，营业时间将不会添加到图表中。 <br/>建
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "告警评估时间预算"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "每批告警规则数"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8149,7 +8147,7 @@ msgstr "开启Lotus Notes (R) 优化"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "启用原生告警评估"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8389,7 +8387,7 @@ msgstr "隐藏Kadupul 仪表板"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "%d 周"
+msgstr "隐藏周末"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8433,7 +8431,7 @@ msgstr "每天统计应该多频繁一次更新?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "单次评估运行可以启动新一批规则的最长时间。评估结束后将使用剩余时间发送队列中的通知，即使预算已用完也可能会发送一批通知。未处理到的规则将在下次运行时优先评估。"
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8557,7 +8555,7 @@ msgstr "Kadupul 日志文件路径"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Kadupul 服务器 v%s - 维护"
+msgstr "Kadupul 服务器时区"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8765,7 +8763,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "原生告警"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9281,7 +9279,7 @@ msgstr "如果有图和数据源,默认情况下会被检查."
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "主数据收集器是否应在每次轮询周期结束后评估告警规则并发送通知？告警规则会读取数据源统计信息收集到的速率，因此还必须启用数据源统计信息收集。"
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9325,7 +9323,7 @@ msgstr "如果开启, Kadupul 的某些界面将会支持拖放. 注意: 对于�
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "将允许在 Web 服务器本身之外访问的空格分隔的域名。这对于选择使用 CDN 或托管站点的用户来说很重要。来源可以包括通配符，例如：*.mydomain.com，或协议，例如：https://*.example.com。这些替代源仅包括图像、CSS 和 JavaScript 类型。"
+msgstr "允许在 Web 服务器自身之外访问的以空格分隔的域名。这对于选择使用 CDN 或托管站点的用户非常重要。来源可以包含通配符，例如：*.mydomain.com，或包含协议，例如：https://*.example.com. 这些备用来源仅包含图像、CSS 和 JavaScript 类型。"
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9664,23 +9662,20 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Kadupul的数据源统计脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "Kadupul的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul 的 RRDfile 检查脚本在不产生超时错误且不被终止的情况下可运行的最长时间。"
 
 #: include/global_settings.php
 msgid "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
 msgstr "Kadupul的Reports Generation脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Kadupul维护脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul 维护脚本在不产生超时错误且不被终止的情况下可运行的最长时间。"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
-msgstr "Kadupul的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul Spikekill 脚本在不产生超时错误且不被终止的情况下可运行的最长时间。"
 
 #: include/global_settings.php
 msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
@@ -9716,7 +9711,7 @@ msgstr "Kadupul 将用作新Web Basic 和LDAP 用户模板的用户名; 默认�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "每次一起读取和评估的告警规则数量。时间预算会在各批次之间进行检查。"
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9961,7 +9956,7 @@ msgstr "该值表示在计算方差平均值之前将从样本中删除的高于
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "该值表示一旦从样本中去除异常值后,高于调整样本平均值的百分比. 例如,调整后平均值为50的方差百分比为100%%将从图形中移除数量超过100的样本."
+msgstr "此值表示从样本中移除异常值后高于调整后样本平均值的百分比。例如，若调整后平均值为 50，且方差百分比为 100%% 时，则会从图形中移除任何超过 100 的样本。"
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10699,7 +10694,7 @@ msgstr "文件"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "%d 行"
+msgstr "头部行数"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -11324,7 +11319,7 @@ msgstr "退出"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Error: 没有设置<b> 收件人 </b>地址!! 如果使用 <i>邮件测试</i> 链接,请设置<b> 报警邮件 </b>设置."
+msgstr "邮件发送错误：未设置收件人地址！！<br>如果使用<i>测试邮件</i>链接，请配置<b>告警电子邮件</b>设置。"
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11569,7 +11564,7 @@ msgstr "缩放模式"
 
 #: lib/html.php pollers.php
 msgid "Connection Failed"
-msgstr "UNKNOWN STATE FIX ME"
+msgstr "连接失败"
 
 #: lib/html.php pollers.php
 msgid "Connection Successful"
@@ -12967,7 +12962,7 @@ msgstr "默认配置文件"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "设备模板 [编辑: %s]"
+msgstr "首个 Kadupul 设备的设备模板为 %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -14228,7 +14223,7 @@ msgstr "解析rrdtool 转储的XML 时出错"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "未找到 %s"
+msgstr "发现错误"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14320,7 +14315,7 @@ msgstr "图形包含 RRDtool 无法接受的值。"
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "在RRDfile中缺少RRA '%s'"
+msgstr "现有的 Kadupul RRDfile 中缺少 RRA '%s'"
 
 #: lib/rrd.php
 #, php-format
@@ -14747,7 +14742,7 @@ msgstr "根据登录次数和使用spine 数据采集器, %s 将需要许多连�
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "如果使用Kadupul Performance Booster并选择内存存储引擎，则在系统内存表空间用完之前，必须小心刷新Performance Booster缓冲区。 这通过两种方式完成，首先将输出列的大小减小到合适的大小。 此列位于表poller_output和poller_output_boost中。 你可以做的第二件事是分配更多的内存到内存表中。 我们已经任意选择了系统内存10％的建议值，但是如果您使用的是SSD磁盘驱动器，或者系统较小，则可以忽略此建议或选择其他存储引擎。 您可以在Console - > System Utilities - > View Boost Status下看到Performance Booster表的预期消耗量。"
+msgstr "如果使用 Kadupul Performance Booster 并选择内存存储引擎，则必须在系统耗尽内存表空间之前及时刷新 Performance Booster 缓冲区。这可以通过两种方式实现：首先，将输出列的大小缩减到恰当的尺寸，该列位于 poller_output 和 poller_output_boost 表中；其次，为内存表分配更多内存。我们拟定了系统内存 10%% 作为推荐值，但如果您使用的是 SSD 磁盘驱动器或系统规模较小，可以忽略此建议或选择其他存储引擎。您可以在 控制台 -> 系统实用程序 -> 查看 Boost 状态 下查看 Performance Booster 表的预期消耗量。"
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14768,7 +14763,7 @@ msgstr "如果表的索引很大，则必须使用梭子鱼的innodb_file_format
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB将在系统内存中保存尽可能多的表和索引。 因此，你应该让innodb_buffer_pool大到足以容纳内存中的表和索引。 检查/ var / lib / mysql / Kadupul目录的大小将有助于确定此值。 我们建议您的系统总内存的25％，但是您的要求会因系统大小而异。"
+msgstr "InnoDB 会尽可能将表和索引保留在系统内存中。因此，您应将 innodb_buffer_pool 设置得足够大，以在内存中容纳尽可能多的表和索引。检查 /var/lib/mysql/cacti 目录的大小将有助于确定此值。我们建议设置为系统总内存的 25%% 左右，但具体需求取决于您的系统规模。"
 
 #: lib/utility.php
 #, php-format
@@ -15007,7 +15002,7 @@ msgstr "将出现在标签或菜单中的文字."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "用于此外部链接的有效 URL。必须包含协议类型，例如 https://kadupul.org. 请注意，许多网站不允许从外部站点嵌入到 iframe 中，因此外部链接可能无法正常工作。"
 
 #: links.php
 msgid "Top of Console Page"
@@ -15035,7 +15030,7 @@ msgstr "这个页面应该在哪里出现?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "您的内容文件不是有效的 URL。请输入有效的 URL"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -16192,9 +16187,8 @@ msgid "Site Name:"
 msgstr "站点名称："
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "文件未找到"
+msgstr "未找到站点。"
 
 #: sites.php
 msgid "State"
@@ -17663,7 +17657,7 @@ msgstr "显示顺序"
 #: utilities.php
 #, php-format
 msgid "ERROR: Installed RRDtool version does not exceed configured version.<br>Please visit the %s and select the correct RRDtool Utility Version."
-msgstr "错误:已安装的RRDtool版本不超过已配置的版本。请访问%s并选择正确的RRDtool实用程序版本。"
+msgstr "错误：已安装的 RRDtool 版本未超过已配置的版本。<br>请访问 %s 并选择正确的 RRDtool 实用程序版本。"
 
 #: utilities.php
 #, php-format
@@ -18331,13 +18325,12 @@ msgid "VDEF Preview"
 msgstr "VDEF 预览"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "文件未找到"
+msgstr "未找到 VDEF。"
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "未找到 VDEF 或 VDEF 项。"
 
 #: vdef.php
 #, php-format

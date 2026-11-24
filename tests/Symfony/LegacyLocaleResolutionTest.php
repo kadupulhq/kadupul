@@ -151,12 +151,16 @@ final class LegacyLocaleResolutionTest extends TestCase
             ['session' => $user, 'saved' => [7 => ['user_language' => 'zh-HK']], 'accept' => 'de-DE'],
             $english + ['cacti_locale' => 'zh-HK', 'cacti_country' => 'hk', 'session_language' => ''],
         ];
-        yield 'saved en-GB is listed English without a catalog' => [
+        yield 'saved en-GB selects British English catalog' => [
             ['session' => $user, 'saved' => [7 => ['user_language' => 'en-GB']], 'accept' => 'de-DE'],
-            $english + ['cacti_locale' => 'en-GB', 'session_language' => ''],
+            ['CACTI_LOCALE' => 'en-GB', 'CACTI_COUNTRY' => 'gb', 'CACTI_LANGUAGE' => 'English (Britain)', 'cacti_locale' => 'en-GB', 'session_language' => 'en-GB', 'text' => 'Devices'],
         ];
-        yield 'saved fr-CA collapses to fr-FR' => [
+        yield 'saved fr-CA selects Canadian French catalog' => [
             ['session' => $user, 'saved' => [7 => ['user_language' => 'fr-CA']]],
+            ['CACTI_LOCALE' => 'fr-CA', 'CACTI_COUNTRY' => 'ca', 'CACTI_LANGUAGE' => 'French (Canada)', 'cacti_locale' => 'fr-CA', 'session_language' => 'fr-CA'],
+        ];
+        yield 'saved fr-BE collapses to fr-FR' => [
+            ['session' => $user, 'saved' => [7 => ['user_language' => 'fr-BE']]],
             $french,
         ];
         yield 'browser first entry' => [
@@ -197,9 +201,13 @@ final class LegacyLocaleResolutionTest extends TestCase
             // First-entry rule: fi-FI, which has no catalog, so English.
             $french,
         ];
-        yield 'browser English region is English' => [
+        yield 'browser English region without a catalog is English' => [
+            ['accept' => 'en-AU,de;q=0.5'],
+            $english + ['cacti_locale' => 'en-US', 'session_language' => ''],
+        ];
+        yield 'browser British English selects en-GB' => [
             ['accept' => 'en-GB,de;q=0.5'],
-            $english + ['cacti_locale' => 'en-GB', 'session_language' => ''],
+            ['CACTI_LOCALE' => 'en-GB', 'CACTI_COUNTRY' => 'gb', 'CACTI_LANGUAGE' => 'English (Britain)', 'cacti_locale' => 'en-GB', 'session_language' => 'en-GB', 'text' => 'Devices'],
         ];
         yield 'weighted: an empty header names no language, so the default' => [
             ['accept' => '', 'settings' => ['i18n_default_language' => 'fr-FR']],
@@ -298,10 +306,12 @@ final class LegacyLocaleResolutionTest extends TestCase
         yield 'disabled support' => [['settings' => ['i18n_language_support' => '0'], 'forced' => 'de-DE'], 'en'];
         yield 'forced language' => [['forced' => 'ru_RU', 'accept' => 'de'], 'ru_RU'];
         yield 'forced language without a catalog' => [['forced' => 'zh-HK', 'accept' => 'de'], 'en'];
-        yield 'saved language' => [['session' => $user, 'saved' => [7 => ['user_language' => 'fr-CA']], 'accept' => 'de'], 'fr'];
+        yield 'saved language' => [['session' => $user, 'saved' => [7 => ['user_language' => 'fr-CA']], 'accept' => 'de'], 'fr_CA'];
+        yield 'saved unshipped French region' => [['session' => $user, 'saved' => [7 => ['user_language' => 'fr-BE']], 'accept' => 'de'], 'fr'];
         yield 'saved pt-AO' => [['session' => $user, 'saved' => [7 => ['user_language' => 'pt-AO']]], 'pt_PT'];
         yield 'saved zh-HK' => [['session' => $user, 'saved' => [7 => ['user_language' => 'zh-HK']], 'accept' => 'de-DE'], 'en'];
-        yield 'saved en-GB' => [['session' => $user, 'saved' => [7 => ['user_language' => 'en-GB']], 'accept' => 'de-DE'], 'en'];
+        yield 'saved en-GB' => [['session' => $user, 'saved' => [7 => ['user_language' => 'en-GB']], 'accept' => 'de-DE'], 'en_GB'];
+        yield 'saved en-AU' => [['session' => $user, 'saved' => [7 => ['user_language' => 'en-AU']], 'accept' => 'de-DE'], 'en'];
         yield 'browser first entry is shipped' => [['accept' => 'de-DE,fr;q=0.8'], 'de_DE'];
         yield 'browser: only a later entry is shipped' => [['accept' => 'xx-YY,de-DE;q=0.8', 'settings' => ['i18n_default_language' => 'fr-FR']], 'de_DE'];
         yield 'browser: first entry is listed without a catalog' => [['accept' => 'fi-FI,de;q=0.5'], 'de_DE'];

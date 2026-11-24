@@ -25,6 +25,14 @@ final class ConsoleTranslations
         // or the module gettext fallback existed.
         $options = $translator->getArgument(4);
         $options['cache_vary']['console_gettext'] = ['locales' => $locales, 'module_fallback' => 1];
+        if (is_array($options)) {
+            $resourceFiles = is_array($options['resource_files'] ?? null) ? $options['resource_files'] : [];
+            foreach ($locales as $locale) {
+                $symfonyLocale = $locale === 'fr-FR' ? 'fr' : str_replace('-', '_', $locale);
+                $resourceFiles[$symfonyLocale] ??= [];
+            }
+            $options['resource_files'] = $resourceFiles;
+        }
         $translator->replaceArgument(4, $options);
         foreach ($locales as $locale) {
             $file = $projectDir . '/locales/LC_MESSAGES/' . $locale . '.mo';
@@ -68,11 +76,11 @@ final class ConsoleTranslations
             return null;
         }
         $language = strtolower($match[1]);
-        if ($language === 'en') {
-            return $language;
-        }
         $region = isset($match[2]) ? strtoupper($match[2]) : '';
         $shipped = array_values(array_filter(self::locales($projectDir), static fn(string $supported): bool => str_starts_with($supported, $language . '-')));
+        if ($language === 'en') {
+            return ($region !== '' && $region !== 'US' && in_array('en-' . $region, $shipped, true)) ? 'en_' . $region : 'en';
+        }
         if ($language === 'fr') {
             return ($region !== '' && $region !== 'FR' && in_array('fr-' . $region, $shipped, true)) ? 'fr_' . $region : 'fr';
         }

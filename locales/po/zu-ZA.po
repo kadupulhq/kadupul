@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Zulu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Zulu\n"
@@ -3989,11 +3989,11 @@ msgstr "Hlanganisa"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Izigameko Zezexwayiso"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Imithetho Yezexwayiso"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7457,7 +7457,7 @@ msgstr "Izinqubo ezingu-%d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "Imithetho engu-%d"
 
 #: include/global_settings.php
 #, php-format
@@ -7579,11 +7579,11 @@ msgstr "Ngemva kwaleli nani lezinsuku, amahora okusebenza ngeke engezwe kugrafu.
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Isabelo Sesikhathi Sokuhlolwa Kwezexwayiso"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Imithetho Yezexwayiso Ngeqoqo Ngalinye"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8167,7 +8167,7 @@ msgstr "Nika amandla ukulungiswa kwe-Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Nika Amandla Ukuhlolwa Kwezexwayiso Kwendabuko"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8451,7 +8451,7 @@ msgstr "Kufanele i-RRD ihlolwe kangaki ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Ubude besikhathi umjikelezo owodwa wokuhlola ongaqala ngaso amaqoqo amasha emithetho. Ukuthunyelwa kwezaziso ezisemugqeni kulandela ukuhlolwa ngesikhathi esisele, futhi kungathumela iqoqo elilodwa ngisho noma isabelo sesikhathi sesiphelile. Imithetho engafinyelelwanga ihlolwa kuqala emjikelezweni olandelayo."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8783,7 +8783,7 @@ msgstr "Ama-NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Ukuxwayisa Kwendabuko"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9299,7 +9299,7 @@ msgstr "Ingabe okuthi Inamagrafu nokuthi Inemithombo Yedatha kufanele Kuhlolwe N
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Ingabe Umqoqi Wedatha Oyinhloko kufanele ahlole imithetho yezexwayiso ngemva komjikelezo ngamunye wokubuza idatha futhi athumele izaziso zayo? Imithetho yezexwayiso ifunda amazinga aqoqwa yiZibalo Zomthombo Wedatha, ngakho-ke Ukuqoqwa Kwezibalo Zomthombo Wedatha nakho kufanele kunikwe amandla."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9731,7 +9731,7 @@ msgstr "Igama lomsebenzisi i-Kadupul ezomsebenzisa njengesifanekiso sabasebenzis
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Inani lemithetho yezexwayiso elifundwa futhi lihlolwe kanyekanye. Isabelo sesikhathi sihlolwa phakathi kwamaqoqo."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

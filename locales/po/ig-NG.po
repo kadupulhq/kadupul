@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Igbo Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Igbo\n"
@@ -3968,11 +3968,11 @@ msgstr "Nchịkọta"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Ihe Omume Ịdọ Aka Ná Ntị"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Iwu Ịdọ Aka Ná Ntị"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7436,7 +7436,7 @@ msgstr "Usoro %d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "Iwu %d"
 
 #: include/global_settings.php
 #, php-format
@@ -7558,11 +7558,11 @@ msgstr "Mgbe ọnụọgụ ụbọchị a gasịrị, agaghị agbakwunye oge a
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Oke Oge Nnyocha Ịdọ Aka Ná Ntị"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Iwu Ịdọ Aka Ná Ntị kwa Ogbe"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8146,7 +8146,7 @@ msgstr "Gbanye mmezi Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Gbanye Nnyocha Ịdọ Aka Ná Ntị Nke Ime"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8430,7 +8430,7 @@ msgstr "Ugboro ole ka ekwesịrị inyocha RRD ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Ogologo oge otu ọsọ nnyocha nwere ike ịmalite ogbe iwu ọhụrụ. Izipu ọkwa ndị dị n'ahịrị na-eso nnyocha na oge fọdụrụ, ma nwee ike izipu otu ogbe ọbụna mgbe oke oge ahụ gwụrụ. A ga-ebu ụzọ nyochaa iwu ndị a na-eruteghị na ọsọ na-esote."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8762,7 +8762,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Ịdọ Aka Ná Ntị Nke Ime"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9278,7 +9278,7 @@ msgstr "E kwesịrị ịlele Has Graphs na Has Data Sources na Ndabere."
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Onye Nchịkọta Data Isi ọ ga-enyocha iwu ịdọ aka ná ntị mgbe usoro polling ọ bụla gasịrị ma zipu ọkwa ha? Iwu ịdọ aka ná ntị na-agụ ọnụego nke Ndekọ ọnụọgụ Isi Data na-anakọta, yabụ a ga-agbanyekwa Nchịkọta Ndekọ ọnụọgụ Isi Data."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9710,7 +9710,7 @@ msgstr "Aha nke onye ọrụ Kadupul ga-eji dịka atụmatụ maka ndị ọr�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Ọnụọgụ iwu ịdọ aka ná ntị a na-agụ ma na-enyocha ọnụ. A na-enyocha oke oge n'etiti ogbe dị iche iche."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

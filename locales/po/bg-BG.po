@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -17,16 +17,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Разработката, приносите и решенията за изданията се управляват от %sорганизацията Kadupul%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "За документация и поддръжка посетете %sпроекта Kadupul%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul е независим проект с отворен код за наблюдение на мрежи и изчертаване на графики на времеви редове."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -76,7 +76,7 @@ msgstr "Общ преглед [ %s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Общ преглед [ %s]"
+msgstr "Агрегираният преглед не съществува"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -1291,7 +1291,7 @@ msgstr "Изпълни откриване в режим за отстраняв�
 
 #: automation_networks.php data_debug.php pollers.php utilities.php
 msgid "Running"
-msgstr "실행 중"
+msgstr "Изпълнява се"
 
 #: automation_networks.php
 msgid "Schedule"
@@ -1392,7 +1392,7 @@ msgstr "Този вид"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
-msgstr "‎درخت"
+msgstr "Дърво"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1980,11 +1980,11 @@ msgstr "Input String не съществува в Белия списък. Из�
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Белият списък на входните данни е активен. Промените в този метод за въвеждане на данни изискват повторно стартиране на CLI скрипта за белия списък на входните данни (cli/input_whitelist.php) с опциите --audit и --update, преди източникът на данни да бъде запитан отново."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Входният низ съдържа опасни shell символи"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2040,9 +2040,8 @@ msgid "Update RRA"
 msgstr "Актуализирайте RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Актуализирайте това поле"
+msgstr "Актуализиране на белия списък"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2083,7 +2082,7 @@ msgstr "Асоциирани графики / шаблони за данни [р
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Асоциирани графики / шаблони за данни [редактиране: %s]"
+msgstr "Свързани шаблони за графики/данни [нов]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2188,7 +2187,7 @@ msgstr "Картографски идентификатор"
 #: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
 #: tree.php
 msgid "Move Down"
-msgstr "Преместване нагоре"
+msgstr "Преместване надолу"
 
 #: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
 #: tree.php
@@ -2611,7 +2610,7 @@ msgstr "Кликнете върху „Напред“, за да дублира
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "Персонализирани данни [въвеждане на данни: %s]"
+msgstr "Предупредително съобщение за персонализирани данни"
 
 #: data_templates.php
 #, php-format
@@ -3185,7 +3184,7 @@ msgstr "Изберете шаблон на графиката и кликнет�
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Изберете шаблон на графиката, който да се приложи към тази графика. Моля, обърнете внимание, че можете да променяте само шаблоните за графики на 100 %% съвместим шаблон за графики, което означава, че включва идентични източници на данни."
+msgstr "Изберете шаблон за графика, който да приложите към тази графика. Моля, имайте предвид, че можете да сменяте шаблоните за графики само със 100%% съвместим шаблон за графика, което означава, че той включва идентични източници на данни."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3301,7 +3300,7 @@ msgstr "[Приложен графичен списък на графиките 
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Управление на потребителските групи [редактиране: %s]"
+msgstr "Управление на графики [Небазирани на устройство]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3887,7 +3886,7 @@ msgstr "1 мегабайт"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "% d Тема"
+msgstr "1 нишка"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -3988,11 +3987,11 @@ msgstr "агрегат"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Алармени инциденти"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Правила за аларми"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -5980,7 +5979,7 @@ msgstr "не е неизвестно"
 
 #: include/global_arrays.php
 msgid "is unknown"
-msgstr "알려지지 않음"
+msgstr "е неизвестно"
 
 #: include/global_arrays.php
 msgid "left"
@@ -6249,7 +6248,7 @@ msgstr "Изберете дърво за новите елементи на дъ
 
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Изберете име за този източник на данни. Тя може да включва заместващи променливи, като например host_description | или | query_fieldName |. За пълен списък на поддържаните маркери за подмяна, моля вижте документацията на Kadupul."
+msgstr "Изберете име за този източник на данни. То може да включва заместващи променливи като |host_description| или |query_fieldName|. За пълен списък на поддържаните заместващи етикети, моля, вижте документацията на Kadupul."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6678,7 +6677,7 @@ msgstr "Ширина на реда (десетичен)"
 
 #: include/global_form.php tree.php
 msgid "Locked"
-msgstr "قفش شده"
+msgstr "Заключено"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
@@ -7214,7 +7213,7 @@ msgstr "Името на този цвят."
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Името, което е отпечатано на графиката. Тя може да включва заместващи променливи, като например host_description | или | query_fieldName |. За пълен списък на поддържаните маркери за подмяна, моля вижте документацията на Kadupul."
+msgstr "Името, което се отпечатва на графиката. То може да включва заместващи променливи като |host_description| или |query_fieldName|. За пълен списък на поддържаните заместващи етикети, моля, вижте документацията на Kadupul."
 
 #: include/global_form.php
 msgid "The new Title of the aggregated Graph."
@@ -7456,7 +7455,7 @@ msgstr "%d Процеси"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d правила"
 
 #: include/global_settings.php
 #, php-format
@@ -7578,11 +7577,11 @@ msgstr "След този брой дни работното време няма
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Времеви бюджет за оценка на аларми"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Правила за аларми на партида"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8166,7 +8165,7 @@ msgstr "Активиране на настройката на Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Активиране на вградената оценка на аларми"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8402,11 +8401,11 @@ msgstr "Скриване е забранено"
 
 #: include/global_settings.php
 msgid "Hide Kadupul Dashboard"
-msgstr "Скриване на таблото за управление на Какту"
+msgstr "Скриване на таблото на Kadupul"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "% d седмици"
+msgstr "Скриване на уикендите"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8450,7 +8449,7 @@ msgstr "Колко често трябва да се актуализира дн
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Колко дълго едно изпълнение за оценка може да стартира нови партиди от правила. Изпращането на известията в опашката следва оценката с оставащото време и може да изпрати една партида дори след изчерпване на бюджета. Недостигнатите правила се оценяват първи при следващото изпълнение."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8574,7 +8573,7 @@ msgstr "Път до дневника на Kadupul"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Kadupul Server v %s - Поддръжка"
+msgstr "Часова зона на сървъра Kadupul"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8754,7 +8753,7 @@ msgstr "Минимална дължина"
 
 #: include/global_settings.php
 msgid "Minimum Refresh Interval"
-msgstr "????‚?µ?Ђ???°?» ???° ???±???????Џ???°???µ"
+msgstr "Минимален интервал на опресняване"
 
 #: include/global_settings.php
 msgid "Minimum Tree Width"
@@ -8782,7 +8781,7 @@ msgstr "Нан"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Вградено алармиране"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9298,7 +9297,7 @@ msgstr "Ако има графики и източниците на данни �
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Дали основният колектор на данни трябва да оценява правилата за аларми след всеки цикъл на анкетиране и да изпраща техните известия? Правилата за аларми четат стойностите, които статистиката на източниците на данни събира, така че събирането на статистика на източниците на данни също трябва да е активирано."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9342,7 +9341,7 @@ msgstr "Някои от интерфейсите на Kadupul поддържат
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Имена на домейни, разпределени в пространството, до които ще бъде разрешен достъп извън самия уеб сървър. Това е важно за потребителите, избрали да използват CDN или хостинг сайт. Източниците могат да включват заместващи символи например: *.mydomain.com или протокол, например: https: //*.example.com. Тези алтернативни източници включват само изображения, CSS и JavaScript."
+msgstr "Имена на домейни, разделени с интервал, до които ще бъде разрешен достъп извън самия уеб сървър. Това е важно за потребители, избрали да използват CDN или хостинг сайт. Източниците могат да включват заместващи символи, например: *.mydomain.com, или протокол, например: https://*.example.com. Тези алтернативни източници включват само типовете изображения, CSS и JavaScript."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9366,7 +9365,7 @@ msgstr "шпайкове"
 
 #: include/global_settings.php
 msgid "Spine Binary File Location"
-msgstr "Местоположение на двоичния файл на гръбнака"
+msgstr "Местоположение на двоичния файл на Spine"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
@@ -9598,7 +9597,7 @@ msgstr "Максималният брой на SNMP Get OID за издаван�
 
 #: include/global_settings.php
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Номерът по подразбиране на конци за устройства. Това е приложимо само при използване на колектора за данни на гръбнака."
+msgstr "Броят нишки на устройство по подразбиране. Това е приложимо само при използване на колектора на данни Spine."
 
 #: include/global_settings.php
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
@@ -9730,7 +9729,7 @@ msgstr "Името на потребителя, което Kadupul ще изпо
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Броят правила за аларми, които се четат и оценяват заедно. Времевият бюджет се проверява между партидите."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9794,7 +9793,7 @@ msgstr "Пътят към двоичния Spine."
 
 #: include/global_settings.php
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "Пътят до конфигурационния файл на гръбнака. По подразбиране в cwd на Spine или / etc, ако не е посочено."
+msgstr "Пътят до конфигурационния файл на Spine. По подразбиране е в текущата работна директория (cwd) на Spine или /etc, ако не е посочен."
 
 #: include/global_settings.php
 msgid "The path to the rrdtool binary."
@@ -9975,7 +9974,7 @@ msgstr "Тази стойност представлява броя на про�
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Тази стойност представлява процентът над коригираната средна извадка, след като от извадката са отстранени външните стойности. Например, процентът на променливата от 100 %% на коригирана средна стойност от 50 ще премахне всяка проба над количеството от 100 от графиката."
+msgstr "Тази стойност представлява процента над коригираната средна стойност на извадката, след като отклоненията са отстранени от нея. Например, процент на отклонение от 100%% при коригирана средна стойност от 50 ще премахне от графиката всяка извадка над стойност 100."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10031,7 +10030,7 @@ msgstr "Размер на шрифта на заглавието"
 
 #: include/global_settings.php
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Да се използва при форматиране | date_time | върху графика"
+msgstr "Използва се при форматиране на |date_time| върху графика"
 
 #: include/global_settings.php
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
@@ -10451,7 +10450,7 @@ msgstr "Тип"
 #: lib/import.php lib/plugins.php lib/rrd.php lib/spikekill.php
 #: package_import.php utilities.php
 msgid "Unknown"
-msgstr "알려지지 않음"
+msgstr "Неизвестно"
 
 #: lib/api_device.php
 msgid "Contact:"
@@ -10713,7 +10712,7 @@ msgstr "Файл"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "% d линии"
+msgstr "Начални редове"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -11299,7 +11298,7 @@ msgstr "HELO не успя: %s"
 
 #: lib/functions.php
 msgid "Kadupul Test Message"
-msgstr "Съобщение за изпитване на какти"
+msgstr "Тестово съобщение на Kadupul"
 
 #: lib/functions.php
 #, php-format
@@ -11338,7 +11337,7 @@ msgstr "Изход"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Мейлър Грешка: Не е <b>за</b> справяне <b>с</b> определени !! <br> Ако използвате връзката <i>Test Mail,</i> моля, задайте настройката за <b>електронна поща предупреждение.</b>"
+msgstr "Грешка на пощенския клиент: Не е зададен адрес на получател!!<br>Ако използвате връзката <i>Test Mail</i>, моля, задайте настройката <b>Имейл за предупреждения</b>."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11712,7 +11711,7 @@ msgstr "Начало на Kadupul"
 
 #: lib/html.php
 msgid "Kadupul Project Page"
-msgstr "Страница"
+msgstr "Страница на проекта Kadupul"
 
 #: lib/html.php
 msgid "Keyboard"
@@ -11861,7 +11860,7 @@ msgstr "SpikeKill Резултати"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "Гръбнак"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -12981,7 +12980,7 @@ msgstr "Основен профил"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Шаблони за устройства [редактиране: %s]"
+msgstr "Шаблонът на устройство за първото устройство на Kadupul е %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13217,7 +13216,7 @@ msgstr "Важно е централният Kadupul сървър да кому�
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Настоятелно се препоръчва да актуализирате config.php, за да активирате тази функция, като <b>коментирате</b> променливата <b>$input_whitelist</b> и след това стартирате трите опции за скрипт на CLI по-горе, след като уеб базираната инсталация приключи."
+msgstr "Силно се препоръчва да актуализирате config.php, за да активирате тази функция, като разкоментирате променливата <b>$input_whitelist</b> и след това стартирате трите опции на CLI скрипта по-горе, след като уеб базираната инсталация завърши."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13262,7 +13261,7 @@ msgstr "Уверете се, че всички стойности са прав�
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Уверете се, че сте прочели и следвали необходимите стъпки, необходими за инсталиране на Kadupul, преди да продължите. Инсталиращата информация може да бъде намерена за <a href=\"%1$s\">Unix</a> и <a href=\"%2$s\">Win32-</a> базирани операционни системи."
+msgstr "Уверете се, че сте прочели и изпълнили необходимите стъпки за инсталиране на Kadupul, преди да продължите. Информация за инсталиране можете да намерите за операционни системи, базирани на <a href=\"%s\">Unix</a> и <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php
 #, php-format
@@ -14242,7 +14241,7 @@ msgstr "Грешка при анализирането на XML на dump на r
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "Няма намерени %s"
+msgstr "Намерени грешки"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14334,7 +14333,7 @@ msgstr "Графиката съдържа стойност, която RRDtool �
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "RRA &#39; %s&#39; липсва в RRDfile"
+msgstr "RRA '%s' липсва в съществуващия RRDfile на Kadupul"
 
 #: lib/rrd.php
 #, php-format
@@ -14761,7 +14760,7 @@ msgstr "В зависимост от броя на входните данни �
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Ако използвате Kadupul Performance Booster и изберете механизъм за съхранение на памет, трябва да внимавате да изчистите буфера за производителност, преди системата да изчерпи пространството за памет. Това се прави по два начина, като първо се намалява размерът на изходната колона до точния размер. Тази колона е в таблиците poller_output и poller_output_boost. Второто нещо, което можете да направите, е да отделите повече памет за таблиците с памет. Ние произволно избрахме препоръчителна стойност от 10%% от системната памет, но ако използвате SSD дискове или имате по-малка система, можете да игнорирате тази препоръка или да изберете различен механизъм за съхранение. Може да видите очакваното потребление на таблиците за подсилване на производителността под Console -&gt; System Utilities -&gt; View Boost Status."
+msgstr "Ако използвате Kadupul Performance Booster и изберете механизъм за съхранение в паметта, трябва да внимавате да изпразвате буфера на Performance Booster, преди системата да изчерпи пространството за таблици в паметта. Това се прави по два начина: първо, като намалите размера на изходната колона до точния размер. Тази колона се намира в таблиците poller_output и poller_output_boost. Второто нещо, което можете да направите, е да заделите повече памет за таблиците в паметта. Произволно сме избрали препоръчителна стойност от 10%% от системната памет, но ако използвате SSD дискове или имате по-малка система, можете да пренебрегнете тази препоръка или да изберете различен механизъм за съхранение. Можете да видите очакваната консумация на таблиците на Performance Booster под Console -> System Utilities -> View Boost Status."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14782,7 +14781,7 @@ msgstr "Ако вашите таблици имат много големи ин
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB ще държи колкото се може повече таблици и индекси в системната памет. Затова трябва да направите innodb_buffer_pool достатъчно голям, за да побере толкова маси и индекси в паметта. Проверката на размера на директорията / var / lib / mysql / Kadupul ще помогне при определянето на тази стойност. Ние препоръчваме 25%% от общата памет на вашите системи, но вашите изисквания ще варират в зависимост от размера на вашите системи."
+msgstr "InnoDB ще съхранява възможно най-много таблици и индекси в системната памет. Поради това трябва да направите innodb_buffer_pool достатъчно голям, за да побере колкото се може повече таблици и индекси в паметта. Проверката на размера на директорията /var/lib/mysql/cacti ще помогне за определянето на тази стойност. Препоръчваме 25%% от общата памет на системата ви, но изискванията ви ще варират в зависимост от размера на системата."
 
 #: lib/utility.php
 #, php-format
@@ -15021,7 +15020,7 @@ msgstr "Текстът, който ще се появи в раздела или
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "Валидният URL адрес, който да се използва за тази външна връзка. Трябва да включва протокола, например https://kadupul.org. Имайте предвид, че много уебсайтове не позволяват вграждане в iframe от външен сайт и поради това външното свързване може да не работи."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15049,7 +15048,7 @@ msgstr "Къде трябва да се показва тази страница
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Вашият файл със съдържание не е валиден URL адрес. Моля, въведете валиден URL адрес"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -16222,9 +16221,8 @@ msgid "Site Name:"
 msgstr "Име на сайта:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Файлът не е открит"
+msgstr "Сайтът не е намерен."
 
 #: sites.php
 msgid "State"
@@ -16690,7 +16688,7 @@ msgstr "Общият брой на отделните графики в това
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Това дърво е заключено за редактиране на%1$s от%2$s."
+msgstr "Това дърво е заключено за редактиране на %s от %s."
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -16724,7 +16722,7 @@ msgstr "Дървета [нови]"
 #: tree.php
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "قفش شده"
+msgstr "Отключване"
 
 #: tree.php
 msgctxt "dropdown action"
@@ -18088,7 +18086,7 @@ msgstr "Намаляване на общата памет на ядрото"
 
 #: utilities.php
 msgid "Refresh Interval"
-msgstr "????‚?µ?Ђ???°?» ???° ???±???????Џ???°???µ"
+msgstr "Интервал на опресняване"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
@@ -18386,13 +18384,12 @@ msgid "VDEF Preview"
 msgstr "VDEF Визуализация"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Файлът не е открит"
+msgstr "VDEF не е намерен."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF или елемент на VDEF не е намерен."
 
 #: vdef.php
 #, php-format

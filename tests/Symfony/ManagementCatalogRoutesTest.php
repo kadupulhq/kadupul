@@ -240,7 +240,7 @@ final class ManagementCatalogRoutesTest extends TestCase
         $container = $this->kernel->getContainer()->get('test.service_container');
         $this->preferences->exec("INSERT INTO settings VALUES ('i18n_language_support','1'), ('i18n_auto_detection','0'), ('i18n_default_language','en')");
         $preference = $this->createStub(LocalePreference::class);
-        $preference->method('preferredLocale')->willReturn('fr-CA');
+        $preference->method('preferredLocale')->willReturn('fr-BE');
         $container->set(LocalePreference::class, $preference);
         foreach (self::screens() as [$screen, $path]) {
             $response = $this->kernel->handle(Request::create($path, cookies: ['Cacti' => 'fixture']));

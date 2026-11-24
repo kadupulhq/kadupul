@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -20,31 +20,28 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "開發、貢獻與釋出決策皆由 %sKadupul 組織%s 管理。"
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "如需文件與支援，請造訪 %sKadupul 專案%s。"
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul 是一個用於網路監控與時間序列繪圖的獨立開放原始碼專案。"
 
 #: about.php
-#, fuzzy
 msgid "Kadupul is licensed under the GNU GPL:"
-msgstr "Kadupul根據GNU GPL許可："
+msgstr "Kadupul 依 GNU GPL 授權："
 
 #: about.php
-#, fuzzy
 msgid "License"
 msgstr "授權"
 
 #: about.php
-#, fuzzy
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details."
-msgstr "本程序的發布是希望它有用，但沒有任何擔保;甚至沒有適銷性或特定用途適用性的暗示保證。有關更多詳細信息，請參閱GNU通用公共許可證。"
+msgstr "本程式的散佈是基於對其有用之期望，但不附帶任何擔保，甚至不包含適售性或特定用途適用性之默示擔保。如需詳細資訊，請參閱 GNU 通用公共授權條款。"
 
 #: aggregate_graphs.php
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
@@ -868,7 +865,7 @@ msgstr "可用性檢查方法"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "單擊“繼續”以添加以下發現的設備。"
+msgstr "按一下「繼續」以刪除下列探索到的裝置。"
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -1445,19 +1442,16 @@ msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "由於活動訊號狀態，已略過將設定儲存至資料收集器 %d。"
 
 #: color.php
-#, fuzzy
 msgid "<strong>hex</strong> - The Hex Value"
-msgstr "<strong>十六進制</strong> - 十六進制值"
+msgstr "<strong>hex</strong> - 十六進位值"
 
 #: color.php
-#, fuzzy
 msgid "<strong>name</strong> - The Color Name"
 msgstr "<strong>name</strong> - 顏色名稱"
 
 #: color.php
-#, fuzzy
 msgid "Allow Existing Rows to be Updated?"
-msgstr "允許更新現有行？"
+msgstr "是否允許更新現有資料列？"
 
 #: color.php
 msgid "Click 'Continue' to delete the following Color"
@@ -1465,24 +1459,21 @@ msgid_plural "Click 'Continue' to delete the following Colors"
 msgstr[0] "單擊“繼續”以刪除以下顏色"
 
 #: color.php
-#, fuzzy
 msgid "Color Name"
 msgstr "顏色名稱"
 
 #: color.php
-#, fuzzy, php-format
+#, php-format
 msgid "Colors [edit: %s]"
-msgstr "顏色[編輯：%s]"
+msgstr "顏色 [編輯：%s]"
 
 #: color.php
-#, fuzzy
 msgid "Colors [new]"
-msgstr "顏色[新]"
+msgstr "顏色 [新增]"
 
 #: color.php
-#, fuzzy
 msgid "Colors in use cannot be Deleted.  In use is defined as being referenced either by a Graph or a Graph Template."
-msgstr "使用的顏色無法刪除。使用中定義為由圖形或圖形模板引用。"
+msgstr "使用中的顏色無法刪除。「使用中」是指被圖表或圖表範本所引用。"
 
 #: color.php
 msgid "Delete Color"
@@ -1490,97 +1481,78 @@ msgid_plural "Delete Colors"
 msgstr[0] "刪除顏色"
 
 #: color.php
-#, fuzzy
 msgid "Export Colors"
-msgstr "出口顏色"
+msgstr "匯出顏色"
 
 #: color.php
-#, fuzzy
 msgid "Import Colors"
-msgstr "導入顏色"
+msgstr "匯入顏色"
 
 #: color.php
-#, fuzzy
 msgid "Import Colors from Local File"
-msgstr "從本地文件導入顏色"
+msgstr "從本機檔案匯入顏色"
 
 #: color.php
-#, fuzzy
 msgid "Is this color a named color which are read only."
-msgstr "此顏色是否為只讀的命名顏色。"
+msgstr "此顏色是否為唯讀的命名顏色。"
 
 #: color.php
-#, fuzzy
 msgid "Kadupul has imported the following items:"
-msgstr "Kadupul已導入以下物品："
+msgstr "Kadupul 已匯入下列項目："
 
 #: color.php
-#, fuzzy
 msgid "Named Color"
 msgstr "命名顏色"
 
 #: color.php
-#, fuzzy
 msgid "Named Colors"
 msgstr "命名顏色"
 
 #: color.php
-#, fuzzy
 msgid "No Colors Found"
 msgstr "找不到顏色"
 
 #: color.php
-#, fuzzy
 msgid "Overwrite Existing Data?"
-msgstr "覆蓋現有數據？"
+msgstr "是否覆寫現有資料？"
 
 #: color.php
-#, fuzzy
 msgid "Please specify the location of the CSV file containing your Color information."
-msgstr "請指定包含顏色信息的CSV文件的位置。"
+msgstr "請指定包含顏色資訊的 CSV 檔案位置。"
 
 #: color.php
-#, fuzzy
 msgid "Required File Format Notes"
-msgstr "所需的文件格式說明"
+msgstr "必要檔案格式說明"
 
 #: color.php
-#, fuzzy
 msgid "Should the import process be allowed to overwrite existing data?  Please note, this does not mean delete old rows, only update duplicate rows."
-msgstr "是否允許導入過程覆蓋現有數據？請注意，這並不意味著刪除舊行，只更新重複行。"
+msgstr "是否允許匯入處理程序覆寫現有資料？請注意，這不代表刪除舊資料列，而僅會更新重複的資料列。"
 
 #: color.php
-#, fuzzy
 msgid "The Color as shown on the screen."
-msgstr "屏幕上顯示的顏色。"
+msgstr "螢幕上顯示的顏色。"
 
 #: color.php
-#, fuzzy
 msgid "The Hex Value for this Color."
-msgstr "此顏色的十六進制值。"
+msgstr "此顏色的十六進位值。"
 
 #: color.php
-#, fuzzy
 msgid "The file must contain a header row with the following column headings."
-msgstr "該文件必須包含帶有以下列標題的標題行。"
+msgstr "該檔案必須包含具有以下欄標題的標題列。"
 
 #: color.php
-#, fuzzy
 msgid "The name of this Color definition."
 msgstr "此顏色定義的名稱。"
 
 #: color.php
-#, fuzzy
 msgid "The number of Graph Templates using this Color."
-msgstr "使用此顏色的圖表模板數。"
+msgstr "使用此顏色的圖表範本數量。"
 
 #: color.php
-#, fuzzy
 msgid "The number of Graph using this Color."
-msgstr "使用此顏色的Graph數量。"
+msgstr "使用此顏色的圖表數量。"
 
 #: color.php
-#, fuzzy
 msgid "Unnamed Color"
 msgstr "未命名的顏色"
 
@@ -1924,14 +1896,12 @@ msgid "Writable"
 msgstr "可寫入"
 
 #: data_input.php
-#, fuzzy
 msgid "(Not In Use)"
 msgstr "（未使用）"
 
 #: data_input.php
-#, fuzzy
 msgid "Click 'Continue' to delete the following Data Input Field."
-msgstr "單擊“繼續”以刪除以下數據輸入字段。"
+msgstr "按一下「繼續」以刪除下列資料輸入欄位。"
 
 #: data_input.php
 msgid "Click 'Continue' to delete the following Data Input Method"
@@ -1943,29 +1913,25 @@ msgid "Click 'Continue' to duplicate the following Data Input Method(s). You can
 msgstr "單擊“繼續”以復制以下數據輸入方法。您可以選擇更改新數據輸入法的標題格式。"
 
 #: data_input.php
-#, fuzzy, php-format
+#, php-format
 msgid "Data Input Method [edit: %s]"
-msgstr "數據輸入方法[編輯：%s]"
+msgstr "資料輸入方法 [編輯：%s]"
 
 #: data_input.php
-#, fuzzy
 msgid "Data Input Method [new]"
-msgstr "數據輸入方法[新]"
+msgstr "資料輸入方法 [新增]"
 
 #: data_input.php
-#, fuzzy
 msgid "Data Input Name"
-msgstr "數據輸入名稱"
+msgstr "資料輸入名稱"
 
 #: data_input.php
-#, fuzzy
 msgid "Data Inputs that are in use cannot be Deleted. In use is defined as being referenced either by a Data Source or a Data Template."
-msgstr "正在使用的數據輸入無法刪除。使用中定義為由數據源或數據模板引用。"
+msgstr "使用中的資料輸入無法刪除。「使用中」是指被資料來源或資料範本所引用。"
 
 #: data_input.php
-#, fuzzy
 msgid "Delete Data Input Field"
-msgstr "刪除數據輸入字段"
+msgstr "刪除資料輸入欄位"
 
 #: data_input.php
 msgid "Delete Data Input Method"
@@ -1973,134 +1939,114 @@ msgid_plural "Delete Data Input Methods"
 msgstr[0] "刪除數據輸入法"
 
 #: data_input.php
-#, fuzzy, php-format
+#, php-format
 msgid "Field Name: %s"
-msgstr "字段名稱：%s"
+msgstr "欄位名稱：%s"
 
 #: data_input.php
-#, fuzzy
 msgid "Field Order"
 msgstr "欄位順序"
 
 #: data_input.php
-#, fuzzy, php-format
+#, php-format
 msgid "Friendly Name: %s"
-msgstr "友好名稱：%s"
+msgstr "易記名稱：%s"
 
 #: data_input.php
-#, fuzzy
 msgid "Input Field"
-msgstr "輸入欄"
+msgstr "輸入欄位"
 
 #: data_input.php
-#, fuzzy
 msgid "Input Fields"
 msgstr "輸入欄位"
 
 #: data_input.php
-#, fuzzy, php-format
+#, php-format
 msgid "Input Fields [edit: %s]"
-msgstr "輸入字段[編輯：%s]"
+msgstr "輸入欄位 [編輯：%s]"
 
 #: data_input.php
-#, fuzzy
 msgid "Input Methods"
-msgstr "輸入法"
+msgstr "輸入方法"
 
 #: data_input.php
 msgid "Input Name:"
 msgstr "輸入名稱："
 
 #: data_input.php
-#, fuzzy
 msgid "Input String does not exist in White List.  Run CLI script input_whitelist.php to correct."
-msgstr "白名單中不存在輸入字符串。運行CLI腳本input_whitelist.php進行更正。"
+msgstr "白名單中不存在此輸入字串。請執行 CLI 腳本 input_whitelist.php 進行修正。"
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "輸入白名單機制目前生效中。變更此資料輸入方法後，必須使用 --audit 與 --update 選項重新執行輸入白名單 CLI 腳本（cli/input_whitelist.php），資料來源才會再次被查詢。"
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "輸入字串包含危險的 shell 字元"
 
 #: data_input.php
-#, fuzzy
 msgid "No Data Input Methods Found"
-msgstr "找不到數據輸入方法"
+msgstr "找不到資料輸入方法"
 
 #: data_input.php
-#, fuzzy
 msgid "No Input Fields"
-msgstr "輸入欄位"
+msgstr "沒有輸入欄位"
 
 #: data_input.php
-#, fuzzy
 msgid "No Output Fields"
-msgstr "沒有輸出字段"
+msgstr "沒有輸出欄位"
 
 #: data_input.php
-#, fuzzy
 msgid "Output Fields"
-msgstr "輸出字段"
+msgstr "輸出欄位"
 
 #: data_input.php
-#, fuzzy, php-format
+#, php-format
 msgid "Output Fields [edit: %s]"
-msgstr "輸出字段[編輯：%s]"
+msgstr "輸出欄位 [編輯：%s]"
 
 #: data_input.php
-#, fuzzy
 msgid "Output Fields can not be removed when Data Sources are present"
-msgstr "存在數據源時，無法刪除輸出字段"
+msgstr "存在資料來源時，無法移除輸出欄位"
 
 #: data_input.php
-#, fuzzy
 msgid "The internal database ID for this Data Input Method.  Useful when performing automation or debugging."
-msgstr "此數據模板的內部數據庫ID。在執行自動化或調試時很有用。"
+msgstr "此資料輸入方法的內部資料庫 ID。在執行自動化或除錯時很有用。"
 
 #: data_input.php
-#, fuzzy
 msgid "The method used to gather information for this Data Input Method."
-msgstr "用於收集此數據輸入方法的信息的方法。"
+msgstr "用於收集此資料輸入方法資訊的方法。"
 
 #: data_input.php
-#, fuzzy
 msgid "The name of this Data Input Method."
-msgstr "此數據輸入法的名稱。"
+msgstr "此資料輸入方法的名稱。"
 
 #: data_input.php
-#, fuzzy
 msgid "The number of Data Sources that use this Data Input Method."
-msgstr "使用此數據輸入方法的數據源的數量。"
+msgstr "使用此資料輸入方法的資料來源數量。"
 
 #: data_input.php
-#, fuzzy
 msgid "The number of Data Templates that use this Data Input Method."
-msgstr "使用此數據輸入方法的數據模板的數量。"
+msgstr "使用此資料輸入方法的資料範本數量。"
 
 #: data_input.php
-#, fuzzy
 msgid "This script appears to have no input values, therefore there is nothing to add."
-msgstr "此腳本似乎沒有輸入值，因此無需添加任何內容。"
+msgstr "此指令碼似乎沒有輸入值，因此沒有可新增的內容。"
 
 #: data_input.php
-#, fuzzy
 msgid "Update RRA"
-msgstr "更新RRA"
+msgstr "更新 RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "更新此字段"
+msgstr "更新白名單"
 
 #: data_input.php
-#, fuzzy
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
-msgstr "白名單驗證失敗。運行CLI腳本input_whitelist.php進行更正。"
+msgstr "白名單驗證失敗。請執行 CLI 指令碼 input_whitelist.php 進行修正。"
 
 #: data_input.php
-#, fuzzy
 msgid "White List Verification Succeeded."
 msgstr "白名單驗證成功。"
 
@@ -3007,14 +2953,12 @@ msgid "Vertical Label"
 msgstr "垂直標籤"
 
 #: graph_templates_items.php graphs_items.php
-#, fuzzy
 msgid "Avg:"
 msgstr "平均："
 
 #: graph_templates_items.php graphs_items.php
-#, fuzzy
 msgid "Cur:"
-msgstr "CUR："
+msgstr "目前："
 
 #: graph_templates_items.php
 msgid "Data Template Filter"
@@ -3026,14 +2970,12 @@ msgid "Graph Template Items [edit graph: %s]"
 msgstr "圖表範本項目 [編輯圖表：%s]"
 
 #: graph_templates_items.php graphs_items.php
-#, fuzzy
 msgid "Max:"
-msgstr "最大:"
+msgstr "最大："
 
 #: graph_templates_items.php graphs_items.php
-#, fuzzy
 msgid "Min:"
-msgstr "閔："
+msgstr "最小："
 
 #: graph_templates_items.php
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
@@ -4027,11 +3969,11 @@ msgstr "彙總"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "警示事件"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "警示規則"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -6656,9 +6598,8 @@ msgid "Import Template from Local File"
 msgstr "從本機檔案匯入範本"
 
 #: include/global_form.php
-#, fuzzy
 msgid "In case LINE was chosen, specify width of line here.  You must include a decimal precision, for example 2.00"
-msgstr "如果選擇了LINE，請在此處指定線寬。您必須包含小數精度，例如2.00"
+msgstr "若選擇了 LINE，請在此指定線寬。您必須包含小數位數，例如 2.00"
 
 #: include/global_form.php
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
@@ -6713,9 +6654,8 @@ msgid "Legend Position (--legend-position=&lt;position&gt;)"
 msgstr "圖例位置 (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
-#, fuzzy
 msgid "Line Width (decimal)"
-msgstr "線寬（十進制）"
+msgstr "線寬（十進位）"
 
 #: include/global_form.php tree.php
 msgid "Locked"
@@ -7497,7 +7437,7 @@ msgstr "%d 個處理程序"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d 條規則"
 
 #: include/global_settings.php
 #, php-format
@@ -7619,11 +7559,11 @@ msgstr "超過此天數後，營業時間將不會新增至圖表中。<br/>建�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "警示評估時間預算"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "每批次警示規則數"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8207,7 +8147,7 @@ msgstr "啟用 Lotus Notes (R) 調整"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "啟用原生警示評估"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8491,7 +8431,7 @@ msgstr "Daily Stats應該多久更新一次？"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "單次評估執行可啟動新規則批次的時間上限。評估結束後會利用剩餘時間傳送佇列中的通知，即使時間預算已用盡仍可傳送一個批次。未及評估的規則將在下次執行時優先評估。"
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8823,7 +8763,7 @@ msgstr "NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "原生警示"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9103,7 +9043,7 @@ msgstr "轉介"
 
 #: include/global_settings.php
 msgid "Refresh Poller Table Per Cycle"
-msgstr ""
+msgstr "每個週期重新整理輪詢器資料表"
 
 #: include/global_settings.php
 msgid "Rejected Sample Limit"
@@ -9339,7 +9279,7 @@ msgstr "預設是否應勾選「有圖表」與「有資料來源」。"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "是否應讓主要資料收集器在每個輪詢週期後評估警示規則並傳送其通知？警示規則會讀取資料來源統計資料所收集的速率，因此也必須啟用「資料來源統計資料收集」。"
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9383,7 +9323,7 @@ msgstr "部分 Kadupul 介面支援拖放功能。若勾選此選項將會啟用
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "將允許在 Web 服務器本身之外訪問的空格分隔的域名。這對於選擇使用 CDN 或託管站點的用戶來說很重要。來源可以包括通配符，例如：*.mydomain.com，或協議，例如：https://*.example.com。這些替代源僅包括圖像、CSS 和 JavaScript 類型。"
+msgstr "以空格分隔的網域名稱，允許從網頁伺服器本身外部進行存取。這對選擇使用 CDN 或代管站台的使用者十分重要。來源可包含萬用字元，例如 *.mydomain.com，或通訊協定，例如 https://*.example.com. 這些替代來源僅包含圖片、CSS 與 JavaScript 類型。"
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9771,7 +9711,7 @@ msgstr "Kadupul 用作新 Web Basic 與 LDAP 使用者範本的使用者名稱�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "一次讀取並評估的警示規則數量。系統會在各批次之間檢查時間預算。"
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9999,7 +9939,7 @@ msgstr "這是指 LDAP 目錄中存放群組成員使用者名稱的特定屬性
 
 #: include/global_settings.php
 msgid "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
-msgstr ""
+msgstr "此設定僅適用於單一輪詢器系統，可在每個輪詢週期重建輪詢器輸出資料表，以防止大型資料庫的超大型系統上的記憶體資料表使用置換空間 (swap)。"
 
 #: include/global_settings.php
 msgid "This timespan you wish to see on the default graph."
@@ -10016,7 +9956,7 @@ msgstr "此值代表在計算變異數平均值前，要從取樣集中移除的
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "此值代表從取樣中移除離群值後，高於調整後取樣平均值的百分比。例如，若調整後平均值為 50 而變異數百分比為 100%%，則任何高於 100 的取樣都會從圖表中移除。"
+msgstr "此值代表從樣本中移除離群值後，高於調整後樣本平均值的百分比。例如，若調整後平均值為 50 且變異數百分比為 100%% 時，圖表將移除任何高於 100 的取樣。"
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -11552,7 +11492,7 @@ msgstr "允許或限制表格欄位延伸超過目前視窗限制。"
 
 #: lib/html.php
 msgid "Alpha %"
-msgstr "Α ％"
+msgstr "Alpha %"
 
 #: lib/html.php
 msgid "Always Off"
@@ -13303,7 +13243,7 @@ msgstr "繼續前請確認所有這些值皆正確。"
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "確保您已閱讀並遵循安裝Kadupul所需的步驟，然後再繼續。可以在基於<a href=\"%1$s\">Unix</a>和<a href=\"%2$s\">Win32</a>的操作系統中找到安裝信息。"
+msgstr "請確認您已閱讀並完成安裝 Kadupul 所需的步驟後再繼續。相關安裝資訊可在 <a href=\"%s\">Unix</a> 與 <a href=\"%s\">Win32</a> 作業系統的文件中找到。"
 
 #: lib/installer.php
 #, php-format
@@ -14111,9 +14051,8 @@ msgid "%s is required for %s, and it is not installed. "
 msgstr "%s 為 %s 所需，但尚未安裝。"
 
 #: lib/plugins.php
-#, fuzzy
 msgid "Legacy Plugin"
-msgstr "傳統插件"
+msgstr "舊版外掛"
 
 #: lib/plugins.php
 msgid "Not Stated"
@@ -14284,7 +14223,7 @@ msgstr "剖析 rrdtool dump 的 XML 時發生錯誤"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "沒有 %s 找到"
+msgstr "發現錯誤"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14824,7 +14763,7 @@ msgstr "若您的資料表具有非常大的索引，您必須將 Barracuda inno
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB將盡可能多地保存系統內存中的表和索引。因此，你應該使innodb_buffer_pool足夠大，以便在內存中保存盡可能多的表和索引。檢查/ var / lib / mysql / Kadupul目錄的大小將有助於確定此值。我們建議您的系統總內存佔25 %%，但您的要求會因係統大小而異。"
+msgstr "InnoDB 會盡可能在系統記憶體中保存資料表與索引。因此，您應該將 innodb_buffer_pool 設得足夠大，以便在記憶體中保存盡可能多的資料表與索引。檢查 /var/lib/mysql/cacti 目錄的大小有助於判斷此值。我們建議使用系統總記憶體的 25%% 作為參考值，但實際需求會依您的系統規模而有所不同。"
 
 #: lib/utility.php
 #, php-format
@@ -14949,19 +14888,16 @@ msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL 
 msgstr "外部連結 ID '%s'（標題 '%s'）嘗試注入無效的 URL，已被封鎖！"
 
 #: links.php
-#, fuzzy
 msgid "Apply Filter"
-msgstr "篩選"
+msgstr "套用篩選"
 
 #: links.php
-#, fuzzy
 msgid "Automatic Page Refresh"
-msgstr "自動頁面刷新"
+msgstr "頁面自動重新整理"
 
 #: links.php
-#, fuzzy
 msgid "Bottom of Console Page"
-msgstr "控制台頁面的底部"
+msgstr "主控台頁面底部"
 
 #: links.php
 msgid "Click 'Continue' to Delete the following Page(s)."
@@ -14976,19 +14912,16 @@ msgid "Click 'Continue' to Enable the following Page(s)."
 msgstr "單擊“繼續”以啟用以下頁面。"
 
 #: links.php
-#, fuzzy
 msgid "Console Menu"
-msgstr "控制台菜單"
+msgstr "主控台選單"
 
 #: links.php
-#, fuzzy
 msgid "Console Menu Section"
-msgstr "控制台菜單部分"
+msgstr "主控台選單區段"
 
 #: links.php
-#, fuzzy
 msgid "Content File/URL"
-msgstr "內容文件/ URL"
+msgstr "內容檔案/URL"
 
 #: links.php
 msgid "Delete Page(s)"
@@ -14999,7 +14932,6 @@ msgid "Disable Page(s)"
 msgstr "禁用頁面"
 
 #: links.php
-#, fuzzy
 msgid "Edit Page"
 msgstr "編輯頁面"
 
@@ -15008,117 +14940,97 @@ msgid "Enable Page(s)"
 msgstr "啟用頁面"
 
 #: links.php
-#, fuzzy, php-format
+#, php-format
 msgid "External Links [edit: %s]"
-msgstr "外部鏈接[編輯：%s]"
+msgstr "外部連結 [編輯：%s]"
 
 #: links.php
-#, fuzzy
 msgid "External Links [new]"
-msgstr "外部鏈接[新]"
+msgstr "外部連結 [新增]"
 
 #: links.php
-#, fuzzy
 msgid "How often do you wish this page to be refreshed automatically."
-msgstr "您希望自動刷新此頁面的頻率。"
+msgstr "設定此頁面自動重新整理的頻率。"
 
 #: links.php
-#, fuzzy
 msgid "If checked, the page will be available immediately to the admin user."
-msgstr "如果選中，該頁面將立即可供管理員用戶使用。"
+msgstr "若勾選，此頁面將立即供管理員使用者存取。"
 
 #: links.php
-#, fuzzy
 msgid "If you don't like any of the choices above, type a new title in here."
-msgstr "如果您不喜歡上述任何選項，請在此處鍵入新標題。"
+msgstr "若您不喜歡上述任何選項，請在此輸入新標題。"
 
 #: links.php
-#, fuzzy
 msgid "Links"
 msgstr "連結"
 
 #: links.php
-#, fuzzy
 msgid "New Console Section"
-msgstr "新控制台部分"
+msgstr "新增主控台區段"
 
 #: links.php
-#, fuzzy
 msgid "No Pages Found"
 msgstr "找不到頁面"
 
 #: links.php
-#, fuzzy
 msgid "Page"
 msgstr "頁面"
 
 #: links.php
-#, fuzzy
 msgid "Reset filters"
-msgstr "重置"
+msgstr "重設篩選條件"
 
 #: links.php
-#, fuzzy
 msgid "Sort for Ordering"
-msgstr "排序訂購"
+msgstr "排序順序"
 
 #: links.php
-#, fuzzy
 msgid "Style"
 msgstr "樣式"
 
 #: links.php
-#, fuzzy
 msgid "Tab/Menu Name"
-msgstr "標籤/菜單名稱"
+msgstr "分頁/選單名稱"
 
 #: links.php
-#, fuzzy
 msgid "The file that contains the content for this page. This file needs to be in the Kadupul 'include/content/' directory."
-msgstr "包含此頁面內容的文件。該文件需要位於Kadupul的“include / content /”目錄中。"
+msgstr "包含此頁面內容的檔案。此檔案必須位於 Kadupul 的 'include/content/' 目錄中。"
 
 #: links.php
-#, fuzzy
 msgid "The text that will appear in the tab or menu."
-msgstr "將出現在選項卡或菜單中的文本。"
+msgstr "將顯示在分頁或選單中的文字。"
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "用於此外部連結的有效網址。必須包含類型，例如 https://kadupul.org. 請注意，許多網站不允許從外部網站嵌入至 iframe 中，因此外部連結可能無法運作。"
 
 #: links.php
-#, fuzzy
 msgid "Top of Console Page"
-msgstr "控制台頁面頂部"
+msgstr "主控台頁面頂端"
 
 #: links.php
-#, fuzzy
 msgid "Under which Console heading should this item appear? (All External Link menus will appear between Configuration and Utilities)"
-msgstr "該項目應出現在哪個控制台標題下？ （所有外部鏈接菜單將出現在配置和實用程序之間）"
+msgstr "此項目應顯示在哪個主控台標題下？（所有外部連結選單都將顯示在「組態」與「公用程式」之間）"
 
 #: links.php
-#, fuzzy
 msgid "View Page"
-msgstr "查看頁面"
+msgstr "檢視頁面"
 
 #: links.php
-#, fuzzy
 msgid "Web URL Below"
-msgstr "網址在下面"
+msgstr "下方網址"
 
 #: links.php
-#, fuzzy
 msgid "Web URL Location"
 msgstr "網址位置"
 
 #: links.php
-#, fuzzy
 msgid "Where should this page appear?"
-msgstr "該頁面應該出現在哪裡？"
+msgstr "此頁面應顯示在哪裡？"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "您的內容檔案不是有效的網址。請輸入有效的網址"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15570,9 +15482,9 @@ msgid "This Plugin requires the following Plugins be installed first."
 msgstr "此外掛程式需要先安裝下列外掛程式。"
 
 #: plugins.php
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to Install Plugin.  The following Plugins must be installed first: %s"
-msgstr "無法安裝插件。必須首先安裝以下插件：％s"
+msgstr "無法安裝外掛程式。必須先安裝下列外掛程式：%s"
 
 #: plugins.php
 #, php-format
@@ -16151,52 +16063,42 @@ msgid "Test Email Results"
 msgstr "測試電子郵件結果"
 
 #: sites.php
-#, fuzzy
 msgid "0 - 23"
-msgstr "0  -  23"
+msgstr "0 - 23"
 
 #: sites.php
-#, fuzzy
 msgid "Additional Information"
 msgstr "額外資訊"
 
 #: sites.php
-#, fuzzy
 msgid "Additional Site Address information"
-msgstr "其他站點地址信息"
+msgstr "其他站台地址資訊"
 
 #: sites.php
-#, fuzzy
 msgid "Additional address information for the Site."
-msgstr "本網站的其他地址信息。"
+msgstr "此站台的其他地址資訊。"
 
 #: sites.php
-#, fuzzy
 msgid "Additional area use for random notes related to this Site."
-msgstr "附加區域用於與本網站相關的隨機筆記。"
+msgstr "用於記錄與此站台相關備註的額外欄位。"
 
 #: sites.php
-#, fuzzy
 msgid "Address Information"
-msgstr "地址信息"
+msgstr "地址資訊"
 
 #: sites.php
-#, fuzzy
 msgid "Address1"
-msgstr "地址1"
+msgstr "地址 1"
 
 #: sites.php
-#, fuzzy
 msgid "Address2"
-msgstr "地址2"
+msgstr "地址 2"
 
 #: sites.php
-#, fuzzy
 msgid "Alternate Name"
 msgstr "替代名稱"
 
 #: sites.php
-#, fuzzy
 msgid "City"
 msgstr "城市"
 
@@ -16211,9 +16113,8 @@ msgid_plural "Click 'Continue' to Duplicate all following Sites."
 msgstr[0] "單擊“繼續”以刪除以下樹。"
 
 #: sites.php
-#, fuzzy
 msgid "Country"
-msgstr "國家"
+msgstr "國家/地區"
 
 #: sites.php
 msgid "Delete Site"
@@ -16226,193 +16127,156 @@ msgid_plural "Duplicate Sites"
 msgstr[0] "複製"
 
 #: sites.php
-#, fuzzy
 msgid "Enter some useful information about the Site."
-msgstr "輸入有關本網站的一些有用信息。"
+msgstr "輸入有關此站台的實用資訊。"
 
 #: sites.php
-#, fuzzy
 msgid "Enter the City or Locality"
 msgstr "輸入城市或地區"
 
 #: sites.php
-#, fuzzy
 msgid "Enter the Site Address"
-msgstr "輸入站點地址"
+msgstr "輸入站台地址"
 
 #: sites.php
-#, fuzzy
 msgid "Enter the country"
 msgstr "輸入國家/地區"
 
 #: sites.php
-#, fuzzy
 msgid "Enter the postal code"
-msgstr "輸入郵政編碼"
+msgstr "輸入郵遞區號"
 
 #: sites.php
-#, fuzzy
 msgid "Enter the state"
-msgstr "輸入州"
+msgstr "輸入州／省"
 
 #: sites.php
-#, fuzzy
 msgid "Geolocation Information"
-msgstr "地理位置信息"
+msgstr "地理位置資訊"
 
 #: sites.php
-#, fuzzy
 msgid "If the Site is known by another name enter it here."
-msgstr "如果該網站以其他名稱為人所知，請在此處輸入。"
+msgstr "如果此站台另有別名，請在此輸入。"
 
 #: sites.php
-#, fuzzy
 msgid "Latitude"
 msgstr "緯度"
 
 #: sites.php
-#, fuzzy
 msgid "Longitude"
 msgstr "經度"
 
 #: sites.php
-#, fuzzy
 msgid "New Site"
-msgstr "新增展示網站"
+msgstr "新增站台"
 
 #: sites.php
-#, fuzzy
 msgid "No Sites Found"
-msgstr "找不到網站"
+msgstr "找不到站台"
 
 #: sites.php
-#, fuzzy
 msgid "Postal/Zip Code"
-msgstr "郵政編碼"
+msgstr "郵遞區號"
 
 #: sites.php
-#, fuzzy
 msgid "Site Information"
-msgstr "網站信息"
+msgstr "站台資訊"
 
 #: sites.php
 msgid "Site Name:"
 msgstr "網站名稱："
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "找不到檔案"
+msgstr "找不到站台。"
 
 #: sites.php
-#, fuzzy
 msgid "State"
-msgstr "州"
+msgstr "州/省"
 
 #: sites.php
-#, fuzzy
 msgid "Template Site was not found! Unable to duplicate."
-msgstr "找不到模板網站！無法複製。"
+msgstr "找不到範本站台！無法複製。"
 
 #: sites.php
-#, fuzzy
 msgid "The City associated with this Site."
-msgstr "與本網站相關的城市。"
+msgstr "與此站台關聯的城市。"
 
 #: sites.php
-#, fuzzy
 msgid "The Country associated with this Site."
-msgstr "與本網站相關的國家/地區。"
+msgstr "與此站台關聯的國家/地區。"
 
 #: sites.php
-#, fuzzy
 msgid "The Latitude for this Site."
-msgstr "本網站的緯度。"
+msgstr "此站台的緯度。"
 
 #: sites.php
-#, fuzzy
 msgid "The Longitude for this Site."
-msgstr "本網站的經度。"
+msgstr "此站台的經度。"
 
 #: sites.php
-#, fuzzy
 msgid "The State associated with this Site."
-msgstr "與本網站相關的國家。"
+msgstr "與此站台關聯的州/省。"
 
 #: sites.php
-#, fuzzy
 msgid "The TimeZone for the Site."
-msgstr "本網站的TimeZone。"
+msgstr "此站台的時區。"
 
 #: sites.php
-#, fuzzy
 msgid "The city or locality for the Site."
-msgstr "本網站的城市或地區。"
+msgstr "此站台的城市或地區。"
 
 #: sites.php
-#, fuzzy
 msgid "The country for the Site."
-msgstr "本網站的國家/地區。"
+msgstr "此站台的國家/地區。"
 
 #: sites.php
-#, fuzzy
 msgid "The default Map Zoom for this Site.  Values can be from 0 to 23. Note that some regions of the planet have a max Zoom of 15."
-msgstr "本網站的默認地圖縮放。值可以是0到23.請注意，行星的某些區域的最大縮放為15。"
+msgstr "此站台的預設地圖縮放層級。數值範圍為 0 到 23。請注意，地球上部分地區的最大縮放層級為 15。"
 
 #: sites.php
-#, fuzzy
 msgid "The name of this Site."
-msgstr "本網站的名稱。"
+msgstr "此站台的名稱。"
 
 #: sites.php
-#, fuzzy
 msgid "The number of Devices associated with this Site."
-msgstr "與本網站關聯的設備數量。"
+msgstr "與此站台關聯的裝置數量。"
 
 #: sites.php
-#, fuzzy
 msgid "The postal or zip code for the Site."
-msgstr "本網站的郵政編碼或郵政編碼。"
+msgstr "此站台的郵遞區號。"
 
 #: sites.php
-#, fuzzy
 msgid "The primary address for the Site."
-msgstr "本網站的主要地址。"
+msgstr "此站台的主要地址。"
 
 #: sites.php
-#, fuzzy
 msgid "The primary name for the Site."
-msgstr "網站的主要名稱。"
+msgstr "此站台的主要名稱。"
 
 #: sites.php
-#, fuzzy
 msgid "The state for the Site."
-msgstr "本網站的狀態。"
+msgstr "此站台的州/省。"
 
 #: sites.php
-#, fuzzy
 msgid "The unique id associated with this Site."
-msgstr "與本網站關聯的唯一ID。"
+msgstr "與此站台關聯的唯一 ID。"
 
 #: sites.php
-#, fuzzy
 msgid "Used for cases where a Site has an alternate named used to describe it"
-msgstr "用於網站具有用於描述它的備用名稱的情況"
+msgstr "用於站台具有用來描述它的替代名稱的情況"
 
 #: sites.php
-#, fuzzy
 msgid "Zoom"
 msgstr "縮放"
 
 #: sites.php
-#, fuzzy
 msgid "example -77.0374678"
-msgstr "例如-77.0374678"
+msgstr "例如 -77.0374678"
 
 #: sites.php
-#, fuzzy
 msgid "example 38.889488"
-msgstr "例如38.889488"
+msgstr "例如 38.889488"
 
 #: spikekill.php
 msgid "FATAL: Spike Kill Not Allowed"
@@ -16784,7 +16648,7 @@ msgstr "此樹狀目錄中的個別圖表總數。"
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "此樹已被%2$s s鎖定在%1$s上編輯。"
+msgstr "此樹狀目錄已於 %s 由 %s 鎖定為編輯狀態。"
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -18375,14 +18239,12 @@ msgid "You've set memory limit to 'unlimited'."
 msgstr "您已將記憶體限制設為「unlimited」。"
 
 #: vdef.php
-#, fuzzy
 msgid "Choose what type of VDEF item this is."
-msgstr "選擇這是什麼類型的VDEF項目。"
+msgstr "選擇此 VDEF 項目的類型。"
 
 #: vdef.php
-#, fuzzy
 msgid "Click 'Continue' to delete the following VDEF's."
-msgstr "單擊“繼續”以刪除以下VDEF。"
+msgstr "按一下「繼續」以刪除下列 VDEF。"
 
 #: vdef.php
 msgid "Click 'Continue' to delete the following VDEF."
@@ -18400,9 +18262,8 @@ msgid_plural "Delete VDEFs"
 msgstr[0] "刪除VDEF"
 
 #: vdef.php
-#, fuzzy
 msgid "Delete VDEF Item"
-msgstr "刪除VDEF項目"
+msgstr "刪除 VDEF 項目"
 
 #: vdef.php
 msgid "Duplicate VDEF"
@@ -18410,90 +18271,76 @@ msgid_plural "Duplicate VDEFs"
 msgstr[0] "重複VDEF"
 
 #: vdef.php
-#, fuzzy
 msgid "Enter a value for this VDEF item."
-msgstr "輸入此VDEF項的值。"
+msgstr "輸入此 VDEF 項目的值。"
 
 #: vdef.php
-#, fuzzy
 msgid "No VDEFs"
-msgstr "沒有VDEF"
+msgstr "沒有 VDEF"
 
 #: vdef.php
-#, fuzzy
 msgid "Remove VDEF Item"
-msgstr "刪除VDEF項目"
+msgstr "移除 VDEF 項目"
 
 #: vdef.php
-#, fuzzy
 msgid "The name of this VDEF."
-msgstr "此VDEF的名稱。"
+msgstr "此 VDEF 的名稱。"
 
 #: vdef.php
-#, fuzzy
 msgid "The number of Graphs Templates using this VDEF."
-msgstr "使用此VDEF的圖表模板數。"
+msgstr "使用此 VDEF 的圖表範本數量。"
 
 #: vdef.php
-#, fuzzy
 msgid "The number of Graphs using this VDEF."
-msgstr "使用此VDEF的圖表數量。"
+msgstr "使用此 VDEF 的圖表數量。"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF Item Type"
-msgstr "VDEF項目類型"
+msgstr "VDEF 項目類型"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF Item Value"
-msgstr "VDEF項目值"
+msgstr "VDEF 項目值"
 
 #: vdef.php
-#, fuzzy, php-format
+#, php-format
 msgid "VDEF Items [edit: %s]"
-msgstr "VDEF項目[編輯：%s]"
+msgstr "VDEF 項目 [編輯：%s]"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF Items [new]"
-msgstr "VDEF項目[新]"
+msgstr "VDEF 項目 [新增]"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF Name"
-msgstr "VDEF名稱"
+msgstr "VDEF 名稱"
 
 #: vdef.php
-#, fuzzy, php-format
+#, php-format
 msgid "VDEF Name: %s"
-msgstr "VDEF名稱：%s"
+msgstr "VDEF 名稱：%s"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF Preview"
-msgstr "VDEF預覽"
+msgstr "VDEF 預覽"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "找不到檔案"
+msgstr "找不到 VDEF。"
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "找不到 VDEF 或 VDEF 項目。"
 
 #: vdef.php
-#, fuzzy, php-format
+#, php-format
 msgid "VDEFs [edit: %s]"
-msgstr "VDEFs [編輯：%s]"
+msgstr "VDEF [編輯：%s]"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEFs [new]"
-msgstr "VDEFs [新]"
+msgstr "VDEF [新增]"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
-msgstr "正在使用的VDEF無法刪除。使用中定義為由圖形或圖形模板引用。"
+msgstr "無法刪除使用中的 VDEF。使用中是指正在被圖表或圖表範本參照。"

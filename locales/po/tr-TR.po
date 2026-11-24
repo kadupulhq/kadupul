@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Geliştirme, katkılar ve sürüm kararları %sKadupul kuruluşu%s tarafından yönetilmektedir."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Belgeler ve destek için %sKadupul projesini%s ziyaret edin."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul, ağ izleme ve zaman serisi grafik oluşturma için bağımsız, açık kaynaklı bir projedir."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -79,7 +79,7 @@ msgstr "Toplam Önizleme [ %s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Toplam Önizleme [ %s]"
+msgstr "Toplu Önizleme Mevcut Değil"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -1983,11 +1983,11 @@ msgstr "Giriş Dizesi Beyaz Liste&#39;de mevcut değil. Düzeltmek için CLI bet
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Giriş Beyaz Listesi (Input Whitelisting) etkin. Bu Veri Giriş Yöntemindeki değişiklikler, Veri Kaynağının yeniden sorgulanabilmesi için Giriş Beyaz Listesi CLI betiğinin (cli/input_whitelist.php) hem --audit hem de --update seçenekleriyle yeniden çalıştırılmasını gerektirir."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Giriş dizesi tehlikeli kabuk (shell) karakterleri içeriyor"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2043,9 +2043,8 @@ msgid "Update RRA"
 msgstr "RRA&#39;yı Güncelle"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Bu alanı güncelle"
+msgstr "Beyaz Listeyi Güncelle"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2086,7 +2085,7 @@ msgstr "İlişkili Grafik / Veri Şablonları [değiştir: %s]"
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "İlişkili Grafik / Veri Şablonları [değiştir: %s]"
+msgstr "İlişkili Grafik/Veri Şablonları [yeni]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2614,7 +2613,7 @@ msgstr "Aşağıdaki Veri Şablonlarını çoğaltmak için &#39;Devam Et&#39;i 
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "Özel Veri [veri girişi: %s]"
+msgstr "Özel Veri Uyarı Mesajı"
 
 #: data_templates.php
 #, php-format
@@ -3188,7 +3187,7 @@ msgstr "Bir Grafik Şablonu seçin ve aşağıdaki Grafik (ler) için Grafik Şa
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Bu Grafiğe uygulanacak bir Grafik Şablonu seçin. Grafik Şablonlarını yalnızca 100%% uyumlu bir Grafik Şablonuna değiştirebileceğinizi lütfen unutmayın; bu, aynı Veri Kaynaklarını içerdiği anlamına gelir."
+msgstr "Bu Grafiğe uygulanacak bir Grafik Şablonu seçin. Grafik Şablonlarını yalnızca %%100 uyumlu bir Grafik Şablonu ile değiştirebileceğinizi lütfen unutmayın; bu, aynı Veri Kaynaklarını içerdiği anlamına gelir."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3304,7 +3303,7 @@ msgstr "[Uygulanan Özel Grafik Listesi - Listeden Filtrele]"
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Kullanıcı Grubu Yönetimi [değiştir: %s]"
+msgstr "Grafik Yönetimi [ Cihaz Tabanlı Olmayan ]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3890,7 +3889,7 @@ msgstr "1 Megabayt"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "% d Konu"
+msgstr "1 İş Parçacığı"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -3991,11 +3990,11 @@ msgstr "Toplam"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Uyarı Olayları"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Uyarı Kuralları"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -6252,7 +6251,7 @@ msgstr "Yeni Ağaç Öğeleri için bir Ağaç seçin."
 
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Bu veri kaynağı için bir isim seçin. | Host_description | gibi değiştirme değişkenleri içerebilir. veya | query_fieldName |. Desteklenen yedek etiketlerin tam bir listesi için lütfen Kadupul belgelerine bakın."
+msgstr "Bu veri kaynağı için bir ad seçin. |host_description| veya |query_fieldName| gibi değiştirme değişkenleri içerebilir. Desteklenen değiştirme etiketlerinin tam listesi için lütfen Kadupul belgelerine bakın."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -7217,7 +7216,7 @@ msgstr "Bu rengin adı."
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Grafikte basılan isim. | Host_description | gibi değiştirme değişkenleri içerebilir. veya | query_fieldName |. Desteklenen yedek etiketlerin tam bir listesi için lütfen Kadupul belgelerine bakın."
+msgstr "Grafik üzerinde yazdırılan ad. |host_description| veya |query_fieldName| gibi değiştirme değişkenleri içerebilir. Desteklenen değiştirme etiketlerinin tam listesi için lütfen Kadupul belgelerine bakın."
 
 #: include/global_form.php
 msgid "The new Title of the aggregated Graph."
@@ -7229,7 +7228,7 @@ msgstr "Tek bir SNMP Alma isteğinde elde edilebilecek OID sayısını belirtti.
 
 #: include/global_form.php
 msgid "The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."
-msgstr "Bu cihazı sorgulamak için kullanılacak eşzamanlı iş parçacıklarının sayısı. Bu sadece Omurga yoklayıcısı için geçerlidir."
+msgstr "Bu cihazı yoklamak için kullanılacak eşzamanlı iş parçacığı sayısı. Bu yalnızca Spine yoklayıcısı için geçerlidir."
 
 #: include/global_form.php
 msgid "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1."
@@ -7459,7 +7458,7 @@ msgstr "%d İşlemler"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d Kural"
 
 #: include/global_settings.php
 #, php-format
@@ -7581,11 +7580,11 @@ msgstr "Bu gün sayısından sonra çalışma saatleri grafiğe eklenmeyecektir.
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Uyarı Değerlendirme Zaman Bütçesi"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Parti Başına Uyarı Kuralı"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8169,7 +8168,7 @@ msgstr "Lotus Notes (R) ayarını etkinleştirme"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Yerleşik Uyarı Değerlendirmesini Etkinleştir"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8409,7 +8408,7 @@ msgstr "Kadupul Panosunu Gizle"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "%d Hafta"
+msgstr "Hafta Sonlarını Gizle"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8453,7 +8452,7 @@ msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Bir değerlendirme çalıştırmasının ne kadar süre boyunca yeni kural partileri başlatabileceği. Kuyruktaki bildirimlerin gönderilmesi değerlendirmenin ardından kalan süreyle gerçekleştirilir ve bütçe tükendiğinde bile bir parti gönderilebilir. Ulaşılamayan kurallar bir sonraki çalıştırmada ilk olarak değerlendirilir."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8577,7 +8576,7 @@ msgstr "Kadupul Günlük Yolu"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Kadupul Sunucu v %s - Bakım"
+msgstr "Kadupul Sunucu Saat Dilimi"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8785,7 +8784,7 @@ msgstr "NaN en"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Yerleşik Uyarı"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9301,7 +9300,7 @@ msgstr "Grafikleri ve Veri Kaynakları Varsa Varsayılan Olarak Kontrol Edilmeli
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Ana Veri Toplayıcı her yoklama döngüsünden sonra uyarı kurallarını değerlendirip bildirimlerini göndersin mi? Uyarı kuralları Veri Kaynağı İstatistiklerinin topladığı oranları okur; bu nedenle Veri Kaynağı İstatistikleri Toplama da etkinleştirilmelidir."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9369,11 +9368,11 @@ msgstr "Başak"
 
 #: include/global_settings.php
 msgid "Spine Binary File Location"
-msgstr "Omurga İkili Dosya Konumu"
+msgstr "Spine İkili Dosya Konumu"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
-msgstr "Omurga Yapılandırma Dosyası Yolu"
+msgstr "Spine Yapılandırma Dosyası Yolu"
 
 #: include/global_settings.php
 msgid "Standard Deviation"
@@ -9601,7 +9600,7 @@ msgstr "snmpget isteği başına verilecek varsayılan maksimum SNMP Get OID say
 
 #: include/global_settings.php
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Varsayılan Aygıt İpliği sayısı. Bu sadece Omurga Veri Toplayıcı kullanılırken geçerlidir."
+msgstr "Varsayılan Cihaz İş Parçacığı sayısı. Bu yalnızca Spine Veri Toplayıcı kullanılırken geçerlidir."
 
 #: include/global_settings.php
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
@@ -9733,7 +9732,7 @@ msgstr "Kadupul&#39;nin yeni Web Basic ve LDAP kullanıcıları için şablon ol
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Birlikte okunan ve değerlendirilen uyarı kuralı sayısı. Zaman bütçesi partiler arasında kontrol edilir."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9793,7 +9792,7 @@ msgstr "SMTP ile gönderirken kimlik doğrulaması yapılacak şifre. (Kimlik do
 
 #: include/global_settings.php
 msgid "The path to Spine binary."
-msgstr "Omurga ikili yolu."
+msgstr "Spine ikili dosyasının yolu."
 
 #: include/global_settings.php
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
@@ -9978,7 +9977,7 @@ msgstr "Bu değer, yüksek ve düşük ortalama örneklerin sayısını, Varyans
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Bu değer, aykırı değerler numuneden çıkarıldıktan sonra düzeltilmiş numune ortalamasının üzerindeki yüzdeyi temsil eder.  Örneğin, düzeltilmiş ortalama 50 'de 100%% Varyans Yüzdesi, 100' ün üzerindeki herhangi bir örneği grafikten kaldıracaktır."
+msgstr "Bu değer, aykırı değerler örneklemden çıkarıldıktan sonra düzeltilmiş örneklem ortalamasının üzerindeki yüzdeyi temsil eder. Örneğin, düzeltilmiş 50 ortalamasında %%100 Varyans Yüzdesi, 100 miktarının üzerindeki tüm örnekleri grafikten kaldıracaktır."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10034,7 +10033,7 @@ msgstr "Başlık Yazı Boyutu"
 
 #: include/global_settings.php
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "|tarih_saat| biçimlendirilirken kullanılacak bir grafikte"
+msgstr "Bir grafikte |date_time| biçimlendirilirken kullanılacak"
 
 #: include/global_settings.php
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
@@ -10541,7 +10540,7 @@ msgstr "Veritabanı kayıtları birlikte kaldırılamadığı için %s Cihazı k
 
 #: lib/api_device.php
 msgid "Uptime:"
-msgstr "ÃalÄ±Åma SÃ¼resi:"
+msgstr "Çalışma Süresi:"
 
 #: lib/api_tree.php
 msgid "New Branch"
@@ -10716,7 +10715,7 @@ msgstr "Dosya"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "% d Satır"
+msgstr "Üst Satırlar"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -10882,7 +10881,7 @@ msgstr "SNMP&#39;nin çalıştırılması %s oids için ( %s) olsun"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "SNMP çalıştırma @ &#39; %s&#39; veri için [değer = &#39;$ değer&#39;]"
+msgstr "'%s' verisi için SNMP get çalıştırılıyor [value='$value']"
 
 #: lib/data_query.php
 #, php-format
@@ -11341,7 +11340,7 @@ msgstr "Çıkış"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Hata: set adrese <b>İÇİN</b> !! <br> <i>Posta Testi</i> bağlantısını kullanıyorsanız, lütfen <b>Uyarı e-posta</b> ayarını ayarlayın."
+msgstr "Posta Gönderici Hatası: Alıcı adresi ayarlanmamış!!<br><i>Test Postası</i> bağlantısını kullanıyorsanız lütfen <b>Uyarı e-postası</b> ayarını yapın."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11586,7 +11585,7 @@ msgstr "Yakınlaştırma Modu"
 
 #: lib/html.php pollers.php
 msgid "Connection Failed"
-msgstr "AÄ adresi ayarlanÄ±yor"
+msgstr "Bağlantı Başarısız"
 
 #: lib/html.php pollers.php
 msgid "Connection Successful"
@@ -11864,7 +11863,7 @@ msgstr "SpikeKill Sonuçları"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "Omurga"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -12984,7 +12983,7 @@ msgstr "Varsayılan profil"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Cihaz Şablonları [edit: %s]"
+msgstr "İlk Kadupul Cihazı için Cihaz Şablonu: %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13220,7 +13219,7 @@ msgstr "Central Kadupul sunucusunun MySQL yoluyla her uzak Kadupul veritabanı s
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "<b>$ İnput_whitelist</b> değişkenini <b>kaldırarak</b> ve ardından web tabanlı yükleme tamamlandıktan sonra yukarıdaki üç CLI komut dosyası seçeneğini çalıştırarak config.php'nizi güncellemeniz önemle önerilir."
+msgstr "Web tabanlı kurulum tamamlandıktan sonra <b>$input_whitelist</b> değişkeninin yorum işaretini kaldırarak bu özelliği etkinleştirmek üzere config.php dosyanızı güncellemeniz ve ardından yukarıdaki üç CLI betiği seçeneğini çalıştırmanız önemle önerilir."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13265,7 +13264,7 @@ msgstr "Devam etmeden önce tüm bu değerlerin doğru olduğundan emin olun."
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Devam etmeden önce Kadupul&#39;yi yüklemek için gereken adımları okuduğunuzdan ve uyguladığınızdan emin olun. <a href=\"%1$s\">Unix</a> ve <a href=\"%2$s\">Win32</a> tabanlı işletim sistemleri için yükleme bilgilerini bulabilirsiniz."
+msgstr "Devam etmeden önce Kadupul'u kurmak için gereken adımları okuyup uyguladığınızdan emin olun. <a href=\"%s\">Unix</a> ve <a href=\"%s\">Win32</a> tabanlı işletim sistemleri için kurulum bilgilerini bulabilirsiniz."
 
 #: lib/installer.php
 #, php-format
@@ -14245,7 +14244,7 @@ msgstr "Rrdtool dökümü XML&#39;sini ayrıştırırken hata oluştu"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "%s Bulunamadı"
+msgstr "Hata Bulundu"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14337,7 +14336,7 @@ msgstr "Grafik, RRDtool'un kabul edemeyeceği bir değer içeriyor."
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "RRA &#39; %s&#39;, RRD dosyasında eksik"
+msgstr "Mevcut Kadupul RRD dosyasında '%s' RRA'sı eksik"
 
 #: lib/rrd.php
 #, php-format
@@ -14764,7 +14763,7 @@ msgstr "Giriş sayısına ve omurga veri toplayıcısının kullanımına bağl�
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Kadupul Performans Artırıcı (Performance Booster) kullanıyor ve bir bellek depolama motoru seçiyorsanız, sistemin bellek tablo alanı tükenmeden önce Performance Booster arabelleğinizi boşaltmaya dikkat etmelisiniz. Bu iki şekilde yapılır: Birincisi, çıktı sütununuzun boyutunu tam olması gereken boyuta düşürmektir. Bu sütun poller_output ve poller_output_boost tablolarında yer alır. Yapabileceğiniz ikinci şey ise bellek tablolarına daha fazla bellek ayırmaktır. Önerilen değer olarak sistem belleğinin 10%%'unu keyfi olarak seçtik, ancak SSD disk sürücüleri kullanıyorsanız veya daha küçük bir sisteminiz varsa bu öneriyi göz ardı edebilir ya da farklı bir depolama motoru seçebilirsiniz. Performance Booster tablolarının beklenen tüketimini Konsol -> Sistem Yardımcı Programları -> Boost Durumunu Görüntüle altında görebilirsiniz."
+msgstr "Kadupul Performans Artırıcı (Performance Booster) kullanıyor ve bir bellek depolama motoru seçiyorsanız, sistemin bellek tablo alanı tükenmeden önce Performance Booster arabelleğinizi boşaltmaya dikkat etmelisiniz. Bu iki şekilde yapılır: Birincisi, çıktı sütununuzun boyutunu tam olması gereken boyuta düşürmektir. Bu sütun poller_output ve poller_output_boost tablolarında yer alır. Yapabileceğiniz ikinci şey ise bellek tablolarına daha fazla bellek ayırmaktır. Önerilen değer olarak sistem belleğinin %%10'unu keyfi olarak seçtik, ancak SSD disk sürücüleri kullanıyorsanız veya daha küçük bir sisteminiz varsa bu öneriyi göz ardı edebilir ya da farklı bir depolama motoru seçebilirsiniz. Performance Booster tablolarının beklenen tüketimini Konsol -> Sistem Yardımcı Programları -> Boost Durumunu Görüntüle altında görebilirsiniz."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14785,7 +14784,7 @@ msgstr "Tablolarınız çok büyük dizinlere sahipse, Barracuda innodb_file_for
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB, mümkün olduğunca çok sayıda tablo ve dizini sistem belleğinde tutacaktır. Bu nedenle, innodb_buffer_pool değerini tabloların ve dizinin mümkün olduğunca çoğunu bellekte tutacak kadar büyük yapmalısınız. /var/lib/mysql/cacti dizininin boyutunu kontrol etmek bu değeri belirlemede yardımcı olacaktır. Sisteminizin toplam belleğinin 25%%'ini öneriyoruz, ancak gereksinimleriniz sisteminizin boyutuna bağlı olarak değişecektir."
+msgstr "InnoDB, mümkün olduğunca çok sayıda tablo ve dizini sistem belleğinde tutacaktır. Bu nedenle, innodb_buffer_pool değerini tabloların ve dizinin mümkün olduğunca çoğunu bellekte tutacak kadar büyük yapmalısınız. /var/lib/mysql/cacti dizininin boyutunu kontrol etmek bu değeri belirlemede yardımcı olacaktır. Sisteminizin toplam belleğinin %%25'ini öneriyoruz, ancak gereksinimleriniz sisteminizin boyutuna bağlı olarak değişecektir."
 
 #: lib/utility.php
 #, php-format
@@ -15024,7 +15023,7 @@ msgstr "Sekmede veya menüde görünecek metin."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "Bu harici bağlantı için kullanılacak geçerli URL. Türünü içermelidir; örneğin https://kadupul.org. Birçok web sitesinin yabancı bir siteden iframe içine gömülmeye izin vermediğini ve bu nedenle Harici Bağlantının çalışmayabileceğini unutmayın."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15052,7 +15051,7 @@ msgstr "Bu sayfa nerede görünmeli?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "İçerik dosyanız geçerli bir URL değil. Lütfen geçerli bir URL girin"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15890,7 +15889,7 @@ msgstr "SNMP sayısı bu Toplayıcı ile ilişkilendirilir."
 
 #: pollers.php
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "Veri Toplayıcı işlemi için kullanılacak Omurga İpliği sayısı."
+msgstr "Veri Toplayıcı işlemi başına kullanılacak Spine İş Parçacığı sayısı."
 
 #: pollers.php
 msgid "The number of script calls associated with this Data Collector."
@@ -16225,9 +16224,8 @@ msgid "Site Name:"
 msgstr "Site Adı:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Dosya bulunamadı"
+msgstr "Site bulunamadı."
 
 #: sites.php
 msgid "State"
@@ -16547,7 +16545,7 @@ msgstr "Şube Sıralama"
 
 #: tree.php
 msgid "Branches"
-msgstr "филиалҳо"
+msgstr "Dallar"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
@@ -16693,7 +16691,7 @@ msgstr "Bu Ağaçtaki bireysel Grafiklerin toplam sayısı."
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Bu ağaç%1$s içindeki Düzenleme için%2$s tarafından kilitlendi."
+msgstr "Bu ağaç %s tarihinde %s tarafından Düzenleme için kilitlendi."
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -18389,13 +18387,12 @@ msgid "VDEF Preview"
 msgstr "VDEF Önizlemesi"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Dosya bulunamadı"
+msgstr "VDEF bulunamadı."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF veya VDEF Öğesi bulunamadı."
 
 #: vdef.php
 #, php-format

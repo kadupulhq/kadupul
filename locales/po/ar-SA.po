@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "تتولى %sمنظمة Kadupul%s إدارة التطوير والمساهمات وقرارات الإصدار."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "للحصول على الوثائق والدعم، تفضل بزيارة %sمشروع Kadupul%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul هو مشروع مستقل مفتوح المصدر لمراقبة الشبكات ورسم المخططات البيانية للسلاسل الزمنية."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -147,7 +147,7 @@ msgstr "إلغاء"
 #: lib/html_tree.php managers.php plugins.php pollers.php tree.php
 #: user_admin.php user_domains.php
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
 #: data_templates.php graph_templates.php graph_view.php graphs.php
@@ -919,7 +919,7 @@ msgstr "مرشحات ديسكفري"
 #: automation_devices.php lib/api_automation.php lib/html_utility.php
 #: pollers.php
 msgid "Down"
-msgstr "المرض"
+msgstr "متوقف"
 
 #: automation_devices.php lib/html_form.php
 msgid "Export"
@@ -970,7 +970,7 @@ msgstr "Pollers"
 
 #: automation_devices.php data_debug.php lib/clog_webapi.php managers.php
 msgid "Purge"
-msgstr "شربة، مسهل. يسهل"
+msgstr "إفراغ"
 
 #: automation_devices.php
 msgid "Purge Discovered Devices"
@@ -1454,15 +1454,14 @@ msgid "Allow Existing Rows to be Updated?"
 msgstr "السماح تحديث الصفوف الموجودة؟"
 
 #: color.php
-#, fuzzy
 msgid "Click 'Continue' to delete the following Color"
 msgid_plural "Click 'Continue' to delete the following Colors"
-msgstr[0] "انقر فوق &quot;متابعة&quot; لحذف لون قالب اللون التالي."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "انقر على 'متابعة' لحذف الألوان التالية"
+msgstr[1] "انقر على 'متابعة' لحذف اللون التالي"
+msgstr[2] "انقر على 'متابعة' لحذف اللونين التاليين"
+msgstr[3] "انقر على 'متابعة' لحذف الألوان التالية"
+msgstr[4] "انقر على 'متابعة' لحذف الألوان التالية"
+msgstr[5] "انقر على 'متابعة' لحذف الألوان التالية"
 
 #: color.php
 msgid "Color Name"
@@ -1482,15 +1481,14 @@ msgid "Colors in use cannot be Deleted.  In use is defined as being referenced e
 msgstr "لا يمكن حذف الألوان المستخدمة. يتم تعريف الاستخدام على أنه يتم الرجوع إليه إما عن طريق الرسم البياني أو قالب الرسم البياني."
 
 #: color.php
-#, fuzzy
 msgid "Delete Color"
 msgid_plural "Delete Colors"
-msgstr[0] "حذف عنصر اللون"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "حذف الألوان"
+msgstr[1] "حذف اللون"
+msgstr[2] "حذف اللونين"
+msgstr[3] "حذف الألوان"
+msgstr[4] "حذف الألوان"
+msgstr[5] "حذف الألوان"
 
 #: color.php
 msgid "Export Colors"
@@ -1918,12 +1916,12 @@ msgstr "انقر فوق &quot;متابعة&quot; لحذف حقل إدخال ال
 #: data_input.php
 msgid "Click 'Continue' to delete the following Data Input Method"
 msgid_plural "Click 'Continue' to delete the following Data Input Method"
-msgstr[0] "انقر فوق \"متابعة\" لحذف طريقة إدخال البيانات التالية"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "انقر على 'متابعة' لحذف طرق إدخال البيانات التالية"
+msgstr[1] "انقر على 'متابعة' لحذف طريقة إدخال البيانات التالية"
+msgstr[2] "انقر على 'متابعة' لحذف طريقتَي إدخال البيانات التاليتين"
+msgstr[3] "انقر على 'متابعة' لحذف طرق إدخال البيانات التالية"
+msgstr[4] "انقر على 'متابعة' لحذف طرق إدخال البيانات التالية"
+msgstr[5] "انقر على 'متابعة' لحذف طرق إدخال البيانات التالية"
 
 #: data_input.php
 msgid "Click 'Continue' to duplicate the following Data Input Method(s). You can optionally change the title format for the new Data Input Method(s)."
@@ -1953,12 +1951,12 @@ msgstr "حذف حقل إدخال البيانات"
 #: data_input.php
 msgid "Delete Data Input Method"
 msgid_plural "Delete Data Input Methods"
-msgstr[0] "حذف طريقة إدخال البيانات"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "حذف طرق إدخال البيانات"
+msgstr[1] "حذف طريقة إدخال البيانات"
+msgstr[2] "حذف طريقتَي إدخال البيانات"
+msgstr[3] "حذف طرق إدخال البيانات"
+msgstr[4] "حذف طرق إدخال البيانات"
+msgstr[5] "حذف طرق إدخال البيانات"
 
 #: data_input.php
 #, php-format
@@ -2001,11 +1999,11 @@ msgstr "سلسلة الإدخال غير موجودة في القائمة الب
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "قائمة السماح للمدخلات قيد التفعيل. تتطلب التغييرات في طريقة إدخال البيانات هذه إعادة تشغيل البرنامج النصي لواجهة سطر الأوامر لقائمة السماح للمدخلات (cli/input_whitelist.php) باستخدام الخيارين --audit و --update معًا قبل إعادة الاستعلام عن مصدر البيانات."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "تحتوي سلسلة الإدخال على أحرف shell خطيرة"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2061,9 +2059,8 @@ msgid "Update RRA"
 msgstr "تحديث RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "قم بتحديث هذا الحقل"
+msgstr "تحديث قائمة السماح"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -3274,7 +3271,7 @@ msgstr "اختر قالبًا رسمًا ، ثم انقر فوق &quot;متاب�
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "اختر قالب الرسم البياني لتطبيقه على هذا الرسم البياني. يرجى ملاحظة أنه يمكنك فقط تغيير قوالب الرسم البياني إلى قالب رسم بياني متوافق بنسبة 100٪ ، مما يعني أنه يحتوي على مصادر بيانات متطابقة."
+msgstr "اختر قالب الرسم البياني لتطبيقه على هذا الرسم البياني. يرجى ملاحظة أنه يمكنك تغيير قوالب الرسم البياني فقط إلى قالب رسم بياني متوافق بنسبة 100%% مما يعني أنه يتضمن مصادر بيانات متطابقة."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -4077,11 +4074,11 @@ msgstr "يكدس. مكدس، كداسة"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "حوادث التنبيهات"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "قواعد التنبيهات"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -6338,7 +6335,7 @@ msgstr "اختر شجرة لعناصر شجرة جديدة."
 
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "اختر اسمًا لمصدر البيانات هذا. يمكن أن تتضمن متغيرات الاستبدال مثل | host_description | أو | query_fieldName |. للحصول على قائمة كاملة بعلامات الاستبدال المعتمدة ، يرجى الاطلاع على وثائق Kadupul."
+msgstr "اختر اسمًا لمصدر البيانات هذا. يمكن أن يتضمن متغيرات استبدال مثل |host_description| أو |query_fieldName|. للحصول على قائمة كاملة بوسوم الاستبدال المدعومة، يرجى الاطلاع على وثائق Kadupul."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -7303,7 +7300,7 @@ msgstr "اسم هذا اللون."
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "الاسم الذي تتم طباعته على الرسم البياني. يمكن أن تتضمن متغيرات الاستبدال مثل | host_description | أو | query_fieldName |. للحصول على قائمة كاملة بعلامات الاستبدال المعتمدة ، يرجى الاطلاع على وثائق Kadupul."
+msgstr "الاسم الذي تتم طباعته على الرسم البياني. يمكن أن يتضمن متغيرات استبدال مثل |host_description| أو |query_fieldName|. للحصول على قائمة كاملة بوسوم الاستبدال المدعومة، يرجى الاطلاع على وثائق Kadupul."
 
 #: include/global_form.php
 msgid "The new Title of the aggregated Graph."
@@ -7545,7 +7542,7 @@ msgstr "العمليات %d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d قواعد"
 
 #: include/global_settings.php
 #, php-format
@@ -7667,11 +7664,11 @@ msgstr "بعد هذا العدد من الأيام ، لن تتم إضافة س�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "الميزانية الزمنية لتقييم التنبيهات"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "قواعد التنبيهات لكل دفعة"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8255,7 +8252,7 @@ msgstr "تمكين قرص Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "تمكين التقييم الأصلي للتنبيهات"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8539,7 +8536,7 @@ msgstr "كم مرة يجب فحص RRD؟"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "المدة الزمنية التي يمكن خلالها لجولة تقييم واحدة بدء دفعات جديدة من القواعد. يلي التقييم إرسال الإشعارات الموضوعة في قائمة الانتظار خلال الوقت المتبقي، وقد تُرسل دفعة واحدة حتى بعد استنفاد الميزانية الزمنية. يتم تقييم القواعد التي لم يتم الوصول إليها أولاً في الجولة التالية."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8871,7 +8868,7 @@ msgstr "ونان"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "التنبيه الأصلي"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9387,7 +9384,7 @@ msgstr "يجب أن يكون تم فحص الرسوم البيانية و Has Da
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "هل ينبغي لمُجمّع البيانات الرئيسي تقييم قواعد التنبيهات بعد كل دورة استطلاع وإرسال إشعاراتها؟ تقرأ قواعد التنبيهات المعدلات التي تجمعها إحصاءات مصادر البيانات، لذا يجب أيضًا تمكين جمع إحصاءات مصادر البيانات."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9819,7 +9816,7 @@ msgstr "اسم المستخدم الذي سيستخدمه Kadupul كقالب ل�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "عدد قواعد التنبيهات التي تُقرأ وتُقيَّم معًا. يتم التحقق من الميزانية الزمنية بين الدفعات."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10064,7 +10061,7 @@ msgstr "تمثل هذه القيمة عدد العينات العالية وال
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "تمثل هذه القيمة النسبة المئوية فوق متوسط العينة المعدل بعد إزالة القيم المتطرفة من العينة. على سبيل المثال ، فإن نسبة التباين بنسبة 100 ٪٪ على متوسط معدّل قدره 50 ستزيل أي عينة أعلى من الكمية 100 من الرسم البياني."
+msgstr "تمثل هذه القيمة النسبة المئوية فوق متوسط العينة المعدّل بعد إزالة القيم المتطرفة من العينة. على سبيل المثال، فإن نسبة تباين تبلغ 100%% على متوسط معدّل قدره 50 ستؤدي إلى إزالة أي عينة تتجاوز الكمية 100 من الرسم البياني."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10120,7 +10117,7 @@ msgstr "العنوان المخصصة حجم الخط"
 
 #: include/global_settings.php
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "لاستخدامها عند تنسيق | date_time | على الرسم البياني"
+msgstr "يُستخدم عند تنسيق |date_time| على الرسم البياني"
 
 #: include/global_settings.php
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
@@ -11427,7 +11424,7 @@ msgstr "تسجيل خروج"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "ميلر خطأ: لا <b>لمعالجة</b> وضع !! <br> إذا كنت تستخدم رابط <i>اختبار البريد</i> ، فيرجى ضبط إعداد <b>البريد الإلكتروني التنبيه</b> ."
+msgstr "خطأ في المرسل: لم يتم تعيين عنوان المستلم!!<br>إذا كنت تستخدم رابط <i>اختبار البريد</i>، فيرجى ضبط إعداد <b>البريد الإلكتروني للتنبيهات</b>."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11797,7 +11794,7 @@ msgstr "Kadupul"
 
 #: lib/html.php
 msgid "Kadupul Home"
-msgstr "كاكتي هوم"
+msgstr "الصفحة الرئيسية لـ Kadupul"
 
 #: lib/html.php
 msgid "Kadupul Project Page"
@@ -13306,7 +13303,7 @@ msgstr "من الضروري أن يتصل خادم Kadupul المركزي عبر
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "يُقترح بشدة أن تقوم بتحديث config.php الخاص بك لتمكين هذه الميزة عن طريق إلغاء <b>التعليق على</b> المتغير <b>$input_whitelist</b> ثم تشغيل خيارات البرنامج النصي CLI الثلاثة أعلاه بعد اكتمال التثبيت المستند إلى الويب."
+msgstr "يُوصى بشدة بتحديث ملف config.php لتمكين هذه الميزة عن طريق إزالة التعليق عن المتغير <b>$input_whitelist</b> ثم تشغيل خيارات البرنامج النصي لواجهة سطر الأوامر الثلاثة المذكورة أعلاه بعد اكتمال التثبيت عبر الويب."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -14850,7 +14847,7 @@ msgstr "اعتمادا على عدد عمليات تسجيل الدخول واس
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "في حالة استخدام Kadupul Performance Booster واختيار محرك تخزين ذاكرة ، يجب أن تكون حذراً لتدفق المخزن المؤقت Performance Booster قبل نفاد مساحة ذاكرة النظام. يتم ذلك بطريقتين ، أولاً تقليل حجم عمود الإخراج الخاص بك إلى الحجم الصحيح فقط. هذا العمود موجود في الجداول poller_output ، و poller_output_boost. الشيء الثاني الذي يمكنك القيام به هو تخصيص المزيد من الذاكرة إلى جداول الذاكرة. لقد اخترنا بشكل عشوائي القيمة الموصى بها بنسبة 10 ٪٪ من ذاكرة النظام ، ولكن إذا كنت تستخدم محركات أقراص SSD أو لديك نظام أصغر ، فيمكنك تجاهل هذه التوصية أو اختيار محرك تخزين مختلف. قد ترى الاستهلاك المتوقع لجداول Booster Performance ضمن Console -&gt; System Utilities -&gt; View Boost Status."
+msgstr "عند استخدام مسرّع الأداء Kadupul Performance Booster واختيار محرك تخزين في الذاكرة، يجب توخي الحذر لتفريغ المخزن المؤقت لمسرّع الأداء قبل نفاد مساحة جداول الذاكرة في النظام. يتم ذلك بطريقتين: الأولى هي تقليل حجم عمود الإخراج إلى الحجم المناسب تمامًا، ويوجد هذا العمود في الجدولين poller_output وpoller_output_boost. أما الطريقة الثانية فهي تخصيص المزيد من الذاكرة لجداول الذاكرة. لقد اخترنا قيمة موصى بها تبلغ 10%% من ذاكرة النظام، ولكن إذا كنت تستخدم أقراص SSD أو كان لديك نظام أصغر، فيمكنك تجاهل هذه التوصية أو اختيار محرك تخزين مختلف. يمكنك الاطلاع على الاستهلاك المتوقع لجداول مسرّع الأداء ضمن Console -> System Utilities -> View Boost Status."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14871,7 +14868,7 @@ msgstr "إذا كانت جداولك تحتوي على فهارس كبيرة ج�
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "يحتفظ InnoDB بالكثير من الجداول والفهارس في ذاكرة النظام قدر الإمكان. لذلك ، يجب أن تجعل innodb_buffer_pool كبيرًا بما يكفي لاستيعاب الكثير من الجداول والفهرس في الذاكرة. سيساعدك فحص حجم / var / lib / mysql / Kadupul directory في تحديد هذه القيمة. نوصي بـ 25 ٪٪ من الذاكرة الإجمالية لنظامك ، ولكن ستختلف متطلباتك حسب حجم الأنظمة لديك."
+msgstr "سيحتفظ InnoDB بأكبر قدر ممكن من الجداول والفهارس في ذاكرة النظام. لذلك، يجب أن تجعل قيمة innodb_buffer_pool كبيرة بما يكفي لاستيعاب أكبر قدر من الجداول والفهارس في الذاكرة. سيساعدك التحقق من حجم الدليل /var/lib/mysql/cacti في تحديد هذه القيمة. نوصي بنسبة 25%% من إجمالي ذاكرة النظام لديك، ولكن متطلباتك ستختلف حسب حجم أنظمتك."
 
 #: lib/utility.php
 #, php-format
@@ -15110,7 +15107,7 @@ msgstr "النص الذي سيظهر في علامة التبويب أو الق�
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "عنوان URL الصالح للاستخدام لهذا الرابط الخارجي. يجب أن يتضمن النوع، على سبيل المثال https://kadupul.org. لاحظ أن العديد من مواقع الويب لا تسمح بتضمينها داخل إطار iframe من موقع خارجي، وبالتالي قد لا يعمل الربط الخارجي."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15138,7 +15135,7 @@ msgstr "أين يجب أن تظهر هذه الصفحة؟"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "ملف المحتوى الخاص بك ليس عنوان URL صالحًا. يرجى إدخال عنوان URL صالح"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -16097,7 +16094,7 @@ msgstr "التنظيف التلقائي المحلي لملفات RRD غير م�
 #: rrdcleaner.php user_group_admin.php
 msgctxt "filter: reset"
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: rrdcleaner.php
 msgid "DS ID"
@@ -16273,22 +16270,22 @@ msgstr "المدينة"
 #: sites.php
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
 msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
-msgstr[0] "انقر فوق \"متابعة\" لحذف الموقع التالي.  لاحظ أنه سيتم فصل جميع الأجهزة عن هذا الموقع."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "انقر على 'متابعة' لحذف المواقع التالية. ملاحظة: سيتم فصل جميع الأجهزة عن هذا الموقع."
+msgstr[1] "انقر على 'متابعة' لحذف الموقع التالي. ملاحظة: سيتم فصل جميع الأجهزة عن هذا الموقع."
+msgstr[2] "انقر على 'متابعة' لحذف الموقعين التاليين. ملاحظة: سيتم فصل جميع الأجهزة عن هذا الموقع."
+msgstr[3] "انقر على 'متابعة' لحذف المواقع التالية. ملاحظة: سيتم فصل جميع الأجهزة عن هذا الموقع."
+msgstr[4] "انقر على 'متابعة' لحذف المواقع التالية. ملاحظة: سيتم فصل جميع الأجهزة عن هذا الموقع."
+msgstr[5] "انقر على 'متابعة' لحذف المواقع التالية. ملاحظة: سيتم فصل جميع الأجهزة عن هذا الموقع."
 
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "انقر فوق \"متابعة\" لتكرار الموقع التالي."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "انقر على 'متابعة' لتكرار المواقع التالية."
+msgstr[1] "انقر على 'متابعة' لتكرار الموقع التالي."
+msgstr[2] "انقر على 'متابعة' لتكرار الموقعين التاليين."
+msgstr[3] "انقر على 'متابعة' لتكرار المواقع التالية."
+msgstr[4] "انقر على 'متابعة' لتكرار المواقع التالية."
+msgstr[5] "انقر على 'متابعة' لتكرار المواقع التالية."
 
 #: sites.php
 msgid "Country"
@@ -16297,22 +16294,22 @@ msgstr "الدولة"
 #: sites.php
 msgid "Delete Site"
 msgid_plural "Delete Sites"
-msgstr[0] "حذف الموقع"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "حذف المواقع"
+msgstr[1] "حذف الموقع"
+msgstr[2] "حذف الموقعين"
+msgstr[3] "حذف المواقع"
+msgstr[4] "حذف المواقع"
+msgstr[5] "حذف المواقع"
 
 #: sites.php
 msgid "Duplicate Site"
 msgid_plural "Duplicate Sites"
-msgstr[0] "موقع مكرر"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "تكرار المواقع"
+msgstr[1] "تكرار الموقع"
+msgstr[2] "تكرار الموقعين"
+msgstr[3] "تكرار المواقع"
+msgstr[4] "تكرار المواقع"
+msgstr[5] "تكرار المواقع"
 
 #: sites.php
 msgid "Enter some useful information about the Site."
@@ -16375,9 +16372,8 @@ msgid "Site Name:"
 msgstr "اسم الموقع:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "الملف غير موجود"
+msgstr "الموقع غير موجود."
 
 #: sites.php
 msgid "State"
@@ -17526,7 +17522,7 @@ msgstr "السماح لمستخدمي هذه المجموعة بالاحتفاظ
 #: user_group_admin.php
 msgctxt "filter reset"
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
@@ -17854,7 +17850,7 @@ msgstr "1 التغيير"
 #: utilities.php
 msgctxt "Button: reset filter settings"
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: utilities.php
 msgid "Clear Kadupul Log"
@@ -18248,7 +18244,7 @@ msgstr "1 عملية"
 #: utilities.php
 msgctxt "Button: delete all table entries"
 msgid "Purge"
-msgstr "شربة، مسهل. يسهل"
+msgstr "إفراغ"
 
 #: utilities.php
 msgid "Purge Data Source Statistics"
@@ -18541,36 +18537,34 @@ msgid "Click 'Continue' to delete the following VDEF's."
 msgstr "انقر فوق &quot;متابعة&quot; لحذف VDEF التالي."
 
 #: vdef.php
-#, fuzzy
 msgid "Click 'Continue' to delete the following VDEF."
 msgid_plural "Click 'Continue' to delete following VDEFs."
-msgstr[0] "انقر فوق &quot;متابعة&quot; لحذف VDEF التالي."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "انقر على 'متابعة' لحذف عناصر VDEF التالية."
+msgstr[1] "انقر على 'متابعة' لحذف عنصر VDEF التالي."
+msgstr[2] "انقر على 'متابعة' لحذف عنصرَي VDEF التاليين."
+msgstr[3] "انقر على 'متابعة' لحذف عناصر VDEF التالية."
+msgstr[4] "انقر على 'متابعة' لحذف عناصر VDEF التالية."
+msgstr[5] "انقر على 'متابعة' لحذف عناصر VDEF التالية."
 
 #: vdef.php
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
-msgstr[0] "انقر فوق \"متابعة\" لتكرار VDEF التالي. يمكنك اختياريا تغيير تنسيق العنوان ل VDEF الجديد."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "انقر على 'متابعة' لتكرار عناصر VDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر VDEF الجديدة."
+msgstr[1] "انقر على 'متابعة' لتكرار عنصر VDEF التالي. يمكنك اختياريًا تغيير تنسيق العنوان لعنصر VDEF الجديد."
+msgstr[2] "انقر على 'متابعة' لتكرار عنصرَي VDEF التاليين. يمكنك اختياريًا تغيير تنسيق العنوان لعنصرَي VDEF الجديدين."
+msgstr[3] "انقر على 'متابعة' لتكرار عناصر VDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر VDEF الجديدة."
+msgstr[4] "انقر على 'متابعة' لتكرار عناصر VDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر VDEF الجديدة."
+msgstr[5] "انقر على 'متابعة' لتكرار عناصر VDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر VDEF الجديدة."
 
 #: vdef.php
-#, fuzzy
 msgid "Delete VDEF"
 msgid_plural "Delete VDEFs"
-msgstr[0] "حذف عنصر VDEF"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "حذف عناصر VDEF"
+msgstr[1] "حذف عنصر VDEF"
+msgstr[2] "حذف عنصرَي VDEF"
+msgstr[3] "حذف عناصر VDEF"
+msgstr[4] "حذف عناصر VDEF"
+msgstr[5] "حذف عناصر VDEF"
 
 #: vdef.php
 msgid "Delete VDEF Item"
@@ -18579,12 +18573,12 @@ msgstr "حذف عنصر VDEF"
 #: vdef.php
 msgid "Duplicate VDEF"
 msgid_plural "Duplicate VDEFs"
-msgstr[0] "VDEF مكررة"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "تكرار عناصر VDEF"
+msgstr[1] "تكرار عنصر VDEF"
+msgstr[2] "تكرار عنصرَي VDEF"
+msgstr[3] "تكرار عناصر VDEF"
+msgstr[4] "تكرار عناصر VDEF"
+msgstr[5] "تكرار عناصر VDEF"
 
 #: vdef.php
 msgid "Enter a value for this VDEF item."
@@ -18641,13 +18635,12 @@ msgid "VDEF Preview"
 msgstr "معاينة VDEF"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "الملف غير موجود"
+msgstr "لم يتم العثور على VDEF."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "لم يتم العثور على VDEF أو عنصر VDEF."
 
 #: vdef.php
 #, php-format

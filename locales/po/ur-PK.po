@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Urdu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Urdu\n"
@@ -3989,11 +3989,11 @@ msgstr "ایگریگیٹ"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "الرٹ واقعات"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "الرٹ قواعد"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7457,7 +7457,7 @@ msgstr "%d پروسیسز"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d قواعد"
 
 #: include/global_settings.php
 #, php-format
@@ -7579,11 +7579,11 @@ msgstr "اتنے دنوں کے بعد، کاروباری اوقات گراف م�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "الرٹ تشخیص کے وقت کا بجٹ"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "فی بیچ الرٹ قواعد"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8167,7 +8167,7 @@ msgstr "Lotus Notes (R) ٹویک فعال کریں"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "مقامی الرٹ تشخیص فعال کریں"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8451,7 +8451,7 @@ msgstr "RRD کو کتنی بار چیک کیا جانا چاہیے؟"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "ایک تشخیصی رن کتنی دیر تک قواعد کے نئے بیچ شروع کر سکتا ہے۔ قطار میں موجود اطلاعات کی ترسیل تشخیص کے بعد باقی بچے وقت میں ہوتی ہے، اور بجٹ ختم ہونے پر بھی ایک بیچ بھیجا جا سکتا ہے۔ جن قواعد کی باری نہ آ سکے ان کی تشخیص اگلے رن میں سب سے پہلے کی جاتی ہے۔"
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8783,7 +8783,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "مقامی الرٹنگ"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9299,7 +9299,7 @@ msgstr "کیا Has Graphs اور Has Data Sources کو ڈیفالٹ طور پر 
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "کیا مرکزی ڈیٹا کلیکٹر کو ہر پولنگ سائیکل کے بعد الرٹ قواعد کی تشخیص کرنی چاہیے اور ان کی اطلاعات بھیجنی چاہئیں؟ الرٹ قواعد ان شرحوں کو پڑھتے ہیں جو ڈیٹا سورس اعدادوشمار جمع کرتے ہیں، اس لیے ڈیٹا سورس اعدادوشمار جمع کرنا بھی فعال ہونا ضروری ہے۔"
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9731,7 +9731,7 @@ msgstr "اس صارف کا نام جسے Kadupul نئے Web Basic اور LDAP ص
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "ایک ساتھ پڑھے اور تشخیص کیے جانے والے الرٹ قواعد کی تعداد۔ بیچوں کے درمیان وقت کے بجٹ کی جانچ کی جاتی ہے۔"
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

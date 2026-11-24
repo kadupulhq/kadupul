@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "विकास, योगदान और रिलीज़ निर्णय %sKadupul संगठन%s द्वारा प्रबंधित किए जाते हैं।"
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "दस्तावेज़ीकरण और सहायता के लिए, %sKadupul प्रोजेक्ट%s पर जाएँ।"
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul नेटवर्क निगरानी और टाइम-सीरीज़ ग्राफ़िंग के लिए एक स्वतंत्र ओपन-सोर्स प्रोजेक्ट है।"
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -79,7 +79,7 @@ msgstr "सकल पूर्वावलोकन [ %s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "सकल पूर्वावलोकन [ %s]"
+msgstr "एग्रीगेट पूर्वावलोकन मौजूद नहीं है"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -119,7 +119,7 @@ msgstr "सभी आइटम"
 #: lib/auth.php lib/html.php lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
-msgstr "कोई भी@ label"
+msgstr "कोई भी"
 
 #: aggregate_graphs.php
 msgid "Associate Graph(s)"
@@ -147,7 +147,7 @@ msgstr "कैंसिल करें"
 #: lib/html_tree.php managers.php plugins.php pollers.php tree.php
 #: user_admin.php user_domains.php
 msgid "Clear"
-msgstr "明确"
+msgstr "साफ़ करें"
 
 #: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
 #: data_templates.php graph_templates.php graph_view.php graphs.php
@@ -1570,7 +1570,7 @@ msgstr "सक्रिय"
 #: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
 #: plugins.php settings.php tree.php user_admin.php utilities.php
 msgid "All"
-msgstr "所有"
+msgstr "सभी"
 
 #: data_debug.php
 msgid "All Devices"
@@ -1983,11 +1983,11 @@ msgstr "व्हाइट लिस्ट में इनपुट स्ट�
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "इनपुट श्वेतसूचीकरण लागू है। इस डेटा इनपुट विधि में परिवर्तनों के बाद डेटा स्रोत से पुनः क्वेरी करने से पहले --audit और --update दोनों विकल्पों का उपयोग करके इनपुट श्वेतसूची CLI स्क्रिप्ट (cli/input_whitelist.php) को फिर से चलाना आवश्यक है।"
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "इनपुट स्ट्रिंग में खतरनाक शेल वर्ण शामिल हैं"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2043,9 +2043,8 @@ msgid "Update RRA"
 msgstr "आरआरए को अपडेट करें"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "इस फील्ड को अपडेट करें"
+msgstr "श्वेतसूची अपडेट करें"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2086,7 +2085,7 @@ msgstr "संबद्ध ग्राफ़ / डेटा टेम्प्�
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "संबद्ध ग्राफ़ / डेटा टेम्प्लेट [संपादित करें: %s]"
+msgstr "संबद्ध ग्राफ़/डेटा टेम्प्लेट [नया]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2614,7 +2613,7 @@ msgstr "निम्न डेटा टेम्पलेट (ओं) को �
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "कस्टम डेटा [डेटा इनपुट: %s]"
+msgstr "कस्टम डेटा चेतावनी संदेश"
 
 #: data_templates.php
 #, php-format
@@ -3188,7 +3187,7 @@ msgstr "एक ग्राफ़ टेम्प्लेट चुनें �
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "इस ग्राफ़ पर लागू करने के लिए एक ग्राफ़ टेम्पलेट चुनें। कृपया ध्यान दें कि आप केवल ग्राफ़ टेम्पलेट को 100%% संगत ग्राफ़ टेम्पलेट में बदल सकते हैं, जिसका अर्थ है कि इसमें समान डेटा स्रोत शामिल हैं।"
+msgstr "इस ग्राफ़ पर लागू करने के लिए एक ग्राफ़ टेम्प्लेट चुनें। कृपया ध्यान दें कि आप केवल 100%% संगत ग्राफ़ टेम्प्लेट में ही ग्राफ़ टेम्प्लेट बदल सकते हैं, जिसका अर्थ है कि इसमें समान डेटा स्रोत शामिल हैं।"
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3304,7 +3303,7 @@ msgstr "[कस्टम ग्राफ सूची लागू - सूच�
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "उपयोगकर्ता समूह प्रबंधन [संपादित करें: %s]"
+msgstr "ग्राफ़ प्रबंधन [ गैर-डिवाइस आधारित ]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3723,7 +3722,7 @@ msgstr "फिर से लॉगिन करें"
 
 #: include/auth.php
 msgid "Not Logged In"
-msgstr "के रूप में दाखिल%s"
+msgstr "लॉग इन नहीं है"
 
 #: include/auth.php
 msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
@@ -3890,7 +3889,7 @@ msgstr "1 मेगाबाइट"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "% d थ्रेड"
+msgstr "1 थ्रेड"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -3991,11 +3990,11 @@ msgstr "कुल"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "अलर्ट घटनाएँ"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "अलर्ट नियम"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -5103,7 +5102,7 @@ msgstr "अक्टूबर"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
 msgid "Operator"
-msgstr "à¤µà¥à¤¯à¤à¥à¤¤à¤¿à¤à¤¤"
+msgstr "ऑपरेटर"
 
 #: include/global_arrays.php
 msgid "Page is not defined.  Therefore, it can not be displayed."
@@ -5543,7 +5542,7 @@ msgstr "हर रोज"
 
 #: include/global_arrays.php
 msgid "This Month"
-msgstr "इस महीने@ label"
+msgstr "इस महीने"
 
 #: include/global_arrays.php
 msgid "This Week"
@@ -5551,7 +5550,7 @@ msgstr "इस सप्ताह"
 
 #: include/global_arrays.php
 msgid "This Year"
-msgstr "यह साल@ label"
+msgstr "इस वर्ष"
 
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
@@ -5911,7 +5910,7 @@ msgstr "साथ शुरू होता है"
 
 #: include/global_arrays.php
 msgid "center"
-msgstr "बीच में@ title: column"
+msgstr "केंद्र"
 
 #: include/global_arrays.php
 msgid "contains"
@@ -6252,7 +6251,7 @@ msgstr "नए ट्री आइटम के लिए ट्री चुन
 
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "इस डेटा स्रोत के लिए एक नाम चुनें। इसमें प्रतिस्थापन चर शामिल हो सकते हैं जैसे कि host_description | या | query_fieldName | समर्थित प्रतिस्थापन टैग की पूरी सूची के लिए, कृपया Kadupul प्रलेखन देखें।"
+msgstr "इस डेटा स्रोत के लिए एक नाम चुनें। इसमें |host_description| या |query_fieldName| जैसे प्रतिस्थापन चर शामिल हो सकते हैं। समर्थित प्रतिस्थापन टैग की पूरी सूची के लिए, कृपया Kadupul दस्तावेज़ीकरण देखें।"
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6981,7 +6980,7 @@ msgstr "इस उपकरण के लिए SNMP v3 उपयोगकर्
 
 #: include/global_form.php
 msgid "Scaling Options"
-msgstr "à¤à¤¦à¤¾à¤¹à¤°à¤£ à¤®à¤¿à¤²à¤¾à¤¯à¤¾"
+msgstr "स्केलिंग विकल्प"
 
 #: include/global_form.php package_import.php
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
@@ -7217,7 +7216,7 @@ msgstr "इस रंग का नाम।"
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "वह नाम जो ग्राफ पर छपा होता है। इसमें प्रतिस्थापन चर शामिल हो सकते हैं जैसे कि host_description | या | query_fieldName | समर्थित प्रतिस्थापन टैग की पूरी सूची के लिए, कृपया Kadupul प्रलेखन देखें।"
+msgstr "वह नाम जो ग्राफ़ पर मुद्रित होता है। इसमें |host_description| या |query_fieldName| जैसे प्रतिस्थापन चर शामिल हो सकते हैं। समर्थित प्रतिस्थापन टैग की पूरी सूची के लिए, कृपया Kadupul दस्तावेज़ीकरण देखें।"
 
 #: include/global_form.php
 msgid "The new Title of the aggregated Graph."
@@ -7459,7 +7458,7 @@ msgstr "%d प्रक्रियाएं"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d नियम"
 
 #: include/global_settings.php
 #, php-format
@@ -7521,7 +7520,7 @@ msgstr "1 प्रक्रिया"
 
 #: include/global_settings.php
 msgid "1 Week"
-msgstr "% d वीक"
+msgstr "1 सप्ताह"
 
 #: include/global_settings.php
 msgid "10 Gbps Ethernet"
@@ -7581,11 +7580,11 @@ msgstr "दिनों की इस संख्या के बाद, ग�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "अलर्ट मूल्यांकन समय बजट"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "प्रति बैच अलर्ट नियम"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8169,7 +8168,7 @@ msgstr "लोटस नोट्स (आर) को सक्षम करे�
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "नेटिव अलर्ट मूल्यांकन सक्षम करें"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8453,7 +8452,7 @@ msgstr "डेली स्टैट्स को कितनी बार अ�
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "एक मूल्यांकन रन कितने समय तक नियमों के नए बैच शुरू कर सकता है। कतारबद्ध सूचनाएँ भेजना बचे हुए समय के साथ मूल्यांकन के बाद होता है, और बजट समाप्त होने पर भी एक बैच भेज सकता है। जिन नियमों तक नहीं पहुँचा जा सका, उनका मूल्यांकन अगले रन द्वारा पहले किया जाता है।"
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8577,7 +8576,7 @@ msgstr "Kadupul लॉग पथ"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Kadupul सर्वर v %s - रखरखाव"
+msgstr "Kadupul सर्वर समयक्षेत्र"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8785,7 +8784,7 @@ msgstr "NaN के"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "नेटिव अलर्टिंग"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9301,7 +9300,7 @@ msgstr "क्या डिफ़ॉल्ट रूप से रेखां�
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "क्या मुख्य डेटा कलेक्टर को प्रत्येक पोलिंग चक्र के बाद अलर्ट नियमों का मूल्यांकन करना चाहिए और उनकी सूचनाएँ भेजनी चाहिए? अलर्ट नियम उन दरों को पढ़ते हैं जिन्हें डेटा स्रोत सांख्यिकी एकत्र करती है, इसलिए डेटा स्रोत सांख्यिकी संग्रहण भी सक्षम होना चाहिए।"
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9345,7 +9344,7 @@ msgstr "Kadupul के कुछ इंटरफ़ेस ड्रैग-एं
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "अंतरिक्ष सीमांकित डोमेन नाम जिन्हें वेब सर्वर के बाहर ही एक्सेस करने की अनुमति होगी। सीडीएन, या होस्टिंग साइट का उपयोग करने वाले उपयोगकर्ताओं के लिए यह महत्वपूर्ण है। उदाहरण के लिए स्रोतों में वाइल्डकार्ड शामिल हो सकते हैं: *.mydomain.com, या प्रोटोकॉल, उदाहरण के लिए: https://*.example.com। इन वैकल्पिक स्रोतों में केवल छवि, सीएसएस और जावास्क्रिप्ट प्रकार शामिल हैं।"
+msgstr "स्पेस से अलग किए गए डोमेन नाम जिन्हें वेब सर्वर के बाहर से एक्सेस करने की अनुमति होगी। यह उन उपयोगकर्ताओं के लिए महत्वपूर्ण है जो CDN या होस्टिंग साइट का उपयोग करना चुनते हैं। स्रोतों में वाइल्डकार्ड शामिल हो सकते हैं, उदाहरण के लिए: *.mydomain.com, या कोई प्रोटोकॉल, उदाहरण के लिए: https://*.example.com. इन वैकल्पिक स्रोतों में केवल इमेज, CSS और JavaScript प्रकार शामिल हैं।"
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9373,7 +9372,7 @@ msgstr "स्पाइन बाइनरी फाइल लोकेशन"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
-msgstr "रीढ़ विन्यास फाइल पथ"
+msgstr "Spine कॉन्फ़िग फ़ाइल पथ"
 
 #: include/global_settings.php
 msgid "Standard Deviation"
@@ -9733,7 +9732,7 @@ msgstr "उस उपयोगकर्ता का नाम जिसे Kadu
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "एक साथ पढ़े और मूल्यांकित किए जाने वाले अलर्ट नियमों की संख्या। बैचों के बीच समय बजट की जाँच की जाती है।"
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9978,7 +9977,7 @@ msgstr "यह मान उच्च और निम्न औसत नमू
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "यह मान सैंपल से आउटलायर्स को हटाए जाने के बाद एडजस्ट किए गए सैंपल औसत से ऊपर के प्रतिशत को दर्शाता है।  उदाहरण के लिए, 50 के समायोजित औसत पर 100%% का भिन्नता प्रतिशत ग्राफ से 100 की मात्रा से ऊपर के किसी भी नमूने को हटा देगा।"
+msgstr "यह मान नमूने से आउटलायर्स हटाए जाने के बाद समायोजित नमूना औसत से ऊपर के प्रतिशत को दर्शाता है। उदाहरण के लिए, 50 के समायोजित औसत पर 100%% का विचरण प्रतिशत ग्राफ़ से 100 की मात्रा से ऊपर के किसी भी नमूने को हटा देगा।"
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10226,7 +10225,7 @@ msgstr "Kadupul के कौन से भाग डिफ़ॉल्ट र�
 
 #: include/global_settings.php
 msgid "Word Wrap"
-msgstr "à¤µà¤°à¥à¤¡ à¤°à¥à¤ª"
+msgstr "वर्ड रैप"
 
 #: include/global_settings.php
 msgid "snmpbulkwalk Binary Path"
@@ -10716,7 +10715,7 @@ msgstr "फ़ाइल"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "% d लाइन्स"
+msgstr "शीर्ष पंक्तियाँ"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -10882,7 +10881,7 @@ msgstr "%s oids के लिए SNMP प्राप्त करना ( %s)"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "एसएनएमपी का निष्पादन डेटा @ &#39; %s&#39; [मूल्य = &#39;$ मूल्य&#39; के लिए मिलता है]"
+msgstr "डेटा @ '%s' [value='$value'] के लिए SNMP get निष्पादित किया जा रहा है"
 
 #: lib/data_query.php
 #, php-format
@@ -11320,11 +11319,11 @@ msgstr "लिंक %s"
 
 #: lib/functions.php
 msgid "Logged in a Guest"
-msgstr "के रूप में दाखिल%s"
+msgstr "अतिथि के रूप में लॉग इन"
 
 #: lib/functions.php
 msgid "Logged in as"
-msgstr "के रूप में दाखिल%s"
+msgstr "के रूप में लॉग इन"
 
 #: lib/functions.php
 #, php-format
@@ -11341,7 +11340,7 @@ msgstr "लॉगआउट"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "मेलर त्रुटि: कोई सेट <b>को</b> संबोधित <b>करने के</b> !! <br> यदि <i>टेस्ट मेल</i> लिंक का उपयोग कर रहे हैं, तो कृपया <b>अलर्ट ई-मेल</b> सेटिंग सेट करें।"
+msgstr "मेलर त्रुटि: कोई प्राप्तकर्ता पता सेट नहीं है!!<br>यदि <i>टेस्ट मेल</i> लिंक का उपयोग कर रहे हैं, तो कृपया <b>अलर्ट ई-मेल</b> सेटिंग सेट करें।"
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11739,7 +11738,7 @@ msgstr "लॉग्स"
 
 #: lib/html.php
 msgid "Miscellaneous"
-msgstr "其他"
+msgstr "विविध"
 
 #: lib/html.php lib/installer.php
 msgid "Next"
@@ -11864,7 +11863,7 @@ msgstr "SpikeKill परिणाम"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "रीढ़ की हड्डी"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -12862,7 +12861,7 @@ msgstr "पृष्ठभूमि को%s पर पहले ही शु�
 
 #: lib/installer.php
 msgid "Begin"
-msgstr "आरंभ@ action End of document"
+msgstr "प्रारंभ"
 
 #: lib/installer.php
 msgid "Both"
@@ -12984,7 +12983,7 @@ msgstr "डिफॉल्ट प्रोफ़ाइल"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "डिवाइस टेम्पलेट [संपादित करें: %s]"
+msgstr "पहले Kadupul डिवाइस के लिए डिवाइस टेम्प्लेट %s है"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13220,7 +13219,7 @@ msgstr "यह आवश्यक है कि केंद्रीय Kadupul
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "यह दृढ़ता से सुझाव दिया जाता है कि आप इस <b>इनपुट</b> को <b>$input_whitelist</b> वैरिएबल को <b>अनइंस्टॉल करने</b> और फिर वेब आधारित इंस्टॉल पूरा होने के बाद ऊपर दिए तीन CLI स्क्रिप्ट विकल्पों को चलाने के लिए अपने config.php को अपडेट करें।"
+msgstr "यह दृढ़ता से सुझाव दिया जाता है कि आप वेब-आधारित इंस्टॉलेशन पूरा होने के बाद <b>$input_whitelist</b> वैरिएबल को अनकमेंट करके इस सुविधा को सक्षम करने के लिए अपनी config.php फ़ाइल अपडेट करें और फिर ऊपर दिए गए तीनों CLI स्क्रिप्ट विकल्प चलाएँ।"
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -14060,7 +14059,7 @@ msgstr "यूडीपी पिंग त्रुटि: %s"
 
 #: lib/ping.php
 msgid "default"
-msgstr "à¤«à¤¼à¤¿à¤²à¥à¤à¤° à¤¨à¤¿à¤¯à¤®à¥à¤ à¤à¥ à¤¦à¥à¤à¥à¤ à¤¯à¤¾ à¤¸à¤à¤ªà¤¾à¤¦à¤¨ à¤à¤°à¥à¤ (R)"
+msgstr "डिफ़ॉल्ट"
 
 #: lib/plugins.php
 #, php-format
@@ -14245,7 +14244,7 @@ msgstr "Rrdtool डंप के XML को पार्स करते सम�
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "कोई %s मिला"
+msgstr "त्रुटियाँ मिलीं"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14337,7 +14336,7 @@ msgstr "ग्राफ़ में एक ऐसा मान है जिस
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "आरआरडीएफाइल में आरआरए &#39; %s&#39; गायब है"
+msgstr "मौजूदा Kadupul RRDfile में RRA '%s' अनुपस्थित है"
 
 #: lib/rrd.php
 #, php-format
@@ -14355,9 +14354,9 @@ msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider
 msgstr "'%s' का pdp_per_row RRA '%s' के लिए अमान्य है, यह '%s' होना चाहिए। इसे हटाने और Kadupul को RRDfile पुनः बनाने देने पर विचार करें।"
 
 #: lib/rrd.php
-#, fuzzy, php-format
+#, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
-msgstr "आवश्यक RRDfile चरण का आकार '{ 0 }' है, लेकिन देखा गया चरण '{ 1 }' है"
+msgstr "आवश्यक RRDfile चरण आकार '%s' है लेकिन देखा गया चरण '%s' है"
 
 #: lib/rrd.php
 #, php-format
@@ -14764,7 +14763,7 @@ msgstr "लॉगइन की संख्या और रीढ़ डेट�
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "यदि Kadupul प्रदर्शन बूस्टर का उपयोग कर रहे हैं और मेमोरी संग्रहण इंजन चुन रहे हैं, तो आपको सिस्टम की मेमोरी तालिका स्थान समाप्त होने से पहले अपने प्रदर्शन बूस्टर बफ़र को फ़्लश करने के प्रति सावधान रहना होगा। यह दो तरीकों से किया जाता है, पहला आपके आउटपुट कॉलम के आकार को ठीक सही आकार तक कम करके। यह कॉलम poller_output और poller_output_boost तालिकाओं में है। दूसरा काम जो आप कर सकते हैं वह मेमोरी तालिकाओं को अधिक मेमोरी आवंटित करना है। हमने मनमाने ढंग से सिस्टम मेमोरी का 10%% अनुशंसित मान चुना है, लेकिन यदि आप SSD डिस्क ड्राइव का उपयोग कर रहे हैं, या आपका सिस्टम छोटा है, तो आप इस अनुशंसा को अनदेखा कर सकते हैं या कोई भिन्न संग्रहण इंजन चुन सकते हैं। आप कंसोल -> सिस्टम उपयोगिताएं -> Boost स्थिति देखें के अंतर्गत प्रदर्शन बूस्टर तालिकाओं की अपेक्षित खपत देख सकते हैं।"
+msgstr "यदि आप Kadupul प्रदर्शन बूस्टर का उपयोग कर रहे हैं और मेमोरी स्टोरेज इंजन चुन रहे हैं, तो सिस्टम की मेमोरी तालिका स्थान समाप्त होने से पहले अपने प्रदर्शन बूस्टर बफ़र को फ़्लश करने का ध्यान रखें। यह दो तरीकों से किया जाता है: पहला, अपने आउटपुट कॉलम का आकार ठीक उपयुक्त आकार तक कम करके। यह कॉलम poller_output और poller_output_boost तालिकाओं में होता है। दूसरा उपाय मेमोरी तालिकाओं को अधिक मेमोरी आवंटित करना है। हमने सिस्टम मेमोरी का 10%% अनुशंसित मान चुना है, लेकिन यदि आप SSD डिस्क ड्राइव का उपयोग कर रहे हैं या आपका सिस्टम छोटा है, तो आप इस अनुशंसा को अनदेखा कर सकते हैं या कोई भिन्न स्टोरेज इंजन चुन सकते हैं। आप कंसोल -> सिस्टम उपयोगिताएँ -> बूस्ट स्थिति देखें के अंतर्गत प्रदर्शन बूस्टर तालिकाओं की अपेक्षित खपत देख सकते हैं।"
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14785,7 +14784,7 @@ msgstr "यदि आपकी तालिकाओं में बहुत �
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB जितना संभव हो उतना सिस्टम मेमोरी में टेबल और इंडेक्स रखेगा। इसलिए, आपको innodb_buffer_pool को पर्याप्त रूप से बड़ा करना चाहिए ताकि स्मृति में तालिकाओं और अनुक्रमणिका को पकड़ सकें। / Var / lib / mysql / Kadupul निर्देशिका के आकार की जाँच करने से इस मान को निर्धारित करने में मदद मिलेगी। हम आपके सिस्टम की कुल मेमोरी के 25%% की अनुशंसा कर रहे हैं, लेकिन आपकी आवश्यकताओं को आपके सिस्टम के आकार के आधार पर अलग-अलग किया जाएगा।"
+msgstr "InnoDB सिस्टम मेमोरी में यथासंभव अधिक से अधिक तालिकाएँ और इंडेक्स रखेगा। इसलिए, आपको innodb_buffer_pool को इतना बड़ा बनाना चाहिए कि वह मेमोरी में अधिक से अधिक तालिकाएँ और इंडेक्स रख सके। /var/lib/mysql/cacti निर्देशिका के आकार की जाँच करने से इस मान को निर्धारित करने में मदद मिलेगी। हम आपके सिस्टम की कुल मेमोरी का 25%% अनुशंसित करते हैं, लेकिन आपकी आवश्यकताएँ आपके सिस्टम के आकार के अनुसार भिन्न होंगी।"
 
 #: lib/utility.php
 #, php-format
@@ -14996,7 +14995,7 @@ msgstr "कोई पृष्ठ नहीं मिला"
 
 #: links.php
 msgid "Page"
-msgstr "页面"
+msgstr "पृष्ठ"
 
 #: links.php
 msgid "Reset filters"
@@ -15015,9 +15014,8 @@ msgid "Tab/Menu Name"
 msgstr "टैब / मेनू नाम"
 
 #: links.php
-#, fuzzy
 msgid "The file that contains the content for this page. This file needs to be in the Kadupul 'include/content/' directory."
-msgstr "वह फ़ाइल जिसमें इस पृष्ठ के लिए सामग्री है। इस फ़ाइल को Kadupul &#39;में शामिल होना चाहिए / सामग्री /&#39; निर्देशिका।"
+msgstr "वह फ़ाइल जिसमें इस पृष्ठ की सामग्री है। यह फ़ाइल Kadupul की 'include/content/' निर्देशिका में होनी चाहिए।"
 
 #: links.php
 msgid "The text that will appear in the tab or menu."
@@ -15025,7 +15023,7 @@ msgstr "वह पाठ जो टैब या मेनू में दि�
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "इस बाहरी लिंक के लिए उपयोग करने हेतु मान्य URL। इसमें प्रकार शामिल होना चाहिए, उदाहरण के लिए https://kadupul.org. ध्यान दें कि कई वेबसाइटें किसी अन्य साइट से iframe में एम्बेड करने की अनुमति नहीं देती हैं, और इसलिए बाहरी लिंकिंग काम नहीं कर सकती है।"
 
 #: links.php
 msgid "Top of Console Page"
@@ -15053,7 +15051,7 @@ msgstr "यह पृष्ठ कहां प्रदर्शित हो�
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "आपकी सामग्री फ़ाइल एक मान्य URL नहीं है। कृपया एक मान्य URL दर्ज करें"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15964,7 +15962,7 @@ msgstr "Windows पर स्वचालित स्थानीय RRD क्
 #: rrdcleaner.php user_group_admin.php
 msgctxt "filter: reset"
 msgid "Clear"
-msgstr "明确"
+msgstr "साफ़ करें"
 
 #: rrdcleaner.php
 msgid "DS ID"
@@ -16226,9 +16224,8 @@ msgid "Site Name:"
 msgstr "साइट नाम"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "फाइल नहीं मिली"
+msgstr "साइट नहीं मिली।"
 
 #: sites.php
 msgid "State"
@@ -16694,7 +16691,7 @@ msgstr "इस ट्री में व्यक्तिगत ग्रा�
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "इस पेड़ को%2$s द्वारा%1$s पर संपादन के लिए बंद कर दिया गया है।"
+msgstr "इस ट्री को %s पर %s द्वारा संपादन के लिए लॉक कर दिया गया है।"
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -17325,7 +17322,7 @@ msgstr "इस समूह के उपयोगकर्ताओं को �
 #: user_group_admin.php
 msgctxt "filter reset"
 msgid "Clear"
-msgstr "明确"
+msgstr "साफ़ करें"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
@@ -17621,7 +17618,7 @@ msgstr "चेंजलॉग"
 #: utilities.php
 msgctxt "Button: reset filter settings"
 msgid "Clear"
-msgstr "明确"
+msgstr "साफ़ करें"
 
 #: utilities.php
 msgid "Clear Kadupul Log"
@@ -18390,13 +18387,12 @@ msgid "VDEF Preview"
 msgstr "VDEF पूर्वावलोकन"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "फाइल नहीं मिली"
+msgstr "VDEF नहीं मिला।"
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF या VDEF आइटम नहीं मिला।"
 
 #: vdef.php
 #, php-format

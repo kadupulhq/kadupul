@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -17,16 +17,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Utveckling, bidrag och beslut om utgåvor hanteras av %sKadupul-organisationen%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "För dokumentation och support, besök %sKadupul-projektet%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul är ett oberoende projekt med öppen källkod för nätverksövervakning och tidsseriegrafer."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -1980,11 +1980,11 @@ msgstr "Inmatningssträngen finns inte i vitlistan.  Kör CLI-skriptet input_whi
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Vitlistning av inmatning är aktiverad.  Ändringar i denna datainmatningsmetod kräver att CLI-skriptet för inmatningsvitlistan (cli/input_whitelist.php) körs om med både flaggorna --audit och --update innan datakällan kommer att tillfrågas igen."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Inmatningssträngen innehåller farliga skaltecken"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2040,9 +2040,8 @@ msgid "Update RRA"
 msgstr "Uppdatering RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Uppdatera detta fält"
+msgstr "Uppdatera vitlista"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -3185,7 +3184,7 @@ msgstr "Välj en grafmall och klicka på \"Fortsätt\" för att ändra grafmalle
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Välj en grafmall som ska tillämpas på denna graf. Observera att du endast kan ändra grafmallar till en 100%%-kompatibel grafmall, vilket innebär att den innehåller identiska datakällor."
+msgstr "Välj en grafmall som ska tillämpas på denna graf. Observera att du endast kan byta grafmall till en 100%% kompatibel grafmall, vilket innebär att den innehåller identiska datakällor."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3988,11 +3987,11 @@ msgstr "Sammanslagna"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Larmincidenter"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Larmregler"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -5083,7 +5082,7 @@ msgstr "November"
 
 #: include/global_arrays.php tree.php
 msgid "Numeric"
-msgstr "﻿Numerisk"
+msgstr "Numerisk"
 
 #: include/global_arrays.php
 msgid "Numeric Ordering"
@@ -7456,7 +7455,7 @@ msgstr "%d Processer"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d regler"
 
 #: include/global_settings.php
 #, php-format
@@ -7578,11 +7577,11 @@ msgstr "Efter detta antal dagar kommer öppettiderna inte att läggas till i dia
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Tidsbudget för larmutvärdering"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Larmregler per batch"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8166,7 +8165,7 @@ msgstr "Aktivera Lotus Notes (R) tweak"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Aktivera inbyggd larmutvärdering"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8450,7 +8449,7 @@ msgstr "Hur ofta bör RRD kontrolleras?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Hur länge en utvärderingskörning får starta nya batcher av regler. Utskick av köade aviseringar följer efter utvärderingen med den återstående tiden, och en batch kan skickas även när tidsbudgeten är förbrukad. Regler som inte hanns med utvärderas först vid nästa körning."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8782,7 +8781,7 @@ msgstr "NaN:s"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Inbyggd larmhantering"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9298,7 +9297,7 @@ msgstr "Bör alternativen Har grafer och Har datakällor vara markerade som stan
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Ska huvuddatainsamlaren utvärdera larmregler efter varje pollingcykel och skicka deras aviseringar? Larmregler läser de värden som datakällstatistiken samlar in, så insamling av datakällstatistik måste också vara aktiverad."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9342,7 +9341,7 @@ msgstr "Vissa av Kadupuls gränssnitt har stöd för Drag-N-Drop.  Om detta alte
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Mellanslagsavgränsade domännamn som ska vara tillåtna att nås utanför själva webbservern.  Detta är viktigt för användare som väljer att använda ett CDN eller en hosting-plats.  Källor kan innehålla jokertecken, t.ex: *.mindomän.se, eller ett protokoll, till exempel: https://*.exempel.se.  Dessa alternativa källor omfattar endast bild-, CSS- och JavaScript-typer."
+msgstr "Mellanslagsavgränsade domännamn som tillåts nås utanför själva webbservern.  Detta är viktigt för användare som väljer att använda ett CDN eller en webbhotellstjänst.  Källor kan innehålla jokertecken, till exempel *.mydomain.com, eller ett protokoll, till exempel https://*.example.com.  Dessa alternativa källor omfattar endast bild-, CSS- och JavaScript-typer."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9598,7 +9597,7 @@ msgstr "Standardvärdet för maximalt antal SNMP Get OID:er som ska utfärdas pe
 
 #: include/global_settings.php
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Standardantalet enhetstrådar.  Detta är endast tillämpligt när datainsamlaren för ryggrad används."
+msgstr "Standardantalet enhetstrådar.  Detta gäller endast när datainsamlaren Spine används."
 
 #: include/global_settings.php
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
@@ -9730,7 +9729,7 @@ msgstr "Namnet på den användare som Kadupul kommer att använda som mall för 
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Antalet larmregler som läses in och utvärderas tillsammans. Tidsbudgeten kontrolleras mellan batcherna."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9975,7 +9974,7 @@ msgstr "Detta värde representerar det antal prover med högt och lågt medelvä
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Detta värde representerar procentandelen över det justerade genomsnittet för urvalet när avvikande värden har tagits bort från urvalet.  Till exempel skulle en variansprocent på 100%% på ett justerat genomsnitt på 50 ta bort alla stickprov över kvantiteten 100 från diagrammet."
+msgstr "Detta värde representerar procentandelen över det justerade medelvärdet för urvalet när avvikande värden har tagits bort från urvalet.  Till exempel skulle en variansprocent på 100%% vid ett justerat medelvärde på 50 ta bort alla stickprov över värdet 100 från grafen."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10031,7 +10030,7 @@ msgstr "Rubrikstorlek"
 
 #: include/global_settings.php
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Används vid formatering av |datum_tid| i en graf"
+msgstr "Används vid formatering av |date_time| i en graf"
 
 #: include/global_settings.php
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
@@ -14761,7 +14760,7 @@ msgstr "Beroende på antalet inloggningar och användningen av spine-datainsamla
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Om du använder Kadupul Performance Booster och väljer en minneslagringsmotor måste du vara noga med att tömma Performance Booster-bufferten innan systemet får slut på utrymme i minnestabellen.  Detta görs på två sätt, först genom att minska storleken på din utdatakolumn till precis rätt storlek.  Den här kolumnen finns i tabellerna poller_output och poller_output_boost.  Det andra du kan göra är att allokera mer minne till minnestabellerna.  Vi har godtyckligt valt ett rekommenderat värde på 10%% av systemminnet, men om du använder SSD-diskar eller har ett mindre system kan du ignorera denna rekommendation eller välja en annan lagringsmotor.  Du kan se den förväntade förbrukningen av Performance Booster-tabellerna under Console -> System Utilities -> View Boost Status."
+msgstr "Om du använder Kadupul Performance Booster och väljer en minneslagringsmotor måste du vara noga med att tömma bufferten för Performance Booster innan systemet får slut på utrymme i minnestabellerna.  Detta görs på två sätt: först genom att minska storleken på utdatakolumnen till precis rätt storlek.  Den här kolumnen finns i tabellerna poller_output och poller_output_boost.  Det andra du kan göra är att allokera mer minne till minnestabellerna.  Vi har godtyckligt valt ett rekommenderat värde på 10%% av systemminnet, men om du använder SSD-diskar eller har ett mindre system kan du bortse från denna rekommendation eller välja en annan lagringsmotor.  Du kan se den förväntade förbrukningen för Performance Booster-tabellerna under Console -> System Utilities -> View Boost Status."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14782,7 +14781,7 @@ msgstr "Om dina tabeller har mycket stora index måste du använda Barracuda inn
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB kommer att hålla så mycket tabeller och index i systemminnet som möjligt. Därför borde du göra innodb_buffer_pool stor nog att hålla så mycket av tabellerna och indexera i minnet. Att kontrollera storleken på katalogen / var / lib / mysql / Kadupul hjälper till att bestämma detta värde. Vi rekommenderar 25 %% av systemets totala minne, men dina krav varierar beroende på din systemstorlek."
+msgstr "InnoDB behåller så många tabeller och index i systemminnet som möjligt.  Därför bör du göra innodb_buffer_pool tillräckligt stor för att rymma så mycket av tabellerna och indexen i minnet.  Att kontrollera storleken på katalogen /var/lib/mysql/cacti hjälper till att fastställa detta värde.  Vi rekommenderar 25%% av systemets totala minne, men dina behov varierar beroende på systemets storlek."
 
 #: lib/utility.php
 #, php-format
@@ -15021,7 +15020,7 @@ msgstr "Den text som ska visas i fliken eller menyn."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "Den giltiga URL som ska användas för den här externa länken.  Måste inkludera typen, till exempel https://kadupul.org.  Observera att många webbplatser inte tillåter att de bäddas in i en iframe från en extern webbplats, och därför kanske extern länkning inte fungerar."
 
 #: links.php
 msgid "Top of Console Page"
@@ -16222,9 +16221,8 @@ msgid "Site Name:"
 msgstr "Sajtnamn:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Filen hittades inte"
+msgstr "Platsen hittades inte."
 
 #: sites.php
 msgid "State"
@@ -16943,7 +16941,7 @@ msgstr "Behörigheter för externa länkar"
 
 #: user_admin.php
 msgid "Full Name:"
-msgstr "Ваше имя :"
+msgstr "Fullständigt namn:"
 
 #: user_admin.php user_group_admin.php
 msgid "Grant Access"
@@ -18386,13 +18384,12 @@ msgid "VDEF Preview"
 msgstr "VDEF-förhandsgranskning"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Filen hittades inte"
+msgstr "VDEF hittades inte."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF eller VDEF-objekt hittades inte."
 
 #: vdef.php
 #, php-format

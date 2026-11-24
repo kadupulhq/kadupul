@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 06:21-0800\n"
+"POT-Creation-Date: 2026-11-24 08:58-0800\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Розробкою, внесками та рішеннями щодо випусків керує %sорганізація Kadupul%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Для отримання документації та підтримки відвідайте %sпроєкт Kadupul%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul — це незалежний проєкт із відкритим вихідним кодом для моніторингу мережі та побудови графіків часових рядів."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -1987,11 +1987,11 @@ msgstr "Рядоку Введення не існує в Білому Списк
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Діє білий список вхідних даних (Input Whitelisting). Зміни в цьому методі введення даних потребують повторного запуску CLI-скрипта білого списку (cli/input_whitelist.php) з параметрами --audit та --update, перш ніж джерело даних знову опитуватиметься."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Вхідний рядок містить небезпечні символи оболонки"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2047,9 +2047,8 @@ msgid "Update RRA"
 msgstr "Оновити RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Оновити це Поле"
+msgstr "Оновити білий список"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -3209,7 +3208,7 @@ msgstr "Виберіть Шаблон Графіка та натисніть 'П
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Виберіть Шаблон Графіків для застосування до цього Графіка. Будь ласка, зверніть увагу, що ви можете змінити лише Шаблони Графіків на 100%% сумісний Шаблон Графіків, що означає, що він містить ідентичні Джерела Даних."
+msgstr "Виберіть шаблон графіка для застосування до цього графіка. Зверніть увагу, що ви можете змінити шаблон графіка лише на 100%% сумісний шаблон, тобто такий, що містить ідентичні джерела даних."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3911,7 +3910,7 @@ msgstr "1 мегабайт"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "%d Потік"
+msgstr "1 потік"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -4012,11 +4011,11 @@ msgstr "Агреговане"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Інциденти сповіщень"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Правила сповіщень"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -6642,7 +6641,7 @@ msgstr "Імпортувати шаблон із локального файлу
 
 #: include/global_form.php
 msgid "In case LINE was chosen, specify width of line here.  You must include a decimal precision, for example 2.00"
-msgstr ""
+msgstr "Якщо вибрано LINE, укажіть тут товщину лінії. Потрібно обов'язково вказати десяткову точність, наприклад 2.00"
 
 #: include/global_form.php
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
@@ -6698,7 +6697,7 @@ msgstr "Позиція легенди (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
-msgstr ""
+msgstr "Товщина лінії (десяткове число)"
 
 #: include/global_form.php tree.php
 msgid "Locked"
@@ -7480,7 +7479,7 @@ msgstr "%d процесів"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d правил"
 
 #: include/global_settings.php
 #, php-format
@@ -7542,7 +7541,7 @@ msgstr "1 процес"
 
 #: include/global_settings.php
 msgid "1 Week"
-msgstr "%d Тиждень"
+msgstr "1 тиждень"
 
 #: include/global_settings.php
 msgid "10 Gbps Ethernet"
@@ -7602,11 +7601,11 @@ msgstr "Після цієї кількості днів робочі годин�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Бюджет часу оцінювання сповіщень"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Правил сповіщень у пакеті"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8190,7 +8189,7 @@ msgstr "Увімкнути адаптацію для Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Увімкнути вбудоване оцінювання сповіщень"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8430,7 +8429,7 @@ msgstr "Приховати панель приладів Kadupul"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "%d Тижнів"
+msgstr "Приховати вихідні"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8474,7 +8473,7 @@ msgstr "Як часто слід перевіряти RRD?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Як довго один цикл оцінювання може запускати нові пакети правил. Надсилання сповіщень із черги відбувається після оцінювання в межах часу, що залишився, і може надіслати один пакет, навіть якщо бюджет часу вичерпано. Правила, до яких не дійшла черга, оцінюються першими під час наступного запуску."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8806,7 +8805,7 @@ msgstr "NaN-и"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Вбудовані сповіщення"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9086,7 +9085,7 @@ msgstr "Переадресації"
 
 #: include/global_settings.php
 msgid "Refresh Poller Table Per Cycle"
-msgstr ""
+msgstr "Оновлювати таблицю опитувача за цикл"
 
 #: include/global_settings.php
 msgid "Rejected Sample Limit"
@@ -9322,7 +9321,7 @@ msgstr "Чи мають прапорці «Має графіки» та «Має
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Чи повинен головний збирач даних оцінювати правила сповіщень після кожного циклу опитування та надсилати відповідні сповіщення? Правила сповіщень зчитують показники інтенсивності, які збирає статистика джерел даних, тому збір статистики джерел даних також має бути увімкнено."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9754,7 +9753,7 @@ msgstr "Ім'я користувача, якого Kadupul використов�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Кількість правил сповіщень, які зчитуються та оцінюються разом. Бюджет часу перевіряється між пакетами."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9982,7 +9981,7 @@ msgstr "Це стосується конкретного атрибута в к�
 
 #: include/global_settings.php
 msgid "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
-msgstr ""
+msgstr "Цей параметр призначений лише для систем з одним опитувачем, щоб перебудовувати таблицю виводу опитувача в кожному циклі опитування й запобігти вивантаженню таблиці в пам'яті у файл підкачки на дуже великих системах із великими базами даних, які можуть використовувати swap."
 
 #: include/global_settings.php
 msgid "This timespan you wish to see on the default graph."
@@ -14095,7 +14094,7 @@ msgstr "%s потрібен для %s, але не встановлений. "
 
 #: lib/plugins.php
 msgid "Legacy Plugin"
-msgstr ""
+msgstr "Застарілий плагін"
 
 #: lib/plugins.php
 msgid "Not Stated"
@@ -14785,7 +14784,7 @@ msgstr "Залежно від кількості входів і викорис�
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Під час використання Kadupul Performance Booster та вибору рушія зберігання в пам'яті (MEMORY) потрібно встигати скидати буфер Performance Booster до того, як закінчиться пам'ять таблиць. Це робиться двома способами: по-перше, зменшенням розміру стовпця виводу до оптимального (у таблицях poller_output та poller_output_boost); по-друге, виділенням більшої кількості пам'яті для таблиць у пам'яті. Ми умовно рекомендуємо 10%% системної пам'яті, але якщо ви використовуєте SSD-накопичувачі або маєте меншу систему, можете проігнорувати цю рекомендацію чи обрати інший рушій зберігання. Очікуване споживання пам'яті таблицями Performance Booster можна переглянути в меню Консоль -> Системні утиліти -> Перегляд стану Boost."
+msgstr "Під час використання Kadupul Performance Booster та вибору рушія зберігання в пам'яті (MEMORY) потрібно стежити за тим, щоб скидати буфер Performance Booster до того, як закінчиться простір для таблиць у пам'яті. Це робиться двома способами: по-перше, зменшенням розміру стовпця виводу до оптимального (цей стовпець міститься в таблицях poller_output та poller_output_boost); по-друге, виділенням більшого обсягу пам'яті для таблиць у пам'яті. Ми умовно рекомендуємо значення 10%% системної пам'яті, але якщо ви використовуєте SSD-накопичувачі або маєте меншу систему, можете проігнорувати цю рекомендацію чи обрати інший рушій зберігання. Очікуване споживання таблиць Performance Booster можна переглянути в меню Консоль -> Системні утиліти -> Перегляд стану Boost."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14806,7 +14805,7 @@ msgstr "Якщо ваші таблиці мають дуже великі інд
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB зберігатиме в системній пам'яті якомога більше таблиць та індексів. Тому innodb_buffer_pool має бути достатньо великим, щоб умістити якомога більшу частину таблиць та індексів у пам'яті. Перевірка розміру каталогу /var/lib/mysql/cacti допоможе визначити це значення. Ми рекомендуємо 25%% загальної пам'яті вашої системи, але вимоги залежатимуть від її розміру."
+msgstr "InnoDB зберігатиме в системній пам'яті якомога більше таблиць та індексів. Тому значення innodb_buffer_pool має бути достатньо великим, щоб умістити якомога більшу частину таблиць та індексів у пам'яті. Перевірка розміру каталогу /var/lib/mysql/cacti допоможе визначити це значення. Ми рекомендуємо 25%% загальної пам'яті вашої системи, але ваші вимоги залежатимуть від розміру системи."
 
 #: lib/utility.php
 #, php-format
@@ -14932,148 +14931,148 @@ msgstr "Зовнішнє посилання ID '%s' із заголовком '%
 
 #: links.php
 msgid "Apply Filter"
-msgstr ""
+msgstr "Застосувати фільтр"
 
 #: links.php
 msgid "Automatic Page Refresh"
-msgstr ""
+msgstr "Автоматичне оновлення сторінки"
 
 #: links.php
 msgid "Bottom of Console Page"
-msgstr ""
+msgstr "Нижня частина сторінки консолі"
 
 #: links.php
 msgid "Click 'Continue' to Delete the following Page(s)."
-msgstr ""
+msgstr "Натисніть «Продовжити», щоб видалити такі сторінки."
 
 #: links.php
 msgid "Click 'Continue' to Disable the following Page(s)."
-msgstr ""
+msgstr "Натисніть «Продовжити», щоб вимкнути такі сторінки."
 
 #: links.php
 msgid "Click 'Continue' to Enable the following Page(s)."
-msgstr ""
+msgstr "Натисніть «Продовжити», щоб увімкнути такі сторінки."
 
 #: links.php
 msgid "Console Menu"
-msgstr ""
+msgstr "Меню консолі"
 
 #: links.php
 msgid "Console Menu Section"
-msgstr ""
+msgstr "Розділ меню консолі"
 
 #: links.php
 msgid "Content File/URL"
-msgstr ""
+msgstr "Файл вмісту / URL"
 
 #: links.php
 msgid "Delete Page(s)"
-msgstr ""
+msgstr "Видалити сторінку(и)"
 
 #: links.php
 msgid "Disable Page(s)"
-msgstr ""
+msgstr "Вимкнути сторінку(и)"
 
 #: links.php
 msgid "Edit Page"
-msgstr ""
+msgstr "Редагувати сторінку"
 
 #: links.php
 msgid "Enable Page(s)"
-msgstr ""
+msgstr "Увімкнути сторінку(и)"
 
 #: links.php
 #, php-format
 msgid "External Links [edit: %s]"
-msgstr ""
+msgstr "Зовнішні посилання [редагування: %s]"
 
 #: links.php
 msgid "External Links [new]"
-msgstr ""
+msgstr "Зовнішні посилання [нове]"
 
 #: links.php
 msgid "How often do you wish this page to be refreshed automatically."
-msgstr ""
+msgstr "Як часто потрібно автоматично оновлювати цю сторінку."
 
 #: links.php
 msgid "If checked, the page will be available immediately to the admin user."
-msgstr ""
+msgstr "Якщо позначено, сторінка буде одразу доступна адміністратору."
 
 #: links.php
 msgid "If you don't like any of the choices above, type a new title in here."
-msgstr ""
+msgstr "Якщо жоден із наведених вище варіантів вам не підходить, введіть тут новий заголовок."
 
 #: links.php
 msgid "Links"
-msgstr ""
+msgstr "Посилання"
 
 #: links.php
 msgid "New Console Section"
-msgstr ""
+msgstr "Новий розділ консолі"
 
 #: links.php
 msgid "No Pages Found"
-msgstr ""
+msgstr "Сторінок не знайдено"
 
 #: links.php
 msgid "Page"
-msgstr ""
+msgstr "Сторінка"
 
 #: links.php
 msgid "Reset filters"
-msgstr ""
+msgstr "Скинути фільтри"
 
 #: links.php
 msgid "Sort for Ordering"
-msgstr ""
+msgstr "Порядок сортування"
 
 #: links.php
 msgid "Style"
-msgstr ""
+msgstr "Стиль"
 
 #: links.php
 msgid "Tab/Menu Name"
-msgstr ""
+msgstr "Назва вкладки/меню"
 
 #: links.php
 msgid "The file that contains the content for this page. This file needs to be in the Kadupul 'include/content/' directory."
-msgstr ""
+msgstr "Файл, що містить вміст для цієї сторінки. Цей файл має бути розташований у каталозі Kadupul 'include/content/'."
 
 #: links.php
 msgid "The text that will appear in the tab or menu."
-msgstr ""
+msgstr "Текст, який відображатиметься у вкладці або меню."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "Дійсна URL-адреса для цього зовнішнього посилання. Має містити протокол, наприклад https://kadupul.org. Зверніть увагу, що багато вебсайтів забороняють вбудовування в iframe зі стороннього сайту, тому зовнішні посилання можуть не працювати."
 
 #: links.php
 msgid "Top of Console Page"
-msgstr ""
+msgstr "Угорі сторінки консолі"
 
 #: links.php
 msgid "Under which Console heading should this item appear? (All External Link menus will appear between Configuration and Utilities)"
-msgstr ""
+msgstr "Під яким заголовком консолі має відображатися цей пункт? (Усі меню зовнішніх посилань відображатимуться між «Конфігурація» та «Утиліти»)"
 
 #: links.php
 msgid "View Page"
-msgstr ""
+msgstr "Переглянути сторінку"
 
 #: links.php
 msgid "Web URL Below"
-msgstr ""
+msgstr "Веб-URL нижче"
 
 #: links.php
 msgid "Web URL Location"
-msgstr ""
+msgstr "Розташування веб-URL"
 
 #: links.php
 msgid "Where should this page appear?"
-msgstr ""
+msgstr "Де має відображатися ця сторінка?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Ваш файл вмісту не є дійсною URL-адресою. Будь ласка, введіть дійсну URL-адресу"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15533,7 +15532,7 @@ msgstr "Цей плагін вимагає попереднього встано
 #: plugins.php
 #, php-format
 msgid "Unable to Install Plugin.  The following Plugins must be installed first: %s"
-msgstr ""
+msgstr "Не вдалося встановити плагін. Спочатку потрібно встановити такі плагіни: %s"
 
 #: plugins.php
 #, php-format
@@ -16131,227 +16130,227 @@ msgstr "Результати тестового листа"
 
 #: sites.php
 msgid "0 - 23"
-msgstr ""
+msgstr "0 - 23"
 
 #: sites.php
 msgid "Additional Information"
-msgstr ""
+msgstr "Додаткова інформація"
 
 #: sites.php
 msgid "Additional Site Address information"
-msgstr ""
+msgstr "Додаткова інформація про адресу майданчика"
 
 #: sites.php
 msgid "Additional address information for the Site."
-msgstr ""
+msgstr "Додаткова адресна інформація для майданчика."
 
 #: sites.php
 msgid "Additional area use for random notes related to this Site."
-msgstr ""
+msgstr "Додаткове поле для довільних нотаток, пов'язаних із цим майданчиком."
 
 #: sites.php
 msgid "Address Information"
-msgstr ""
+msgstr "Інформація про адресу"
 
 #: sites.php
 msgid "Address1"
-msgstr ""
+msgstr "Адреса 1"
 
 #: sites.php
 msgid "Address2"
-msgstr ""
+msgstr "Адреса 2"
 
 #: sites.php
 msgid "Alternate Name"
-msgstr ""
+msgstr "Альтернативна назва"
 
 #: sites.php
 msgid "City"
-msgstr ""
+msgstr "Місто"
 
 #: sites.php
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
 msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Натисніть 'Продовжити', щоб видалити наступний сайт. Примітка: усі пристрої будуть від'єднані від цього сайту."
+msgstr[1] "Натисніть 'Продовжити', щоб видалити всі наступні сайти. Примітка: усі пристрої будуть від'єднані від цього сайту."
+msgstr[2] "Натисніть 'Продовжити', щоб видалити всі наступні сайти. Примітка: усі пристрої будуть від'єднані від цього сайту."
 
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Натисніть 'Продовжити', щоб дублювати наступний сайт."
+msgstr[1] "Натисніть 'Продовжити', щоб дублювати всі наступні сайти."
+msgstr[2] "Натисніть 'Продовжити', щоб дублювати всі наступні сайти."
 
 #: sites.php
 msgid "Country"
-msgstr ""
+msgstr "Країна"
 
 #: sites.php
 msgid "Delete Site"
 msgid_plural "Delete Sites"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Видалити сайт"
+msgstr[1] "Видалити сайти"
+msgstr[2] "Видалити сайти"
 
 #: sites.php
 msgid "Duplicate Site"
 msgid_plural "Duplicate Sites"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Дублювати сайт"
+msgstr[1] "Дублювати сайти"
+msgstr[2] "Дублювати сайти"
 
 #: sites.php
 msgid "Enter some useful information about the Site."
-msgstr ""
+msgstr "Введіть корисну інформацію про майданчик."
 
 #: sites.php
 msgid "Enter the City or Locality"
-msgstr ""
+msgstr "Введіть місто або населений пункт"
 
 #: sites.php
 msgid "Enter the Site Address"
-msgstr ""
+msgstr "Введіть адресу майданчика"
 
 #: sites.php
 msgid "Enter the country"
-msgstr ""
+msgstr "Введіть країну"
 
 #: sites.php
 msgid "Enter the postal code"
-msgstr ""
+msgstr "Введіть поштовий індекс"
 
 #: sites.php
 msgid "Enter the state"
-msgstr ""
+msgstr "Введіть область або штат"
 
 #: sites.php
 msgid "Geolocation Information"
-msgstr ""
+msgstr "Інформація про геолокацію"
 
 #: sites.php
 msgid "If the Site is known by another name enter it here."
-msgstr ""
+msgstr "Якщо майданчик відомий під іншою назвою, введіть її тут."
 
 #: sites.php
 msgid "Latitude"
-msgstr ""
+msgstr "Широта"
 
 #: sites.php
 msgid "Longitude"
-msgstr ""
+msgstr "Довгота"
 
 #: sites.php
 msgid "New Site"
-msgstr ""
+msgstr "Новий майданчик"
 
 #: sites.php
 msgid "No Sites Found"
-msgstr ""
+msgstr "Майданчиків не знайдено"
 
 #: sites.php
 msgid "Postal/Zip Code"
-msgstr ""
+msgstr "Поштовий індекс"
 
 #: sites.php
 msgid "Site Information"
-msgstr ""
+msgstr "Інформація про майданчик"
 
 #: sites.php
 msgid "Site Name:"
-msgstr ""
+msgstr "Назва майданчика:"
 
 #: sites.php
 msgid "Site not found."
-msgstr ""
+msgstr "Майданчик не знайдено."
 
 #: sites.php
 msgid "State"
-msgstr ""
+msgstr "Область / Штат"
 
 #: sites.php
 msgid "Template Site was not found! Unable to duplicate."
-msgstr ""
+msgstr "Шаблонний майданчик не знайдено! Неможливо дублювати."
 
 #: sites.php
 msgid "The City associated with this Site."
-msgstr ""
+msgstr "Місто, пов'язане з цим майданчиком."
 
 #: sites.php
 msgid "The Country associated with this Site."
-msgstr ""
+msgstr "Країна, пов'язана з цим майданчиком."
 
 #: sites.php
 msgid "The Latitude for this Site."
-msgstr ""
+msgstr "Широта цього майданчика."
 
 #: sites.php
 msgid "The Longitude for this Site."
-msgstr ""
+msgstr "Довгота цього майданчика."
 
 #: sites.php
 msgid "The State associated with this Site."
-msgstr ""
+msgstr "Область або штат, пов'язаний із цим майданчиком."
 
 #: sites.php
 msgid "The TimeZone for the Site."
-msgstr ""
+msgstr "Часовий пояс майданчика."
 
 #: sites.php
 msgid "The city or locality for the Site."
-msgstr ""
+msgstr "Місто або населений пункт для майданчика."
 
 #: sites.php
 msgid "The country for the Site."
-msgstr ""
+msgstr "Країна для майданчика."
 
 #: sites.php
 msgid "The default Map Zoom for this Site.  Values can be from 0 to 23. Note that some regions of the planet have a max Zoom of 15."
-msgstr ""
+msgstr "Масштаб карти за замовчуванням для цього майданчика. Значення можуть бути від 0 до 23. Зверніть увагу, що деякі регіони планети мають максимальний масштаб 15."
 
 #: sites.php
 msgid "The name of this Site."
-msgstr ""
+msgstr "Назва цього майданчика."
 
 #: sites.php
 msgid "The number of Devices associated with this Site."
-msgstr ""
+msgstr "Кількість пристроїв, пов'язаних із цим майданчиком."
 
 #: sites.php
 msgid "The postal or zip code for the Site."
-msgstr ""
+msgstr "Поштовий індекс майданчика."
 
 #: sites.php
 msgid "The primary address for the Site."
-msgstr ""
+msgstr "Основна адреса майданчика."
 
 #: sites.php
 msgid "The primary name for the Site."
-msgstr ""
+msgstr "Основна назва майданчика."
 
 #: sites.php
 msgid "The state for the Site."
-msgstr ""
+msgstr "Штат майданчика."
 
 #: sites.php
 msgid "The unique id associated with this Site."
-msgstr ""
+msgstr "Унікальний ідентифікатор, пов'язаний із цим майданчиком."
 
 #: sites.php
 msgid "Used for cases where a Site has an alternate named used to describe it"
-msgstr ""
+msgstr "Використовується у випадках, коли для опису майданчика використовується альтернативна назва"
 
 #: sites.php
 msgid "Zoom"
-msgstr ""
+msgstr "Масштаб"
 
 #: sites.php
 msgid "example -77.0374678"
-msgstr ""
+msgstr "наприклад, -77.0374678"
 
 #: sites.php
 msgid "example 38.889488"
-msgstr ""
+msgstr "наприклад, 38.889488"
 
 #: spikekill.php
 msgid "FATAL: Spike Kill Not Allowed"
@@ -18357,115 +18356,115 @@ msgstr "Ви встановили ліміт пам'яті на 'unlimited'."
 
 #: vdef.php
 msgid "Choose what type of VDEF item this is."
-msgstr ""
+msgstr "Виберіть тип цього елемента VDEF."
 
 #: vdef.php
 msgid "Click 'Continue' to delete the following VDEF's."
-msgstr ""
+msgstr "Натисніть «Продовжити», щоб видалити такі VDEF."
 
 #: vdef.php
 msgid "Click 'Continue' to delete the following VDEF."
 msgid_plural "Click 'Continue' to delete following VDEFs."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Натисніть 'Продовжити', щоб видалити наступний VDEF."
+msgstr[1] "Натисніть 'Продовжити', щоб видалити наступні VDEF."
+msgstr[2] "Натисніть 'Продовжити', щоб видалити наступні VDEF."
 
 #: vdef.php
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Натисніть 'Продовжити', щоб дублювати наступний VDEF. За бажанням ви можете змінити формат заголовка для нового VDEF."
+msgstr[1] "Натисніть 'Продовжити', щоб дублювати наступні VDEF. За бажанням ви можете змінити формат заголовка для нових VDEF."
+msgstr[2] "Натисніть 'Продовжити', щоб дублювати наступні VDEF. За бажанням ви можете змінити формат заголовка для нових VDEF."
 
 #: vdef.php
 msgid "Delete VDEF"
 msgid_plural "Delete VDEFs"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Видалити VDEF"
+msgstr[1] "Видалити VDEF"
+msgstr[2] "Видалити VDEF"
 
 #: vdef.php
 msgid "Delete VDEF Item"
-msgstr ""
+msgstr "Видалити елемент VDEF"
 
 #: vdef.php
 msgid "Duplicate VDEF"
 msgid_plural "Duplicate VDEFs"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Дублювати VDEF"
+msgstr[1] "Дублювати VDEF"
+msgstr[2] "Дублювати VDEF"
 
 #: vdef.php
 msgid "Enter a value for this VDEF item."
-msgstr ""
+msgstr "Введіть значення для цього елемента VDEF."
 
 #: vdef.php
 msgid "No VDEFs"
-msgstr ""
+msgstr "Немає VDEF"
 
 #: vdef.php
 msgid "Remove VDEF Item"
-msgstr ""
+msgstr "Вилучити елемент VDEF"
 
 #: vdef.php
 msgid "The name of this VDEF."
-msgstr ""
+msgstr "Назва цього VDEF."
 
 #: vdef.php
 msgid "The number of Graphs Templates using this VDEF."
-msgstr ""
+msgstr "Кількість шаблонів графіків, що використовують цей VDEF."
 
 #: vdef.php
 msgid "The number of Graphs using this VDEF."
-msgstr ""
+msgstr "Кількість графіків, що використовують цей VDEF."
 
 #: vdef.php
 msgid "VDEF Item Type"
-msgstr ""
+msgstr "Тип елемента VDEF"
 
 #: vdef.php
 msgid "VDEF Item Value"
-msgstr ""
+msgstr "Значення елемента VDEF"
 
 #: vdef.php
 #, php-format
 msgid "VDEF Items [edit: %s]"
-msgstr ""
+msgstr "Елементи VDEF [редагування: %s]"
 
 #: vdef.php
 msgid "VDEF Items [new]"
-msgstr ""
+msgstr "Елементи VDEF [новий]"
 
 #: vdef.php
 msgid "VDEF Name"
-msgstr ""
+msgstr "Назва VDEF"
 
 #: vdef.php
 #, php-format
 msgid "VDEF Name: %s"
-msgstr ""
+msgstr "Назва VDEF: %s"
 
 #: vdef.php
 msgid "VDEF Preview"
-msgstr ""
+msgstr "Попередній перегляд VDEF"
 
 #: vdef.php
 msgid "VDEF not found."
-msgstr ""
+msgstr "VDEF не знайдено."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF або елемент VDEF не знайдено."
 
 #: vdef.php
 #, php-format
 msgid "VDEFs [edit: %s]"
-msgstr ""
+msgstr "VDEF [редагування: %s]"
 
 #: vdef.php
 msgid "VDEFs [new]"
-msgstr ""
+msgstr "VDEF [новий]"
 
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
-msgstr ""
+msgstr "VDEF, які використовуються, не можна видалити. Використанням вважається наявність посилання з графіка або шаблону графіка."
