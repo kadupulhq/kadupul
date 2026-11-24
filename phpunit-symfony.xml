@@ -10,6 +10,10 @@
             <directory>tests/Symfony</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <!-- The suite peaks above 400 MB; CI already runs PHP without a limit. -->
+        <ini name="memory_limit" value="-1"/>
+    </php>
     <source>
         <include>
             <directory suffix=".php">src</directory>
