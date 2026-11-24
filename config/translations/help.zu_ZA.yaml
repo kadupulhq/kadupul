@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Usizo"
+"Access denied.": "Ukufinyelela kwenqatshiwe."
+"Choose a topic to open the Kadupul documentation.": "Khetha isihloko ukuze uvule amadokhumenti e-Kadupul."
+"Get started": "Qalisa"
+"Graphs": "Amagrafu"
+"Templates": "Izifanekiso"
+"Data queries": "Imibuzo yedatha"
+"Remote data collectors": "Abaqoqi bedatha abakude"
+"Users and permissions": "Abasebenzisi nezimvume"
+"Plugins": "Ama-Plugin"
+"Troubleshoot missing data": "Xazulula inkinga yedatha engekho"
+"Not available locally.": "Akutholakali endaweni."
+"Back to console": "Buyela kukhonsoli"

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Über Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul ist ein unabhängiges Open-Source-Projekt für Netzwerküberwachung und Zeitreihen-Graphen."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Entwicklung, Beiträge und Release-Entscheidungen werden von der Kadupul-Organisation verwaltet."
+"For documentation and support, visit the Kadupul project.": "Dokumentation und Support finden Sie beim Kadupul-Projekt."
+"License": "Lizenz"
+"Kadupul is licensed under the GNU GPL:": "Kadupul ist lizensiert unter der GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Dieses Programm ist freie Software: Sie können sie weitergeben und/oder verändern unter den Bedingungen der GNU General Public License, wie von der Free Software Foundation veröffentlicht; entweder Version 2 der Lizenz oder (nach Ihrer Wahl) jeder späteren Version."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Dieses Programm wird verteilt in der Hoffnung, dass es nützlich ist, aber OHNE JEDE GARANTIE; sogar ohne die implizite Garantie der MARKTGÄNGIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Weitere Details finden Sie in der GNU General Public License."
+"Access denied.": "Zugriff verweigert."
+"Open About Kadupul to view project information.": "Öffnen Sie „Über Kadupul“, um Projektinformationen anzuzeigen."
+"Version %version%": "Version %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Kadupul-Organisation"
+"Kadupul project": "Kadupul-Projekt"

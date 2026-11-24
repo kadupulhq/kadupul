@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Par Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul ir neatkarīgs atvērtā pirmkoda projekts tīkla pārraudzībai un laikrindu grafiku veidošanai."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Izstrādi, ieguldījumus un laidienu lēmumus pārvalda Kadupul organizācija."
+"For documentation and support, visit the Kadupul project.": "Lai iegūtu dokumentāciju un atbalstu, apmeklējiet Kadupul projektu."
+"License": "Licences līgums"
+"Kadupul is licensed under the GNU GPL:": "Kadupul ir licencēts saskaņā ar GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Šī ir bezmaksas programmatūra. Jūs varat to izplatīt tālāk un/vai modificēt saskaņā ar GNU vispārējās publiskās licences (GNU General Public License) noteikumiem, ko publicējusi Brīvās programmatūras fonds (Free Software Foundation). Vai nu licences 2. versija, vai nu jebkura jaunāka versija (pēc jūsu izvēles)."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Šī programma tiek izplatīta cerībā, ka kādam tā būs noderīga, taču BEZ GARANTIJAS; pat bez netiešas garantijas par TIRDZNIECĪBU vai PIEMĒROTĪBU KONKRĒTAM MĒRĶIM. Lai iegūtu papildinformāciju, skatiet GNU vispārējo publisko licenci (GNU General Public License)."
+"Access denied.": "Piekļuve liegta."
+"Open About Kadupul to view project information.": "Atveriet Par Kadupul, lai skatītu projekta informāciju."
+"Version %version%": "Versija %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Kadupul organizācija"
+"Kadupul project": "Kadupul projekts"

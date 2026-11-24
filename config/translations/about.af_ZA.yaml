@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Oor Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul is 'n onafhanklike oopbronprojek vir netwerkmonitering en tydreeksgrafieke."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Ontwikkeling, bydraes en vrystellingsbesluite word deur die Kadupul-organisasie bestuur."
+"For documentation and support, visit the Kadupul project.": "Vir dokumentasie en ondersteuning, besoek die Kadupul-projek."
+"License": "Lisensie"
+"Kadupul is licensed under the GNU GPL:": "Kadupul is gelisensieer onder die GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Hierdie program is vrye sagteware; jy kan dit herversprei en/of wysig onder die voorwaardes van die GNU General Public License soos gepubliseer deur die Free Software Foundation; óf weergawe 2 van die Lisensie, óf (na jou keuse) enige latere weergawe."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Hierdie program word versprei in die hoop dat dit nuttig sal wees, maar SONDER ENIGE WAARBORG; selfs sonder die geïmpliseerde waarborg van VERHANDELBAARHEID of GESKIKTHEID VIR 'N SPESIFIEKE DOEL. Sien die GNU General Public License vir meer besonderhede."
+"Access denied.": "Toegang geweier."
+"Open About Kadupul to view project information.": "Maak Oor Kadupul oop om projekinligting te bekyk."
+"Version %version%": "Weergawe %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Kadupul-organisasie"
+"Kadupul project": "Kadupul-projek"

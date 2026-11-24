@@ -324,7 +324,7 @@
 "Device debug enabled.": "Débogage de l’appareil activé."
 "Device debug disabled.": "Débogage de l’appareil désactivé."
 "Connectivity check finished.": "Vérification de connectivité terminée."
-"Poller cache refreshed.": "Cache de collecte actualisé."
+"Poller cache refreshed.": "Cache du collecteur actualisé."
 "Data queries reindexed.": "Requêtes de données réindexées."
 "Diagnostic output describes this check; it does not guarantee future device availability.": "Le résultat décrit cette vérification ; il ne garantit pas la disponibilité future de l’appareil."
 "Operation result": "Résultat de l’opération"

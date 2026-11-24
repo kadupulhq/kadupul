@@ -107,22 +107,22 @@ final class GettextCatalogBridgeTest extends TestCase
     public static function resolved(): iterable
     {
         yield 'French YAML wins over French gettext' => ['fr', 'inventory', 'Devices', [], 'Appareils'];
-        yield 'German from gettext' => ['de_DE', 'inventory', 'Devices', [], 'Zielsysteme'];
-        yield 'Russian from gettext' => ['ru_RU', 'inventory', 'Devices', [], 'Устройства'];
-        yield 'Japanese from gettext' => ['ja_JP', 'inventory', 'Devices', [], 'デバイス'];
-        yield 'Arabic from gettext' => ['ar_SA', 'inventory', 'Devices', [], 'الأجهزة'];
-        yield 'missing msgid falls back to English' => ['de_DE', 'inventory', 'Save site', [], 'Save site'];
-        yield 'missing msgid with placeholder falls back to English' => ['ru_RU', 'inventory', 'Page %page%', ['%page%' => 3], 'Page 3'];
-        yield 'printf conversion becomes the Symfony placeholder' => ['de_DE', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Alle 6 Stunden'];
-        yield 'named placeholder through %s' => ['de_DE', 'graph_definition', 'VDEFs [edit: %name%]', ['%name%' => '<x>'], 'VDEFs [bearbeiten: <x>]'];
-        yield 'Hebrew count message matches fixed %d placeholder' => ['he_IL', 'data_source_profile', '%count% Day', ['%count%' => 1], '1 יום'];
-        yield 'plural form for n != 1 locale' => ['de_DE', 'palette', 'Delete Colors', [], 'Farben löschen'];
-        yield 'single plural form locale' => ['ja_JP', 'palette', 'Delete Colors', [], '色を削除'];
-        yield 'n > 1 plural rule keeps English' => ['pt_BR', 'palette', 'Delete Colors', [], 'Delete Colors'];
-        yield 'inverted Hindi plural rule keeps English' => ['hi_IN', 'palette', 'Delete Colors', [], 'Delete Colors'];
-        yield 'Russian plural entry keeps English' => ['ru_RU', 'palette', 'Delete Colors', [], 'Delete Colors'];
-        yield 'Arabic plural entry keeps English' => ['ar_SA', 'palette', 'Delete Colors', [], 'Delete Colors'];
-        yield 'Russian non-plural count message matches legacy __()' => ['ru_RU', 'data_source_profile', '%count% Days', ['%count%' => 5], '5 Дней'];
+        yield 'German from YAML' => ['de_DE', 'inventory', 'Devices', [], 'Geräte'];
+        yield 'Russian from YAML' => ['ru_RU', 'inventory', 'Devices', [], 'Устройства'];
+        yield 'Japanese from YAML' => ['ja_JP', 'inventory', 'Devices', [], 'デバイス'];
+        yield 'Arabic from YAML' => ['ar_SA', 'inventory', 'Devices', [], 'الأجهزة'];
+        yield 'German YAML translates Save site' => ['de_DE', 'inventory', 'Save site', [], 'Standort speichern'];
+        yield 'Russian YAML translates Page with placeholder' => ['ru_RU', 'inventory', 'Page %page%', ['%page%' => 3], 'Страница 3'];
+        yield 'German YAML count placeholder' => ['de_DE', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Alle 6 Stunden'];
+        yield 'German YAML named placeholder' => ['de_DE', 'graph_definition', 'VDEFs [edit: %name%]', ['%name%' => '<x>'], 'VDEFs [Bearbeiten: <x>]'];
+        yield 'Hebrew YAML count placeholder' => ['he_IL', 'data_source_profile', '%count% Day', ['%count%' => 1], '1 יום'];
+        yield 'German YAML palette action' => ['de_DE', 'palette', 'Delete Colors', [], 'Farben löschen'];
+        yield 'Japanese YAML palette action' => ['ja_JP', 'palette', 'Delete Colors', [], '色を削除'];
+        yield 'Brazilian Portuguese YAML palette action' => ['pt_BR', 'palette', 'Delete Colors', [], 'Excluir cores'];
+        yield 'Hindi YAML palette action' => ['hi_IN', 'palette', 'Delete Colors', [], 'रंग हटाएं'];
+        yield 'Russian YAML palette action' => ['ru_RU', 'palette', 'Delete Colors', [], 'Удалить цвета'];
+        yield 'Arabic YAML palette action' => ['ar_SA', 'palette', 'Delete Colors', [], 'حذف الألوان'];
+        yield 'Russian YAML count message' => ['ru_RU', 'data_source_profile', '%count% Days', ['%count%' => 5], '5 дн.'];
         yield 'unshipped locale stays English' => ['fi', 'inventory', 'Devices', [], 'Devices'];
     }
 
@@ -294,7 +294,11 @@ final class GettextCatalogBridgeTest extends TestCase
             $arabicChecked++;
         }
         self::assertGreaterThan(0, $arabicChecked);
-        self::assertSame(['Delete Colors' => 'Delete Colors'], [self::translator()->trans('Delete Colors', [], 'palette', 'ar_SA') => self::translator()->trans('Delete Colors', ['%count%' => 3], 'palette', 'ar_SA')]);
+        // Gettext fallback does not bridge multi-form/divergent plural entries; YAML provides them.
+        foreach (['pt-BR', 'hi-IN', 'ru-RU', 'ar-SA'] as $locale) {
+            self::assertNull(GettextCatalog::fromFile(self::ROOT . '/locales/po/' . $locale . '.po')->translate('Delete Colors'), $locale);
+        }
+        self::assertSame(['حذف الألوان' => 'حذف الألوان'], [self::translator()->trans('Delete Colors', [], 'palette', 'ar_SA') => self::translator()->trans('Delete Colors', ['%count%' => 3], 'palette', 'ar_SA')]);
     }
 
     /** @return iterable<string, array{mixed, ?string}> */
@@ -396,7 +400,7 @@ final class GettextCatalogBridgeTest extends TestCase
             $content = (string) $response->getContent();
             self::assertStringContainsString('<html lang="de-DE">', $content);
             self::assertStringContainsString('>Notizen</label>', $content);
-            self::assertStringContainsString('Save site', $content);
+            self::assertStringContainsString('Standort speichern', $content);
             self::assertStringContainsString('&lt;script&gt;site&lt;/script&gt;', $content);
         } finally {
             $kernel->shutdown();

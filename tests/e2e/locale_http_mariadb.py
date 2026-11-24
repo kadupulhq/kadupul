@@ -9,8 +9,9 @@ language and plugins in the Compose MariaDB, signs in as admin with a fresh
 cookie jar and one Accept-Language header, and then requests the legacy
 utilities.php page (include/global.php and gettext) and the Symfony
 /app.php/inventory/sites route with that same session. Both must render text
-of the same language: the German catalog's "Zielsysteme" for "Devices" on both,
-or the French "Équipements" (legacy gettext) and "Appareils" (Symfony YAML).
+of the same language: the German "Zielsysteme" (legacy gettext) and "Geräte"
+(Symfony YAML) for "Devices", or the French "Équipements" (legacy gettext) and
+"Appareils" (Symfony YAML).
 
 Start a dedicated tests/e2e stack first, then run this from the repository
 root, for example:
@@ -45,7 +46,7 @@ SYMFONY_ROUTE = "/app.php/inventory/sites"
 
 TEXT = {
     "en": {"legacy": "Devices", "symfony": "Devices"},
-    "de": {"legacy": "Zielsysteme", "symfony": "Zielsysteme"},
+    "de": {"legacy": "Zielsysteme", "symfony": "Geräte"},
     "fr": {"legacy": "Équipements", "symfony": "Appareils"},
 }
 LANG = {"en": "en", "de": "de-DE", "fr": "fr"}

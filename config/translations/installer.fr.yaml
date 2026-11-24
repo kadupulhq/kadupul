@@ -51,7 +51,7 @@
 "Operation": "Opération"
 "Override discovery SNMP settings": "Remplacer les paramètres SNMP de découverte"
 "Pass": "Réussi"
-"Poller interval in seconds": "Intervalle de collecte en secondes"
+"Poller interval in seconds": "Intervalle du collecteur en secondes"
 "Preparing CSRF protection": "Préparation de la protection CSRF"
 "Progress shows the last recorded phase. Refreshing this page never starts or retries a worker.": "La progression indique la dernière phase enregistrée. Actualiser cette page ne démarre et ne relance jamais un processus."
 "Recover stopped attempt": "Récupérer la tentative arrêtée"

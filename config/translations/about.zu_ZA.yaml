@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Mayelana ne-Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "I-Kadupul iyiprojekthi yomthombo ovulekile ezimele yokuqapha inethiwekhi nokugrafa kwe-time-series."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Ukuthuthukiswa, iminikelo, kanye nezinqumo zokukhishwa ziphathwa yi-Kadupul organization."
+"For documentation and support, visit the Kadupul project.": "Ukuze uthole imibhalo nokusekelwa, vakashela iphrojekthi ye-Kadupul."
+"License": "Ilayisensi"
+"Kadupul is licensed under the GNU GPL:": "I-Kadupul inelayisensi ngaphansi kwe-GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Lolu hlelo luyisofthiwe yamahhala; ungalusabalalisa futhi/noma uluguqule ngaphansi kwemigomo ye-GNU General Public License njengoba ishicilelwe yi-Free Software Foundation; inguqulo 2 yeLayisense, noma (ngokukhetha kwakho) noma iyiphi inguqulo yakamuva."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Lolu hlelo lusatshalaliswa ngethemba lokuthi luzoba usizo, kodwa NGAPHANDLE KWANOMA YIYIPHI IWARANTI; ngisho nangaphandle kwewaranti echaziwe YOKUDAYISEKA noma YOKUFANELELA INHLOSO ETHILE. Bheka i-GNU General Public License ukuthola eminye imininingwane."
+"Access denied.": "Ukufinyelela kwenqatshiwe."
+"Open About Kadupul to view project information.": "Vula i-Mayelana ne-Kadupul ukuze ubuke ulwazi lwephrojekthi."
+"Version %version%": "Inguqulo %version%"
+"- Beta %beta%": "- I-Beta %beta%"
+"Kadupul organization": "Inhlangano ye-Kadupul"
+"Kadupul project": "Iphrojekthi ye-Kadupul"

@@ -52,39 +52,58 @@ final class TranslationCatalogTest extends TestCase
         }
     }
 
+    /** @var array<string, array<string, string>> */
+    private static array $catalogs = [];
+
     /** @return array<string, string> */
     private static function catalog(string $domain, string $locale): array
     {
-        $file = self::ROOT . '/config/translations/' . $domain . '.' . $locale . '.yaml';
+        $name = $domain . '.' . $locale;
+        if (isset(self::$catalogs[$name])) {
+            return self::$catalogs[$name];
+        }
+        $file = self::ROOT . '/config/translations/' . $name . '.yaml';
         self::assertFileExists($file);
         $messages = Yaml::parseFile($file);
         self::assertIsArray($messages);
         foreach ($messages as $id => $message) {
-            self::assertIsString($message, $domain . '.' . $locale . ': ' . $id);
+            self::assertIsString($message, $name . ': ' . $id);
         }
 
-        return array_combine(array_map('strval', array_keys($messages)), $messages);
+        return self::$catalogs[$name] = array_combine(array_map('strval', array_keys($messages)), $messages);
     }
 
+    /** @var list<string> */
+    private const TRANSLATED_LOCALES = [
+        'af_ZA', 'am_ET', 'ar_SA', 'bg_BG', 'bn_BD', 'de_DE', 'el_GR', 'es_ES',
+        'fa_IR', 'fr', 'fr_SN', 'ha_NG', 'he_IL', 'hi_IN', 'id_ID', 'ig_NG',
+        'it_IT', 'ja_JP', 'ko_KR', 'lv_LV', 'mr_IN', 'nl_NL', 'pl_PL', 'pt_BR',
+        'pt_PT', 'ru_RU', 'sv_SE', 'sw_KE', 'ta_IN', 'te_IN', 'th_TH', 'tr_TR',
+        'uk_UA', 'ur_PK', 'vi_VN', 'xh_ZA', 'yo_NG', 'zh_CN', 'zh_TW', 'zu_ZA',
+    ];
+
     #[DataProvider('domains')]
-    public function testEnglishAndFrenchDefineTheSameMessages(string $domain): void
+    public function testEnglishAndTranslatedLocalesDefineTheSameMessages(string $domain): void
     {
         $english = self::catalog($domain, 'en');
-        $french = self::catalog($domain, 'fr');
-
-        self::assertSame([], array_values(array_diff_key($english, $french)), $domain . ' is missing French messages');
-        self::assertSame([], array_values(array_diff_key($french, $english)), $domain . ' is missing English messages');
+        foreach (self::TRANSLATED_LOCALES as $locale) {
+            $translated = self::catalog($domain, $locale);
+            self::assertSame([], array_values(array_diff_key($english, $translated)), $domain . ' is missing ' . $locale . ' messages');
+            self::assertSame([], array_values(array_diff_key($translated, $english)), $domain . ' has extra ' . $locale . ' messages');
+        }
     }
 
     #[DataProvider('domains')]
     public function testMessagesAreNotBlankAndKeepPlaceholders(string $domain): void
     {
         $english = self::catalog($domain, 'en');
-        foreach (self::catalog($domain, 'fr') as $id => $message) {
-            $id = (string) $id;
-            self::assertNotSame('', trim($message), $domain . ' fr: ' . $id);
-            // A plural form may drop %count% ("Every %count% Day" becomes "Chaque jour") but must not invent one.
-            self::assertSame([], array_diff(self::placeholders($message), self::placeholders($id)), $domain . ' fr: ' . $id);
+        foreach (self::TRANSLATED_LOCALES as $locale) {
+            foreach (self::catalog($domain, $locale) as $id => $message) {
+                $id = (string) $id;
+                self::assertNotSame('', trim($message), $domain . ' ' . $locale . ': ' . $id);
+                // A plural form may drop %count% ("Every %count% Day" becomes "Chaque jour") but must not invent one.
+                self::assertSame([], array_diff(self::placeholders($message), self::placeholders($id)), $domain . ' ' . $locale . ': ' . $id);
+            }
         }
         foreach ($english as $id => $message) {
             self::assertNotSame('', trim($message), $domain . ' en: ' . $id);
@@ -97,6 +116,119 @@ final class TranslationCatalogTest extends TestCase
         preg_match_all('/%\w+%/', $message, $matches);
 
         return $matches[0];
+    }
+
+    /**
+     * Unicode scripts each locale is written in. Latin is accepted everywhere:
+     * product names, acronyms, units and code-like tokens stay as they are.
+     */
+    private const SCRIPTS = [
+        'am_ET' => ['Ethiopic'], 'ar_SA' => ['Arabic'], 'bg_BG' => ['Cyrillic'], 'bn_BD' => ['Bengali'],
+        'el_GR' => ['Greek'], 'fa_IR' => ['Arabic'], 'he_IL' => ['Hebrew'], 'hi_IN' => ['Devanagari'],
+        'ja_JP' => ['Han', 'Hiragana', 'Katakana'], 'ko_KR' => ['Hangul', 'Han'], 'mr_IN' => ['Devanagari'],
+        'ru_RU' => ['Cyrillic'], 'ta_IN' => ['Tamil'], 'te_IN' => ['Telugu'], 'th_TH' => ['Thai'],
+        'uk_UA' => ['Cyrillic'], 'ur_PK' => ['Arabic'], 'zh_CN' => ['Han'], 'zh_TW' => ['Han'],
+    ];
+
+    private const PRINTF = '/%(?:\d+\$)?[-+0#]?\d*(?:\.\d+)?[sdfuxXeEgGcbo](?![A-Za-z])|%\s\d/';
+
+    private const ENTITY = '/&(?:#\d+|#[xX][0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9]*);/';
+
+    private const SPACE = '[\s\x{00A0}\x{3000}]';
+
+    // Directional marks, embeddings, isolates and the byte order mark. Zero-width
+    // joiners and non-joiners are ordinary inside Persian, Telugu and Hindi words.
+    private const INVISIBLE = '[\x{200E}\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}\x{FEFF}]';
+
+    #[DataProvider('domains')]
+    public function testTranslatedValuesAreWellFormed(string $domain): void
+    {
+        $english = self::catalog($domain, 'en');
+        $problems = [];
+        foreach (self::TRANSLATED_LOCALES as $locale) {
+            foreach (self::catalog($domain, $locale) as $id => $message) {
+                $id = (string) $id;
+                if (!isset($english[$id])) {
+                    continue;
+                }
+                foreach (self::valueProblems($locale, $id, $message, $english[$id]) as $reason) {
+                    $problems[] = $domain . '.' . $locale . '.yaml [' . $id . ']: ' . $reason;
+                }
+            }
+        }
+
+        self::assertSame([], $problems);
+    }
+
+    /**
+     * Reasons a translated value cannot be right, judged against the English
+     * source without reading the language.
+     *
+     * @return list<string>
+     */
+    public static function valueProblems(string $locale, string $id, string $message, string $source): array
+    {
+        $problems = [];
+        $scripts = implode('', array_map(static fn(string $script): string => '\p{' . $script . '}', self::SCRIPTS[$locale] ?? []));
+        $text = (string) preg_replace(['/%\w+%/', '/<\/?[A-Za-z][^<>]*>/'], '', $message);
+        if (preg_match('/(?![\p{Latin}\p{Common}\p{Inherited}' . $scripts . '])\p{L}/u', $text, $match) === 1) {
+            $problems[] = 'has letters in a script foreign to ' . $locale . ', first "' . $match[0] . '"';
+        }
+        $printf = static fn(string $value): bool => preg_match(self::PRINTF, (string) preg_replace('/%\w+%/', '', $value)) === 1;
+        if ($printf($message) && !$printf($source)) {
+            $problems[] = 'has a printf-style placeholder the source lacks; Symfony substitutes only %name%';
+        }
+        if (preg_match(self::ENTITY, $message) === 1 && preg_match(self::ENTITY, $source) !== 1) {
+            $problems[] = 'has an HTML entity the source lacks; templates escape it and show it literally';
+        }
+        foreach (['/^' . self::SPACE . '*/u' => 'leading', '/' . self::SPACE . '*\z/u' => 'trailing'] as $pattern => $side) {
+            preg_match($pattern, $message, $translated);
+            preg_match($pattern, $source, $original);
+            if ($translated !== $original) {
+                $problems[] = 'differs from the source in ' . $side . ' whitespace';
+            }
+        }
+        $colon = static fn(string $value): bool => preg_match('/[:\x{FF1A}]' . self::SPACE . '*\z/u', $value) === 1;
+        if ($colon($message) !== $colon($source)) {
+            $problems[] = $colon($source) ? 'drops the trailing colon of the source' : 'adds a trailing colon the source lacks';
+        }
+        $invisible = static fn(string $value): bool => preg_match('/^' . self::INVISIBLE . '|' . self::INVISIBLE . '\z/u', $value) === 1;
+        if ($invisible($message) && !$invisible($source)) {
+            $problems[] = 'starts or ends with an invisible directional or byte order mark';
+        }
+        if ($message === $id && $source !== $id) {
+            $problems[] = 'repeats the symbolic key instead of translating "' . $source . '"';
+        }
+
+        return $problems;
+    }
+
+    public function testValueProblemsAreDetected(): void
+    {
+        $reasons = static fn(string $locale, string $id, string $message, ?string $source = null): string => implode('; ', self::valueProblems($locale, $id, $message, $source ?? $id));
+
+        self::assertSame('', $reasons('ru_RU', 'SNMP Options', 'Параметры SNMP'));
+        self::assertSame('', $reasons('ja_JP', 'Delete Device', 'デバイスを削除'));
+        self::assertSame('', $reasons('fa_IR', 'Devices', "دستگاه\u{200C}ها"));
+        self::assertSame('', $reasons('de_DE', '%count% of %total% [%pct%]', '%count% von %total% [%pct%]'));
+        self::assertSame('', $reasons('fr', 'Usage is above 90%', 'L’utilisation dépasse 90 % depuis hier'));
+        self::assertSame('', $reasons('nl_NL', 'csrf', 'Het formulier kon niet worden gecontroleerd.', 'The form could not be verified.'));
+        self::assertStringContainsString('script foreign to bg_BG', $reasons('bg_BG', 'Running', '실행 중'));
+        self::assertStringContainsString('script foreign to de_DE', $reasons('de_DE', 'ALLOW', '允許'));
+        self::assertStringContainsString('script foreign to ja_JP', $reasons('ja_JP', 'Unknown', '알려지지 않음'));
+        self::assertStringContainsString('printf-style', $reasons('ru_RU', 'This Day', '%d День'));
+        self::assertStringContainsString('printf-style', $reasons('el_GR', 'Week(s)', 'Εβδομάδα(ες) %s'));
+        self::assertStringContainsString('printf-style', $reasons('pl_PL', 'Rows', '%1$s wierszy'));
+        self::assertStringContainsString('printf-style', $reasons('vi_VN', 'Named Colors', '% 1 is the number of paths'));
+        self::assertStringContainsString('HTML entity', $reasons('tr_TR', 'Update RRA', 'RRA&#39;yı Güncelle'));
+        self::assertStringContainsString('trailing whitespace', $reasons('ko_KR', 'Graphs', '그래프 '));
+        self::assertStringContainsString('leading whitespace', $reasons('tr_TR', 'Options', ' Seçenekler'));
+        self::assertStringContainsString('adds a trailing colon', $reasons('ko_KR', 'Color Name', '색상명:'));
+        self::assertStringContainsString('drops the trailing colon', $reasons('ja_JP', 'Licensed under the GPL:', 'GPLの下でライセンスされています。'));
+        self::assertSame('', $reasons('ja_JP', 'Licensed under the GPL:', 'GPLの下でライセンスされています：'));
+        self::assertStringContainsString('invisible', $reasons('he_IL', 'ROOT', "\u{202B}Root"));
+        self::assertStringContainsString('invisible', $reasons('sv_SE', 'Numeric', "\u{FEFF}Numerisk"));
+        self::assertStringContainsString('repeats the symbolic key', $reasons('nl_NL', 'csrf', 'csrf', 'The form could not be verified.'));
     }
 
     public function testSourceUsesNoGettextOutsideLegacyPageHelpers(): void

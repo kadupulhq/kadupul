@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Bantuan"
+"Access denied.": "Akses ditolak."
+"Choose a topic to open the Kadupul documentation.": "Pilih topik untuk membuka dokumentasi Kadupul."
+"Get started": "Mulai"
+"Graphs": "Grafik"
+"Templates": "Templat"
+"Data queries": "Kueri data"
+"Remote data collectors": "Kolektor data jarak jauh"
+"Users and permissions": "Pengguna dan izin"
+"Plugins": "Plugin"
+"Troubleshoot missing data": "Pemecahan masalah data hilang"
+"Not available locally.": "Tidak tersedia secara lokal."
+"Back to console": "Kembali ke konsol"

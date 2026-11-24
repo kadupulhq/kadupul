@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Nípa Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul jẹ́ iṣẹ́ àkànṣe orísun-ṣíṣí aládàáṣe fún àmójútó nẹ́tíwọ́ọ̀kì àti yíyà àtẹ àwòrán oníṣẹ̀ẹ́-àkókò."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Àjọ Kadupul ló ń ṣàkóso ìdàgbàsókè, àwọn àfikún, àti àwọn ìpinnu ìtújáde."
+"For documentation and support, visit the Kadupul project.": "Fún ìwé àkọsílẹ̀ àti àtìlẹ́yìn, ṣèbẹ̀wò sí iṣẹ́ àkànṣe Kadupul."
+"License": "Ìwé Àṣẹ"
+"Kadupul is licensed under the GNU GPL:": "Kadupul wà lábẹ́ ìwé àṣẹ GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Ètò yìí jẹ́ sọ́fítíwèà ọ̀fẹ́; o lè tún pín in àti/tàbí ṣàtúnṣe rẹ̀ lábẹ́ àwọn òfin Ìwé-àṣẹ Gbogbogbòò GNU gẹ́gẹ́ bí Free Software Foundation ṣe tẹ̀ ẹ́ jáde; yálà ẹ̀dà 2 ti Ìwé-àṣẹ náà, tàbí (ní àṣàyàn rẹ) èyíkéyìí ẹ̀dà tó kẹ́yìn."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "A pín ètò yìí ní ìrètí pé yóò wúlò, ṣùgbọ́n LÁÌSÍ ÀTÌLẸ́YÌN KANKAN; kódà láìsí àtìlẹ́yìn tí a gbà rò ti ÌṢÒWÒ tàbí ÌBÁMU FÚN ÈRÈDÍ PÀTÓ KAN. Wo Ìwé-àṣẹ Gbogbogbòò GNU fún ẹ̀kúnrẹ́rẹ́."
+"Access denied.": "A kọ̀ ìráyè."
+"Open About Kadupul to view project information.": "Ṣí Nípa Kadupul láti wo àlàyé iṣẹ́ àkànṣe."
+"Version %version%": "Ẹ̀dà %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Àjọ Kadupul"
+"Kadupul project": "Iṣẹ́ àkànṣe Kadupul"

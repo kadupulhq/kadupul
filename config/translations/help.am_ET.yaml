@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "እገዛ"
+"Access denied.": "መዳረሻ ተከልክሏል።"
+"Choose a topic to open the Kadupul documentation.": "የ Kadupul ሰነድን ለመክፈት ርዕስ ይምረጡ።"
+"Get started": "ይጀምሩ"
+"Graphs": "ግራፎች"
+"Templates": "አብነቶች"
+"Data queries": "የውሂብ መጠይቆች"
+"Remote data collectors": "የርቀት ውሂብ ሰብሳቢዎች"
+"Users and permissions": "ተጠቃሚዎች እና ፈቃዶች"
+"Plugins": "ተሰኪዎች"
+"Troubleshoot missing data": "የጠፋ ውሂብ መላ መፈለግ"
+"Not available locally.": "በአካባቢያዊ ሁኔታ አይገኝም።"
+"Back to console": "ወደ ኮንሶል ተመለስ"
