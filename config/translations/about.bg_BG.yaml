@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "За Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul е независим проект с отворен код за мрежов мониторинг и изграждане на времеви графики."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Разработката, приносите и решенията за изданията се управляват от Kadupul organization."
+"For documentation and support, visit the Kadupul project.": "За документация и поддръжка посетете Kadupul project."
+"License": "Лиценз"
+"Kadupul is licensed under the GNU GPL:": "Kadupul е лицензиран под GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Тази програма се разпространява с надеждата, че тя ще бъде полезна, но без никаква гаранция; без дори подразбираща се гаранция за ТЪРГОВСКА ПРОДАЖБА или ПРИНАДЛЕЖНОСТ ЗА ЧАСТНА ЦЕЛ. Вижте GNU General Public License за повече подробности."
+"Access denied.": "Достъпът е отказан."
+"Open About Kadupul to view project information.": "Отворете За Kadupul, за да видите информация за проекта."
+"Version %version%": "Версия %version%"
+"- Beta %beta%": "- Бета %beta%"
+"Kadupul organization": "Kadupul organization"
+"Kadupul project": "Kadupul project"

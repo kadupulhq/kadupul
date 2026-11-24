@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Kadupul hakkında"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul, ağ izleme ve zaman serisi grafik oluşturma için bağımsız bir açık kaynaklı projedir."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Geliştirme, katkılar ve sürüm kararları Kadupul organizasyonu tarafından yönetilmektedir."
+"For documentation and support, visit the Kadupul project.": "Belgeler ve destek için Kadupul projesini ziyaret edin."
+"License": "Lisans"
+"Kadupul is licensed under the GNU GPL:": "Kadupul GNU GPL lisansı altında lisanslanmıştır:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Bu program, ücretsiz bir yazılımdır; Özgür Yazılım Vakfı tarafından yayınlanan GNU Genel Kamu Lisansının 2. sürümü veya (isteğe bağlı olarak) daha sonraki herhangi bir sürümü koşulları altında yeniden dağıtabilir ve/veya değiştirebilirsiniz."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Bu program yararlı olması ümidiyle, ancak HİÇBİR GARANTİ OLMAKSIZIN; TİCARETE ELVERİŞLİLİK veya BELİRLİ BİR AMACA UYGUNLUK zımni garantisi bile olmadan dağıtılmıştır. Daha fazla ayrıntı için GNU Genel Kamu Lisansına bakınız."
+"Access denied.": "Erişim reddedildi."
+"Open About Kadupul to view project information.": "Proje bilgilerini görüntülemek için Kadupul Hakkında sayfasını açın."
+"Version %version%": "Sürüm %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Kadupul organizasyonu"
+"Kadupul project": "Kadupul projesi"

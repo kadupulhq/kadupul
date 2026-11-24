@@ -2689,7 +2689,8 @@ returned as printed, after csrf-magic's rewriter, under the native CSP its
 nonces match. Otherwise an AJAX request gets the 401 text of
 `raise_ajax_permission_denied()` and a page request gets the Twig page, which
 uses the existing gettext messages and moves the history-back handler to
-`include/js/permission-denied.js`. Status stays 200 for the page.
+`frontend/permission-denied.ts`, built to `include/js/app/`. Status stays 200
+for the page.
 
 The page no longer loads the legacy header bundle, so `page_head` and the
 `global_session.php` footer hooks do not run there, as on About. Output a
@@ -2997,6 +2998,20 @@ from 1 to 4294967295; names are limited to 255 characters, counted in
 characters. A refused read-only change is recorded as a failed
 `graphing.data_source_profile.edit` audit event instead of a `cacti.log`
 warning. At most 100 profiles may be selected.
+
+### Graph item input administration
+
+The graph item input editor that `graph_templates_inputs.php` rendered uses
+Symfony routes, Forms and Twig under `/graphing/graph-templates/{templateId}/inputs`.
+It covers create, edit and a confirmed POST removal. The legacy page forwards
+GET navigation to them and answers 409 to posted forms. Every route requires
+console access and the Graph Templates realm (10) before any template is read.
+A save locks the template and input, checks the form revision, confirms that
+every item is a template item of the same template, pushes values out to
+existing graphs, and rewrites the item set in one audited transaction on the
+primary collector. Graph template and graph item editing stay in PHP. Scope,
+outcome codes, behaviour differences and rollback are in
+[graph item inputs](migrations/graph-template-inputs.md).
 
 ### Template synchronization discovery boundary
 

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "ስለ Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul ለአውታረ መረብ ክትትል እና ለጊዜ-ተከታታይ ግራፊንግ ገለልተኛ ክፍት-ምንጭ ፕሮጀክት ነው።"
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "ልማት፣ አስተዋጽኦዎች እና የልቀት ውሳኔዎች የሚተዳደሩት በ Kadupul ድርጅት ነው።"
+"For documentation and support, visit the Kadupul project.": "ለሰነድ እና ለድጋፍ Kadupul projectን ይጎብኙ።"
+"License": "ፈቃድ"
+"Kadupul is licensed under the GNU GPL:": "Kadupul በGNU GPL ስር ፈቃድ ተሰጥቶታል:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "ይህ ፕሮግራም ነጻ ሶፍትዌር ነው፤ በFree Software Foundation በታተመው የGNU General Public License ውሎች መሠረት እንደገና ማሰራጨት እና/ወይም ማሻሻል ይችላሉ፤ የፈቃዱ ስሪት 2፣ ወይም (በእርስዎ ምርጫ) ማንኛውም የበኋላ ስሪት።"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "ይህ ፕሮግራም ጠቃሚ ይሆናል በሚል ተስፋ ይሰራጫል፣ ነገር ግን ያለምንም ዋስትና፤ ለንግድነት ወይም ለተወሰነ ዓላማ ተስማሚነት የውስጥ ዋስትና እንኳን ሳይኖር። ለተጨማሪ ዝርዝሮች የGNU General Public License ን ይመልከቱ።"
+"Access denied.": "መዳረሻ ተከልክሏል።"
+"Open About Kadupul to view project information.": "የፕሮጀክት መረጃን ለማየት ስለ Kadupul ክፈት።"
+"Version %version%": "ስሪት %version%"
+"- Beta %beta%": "- ቤታ %beta%"
+"Kadupul organization": "የKadupul ድርጅት"
+"Kadupul project": "የKadupul ፕሮጀክት"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 00:54-0800\n"
+"POT-Creation-Date: 2026-11-24 06:21-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3005,28 +3005,6 @@ msgstr "所產生圖表的垂直標籤。"
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "垂直標籤"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "關聯的圖表項目"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "圖表項目輸入 [編輯圖表：%s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "項目 #%s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "沒有項目"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr "圖表項目輸入關聯無效。"
 
 #: graph_templates_items.php graphs_items.php
 #, fuzzy
@@ -10340,6 +10318,10 @@ msgstr "項目 # %d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "項目色彩"
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "沒有項目"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

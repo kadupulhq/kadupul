@@ -45,7 +45,7 @@ final class GraphDataRemovalNativeTest extends TestCase
                     GraphDataRemovalCoverageRegistration::HITS
                 );
                 if (!self::$evidenceChecked) {
-                    self::assertSame(48, NativeChildCoverageEvidence::verifyRejections(
+                    self::assertSame(49, NativeChildCoverageEvidence::verifyRejections(
                         $reports[0],
                         $root,
                         'tests/Fixtures/auth-policy-native.php',

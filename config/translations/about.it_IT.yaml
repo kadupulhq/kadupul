@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Informazioni su Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul è un progetto open source indipendente per il monitoraggio di rete e la rappresentazione grafica di serie temporali."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Lo sviluppo, i contributi e le decisioni di rilascio sono gestiti dall'organizzazione Kadupul."
+"For documentation and support, visit the Kadupul project.": "Per documentazione e supporto, visita il progetto Kadupul."
+"License": "Licenza"
+"Kadupul is licensed under the GNU GPL:": "Kadupul ha una licenza GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Questo programma è software libero; è possibile ridistribuirlo e/o modificarlo secondo i termini della licenza GNU General Public License, come pubblicata dalla Free Software Foundation; versione 2 della licenza, o (a scelta) una versione più recente."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Questo programma è distribuito nella speranza che possa risultare utile, ma SENZA ALCUNA GARANZIA, nemmeno la garanzia implicita di COMMERCIABILITÀ o APPLICABILITÀ PER UNO SCOPO PARTICOLARE. Per maggiori dettagli consultare la GNU General Public License."
+"Access denied.": "Accesso negato."
+"Open About Kadupul to view project information.": "Apri Informazioni su Kadupul per visualizzare le informazioni del progetto."
+"Version %version%": "Versione %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Organizzazione Kadupul"
+"Kadupul project": "Progetto Kadupul"

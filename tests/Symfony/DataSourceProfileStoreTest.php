@@ -406,7 +406,7 @@ final class DataSourceProfileStoreTest extends TestCase
         }
         $actor = new Actor(9, 'operator');
         $console = $this->createMock(ConsoleAccess::class);
-        $console->method('consoleActor')->willReturnCallback(static function () use (&$actor): Actor {
+        $console->method('consoleActor')->willReturnCallback(static function () use (&$actor): ?Actor {
             return $actor;
         });
         $access = new DbalDataSourceProfileAccess($console, $this->database);
@@ -431,6 +431,8 @@ final class DataSourceProfileStoreTest extends TestCase
 
         $actor = new Actor(10, 'guest');
         self::assertTrue($denied(static fn() => $access->authorize()));
+        $actor = null;
+        self::assertTrue($denied(static fn() => $access->authorize()), 'an anonymous request');
         $this->expectException(\LogicException::class);
         $access->assertCurrent(9);
     }

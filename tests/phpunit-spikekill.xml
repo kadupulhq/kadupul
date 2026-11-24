@@ -60,6 +60,7 @@
       <file>Unit/FlagIconsCompatibilityTest.php</file>
       <file>Unit/PhpMailerCompatibilityTest.php</file>
       <file>Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
+      <file>Unit/Installer/InstallerCacheRefreshTest.php</file>
       <file>Unit/Installer/InstallerPhpBinaryPathTest.php</file>
       <file>Unit/Installer/LegacyQueueUpgradeTest.php</file>
       <file>Unit/Installer/DataInputIndexUpgradeTest.php</file>

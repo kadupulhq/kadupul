@@ -72,7 +72,7 @@ test('native compact navigation preserves menu glyphs and one dialog binding', a
 
 test('the compact logout icon submits CSRF by POST instead of opening confirmation', async ({ page }) => {
   await loadNativeNavigation(page);
-  await page.route('**/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
+  await page.route('**/logout.php*', route => route.fulfill({ status: 204 }));
   const request = page.waitForRequest(request => new URL(request.url()).pathname === '/logout.php');
   await page.evaluate(() => { window.csrfMagicToken = 'sid:fixture-token,123456'; $('#compact_user_menu .mdw_logout').trigger('click'); });
   const sent = await request;

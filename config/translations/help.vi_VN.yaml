@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Trợ giúp"
+"Access denied.": "Truy cập bị từ chối."
+"Choose a topic to open the Kadupul documentation.": "Chọn một chủ đề để mở tài liệu Kadupul."
+"Get started": "Bắt đầu"
+"Graphs": "Đồ thị"
+"Templates": "Giao diện"
+"Data queries": "Truy vấn dữ liệu"
+"Remote data collectors": "Trình thu thập dữ liệu từ xa"
+"Users and permissions": "Người dùng và quyền hạn"
+"Plugins": "Gói mở rộng"
+"Troubleshoot missing data": "Khắc phục sự cố thiếu dữ liệu"
+"Not available locally.": "Không khả dụng cục bộ."
+"Back to console": "Quay lại bảng điều khiển"

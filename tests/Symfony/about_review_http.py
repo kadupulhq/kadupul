@@ -40,7 +40,9 @@ def main():
             harness.sql(f"UPDATE user_auth SET {column}='{restore}' WHERE id={user_id}")
             check(session.request('/app.php/about')['status'] == 401, 'About does not resurrect revoked session')
             session = login()
+        # A GET only shows the confirmation; the POST with its token ends the session.
         session.request('/logout.php')
+        session.request('/logout.php', {'action': '', '__csrf_magic': session.token})
         check(session.request('/app.php/about')['status'] == 401, 'About rejects ended session')
         harness.sql(f"UPDATE user_auth SET must_change_password='on', password_change='on' WHERE id={user_id}")
         session = login()

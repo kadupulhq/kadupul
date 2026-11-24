@@ -146,7 +146,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'bin/legacy-installer-verification.php' => '590649346f748a87b593da5eaa8aed20eacdb3b67c7aa890ff6222c120dc4fbd',
     'src/Platform/Application/Installer/VerifyInstallationOperation.php' => '61a12e8468fa852d35686b98c02a64efb5a3ecd2530abb75dd717faf02fc1510',
     'src/Platform/Infrastructure/Legacy/NativeOperationalEvidence.php' => '8f213f004b5ae9df6ed20d3436502918c5b9b6dcfc5c198beff5aa885e217a4e',
-    'lib/installer.php' => 'c9dd553745916d356539e87f2f87aa7c3802d692348f927ba0a4aa7f477d7c45',
+    'lib/installer.php' => 'fe151eed2049b3ccdd516039de4b8e4ca038def447409abf46f356e65427468e',
     'src/Platform/Application/Installer/InstallationActions.php' => '9b588cab6c2b1a94683dc99c92ad6d82941ade2e832ef923caa1e21809802472',
     'src/Platform/Application/Installer/InstallationExecution.php' => 'f9db102b39cff8bcca6d2bb9fb6100aa51fd78c211ec08081db6ab466ff7602f',
     'src/Platform/Domain/Installer/InstallationMode.php' => '71e56d248203b9c4f5b832795dc07c929cbdd7a74260602fb912ce198da4956c',
@@ -2329,7 +2329,7 @@ function authenticated_access_adapter(string $root): string
 // complete firewall, request reset and native authentication implementation.
 const NATIVE_SESSION_FIREWALL_SOURCES = [
     'config/bundles.php' => '0432519a4e3cd6030979a2b8b26e8660b46fae9fade5a80c1186a6508cfb920c',
-    'config/packages/framework.yaml' => 'e8d26636c0e7063c33ba9e2596feda57a7976e57061565d68b36a38a836646ce',
+    'config/packages/framework.yaml' => '26e0b6f5afffb24d5c4ebb446849cbf9b50c0b9a387e21ae58ee58c57de5ef09',
     'config/packages/security.yaml' => '089678fa4801a6efa5872f256b282415d9c1bd9fbf99908948b9dae5eabea914',
     'config/routes.yaml' => '2f0f862c7962adc779c325cd4b138d07fc7a9364c0f0f545f7bdc60409918e5e',
     'src/Kernel.php' => '030b9f7a8b0bbd936cde923d58a1a652faeebedb4541de9116f89917325eb14b',
@@ -2370,7 +2370,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'src/IdentityAccess/Application/Port/AccountLockoutStatus.php' => '54d4a8d16b5df9320d99752c35e5173e96ceac8500eab86945115809e41c1e32',
     'src/IdentityAccess/Application/Query/IsAccountLocked.php' => 'cdf547461024111a7f55f5613717404f916a53f0c8e613a755f6a764d1492eed',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
-    'include/layout.js' => 'e1e8707a1cff00982bd0364c286ab5e37b5d1c95a0d2dd9d1acd8344fe5c4a09',
+    'include/layout.js' => '713dbc32979da5229a010592057fafe3c5733612917a0bed439b11b5b4a05b4e',
     'include/vendor/csrf/csrf-magic.php' => '4159c4d545c18181fbda73c99d00722de5dc9138ad1e75830d45740ce09511f0',
     'include/vendor/csrf/csrf-conf.php' => '61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514',
 ];
@@ -3206,7 +3206,18 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Graphing\\Application\\Port\\DataSourceProfileAccess',
         'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalDataSourceProfileAccess',
         'sources' => [
-            'src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php' => 'c06b81cf3ed7160f8f0fc2aa3c10fca2d4d658b9ca15f819ef7d5a93dc85402c',
+            'src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php' => '72b0cd8c0bd0c85e15c436fa7307065b81ad034e6f0c4f919f94589b62e3d0ca',
+            'src/Graphing/Infrastructure/Persistence/DbalRealmPolicy.php' => '8c972a76fe79dedc7a0bade73ffbf6b7db4e0145c2770ab7ac3f47aa6816daed',
+        ],
+    ],
+    '/graphing/graph-templates' => [
+        'label' => 'graph item input',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Graphing\\Application\\Port\\GraphTemplateInputAccess',
+        'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalGraphTemplateInputAccess',
+        'sources' => [
+            'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateInputAccess.php' => '72f333ce886a26b2152beacb405393258cdd70942417bc498b7c7ec2ed7f3a12',
+            'src/Graphing/Infrastructure/Persistence/DbalRealmPolicy.php' => '8c972a76fe79dedc7a0bade73ffbf6b7db4e0145c2770ab7ac3f47aa6816daed',
         ],
     ],
     '/graph-definitions/cdefs' => [

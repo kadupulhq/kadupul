@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Banyere Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul bụ ọrụ ngo mepere emepe nọọrọ onwe ya maka nlekọta netwọk na eserese oge."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Mmepe, ntinye aka, na mkpebi mwepụta ka òtù Kadupul na-elekọta."
+"For documentation and support, visit the Kadupul project.": "Maka akwụkwọ ntuziaka na nkwado, gaa na ọrụ ngo Kadupul."
+"License": "License"
+"Kadupul is licensed under the GNU GPL:": "Enyere Kadupul ikike n'okpuru GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Mmemme a bụ ngwanrọ n'efu; ị nwere ike ikesa ya ọzọ ma ọ bụ gbanwee ya n'okpuru usoro nke GNU General Public License dịka Free Software Foundation bipụtara; ma ọ bụ ụdị 2 nke Ikikere ahụ, ma ọ bụ (na nhọrọ gị) ụdị ọ bụla sochirinụ."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "A na-ekesa mmemme a n'olileanya na ọ ga-aba uru, mana ENWEGHỊ NKWA Ọ BỤLA; ọbụlagodi na-enweghị nkwa ezoro ezo nke ỊZỤ AHỊA ma ọ bụ NTỌZU MAKA Otu EBUMNUCHE. Lee GNU General Public License maka nkọwa ndị ọzọ."
+"Access denied.": "Ajụrụ ohere."
+"Open About Kadupul to view project information.": "Mepee Maka Kadupul iji lee ozi ọrụ ngo."
+"Version %version%": "Ụdị %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Ụlọ ọrụ Kadupul"
+"Kadupul project": "Ọrụ ngo Kadupul"

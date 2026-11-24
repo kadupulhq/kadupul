@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Palīdzība"
+"Access denied.": "Piekļuve liegta."
+"Choose a topic to open the Kadupul documentation.": "Izvēlieties tēmu, lai atvērtu Kadupul dokumentāciju."
+"Get started": "Sākt darbu"
+"Graphs": "Grafiki"
+"Templates": "Veidnes"
+"Data queries": "Datu vaicājumi"
+"Remote data collectors": "Attālie datu savācēji"
+"Users and permissions": "Lietotāji un atļaujas"
+"Plugins": "Spraudņi"
+"Troubleshoot missing data": "Trūkstošo datu problēmu novēršana"
+"Not available locally.": "Nav pieejams lokāli."
+"Back to console": "Atpakaļ uz konsoli"

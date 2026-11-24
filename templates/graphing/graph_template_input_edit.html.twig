@@ -1,0 +1,35 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Graph Item Inputs [edit graph: %name%]'|trans({'%name%': template_name}, 'graph_template_input') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- template_url is the fixed graph_templates.php path below the validated url_path with an integer id. #}
+    <p><a href="{{ template_url }}">{{ 'Back to Graph Template'|trans({}, 'graph_template_input') }}</a></p>
+    <h1>{{ 'Graph Item Inputs [edit graph: %name%]'|trans({'%name%': template_name}, 'graph_template_input') }}</h1>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.column_name) }}
+        <fieldset id="graph_template_input_items">
+            <legend>{{ 'Associated Graph Items'|trans({}, 'graph_template_input') }}</legend>
+            {{ form_errors(form.items) }}
+            {% for child in form.items %}
+                {% set item = items[child.vars.value] %}
+                {% set label = 'Item #%number%'|trans({'%number%': item.position}, 'graph_template_input') ~ ': ' ~ item.typeName ~ ' (' ~ item.consolidationName ~ ')' %}
+                <div>{{ form_widget(child) }} <label for="{{ child.vars.id }}">{% if item.emphasised %}<strong>{{ label }}</strong>{% else %}{{ label }}{% endif %}</label></div>
+            {% else %}
+                <p><em>{{ 'No Items'|trans({}, 'graph_template_input') }}</em></p>
+            {% endfor %}
+        </fieldset>
+        {% do form.items.setRendered() %}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ (input ? 'Save' : 'Create')|trans({}, 'graph_template_input') }}</button>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- template_url is the fixed graph_templates.php path below the validated url_path with an integer id. #}
+        <a href="{{ template_url }}">{{ 'Cancel'|trans({}, 'graph_template_input') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

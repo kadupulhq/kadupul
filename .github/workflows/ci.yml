@@ -313,6 +313,7 @@ jobs:
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/profile-store-phpunit.cache" Symfony/DataSourceProfileStoreDatabaseTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/session-revocation-phpunit.cache" Symfony/NativeSessionRevocationDatabaseTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/login-parity-phpunit.cache" Symfony/LocalLoginParityTest.php Symfony/BasicLoginParityTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/graph-template-input-phpunit.cache" Symfony/GraphTemplateInputEditorDatabaseTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/administration-list-phpunit.cache" Symfony/AdministrationCatalogNativeTest.php Symfony/RelationshipCatalogNativeTest.php Symfony/IdentityRelationshipsNativeTest.php Symfony/IdentitySettingsNativeTest.php Symfony/NativeAdministrativeActorPolicyTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/system-diagnostics-phpunit.cache" Symfony/SystemDiagnosticsDatabaseTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/management-catalog-phpunit.cache" Symfony/ManagementCatalogNativeTest.php Symfony/MappingMetadataNativeTest.php Symfony/InstanceCatalogNativeTest.php
@@ -953,7 +954,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/realtime-preferences.test.mjs tests/Unit/post-action-links.test.mjs tests/Unit/html-sink-escaping.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/permission-denied.test.mjs tests/Unit/realtime-preferences.test.mjs tests/Unit/post-action-links.test.mjs tests/Unit/html-sink-escaping.test.mjs
 
   changelog:
     timeout-minutes: 5

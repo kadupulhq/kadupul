@@ -8,7 +8,7 @@ require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 function rrd_cli_cache_fixture(string $dir, string $root): string
 {
     mkdir($dir . '/bin', 0700);
-    file_put_contents($dir . '/bin/console', '<?php if(array_slice($argv,1)!==["cache:clear","--env=prod","--no-debug","--no-interaction"]||getenv("APP_ENV")!=="prod"||getenv("APP_DEBUG")!=="0"){exit(2);}touch(dirname(__DIR__)."/cache-refreshed");');
+    file_put_contents($dir . '/bin/console', '<?php if(!in_array(array_slice($argv,1),[["cache:clear","--no-optional-warmers","--env=prod","--no-debug","--no-interaction"],["cache:warmup","--env=prod","--no-debug","--no-interaction"]],true)||getenv("APP_ENV")!=="prod"||getenv("APP_DEBUG")!=="0"){exit(2);}touch(dirname(__DIR__)."/cache-refreshed");');
 
     return 'require_once ' . var_export($root . '/include/vendor/autoload.php', true) . ';';
 }

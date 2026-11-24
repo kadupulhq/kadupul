@@ -6,26 +6,30 @@
  */
 
 // Renders a list of translation calls through the legacy runtime for one
-// locale: include/global_languages.php with the php-gettext handler over the
-// shipped .mo catalogs. Only the request environment is stubbed (settings,
-// request variables, the plugin_config rows); the helpers, the domain
-// heuristic and the catalog reader are the production ones.
+// locale: include/global_languages.php over the shipped .mo catalogs, with
+// the language handler the i18n_language_handler setting selects. Only the
+// request environment is stubbed (settings, request variables, the
+// plugin_config rows); the helpers, the domain heuristic and the catalog
+// reader are the production ones.
 //
 // Arguments: <project root> <base path> <locale> <calls file> <output file>
+//            <handler setting> <expected locale> <expected handler>
 //            [<Symfony cache directory>]
 // The base path holds locales/ and plugins/ the way an installation does.
+// The handler setting is the stored string: '' for none, '1' for php-gettext.
 // With a cache directory, the text domains php-gettext loaded are then
 // answered from Symfony catalogues instead (CatalogueGettextReader), so the
-// same helpers render over the new loader.
+// same helpers render over the loader alone.
 // Like the legacy pages it stands in for, this file is not strictly typed.
 
-if (PHP_SAPI !== 'cli' || ($argc !== 6 && $argc !== 7)) {
-    fwrite(STDERR, "usage: legacy-gettext-oracle.php <root> <base> <locale> <calls> <output> [<cache>]\n");
+if (PHP_SAPI !== 'cli' || ($argc !== 9 && $argc !== 10)) {
+    fwrite(STDERR, "usage: legacy-gettext-oracle.php <root> <base> <locale> <calls> <output> <handler> <expected locale> <expected handler> [<cache>]\n");
     exit(2);
 }
 
-[, $root, $base, $locale, $callsFile, $outputFile] = $argv;
-$symfonyCache = $argv[6] ?? null;
+[, $root, $base, $locale, $callsFile, $outputFile, $handlerSetting, $expectedLocale] = $argv;
+$expectedHandler = (int) $argv[8];
+$symfonyCache = $argv[9] ?? null;
 
 date_default_timezone_set('UTC');
 
@@ -42,15 +46,17 @@ $config = [
     'i18n_force_language' => $locale,
 ];
 
-// Settings exactly as an installation stores them: strings, and an unset
-// handler, so the handler is chosen by get_src_language_files(null).
+// Settings exactly as an installation stores them: strings. An unset handler
+// is chosen by get_src_language_files(null).
 function read_config_option($name)
 {
     $settings = [
         'i18n_language_support' => '1',
         'i18n_auto_detection' => '0',
         'i18n_default_language' => 'en-US',
-        'i18n_language_handler' => '',
+        'i18n_language_handler' => $GLOBALS['handlerSetting'],
+        // Read for the saved user language when the forced one is not a locale.
+        'auth_method' => '1',
     ];
     if (!array_key_exists($name, $settings)) {
         throw new LogicException('Unexpected setting read by the language runtime: ' . $name);
@@ -62,6 +68,14 @@ function read_config_option($name)
 function read_default_config_option($name)
 {
     throw new LogicException('Unexpected default setting read by the language runtime: ' . $name);
+}
+
+/** @var list<string> $logged */
+$logged = [];
+
+function cacti_log($string, $output = false, $environ = 'CMDPHP')
+{
+    $GLOBALS['logged'][] = $environ . ': ' . $string;
 }
 
 function set_request_var($name, $value)
@@ -84,6 +98,12 @@ function set_user_setting($name, $value)
     // Persisting ?language= is outside the corpus.
 }
 
+function db_table_exists($table)
+{
+    // No saved user language.
+    return false;
+}
+
 function cacti_sizeof($value)
 {
     return is_countable($value) ? count($value) : 0;
@@ -101,19 +121,25 @@ function db_fetch_assoc($sql)
 require $root . '/include/global_constants.php';
 require $root . '/include/global_languages.php';
 
-$translated = $locale !== 'en-US';
-$expectedHandler = $translated ? CACTI_LANGUAGE_HANDLER_PHPGETTEXT : CACTI_LANGUAGE_HANDLER_DEFAULT;
-if (CACTI_LOCALE !== $locale || CACTI_LANGUAGE_HANDLER !== $expectedHandler) {
-    fwrite(STDERR, sprintf("legacy runtime selected locale %s with handler %s, expected %s with handler %s\n", CACTI_LOCALE, var_export(CACTI_LANGUAGE_HANDLER, true), $locale, $expectedHandler));
+if (CACTI_LOCALE !== $expectedLocale || CACTI_LANGUAGE_HANDLER !== $expectedHandler) {
+    fwrite(STDERR, sprintf("legacy runtime selected locale %s with handler %s, expected %s with handler %s\n", CACTI_LOCALE, var_export(CACTI_LANGUAGE_HANDLER, true), $expectedLocale, $expectedHandler));
     exit(3);
 }
+$readerClass = [
+    // Named as a string: php-gettext is loaded by include, not by Composer.
+    CACTI_LANGUAGE_HANDLER_PHPGETTEXT => 'gettext_reader',
+    CACTI_LANGUAGE_HANDLER_SYMFONY => Kadupul\Platform\Infrastructure\Legacy\LegacyTextDomain::class,
+    CACTI_LANGUAGE_HANDLER_MOTRANSLATOR => PhpMyAdmin\MoTranslator\Translator::class,
+][CACTI_LANGUAGE_HANDLER] ?? null;
 foreach ($i18n ?? [] as $domain => $reader) {
-    if (!$reader instanceof gettext_reader) {
-        fwrite(STDERR, 'text domain ' . $domain . " is not read by php-gettext\n");
+    if ($readerClass === null || !$reader instanceof $readerClass) {
+        fwrite(STDERR, 'text domain ' . $domain . ' is not read by handler ' . CACTI_LANGUAGE_HANDLER . "\n");
         exit(3);
     }
 }
-if ($translated && !isset($i18n['cacti'])) {
+// The Symfony handler leaves an unreadable catalog out; the caller checks the
+// readers it expects.
+if (CACTI_LANGUAGE_HANDLER === CACTI_LANGUAGE_HANDLER_PHPGETTEXT && !isset($i18n['cacti'])) {
     fwrite(STDERR, "the core catalog was not loaded\n");
     exit(3);
 }
@@ -160,8 +186,13 @@ foreach ($calls as $index => [$function, $arguments]) {
 }
 restore_error_handler();
 
+// The Symfony handler's reader has no select_string(); its plural choice is
+// compared through __n() and __xn().
 $pluralIndex = [];
 foreach ($i18n ?? [] as $domain => $reader) {
+    if (!method_exists($reader, 'select_string')) {
+        continue;
+    }
     for ($n = 0; $n <= 1000; $n++) {
         $pluralIndex[$domain][$n] = $reader->select_string($n);
     }
@@ -176,6 +207,7 @@ $output = serialize([
     'values' => $values,
     'errors' => $errors,
     'warnings' => $callWarnings,
+    'log' => $logged,
 ]);
 if (file_put_contents($outputFile, $output) !== strlen($output)) {
     fwrite(STDERR, "cannot write the rendered corpus\n");

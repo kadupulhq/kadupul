@@ -131,7 +131,12 @@ class PairsTest(unittest.TestCase):
         for pair in pairs:
             legacy, symfony = pair["legacy"].split("?")[0], pair["symfony"].split("?")[0]
             self.assertEqual(shims[legacy], "forwards to " + symfony)
-        self.assertEqual(set(shims), {pair["legacy"].split("?")[0] for pair in pairs})
+        # Shims without a pair yet, each with its reason. graph_templates_inputs.php
+        # needs a graph template, and the tests/e2e fixture seeds none, so both sides
+        # of a pair would measure a 404; it is profiled once the fixture has one.
+        unprofiled = {"graph_templates_inputs.php"}
+        self.assertEqual(set(shims) - unprofiled, {pair["legacy"].split("?")[0] for pair in pairs})
+        self.assertTrue(unprofiled <= set(shims), "an unprofiled shim that no longer exists")
 
 
 class ComparisonTest(unittest.TestCase):
