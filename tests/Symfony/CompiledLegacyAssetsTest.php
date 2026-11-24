@@ -32,7 +32,7 @@ final class CompiledLegacyAssetsTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$root = dirname(__DIR__, 2);
-        foreach (['include/fa/css/all.css', 'include/js/jquery.js'] as $built) {
+        foreach (['include/fa/css/all.css', 'include/js/jquery.js', 'include/js/app/permission-denied.js'] as $built) {
             if (!is_file(self::$root . '/' . $built)) {
                 self::fail($built . ' is missing; run npm ci && npm run build first.');
             }
@@ -167,6 +167,8 @@ final class CompiledLegacyAssetsTest extends TestCase
         }
         self::assertArrayNotHasKey('include/themes/custom.css', self::$entries);
         self::assertArrayHasKey('include/layout.js', self::$entries);
+        // Modules compiled from frontend/ are fingerprinted like any other script.
+        self::assertMatchesRegularExpression('~\A/assets/include/js/app/permission-denied-[A-Za-z0-9_-]+\.js\z~', self::$entries['include/js/app/permission-denied.js'] ?? '');
     }
 
     /** @return list<string> */

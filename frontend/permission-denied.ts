@@ -5,8 +5,8 @@
 
 // Without a Referer the Return link steps back in history, as the native page did.
 for (const link of document.querySelectorAll('a.returnTo')) {
-    link.addEventListener('click', (event) => {
-        event.preventDefault();
-        window.history.back();
-    });
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
+    window.history.back();
+  });
 }

@@ -6,7 +6,7 @@
 {% block title %}{{ 'Permission Denied'|trans }}{% endblock %}
 {% block javascripts %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- asset() resolves a fixed script below the installation root. #}
-<script src="{{ asset('include/js/permission-denied.js', 'legacy') }}" type="module"></script>
+<script src="{{ asset('include/js/app/permission-denied.js', 'legacy') }}" type="module"></script>
 {% endblock %}
 {% block body_attributes %} class="logoutBody"{% endblock %}
 {% block page %}
