@@ -19,6 +19,21 @@ final readonly class DataSourceProfileText
 {
     private const string DOMAIN = 'data_source_profile';
 
+    /**
+     * Plural messages, held in data_source_profile+intl-icu.<locale>.yaml. `count` selects the
+     * form and `number` is the digits as the legacy list wrote them, ungrouped and in ASCII.
+     */
+    private const array UNITS = [
+        'second' => '{count, plural, one {{number} Second} other {{number} Seconds}}',
+        'minute' => '{count, plural, one {{number} Minute} other {{number} Minutes}}',
+        'hour' => '{count, plural, one {{number} Hour} other {{number} Hours}}',
+        'day' => '{count, plural, one {{number} Day} other {{number} Days}}',
+        'week' => '{count, plural, one {{number} Week} other {{number} Weeks}}',
+        'month' => '{count, plural, one {{number} Month} other {{number} Months}}',
+        'year' => '{count, plural, one {{number} Year} other {{number} Years}}',
+    ];
+    private const string EVERY_DAYS = '{count, plural, one {Every {number} Day} other {Every {number} Days}}';
+
     public function __construct(private TranslatorInterface $translator, private RequestStack $requests) {}
 
     /** get_span(): comma-separated calendar parts, empty below one hour. */
@@ -64,8 +79,7 @@ final readonly class DataSourceProfileText
             $seconds < 60 || $seconds % 60 !== 0 => $this->translator->trans('Every %count% Seconds', ['%count%' => $seconds], self::DOMAIN),
             $seconds < 3600 || $seconds % 3600 !== 0 => $this->translator->trans('Every %count% Minutes', ['%count%' => intdiv($seconds, 60)], self::DOMAIN),
             $seconds < 86400 || $seconds % 86400 !== 0 => $this->translator->trans('Every %count% Hours', ['%count%' => intdiv($seconds, 3600)], self::DOMAIN),
-            $seconds === 86400 => $this->translator->trans('Every %count% Day', ['%count%' => 1], self::DOMAIN),
-            default => $this->translator->trans('Every %count% Days', ['%count%' => intdiv($seconds, 86400)], self::DOMAIN),
+            default => $this->everyDays(intdiv($seconds, 86400)),
         };
     }
 
@@ -135,9 +149,13 @@ final readonly class DataSourceProfileText
 
     private function unit(string $unit, int|float $count): string
     {
-        $text = is_float($count) && floor($count) !== $count ? (string) $count : (string) (int) $count;
-        $key = '%count% ' . ucfirst($unit) . ((float) $count === 1.0 ? '' : 's');
-        return $this->translator->trans($key, ['%count%' => $text], self::DOMAIN);
+        $number = is_float($count) && floor($count) !== $count ? (string) $count : (string) (int) $count;
+        return $this->translator->trans(self::UNITS[$unit], ['count' => $count, 'number' => $number], self::DOMAIN);
+    }
+
+    private function everyDays(int $days): string
+    {
+        return $this->translator->trans(self::EVERY_DAYS, ['count' => $days, 'number' => (string) $days], self::DOMAIN);
     }
 
     /** number_format_i18n() with no decimals: grouped digits, half to even. */

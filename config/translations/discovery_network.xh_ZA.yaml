@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% Iyure"
-"%count% Hours": "%count% Iiyure"
-"%count% Minute": "%count% Umzuzu"
-"%count% Minutes": "%count% Imizuzu"
-"%count% Thread": "%count% Umsonto"
-"%count% Threads": "%count% Imisonto"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Uluhlu olwahlulwe ngezithuba lweeSeva ze-DNS ezizezinye eziza kusetyenziswa ukusombulula i-DNS. Ukuba akukho nto, i-OS ye-poller iya kusetyenziswa ukusombulula amagama e-DNS."
 "Access denied.": "Ufikelelo lwaliwe."
 "Add Discovery Network": "Yongeza uThungelwano lokuFumanisa"

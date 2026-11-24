@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Mỗi {number} ngày} other {Mỗi {number} ngày}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {{number} ngày} other {{number} ngày}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} giờ} other {{number} giờ}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number} phút} other {{number} phút}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {{number} tháng} other {{number} tháng}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} giây} other {{number} giây}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {{number} tuần} other {{number} tuần}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} năm} other {{number} năm}}"

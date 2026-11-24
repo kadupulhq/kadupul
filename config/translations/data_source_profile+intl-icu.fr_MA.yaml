@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Tous les {number} jours} other {Tous les {number} jours}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} heure} other {{number} heures}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} année} other {{number} années}}"

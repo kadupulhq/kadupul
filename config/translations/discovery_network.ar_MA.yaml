@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% ساعة"
-"%count% Hours": "%count% ساعات"
-"%count% Minute": "%count% دقيقة"
-"%count% Minutes": "%count% دقيقة"
-"%count% Thread": "%count% خيط معالجة"
-"%count% Threads": "%count% خيوط معالجة"
 "April": "أبريل"
 "August": "غشت"
 "Daily": "يومي"

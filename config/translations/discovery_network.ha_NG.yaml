@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "Sa'a %count%"
-"%count% Hours": "Sa'o'i %count%"
-"%count% Minute": "Minti %count%"
-"%count% Minutes": "Mintuna %count%"
-"%count% Thread": "Zaren aiki %count%"
-"%count% Threads": "Zarukan aiki %count%"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Jerin Sabar DNS na daban da aka raba da sarari don amfani da su don warware DNS. Idan fanko ne, za a yi amfani da poller OS don warware sunayen DNS."
 "Access denied.": "An hana shiga."
 "Add Discovery Network": "Ƙara Hanyar Sadarwa ta Gano"

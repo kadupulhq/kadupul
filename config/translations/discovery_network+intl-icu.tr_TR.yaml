@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} Saat} other {{number} Saat}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} Dakika} other {{number} Dakika}}"
+"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, one {{number} İş Parçacığı} other {{number} İş Parçacığı}}"

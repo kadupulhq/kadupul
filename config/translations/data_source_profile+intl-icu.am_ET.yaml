@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {በየ {number} ቀን} other {በየ {number} ቀናት}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {{number} ቀን} other {{number} ቀናት}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} ሰዓት} other {{number} ሰዓታት}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number} ደቂቃ} other {{number} ደቂቃዎች}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {{number} ወር} other {{number} ወራት}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} ሰከንድ} other {{number} ሰከንዶች}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {{number} ሳምንት} other {{number} ሳምንታት}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} ዓመት} other {{number} ዓመታት}}"

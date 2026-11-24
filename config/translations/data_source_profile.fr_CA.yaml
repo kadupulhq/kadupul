@@ -1,15 +1,11 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% heure"
-"%count% Year": "%count% année"
-"%count% Years": "%count% années"
 "A useful name for this Data Storage and Polling Profile.": "Un nom utile pour ce profil de stockage et d'interrogation de données."
 "Data Source Profiles": "Profils des sources de données"
 "Data Sources Using": "Sources de données utilisées"
 "Default": "Défaut"
 "Deletable": "Effaçable"
-"Every %count% Day": "Tous les %count% jours"
 "Graph Timespan": "Durée du graphique"
 "Has Data Sources": "Sources de données"
 "How data is to be entered in RRAs.": "Comment les données doivent être saisies dans les arr."

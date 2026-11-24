@@ -1,19 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Day": "Umunsi %count%"
-"%count% Days": "Iminsi %count%"
-"%count% Hour": "Isaha %count%"
-"%count% Hours": "Amasaha %count%"
-"%count% Minute": "Umunota %count%"
-"%count% Minutes": "Iminota %count%"
-"%count% Month": "Ukwezi %count%"
-"%count% Months": "Amezi %count%"
-"%count% Seconds": "Amasegonda %count%"
-"%count% Week": "Icyumweru %count%"
-"%count% Weeks": "Ibyumweru %count%"
-"%count% Year": "Umwaka %count%"
-"%count% Years": "Imyaka %count%"
 "A useful name for this Data Storage and Polling Profile.": "Izina rifite akamaro ry'iyi porofayili yo kubika no gukusanya amakuru."
 "Actions": "Ibikorwa"
 "Aggregation Level": "Urwego rwo guhuriza hamwe"
@@ -26,7 +13,6 @@
 "Default": "Mburabuzi"
 "Default Timespan": "Igihe gisanzwe cyerekanwa"
 "Deletable": "Ishobora gusibwa"
-"Every %count% Day": "Buri munsi %count%"
 "Every %count% Hours": "Buri masaha %count%"
 "Every %count% Minutes": "Buri minota %count%"
 "Every %count% Seconds": "Buri masegonda %count%"

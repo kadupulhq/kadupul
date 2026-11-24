@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "Isaha %count%"
-"%count% Hours": "Amasaha %count%"
-"%count% Minute": "Umunota %count%"
-"%count% Minutes": "Iminota %count%"
-"%count% Thread": "Umugozi %count%"
-"%count% Threads": "Imigozi %count%"
 "April": "Mata"
 "August": "Kanama"
 "Daily": "Buri munsi"

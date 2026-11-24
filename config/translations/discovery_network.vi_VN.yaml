@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% giờ"
-"%count% Hours": "%count% giờ"
-"%count% Minute": "%count% phút"
-"%count% Minutes": "%count% phút"
-"%count% Thread": "%count% luồng"
-"%count% Threads": "%count% luồng"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Danh sách các máy chủ DNS thay thế phân tách bằng dấu cách dùng để phân giải DNS. Nếu để trống, hệ điều hành của Poller sẽ được dùng để phân giải tên DNS."
 "Access denied.": "Truy cập bị từ chối."
 "Add Discovery Network": "Thêm Mạng dò tìm"
