@@ -8,6 +8,4 @@ SPDX-License-Identifier: GPL-3.0-or-later
 {% set intro = operation == 'delete' ? t('Click Continue to delete the following SNMP Option Sets and all their entries.', {}, 'automation') : t('Click Continue to duplicate the following SNMP Option Sets. You can optionally change the name format for the new SNMP Option Sets.', {}, 'automation') %}
 {% set cancel_url = path('admin_snmp_options') %}
 {% block extra_fields %}{% if form.name_format is defined %}{{ form_row(form.name_format) }}{% endif %}{% endblock %}
-{% block items %}
-    {% for set in sets %}<li>{{ set.name }}</li>{% endfor %}
-{% endblock %}
+{% set item_names = sets|map(set => set.name) %}

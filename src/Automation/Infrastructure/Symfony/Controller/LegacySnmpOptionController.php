@@ -68,16 +68,19 @@ final readonly class LegacySnmpOptionController
         }
     }
 
+    private static function redirect(string $url): RedirectResponse
+    {
+        return new RedirectResponse($url, 302, ['Cache-Control' => 'private, no-store']);
+    }
+
     /** An absent or empty ID is 0, as the legacy page read it. */
     private static function id(mixed $raw): int
     {
-        if ($raw === '') {
-            return 0;
-        }
-        if (!is_string($raw) || preg_match(self::ID, $raw) !== 1) {
-            throw new \InvalidArgumentException('Invalid SNMP Option Set request.');
-        }
-        return (int) $raw;
+        return match (true) {
+            $raw === '' => 0,
+            is_string($raw) && preg_match(self::ID, $raw) === 1 => (int) $raw,
+            default => throw new \InvalidArgumentException('Invalid SNMP Option Set request.'),
+        };
     }
 
     private static function entry(UrlGeneratorInterface $urls, int $set, int $entry): string
@@ -88,11 +91,6 @@ final readonly class LegacySnmpOptionController
         return $entry === 0
             ? $urls->generate('automation_snmp_entry_create', ['id' => $set])
             : $urls->generate('automation_snmp_entry_edit', ['id' => $set, 'entry' => $entry]);
-    }
-
-    private static function redirect(string $url): RedirectResponse
-    {
-        return new RedirectResponse($url, 302, ['Cache-Control' => 'private, no-store']);
     }
 
     /**
