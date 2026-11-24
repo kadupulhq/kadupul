@@ -13,7 +13,7 @@
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV मान्य UTF-8 होना चाहिए और 1 MiB से बड़ा नहीं होना चाहिए।"
 "CSV requires exactly the name and hex header columns.": "CSV के लिए ठीक name और hex हेडर कॉलम आवश्यक हैं।"
 "Cancel": "कैंसिल करें"
-"Clear": "明确"
+"Clear": "Clear"
 "Click Continue to delete the following Colors.": "निम्नलिखित रंग हटाने के लिए जारी रखें पर क्लिक करें।"
 "Color Name": "रंग का नाम"
 "Color changed since you opened this form. Reload before saving.": "आपके यह फ़ॉर्म खोलने के बाद से रंग बदल गया है। सहेजने से पहले पुनः लोड करें।"

@@ -153,7 +153,7 @@
 "Unable to load SNMP Option Sets. Reload before retrying.": "Не могат да се заредят наборите от SNMP опции. Презаредете, преди да опитате отново."
 "Unable to load automation templates. Reload before retrying.": "Не могат да се заредят шаблоните за автоматизация. Презаредете, преди да опитате отново."
 "Unexpected fields were submitted.": "Бяха изпратени неочаквани полета."
-"Unknown": "알려지지 않음"
+"Unknown": "Unknown"
 "Unknown Template": "Неизвестен шаблон"
 "Use stored credentials": "Използване на съхранените идентификационни данни"
 "Version": "Версия"

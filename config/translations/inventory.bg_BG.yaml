@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Sites": "за инжектиране e предната страна на бедрата"
+"Sites": "Sites"
 "Devices": "Устройства"
 "Search by name, city, state or country": "Търсене по име, град, област или държава"
 "Name order": "Ред по име"
@@ -54,7 +54,7 @@
 "Down": "Надолу"
 "Error": "Грешка"
 "Recovering": "Възстановяване"
-"Unknown": "알려지지 않음"
+"Unknown": "Unknown"
 "Sort by": "Сортиране по"
 "Hostname": "Име на хост"
 "Order": "Поръчка"
@@ -357,7 +357,7 @@
 "Last Year": "Миналата година"
 "Last 2 Years": "Последните 2 години"
 "Day Shift": "Дневна смяна"
-"This Day": "Всеки ден"
+"This Day": "This Day"
 "This Week": "Тази Седмица"
 "This Month": "Този месец"
 "This Year": "Тази година"

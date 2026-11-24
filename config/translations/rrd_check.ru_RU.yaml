@@ -25,7 +25,7 @@
 "Messages": "Сообщения"
 "Next": "Следующая"
 "No RRDcheck Problems Found": "Проблемы проверки RRD не найдены"
-"Page %page% of %total% problems": "Страница %page% (всего проблем: %total%)"
+"Page %page% of %total% problems": "Страница %page% из %total% проблем"
 "Previous": "Предыдущая"
 "Purge": "Очистить"
 "Purge RRD check problems": "Очистить проблемы проверки RRD"

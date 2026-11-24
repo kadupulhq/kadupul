@@ -74,7 +74,7 @@
 "This legacy VDEF item is read-only. Its stored reference is preserved.": "Dieses veraltete VDEF-Element ist schreibgeschützt. Seine gespeicherte Referenz bleibt erhalten."
 "Title format": "Titelformat"
 "Unexpected fields were submitted.": "Es wurden unerwartete Felder übermittelt."
-"VDEF Item": "Wählen Sie die Art dieses VDEF Elementes."
+"VDEF Item": "VDEF-Element"
 "VDEF Items": "VDEF Elemente"
 "VDEF Preview": "VDEF-Vorschau"
 "VDEF action failed. Check the VDEF list before retrying.": "VDEF-Aktion fehlgeschlagen. Prüfen Sie vor einem erneuten Versuch die VDEF-Liste."

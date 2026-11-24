@@ -120,7 +120,7 @@
 "RRA [new]": "RRA [Neu]"
 "RRA not found.": "RRA nicht gefunden."
 "RRDfile Size (in Bytes)": "RRDfile Größe (in Bytes)"
-"Read Only": "Schreibzugriff"
+"Read Only": "Schreibgeschützt"
 "Rows": "Zeilen"
 "Save": "Speichern"
 "Save outcome is uncertain. Reload before retrying.": "Das Speicherergebnis ist ungewiss. Vor einem erneuten Versuch neu laden."

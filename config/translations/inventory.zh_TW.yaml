@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "備註必須為最多 65,535 個位元組的有效文字。"
 "Location must be valid text of at most 40 characters.": "位置必須為最多 40 個字元的有效文字。"
 "External ID must be valid text of at most 40 characters.": "外部 ID 必須為最多 40 個字元的有效文字。"
-"device.state": "裝置狀態"
+"device.state": "狀態"
 "Add site": "新增站台"
 "Create site": "建立站台"
 "Address line 1": "地址行 1"

@@ -27,7 +27,7 @@
 "Choose the Site that you wish to associate discovered Devices with.": "Wybierz lokalizację, z którą chcesz powiązać wykryte urządzenia."
 "Daily and Weekly schedules use the start and Rerun Every; Weekly also uses Days of Week. Monthly uses Months and Days of Month; Monthly on Day uses Months, Weeks of Month and Days of Week.": "Harmonogramy dzienne i tygodniowe używają czasu rozpoczęcia oraz parametru Uruchamiaj ponownie co; harmonogramy tygodniowe używają również dni tygodnia. Miesięczne używają miesięcy i dni miesiąca; Miesięczne w dniu używają miesięcy, tygodni miesiąca i dni tygodnia."
 "Daily": "Dziennie"
-"Data Collector": "Kolektor synchronizacji danych musi być zainicjowany z głównego serwera Kadupul."
+"Data Collector": "Data Collector"
 "Day(s) of Week": "Dzień (dni) tygodnia"
 "Days of Month": "Dni miesiąca"
 "Days of Week": "Dni tygodnia"

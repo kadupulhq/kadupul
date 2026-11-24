@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Main Console": "Consola"
-"Console Page": "Topo da página do console"
+"Main Console": "Console principal"
+"Console Page": "Página do console"
 "Create": "Criar"
 "New Graphs": "Novos Gráficos"
 "New Device": "Novo Dispositivo"
@@ -30,7 +30,7 @@
 "Graph Rules": "Regras do gráfico"
 "Tree Rules": "Regras da árvore"
 "Presets": "Predefinições"
-"Data Profiles": "Perfiles de Dados"
+"Data Profiles": "Perfis de dados"
 "SNMP": "SNMP"
 "CDEFs": "CDEFs"
 "VDEFs": "VDEFs"
@@ -38,7 +38,7 @@
 "GPRINTs": "GPRINTs"
 "Import/Export": "Importar/Exportar"
 "Import Templates": "Importar Modelos"
-"Import Packages": "Importar Modelos"
+"Import Packages": "Importar pacotes"
 "Export Templates": "Exportar Templates"
 "Configuration": "Configuração"
 "Settings": "Configurações"
@@ -49,6 +49,6 @@
 "System Utilities": "Utilidades do Sistema"
 "External Links": "Links Externos"
 "Troubleshooting": "Solução de problemas"
-"Console": "console."
+"Console": "Console"
 "About Kadupul": "Sobre o Kadupul"
 "Reports": "Relatórios"

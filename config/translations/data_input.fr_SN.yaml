@@ -68,7 +68,7 @@
 "duplicate": "Dupliquer"
 "field_delete": "Supprimer le champ"
 "propagate": "Propager aux collecteurs"
-"whitelist": "Mettre à jour la liste blanche"
+"whitelist": "liste blanche"
 "Script/Command": "Script/Commande"
 "Script Server": "Serveur de scripts"
 "Script Query": "Requête de script"

@@ -34,7 +34,7 @@
 "RRD check pages": "RRD kontrol sayfaları"
 "RRD check problems": "RRD kontrol sorunları"
 "RRD check problems purged.": "RRD kontrol sorunları temizlendi."
-"RRDfile Checker": "RRDfile Temizleyici"
+"RRDfile Checker": "RRDfile Checker"
 "Search": "Ara"
 "This legacy RRD check form has expired. Open RRD Check and submit a new form.": "Bu eski RRD kontrol formunun süresi doldu. RRD Kontrolünü açın ve yeni bir form gönderin."
 "Unable to load RRD check problems. Reload before retrying.": "RRD kontrol sorunları yüklenemedi. Yeniden denemeden önce yeniden yükleyin."

@@ -65,7 +65,7 @@
 "Enter a CDEF name of at most 255 characters.": "En fazla 255 karakterlik bir CDEF adı girin."
 "Enter a valid title format.": "Geçerli bir başlık biçimi girin."
 "Enter a valid value for this CDEF item type.": "Bu CDEF öğesi türü için geçerli bir değer girin."
-"Function": "Olası nedeni: Host firmanız mail() işlevini devre dışı bırakmış olabilir"
+"Function": "Function"
 "Go": "Git"
 "Graph: Lower Limit": "Grafik: Alt Sınır"
 "Graph: Upper Limit": "Grafik: Üst Sınır"

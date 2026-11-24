@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Action": "启动"
+"Action": "操作"
 "Advanced options": "高级选项"
 "Applying database upgrades": "正在应用数据库升级"
 "Back up the database, RRD files, configuration and keys. Database upgrades may commit changes that application rollback cannot undo.": "请备份数据库、RRD 文件、配置和密钥。数据库升级可能会提交应用程序回滚无法撤销的更改。"

@@ -94,7 +94,7 @@
 "Rerun Every": "إعادة التشغيل كل"
 "Rerun discovery for this Network Range every X days for a Daily schedule, or every X weeks for a Weekly one.": "أعد تشغيل الاكتشاف لنطاق الشبكة هذا كل X أيام لجدول يومي، أو كل X أسابيع لجدول أسبوعي."
 "Run Limit": "حد التشغيل"
-"SNMP Get": "SNMP"
+"SNMP Get": "SNMP Get"
 "SNMP Options": "خيارات SNMP"
 "Saturday": "السبت"
 "Save outcome is uncertain. Reload before retrying.": "نتيجة الحفظ غير مؤكدة. أعد التحميل قبل إعادة المحاولة."

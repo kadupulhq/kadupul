@@ -63,7 +63,7 @@
 "Item": "Item"
 "Item # %number%": "Item nº %number%"
 "Max OIDS": "Máximo de OIDS"
-"Maximum OIDs Per Get Request": "Máximo de OID por pedido de Get"
+"Maximum OIDs Per Get Request": "Máximo de OIDs por solicitação Get"
 "Move Down": "Mover para baixo"
 "Move Up": "Mover para Cima"
 "Move outcome is uncertain. Reload before retrying.": "O resultado da movimentação é incerto. Recarregue antes de tentar novamente."

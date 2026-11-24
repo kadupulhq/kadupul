@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "Main Console": "Consola"
-"Console Page": "Parte superior de la página de Consola"
+"Console Page": "Página de consola"
 "Create": "Crear"
 "New Graphs": "Nuevos gráficos"
 "New Device": "Nuevo dispositivo"
@@ -16,7 +16,7 @@
 "Data Collection": "Recolección de datos"
 "Data Collectors": "Recolectores de datos"
 "Data Queries": "Consultas de datos"
-"Data Input Methods": "Entrada de datos"
+"Data Input Methods": "Métodos de entrada de datos"
 "Templates": "Plantillas"
 "Device": "Dispositivo"
 "Graph": "Gráfico"
@@ -38,7 +38,7 @@
 "GPRINTs": "GPRINTs"
 "Import/Export": "Importar/Exportar"
 "Import Templates": "Importar Plantillas"
-"Import Packages": "Importar Plantillas"
+"Import Packages": "Importar paquetes"
 "Export Templates": "Exportar Plantillas"
 "Configuration": "Configuración"
 "Settings": "Opciones"

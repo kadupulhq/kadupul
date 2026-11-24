@@ -34,7 +34,7 @@
 "RRD check pages": "RRD 검사 페이지"
 "RRD check problems": "RRD 검사 문제"
 "RRD check problems purged.": "RRD 검사 문제가 일괄 삭제되었습니다."
-"RRDfile Checker": "RRDfile 클리너"
+"RRDfile Checker": "RRDfile 검사기"
 "Search": "검색"
 "This legacy RRD check form has expired. Open RRD Check and submit a new form.": "이 레거시 RRD 검사 양식이 만료되었습니다. RRD 검사를 열어 새 양식을 제출하세요."
 "Unable to load RRD check problems. Reload before retrying.": "RRD 검사 문제를 불러올 수 없습니다. 다시 시도하기 전에 새로 고침하세요."

@@ -29,7 +29,7 @@
 "GPRINT Text": "GPRINT テキスト"
 "GPRINT Text must contain 1 to 50 valid characters.": "GPRINT テキストは 1 から 50 文字の有効な文字である必要があります。"
 "GPRINTs per page": "ページあたりの GPRINT 数"
-"Graphs Using": "グラフ"
+"Graphs Using": "使用しているグラフ"
 "Has Graphs": "グラフあり"
 "Invalid GPRINT preset filters.": "GPRINT プリセットフィルターが無効です。"
 "Invalid GPRINT preset selection.": "GPRINT プリセットの選択が無効です。"

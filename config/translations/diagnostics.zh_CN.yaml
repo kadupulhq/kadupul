@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "Access denied.": "拒绝访问。"
-"Action": "启动"
+"Action": "操作"
 "Advanced diagnostics and maintenance": "高级诊断与维护"
 "Allocated Storage Bytes": "已分配存储字节数"
 "Any": "任何"
@@ -25,7 +25,7 @@
 "Database Tables": "数据库表"
 "Database Version": "数据库版本"
 "Device": "设备"
-"Device ID": "设备"
+"Device ID": "设备 ID"
 "Devices": "设备"
 "Diagnostic filters": "诊断筛选器"
 "Diagnostic pages": "诊断页"
@@ -74,7 +74,7 @@
 "Rows": "行数"
 "Running Boost Processes": "正在运行的 Boost 进程"
 "SNMP": "SNMP"
-"SNMP Agent Cache": "查看SNMP Agent缓存"
+"SNMP Agent Cache": "SNMP Agent 缓存"
 "SNMP Notification History": "SNMP 通知历史"
 "SNMP Notification Receivers": "SNMP 通知接收器"
 "Script": "脚本"

@@ -29,7 +29,7 @@
 "Replace credentials": "Заменить учётные данные"
 "Replace stored credentials that contain control characters.": "Замените сохранённые учётные данные, содержащие управляющие символы."
 "SNMP Auth Password (v3)": "Пароль аутентификации SNMP (v3)"
-"SNMP Auth Protocol (v3)": "Автоматический протокол SNMP (v3)"
+"SNMP Auth Protocol (v3)": "Протокол аутентификации SNMP (v3)"
 "SNMP Community": "Сообщество SNMP (Community)"
 "SNMP Engine ID (v3)": "ID двигателя SNMP (v3)"
 "SNMP Message Type": "Тип сообщения SNMP"

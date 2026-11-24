@@ -89,7 +89,7 @@
 "Has Data Sources": "Tem fontes de dados"
 "Heartbeat": "Pulsação"
 "How data is to be entered in RRAs.": "Como os dados devem ser entrados em RRAs."
-"How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time.": "Durante quanto tempo podem faltar dados antes de o RRDtool registar dados desconhecidos.  Aumente este valor se a sua fonte de dados for instável e pretender transportar dados antigos em vez de mostrar lacunas nos seus gráficos.  Este valor é multiplicado pelo Fator de Arquivos X para determinar a quantidade de tempo real."
+"How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time.": "Por quanto tempo podem faltar dados antes de o RRDtool registrar dados desconhecidos.  Aumente este valor se sua fonte de dados for instável e você quiser levar adiante dados antigos em vez de mostrar lacunas nos gráficos.  Este valor é multiplicado pelo Fator X-Files para determinar a quantidade real de tempo."
 "How many generations data is kept in the RRA.": "Quantas gerações de dados são mantidos na RRA."
 "Invalid profile filters.": "Filtros de perfil inválidos."
 "Invalid profile request.": "Solicitação de perfil inválida."

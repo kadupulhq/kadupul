@@ -31,7 +31,7 @@
 "Enter a VDEF name.": "Bir VDEF adı girin."
 "Enter a valid VDEF name.": "Geçerli bir VDEF adı girin."
 "Enter a valid custom VDEF value.": "Geçerli bir özel VDEF değeri girin."
-"Function": "Olası nedeni: Host firmanız mail() işlevini devre dışı bırakmış olabilir"
+"Function": "Function"
 "Graphs using": "Kullanan grafikler"
 "Has graphs": "Grafikleri var"
 "Invalid VDEF action.": "Geçersiz VDEF işlemi."

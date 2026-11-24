@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "Main Console": "콘솔"
-"Console Page": "콘솔 페이지 맨 위"
+"Console Page": "콘솔 페이지"
 "Create": "생성"
 "New Graphs": "새 그래프"
 "New Device": "새 기기"
@@ -21,7 +21,7 @@
 "Device": "장치"
 "Graph": "그래프"
 "Data Source": "데이터 원본"
-"Aggregate": "Legacy)"
+"Aggregate": "집계"
 "Color": "색상"
 "Automation": "자동화"
 "Networks": "네트워크"
@@ -38,7 +38,7 @@
 "GPRINTs": "GPRINTs"
 "Import/Export": "가져오기/내보내기"
 "Import Templates": "템플릿 가져오기"
-"Import Packages": "템플릿 가져오기"
+"Import Packages": "패키지 가져오기"
 "Export Templates": "템플릿 내보내기"
 "Configuration": "구성"
 "Settings": "설정"

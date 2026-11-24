@@ -34,7 +34,7 @@
 "RRD check pages": "Σελίδες ελέγχου RRD"
 "RRD check problems": "Προβλήματα ελέγχου RRD"
 "RRD check problems purged.": "Τα προβλήματα ελέγχου RRD εκκαθαρίστηκαν."
-"RRDfile Checker": "RRDfile Cleaner"
+"RRDfile Checker": "RRDfile Checker"
 "Search": "Αναζήτηση"
 "This legacy RRD check form has expired. Open RRD Check and submit a new form.": "Αυτή η παλαιού τύπου φόρμα ελέγχου RRD έχει λήξει. Ανοίξτε τον Έλεγχο RRD και υποβάλετε νέα φόρμα."
 "Unable to load RRD check problems. Reload before retrying.": "Αδυναμία φόρτωσης των προβλημάτων ελέγχου RRD. Επαναφορτώστε πριν προσπαθήσετε ξανά."

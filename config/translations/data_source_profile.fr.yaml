@@ -130,7 +130,7 @@
 "Select up to %count% profiles at a time.": "Sélectionnez au plus %count% profils à la fois."
 "Selected Poller Interval": "Intervalle d'interrogation choisi"
 "Steps": "Pas"
-"Templates Using": "Modèles utilisateurs"
+"Templates Using": "Modèles utilisant ce profil"
 "The Data Source Profile changed since you opened this form. Reload before saving.": "Le profil de source de données a changé depuis l'ouverture de ce formulaire. Rechargez avant d'enregistrer."
 "The RRA changed since you opened this form. Reload before saving.": "La RRA a changé depuis l'ouverture de ce formulaire. Rechargez avant d'enregistrer."
 "The amount of unknown data that can still be regarded as known.": "La proportion de données inconnues qui peut encore être considérée comme connue."

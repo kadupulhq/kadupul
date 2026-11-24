@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "Main Console": "Konsole"
-"Console Page": "Oben auf der Konsolenseite"
+"Console Page": "Konsolenseite"
 "Create": "Erzeugen"
 "New Graphs": "Neue Diagramme"
 "New Device": "Neues Zielsystem"
@@ -38,8 +38,8 @@
 "GPRINTs": "GPRINTs"
 "Import/Export": "Import/Export"
 "Import Templates": "Vorlage importieren"
-"Import Packages": "Vorlage importieren"
-"Export Templates": "Vorlage exportieren"
+"Import Packages": "Pakete importieren"
+"Export Templates": "Vorlagen exportieren"
 "Configuration": "Konfiguration"
 "Settings": "Einstellungen"
 "Users": "Benutzer"

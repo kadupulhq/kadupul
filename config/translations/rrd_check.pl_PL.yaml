@@ -34,7 +34,7 @@
 "RRD check pages": "Strony sprawdzania RRD"
 "RRD check problems": "Problemy sprawdzania RRD"
 "RRD check problems purged.": "Wyczyszczono problemy sprawdzania RRD."
-"RRDfile Checker": "Środek czyszczący RRDfile"
+"RRDfile Checker": "RRDfile Checker"
 "Search": "Szukaj"
 "This legacy RRD check form has expired. Open RRD Check and submit a new form.": "Ten starszy formularz sprawdzania RRD wygasł. Otwórz Sprawdzanie RRD i prześlij nowy formularz."
 "Unable to load RRD check problems. Reload before retrying.": "Nie można wczytać problemów sprawdzania RRD. Odśwież stronę przed ponowną próbą."

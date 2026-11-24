@@ -35,7 +35,7 @@
 "Save the rule first; its Object Selection and Tree Creation Criteria are added afterwards.": "पहले नियम सहेजें; इसके ऑब्जेक्ट चयन और ट्री निर्माण मानदंड बाद में जोड़े जाते हैं।"
 "The Item Type that shall be dynamically added to the tree.": "आइटम प्रकार जो गतिशील रूप से पेड़ में जोड़ा जाएगा।"
 "The tree rule changed since you opened this form. Reload before saving.": "आपके यह फ़ॉर्म खोलने के बाद से ट्री नियम बदल गया है। सहेजने से पहले पुनः लोड करें।"
-"Tree": "वृक्षugiou"
+"Tree": "Tree"
 "Tree Rule Selection [edit: %name%]": "ट्री नियम चयन [संपादित करें: %name%]"
 "Tree Rules Selection [new]": "ट्री नियम चयन [नया]"
 "Tree rule not found.": "ट्री नियम नहीं मिला।"

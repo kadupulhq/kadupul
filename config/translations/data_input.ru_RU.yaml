@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Data Input Methods": "Метод Ввода Данных"
+"Data Input Methods": "Методы ввода данных"
 "Data Input Method": "Метод Ввода Данных"
 "Data Input Field": "Поле ввода данных"
 "Create data input": "Создать ввод данных"
@@ -72,7 +72,7 @@
 "Script/Command": "Сценарий / Команда"
 "Script Server": "Сервер Скриптов"
 "Script Query": "Сценарий запроса"
-"Script Server Query": "Сервер Скриптов"
+"Script Server Query": "Запрос сервера скриптов"
 "SNMP Get": "SNMP Получить"
 "SNMP Query": "SNMP Запрос"
 "Unknown": "Неизвестно"

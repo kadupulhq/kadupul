@@ -125,7 +125,7 @@
 "Select a Device Template that Devices will be matched to.": "حدّد قالب جهاز ستتم مطابقة الأجهزة معه."
 "Select a supported SNMP setting.": "حدّد إعداد SNMP مدعوماً."
 "Select supported SNMP settings.": "حدّد إعدادات SNMP مدعومة."
-"Sequence": "تسلسل، تتابع، متوالية"
+"Sequence": "Sequence"
 "Stored credentials are never displayed. Replacing them sets all four fields below; leaving SNMP version 3 clears its username and passphrases.": "لا يتم عرض بيانات الاعتماد المخزنة مطلقاً. يؤدي استبدالها إلى تعيين الحقول الأربعة أدناه جميعها؛ ويؤدي الخروج من إصدار SNMP 3 إلى مسح اسم المستخدم وعبارات المرور الخاصة به."
 "Submit all SNMP settings.": "أرسل جميع إعدادات SNMP."
 "System Description Match": "مطابقة وصف النظام"

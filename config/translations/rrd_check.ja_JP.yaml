@@ -34,7 +34,7 @@
 "RRD check pages": "RRD チェックページ"
 "RRD check problems": "RRD チェックの問題"
 "RRD check problems purged.": "RRD チェックの問題を削除しました。"
-"RRDfile Checker": "RRDファイルクリーナー"
+"RRDfile Checker": "RRDファイルチェッカー"
 "Search": "検索"
 "This legacy RRD check form has expired. Open RRD Check and submit a new form.": "このレガシー RRD チェックフォームは期限切れです。RRD チェックを開いて新しいフォームを送信してください。"
 "Unable to load RRD check problems. Reload before retrying.": "RRD チェックの問題を読み込めません。再試行する前に再読み込みしてください。"
