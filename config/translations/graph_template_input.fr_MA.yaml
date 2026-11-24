@@ -1,0 +1,9 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Enter a description for this graph item input to describe what this input is used for.": "Saisissez une description pour cette entrée d'élément du graphique afin d'indiquer son utilité."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Saisissez un nom pour cette entrée d'élément du graphique ; assurez-vous qu'il s'agit d'un nom que vous reconnaissez."
+"Graph Item Type": "Type d'élément du graphique"
+"Insert Hard Return": "Insérer un retour à la ligne forcé"
+"Opacity/Alpha Channel": "Canal opacité/alpha"
+"Shift Data": "Décalage des données"

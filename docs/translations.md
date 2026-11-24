@@ -9,16 +9,16 @@ Legacy PHP pages translate with gettext: `__()` and its variants in
 `include/global_languages.php` read the compiled catalogs in
 `locales/LC_MESSAGES/<ll-CC>.mo`, by default through Symfony Translation (see
 [Legacy pages](#legacy-pages-the-language-handler)). Pages migrated to Symfony
-and Twig use Symfony Translation with one message domain per feature. They reuse
-the legacy translations by English text, so a migrated page is not limited to
-the English and French that its own files provide. This page describes how
-that works, when a domain needs more than two files, how the request locale is
-chosen and what CI checks.
+and Twig use Symfony Translation with one message domain per feature, whose
+text lives in YAML files. This page describes how that works, how the other
+locales are covered, how the request locale is chosen and what CI checks.
 
 ## How a Symfony page's text is translated
 
-Each feature has a domain in `config/translations/`: `<domain>.en.yaml` and
-`<domain>.fr.yaml`. Message keys are the English text, with named placeholders
+Each feature has a domain in `config/translations/`: `<domain>.en.yaml`, a
+complete file for each of 40 locales, such as `<domain>.fr.yaml` or
+`<domain>.de_DE.yaml`, and a few partial files (below).
+Message keys are the English text, with named placeholders
 such as `%count%`:
 
 ```yaml
@@ -37,42 +37,31 @@ $translator->trans('Access denied.', [], 'data_input');
 
 For a request locale, Symfony looks a key up in this order:
 
-1. The domain's own file for that locale, if one exists, for example
-   `gprint.fr.yaml` or `graph_template_input.de_DE.yaml`.
-2. For any other shipped locale, the legacy `locales/po/<ll-CC>.po` catalog
-   of the same language, matched by English text. This is the gettext bridge:
-   `ConsoleTranslations::register()` adds one `kadupul_gettext` resource per
-   shipped locale and `*.en.yaml` domain, and `GettextCatalogLoader` fills only
-   the keys that the locale's own YAML file does not translate.
+1. The domain's own file for that locale, for example `gprint.fr.yaml` or
+   `graph_template_input.de_DE.yaml`.
+2. The locale's parent language, when it has one: `fr_CA` and `fr_MA` use `fr`,
+   `en_GB` uses `en`.
 3. English, from `<domain>.en.yaml` (`fallbacks: [en]` in
    `config/packages/translation.yaml`).
 
-French is the exception to step 2 in practice. `TranslationCatalogTest`
-requires `<domain>.fr.yaml` to define every key of `<domain>.en.yaml`, so
-French text always comes from the reviewed YAML file and never from
-`fr-FR.po`.
+The `.po` catalogs play no part here. Text that only the legacy catalogs
+contain does not reach a Symfony page.
 
-`GettextCatalog::translate()` decides whether a `.po` entry matches a key. It
-is deliberately conservative, and anything it cannot match exactly shows in
-English:
+Files are named with the Symfony locale (`de_DE`, `pt_BR`, `zh_CN`; see
+[Locale names](#locale-names)). Two kinds exist:
 
-- The key's `%name%` placeholders are tried as `%s` in the msgid, then
-  all as `%d`. The msgstr's `%s`, `%d` and positional `%1$s` conversions are mapped
-  back to the key's named placeholders. A key with any other `%` does not match.
-- A msgid that also occurs with a `msgctxt` anywhere in the catalog is
-  skipped.
-- Empty and fuzzy msgstrs are skipped (Symfony's `PoFileLoader` drops fuzzy
-  entries).
-- Migrated pages choose between separate singular and plural keys with the
-  English rule, `n == 1`. A `.po` plural entry is used only when the catalog's
-  `Plural-Forms` rule is `n != 1` or a single form. In languages with other
-  rules, such as Russian or Polish, both keys show English.
+- **Complete files.** `TranslationCatalogTest` requires every locale in its
+  `TRANSLATED_LOCALES` list to define exactly the keys of `<domain>.en.yaml`.
+- **Partial files** for `ar_EG`, `ar_MA`, `en_GB`, `es_MX`, `fr_CA`, `fr_MA`,
+  `mg_MG`, `rw_RW` and `so_SO`. They hold only the messages that differ from
+  the fallback above and may be missing for a domain. A key they omit shows
+  the fallback's text. `TranslationCatalogTest` checks that they add no keys
+  and no placeholders and leave no blank text.
 
-New domains need no registration code. The bridge globs
-`config/translations/*.en.yaml` when the Symfony container is compiled, and
-the container tracks `locales/catalogs.json` and each `.po` file as resources.
-Symfony caches compiled catalogues, so in a production install clear the cache
-(`php bin/console cache:clear`) after changing YAML or catalog files.
+New domains need no registration code. Symfony reads every file in
+`config/translations`. Symfony caches compiled catalogues, so in a production
+install clear the cache (`php bin/console cache:clear`) after changing YAML
+files.
 
 Two other domains exist. The `console` domain loads the compiled `.mo` files
 directly for the console home page, whose text is extracted into the shared
@@ -134,76 +123,17 @@ request. Its text domain is shown in English, the other domains still load,
 and every such request writes a `WARNING` with the file name to the Kadupul
 log.
 
-## When a domain needs other-locale files
+## When the legacy catalogs lose a string
 
-The bridge only works while the `.po` files still contain the English text.
-`locales/build_gettext.sh` extracts msgids from PHP files (top-level pages,
-one directory below them, and `src/`) and from the console home template. It
-does not read YAML files or other Twig templates. It then runs
-`msgattrib --no-obsolete`, which removes every msgid that no longer occurs in
-that source. `tests/security/verify_gettext_catalogs.py` fails if a `.po` file
-differs from the current extraction plus the 195 reviewed historical
-identities in `locales/historical-compatibility.json`, so an entry cannot be
-kept by editing the `.po` file by hand.
-
-When a migration removes or shims the legacy page that used a string, and no
-other PHP source uses it, the next catalog rebuild drops that string from
-every `.po` file. The migrated page then shows it in English in every
-language except French. The graph item inputs migration hit this: strings
-such as "Associated Graph Items" were used only by `graph_templates_inputs.php`.
-
-The fix is to copy the legacy translations into the domain before the rebuild
-removes them, as `config/translations/<domain>.<ll_CC>.yaml` for each shipped
-locale except French. Name the file with the Symfony locale (`de_DE`,
-`pt_BR`, `zh_CN`), the same name the bridge uses for that language. Symfony
-loads the file from the translation directory, and the bridge leaves its keys
-alone.
-
-Generate the values with the bridge's own matcher, from the `.po` files as
-they were before the rebuild (for example the files on `origin/main`), so the
-copied text is exactly what the page showed before. Run this from the
-repository root for one domain:
-
-```php
-<?php
-// php copy-legacy-translations.php <domain>
-require 'include/vendor/autoload.php';
-
-use Kadupul\Platform\Infrastructure\Symfony\GettextCatalog;
-use Kadupul\Platform\Infrastructure\Symfony\TranslationResources;
-use Symfony\Component\Yaml\Yaml;
-
-$domain = $argv[1];
-$keys = array_keys(Yaml::parseFile("config/translations/$domain.en.yaml"));
-foreach (TranslationResources::shippedLocales('.') as $locale) {
-    if ($locale === 'fr-FR') {
-        continue;
-    }
-    $catalog = GettextCatalog::fromFile("locales/po/$locale.po");
-    $messages = [];
-    foreach ($keys as $key) {
-        $message = $catalog->translate((string) $key);
-        if ($message !== null) {
-            $messages[(string) $key] = $message;
-        }
-    }
-    if ($messages !== []) {
-        $file = "config/translations/$domain." . str_replace('-', '_', $locale) . '.yaml';
-        file_put_contents($file, Yaml::dump($messages));
-    }
-}
-```
-
-Add the SPDX header used by the other files in `config/translations/`, then
-read the output before committing it. A legacy msgstr can be wrong in ways the
-matcher cannot see; the graph item inputs work left out one Hebrew entry
-whose text was double-encoded UTF-8. Expect fewer messages for languages
-whose catalogs are incomplete, and none at all for some.
-
-`TranslationCatalogTest` currently checks only the `en` and `fr` files of each
-domain. Check other-locale files by hand for keys that are not in
-`<domain>.en.yaml`, blank values and placeholders the English key does not
-have.
+Translations of a migrated page live in its YAML files, so rebuilding the
+`.po` catalogs does not affect them. `locales/build_gettext.sh` extracts
+msgids from PHP files and the console home template, not from YAML or other
+Twig templates, and `msgattrib --no-obsolete` drops every msgid no longer
+found there. `tests/security/verify_gettext_catalogs.py` fails if a `.po` file
+differs from the current extraction plus the reviewed historical identities in
+`locales/historical-compatibility.json`, so an entry cannot be kept by editing
+the `.po` file by hand. Legacy `__()` calls are the only readers of those
+catalogs.
 
 ## Locale names
 
@@ -310,23 +240,19 @@ corpus with no handler chosen, so the legacy bootstrap selects the Symfony
 handler itself, and requires identical values, errors and warnings; it also
 covers handler selection, a locale without a catalog, an unreadable catalog
 and an unwritable cache directory. `LegacyTranslationsTest` covers the
-catalogue cache. `GettextCatalogBridgeTest`,
+catalogue cache. `ConsoleTranslationsTest`,
 `LocaleResolverTest`, `LegacyLocaleResolutionTest` and `TranslationTest`
-cover the bridge, the resolver and the subscriber.
+cover the locale names, the resolver, the subscriber and the YAML lookup.
 
 ## Adding a string
 
 1. Add the English text as a key to `<domain>.en.yaml` and its translation to
-   `<domain>.fr.yaml`. Use `%name%` placeholders, not `%s`.
+   every complete locale file, `<domain>.fr.yaml` first. Use `%name%`
+   placeholders, not `%s`. `TranslationCatalogTest` requires the full key set in
+   each complete file, so a locale you cannot translate still needs an entry;
+   use the English text.
 2. Use it with `|trans({}, '<domain>')` in Twig or
    `TranslatorInterface::trans()` in PHP. Do not call `__()` from `src/`.
-3. If a legacy page already uses the same English text, the other languages
-   get its translation through the bridge. If the text is new, they show
-   English until someone translates it.
-4. If the change removes the last legacy use of a string that a migrated page
-   shows, copy its translations into other-locale files first, as described
-   above. Then rebuild the catalogs with `locales/build_gettext.sh`, not
-   `update-pot.sh`, and run `verify_gettext_catalogs.py`.
-   [CONTRIBUTING.md](../CONTRIBUTING.md) lists the rebuild alongside the
-   other generated files.
-5. Run `TranslationCatalogTest`.
+3. Add the translation to a partial file only when that locale's text should
+   differ from its fallback.
+4. Run `TranslationCatalogTest`.

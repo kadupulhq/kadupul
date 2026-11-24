@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A useful name for this Rule.": "اسم مفيد لهذه القاعدة."
+"Check this box to enable this rule.": "حدد هذا المربع لتفعيل هذه القاعدة."
+"Choose a Tree for the new Tree Items.": "اختر شجرة لعناصر الشجرة الجديدة."
+"Data Query Index": "فهرس استعلام البيانات"
+"Device": "جهاز"
+"Enable Rule": "تفعيل القاعدة"
+"Graph": "الرسم البياني"
+"Graph Grouping Style": "نمط تجميع الرسم البياني"
+"Graph Template": "قالب الرسم البياني"
+"Leaf Item Type": "نوع العنصر الورقي"
+"Name": "الاسم"
+"Optional: Sub-Tree Item": "اختياري: عنصر شجرة فرعية"
+"Save": "حفظ"
+"The Item Type that shall be dynamically added to the tree.": "نوع العنصر الذي ستتم إضافته ديناميكيًا إلى الشجرة."
+"Tree": "شجرة"
+"Tree Rule Selection [edit: %name%]": "اختيار قاعدة الشجرة [تعديل: %name%]"

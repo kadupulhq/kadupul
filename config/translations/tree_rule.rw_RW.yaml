@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A useful name for this Rule.": "Izina ry'ingirakamaro ry'iri tegeko."
+"Check this box to enable this rule.": "Hitamo aka gasanduku kugira ngo ukoreshe iri tegeko."
+"Choose a Tree for the new Tree Items.": "Hitamo igiti kizashyirwamo ibigize igiti bishya."
+"Data Query Index": "Urutonde rw'ishakisha ry'amakuru"
+"Device": "Igikoresho"
+"Enable Rule": "Koresha itegeko"
+"Graph": "Igishushanyo"
+"Graph Grouping Style": "Uburyo bwo guhuriza hamwe ibishushanyo"
+"Graph Template": "Inyandikorugero y'igishushanyo"
+"Leaf Item Type": "Ubwoko bw'ikintu cy'ikibabi"
+"Name": "Izina"
+"Optional: Sub-Tree Item": "Bitari itegeko: Ikintu cyo mu ishami ry'igiti"
+"Save": "Bika"
+"The Item Type that shall be dynamically added to the tree.": "Ubwoko bw'ikintu kizajya cyongerwa mu giti mu buryo bwikora."
+"Tree": "Igiti"
+"Tree Rule Selection [edit: %name%]": "Guhitamo Itegeko ry'Igiti [hindura: %name%]"

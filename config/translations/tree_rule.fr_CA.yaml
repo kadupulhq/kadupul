@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Choose a Tree for the new Tree Items.": "Choisissez une arborescence pour les nouveaux éléments de l'arborescence."
+"Data Query Index": "Index de requête de données"
+"Device": "Équipement"
+"Graph Grouping Style": "Style de regroupement de graphiques"
+"Leaf Item Type": "Type de l'article"
+"Optional: Sub-Tree Item": "Facultatif : article sous-arbre"
+"The Item Type that shall be dynamically added to the tree.": "Le type d'article qui doit être ajouté dynamiquement à l'arborescence."
+"Tree Rule Selection [edit: %name%]": "Sélection de la règle d'arborescence [edit : %name%]"

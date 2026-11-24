@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A description for this data query.": "Ibisobanuro by'ubu bubaza bw'amakuru."
+"A name for this data query.": "Izina ry'ubu bubaza bw'amakuru."
+"Add Data Query": "Ongera ububaza bw'amakuru"
+"Associated Graph Templates": "Inyandikorugero z'ibishushanyo zihujwe"
+"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "Hitamo uburyo bwo kwinjiza amakuru kuri ubu Bubaza bw'amakuru. Ubu buryo bwo kwinjiza bugaragaza uko amakuru akusanywa kuri buri Gikoresho gihujwe n'Ububaza bw'amakuru."
+"Could not locate XML file.": "Dosiye ya XML ntiyabonetse."
+"Data Input Method": "Uburyo bwo kwinjiza amakuru"
+"Data Queries [edit: %name%]": "Amabaza y'amakuru [hindura: %name%]"
+"Description": "Ibisobanuro"
+"Name": "Izina"
+"Save": "Bika"
+"Successfully located XML file": "Dosiye ya XML yabonetse neza"
+"The full path to the XML file containing definitions for this data query.": "Inzira yuzuye igana kuri dosiye ya XML irimo ibisobanuro by'ubu bubaza bw'amakuru."
+"XML Path": "Inzira ya XML"
