@@ -1,0 +1,1 @@
+- Add the missing Previous and Next messages to the relationships translation domain, and remove ten unused English messages from the administration, inventory and palette domains.

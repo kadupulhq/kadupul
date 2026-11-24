@@ -1,0 +1,1 @@
+- Check in the Symfony suite that every message key the real translation extractor finds in `src/` and `templates/` has an English entry in its domain, including keys shown through shared templates.

@@ -11,7 +11,6 @@
 "CSV file": "Fichier CSV"
 "CSV may contain at most 5000 colors.": "Le CSV peut contenir au plus 5000 couleurs."
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "Le CSV doit être en UTF-8 valide et ne pas dépasser 1 Mio."
-"CSV requires exactly the name and hex header columns.": "Le CSV doit contenir exactement les colonnes name et hex."
 "Cancel": "Annuler"
 "Clear": "Réinitialiser"
 "Click Continue to delete the following Colors.": "Cliquez sur Continuer pour supprimer les couleurs suivantes."

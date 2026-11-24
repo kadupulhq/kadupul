@@ -11,7 +11,6 @@
 "CSV file": "CSV ফাইল"
 "CSV may contain at most 5000 colors.": "CSV-তে সর্বোচ্চ 5000টি কালার থাকতে পারে।"
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV অবশ্যই বৈধ UTF-8 হতে হবে এবং আকার 1 MiB-এর বেশি হওয়া যাবে না।"
-"CSV requires exactly the name and hex header columns.": "CSV-তে ঠিক name এবং hex হেডার কলাম প্রয়োজন।"
 "Cancel": "বাতিল"
 "Clear": "পরিষ্কার করুন"
 "Click Continue to delete the following Colors.": "নিম্নলিখিত কালারসমূহ মুছে ফেলতে 'চালিয়ে যান' ক্লিক করুন।"
