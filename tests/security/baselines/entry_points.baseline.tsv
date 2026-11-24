@@ -277,7 +277,7 @@ include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at a447d033476b; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 0dbdef660348; included by include/global.php
-include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at a8cdfa65134a; included by include/global.php
+include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 251fe2830232; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fd457ddb745; included by auth_changepassword.php, auth_login.php, graph_realtime.php
 include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at c833aaabd8f2; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only

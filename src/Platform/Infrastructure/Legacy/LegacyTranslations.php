@@ -112,7 +112,7 @@ final class LegacyTranslations
     {
         if (is_dir($cacheDir)) {
             // Catalogues another user compiled can still be read.
-            return is_writable($cacheDir) || (glob($cacheDir . '/catalogue.' . $locale . '.*.php') ?: []) !== [];
+            return is_writable($cacheDir) || !in_array(glob($cacheDir . '/catalogue.' . $locale . '.*.php'), [false, []], true);
         }
         $ancestor = dirname($cacheDir);
         while (!is_dir($ancestor) && dirname($ancestor) !== $ancestor) {
