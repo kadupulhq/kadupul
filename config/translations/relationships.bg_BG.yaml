@@ -134,7 +134,7 @@
 "Not set": "Не е зададено"
 "Empty string": "Празен низ"
 "Stored grants and allowlisted settings only. Values are shown as recorded; inherited defaults and effective access are not calculated. Missing settings have no stored override.": "Само съхранени права и настройки от белия списък. Стойностите се показват както са записани; наследените стойности по подразбиране и действителният достъп не се изчисляват. Липсващите настройки нямат съхранено презаписване."
-"Theme": "Теми:"
+"Theme": "Теми"
 "Default View Mode": "Режим по подразбиране за преглед"
 "User Language": "Език на потребителя"
 "Enable Horizontal Scrolling": "Активирайте хоризонталното превъртане"

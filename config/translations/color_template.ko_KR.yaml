@@ -54,7 +54,7 @@
 "Duplicate Color Templates": "색상 템플릿 복제"
 "Each Color Template is synchronized in turn. Synchronization stops at the first failure, and templates not started within %seconds% seconds are left for another run.": "각 색상 템플릿은 순서대로 동기화됩니다. 첫 번째 실패 시 동기화가 중지되며, %seconds%초 이내에 시작되지 않은 템플릿은 다음 실행으로 남습니다."
 "Go": "가기"
-"Graphs": "그래프 "
+"Graphs": "그래프"
 "Has Graphs": "그래프 있음"
 "Hex": "16진수(Hex)"
 "Invalid color item order.": "잘못된 색상 항목 순서입니다."

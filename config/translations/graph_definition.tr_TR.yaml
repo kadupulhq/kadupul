@@ -89,7 +89,7 @@
 "VDEF save failed. Check the VDEF list before retrying.": "VDEF kaydetme başarısız oldu. Yeniden denemeden önce VDEF listesini kontrol edin."
 "VDEFs": "VDEFs"
 "VDEFs [edit: %name%]": "VDEF'ler [düzenle: %name%]"
-"VDEFs [new]": "VDEF&#39;ler [yeni]"
+"VDEFs [new]": "VDEF'ler [yeni]"
 "VDEFs in use cannot be deleted.": "Kullanımda olan VDEF'ler silinemez."
 "Value": "Değer"
 "Variable definitions and graph usage": "Değişken tanımları ve grafik kullanımı"

@@ -140,7 +140,7 @@
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Ο αριθμός των δειγμάτων που απαιτούνται πριν από την πλήρωση μιας σειράς στην προδιαγραφή RRA. Το πρώτο RRA θα πρέπει πάντα να έχει τιμή 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Το διάστημα polling, ο συντελεστής X-Files, οι συναρτήσεις ενοποίησης και τα RRA δεν μπορούν να αλλάξουν."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Αυτή η παλαιού τύπου φόρμα προφίλ πηγής δεδομένων έχει λήξει. Ανοίξτε τα Προφίλ πηγών δεδομένων και υποβάλετε νέα φόρμα."
-"Title Format": "Μορφή τίτλου:"
+"Title Format": "Μορφή τίτλου"
 "To change the default, mark another profile as the default.": "Για να αλλάξετε την προεπιλογή, επισημάνετε ένα άλλο προφίλ ως προεπιλεγμένο."
 "Unable to load Data Source Profiles. Reload before retrying.": "Αδυναμία φόρτωσης των προφίλ πηγών δεδομένων. Επαναφορτώστε πριν προσπαθήσετε ξανά."
 "Unexpected fields were submitted.": "Υποβλήθηκαν απροσδόκητα πεδία."

@@ -115,7 +115,7 @@
 "The discovery network changed since you opened this form. Reload before saving.": "Bu formu açtığınızdan beri keşif ağı değişti. Kaydetmeden önce yeniden yükleyin."
 "The discovery network form is incomplete.": "Keşif ağı formu eksik."
 "The ranges cover more than %count% addresses.": "Aralıklar %count% adresten fazlasını kapsıyor."
-"The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings.": "Ana bilgisayar ICMP ve UDP ping işlemi için kullanılacak zamanaşımı değeri. Bu ana bilgisayar SNMP zaman aşımı değeri, SNMP ping&#39;leri için geçerlidir."
+"The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings.": "Ana bilgisayar ICMP ve UDP ping işlemi için kullanılacak zamanaşımı değeri. Bu ana bilgisayar SNMP zaman aşımı değeri, SNMP ping'leri için geçerlidir."
 "The type of ping packet to send.": "Gönderilecek ping paketinin türü."
 "Third": "Üçüncü"
 "Thursday": "Perşembe"

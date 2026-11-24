@@ -69,7 +69,7 @@
 "Templates": "Шаблони"
 "The database version matches this application. Installation does not establish that polling is healthy.": "Версията на базата данни съответства на това приложение. Инсталацията не доказва, че обхождането работи изправно."
 "The request outcome is unknown. Check execution status before retrying.": "Резултатът от заявката е неизвестен. Проверете състоянието на изпълнението, преди да опитате отново."
-"Theme": "Теми:"
+"Theme": "Теми"
 "Verify": "Проверка"
 "Verify the poller schedule and service account.": "Проверете графика на полера и служебния акаунт."
 "Version change": "Промяна на версията"
