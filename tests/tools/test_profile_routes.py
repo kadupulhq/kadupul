@@ -123,7 +123,7 @@ class PairsTest(unittest.TestCase):
     def test_shipped_pairs_cover_every_forwarding_shim(self):
         root = Path(__file__).resolve().parents[2]
         pairs = pr.load_pairs(root / "tests/tools/route-pairs.json")
-        self.assertEqual(len(pairs), 16)
+        self.assertEqual(len(pairs), 17)
         baseline = (root / "tests/security/baselines/entry_points.baseline.tsv").read_text().splitlines()
         shims = {line.split("\t")[0]: line.split("\t")[2] for line in baseline
                  if line.split("\t")[1] == "symfony:forward"}

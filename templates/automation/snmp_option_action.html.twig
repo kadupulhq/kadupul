@@ -1,0 +1,13 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends '_action_confirm.html.twig' %}
+{% set domain = 'automation' %}
+{% set heading = operation == 'delete' ? t('Delete SNMP Option Sets', {}, 'automation') : t('Duplicate SNMP Option Sets', {}, 'automation') %}
+{% set intro = operation == 'delete' ? t('Click Continue to delete the following SNMP Option Sets and all their entries.', {}, 'automation') : t('Click Continue to duplicate the following SNMP Option Sets. You can optionally change the name format for the new SNMP Option Sets.', {}, 'automation') %}
+{% set cancel_url = path('admin_snmp_options') %}
+{% block extra_fields %}{% if form.name_format is defined %}{{ form_row(form.name_format) }}{% endif %}{% endblock %}
+{% block items %}
+    {% for set in sets %}<li>{{ set.name }}</li>{% endfor %}
+{% endblock %}

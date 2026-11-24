@@ -107,11 +107,21 @@ final class AdministrationListRoutesTest extends TestCase
             self::assertTrue(@$dom->loadHTML($html));
             $xpath = new \DOMXPath($dom);
             self::assertSame(10, $xpath->query('//table[@id="administration-list"]/tbody/tr')->length);
-            self::assertSame(count($screen->columns()), $xpath->query('//table[@id="administration-list"]/thead/tr/th[@scope="col"]')->length);
+            $native = $screen === ListScreen::SnmpOptions;
+            self::assertSame(count($screen->columns()) + ($native ? 1 : 0), $xpath->query('//table[@id="administration-list"]/thead/tr/th[@scope="col"]')->length);
+            self::assertSame($native ? 10 : 0, $xpath->query('//input[@type="checkbox"]')->length);
             self::assertSame(1, $xpath->query('//a[@rel="next"]')->length);
             self::assertStringContainsString('filter=Router', $xpath->query('//a[@rel="next"]')->item(0)->getAttribute('href'));
             self::assertSame(0, $xpath->query('//form[translate(@method,"POST","post")="post"]')->length);
             $links = array_map(static fn(\DOMElement $link): string => $link->getAttribute('href'), iterator_to_array($xpath->query('//a')));
+            if ($native) {
+                // SNMP Option Sets have no PHP forms left to open.
+                self::assertContains('/automation/snmp-options/new', $links);
+                self::assertContains('/automation/snmp-options/7/edit', $links);
+                self::assertStringNotContainsString($screen->legacyScript(), $html);
+                self::assertStringNotContainsString('Bulk actions and advanced filters', $html);
+                continue;
+            }
             if ($screen->creatable()) {
                 self::assertContains('/monitor/' . $screen->legacyScript() . '?' . http_build_query($screen->editQuery()), $links);
             } else {
@@ -125,6 +135,49 @@ final class AdministrationListRoutesTest extends TestCase
             self::assertContains('/monitor/' . $screen->legacyScript() . '?' . http_build_query($screen->legacyQuery() + ['filter' => 'Router', 'rows' => '10']), $links);
         }
         self::assertSame(array_merge(...array_map(static fn(ListScreen $screen): array => [$screen, $screen], ListScreen::cases())), $this->authorized);
+    }
+
+    public function testSnmpOptionSetsAreSelectedForTheSymfonyBulkActions(): void
+    {
+        $this->empty = true;
+        $empty = new \DOMDocument();
+        self::assertTrue(@$empty->loadHTML((string) $this->get(ListScreen::SnmpOptions)->getContent()));
+        self::assertSame((string) (count(ListScreen::SnmpOptions->columns()) + 1), (new \DOMXPath($empty))->query('//table[@id="administration-list"]/tbody/tr/td')->item(0)?->getAttribute('colspan'));
+        $this->empty = false;
+
+        // A subdirectory installation: every generated link stays below its front controller.
+        $server = ['SCRIPT_NAME' => '/monitor/app.php', 'SCRIPT_FILENAME' => '/srv/monitor/app.php'];
+        $response = $this->kernel->handle(Request::create('/monitor/app.php/automation/snmp-options?rows=5000', server: $server));
+        self::assertSame(200, $response->getStatusCode());
+        $html = (string) $response->getContent();
+        $dom = new \DOMDocument();
+        self::assertTrue(@$dom->loadHTML($html));
+        $xpath = new \DOMXPath($dom);
+        // CSP: no inline script and no event handler attribute.
+        self::assertSame(0, $xpath->query('//script[not(@src)] | //@*[starts-with(name(), "on")]')->length);
+        $form = $xpath->query('//form[.//table[@id="administration-list"]]')->item(0);
+        self::assertInstanceOf(\DOMElement::class, $form);
+        // The selection only opens a confirmation page, so it is a GET form without a token.
+        self::assertSame(['get', '/monitor/app.php/automation/snmp-options/actions/delete'], [strtolower($form->getAttribute('method')), $form->getAttribute('action')]);
+        self::assertSame(0, $xpath->query('.//input[@type="hidden"]', $form)->length);
+        $buttons = $xpath->query('.//button[@type="submit"]', $form);
+        self::assertSame(['Delete selected', 'Duplicate selected'], array_map(static fn(\DOMNode $button): string => trim((string) $button->textContent), iterator_to_array($buttons)));
+        self::assertSame('/monitor/app.php/automation/snmp-options/actions/duplicate', $buttons->item(1)?->attributes?->getNamedItem('formaction')?->nodeValue);
+        // Every row of the largest page can be ticked; the action route enforces the limit the page states.
+        $boxes = $xpath->query('.//tbody//input[@type="checkbox"][@name="ids[]"][@value="7"][not(@disabled)]', $form);
+        self::assertSame(5000, $boxes->length);
+        self::assertSame('Select Router <img src=x onerror=alert(1)>', $boxes->item(0)?->attributes?->getNamedItem('aria-label')?->nodeValue);
+        self::assertStringContainsString('Select up to 100 rows at a time.', $html);
+        self::assertSame(5000, $xpath->query('//a[@class="linkEditMain"][@href="/monitor/app.php/automation/snmp-options/7/edit"]')->length);
+        self::assertSame(1, $xpath->query('//a[@href="/monitor/app.php/automation/snmp-options/new"]')->length);
+        // Sorting and paging keep working from inside the selection form.
+        self::assertStringStartsWith('/monitor/app.php/automation/snmp-options?', (string) $xpath->query('.//th/a', $form)->item(0)?->attributes?->getNamedItem('href')?->nodeValue);
+
+        $other = (string) $this->get(ListScreen::GraphRules)->getContent();
+        self::assertStringNotContainsString('type="checkbox"', $other);
+        self::assertStringNotContainsString('Delete selected', $other);
+        self::assertStringContainsString('Changes and advanced filters use the existing administration forms.', $other);
+        self::assertStringNotContainsString('Changes and advanced filters use the existing administration forms.', $html);
     }
 
     public function testAuthorizationPrecedesParsingAndCatalogAccess(): void
@@ -183,7 +236,14 @@ final class AdministrationListRoutesTest extends TestCase
             $response = $this->kernel->handle($request);
             self::assertSame(200, $response->getStatusCode());
             self::assertSame('fr', $request->getLocale());
-            self::assertStringContainsString('Actions groupées et filtres avancés', (string) $response->getContent());
+            if ($screen === ListScreen::SnmpOptions) {
+                self::assertStringNotContainsString('Actions groupées et filtres avancés', (string) $response->getContent());
+                self::assertStringContainsString('Dupliquer la sélection', (string) $response->getContent());
+                self::assertStringContainsString('Sélectionnez jusqu’à 100 lignes à la fois.', (string) $response->getContent());
+                self::assertStringContainsString('aria-label="Sélectionner Router &lt;img', (string) $response->getContent());
+            } else {
+                self::assertStringContainsString('Actions groupées et filtres avancés', (string) $response->getContent());
+            }
             if ($screen->creatable()) {
                 self::assertStringContainsString('Créer', (string) $response->getContent());
             } else {

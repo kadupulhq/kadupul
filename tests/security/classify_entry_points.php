@@ -2329,7 +2329,7 @@ function authenticated_access_adapter(string $root): string
 // complete firewall, request reset and native authentication implementation.
 const NATIVE_SESSION_FIREWALL_SOURCES = [
     'config/bundles.php' => '0432519a4e3cd6030979a2b8b26e8660b46fae9fade5a80c1186a6508cfb920c',
-    'config/packages/framework.yaml' => '252cb657e83d118e7a641770a25b42fd83fd5758f28bfd20c7bfd48a9e1e372c',
+    'config/packages/framework.yaml' => 'e8d26636c0e7063c33ba9e2596feda57a7976e57061565d68b36a38a836646ce',
     'config/packages/security.yaml' => '089678fa4801a6efa5872f256b282415d9c1bd9fbf99908948b9dae5eabea914',
     'config/routes.yaml' => '2f0f862c7962adc779c325cd4b138d07fc7a9364c0f0f545f7bdc60409918e5e',
     'src/Kernel.php' => '030b9f7a8b0bbd936cde923d58a1a652faeebedb4541de9116f89917325eb14b',
@@ -2996,8 +2996,9 @@ const REVIEWED_FEATURE_ACCESS = [
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
     ],
-    // The SNMP Option Set editor checks the Automation realm itself; these
-    // keys precede the list page's prefix, which uses AdministrationListAccess.
+    // The SNMP Option Set editor, bulk actions and legacy forwarder check the
+    // Automation realm themselves; these keys precede the list page's prefix,
+    // which uses AdministrationListAccess.
     '/automation/snmp-options/new' => [
         'label' => 'SNMP option set',
         'realm' => 23,
@@ -3008,6 +3009,24 @@ const REVIEWED_FEATURE_ACCESS = [
         ],
     ],
     '/automation/snmp-options/{id}' => [
+        'label' => 'SNMP option set',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/snmp-options/actions' => [
+        'label' => 'SNMP option set',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/snmp-options/legacy' => [
         'label' => 'SNMP option set',
         'realm' => 23,
         'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',

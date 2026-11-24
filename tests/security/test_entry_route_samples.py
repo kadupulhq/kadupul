@@ -21,6 +21,7 @@ class RouteSamples(unittest.TestCase):
                       'app.php/graph-definitions/vdefs/{id}/items',
                       'app.php/graph-definitions/cdefs', 'app.php/graphing/colors/import',
                       'app.php/automation/templates/{id}/move/{direction}', 'automation_templates.php',
+                      'app.php/automation/snmp-options/actions/{operation}', 'app.php/automation/snmp-options/legacy', 'automation_snmp.php',
                       'app.php/templates/devices', 'app.php/templates/graphs', 'app.php/templates/data-sources',
                       'app.php/templates/aggregates', 'app.php/data-collection/queries', 'app.php/automation/snmp-options',
                       'app.php/automation/graph-rules', 'app.php/automation/tree-rules', 'app.php/automation/networks',
@@ -39,7 +40,7 @@ class RouteSamples(unittest.TestCase):
         for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
                       'app.php/inventory/devices/{id}', 'app.php/links-extra',
                       'app.php/utilities/rrd-checker', 'app.php/management-extra', 'app.php/utilities/system-extra', 'app.php/automation/templates-other',
-                      'automation_snmp.php', 'app.php/graphing/data-source-profiles-other', 'app.php/administration/users-other'):
+                      'automation_snmp_items.php', 'app.php/automation/snmp-options-other', 'app.php/graphing/data-source-profiles-other', 'app.php/administration/users-other'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
 

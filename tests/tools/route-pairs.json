@@ -4,6 +4,10 @@
     "symfony": "app.php/about/legacy"
   },
   {
+    "legacy": "automation_snmp.php",
+    "symfony": "app.php/automation/snmp-options/legacy"
+  },
+  {
     "legacy": "automation_templates.php",
     "symfony": "app.php/automation/templates/legacy"
   },

@@ -109,7 +109,7 @@ final class TranslationTest extends TestCase
 
     public static function snmpOptionRoutes(): iterable
     {
-        foreach (['automation_snmp_option_create', 'automation_snmp_option_edit', 'automation_snmp_entry_create', 'automation_snmp_entry_edit', 'automation_snmp_entry_delete', 'automation_snmp_entry_move'] as $route) {
+        foreach (['automation_snmp_option_create', 'automation_snmp_option_edit', 'automation_snmp_entry_create', 'automation_snmp_entry_edit', 'automation_snmp_entry_delete', 'automation_snmp_entry_move', 'automation_snmp_option_action', 'automation_snmp_options_legacy'] as $route) {
             yield $route => [$route];
         }
     }

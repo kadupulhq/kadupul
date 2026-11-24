@@ -46,6 +46,7 @@ final class LegacyPageForwarderTest extends TestCase
     {
         return [
             ['about.php', '/about/legacy'],
+            ['automation_snmp.php', '/automation/snmp-options/legacy'],
             ['automation_templates.php', '/automation/templates/legacy'],
             ['cdef.php', '/graph-definitions/cdefs/legacy'],
             ['color.php', '/graphing/colors/legacy'],
