@@ -7,8 +7,9 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 Legacy PHP pages translate with gettext: `__()` and its variants in
 `include/global_languages.php` read the compiled catalogs in
-`locales/LC_MESSAGES/<ll-CC>.mo`. Pages migrated to Symfony and Twig use
-Symfony Translation instead, with one message domain per feature. They reuse
+`locales/LC_MESSAGES/<ll-CC>.mo`, by default through Symfony Translation (see
+[Legacy pages](#legacy-pages-the-language-handler)). Pages migrated to Symfony
+and Twig use Symfony Translation with one message domain per feature. They reuse
 the legacy translations by English text, so a migrated page is not limited to
 the English and French that its own files provide. This page describes how
 that works, when a domain needs more than two files, how the request locale is
@@ -77,12 +78,61 @@ Two other domains exist. The `console` domain loads the compiled `.mo` files
 directly for the console home page, whose text is extracted into the shared
 gettext catalog. The `cacti` domain (`TranslationResources`,
 `GettextMoLoader`) loads each `.mo` under its exact gettext identities,
-including contexts and every plural form. Nothing translates through it yet:
-the kernel translator does not register it, and
+including contexts and every plural form. Symfony pages do not translate
+through it yet: the kernel translator does not register it, and
 `GettextMoLoaderParityTest::testTheKernelTranslatorDoesNotLoadTheCactiDomainYet`
-pins that. It exists so that legacy `__()` calls can later move onto Symfony
-Translation, and its tests compare it with php-gettext output for every
-shipped catalog.
+pins that. Legacy `__()` calls read the same identities through the same
+loader, with a translator of their own, as the next section describes.
+
+## Legacy pages: the language handler
+
+`include/global_languages.php` resolves `__()`, `__n()`, `__x()`, `__xn()` and
+their `__esc` variants through a language handler. The default is the Symfony
+handler (`CACTI_LANGUAGE_HANDLER_SYMFONY`, value 4).
+`Kadupul\Platform\Infrastructure\Legacy\LegacyTranslations` builds a
+Symfony `Translator` for the request locale, without booting the kernel, and
+registers `GettextMoLoader` for the core catalog (`cacti`) and for the catalog
+of every installed plugin that ships one. Lookups use the gettext identities
+and each catalog's own `Plural-Forms` rule, so the text is what php-gettext
+returned. Call sites, catalogs and the `sprintf` argument handling of `__()`
+are unchanged. English needs no catalog and loads no handler.
+
+The handler is chosen the way it was before:
+
+1. **Preferred Language Processor** (`i18n_language_handler`, Settings >
+   General), when it is not "Use the First Handler Found".
+2. Otherwise `$i18n_handler` in `include/config.php`, as the number of a
+   `CACTI_LANGUAGE_HANDLER_*` constant.
+3. Otherwise the first handler found: Symfony, then php-gettext.
+
+To go back to php-gettext, select "Use the PHP GetText Handler" or set
+`$i18n_handler = 1;`. No cache needs clearing, and the next request uses it.
+A saved choice is now honoured: the setting is stored as a string, which
+matched none of the integer constants, so every saved choice used to get the
+first handler found. MoTranslator can be selected only where its library is
+installed under `include/vendor/motranslator`, and the Oscarotero handler only
+on PHP 8.0 or older, which `main` does not support; without their library both
+choices get the first handler found.
+
+Compiled catalogues are cached in `var/cache/legacy-translations`, one file
+per locale and set of catalogs (`catalogue.<locale>.<hash>.php`). The hash
+covers the text domains and their file paths, so installing or removing a
+plugin catalog uses another file. Each file records its `.mo` files and is
+rebuilt when one of them has a later modification time, so a replaced catalog
+needs no cache clear. Deleting the directory is always safe. `cache:clear`
+does not touch it.
+
+The directory is created on first use with the permissions of the process
+that got there first, like the rest of `var/cache`. It holds PHP files that
+are included, so it must be writable only by the application. When it cannot
+be created or written, for example on a read-only deployment or when another
+user created it, the catalogs are read from the `.mo` files on every request
+instead: the text is the same and the page costs about what php-gettext cost.
+
+A catalog that is missing, truncated or not a `.mo` file no longer ends the
+request. Its text domain is shown in English, the other domains still load,
+and every such request writes a `WARNING` with the file name to the Kadupul
+log.
 
 ## When a domain needs other-locale files
 
@@ -255,7 +305,12 @@ The **Gettext source and compiled catalogs** job in `.github/workflows/ci.yml`:
 `tests/Symfony/Translation/` holds the rendered corpus tests. They render every
 catalog identity through the real `include/global_languages.php` helpers and
 php-gettext, for every shipped locale and two fixture plugins, and compare the
-`cacti` domain with that output. `GettextCatalogBridgeTest`,
+`cacti` domain with that output. `LegacySymfonyHandlerTest` renders the same
+corpus with no handler chosen, so the legacy bootstrap selects the Symfony
+handler itself, and requires identical values, errors and warnings; it also
+covers handler selection, a locale without a catalog, an unreadable catalog
+and an unwritable cache directory. `LegacyTranslationsTest` covers the
+catalogue cache. `GettextCatalogBridgeTest`,
 `LocaleResolverTest`, `LegacyLocaleResolutionTest` and `TranslationTest`
 cover the bridge, the resolver and the subscriber.
 
