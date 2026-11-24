@@ -756,6 +756,12 @@ function get_list_of_locales() {
 		'et-EE' => array('language' => 'Estonian',            'direction' => 'ltr', 'country' => 'ee', 'filename' => 'estonian_estonia'),
 		'fi-FI' => array('language' => 'Finnish',             'direction' => 'ltr', 'country' => 'fi', 'filename' => 'finnish_finland'),
 		'fr-FR' => array('language' => 'French',              'direction' => 'ltr', 'country' => 'fr', 'filename' => 'french_france'),
+		'fr-CA' => array(
+			'language'  => 'French (Canada)',
+			'direction' => 'ltr',
+			'country'   => 'ca',
+			'filename'  => 'french_canada'
+		),
 		'fr-SN' => array(
 			'language'  => 'French (Africa)',
 			'direction' => 'ltr',
@@ -813,6 +819,12 @@ function get_list_of_locales() {
 		'sk-SK' => array('language' => 'Slovak',              'direction' => 'ltr', 'country' => 'sk', 'filename' => 'slovak_slovakia'),
 		'sl-SI' => array('language' => 'Slovenian',           'direction' => 'ltr', 'country' => 'si', 'filename' => 'slovenian_slovenia'),
 		'es-ES' => array('language' => 'Spanish',             'direction' => 'ltr', 'country' => 'es', 'filename' => 'spanish_spain'),
+		'es-MX' => array(
+			'language'  => 'Spanish (Mexico)',
+			'direction' => 'ltr',
+			'country'   => 'mx',
+			'filename'  => 'spanish_mexico'
+		),
 		'sw-KE' => array(
 			'language'  => 'Swahili',
 			'direction' => 'ltr',

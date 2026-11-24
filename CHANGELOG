@@ -7,7 +7,9 @@ Cacti CHANGELOG
 -issue#207: Retain distinct addresses from overlapping discovery ranges and isolate concurrent network queues
 -issue#1032: Validate discovery ranges and scan valid .255 endpoints
 -issue#1499: Fix spaced sprintf specifiers, broken HTML tags, mangled PHP variable names, corrupted Arabic strftime formatting, and translated example.com URLs across shipped gettext catalogs
+-issue#1499: Repair remaining brand-name mistranslations, shifted placeholders, HTML tag mismatches, mojibake, foreign-script leaks, and stray blank lines across all 23 existing shipped gettext catalogs
 -feature#1499: Complete all 23 existing shipped gettext catalogs and add 17 top-25 world and African language catalogs (af-ZA, am-ET, bn-BD, fa-IR, fr-SN, ha-NG, id-ID, ig-NG, mr-IN, sw-KE, ta-IN, te-IN, th-TH, ur-PK, xh-ZA, yo-NG, zu-ZA) for 40 translated locales total
+-feature#1499: Add regional gettext catalogs for English (Britain) (en-GB), Spanish (Mexico) (es-MX), and French (Canada) (fr-CA) for 43 translated locales total
 -issue: Preserve automation discovery work across failures, isolate concurrent network runs, enforce deadlines, and acknowledge schedules only after completed discovery
 -issue: Retry the automation recovery regression tests with the run limit their work needs, so a slow runner no longer fails the deadline and later-batch retries intermittently
 -issue: Retry an automation discovery queue statement that InnoDB rolls back as a deadlock victim, so concurrent discovery workers no longer fail the whole run
