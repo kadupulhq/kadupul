@@ -21,6 +21,13 @@
 
 require __DIR__ . '/../../include/vendor/autoload.php';
 
+// The syntax trees a run keeps peak near 400 MB, above PHP's 128 MB CLI
+// default. A higher or unlimited configured limit is left alone.
+$memory_limit = ini_parse_quantity((string) ini_get('memory_limit'));
+if ($memory_limit !== -1 && $memory_limit < 1024 * 1024 * 1024) {
+    ini_set('memory_limit', '1G');
+}
+
 use PhpParser\Error as ParseError;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
@@ -368,30 +375,36 @@ function fail(string $message): never
 }
 
 /**
+ * A scan of the whole tree passes $keep = false: holding every file's syntax
+ * tree at once takes close to 2 GB, and only the few files a classification
+ * reads again are worth keeping.
+ *
  * @return list<Stmt>|null null when the file does not parse
  */
-function parse_file(string $root, string $path, bool $names = false): ?array
+function parse_file(string $root, string $path, bool $names = false, bool $keep = true): ?array
 {
     static $cache = [];
     $key = ($names ? 'n:' : 'p:') . $root . '/' . $path;
-    if (!array_key_exists($key, $cache)) {
-        $cache[$key] = null;
-        $code = is_file($root . '/' . $path) ? file_get_contents($root . '/' . $path) : false;
-        if ($code !== false) {
-            try {
-                $stmts = (new ParserFactory())->createForNewestSupportedVersion()->parse($code);
-                if ($names) {
-                    $traverser = new NodeTraverser(new NameResolver());
-                    $stmts = $traverser->traverse($stmts);
-                }
-                $cache[$key] = $stmts;
-            } catch (ParseError) {
-                $cache[$key] = null;
+    if (array_key_exists($key, $cache)) {
+        return $cache[$key];
+    }
+    $stmts = null;
+    $code = is_file($root . '/' . $path) ? file_get_contents($root . '/' . $path) : false;
+    if ($code !== false) {
+        try {
+            $stmts = (new ParserFactory())->createForNewestSupportedVersion()->parse($code);
+            if ($names && $stmts !== null) {
+                $stmts = (new NodeTraverser(new NameResolver()))->traverse($stmts);
             }
+        } catch (ParseError) {
+            $stmts = null;
         }
     }
+    if ($keep) {
+        $cache[$key] = $stmts;
+    }
 
-    return $cache[$key];
+    return $stmts;
 }
 
 /**
@@ -941,7 +954,7 @@ function includers(string $root, array $files): array
         if (preg_match('#\A(?:tests|include/vendor|docs)/#', $path)) {
             continue;
         }
-        $stmts = parse_file($root, $path);
+        $stmts = parse_file($root, $path, false, false);
         foreach ($stmts === null ? [] : walk($stmts) as $node) {
             if ($node instanceof Expr\Include_) {
                 $target = resolve($node->expr, $root, $path);
@@ -965,7 +978,7 @@ function declared_functions(string $root, array $files): array
 {
     $found = [];
     foreach ($files as $path) {
-        foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+        foreach (walk(parse_file($root, $path, true, false) ?? []) as $node) {
             if ($node instanceof Stmt\Function_) {
                 $found[strtolower($node->namespacedName?->toString() ?? $node->name->toString())][] = $path;
             }
