@@ -13,7 +13,7 @@ test('installer rejects unsafe storage before database changes even when forced'
     mkdir($dir . '/rra', 0700);
     mkdir($dir . '/bin', 0700);
     // Cache compilation is a separate boundary; this fixture tests storage admission.
-    file_put_contents($dir . '/bin/console', '<?php if(array_slice($argv,1)!==["cache:clear","--env=prod","--no-debug","--no-interaction"]||getenv("APP_ENV")!=="prod"||getenv("APP_DEBUG")!=="0"){exit(2);}touch(dirname(__DIR__)."/cache-refreshed");');
+    file_put_contents($dir . '/bin/console', '<?php if(!in_array(array_slice($argv,1),[["cache:clear","--no-optional-warmers","--env=prod","--no-debug","--no-interaction"],["cache:warmup","--env=prod","--no-debug","--no-interaction"]],true)||getenv("APP_ENV")!=="prod"||getenv("APP_DEBUG")!=="0"){exit(2);}touch(dirname(__DIR__)."/cache-refreshed");');
     $parentCoverage = $this->getTestResultObject()->getCodeCoverage();
     $coverage = '';
     if ($parentCoverage !== null) {

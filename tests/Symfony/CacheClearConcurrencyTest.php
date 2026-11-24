@@ -87,6 +87,36 @@ final class CacheClearConcurrencyTest extends TestCase
         self::assertFileExists($this->cacheRoot . '/prod/Kadupul_KernelProdContainer.php');
     }
 
+    /**
+     * The installer refresh runs these two commands. Catalogues compiled by
+     * cache:clear are compiled under the exclusive lock, where every shipped
+     * locale together outlasted the bound a web request waits for.
+     */
+    public function testTranslationCataloguesAreCompiledByTheWarmupNotUnderTheCacheClearLock(): void
+    {
+        $catalogues = fn(): array => array_values(array_unique(array_map(
+            static fn(string $file): string => explode('.', basename($file))[1],
+            glob($this->cacheRoot . '/prod/translations/catalogue.*.php') ?: [],
+        )));
+
+        $clear = $this->console('cache:clear', '--no-optional-warmers');
+        $clear->run();
+        self::assertSame(0, $clear->getExitCode(), $clear->getErrorOutput());
+        self::assertFileExists($this->cacheRoot . '/prod/Kadupul_KernelProdContainer.php');
+        self::assertSame([], $catalogues());
+
+        $warmup = $this->console('cache:warmup');
+        $warmup->run();
+        self::assertSame(0, $warmup->getExitCode(), $warmup->getErrorOutput());
+        $shipped = json_decode((string) file_get_contents(dirname(__DIR__, 2) . '/locales/catalogs.json'), true, 8, JSON_THROW_ON_ERROR)['translated_locales'];
+        self::assertGreaterThanOrEqual(40, count($shipped));
+        $compiled = $catalogues();
+        foreach ($shipped as $locale) {
+            // fr-FR is served as fr (ConsoleTranslations).
+            self::assertContains($locale === 'fr-FR' ? 'fr' : str_replace('-', '_', $locale), $compiled, $locale);
+        }
+    }
+
     public function testWebRequestWaitsWhileCacheIsBeingReplaced(): void
     {
         $address = $this->startServer();
@@ -305,12 +335,12 @@ final class CacheClearConcurrencyTest extends TestCase
         self::assertFalse(CacheLockPolicy::fileUsable(['mode' => 0o040750, 'uid' => $application], false, 0, $application));
     }
 
-    private function console(string $command): Process
+    private function console(string $command, string ...$options): Process
     {
         $root = dirname(__DIR__, 2);
 
         return new Process(
-            [PHP_BINARY, $root . '/bin/console', $command, '--env=prod', '--no-debug', '--no-interaction'],
+            [PHP_BINARY, $root . '/bin/console', $command, ...$options, '--env=prod', '--no-debug', '--no-interaction'],
             $root,
             ['APP_ENV' => 'prod', 'APP_DEBUG' => '0', 'APP_CACHE_DIR' => $this->cacheRoot],
             null,
