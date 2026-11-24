@@ -3539,9 +3539,11 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         // alone; cache:warmup then compiles the optional caches, the
         // translation catalogues of every shipped locale among them, without
         // that lock, so the web installer's status polling keeps answering.
+        // The children read php.ini afresh, so the limit this worker lifted for
+        // itself is passed on: compiling every shipped locale exceeds 128M.
         foreach (array(array('cache:clear', '--no-optional-warmers'), array('cache:warmup')) as $command) {
             $process = new \Symfony\Component\Process\Process(
-                array_merge(array($php, $config['base_path'] . '/bin/console'), $command, array('--env=prod', '--no-debug', '--no-interaction')),
+                array_merge(array($php, '-d', 'memory_limit=-1', $config['base_path'] . '/bin/console'), $command, array('--env=prod', '--no-debug', '--no-interaction')),
                 $config['base_path'],
                 array('APP_ENV' => 'prod', 'APP_DEBUG' => '0'),
                 null,

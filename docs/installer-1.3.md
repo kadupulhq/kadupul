@@ -174,6 +174,23 @@ controlled conflict and must reload the installer. The historical background
 entry remains for draining an already launched legacy job; do not run old and
 new write paths concurrently.
 
+The installer and `cli/upgrade_database.php` refresh the cache themselves. They
+run `cache:clear --no-optional-warmers` and then `cache:warmup`, each with the
+PHP memory limit lifted, so the translation catalogues of all 40 locales are
+compiled after the cache lock is released.
+
+A `cache:clear` or `cache:warmup` run by hand has neither property:
+
+- It compiles every locale in one process. The translator warmup alone peaked
+  at about 142 MB, so PHP's default `memory_limit` of 128M ends it with
+  "Allowed memory size exhausted". Use at least 256M, for example
+  `php -d memory_limit=256M bin/console cache:clear --env=prod --no-debug`.
+- A plain `cache:clear` compiles the catalogues while it holds the cache lock.
+  A web request waits up to 15 seconds for that lock and then answers 503 with
+  `Retry-After`. To keep the locked part short, run
+  `cache:clear --no-optional-warmers` followed by `cache:warmup`, as the
+  installer does.
+
 Application rollback requires stopping installer workers first and restoring
 matching files. Reverting code does not undo committed schema migrations,
 template imports or external plugin effects. Restore tested backups when data

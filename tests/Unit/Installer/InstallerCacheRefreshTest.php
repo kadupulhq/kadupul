@@ -7,13 +7,15 @@
 // most CacheDirectoryLock::SHARED_TIMEOUT_SECONDS. Compiling the translation
 // catalogues of every shipped locale inside it outlasted that bound, and the
 // web installer's status request answered 503. The refresh therefore builds
-// the container under the lock and warms the optional caches afterwards.
+// the container under the lock and warms the optional caches afterwards. Both
+// children get the memory limit the installer lifts for itself, because that
+// compilation needs more than PHP's default 128M.
 test('the installer cache refresh compiles optional caches outside the locked cache:clear', function (string $failing, bool $refreshed, array $expected) {
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/installer-cache-refresh-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
     mkdir($dir . '/bin', 0700);
-    file_put_contents($dir . '/bin/console', '<?php file_put_contents(dirname(__DIR__)."/calls",json_encode([array_slice($argv,1),getenv("APP_ENV"),getenv("APP_DEBUG")])."\n",FILE_APPEND);exit($argv[1]===' . var_export($failing, true) . '?1:0);');
+    file_put_contents($dir . '/bin/console', '<?php file_put_contents(dirname(__DIR__)."/calls",json_encode([array_slice($argv,1),getenv("APP_ENV"),getenv("APP_DEBUG"),ini_get("memory_limit")])."\n",FILE_APPEND);exit($argv[1]===' . var_export($failing, true) . '?1:0);');
     $script = '<?php function __($message, ...$args) { return $args ? vsprintf($message, $args) : $message; }'
         . '$config = array("base_path" => __DIR__);'
         . 'require ' . var_export($root . '/include/vendor/autoload.php', true) . ';'
@@ -21,7 +23,8 @@ test('the installer cache refresh compiles optional caches outside the locked ca
         . 'try { Installer::refreshSymfonyCache(); echo "refreshed"; } catch (RuntimeException $e) { echo $e->getMessage(); }';
     file_put_contents($dir . '/refresh.php', $script);
     try {
-        $process = proc_open([PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'auto_append_file=', $dir . '/refresh.php'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $dir);
+        // The parent runs under PHP's default limit; each child must have it lifted.
+        $process = proc_open([PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'auto_append_file=', '-d', 'memory_limit=128M', $dir . '/refresh.php'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $dir);
         expect(is_resource($process))->toBeTrue();
         $output = stream_get_contents($pipes[1]);
         $errors = stream_get_contents($pipes[2]);
@@ -31,7 +34,7 @@ test('the installer cache refresh compiles optional caches outside the locked ca
         $calls = array_map(static fn(string $line): array => json_decode($line, true, 8, JSON_THROW_ON_ERROR), file($dir . '/calls', FILE_IGNORE_NEW_LINES));
         expect(array_column($calls, 0))->toBe($expected);
         foreach ($calls as $call) {
-            expect(array_slice($call, 1))->toBe(['prod', '0']);
+            expect(array_slice($call, 1))->toBe(['prod', '0', '-1']);
         }
         if ($refreshed) {
             expect($output)->toBe('refreshed');
