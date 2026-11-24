@@ -52,6 +52,7 @@ final class LegacyPageForwarderTest extends TestCase
             ['data_input.php', '/data-inputs/legacy'],
             ['data_source_profiles.php', '/graphing/data-source-profiles/legacy'],
             ['gprint_presets.php', '/graphing/gprint-presets/legacy'],
+            ['graph_templates_inputs.php', '/graphing/graph-templates/inputs/legacy'],
             ['host.php', '/inventory/devices/legacy'],
             ['links.php', '/links/legacy'],
             ['sites.php', '/inventory/sites/legacy'],

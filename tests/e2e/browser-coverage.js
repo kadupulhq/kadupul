@@ -77,6 +77,7 @@ const scenarios = {
     'smart television: native client dialog displays parsed environment and glyphs',
     'tesla embedded: native client dialog displays parsed environment and glyphs',
     'unknown client: native client dialog displays parsed environment and glyphs',
+    'the compact logout icon submits CSRF by POST instead of opening confirmation',
   ],
   'layout-interactions.spec.js': [
     'native tab wrapping preserves width boundaries and row and height overflow',
@@ -97,6 +98,12 @@ const scenarios = {
     'dark graph timer snapshots its element before a class hook changes shared state',
     'native own icon lookup preserves registry semantics with modern API available',
     'native own icon lookup preserves registry semantics with modern API absent',
+    'automatic disabled logout submits CSRF by POST under CSP and a foreign base',
+    'automatic remote logout submits CSRF by POST under CSP and a foreign base',
+    'the idle timer ends the session by same-origin GET even with a token',
+    'a user logout submits CSRF by POST without an automatic reason',
+    'automatic logout without a CSRF token navigates by GET',
+    'logout refuses a foreign destination or unknown reason before creating a form',
   ],
   'html-sink-escaping.spec.js': [
     'a color name with markup stays inside the color dropdown input',

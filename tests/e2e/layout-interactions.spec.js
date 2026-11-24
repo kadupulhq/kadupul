@@ -385,7 +385,7 @@ for (const nativeApi of [true, false]) {
 for (const [action, marker] of [['disabled', 'cactiLoginSuspend'], ['remote', 'cactiRemoteState']]) {
   test(`automatic ${action} logout submits CSRF by POST under CSP and a foreign base`, async ({ page, baseURL }) => {
     await loadLayout(page);
-    await page.route('**/monitoring/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
+    await page.route('**/monitoring/logout.php*', route => route.fulfill({ status: 204 }));
     await page.evaluate(() => {
       const policy = document.createElement('meta');
       policy.httpEquiv = 'Content-Security-Policy';
@@ -411,7 +411,7 @@ for (const [action, marker] of [['disabled', 'cactiLoginSuspend'], ['remote', 'c
 
 test('the idle timer ends the session by same-origin GET even with a token', async ({ page, baseURL }) => {
   await loadLayout(page);
-  await page.route('**/monitoring/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
+  await page.route('**/monitoring/logout.php*', route => route.fulfill({ status: 204 }));
   await page.evaluate(() => {
     window.urlPath = '/monitoring/';
     window.csrfMagicToken = 'sid:fixture-token,123456';
@@ -432,7 +432,7 @@ test('the idle timer ends the session by same-origin GET even with a token', asy
 
 test('a user logout submits CSRF by POST without an automatic reason', async ({ page, baseURL }) => {
   await loadLayout(page);
-  await page.route('**/monitoring/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
+  await page.route('**/monitoring/logout.php*', route => route.fulfill({ status: 204 }));
   const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');
   await page.evaluate(() => { window.urlPath = '/monitoring/'; window.csrfMagicToken = 'sid:fixture-token,123456'; submitLogout(''); });
   const sent = await request;
@@ -444,7 +444,7 @@ test('a user logout submits CSRF by POST without an automatic reason', async ({ 
 
 test('automatic logout without a CSRF token navigates by GET', async ({ page }) => {
   await loadLayout(page);
-  await page.route('**/logout.php?*', route => route.fulfill({ body: 'Confirm logout' }));
+  await page.route('**/logout.php?*', route => route.fulfill({ status: 204 }));
   const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');
   await page.evaluate(() => { window.urlPath = '/monitoring/'; delete window.csrfMagicToken; submitLogout('timeout'); });
   const sent = await request;

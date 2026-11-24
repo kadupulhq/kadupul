@@ -18,7 +18,8 @@ final class GraphDataRemovalCoverageRegistration
         'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php',
         'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php',
         'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php',
-        'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php');
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php',
+        'src/Graphing/Domain/GraphTemplateInputColumn.php');
     public const MARKERS = array('native-policy-operation-returned', 'policy-session-observed', 'cascade-controller-state-observed');
     public const HITS = array('lib/auth.php', 'lib/graph_data_removal.php');
 }
