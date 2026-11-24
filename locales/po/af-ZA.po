@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Afrikaans Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Afrikaans\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Toegang geweier! Gasgebruiker-ID %s bestaan nie. Kontak asseblief jou administrateur."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Toegang geweier! Aanmelding het misluk."
 
@@ -1157,7 +1159,7 @@ msgstr "Titelformaat"
 msgid "rule_name"
 msgstr "reëlnaam"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d minuut"
@@ -4054,6 +4056,14 @@ msgstr "Na Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Aggregaat"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7516,6 +7526,11 @@ msgstr "%d prosesse"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d pieke"
 
@@ -7631,6 +7646,14 @@ msgstr "Gevorderd"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Na hierdie aantal dae sal die besigheidsure nie by die grafiek gevoeg word nie. <br/>Aanbeveel: 62 dae"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8213,6 +8236,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Aktiveer Lotus Notes (R)-aanpassing"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Aktiveer op-aanvraag RRD-opdatering"
 
@@ -8491,6 +8518,10 @@ msgstr "Hoe gereeld moet daaglikse statistieke bygewerk word?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Hoe gereeld moet RRD gekontroleer word?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8819,6 +8850,10 @@ msgstr "My blaaier se tydsone"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9333,6 +9368,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Moet Het Grafieke en Het Databronne by verstek gemerk wees."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Wys toestel-aggregate"
 
@@ -9759,6 +9798,10 @@ msgstr "Die naam van die primêre administratiewe rekening wat outomaties E-poss
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Die naam van die gebruiker wat Kadupul as 'n sjabloon vir nuwe Web Basic- en LDAP-gebruikers sal gebruik; is by verstek 'guest'.  Hierdie gebruikersrekening sal gedeaktiveer word om aan te meld sodra dit gekies is."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10643,11 +10686,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul-aanmelding het misluk"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Wagwoord moet ten minste %d karakters wees!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Beperk"
 
@@ -10669,24 +10707,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Basic-verifikasie gekonfigureer, maar geen gebruikersnaam is vanaf die webbediener deurgegee nie. Maak asseblief seker jy het verifikasie op die webbediener geaktiveer."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Jou Kadupul-administrateur het komplekse wagwoorde vir aanmeldings afgedwing en jou huidige Kadupul-wagwoord voldoen nie aan die nuwe vereistes nie.  Daarom moet jy nou jou wagwoord verander."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Jou rekening is gesluit.  Kontak asseblief jou Administrateur."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Jou wagwoord moet 'n mengsel van kleinletter- en hoofletterkarakters bevat!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Jou wagwoord moet ten minste 1 syferkarakter bevat!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Jou wagwoord moet ten minste 1 spesiale karakter bevat!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11403,7 @@ msgstr "Aangemeld as %s"
 msgid "Login as Regular User"
 msgstr "Meld aan as gewone gebruiker"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Meld af"
 
@@ -16370,6 +16392,27 @@ msgstr "FATAAL: Piekverwydering nie toegelaat nie"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAAL: Piekverwyderingsmetode '%s' is ongeldig"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Jou Kadupul-administrateur het komplekse wagwoorde vir aanmeldings afgedwing en jou huidige Kadupul-wagwoord voldoen nie aan die nuwe vereistes nie.  Daarom moet jy nou jou wagwoord verander."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Wagwoord moet ten minste %d karakters wees!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Jou wagwoord moet 'n mengsel van kleinletter- en hoofletterkarakters bevat!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Jou wagwoord moet ten minste 1 syferkarakter bevat!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Jou wagwoord moet ten minste 1 spesiale karakter bevat!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

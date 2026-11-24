@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -689,6 +689,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "הגישה נדחתה! מזהה משתמש אורח %s אינו קיים.  צור קשר עם מנהל המערכת שלך."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "הגישה נדחתה, חשבון המשתמש מושבת."
 
@@ -1158,7 +1160,7 @@ msgstr "פורמט כותרת"
 msgid "rule_name"
 msgstr "שם החוק"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "‫%d דקה"
@@ -4098,6 +4100,14 @@ msgstr "לאחר Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "מצטבר"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7560,6 +7570,11 @@ msgstr "%d תהליכים"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d קוצים"
 
@@ -7675,6 +7690,14 @@ msgstr "מתקדם"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "לאחר מספר ימים זה, שעות הפעילות לא יתווספו לגרף. <br/>מומלץ: 62 ימים"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8257,6 +8280,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "אפשר לצבוט Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "אפשר על פי דרישה RRD מעדכן"
 
@@ -8535,6 +8562,10 @@ msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יו
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יומיים?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8863,6 +8894,10 @@ msgstr "אזור הזמן של הדפדפנים שלי"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "של נאן"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9377,6 +9412,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "האם יש לבדוק את הגרפים ואת מקורות הנתונים על פי ברירת המחדל."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "אגרגטים"
 
@@ -9803,6 +9842,10 @@ msgstr "השם של חשבון הניהול הראשי שיקבל הודעות �
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "שם המשתמש ש- Kadupul ישמש כתבנית עבור משתמשי Web Basic ו- LDAP חדשים; הוא &#39;אורח&#39; כברירת מחדל. חשבון משתמש זה יושבת מפני כניסה עם בחירתו."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10687,11 +10730,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul יומן מסומנת"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "הסיסמה חייבת להיות לפחות %d תווים!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "מוגבל"
 
@@ -10713,24 +10751,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "אימות אינטרנט בסיסי הוגדר, אך לא עבר שם משתמש משרת האינטרנט. ודא שהאימות מופעל בשרת האינטרנט."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "מנהל ה-Kadupul שלך אכף סיסמאות מורכבות להתחברויות וסיסמת ה-Kadupul הנוכחית שלך אינה תואמת לדרישות החדשות. לכן, עליך לשנות את סיסמתך כעת."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "הגישה נדחתה, אנא צור קשר עם מנהל Kadupul."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "הסיסמה שלך חייבת להכיל שילוב של אותיות קטנות ומילות מפתח גדולות!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "על הסיסמה שלך להכיל לפחות תו מספרי אחד!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "על הסיסמה שלך להכיל לפחות תו אחד מיוחד!"
 
 #: lib/boost.php
 #, php-format
@@ -11425,7 +11447,7 @@ msgstr "מחובר כ %s"
 msgid "Login as Regular User"
 msgstr "התחבר כמשתמש רגיל"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "התנתק"
 
@@ -16447,6 +16469,27 @@ msgstr "FATAL: להרוג ספייק לא מותר"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: שיטת החיסול של ספייק &#39; %s&#39; אינה חוקית"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "מנהל ה-Kadupul שלך אכף סיסמאות מורכבות להתחברויות וסיסמת ה-Kadupul הנוכחית שלך אינה תואמת לדרישות החדשות. לכן, עליך לשנות את סיסמתך כעת."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "הסיסמה חייבת להיות לפחות %d תווים!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "הסיסמה שלך חייבת להכיל שילוב של אותיות קטנות ומילות מפתח גדולות!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "על הסיסמה שלך להכיל לפחות תו מספרי אחד!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "על הסיסמה שלך להכיל לפחות תו אחד מיוחד!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Bengali Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Bengali\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "অ্যাক্সেস প্রত্যাখ্যাত! অতিথি ব্যবহারকারী আইডি %s বিদ্যমান নেই। অনুগ্রহ করে আপনার প্রশাসকের সাথে যোগাযোগ করুন।"
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "অ্যাক্সেস প্রত্যাখ্যাত! লগইন ব্যর্থ হয়েছে।"
 
@@ -1157,7 +1159,7 @@ msgstr "শিরোনামের ফরম্যাট"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d মিনিট"
@@ -4054,6 +4056,14 @@ msgstr "Boost-এর পরে"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "অ্যাগ্রিগেট"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7516,6 +7526,11 @@ msgstr "%d প্রসেস"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d স্পাইক"
 
@@ -7631,6 +7646,14 @@ msgstr "উন্নত"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "এই সংখ্যক দিন পর, গ্রাফে ব্যবসার সময় (business hours) যোগ করা হবে না। <br/>সুপারিশকৃত: 62 দিন"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8213,6 +8236,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes (R) সমন্বয় সক্রিয় করুন"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "অন-ডিমান্ড RRD আপডেটিং সক্রিয় করুন"
 
@@ -8491,6 +8518,10 @@ msgstr "দৈনিক পরিসংখ্যান কত ঘন ঘন আ�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "কত ঘন ঘন RRD পরীক্ষা করা উচিত?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8819,6 +8850,10 @@ msgstr "আমার ব্রাউজারের সময় অঞ্চল
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN-সমূহ"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9333,6 +9368,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Has Graphs এবং Has Data Sources কি ডিফল্টরূপে চেক করা থাকবে।"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "ডিভাইস অ্যাগ্রিগেটসমূহ দেখান"
 
@@ -9759,6 +9798,10 @@ msgstr "প্রাথমিক প্রশাসনিক অ্যাকা�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "নতুন Web Basic এবং LDAP ব্যবহারকারীদের জন্য Kadupul যে ব্যবহারকারীকে টেমপ্লেট হিসেবে ব্যবহার করবে তার নাম; ডিফল্টরূপে 'guest'। নির্বাচিত হওয়ার পর এই ব্যবহারকারী অ্যাকাউন্টটি লগইন করা থেকে নিষ্ক্রিয় থাকবে।"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10643,11 +10686,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul লগইন ব্যর্থতা"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "পাসওয়ার্ড অবশ্যই কমপক্ষে %d অক্ষরের হতে হবে!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "সীমাবদ্ধ"
 
@@ -10669,24 +10707,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "ওয়েব বেসিক প্রমাণীকরণ কনফিগার করা আছে, কিন্তু ওয়েব সার্ভার থেকে কোনো ব্যবহারকারীর নাম পাঠানো হয়নি। অনুগ্রহ করে নিশ্চিত করুন যে ওয়েব সার্ভারে প্রমাণীকরণ সক্রিয় রয়েছে।"
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "আপনার Kadupul অ্যাডমিনিস্ট্রেটর লগইনের জন্য জটিল পাসওয়ার্ড বাধ্যতামূলক করেছেন এবং আপনার বর্তমান Kadupul পাসওয়ার্ডটি নতুন শর্তাবলীর সাথে মেলে না। অতএব, আপনাকে অবশ্যই এখনই আপনার পাসওয়ার্ড পরিবর্তন করতে হবে।"
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "আপনার অ্যাকাউন্ট লক করা হয়েছে। অনুগ্রহ করে আপনার অ্যাডমিনিস্ট্রেটরের সাথে যোগাযোগ করুন।"
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "আপনার পাসওয়ার্ডে অবশ্যই ছোট হাতের এবং বড় হাতের অক্ষরের মিশ্রণ থাকতে হবে!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি সংখ্যাসূচক অক্ষর থাকতে হবে!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি বিশেষ অক্ষর থাকতে হবে!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11403,7 @@ msgstr "%s হিসেবে লগইনকৃত"
 msgid "Login as Regular User"
 msgstr "সাধারণ ব্যবহারকারী হিসেবে লগইন করুন"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "লগআউট"
 
@@ -16370,6 +16392,27 @@ msgstr "গুরুতর ত্রুটি: স্পাইক কিল অ�
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "গুরুতর ত্রুটি: স্পাইক কিল পদ্ধতি '%s' অবৈধ"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "আপনার Kadupul অ্যাডমিনিস্ট্রেটর লগইনের জন্য জটিল পাসওয়ার্ড বাধ্যতামূলক করেছেন এবং আপনার বর্তমান Kadupul পাসওয়ার্ডটি নতুন শর্তাবলীর সাথে মেলে না। অতএব, আপনাকে অবশ্যই এখনই আপনার পাসওয়ার্ড পরিবর্তন করতে হবে।"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "পাসওয়ার্ড অবশ্যই কমপক্ষে %d অক্ষরের হতে হবে!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "আপনার পাসওয়ার্ডে অবশ্যই ছোট হাতের এবং বড় হাতের অক্ষরের মিশ্রণ থাকতে হবে!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি সংখ্যাসূচক অক্ষর থাকতে হবে!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি বিশেষ অক্ষর থাকতে হবে!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

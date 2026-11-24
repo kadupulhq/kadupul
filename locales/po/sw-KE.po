@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Swahili Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Swahili\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Ufikiaji Umekataliwa! ID ya mtumiaji mgeni %s haipo. Tafadhali wasiliana na Msimamizi wako."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Ufikiaji Umekataliwa! Kuingia Kumeshindwa."
 
@@ -1157,7 +1159,7 @@ msgstr "Umbizo la Kichwa"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "Dakika %d"
@@ -4054,6 +4056,14 @@ msgstr "Baada ya Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Jumlishi"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7516,6 +7526,11 @@ msgstr "Michakato %d"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "Vilele %d"
 
@@ -7631,6 +7646,14 @@ msgstr "Kina"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Baada ya idadi hii ya siku, saa za kazi hazitaongezwa kwenye grafu. <br/>Inapendekezwa: siku 62"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8213,6 +8236,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Wezesha marekebisho ya Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Wezesha Usasishaji wa RRD Unapohitajika"
 
@@ -8491,6 +8518,10 @@ msgstr "Takwimu za Kila Siku zinapaswa kusasishwa mara ngapi?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "RRD inapaswa kukaguliwa mara ngapi?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8819,6 +8850,10 @@ msgstr "Saa za Eneo za Kivinjari Changu"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9333,6 +9368,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Je, Ina Grafu na Ina Vyanzo vya Data zitiwe alama kwa Chaguo-msingi."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Onyesha Majumlisho ya Kifaa"
 
@@ -9759,6 +9798,10 @@ msgstr "Jina la akaunti kuu ya usimamizi ambayo itapokea Barua pepe kiotomatiki 
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Jina la mtumiaji ambaye Kadupul itatumia kama kiolezo kwa watumiaji wapya wa Web Basic na LDAP; ni 'guest' kwa chaguo-msingi.  Akaunti hii ya mtumiaji itazimwa kuingia baada ya kuchaguliwa."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10643,11 +10686,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kushindwa Kuingia Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Nenosiri ni lazima liwe na angalau herufi %d!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Imezuiwa"
 
@@ -10669,24 +10707,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Uthibitishaji wa Msingi wa Wavuti umesanidiwa, lakini hakuna jina la mtumiaji lililopitishwa kutoka kwa seva ya wavuti. Tafadhali hakikisha umewezesha uthibitishaji kwenye seva ya wavuti."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Msimamizi wako wa Kadupul amelazimisha manenosiri magumu kwa kuingia na nenosiri lako la sasa la Kadupul halilingani na masharti mapya.  Kwa hivyo, lazima ubadilishe nenosiri lako sasa."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Akaunti yako imefungwa.  Tafadhali wasiliana na Msimamizi wako."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Nenosiri lako lazima liwe na mchanganyiko wa herufi ndogo na herufi kubwa!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Nenosiri lako lazima liwe na angalau namba 1!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Nenosiri lako lazima liwe na angalau herufi maalum 1!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11403,7 @@ msgstr "Ameingia kama %s"
 msgid "Login as Regular User"
 msgstr "Ingia kama Mtumiaji wa Kawaida"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Ondoka"
 
@@ -16370,6 +16392,27 @@ msgstr "HATARI: Spike Kill Hairuhusiwi"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "HATARI: Mbinu ya Spike Kill '%s' ni Batili"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Msimamizi wako wa Kadupul amelazimisha manenosiri magumu kwa kuingia na nenosiri lako la sasa la Kadupul halilingani na masharti mapya.  Kwa hivyo, lazima ubadilishe nenosiri lako sasa."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Nenosiri ni lazima liwe na angalau herufi %d!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Nenosiri lako lazima liwe na mchanganyiko wa herufi ndogo na herufi kubwa!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Nenosiri lako lazima liwe na angalau namba 1!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Nenosiri lako lazima liwe na angalau herufi maalum 1!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

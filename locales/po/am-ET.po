@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Amharic Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Amharic\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "መዳረሻ ተከልክሏል! የእንግዳ ተጠቃሚ መታወቂያ %s የለም። እባክዎ አስተዳዳሪዎን ያግኙ።"
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "መዳረሻ ተከልክሏል! መግባት አልተሳካም።"
 
@@ -1157,7 +1159,7 @@ msgstr "የርዕስ ቅርጸት"
 msgid "rule_name"
 msgstr "የደንብ ስም"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d ደቂቃ"
@@ -4054,6 +4056,14 @@ msgstr "ከ Boost በኋላ"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "ጥምር (Aggregate)"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7516,6 +7526,11 @@ msgstr "%d ሂደቶች"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d ስፓይኮች"
 
@@ -7631,6 +7646,14 @@ msgstr "የላቀ"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "ከዚህ የቀናት ብዛት በኋላ፣ የሥራ ሰዓታት ወደ ግራፉ አይታከሉም። <br/>የሚመከር: 62 ቀናት"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8213,6 +8236,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "የ Lotus Notes (R) ማስተካከያ አንቃ"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "በፍላጎት RRD ማዘመንን አንቃ"
 
@@ -8491,6 +8518,10 @@ msgstr "ዕለታዊ ስታቲስቲክስ በምን ያህል ጊዜ መዘመ�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "RRD በምን ያህል ጊዜ መፈተሽ አለበት ?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8819,6 +8850,10 @@ msgstr "የአሳሼ የሰዓት ሰቅ"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaNዎች"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9333,6 +9368,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "ግራፎች አሉት እና የውሂብ ምንጮች አሉት በነባሪነት ምልክት መደረግ አለባቸው።"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "የመሣሪያ ጥምሮችን አሳይ"
 
@@ -9759,6 +9798,10 @@ msgstr "የKadupul ሥርዓት ችግሮች ሲያጋጥሙት በራስ-ሰር
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul ለአዲስ የWeb Basic እና LDAP ተጠቃሚዎች እንደ አብነት የሚጠቀምበት የተጠቃሚ ስም፤ በነባሪ 'guest' ነው። ይህ የተጠቃሚ መለያ ሲመረጥ ከመግባት ይሰናከላል።"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10643,11 +10686,6 @@ msgid "Kadupul Login Failure"
 msgstr "የKadupul መግቢያ ውድቀት"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "የይለፍ ቃል ቢያንስ %d ቁምፊዎች መሆን አለበት!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "የተገደበ"
 
@@ -10669,24 +10707,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Basic ማረጋገጫ ተዋቅሯል፣ ነገር ግን ከድር አገልጋዩ ምንም የተጠቃሚ ስም አልተላለፈም። እባክዎ በድር አገልጋዩ ላይ ማረጋገጫ መንቃቱን ያረጋግጡ።"
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "የKadupul አስተዳዳሪዎ ለመግቢያዎች ውስብስብ የይለፍ ቃሎችን አስገድዷል እና የአሁኑ የKadupul የይለፍ ቃልዎ አዲሶቹን መስፈርቶች አያሟላም። ስለዚህ፣ አሁን የይለፍ ቃልዎን መቀየር አለብዎት።"
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "መለያዎ ተቆልፏል። እባክዎ አስተዳዳሪዎን ያግኙ።"
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "የይለፍ ቃልዎ የትንሽ ፊደል እና የትልቅ ፊደል ቁምፊዎችን ድብልቅ መያዝ አለበት!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "የይለፍ ቃልዎ ቢያንስ 1 የቁጥር ቁምፊ መያዝ አለበት!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "የይለፍ ቃልዎ ቢያንስ 1 ልዩ ቁምፊ መያዝ አለበት!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11403,7 @@ msgstr "የገቡት እንደ %s"
 msgid "Login as Regular User"
 msgstr "እንደ መደበኛ ተጠቃሚ ግባ"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "ውጣ"
 
@@ -16370,6 +16392,27 @@ msgstr "ከባድ ስህተት: ስፓይክ ማጥፋት አይፈቀድም"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "ከባድ ስህተት: የስፓይክ ማጥፊያ ዘዴ '%s' ልክ ያልሆነ ነው"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "የKadupul አስተዳዳሪዎ ለመግቢያዎች ውስብስብ የይለፍ ቃሎችን አስገድዷል እና የአሁኑ የKadupul የይለፍ ቃልዎ አዲሶቹን መስፈርቶች አያሟላም። ስለዚህ፣ አሁን የይለፍ ቃልዎን መቀየር አለብዎት።"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "የይለፍ ቃል ቢያንስ %d ቁምፊዎች መሆን አለበት!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "የይለፍ ቃልዎ የትንሽ ፊደል እና የትልቅ ፊደል ቁምፊዎችን ድብልቅ መያዝ አለበት!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "የይለፍ ቃልዎ ቢያንስ 1 የቁጥር ቁምፊ መያዝ አለበት!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "የይለፍ ቃልዎ ቢያንስ 1 ልዩ ቁምፊ መያዝ አለበት!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

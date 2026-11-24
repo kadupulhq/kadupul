@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2024-06-25 21:23+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -689,6 +689,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Acesso negado! O ID de usuário convidado %s não existe.  Entre em contato com seu administrador."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Acesso negado, conta de usuário desativada."
 
@@ -1158,7 +1160,7 @@ msgstr "Formato do título"
 msgid "rule_name"
 msgstr "Nome da Regra"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d Minuto"
@@ -4056,6 +4058,14 @@ msgstr "Depois do impulso"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Agregado"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7518,6 +7528,11 @@ msgstr "%d Processos"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d Espigas"
 
@@ -7633,6 +7648,14 @@ msgstr "Avançado"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Após esse número de dias, o horário comercial não será adicionado ao gráfico. <br/>Recomendado: 62 dias"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8215,6 +8238,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Habilitar a afinação do Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Ativar a atualização do RRD sob demanda"
 
@@ -8493,6 +8520,10 @@ msgstr "Com que frequência as estatísticas diárias devem ser actualizadas?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Com que frequência as estatísticas diárias devem ser actualizadas?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8821,6 +8852,10 @@ msgstr "Fuso horário dos meus navegadores"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9335,6 +9370,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Se os gráficos e as fontes de dados tiverem sido verificados por default."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Agregados"
 
@@ -9761,6 +9800,10 @@ msgstr "O nome da conta administrativa principal que receberá automaticamente e
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "O nome do usuário que Kadupul usará como modelo para novos usuários Web Basic e LDAP; é 'guest' por padrão.  Esta conta de usuário será desativada para não fazer login ao ser selecionada."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10645,11 +10688,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul Log Cleared"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "A senha deve ter pelo menos %d caracteres!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Restrito"
 
@@ -10671,24 +10709,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Autenticação Web Basic configurada, mas nenhum nome de usuário foi passado do servidor web. Certifique-se de que tem a autenticação activada no servidor web."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "O administrador do Kadupul forçou senhas complexas para logins e sua senha atual do Kadupul não corresponde aos novos requisitos. Portanto, você deve alterar sua senha agora."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Acesso Negado, entre em contato com o Administrador Kadupul."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Sua senha deve conter uma mistura de letras minúsculas e maiúsculas!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Sua senha deve conter pelo menos 1 caractere numérico!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Sua senha deve conter pelo menos 1 caractere especial!"
 
 #: lib/boost.php
 #, php-format
@@ -11383,7 +11405,7 @@ msgstr "Logado como %s"
 msgid "Login as Regular User"
 msgstr "Login como usuário regular"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Sair"
 
@@ -16373,6 +16395,27 @@ msgstr "FATAL: Spike Kill Não é permitido"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: O método Spike Kill '%s' é inválido"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "O administrador do Kadupul forçou senhas complexas para logins e sua senha atual do Kadupul não corresponde aos novos requisitos. Portanto, você deve alterar sua senha agora."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "A senha deve ter pelo menos %d caracteres!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Sua senha deve conter uma mistura de letras minúsculas e maiúsculas!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Sua senha deve conter pelo menos 1 caractere numérico!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Sua senha deve conter pelo menos 1 caractere especial!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

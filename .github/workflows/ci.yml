@@ -310,6 +310,8 @@ jobs:
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/native-recovery-probe-phpunit.cache" Symfony/NativeCollectorRecoveryProbeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/profile-store-phpunit.cache" Symfony/DataSourceProfileStoreDatabaseTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/session-revocation-phpunit.cache" Symfony/NativeSessionRevocationDatabaseTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/login-parity-phpunit.cache" Symfony/LocalLoginParityTest.php Symfony/BasicLoginParityTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/graph-template-input-phpunit.cache" Symfony/GraphTemplateInputEditorDatabaseTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/administration-list-phpunit.cache" Symfony/AdministrationCatalogNativeTest.php Symfony/RelationshipCatalogNativeTest.php Symfony/IdentityRelationshipsNativeTest.php Symfony/IdentitySettingsNativeTest.php Symfony/NativeAdministrativeActorPolicyTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/system-diagnostics-phpunit.cache" Symfony/SystemDiagnosticsDatabaseTest.php
@@ -437,7 +439,7 @@ jobs:
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
           mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
-            -c phpunit-symfony.xml --filter 'NativeCollectorRecoveryProbeTest|CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerNativeStateTest|InstallerFailedPollTest|InstallerOperationalNativeEvidenceTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|BoostSchemaUpgradeTest|AccountIdColumnWidthUpgradeTest|DbalMonitoringStoreDatabaseTest' \
+            -c phpunit-symfony.xml --filter 'NativeCollectorRecoveryProbeTest|CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerNativeStateTest|InstallerFailedPollTest|InstallerOperationalNativeEvidenceTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|BoostSchemaUpgradeTest|AccountIdColumnWidthUpgradeTest|AlertingSchemaUpgradeTest|DbalMonitoringStoreDatabaseTest' \
             --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
@@ -855,7 +857,7 @@ jobs:
         run: |
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends autoconf bison build-essential curl gettext git libgd-dev libcurl4-openssl-dev libedit-dev libicu-dev libjpeg-dev libonig-dev libpng-dev libpq-dev libreadline-dev libsqlite3-dev libssl-dev libxml2-dev libzip-dev openssl pkg-config re2c zlib1g-dev
-      - uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+      - uses: jdx/mise-action@236a21c3b91f5db6d4e174b348674a0f0caac06d # v5.2.9
         with:
           install_args: php@8.4.25
           plugins: php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Igbo Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Igbo\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Ajụrụ Ohere! ID onye ọrụ ọbịa %s adịghị. Biko kpọtụrụ Onye Nchịkwa gị."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Ajụrụ Ohere! Nbanye Dara."
 
@@ -1157,7 +1159,7 @@ msgstr "Ụdị Aha"
 msgid "rule_name"
 msgstr "aha iwu"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "Nkeji %d"
@@ -4033,6 +4035,14 @@ msgstr "Mgbe Boost gasịrị"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Nchịkọta"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7495,6 +7505,11 @@ msgstr "Usoro %d"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "Spike %d"
 
@@ -7610,6 +7625,14 @@ msgstr "Ọkwa dị elu"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Mgbe ọnụọgụ ụbọchị a gasịrị, agaghị agbakwunye oge azụmahịa na eserese ahụ. <br/>Akwadoro: ụbọchị 62"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8192,6 +8215,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Gbanye mmezi Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Gbanye Mmelite RRD Mgbe Achọrọ Ya"
 
@@ -8470,6 +8497,10 @@ msgstr "Ugboro ole ka ekwesịrị imelite Ndekọ Ọnụọgụgụ Kwa Ụb�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Ugboro ole ka ekwesịrị inyocha RRD ?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8798,6 +8829,10 @@ msgstr "Mpaghara Oge Ihe Nchọgharị M"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9312,6 +9347,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "E kwesịrị ịlele Has Graphs na Has Data Sources na Ndabere."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Gosi Nchịkọta Ngwaọrụ"
 
@@ -9738,6 +9777,10 @@ msgstr "Aha nke akaụntụ nchịkwa mbụ nke ga-anata Ozi-e na-akpaghị aka 
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Aha nke onye ọrụ Kadupul ga-eji dịka atụmatụ maka ndị ọrụ Web Basic na LDAP ọhụrụ; ọ bụ 'guest' na ndabere. A ga-agbanyụ akaụntụ onye ọrụ a ka ọ ghara ịbanye mgbe ahọpụtara ya."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10622,11 +10665,6 @@ msgid "Kadupul Login Failure"
 msgstr "Ọdịda Nbanye Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Okwuntụghe ga-adịkarị ala mkpụrụedemede %d!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Egbochiri"
 
@@ -10648,24 +10686,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Ahaziri Nkwenye Weebụ Ntọala, mana ebufeghị aha onye ọrụ ọ bụla site na seva weebụ. Biko hụ na agbanwuola nkwenye na seva weebụ."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Onye nchịkwa Kadupul gị amanyela okwuntụghe dị mgbagwoju anya maka nbanye na okwuntụghe Kadupul gị dị ugbu a adabaghị na ihe ọhụrụ achọrọ. Ya mere, ị ga-agbanwerịrị okwuntụghe gị ugbu a."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "A kpọchiela akaụntụ gị. Biko kpọtụrụ Onye Nchịkwa gị."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Okwuntụghe gị ga-enwerịrị ngwakọta nke mkpụrụedemede obere na nnukwu mkpụrụedemede!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede ọnụọgụ!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede pụrụ iche!"
 
 #: lib/boost.php
 #, php-format
@@ -11360,7 +11382,7 @@ msgstr "Banyere dịka %s"
 msgid "Login as Regular User"
 msgstr "Banye dịka Onye Ọrụ Nkịtị"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Ọpụpụ"
 
@@ -16333,6 +16355,27 @@ msgstr "NJỌ NKE UKWUU: Ekwereghị Mgbu Spike"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "NJỌ NKE UKWUU: Ụzọ Mgbu Spike '%s' Abaghị Uru"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Onye nchịkwa Kadupul gị amanyela okwuntụghe dị mgbagwoju anya maka nbanye na okwuntụghe Kadupul gị dị ugbu a adabaghị na ihe ọhụrụ achọrọ. Ya mere, ị ga-agbanwerịrị okwuntụghe gị ugbu a."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Okwuntụghe ga-adịkarị ala mkpụrụedemede %d!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Okwuntụghe gị ga-enwerịrị ngwakọta nke mkpụrụedemede obere na nnukwu mkpụrụedemede!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede ọnụọgụ!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede pụrụ iche!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

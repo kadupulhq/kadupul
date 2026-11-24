@@ -46,7 +46,7 @@ final class GraphPolicyDisplaySqlParityTest extends TestCase
                     ['lib/auth.php']
                 );
                 if (!self::$evidenceChecked) {
-                    self::assertSame(33, NativeChildCoverageEvidence::verifyRejections(
+                    self::assertSame(41, NativeChildCoverageEvidence::verifyRejections(
                         $reports[0],
                         $root,
                         'tests/Fixtures/auth-policy-native.php',

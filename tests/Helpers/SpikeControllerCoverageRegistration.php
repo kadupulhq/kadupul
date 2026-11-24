@@ -13,7 +13,11 @@ final class SpikeControllerCoverageRegistration
         'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
         'spikekill.php', 'lib/html_utility.php', 'lib/html_validate.php', 'lib/html.php', 'include/vendor/csrf/csrf-magic.php',
         'include/vendor/csrf/csrf-conf.php', 'include/global_constants.php', 'composer.lock', 'tests/composer.lock', 'cacti.sql',
-        'tests/Fixtures/spike-controller-native.php', 'tests/Helpers/SpikeControllerCoverageRegistration.php'];
+        'tests/Fixtures/spike-controller-native.php', 'tests/Helpers/SpikeControllerCoverageRegistration.php',
+        'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php',
+        'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php',
+        'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php'];
     public const MARKERS = ['spike-controller-response-observed', 'persisted-graph-policy-observed', 'spike-processor-handoff-observed'];
     public const HITS = ['lib/auth.php', 'lib/html_utility.php', 'spikekill.php'];
 }

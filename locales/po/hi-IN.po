@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -689,6 +689,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "पहुंच अस्वीकृत!  अतिथि उपयोगकर्ता आईडी %s मौजूद नहीं है।  कृपया अपने एडमिनिस्ट्रेटर से संपर्क करें।"
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "प्रवेश निषेध, उपयोगकर्ता खाता अक्षम।"
 
@@ -1158,7 +1160,7 @@ msgstr "शीर्षक प्रारूप"
 msgid "rule_name"
 msgstr "नियम का नाम"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d मिनट"
@@ -4056,6 +4058,14 @@ msgstr "बूस्ट के बाद"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "कुल"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7518,6 +7528,11 @@ msgstr "%d प्रक्रियाएं"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d स्पाइक्स"
 
@@ -7633,6 +7648,14 @@ msgstr "उन्नत"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "दिनों की इस संख्या के बाद, ग्राफ़ में व्यावसायिक घंटे नहीं जोड़े जाएँगे। <br/>सुझाया गया: 62 दिन"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8215,6 +8238,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "लोटस नोट्स (आर) को सक्षम करें"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "ऑन-डिमांड आरआरडी अपडेट करना सक्षम करें"
 
@@ -8493,6 +8520,10 @@ msgstr "डेली स्टैट्स को कितनी बार अ�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "डेली स्टैट्स को कितनी बार अपडेट किया जाना चाहिए?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8821,6 +8852,10 @@ msgstr "मेरे ब्राउज़र का टाइमज़ोन"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN के"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9335,6 +9370,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "क्या डिफ़ॉल्ट रूप से रेखांकन और डेटा स्रोत होना चाहिए।"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "समुच्चय"
 
@@ -9761,6 +9800,10 @@ msgstr "प्राथमिक प्रशासनिक खाते का
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "उस उपयोगकर्ता का नाम जिसे Kadupul नए वेब बेसिक और LDAP उपयोगकर्ताओं के लिए टेम्पलेट के रूप में उपयोग करेगा; डिफ़ॉल्ट रूप से 'guest' है। चयनित होने पर यह उपयोगकर्ता खाता लॉगिन करने से अक्षम हो जाएगा।"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10645,11 +10688,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul लॉगिन विफलता"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "पासवर्ड कम से कम %d वर्ण का होना चाहिए!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "प्रतिबंधत"
 
@@ -10671,24 +10709,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "वेब बेसिक प्रमाणीकरण कॉन्फ़िगर किया गया है, लेकिन वेब सर्वर से कोई उपयोगकर्ता नाम पारित नहीं किया गया था। कृपया सुनिश्चित करें कि आपके पास वेब सर्वर पर प्रमाणीकरण सक्षम है।"
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "आपके Kadupul व्यवस्थापक ने लॉगिन के लिए जटिल पासवर्ड को मजबूर कर दिया है और आपका वर्तमान Kadupul पासवर्ड नई आवश्यकताओं से मेल नहीं खाता है। इसलिए, आपको अब अपना पासवर्ड बदलना होगा।"
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "पहुँच निषेध, कृपया आप कैक्टि प्रशासक से संपर्क करें।"
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "आपके पासवर्ड में लोअर केस और अपर केस कैरेक्टर का मिश्रण होना चाहिए!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "आपके पासवर्ड में कम से कम 1 संख्यात्मक चरित्र होना चाहिए!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "आपके पासवर्ड में कम से कम 1 विशेष वर्ण होना चाहिए!"
 
 #: lib/boost.php
 #, php-format
@@ -11383,7 +11405,7 @@ msgstr "के रूप में दाखिल%s"
 msgid "Login as Regular User"
 msgstr "नियमित उपयोगकर्ता के रूप में लॉगिन करें"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "लॉगआउट"
 
@@ -16374,6 +16396,27 @@ msgstr "FATAL: स्पाइक किल नॉट अलाइड"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: स्पाइक किल विधि &#39; %s&#39; अमान्य है"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "आपके Kadupul व्यवस्थापक ने लॉगिन के लिए जटिल पासवर्ड को मजबूर कर दिया है और आपका वर्तमान Kadupul पासवर्ड नई आवश्यकताओं से मेल नहीं खाता है। इसलिए, आपको अब अपना पासवर्ड बदलना होगा।"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "पासवर्ड कम से कम %d वर्ण का होना चाहिए!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "आपके पासवर्ड में लोअर केस और अपर केस कैरेक्टर का मिश्रण होना चाहिए!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "आपके पासवर्ड में कम से कम 1 संख्यात्मक चरित्र होना चाहिए!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "आपके पासवर्ड में कम से कम 1 विशेष वर्ण होना चाहिए!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

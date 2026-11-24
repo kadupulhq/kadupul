@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -689,6 +689,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Piekļuve liegta!  Viesu lietotāja ID %s neeksistē.  Lūdzu, sazinieties ar savu Kadupul administratoru."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Pieeja noliegta! Pieslēgšanās neizdevās."
 
@@ -1158,7 +1160,7 @@ msgstr "Virsraksta formāts"
 msgid "rule_name"
 msgstr "kārtulas_nosaukums"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d minūte"
@@ -4077,6 +4079,14 @@ msgstr "Pēc Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Agregāts"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7539,6 +7549,11 @@ msgstr "%d procesi"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d tapas"
 
@@ -7654,6 +7669,14 @@ msgstr "Detalizēti"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Pēc šī dienu skaita uzņēmējdarbības darba stundas netiks pievienotas grafikam.<br/>Ieteicams: 62 dienas"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8236,6 +8259,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Iespējot Lotus Notes (R) pielāgošanu"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Iespējot RRD atjaunināšanu pēc pieprasījuma"
 
@@ -8514,6 +8541,10 @@ msgstr "Cik bieži ir jāatjaunina ikdienas statistika?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Cik bieži pārbaudīt RRD?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8842,6 +8873,10 @@ msgstr "Manas pārlūkprogrammas laika josla"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9356,6 +9391,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Vai pēc noklusējuma pārbaudīt grafikus un datu avotus."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Rādīt ierīču apkopojumus"
 
@@ -9782,6 +9821,10 @@ msgstr "Primārā administratīvā konta nosaukums, kas automātiski saņems e-p
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Lietotāja vārds, kuru Kadupul izmantos kā veidni jauniem Web Basic un LDAP lietotājiem; pēc noklusējuma ir \"viesis\". Pēc atlases šim lietotāja kontam tiks atspējota pieteikšanās."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10666,11 +10709,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul pieteikšanās kļūda"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Parolei ir jābūt vismaz %d rakstzīmēm!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Ierobežots"
 
@@ -10692,24 +10730,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Tīmekļa pamata autentifikācija ir konfigurēta, taču no tīmekļa servera netika nodots neviens lietotājvārds. Lūdzu, pārbaudiet, vai tīmekļa serverī ir iespējota autentifikācija."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Jūsu Kadupul administrators ir piespiedis lietot sarežģītas paroles, un jūsu pašreizējā Kadupul parole neatbilst jaunajām prasībām. Tāpēc jums tagad ir jāmaina parole."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Jūsu konts ir bloķēts. Lūdzu, sazinieties ar savu administratoru."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Jūsu parolei jāsastāv gan no mazajiem, gan lielajiem burtiem!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Jūsu parolei jāsatur vismaz 1 ciparu rakstzīme!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Jūsu parolei jāsatur vismaz 1 speciālā rakstzīme!"
 
 #: lib/boost.php
 #, php-format
@@ -11404,7 +11426,7 @@ msgstr "Autorizējies kā %s"
 msgid "Login as Regular User"
 msgstr "Piesakieties kā parasts lietotājs"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Iziet"
 
@@ -16411,6 +16433,27 @@ msgstr "FATAL: Spike Kill nav atļauts"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Spike Kill metode '%s' ir nederīga"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Jūsu Kadupul administrators ir piespiedis lietot sarežģītas paroles, un jūsu pašreizējā Kadupul parole neatbilst jaunajām prasībām. Tāpēc jums tagad ir jāmaina parole."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Parolei ir jābūt vismaz %d rakstzīmēm!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Jūsu parolei jāsastāv gan no mazajiem, gan lielajiem burtiem!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Jūsu parolei jāsatur vismaz 1 ciparu rakstzīme!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Jūsu parolei jāsatur vismaz 1 speciālā rakstzīme!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

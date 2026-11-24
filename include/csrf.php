@@ -253,8 +253,9 @@ function cacti_csrf_external_path_is_safe($path)
 
 function csrf_error_callback(): never
 {
-    //Resolve session fixation for PHP 5.4
-    session_regenerate_id();
+    // Move the visitor to a new session identifier and discard the stored
+    // session under the old one. The session data carries over.
+    session_regenerate_id(true);
     if (defined('KADUPUL_INSTALLER_WEB') && ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
         while (ob_get_level() > 0) {
             ob_end_clean();
@@ -367,6 +368,34 @@ function csrf_request_is_cross_site()
     }
 
     return false;
+}
+
+/**
+ * Whether the browser shows that this request came from this site.
+ *
+ * Stricter than csrf_request_is_cross_site(): a request without evidence,
+ * such as one with no Sec-Fetch-Site, Origin or Referer, or a navigation the
+ * browser reports as 'none', is not treated as same-site. Use it before a GET
+ * side effect that a cross-site request must never trigger, such as ending
+ * the session; refuse or ask for confirmation otherwise.
+ */
+function csrf_request_is_same_origin()
+{
+    if (isset($_SERVER['HTTP_SEC_FETCH_SITE'])) {
+        return strtolower(trim($_SERVER['HTTP_SEC_FETCH_SITE'])) === 'same-origin';
+    }
+
+    $evidence = false;
+    foreach (array('HTTP_ORIGIN', 'HTTP_REFERER') as $header) {
+        if (isset($_SERVER[$header]) && $_SERVER[$header] !== '') {
+            if (!csrf_request_host_matches($_SERVER[$header])) {
+                return false;
+            }
+            $evidence = true;
+        }
+    }
+
+    return $evidence;
 }
 
 /**

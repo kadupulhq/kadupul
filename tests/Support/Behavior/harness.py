@@ -336,11 +336,14 @@ class Harness:
         # by web requests, and the poller runs as the web user in real deployments.
         return self.compose('exec', '-T', '-u', 'www-data', 'web', *args, check=check)
 
-    def php(self, *args):
+    def php(self, *args, observation_timeout=None):
         if args and args[0] == 'poller.php':
             completion = '/tmp/poller-observation-' + uuid.uuid4().hex
+            # A poller that loops within its cron interval outlives the default
+            # observation window; it still gets a bounded one.
+            boundary = [] if observation_timeout is None else ['env', 'HARNESS_OBSERVATION_TIMEOUT=%d' % observation_timeout]
             try:
-                result = self.command('php', '-d', 'auto_prepend_file=', '/harness/wait-php.php', completion, '-d',
+                result = self.command(*boundary, 'php', '-d', 'auto_prepend_file=', '/harness/wait-php.php', completion, '-d',
                                       'auto_prepend_file=/harness/errors.php', *args)
                 observed = self.command('cat', completion)
                 if observed['exit'] != 0 or observed['stdout'] != 'complete\n':

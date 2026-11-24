@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Persian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Persian\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "دسترسی رد شد! شناسه کاربر مهمان %s وجود ندارد. لطفاً با مدیر خود تماس بگیرید."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "دسترسی رد شد! ورود ناموفق بود."
 
@@ -1157,7 +1159,7 @@ msgstr "قالب عنوان"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d دقیقه"
@@ -4054,6 +4056,14 @@ msgstr "پس از Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "تجمیع"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7516,6 +7526,11 @@ msgstr "%d فرایند"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d جهش"
 
@@ -7631,6 +7646,14 @@ msgstr "پیشرفته"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "پس از این تعداد روز، ساعات کاری به نمودار اضافه نخواهد شد. <br/>پیشنهاد: 62 روز"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8213,6 +8236,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "فعال کردن بهینه‌سازی Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "فعال کردن به‌روزرسانی درخواستی RRD"
 
@@ -8491,6 +8518,10 @@ msgstr "آمار روزانه هر چند وقت یک‌بار باید به‌�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "RRD هر چند وقت یک‌بار باید بررسی شود؟"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8819,6 +8850,10 @@ msgstr "منطقه زمانی مرورگر من"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "مقادیر NaN"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9333,6 +9368,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "آیا گزینه‌های دارای نمودار و دارای منبع داده به صورت پیش‌فرض علامت‌دار باشند."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "نمایش تجمیع‌های دستگاه"
 
@@ -9759,6 +9798,10 @@ msgstr "نام حساب مدیریتی اصلی که هنگام بروز مشک�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "نام کاربری که Kadupul به عنوان الگو برای کاربران جدید Web Basic و LDAP استفاده خواهد کرد؛ به صورت پیش‌فرض «guest» است. این حساب کاربری پس از انتخاب، از ورود غیرفعال خواهد شد."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10643,11 +10686,6 @@ msgid "Kadupul Login Failure"
 msgstr "خطای ورود به Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "رمز عبور باید حداقل %d نویسه باشد!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "محدودشده"
 
@@ -10669,24 +10707,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "احراز هویت پایه وب پیکربندی شده است، اما هیچ نام کاربری از وب‌سرور ارسال نشده است. لطفاً مطمئن شوید احراز هویت در وب‌سرور فعال شده است."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "مدیر Kadupul شما رمزهای عبور پیچیده را برای ورود اجباری کرده است و رمز عبور فعلی Kadupul شما با الزامات جدید مطابقت ندارد. بنابراین، باید اکنون رمز عبور خود را تغییر دهید."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "حساب شما قفل شده است. لطفاً با مدیر خود تماس بگیرید."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "رمز عبور شما باید شامل ترکیبی از حروف کوچک و بزرگ باشد!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "رمز عبور شما باید حداقل شامل 1 نویسه عددی باشد!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "رمز عبور شما باید حداقل شامل 1 نویسه ویژه باشد!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11403,7 @@ msgstr "واردشده با نام %s"
 msgid "Login as Regular User"
 msgstr "ورود به عنوان کاربر عادی"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "خروج"
 
@@ -16370,6 +16392,27 @@ msgstr "بحرانی: حذف جهش (Spike Kill) مجاز نیست"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "بحرانی: روش حذف جهش «%s» نامعتبر است"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "مدیر Kadupul شما رمزهای عبور پیچیده را برای ورود اجباری کرده است و رمز عبور فعلی Kadupul شما با الزامات جدید مطابقت ندارد. بنابراین، باید اکنون رمز عبور خود را تغییر دهید."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "رمز عبور باید حداقل %d نویسه باشد!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "رمز عبور شما باید شامل ترکیبی از حروف کوچک و بزرگ باشد!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "رمز عبور شما باید حداقل شامل 1 نویسه عددی باشد!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "رمز عبور شما باید حداقل شامل 1 نویسه ویژه باشد!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

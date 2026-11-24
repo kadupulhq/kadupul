@@ -399,6 +399,7 @@ deptrac:
       - Contract
       - PlatformContract
       - Alerting.Legacy
+      - PersistenceSupport
     Alerting.Legacy:
       - Alerting.Domain
       - Alerting.Application

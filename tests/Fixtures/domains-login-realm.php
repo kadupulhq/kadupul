@@ -10,6 +10,14 @@
 $root = $argv[1];
 $mode = $argv[2];
 $scenario = json_decode($argv[3], true, 512, JSON_THROW_ON_ERROR);
+$_SERVER['APP_ENV'] = 'test';
+$_SERVER['APP_DEBUG'] = '1';
+$_SERVER['SHELL_VERBOSITY'] = $_ENV['SHELL_VERBOSITY'] = '-1';
+if (defined('DOMAINS_LOGIN_TEST_COVERAGE')) {
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $coverageSources = array('composer.lock', 'tests/composer.lock', 'tests/Unit/Security/Auth/DomainsLoginRealmTest.php', 'tests/Fixtures/domains-login-realm.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'lib/auth.php', 'lib/ldap.php', 'auth_login.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php', 'templates/identity_access/login.html.twig', 'config/services.yaml', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    $GLOBALS['nativeCoverageEvidence'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/domains-login-realm.php', $mode . ':' . $argv[3], $coverageSources);
+}
 
 define('POLLER_VERBOSITY_LOW', 2);
 define('POLLER_VERBOSITY_DEBUG', 5);
@@ -26,9 +34,11 @@ $dispatches = array();
 $_REQUEST = $scenario['request'];
 
 register_shutdown_function(function () {
+    define('NATIVE_COVERAGE_COMPLETED', array('domain-login-state-produced'));
     echo json_encode(array(
         'events'    => $GLOBALS['events'],
         'dispatches' => $GLOBALS['dispatches'],
+        'status'    => http_response_code() ?: 200,
         'error'     => $GLOBALS['error'] ?? null,
         'error_msg' => $GLOBALS['error_msg'] ?? null,
         'user'      => $GLOBALS['result'] ?? null,
@@ -331,6 +341,10 @@ if ($mode === 'process') {
     function get_current_page()
     {
         return 'auth_login.php';
+    }
+    function html_escape_charset(): string
+    {
+        return 'UTF-8';
     }
     function html_escape($value)
     {

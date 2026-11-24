@@ -208,8 +208,12 @@ final class AuditTrailTest extends TestCase
         mkdir($root . '/log', 0700, true);
         $path = $root . '/log/kadupul-audit.jsonl';
         file_put_contents($path, 'unchanged');
-        chmod($path, 04600);
         try {
+            $chmodWorked = chmod($path, 04600);
+            clearstatcache(true, $path);
+            if (!$chmodWorked || (fileperms($path) & 07777) !== 04600) {
+                self::markTestSkipped('The temporary filesystem does not preserve special permission bits.');
+            }
             $this->expectException(\RuntimeException::class);
             (new LegacyAuditTrail($root))->record(new AuditEvent(
                 bin2hex(random_bytes(16)),

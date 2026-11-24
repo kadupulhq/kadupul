@@ -223,7 +223,7 @@ $currentVersion = trim($currentVersionSource);
 if (strlen($currentVersion) > 32 || preg_match('/\A[0-9]+(?:\.[0-9]+){2}(?:[-a-zA-Z0-9]+)?\z/', $currentVersion) !== 1) {
     throw new RuntimeException('The current installer version has an unsupported format.');
 }
-$lastConfirmedVersion = '1.2.38';
+$lastConfirmedVersion = '1.2.40';
 if ($failureUpgrade) {
     installerAssert(version_compare($currentVersion, $lastConfirmedVersion, '>'), 'the final web version follows the admitted intermediate migration');
 }
@@ -253,6 +253,8 @@ try {
     $database->exec("USE `$schema`");
     installerSeed($database, $root);
     if ($failureUpgrade) {
+        // Restore pre-1.2.41 history before exercising the historical upgrade chain.
+        $database->exec('ALTER TABLE alert_baseline_sample DROP COLUMN sample_mean, DROP COLUMN sample_m2');
         $database->exec("UPDATE version SET cacti='1.2.33'");
         $database->exec("INSERT INTO cdef_items (hash,cdef_id,sequence,type,value) VALUES('" . str_repeat('f', 32) . "',15000001,1,1,'1')");
     }
@@ -330,8 +332,8 @@ try {
                 === 'The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.',
                 'actual web background upgrade reports native contract failure'
             );
-            // The actual 1.2.38 migration is confirmed before the final CDEF
-            // contract refuses 1.2.39; preserve that last successful marker.
+            // The actual 1.2.40 migration is confirmed before the final CDEF
+            // contract refuses 1.2.41; preserve that last successful marker.
             $failedVersion = $database->query('SELECT cacti FROM version')->fetchColumn();
             $observedVersion = is_string($failedVersion) && strlen($failedVersion) <= 32
                 && preg_match('/\A[0-9]+(?:\.[0-9]+){2}\z/', $failedVersion) === 1 ? $failedVersion : 'unexpected';

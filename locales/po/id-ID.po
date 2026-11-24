@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Indonesian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Indonesian\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Opsi Akun"
 
@@ -1157,7 +1159,7 @@ msgstr "Format Judul"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d Menit"
@@ -4033,6 +4035,14 @@ msgstr "Pratinjau Agregat %s"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Pembuatan grafik agregat tidak dapat dikonfirmasi. Tinjau pengaturan grafik sebelum mencoba lagi."
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7495,6 +7505,11 @@ msgstr "%d Proses"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d Lonjakan"
 
@@ -7610,6 +7625,14 @@ msgstr "Nama Agregat:"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Templat Agregat [baru]"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8192,6 +8215,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Aktifkan penyesuaian Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Aktifkan Pembaruan RRD Sesuai Permintaan"
 
@@ -8470,6 +8497,10 @@ msgstr "Seberapa sering Statistik Harian harus diperbarui?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Seberapa sering RRD harus diperiksa?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8798,6 +8829,10 @@ msgstr "Zona Waktu Browser Saya"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9312,6 +9347,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Haruskah Memiliki Grafik dan Memiliki Sumber Data Dicentang secara Default."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Tampilkan Agregat Perangkat"
 
@@ -9738,6 +9777,10 @@ msgstr "Nama akun administratif utama yang secara otomatis akan menerima Email s
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Nama pengguna yang akan digunakan Kadupul sebagai templat untuk pengguna Web Basic dan LDAP baru; default-nya adalah 'guest'.  Akun pengguna ini akan dinonaktifkan dari login setelah dipilih."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10622,11 +10665,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kegagalan Login Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Kata sandi minimal harus %d karakter!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Dibatasi"
 
@@ -10648,24 +10686,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Autentikasi Dasar Web dikonfigurasi, tetapi tidak ada nama pengguna yang dikirim dari server web. Pastikan Anda mengaktifkan autentikasi di server web."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Administrator Kadupul Anda mewajibkan kata sandi kompleks untuk masuk dan kata sandi Kadupul Anda saat ini tidak memenuhi persyaratan baru.  Oleh karena itu, Anda harus mengubah kata sandi Anda sekarang."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Akun Anda telah dikunci.  Silakan hubungi Administrator Anda."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Kata sandi Anda harus mengandung campuran karakter huruf kecil dan huruf besar!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Kata sandi Anda harus mengandung setidaknya 1 karakter angka!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Kata sandi Anda harus mengandung setidaknya 1 karakter khusus!"
 
 #: lib/boost.php
 #, php-format
@@ -11360,7 +11382,7 @@ msgstr "Masuk sebagai %s"
 msgid "Login as Regular User"
 msgstr "Login sebagai Pengguna Biasa"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Logout"
 
@@ -16333,6 +16355,27 @@ msgstr "FATAL: Spike Kill Tidak Diizinkan"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Metode Spike Kill '%s' Tidak Valid"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Administrator Kadupul Anda mewajibkan kata sandi kompleks untuk masuk dan kata sandi Kadupul Anda saat ini tidak memenuhi persyaratan baru.  Oleh karena itu, Anda harus mengubah kata sandi Anda sekarang."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Kata sandi minimal harus %d karakter!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Kata sandi Anda harus mengandung campuran karakter huruf kecil dan huruf besar!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Kata sandi Anda harus mengandung setidaknya 1 karakter angka!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Kata sandi Anda harus mengandung setidaknya 1 karakter khusus!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

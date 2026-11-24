@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Telugu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Telugu\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "యాక్సెస్ నిరాకరించబడింది! అతిథి యూజర్ id %s లేదు. దయచేసి మీ నిర్వాహకుడిని సంప్రదించండి."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "యాక్సెస్ నిరాకరించబడింది! లాగిన్ విఫలమైంది."
 
@@ -1157,7 +1159,7 @@ msgstr "శీర్షిక ఫార్మాట్"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d నిమిషం"
@@ -4054,6 +4056,14 @@ msgstr "Boost తర్వాత"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "అగ్రిగేట్"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7516,6 +7526,11 @@ msgstr "%d ప్రాసెస్‌లు"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d స్పైక్‌లు"
 
@@ -7631,6 +7646,14 @@ msgstr "అధునాతన"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "ఈ రోజుల సంఖ్య తర్వాత, గ్రాఫ్‌కు వ్యాపార గంటలు జోడించబడవు. <br/>సిఫార్సు చేయబడినది: 62 రోజులు"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8213,6 +8236,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes (R) ట్వీక్‌ను ప్రారంభించు"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "ఆన్-డిమాండ్ RRD నవీకరణను ప్రారంభించు"
 
@@ -8491,6 +8518,10 @@ msgstr "రోజువారీ గణాంకాలు ఎంత తరచు
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "RRD ఎంత తరచుగా తనిఖీ చేయబడాలి?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8819,6 +8850,10 @@ msgstr "నా బ్రౌజర్ టైమ్‌జోన్"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaNలు"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9333,6 +9368,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Has Graphs మరియు Has Data Sources డిఫాల్ట్‌గా తనిఖీ చేయబడాలా."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "పరికర అగ్రిగేట్‌లను చూపు"
 
@@ -9759,6 +9798,10 @@ msgstr "Kadupul సిస్టమ్ సమస్యలను ఎదుర్�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "కొత్త Web Basic మరియు LDAP వినియోగదారుల కోసం Kadupul టెంప్లేట్‌గా ఉపయోగించే వినియోగదారు పేరు; డిఫాల్ట్‌గా 'guest' గా ఉంటుంది. ఎంచుకున్న తర్వాత ఈ వినియోగదారు ఖాతా లాగిన్ అవ్వకుండా నిలిపివేయబడుతుంది."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10643,11 +10686,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul లాగిన్ వైఫల్యం"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "పాస్‌వర్డ్ కనీసం %d అక్షరాలు ఉండాలి!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "పరిమితం చేయబడినది"
 
@@ -10669,24 +10707,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Basic Authentication కాన్ఫిగర్ చేయబడింది, కానీ వెబ్ సర్వర్ నుండి వినియోగదారు పేరు ఏదీ పంపబడలేదు. దయచేసి వెబ్ సర్వర్‌లో ప్రామాణీకరణ ప్రారంభించబడిందని నిర్ధారించుకోండి."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "మీ Kadupul అడ్మినిస్ట్రేటర్ లాగిన్ల కోసం సంక్లిష్ట పాస్‌వర్డ్‌లను బలవంతం చేసారు మరియు మీ ప్రస్తుత Kadupul పాస్‌వర్డ్ కొత్త అవసరాలకు సరిపోలడం లేదు. కాబట్టి, మీరు ఇప్పుడు మీ పాస్‌వర్డ్‌ను తప్పనిసరిగా మార్చాలి."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "మీ ఖాతా లాక్ చేయబడింది. దయచేసి మీ అడ్మినిస్ట్రేటర్‌ను సంప్రదించండి."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "మీ పాస్‌వర్డ్‌లో తప్పనిసరిగా చిన్న అక్షరాలు మరియు పెద్ద అక్షరాల మిశ్రమం ఉండాలి!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "మీ పాస్‌వర్డ్‌లో కనీసం 1 సంఖ్యా అక్షరం ఉండాలి!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "మీ పాస్‌వర్డ్‌లో కనీసం 1 ప్రత్యేక అక్షరం ఉండాలి!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11403,7 @@ msgstr "%s గా లాగిన్ అయ్యారు"
 msgid "Login as Regular User"
 msgstr "సాధారణ యూజర్‌గా లాగిన్ చేయి"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "లాగౌట్"
 
@@ -16370,6 +16392,27 @@ msgstr "తీవ్రమైన లోపం: స్పైక్ కిల్ �
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "తీవ్రమైన లోపం: స్పైక్ కిల్ పద్ధతి '%s' చెల్లదు"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "మీ Kadupul అడ్మినిస్ట్రేటర్ లాగిన్ల కోసం సంక్లిష్ట పాస్‌వర్డ్‌లను బలవంతం చేసారు మరియు మీ ప్రస్తుత Kadupul పాస్‌వర్డ్ కొత్త అవసరాలకు సరిపోలడం లేదు. కాబట్టి, మీరు ఇప్పుడు మీ పాస్‌వర్డ్‌ను తప్పనిసరిగా మార్చాలి."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "పాస్‌వర్డ్ కనీసం %d అక్షరాలు ఉండాలి!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "మీ పాస్‌వర్డ్‌లో తప్పనిసరిగా చిన్న అక్షరాలు మరియు పెద్ద అక్షరాల మిశ్రమం ఉండాలి!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "మీ పాస్‌వర్డ్‌లో కనీసం 1 సంఖ్యా అక్షరం ఉండాలి!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "మీ పాస్‌వర్డ్‌లో కనీసం 1 ప్రత్యేక అక్షరం ఉండాలి!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

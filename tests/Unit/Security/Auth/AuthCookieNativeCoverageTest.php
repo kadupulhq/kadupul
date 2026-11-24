@@ -13,6 +13,90 @@ final class AuthCookieNativeCoverageTest extends TestCase
 
     private static bool $coverageEvidenceChecked = false;
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('lockoutChecks')]
+    public function testSharedLockoutGatePreservesPolicyIdentityAndCallerErrors(array $scenario, bool $locked, bool $queried): void
+    {
+        $state = $this->runCookie(['operation' => 'lockout-check'] + $scenario);
+        self::assertSame($locked, $state['result']);
+        self::assertSame($locked || ($scenario['prior_error'] ?? false), $state['error']);
+        self::assertSame($locked ? 'Your account has been locked.  Please contact your Administrator.' : ($scenario['prior_message'] ?? ''), $state['error_message']);
+        self::assertSame($queried ? [[$scenario['username'] ?? 'alice', $scenario['account_realm'] ?? 0]] : [], $state['lockout_queries']);
+        self::assertSame([], $state['events']);
+        self::assertSame([], $state['audit']);
+        self::assertSame([42 => 0, 43 => 0, 44 => 0], $state['failed_attempts']);
+        foreach ($state['rows'] as $row) {
+            self::assertSame($state['old_hash'], $row['token']);
+        }
+    }
+
+    public static function lockoutChecks(): iterable
+    {
+        yield 'enabled locked local account' => [['locked' => 'on'], true, true];
+        yield 'unlocked local account' => [[], false, true];
+        yield 'disabled locked account handled by caller' => [['locked' => 'on', 'enabled' => ''], false, true];
+        yield 'same name in another realm' => [['locked' => 'on', 'account_realm' => 3], false, true];
+        yield 'locked directory account' => [['locked' => 'on', 'principal' => 43, 'account_realm' => 3], true, true];
+        yield 'string realm remains bound unchanged' => [['locked' => 'on', 'account_realm' => '0'], true, true];
+        yield 'different username' => [['locked' => 'on', 'username' => 'foreign'], false, true];
+        yield 'missing account' => [['locked' => 'on', 'username' => 'missing'], false, true];
+        yield 'existing caller failure retained' => [['prior_error' => true, 'prior_message' => 'prior failure'], false, true];
+        foreach ([0, -1, '0.9', '', false, 'invalid'] as $index => $limit) {
+            yield 'disabled threshold ' . $index => [['locked' => 'on', 'config' => ['secpass_lockfailed' => $limit]], false, false];
+        }
+        foreach ([true, '1', '3.9'] as $index => $limit) {
+            yield 'enabled threshold ' . $index => [['locked' => 'on', 'config' => ['secpass_lockfailed' => $limit]], true, true];
+        }
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('recoveries')]
+    public function testTimedLockoutRecoveryPreservesIdentityAndNewFailures(array $scenario, bool $cleared, bool $queried = true): void
+    {
+        $scenario += ['config' => ['secpass_lockfailed' => 3, 'secpass_unlocktime' => 1]];
+        $state = $this->runCookie(['operation' => 'recover-lockout', 'locked' => 'on'] + $scenario);
+        $account = $state['accounts'][($scenario['principal'] ?? 42) === 43 ? 1 : 0];
+        self::assertNull($state['result']);
+        self::assertSame($cleared ? '' : 'on', $account['locked']);
+        self::assertSame($cleared ? 0 : ($scenario['failures'] ?? 3) + (int) ($scenario['failure_after_read'] ?? false), $account['failed_attempts']);
+        self::assertSame($queried ? [[$scenario['username'] ?? 'alice', $scenario['account_realm'] ?? 0]] : [], $state['recovery_queries']);
+        self::assertSame([], $state['events']);
+        self::assertSame([], $state['audit']);
+        self::assertNull($state['issued']);
+        self::assertSame(0, $state['accounts'][2]['failed_attempts']);
+    }
+
+    public static function recoveries(): iterable
+    {
+        yield 'expired' => [[], true];
+        yield 'recent' => [['age' => 30], false];
+        yield 'future failure' => [['age' => -30], false];
+        yield 'disabled account' => [['enabled' => ''], false];
+        yield 'missing account' => [['username' => 'missing'], false];
+        yield 'same name other realm' => [['account_realm' => 3], false];
+        yield 'directory principal' => [['principal' => 43, 'account_realm' => '3'], true];
+        yield 'disabled before write' => [['disable_after_read' => true], false];
+        yield 'new failure before write' => [['failure_after_read' => true], false];
+        yield 'write rejected' => [['reject_recovery' => true], false];
+        foreach ([0, -1, '0.9', '', 'invalid'] as $index => $limit) {
+            yield 'disabled policy ' . $index => [['config' => ['secpass_lockfailed' => $limit, 'secpass_unlocktime' => 1]], false, false];
+        }
+        yield 'manual unlock only' => [['config' => ['secpass_lockfailed' => 3, 'secpass_unlocktime' => 0]], false];
+        yield 'one day cap' => [['age' => 86410, 'config' => ['secpass_lockfailed' => 3, 'secpass_unlocktime' => 3000]], true];
+    }
+
+    public function testLockoutIsRecheckedBeforeRememberMeRotation(): void
+    {
+        $state = $this->runCookie(['lock_during_restore' => true]);
+        self::assertFalse($state['result']);
+        self::assertTrue($state['error']);
+        self::assertSame([['alice', 0]], $state['lockout_queries']);
+        self::assertNull($state['issued']);
+        self::assertSame([], $state['events']);
+        self::assertSame([], $state['audit']);
+        foreach ($state['rows'] as $row) {
+            self::assertSame($state['old_hash'], $row['token']);
+        }
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('acceptedCookies')]
     public function testAValidCookieRotatesOnlyItsPersistedPrincipalAndAuditsTheActualIdentity(array $scenario, int $principal, int $realm): void
     {
@@ -198,6 +282,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
             'missing template cannot create a principal' => array(array('foreign_realm' => true, 'missing_template' => true), null, true, array('bind'), 0),
             'rejected bind increments only its realm' => array(array('bind_failure' => true), null, true, array('bind'), 1),
             'search failure never attempts bind' => array(array('search_failure' => true), null, true, array(), 0),
+            'locked domain account never attempts bind' => array(array('principal' => 43, 'locked' => 'on'), null, true, array(), 0),
         );
     }
 
@@ -224,9 +309,16 @@ final class AuthCookieNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), array('lib/auth.php'));
+                $requiredHits = array('lib/auth.php');
+                if (in_array($scenario['operation'] ?? '', ['lockout-check', 'local-password', 'domain'], true) || ($scenario['lock_during_restore'] ?? false)) {
+                    $requiredHits = array_merge($requiredHits, array('src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php'));
+                }
+                if (($scenario['operation'] ?? '') === 'local-password' && ($scenario['password'] ?? '') === 'test-password') {
+                    $requiredHits = array_merge($requiredHits, array('src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php'));
+                }
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'src/IdentityAccess/Application/Port/LocalLoginPolicy.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), $requiredHits);
                 if (!self::$coverageEvidenceChecked) {
-                    self::assertSame(26, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), array('lib/auth.php'), 'lib/rrd.php'));
+                    self::assertSame(35, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'src/IdentityAccess/Application/Port/LocalLoginPolicy.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), $requiredHits, 'lib/rrd.php'));
                     self::$coverageEvidenceChecked = true;
                 }
                 $coverage->merge($childCoverage);

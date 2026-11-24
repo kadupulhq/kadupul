@@ -41,7 +41,7 @@ def main():
     if measured is None:
         raise RuntimeError('Self-test requires actual measured poller coverage')
     cases = ['stale-source', 'invalid-hit', 'invalid-line', 'missing-scenario',
-             'missing-reports', 'unexecuted-poller', 'path-traversal']
+             'missing-subminute-scenario', 'missing-reports', 'unexecuted-poller', 'path-traversal']
     with tempfile.TemporaryDirectory(prefix='coverage-failure-') as directory:
         root = Path(directory)
         (root / 'raw').mkdir()
@@ -59,6 +59,8 @@ def main():
                 lines['0'] = 1
             elif case == 'missing-scenario':
                 evidence['scenarios'].pop('poller/run-reachable')
+            elif case == 'missing-subminute-scenario':
+                evidence['scenarios'].pop('poller/subminute-loop')
             elif case == 'unexecuted-poller':
                 data['files'][poller]['lines'] = {key: -1 for key in lines}
             elif case == 'path-traversal':
@@ -75,6 +77,7 @@ def main():
                 raise RuntimeError(f'{case}: invalid evidence replaced unit coverage')
             expected = {'stale-source': 'Covered source differs', 'invalid-hit': 'Invalid PCOV',
                         'invalid-line': 'Invalid PCOV', 'missing-scenario': 'Incomplete integration',
+                        'missing-subminute-scenario': 'Incomplete integration',
                         'missing-reports': 'Missing integration', 'unexecuted-poller': 'No real poller',
                         'path-traversal': 'Invalid coverage source'}[case]
             if expected not in result.stdout + result.stderr:

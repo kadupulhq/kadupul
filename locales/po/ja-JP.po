@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -686,6 +686,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "アクセスが拒否されました！ゲストユーザーID %sは存在しません。管理者に連絡してください。"
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "アクセスが拒否されました。ユーザーアカウントは無効です。"
 
@@ -1155,7 +1157,7 @@ msgstr "タイトルフォーマット"
 msgid "rule_name"
 msgstr "ルール名"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d 分"
@@ -4032,6 +4034,14 @@ msgstr "ブースト後"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "総計"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7494,6 +7504,11 @@ msgstr "%d プロセス"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d スパイク"
 
@@ -7609,6 +7624,14 @@ msgstr "高度な設定"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "この日数が経過すると、営業時間はグラフに追加されません。<br/>オススメ： 62日"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8191,6 +8214,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes（R）調整を有効にする"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "オンデマンドRRD更新を有効にする"
 
@@ -8469,6 +8496,10 @@ msgstr "Daily Statsはどのくらいの頻度で更新されるべきですか�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Daily Statsはどのくらいの頻度で更新されるべきですか？"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8797,6 +8828,10 @@ msgstr "マイブラウザのタイムゾーン"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN&#39;s"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9311,6 +9346,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "[グラフあり]と[データソースあり]がデフォルトでチェックされるべきか"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "集合体"
 
@@ -9737,6 +9776,10 @@ msgstr "Kadupulシステムに問題が発生したときに自動的にEメー�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupulが新しいWeb BasicおよびLDAPユーザーのテンプレートとして使用するユーザーの名前。デフォルトでは &#39;guest&#39;です。このユーザーアカウントは選択されるとログインできなくなります。"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10621,11 +10664,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul ログイン失敗"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "パスワードは少なくとも %d 文字にする必要があります!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "メンバーに限定"
 
@@ -10647,24 +10685,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web基本認証が構成されましたが、Webサーバーからユーザー名が渡されませんでした。 Webサーバーで認証が有効になっていることを確認してください。"
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Kadupul管理者がログインに複雑なパスワードを強制しているため、現在のKadupulパスワードが新しい要件に一致しません。したがって、今すぐパスワードを変更する必要があります。"
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "アクセス拒否されました。Kadupul 管理者に連絡してください。"
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "パスワードには、小文字と大文字が混在している必要があります。"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "あなたのパスワードは少なくとも1つの数字を含まなければなりません！"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "パスワードには少なくとも1つの特殊文字を含める必要があります。"
 
 #: lib/boost.php
 #, php-format
@@ -11359,7 +11381,7 @@ msgstr "%sとしてログイン中"
 msgid "Login as Regular User"
 msgstr "一般ユーザーとしてログイン"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "ログアウト"
 
@@ -16333,6 +16355,27 @@ msgstr "致命的：スパイクキルは許されない"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "致命的：スパイクキルメソッド「%s」が無効です"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Kadupul管理者がログインに複雑なパスワードを強制しているため、現在のKadupulパスワードが新しい要件に一致しません。したがって、今すぐパスワードを変更する必要があります。"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "パスワードは少なくとも %d 文字にする必要があります!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "パスワードには、小文字と大文字が混在している必要があります。"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "あなたのパスワードは少なくとも1つの数字を含まなければなりません！"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "パスワードには少なくとも1つの特殊文字を含める必要があります。"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

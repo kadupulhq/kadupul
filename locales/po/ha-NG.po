@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Hausa Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Hausa\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "An Hana Shiga! ID na mai amfani baƙo %s ba ya wanzu. Da fatan za a tuntuɓi Mai Gudanarwa."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "An Hana Shiga! Shiga Ya Kasa."
 
@@ -1157,7 +1159,7 @@ msgstr "Tsarin Take"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "Minti %d"
@@ -4054,6 +4056,14 @@ msgstr "Bayan Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Haɗaka"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7516,6 +7526,11 @@ msgstr "Tsarukan aiki %d"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "Haɓaka %d"
 
@@ -7631,6 +7646,14 @@ msgstr "Na Gaba"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Bayan wannan adadin kwanaki, ba za a ƙara sa'o'in aiki a kan jadawalin ba. <br/>Abinda aka ba da shawara: kwanaki 62"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8213,6 +8236,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Kunna daidaitawar Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Kunna Sabunta RRD Bisa Buƙata"
 
@@ -8491,6 +8518,10 @@ msgstr "Sau nawa ya kamata a sabunta Ƙididdigar Yau da Kullum?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Sau nawa ya kamata a duba RRD ?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8819,6 +8850,10 @@ msgstr "Yankin Lokacin Burauzata"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9333,6 +9368,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Shin a zaɓi Yana da Jadawalai da Yana da Tushen Bayanai ta Tsoho."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Nuna Haɗaɗɗun Na'ura"
 
@@ -9759,6 +9798,10 @@ msgstr "Sunan babban asusun gudanarwa wanda zai karɓi Imel ta atomatik lokacin 
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Sunan mai amfani da Kadupul zai yi amfani da shi a matsayin samfuri ga sabbin masu amfani na Web Basic da LDAP; 'guest' ne ta tsoho.  Za a kashe wannan asusun mai amfani daga shiga da zarar an zaɓe shi."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10643,11 +10686,6 @@ msgid "Kadupul Login Failure"
 msgstr "Gazawar Shiga Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Kalmar sirri dole ne ta kasance aƙalla haruffa %d!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "An Taƙaita"
 
@@ -10669,24 +10707,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "An saita Tantancewar Web Basic, amma sabar yanar gizo ba ta miƙa wani sunan mai amfani ba. Da fatan za a tabbatar kun kunna tantancewa a sabar yanar gizo."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Mai gudanar da Kadupul naka ya tilasta kalmomin sirri masu sarƙaƙiya don shiga kuma kalmar sirrinka ta Kadupul ta yanzu ba ta dace da sabbin buƙatun ba.  Saboda haka, dole ne ka sauya kalmar sirrinka yanzu."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "An kulle asusunka.  Da fatan za a tuntuɓi Mai Gudanarwa naka."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Dole ne kalmar sirrinka ta ƙunshi haɗin ƙananan haruffa da manyan haruffa!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla lamba 1!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla alama ta musamman 1!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11403,7 @@ msgstr "An shiga a matsayin %s"
 msgid "Login as Regular User"
 msgstr "Shiga a Matsayin Mai Amfani Na Yau da Kullum"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Fita"
 
@@ -16370,6 +16392,27 @@ msgstr "MAI TSANANI: Ba A Bada Damar Spike Kill Ba"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "MAI TSANANI: Hanyar Spike Kill '%s' Ba Daidai Ba Ce"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Mai gudanar da Kadupul naka ya tilasta kalmomin sirri masu sarƙaƙiya don shiga kuma kalmar sirrinka ta Kadupul ta yanzu ba ta dace da sabbin buƙatun ba.  Saboda haka, dole ne ka sauya kalmar sirrinka yanzu."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Kalmar sirri dole ne ta kasance aƙalla haruffa %d!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Dole ne kalmar sirrinka ta ƙunshi haɗin ƙananan haruffa da manyan haruffa!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla lamba 1!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla alama ta musamman 1!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

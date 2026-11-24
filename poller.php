@@ -20,6 +20,7 @@ require_once($config['base_path'] . '/lib/poller.php');
 require_once($config['base_path'] . '/lib/data_query.php');
 require_once($config['base_path'] . '/lib/rrd.php');
 require_once($config['base_path'] . '/lib/dsstats.php');
+require_once($config['base_path'] . '/lib/alerting.php');
 require_once($config['base_path'] . '/lib/dsdebug.php');
 require_once($config['base_path'] . '/lib/boost.php');
 require_once($config['base_path'] . '/lib/reports.php');
@@ -979,6 +980,7 @@ while ($poller_runs_completed < $poller_runs) {
             if ($poller_id == 1) {
                 snmpagent_poller_bottom();
                 dsstats_poller_bottom();
+                alerting_poller_bottom((int) $poller_id, $config['base_path']);
                 dsdebug_poller_bottom();
                 boost_poller_bottom();
             }
@@ -1069,6 +1071,7 @@ if ($poller_id == 1) {
     snmpagent_poller_bottom();
     boost_poller_bottom();
     dsstats_poller_bottom();
+    alerting_poller_bottom((int) $poller_id, $config['base_path']);
     dsdebug_poller_bottom();
     reports_poller_bottom();
     spikekill_poller_bottom();

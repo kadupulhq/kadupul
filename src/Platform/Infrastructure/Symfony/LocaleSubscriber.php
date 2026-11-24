@@ -41,6 +41,9 @@ final readonly class LocaleSubscriber implements EventSubscriberInterface
         'inventory_devices_json' => true,
         'inventory_devices_csv' => true,
         'inventory_sites_json' => true,
+        // The native logout page hands over text it has already translated; this
+        // route must not read settings, configuration or the departed user's preference.
+        'platform_logout_message' => true,
     ];
 
     public function __construct(

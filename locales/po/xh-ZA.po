@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Xhosa Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Xhosa\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Ufikelelo lwaliwe! I-ID yomsebenzisi wondwendwe engu-%s ayikho. Nceda uqhagamshelane noMlawuli wakho."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Ufikelelo lwaliwe! Ukungena kuPhanzile."
 
@@ -1157,7 +1159,7 @@ msgstr "Ifomathi yesihloko"
 msgid "rule_name"
 msgstr "igama lomgaqo"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d Umzuzu"
@@ -4033,6 +4035,14 @@ msgstr "Emva kwe-Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Idibaniso"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7495,6 +7505,11 @@ msgstr "%d Iinkqubo"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d Izikhwebu"
 
@@ -7610,6 +7625,14 @@ msgstr "Okuphezulu"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Emva kweli nani leentsuku, iiyure zoshishino aziyi kongezwa kwigrafu. <br/>Okucetyiswayo: iintsuku ezingama-62"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8192,6 +8215,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Vula uhlengahlengiso lwe-Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Vula uHlaziyo lwe-RRD ngokweMfuno"
 
@@ -8470,6 +8497,10 @@ msgstr "Iinkcukacha-manani zeMihla ngemihla kufuneka zihlaziywe rhoqo kangakanan
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "I-RRD kufuneka ijongwe rhoqo kangakanani ?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8798,6 +8829,10 @@ msgstr "Ummandla weXesha weBhrawuza yam"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "Ii-NaN"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9312,6 +9347,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Ingaba i-Has Graphs ne-Has Data Sources kufuneka zikhethwe ngokungagqibekanga."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Bonisa ii-Aggregates zezixhobo"
 
@@ -9738,6 +9777,10 @@ msgstr "Igama le-akhawunti yomlawuli eyintloko eya kufumana ii-Imeyile ngokuzenz
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Igama lomsebenzisi eliza kusetyenziswa yi-Kadupul njengokulinganisa kwabasebenzisi abatsha be-Web Basic ne-LDAP; ngu-'guest' ngokungagqibekanga.  Le akhawunti yomsebenzisi iya kukhubazwa ekungeneni xa ikhethiwe."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10622,11 +10665,6 @@ msgid "Kadupul Login Failure"
 msgstr "Ukusilela kokuNgena kwi-Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Iphasiwedi kufuneka ibe nobuncinci boonobumba aba-%d!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Kuthintelwe"
 
@@ -10648,24 +10686,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Uqinisekiso lwe-Web Basic luqwalaselwe, kodwa akukho gama lomsebenzisi lidluliselweyo ukusuka kweseva yewebhu. Nceda uqinisekise ukuba uqinisekiso luvuliwe kweseva yewebhu."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Umlawuli wakho we-Kadupul unyanzelise amagama okugqitha antsonkothileyo okungena kwaye igama lakho lokugqitha le-Kadupul langoku alihambelani neemfuno ezitsha.  Ngoko ke, kufuneka utshintshe igama lakho lokugqitha ngoku."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "I-akhawunti yakho itshixiwe.  Nceda uqhagamshelane noMlawuli wakho."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Igama lakho lokugqitha kufuneka libe nomxube woonobumba abancinci nabakhulu!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Igama lakho lokugqitha kufuneka libe nobuncinane unobumba wenani o-1!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Igama lakho lokugqitha kufuneka libe nobuncinane unobumba okhethekileyo o-1!"
 
 #: lib/boost.php
 #, php-format
@@ -11360,7 +11382,7 @@ msgstr "Ungene njengo-%s"
 msgid "Login as Regular User"
 msgstr "Ngena njengoMsebenzisi oQhelekileyo"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Phuma"
 
@@ -16333,6 +16355,27 @@ msgstr "FATAL: Ukubulala iZikhwebu Akuvumelekanga"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Indlela yokuBulala iZikhwebu '%s' ayiSebenzi"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Umlawuli wakho we-Kadupul unyanzelise amagama okugqitha antsonkothileyo okungena kwaye igama lakho lokugqitha le-Kadupul langoku alihambelani neemfuno ezitsha.  Ngoko ke, kufuneka utshintshe igama lakho lokugqitha ngoku."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Iphasiwedi kufuneka ibe nobuncinci boonobumba aba-%d!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Igama lakho lokugqitha kufuneka libe nomxube woonobumba abancinci nabakhulu!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Igama lakho lokugqitha kufuneka libe nobuncinane unobumba wenani o-1!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Igama lakho lokugqitha kufuneka libe nobuncinane unobumba okhethekileyo o-1!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

@@ -270,6 +270,15 @@ final class BasicLoginParityTest extends TestCase
     /** MariaDB's PAD SPACE collation matches 'basic-user ' to 'basic-user'; user_log keeps the raw name. */
     public function testTrailingSpaceInRemoteUserSignsInTheTrimmedAccountAndLogsTheRawName(): void
     {
+        // MySQL 8+ utf8mb4_0900 collations are NO PAD, so the raw name names no account there.
+        if ((int) $this->database->fetchOne('SELECT COUNT(*) FROM user_auth WHERE username = ?', [self::USER . ' ']) === 0) {
+            $response = $this->gated(self::USER . ' ');
+            self::assertNotSame('GATED:' . self::USER_ID, $response['body']);
+            self::assertArrayNotHasKey('sess_user_id', $response['session']);
+            self::assertSame([], $this->userLog());
+
+            return;
+        }
         $this->assertSignedIn($this->gated(self::USER . ' '));
         self::assertSame([['username' => self::USER . ' ', 'user_id' => self::USER_ID, 'result' => 1, 'ip' => '127.0.0.1']], $this->userLog());
         self::assertSame([$this->basicLine(self::USER)], $this->authLog());

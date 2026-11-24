@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:57-0800\n"
+"POT-Creation-Date: 2026-11-23 17:14-0800\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -686,6 +686,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Доступ запрещен! Пользовательский ID %s не существует. Пожалуйста свяжитесь с администратором."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Доступ запрещен, учетная запись пользователя отключена."
 
@@ -1155,7 +1157,7 @@ msgstr "Формат заголовка"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d Минута"
@@ -4074,6 +4076,14 @@ msgstr "После Буста"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Совокупный"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7560,6 +7570,11 @@ msgstr "%d Процессы"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d Шипы"
 
@@ -7675,6 +7690,14 @@ msgstr "Дополнительно"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "По истечении этого количества дней рабочие часы не будут добавлены в график. <br/>Рекомендуется: 62 дня"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8259,6 +8282,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Включить Lotus Notes (R) tweak (Настройка лотоса)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Включить обновление RRD по запросу"
 
@@ -8537,6 +8564,10 @@ msgstr "Как часто следует обновлять ежедневную
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Как часто следует обновлять RRD?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8865,6 +8896,10 @@ msgstr "Часовой пояс браузера"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9379,6 +9414,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Должны ли быть проверены по умолчанию Has Graphs и Has Data Sources (Имеет графики и источники данных)."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Показать агрегированные устройства"
 
@@ -9805,6 +9844,10 @@ msgstr "Имя основной учетной записи администра
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Имя пользователя, которое Kadupul будет использовать в качестве шаблона для новых пользователей Web Basic и LDAP; по умолчанию является \"гостевым\".  Эта учетная запись пользователя будет отключена от входа при выборе."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10689,11 +10732,6 @@ msgid "Kadupul Login Failure"
 msgstr "Ошибка входа в Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Пароль должен содержать не менее %d символов!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Ограниченный"
 
@@ -10715,24 +10753,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Настроена базовая аутентификация Web Basic, но с веб-сервера не было передано ни одного имени пользователя. Убедитесь, что на веб-сервере включена аутентификация."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Ваш администратор Kadupul ввел сложные пароли для входа в систему, и ваш текущий пароль Kadupul не соответствует новым требованиям. Поэтому вы должны изменить свой пароль сейчас."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Доступ запрещен, пожалуйста, свяжитесь с администратором кактусов."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Ваш пароль должен содержать символы нижнего регистра и верхнего регистра!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Ваш пароль должен содержать не менее 1 цифрового символа!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Ваш пароль должен содержать не менее 1 специального символа!"
 
 #: lib/boost.php
 #, php-format
@@ -11427,7 +11449,7 @@ msgstr "Авторизован как %s"
 msgid "Login as Regular User"
 msgstr "Вход в систему как постоянный пользователь"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Выход"
 
@@ -16437,6 +16459,27 @@ msgstr "Spike Kill не разрешается"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "ФАТАЛЬНО: Spike метод завершения '%s'\" недействителен."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Ваш администратор Kadupul ввел сложные пароли для входа в систему, и ваш текущий пароль Kadupul не соответствует новым требованиям. Поэтому вы должны изменить свой пароль сейчас."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Пароль должен содержать не менее %d символов!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Ваш пароль должен содержать символы нижнего регистра и верхнего регистра!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Ваш пароль должен содержать не менее 1 цифрового символа!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Ваш пароль должен содержать не менее 1 специального символа!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

@@ -9,20 +9,23 @@
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
 $authLoginSource = file_get_contents(dirname(__DIR__, 2) . '/auth_login.php');
 
-test('auth_process_lockout uses atomic SQL increment for failed_attempts', function () use ($authSource) {
-    // The fix replaces SELECT-then-UPDATE with a single atomic UPDATE
-    expect(str_contains($authSource, 'failed_attempts = failed_attempts + 1'))
-        ->toBeTrue();
-});
-
-test('auth_process_lockout atomic increment is inside auth_process_lockout function', function () use ($authSource) {
-    // Extract the function body and verify the pattern is there
+test('auth_process_lockout delegates to the lockout failure command', function () use ($authSource) {
     $start = strpos($authSource, 'function auth_process_lockout(');
     expect($start)->not->toBeFalse();
 
     $body = substr($authSource, $start, 2000);
-    expect(str_contains($body, 'failed_attempts = failed_attempts + 1'))
-        ->toBeTrue();
+    expect(str_contains($body, 'RecordLocalLoginFailure('))->toBeTrue()
+        ->and(str_contains($body, 'NativeAccountLockoutFailure()'))->toBeTrue();
+});
+
+test('the lockout failure adapter increments failed_attempts atomically', function () {
+    // The increment must stay a single UPDATE, not SELECT-then-UPDATE.
+    $source = file_get_contents(dirname(__DIR__, 2) . '/src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutFailure.php');
+    $start = strpos($source, 'public function increment(');
+    expect($start)->not->toBeFalse();
+
+    $body = substr($source, $start, 600);
+    expect(str_contains($body, 'failed_attempts = failed_attempts + 1'))->toBeTrue();
 });
 
 test('set_auth_cookie does not use mt_rand', function () use ($authSource) {
