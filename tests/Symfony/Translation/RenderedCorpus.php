@@ -22,7 +22,7 @@ namespace Kadupul\Tests\Translation;
  *
  * @phpstan-type Call array{0: string, 1: list<int|string>}
  * @phpstan-type Result array{value: mixed, error: ?string, warnings: list<string>}
- * @phpstan-type Rendering array{locale: string, handler: int, domains: array<string, string>, readers: array<string, string>, plural_index: array<string, list<int|bool>>, values: list<mixed>, errors: array<int, string>, warnings: array<int, list<string>>}
+ * @phpstan-type Rendering array{locale: string, handler: int, domains: array<string, string>, readers: array<string, string>, plural_index: array<string, list<int|bool>>, values: list<mixed>, errors: array<int, string>, warnings: array<int, list<string>>, log: list<string>}
  */
 final class RenderedCorpus
 {
@@ -30,6 +30,14 @@ final class RenderedCorpus
     public const array COUNTS = [0, 1, 2, 3, 4, 5, 11, 12, 21, 22, 100, 101, 111];
 
     public const array PLUGINS = ['i18nprobe', 'folder'];
+
+    /** i18n_language_handler as the settings table stores it. */
+    public const string PHP_GETTEXT = '1';
+
+    public const string NO_HANDLER = '';
+
+    /** CACTI_LANGUAGE_HANDLER_* in include/global_constants.php. */
+    public const array HANDLERS = ['' => 4, '0' => 4, '1' => 1, '4' => 4];
 
     private const string ORACLE = __DIR__ . '/../Fixtures/translation/legacy-gettext-oracle.php';
 
@@ -40,8 +48,9 @@ final class RenderedCorpus
     /**
      * @param list<Call> $calls
      * @param array<string, Rendering> $renderings
+     * @param list<string> $english locales the caller expects to render in English
      */
-    private function __construct(public readonly array $calls, public readonly array $renderings) {}
+    private function __construct(public readonly array $calls, public readonly array $renderings, private readonly array $english = []) {}
 
     /** The corpus of this checkout, rendered once per test process. */
     public static function shared(): self
@@ -192,6 +201,14 @@ final class RenderedCorpus
             ['__date', ['l, j F Y H:i', 1700000000]],
             // php-gettext rejects a count that is not an int.
             ['__n', ['Delete Data Query', 'Delete Data Queries', '2']],
+            // A text domain no catalog was loaded for.
+            ['__gettext', ['Devices', 'absent']],
+            ['__n', ['Delete Data Query', 'Delete Data Queries', 2, 'absent']],
+            ['__n', ['Delete Data Query', 'Delete Data Queries', 1, 'absent']],
+            ['__xn', ['probe', 'Item', 'Items', 2, 'absent']],
+            ['__x', ['dropdown action', 'Delete', 'absent']],
+            ['__gettext', ['Devices', 'i18nprobe']],
+            ['__gettext', ['Untranslated probe', 'i18nprobe']],
         ];
         foreach (self::COUNTS as $n) {
             $calls[] = ['__n', ['%d probe', '%d probes', $n, 'i18nprobe']];
@@ -210,13 +227,20 @@ final class RenderedCorpus
      * @param list<string> $locales
      * @param list<Call> $calls
      * @param ?string $symfonyCache render over Symfony catalogues compiled here instead of php-gettext
+     * @param string $handler the i18n_language_handler setting
+     * @param array<string, array{string, int}> $expect the locale and handler the runtime must end with, by
+     *     requested locale; the requested locale and $handler's own handler otherwise, English without one
+     * @param ?string $applicationCache the installation's var/cache, kept between renders; a throwaway one otherwise
+     * @param array<string, string> $catalogs files that replace a core catalog, by file name (de-DE.mo)
      */
-    public static function render(string $root, array $locales, array $calls, ?string $symfonyCache = null): self
+    public static function render(string $root, array $locales, array $calls, ?string $symfonyCache = null, string $handler = self::PHP_GETTEXT, array $expect = [], ?string $applicationCache = null, array $catalogs = []): self
     {
         if ($calls === [] || $locales === []) {
             throw new \RuntimeException('An empty corpus proves nothing.');
         }
-        $work = sys_get_temp_dir() . '/kadupul-corpus-' . bin2hex(random_bytes(8));
+        // The Symfony handler keys its compiled catalogues by catalog path, so
+        // renders that share an application cache get the same installation path.
+        $work = sys_get_temp_dir() . '/kadupul-corpus-' . ($applicationCache === null ? bin2hex(random_bytes(8)) : substr(hash('sha256', $applicationCache), 0, 16));
         if (!mkdir($work, 0700)) {
             throw new \RuntimeException('Cannot create the corpus work directory.');
         }
@@ -226,8 +250,23 @@ final class RenderedCorpus
             $owned[] = $base;
             mkdir($base . '/plugins', 0700, true);
             $owned[] = $base . '/plugins';
-            self::link($root . '/locales', $base . '/locales');
-            $owned[] = $base . '/locales';
+            if ($catalogs === []) {
+                self::link($root . '/locales', $base . '/locales');
+                $owned[] = $base . '/locales';
+            } else {
+                mkdir($base . '/locales/LC_MESSAGES', 0700, true);
+                array_push($owned, $base . '/locales', $base . '/locales/LC_MESSAGES');
+                foreach (glob($root . '/locales/LC_MESSAGES/*.mo') ?: [] as $catalog) {
+                    self::link($catalogs[basename($catalog)] ?? $catalog, $base . '/locales/LC_MESSAGES/' . basename($catalog));
+                    $owned[] = $base . '/locales/LC_MESSAGES/' . basename($catalog);
+                }
+            }
+            if ($applicationCache !== null) {
+                mkdir($base . '/var', 0700);
+                $owned[] = $base . '/var';
+                self::link($applicationCache, $base . '/var/cache');
+                $owned[] = $base . '/var/cache';
+            }
             foreach (self::PLUGINS as $plugin) {
                 self::link(self::PLUGIN_FIXTURES . '/' . $plugin, $base . '/plugins/' . $plugin);
                 $owned[] = $base . '/plugins/' . $plugin;
@@ -243,7 +282,8 @@ final class RenderedCorpus
                     $errors = $work . '/' . $locale . '.err';
                     $owned[] = $output;
                     $owned[] = $errors;
-                    $command = [PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', self::ORACLE, $root, $base, $locale, $callsFile, $output];
+                    [$expectedLocale, $expectedHandler] = $expect[$locale] ?? ($locale === 'en-US' ? ['en-US', 0] : [$locale, self::HANDLERS[$handler]]);
+                    $command = [PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', self::ORACLE, $root, $base, $locale, $callsFile, $output, $handler, $expectedLocale, (string) $expectedHandler];
                     if ($symfonyCache !== null) {
                         $command[] = $symfonyCache;
                     }
@@ -268,6 +308,10 @@ final class RenderedCorpus
                 }
             }
         } finally {
+            if ($applicationCache === null) {
+                // Catalogues the Symfony handler compiled below the throwaway installation.
+                self::remove($base . '/var');
+            }
             foreach (array_reverse($owned) as $path) {
                 if (is_link($path) || is_file($path)) {
                     unlink($path);
@@ -277,7 +321,7 @@ final class RenderedCorpus
             }
             rmdir($work);
         }
-        $corpus = new self($calls, $renderings);
+        $corpus = new self($calls, $renderings, [...array_keys($expect), ...array_map(static fn(string $file): string => basename($file, '.mo'), array_keys($catalogs))]);
         $corpus->assertUsable();
 
         return $corpus;
@@ -287,7 +331,8 @@ final class RenderedCorpus
      * A corpus is usable only if every locale rendered every call, and every
      * translated locale changed some of them. An empty corpus, a missing locale
      * or a catalog that silently fell back to English would otherwise make any
-     * later comparison pass.
+     * later comparison pass. Only a locale the caller named in $expect or
+     * replaced the catalog of may render in English.
      */
     public function assertUsable(): void
     {
@@ -298,7 +343,7 @@ final class RenderedCorpus
             if (count($rendering['values']) !== count($this->calls)) {
                 throw new \RuntimeException(sprintf('%s rendered %d of %d calls.', $locale, count($rendering['values']), count($this->calls)));
             }
-            if ($locale !== 'en-US' && $this->translatedCount($locale) === 0) {
+            if ($locale !== 'en-US' && !in_array($locale, $this->english, true) && $this->translatedCount($locale) === 0) {
                 throw new \RuntimeException($locale . ' has no translated entries.');
             }
         }
@@ -329,6 +374,25 @@ final class RenderedCorpus
         $rendering = $this->renderings[$locale];
 
         return ['value' => $rendering['values'][$index], 'error' => $rendering['errors'][$index] ?? null, 'warnings' => $rendering['warnings'][$index] ?? []];
+    }
+
+    /** Removes a directory tree this class created, without following links. */
+    private static function remove(string $path): void
+    {
+        if (is_link($path) || is_file($path)) {
+            unlink($path);
+
+            return;
+        }
+        if (!is_dir($path)) {
+            return;
+        }
+        foreach (scandir($path) ?: [] as $entry) {
+            if ($entry !== '.' && $entry !== '..') {
+                self::remove($path . '/' . $entry);
+            }
+        }
+        rmdir($path);
     }
 
     private static function link(string $target, string $link): void
