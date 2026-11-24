@@ -1,0 +1,1 @@
+- Repair corrupted, hallucinated, wrong-language, and inverted-action strings in the shipped Russian (`ru-RU`) and Ukrainian (`uk-UA`) gettext catalogs and recompile their `.mo` catalogs.
