@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "Choisissez la méthode d'entrée pour cette requête de données. Cette méthode d'entrée définit comment les données sont collectées pour chaque équipement associé à la requête de données."
+"Data Input Method": "Méthode d'acquisition des données"
+"The full path to the XML file containing definitions for this data query.": "Le chemin complet vers le fichier XML contenant les définitions pour cette requête."

@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"ChangeLog": "Changelog"
+"Collation": "Interclassement"
+"Data Length": "Longueur des données"
+"Device": "Équipement"
+"Device ID": "ID de l'équipement"
+"Devices": "Équipements"
+"Include Index": "Inclure l'index"
+"Index Length": "Longueur d'index"
+"Kadupul Version": "Version Kadupul"
+"Log Administration": "Administration des journaux"
+"Next": "Suivant"
+"PHP Version": "Version PHP"
+"Previous": "Précédent"
+"RRDfile Checker": "Vérificateur de fichiers RRD"
+"RRDfile Cleaner": "Nettoyeur de fichiers RRD"
+"Row Format": "Format de ligne"
+"SNMP Agent Cache": "Cache de l'agent SNMP"
+"SNMP Notification Receivers": "Récepteurs de notifications SNMP"
+"Script Server": "Serveur de script"
+"View User Log": "Afficher le journal de l'utilisateur"

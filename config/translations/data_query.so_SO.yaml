@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A description for this data query.": "Sharaxaad weydiintan xogta."
+"A name for this data query.": "Magac weydiintan xogta."
+"Add Data Query": "Ku dar Weydiinta Xogta"
+"Associated Graph Templates": "Qaababka Jaantusyada ee La Xiriira"
+"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "Dooro habka galinta ee Weydiintan Xogta. Habkan galintu wuxuu qeexaa sida xogta loogu ururiyo Qalab kasta oo ku xiran Weydiinta Xogta."
+"Could not locate XML file.": "Lama heli karin faylka XML."
+"Data Input Method": "Habka Gelinta Xogta"
+"Data Queries [edit: %name%]": "Weydiimaha Xogta [tafatir: %name%]"
+"Description": "Sharaxaadda"
+"Name": "Magaca"
+"Save": "Kaydi"
+"Successfully located XML file": "Si guul leh ayaa loo helay faylka XML"
+"The full path to the XML file containing definitions for this data query.": "Waddada buuxda ee faylka XML ee ka kooban qeexitaannada weydiintan xogta."
+"XML Path": "Waddada XML"
