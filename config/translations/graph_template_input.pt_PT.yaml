@@ -26,7 +26,7 @@
 "GPRINT Type": "Tipo GPRINT"
 "Graph Item Input not found.": "Graph Item Input not found."
 "Graph Item Input: %name%": "Graph Item Input: %name%"
-"Graph Item Inputs [edit graph: %name%]": "Graph Item Inputs [editar gráfico: %name%]"
+"Graph Item Inputs [edit graph: %name%]": "Entradas de itens de gráfico [editar gráfico: %name%]"
 "Graph Item Inputs are unavailable. Reload before retrying.": "Graph Item Inputs are unavailable. Reload before retrying."
 "Graph Item Type": "Tipo de item gráfico"
 "Graph Template not found.": "Graph Template not found."

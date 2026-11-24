@@ -14469,7 +14469,7 @@ msgstr "Foleni ya poller_output ni lazima itumie InnoDB kabla ya ukusanyaji. Sim
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "Operesheni haikuweza kuthibitishwa. Kagua historia ya mabadiliko kabla ya kujaribu tena."
+msgstr "haipatikani"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."

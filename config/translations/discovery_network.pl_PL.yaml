@@ -87,7 +87,7 @@
 "October": "Październik"
 "Ping Method": "Metoda Pingowa"
 "Ping Port": "Port pinga"
-"Ping Retry Count": "Licznik liczników Ping Retry"
+"Ping Retry Count": "Liczba ponownych prób Ping"
 "Ping Timeout Value": "Wartość czasu oczekiwania"
 "Reachability Settings": "Ustawienia osiągalności"
 "Rerun Data Queries": "Uruchom ponownie zapytania o dane"

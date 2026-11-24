@@ -14469,7 +14469,7 @@ msgstr "সংগ্রহের আগে poller_output সারিতে অ�
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "অপারেশনটি নিশ্চিত করা যায়নি। পুনরায় চেষ্টা করার আগে পরিবর্তনের ইতিহাস পরীক্ষা করুন।"
+msgstr "অনুপলব্ধ"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."

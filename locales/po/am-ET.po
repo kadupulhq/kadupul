@@ -15133,7 +15133,7 @@ msgstr "ከKadupul ውጣ"
 #: logout.php
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
-msgstr "እባክዎ አሳሽዎን ይዝጉ ወይም %sLogin Again%s"
+msgstr "እባክዎ አሳሽዎን ይዝጉ ወይም %sእንደገና ይግቡ%s"
 
 #: logout.php utilities.php
 #, php-format

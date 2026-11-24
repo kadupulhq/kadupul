@@ -156,7 +156,7 @@
         },
         "ja-JP": {
           "fields": {
-            "msgstr": "ユーザー名は既に使用されています。"
+            "msgstr": "(未使用)"
           },
           "flags": []
         },
@@ -198,7 +198,7 @@
         },
         "pt-BR": {
           "fields": {
-            "msgstr": "Usar Fontes Personalizadas"
+            "msgstr": "(Não está em uso)"
           },
           "flags": []
         },
@@ -258,7 +258,7 @@
         },
         "tr-TR": {
           "fields": {
-            "msgstr": "Özel Yazı Tiplerini Kullan"
+            "msgstr": "(Kullanımda Değil)"
           },
           "flags": []
         },
@@ -1663,7 +1663,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Setelah mengubah Model Izin Grafik, Anda harus mengaudit izin Grafik Efektif Pengguna dan Grup Pengguna Anda untuk memastikan bahwa Anda masih memiliki kontrol yang memadai atas Grafik Anda. CATATAN: Jika Anda ingin membatasi semua Grafik pada Model Izin Grafik Perangkat atau Templat Grafik, Kebijakan Grafik default harus diatur ke 'Deny'."
+            "msgstr": "Informasi Alamat Situs tambahan"
           },
           "flags": []
         },
@@ -1968,7 +1968,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Grafik Agregat %s"
+            "msgstr": "Informasi alamat tambahan untuk Situs."
           },
           "flags": []
         },
@@ -3493,7 +3493,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Warna bernama apa pun harus bersifat hanya-baca."
+            "msgstr": "Izinkan Baris yang Ada untuk Diperbarui?"
           },
           "flags": []
         },
@@ -3798,7 +3798,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Apakah Anda yakin ingin menghapus Aturan '%s'?"
+            "msgstr": "Nama Alternatif"
           },
           "flags": []
         },
@@ -4013,7 +4013,7 @@
         },
         "bg-BG": {
           "fields": {
-            "msgstr": "Прилагане на стил"
+            "msgstr": "Прилагане на филтър"
           },
           "flags": []
         },
@@ -4103,7 +4103,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Protokol Auth (v3)"
+            "msgstr": "Terapkan Filter"
           },
           "flags": []
         },
@@ -4169,7 +4169,7 @@
         },
         "pt-PT": {
           "fields": {
-            "msgstr": "ใช้ตัวกรอง"
+            "msgstr": "Aplicar Filtro"
           },
           "flags": []
         },
@@ -4635,7 +4635,7 @@
         },
         "de-DE": {
           "fields": {
-            "msgstr": "Durchschnittliche Bytes pro Datensatz:"
+            "msgstr": "Durchschn.:"
           },
           "flags": []
         },
@@ -6256,10 +6256,10 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr[0]": "לחץ על 'המשך' כדי למחוק את האתר הבא.  שים לב, כל המכשירים ינותקו מאתר זה.",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[0]": "לחץ על 'המשך' כדי למחוק את האתר הבא.  שים לב, כל ההתקנים ינותקו מאתר זה.",
+            "msgstr[1]": "לחץ על 'המשך' כדי למחוק את שני האתרים הבאים.  שים לב, כל ההתקנים ינותקו מאתרים אלה.",
+            "msgstr[2]": "לחץ על 'המשך' כדי למחוק את כל האתרים הבאים.  שים לב, כל ההתקנים ינותקו מאתרים אלה.",
+            "msgstr[3]": "לחץ על 'המשך' כדי למחוק את כל האתרים הבאים.  שים לב, כל ההתקנים ינותקו מאתרים אלה."
           },
           "flags": []
         },
@@ -6410,8 +6410,8 @@
         },
         "tr-TR": {
           "fields": {
-            "msgstr[0]": "Aşağıdaki Siteyi silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu siteden ayrılmayacağını unutmayın.",
-            "msgstr[1]": "Aşağıdaki tüm Siteleri silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu siteden ayrılmayacağını unutmayın."
+            "msgstr[0]": "Aşağıdaki Siteyi silmek için 'Devam Et'i tıklayın. Tüm cihazların bu siteden ayrılacağını unutmayın.",
+            "msgstr[1]": "Aşağıdaki tüm Siteleri silmek için 'Devam Et'i tıklayın. Tüm cihazların bu siteden ayrılacağını unutmayın."
           },
           "flags": []
         },
@@ -6438,7 +6438,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cofa u-'Qhubeka' ukucima ezi Ziza zilandelayo. Qaphela, zonke iZixhobo ziya kukhululwa kwesi siza."
+            "msgstr[0]": "Cofa u-'Qhubeka' ukucima esi Siza silandelayo. Qaphela, zonke iZixhobo ziya kukhululwa kwesi siza.",
+            "msgstr[1]": "Cofa u-'Qhubeka' ukucima zonke ezi Ziza zilandelayo. Qaphela, zonke izixhobo ziya kukhululwa kwesi siza."
           },
           "flags": []
         },
@@ -6832,8 +6833,8 @@
         },
         "bg-BG": {
           "fields": {
-            "msgstr[0]": "Кликнете върху „Напред“, за да изтриете следното Дърво.",
-            "msgstr[1]": "Кликнете върху „Напред“, за да изтриете следващите дървета."
+            "msgstr[0]": "Кликнете върху „Продължи“, за да дублирате следния обект.",
+            "msgstr[1]": "Кликнете върху „Продължи“, за да дублирате всички следващи обекти."
           },
           "flags": []
         },
@@ -6846,15 +6847,15 @@
         },
         "de-DE": {
           "fields": {
-            "msgstr[0]": "Klicken Sie auf \"Fortfahren\", um den folgenden Baum zu löschen.",
-            "msgstr[1]": "Klicken Sie auf \"Fortfahren\", um folgende Bäume zu löschen."
+            "msgstr[0]": "Klicken Sie auf \"Weiter\", um den folgenden Standort zu duplizieren.",
+            "msgstr[1]": "Klicken Sie auf \"Weiter\", um alle folgenden Standorte zu duplizieren."
           },
           "flags": []
         },
         "el-GR": {
           "fields": {
-            "msgstr[0]": "Κάντε κλικ στο κουμπί &#39;Συνέχεια&#39; για να διαγράψετε το παρακάτω δέντρο.",
-            "msgstr[1]": "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να διαγράψετε τα παρακάτω δέντρα."
+            "msgstr[0]": "Κάντε κλικ στο 'Συνέχεια' για να δημιουργήσετε αντίγραφο της ακόλουθης Τοποθεσίας.",
+            "msgstr[1]": "Κάντε κλικ στο 'Συνέχεια' για να δημιουργήσετε αντίγραφα όλων των ακόλουθων Τοποθεσιών."
           },
           "flags": []
         },
@@ -6867,8 +6868,8 @@
         },
         "es-ES": {
           "fields": {
-            "msgstr[0]": "Haga click en 'Continuar' para eliminar el siguiente arbol.",
-            "msgstr[1]": "Haga click en 'Continuar' para eliminar los siguientes arboles."
+            "msgstr[0]": "Haga clic en 'Continuar' para duplicar el siguiente sitio.",
+            "msgstr[1]": "Haga clic en 'Continuar' para duplicar todos los siguientes sitios."
           },
           "flags": []
         },
@@ -6895,8 +6896,8 @@
         },
         "fr-FR": {
           "fields": {
-            "msgstr[0]": "Cliquez sur 'Continuer' pour supprimer l'arbre suivant.",
-            "msgstr[1]": "Cliquez sur 'Continuer' pour supprimer les arbres suivants."
+            "msgstr[0]": "Cliquez sur 'Continuer' pour dupliquer le site suivant.",
+            "msgstr[1]": "Cliquez sur 'Continuer' pour dupliquer tous les sites suivants."
           },
           "flags": []
         },
@@ -6909,8 +6910,8 @@
         },
         "fr-SN": {
           "fields": {
-            "msgstr[0]": "Cliquez sur 'Continuer' pour supprimer l'arbre suivant.",
-            "msgstr[1]": "Cliquez sur 'Continuer' pour supprimer les arbres suivants."
+            "msgstr[0]": "Cliquez sur 'Continuer' pour dupliquer le site suivant.",
+            "msgstr[1]": "Cliquez sur 'Continuer' pour dupliquer tous les sites suivants."
           },
           "flags": []
         },
@@ -6924,9 +6925,9 @@
         "he-IL": {
           "fields": {
             "msgstr[0]": "לחץ על 'המשך' כדי לשכפל את האתר הבא.",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[1]": "לחץ על 'המשך' כדי לשכפל את שני האתרים הבאים.",
+            "msgstr[2]": "לחץ על 'המשך' כדי לשכפל את כל האתרים הבאים.",
+            "msgstr[3]": "לחץ על 'המשך' כדי לשכפל את כל האתרים הבאים."
           },
           "flags": []
         },
@@ -6951,20 +6952,20 @@
         },
         "it-IT": {
           "fields": {
-            "msgstr[0]": "Fare clic su 'Continua' per eliminare il seguente albero.",
-            "msgstr[1]": "Fare clic su 'Continua' per eliminare i seguenti alberi."
+            "msgstr[0]": "Fare clic su 'Continua' per duplicare il seguente sito.",
+            "msgstr[1]": "Fare clic su 'Continua' per duplicare tutti i seguenti siti."
           },
           "flags": []
         },
         "ja-JP": {
           "fields": {
-            "msgstr[0]": "次のツリーを削除するには、[続行]をクリックしてください。"
+            "msgstr[0]": "次のサイトを複製するには、[続行]をクリックします。"
           },
           "flags": []
         },
         "ko-KR": {
           "fields": {
-            "msgstr[0]": "다음 트리를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
+            "msgstr[0]": "다음 사이트를 복제하려면 '계속'을 클릭하십시오."
           },
           "flags": []
         },
@@ -6992,8 +6993,8 @@
         },
         "nl-NL": {
           "fields": {
-            "msgstr[0]": "Klik op 'Doorgaan' om de volgende boom te verwijderen.",
-            "msgstr[1]": "Klik op 'Doorgaan' om de volgende bomen te verwijderen."
+            "msgstr[0]": "Klik op 'Doorgaan' om de volgende locatie te dupliceren.",
+            "msgstr[1]": "Klik op 'Doorgaan' om alle volgende locaties te dupliceren."
           },
           "flags": []
         },
@@ -7007,15 +7008,15 @@
         },
         "pt-BR": {
           "fields": {
-            "msgstr[0]": "Clique em 'Continuar' para excluir a seguinte árvore.",
-            "msgstr[1]": "Clique em 'Continuar' para apagar as seguintes árvores."
+            "msgstr[0]": "Clique em 'Continuar' para duplicar o seguinte Site.",
+            "msgstr[1]": "Clique em 'Continuar' para duplicar todos os seguintes Sites."
           },
           "flags": []
         },
         "pt-PT": {
           "fields": {
-            "msgstr[0]": "Clique em 'Continuar' para excluir a seguinte árvore.",
-            "msgstr[1]": "Clique em 'Continuar' para apagar as seguintes árvores."
+            "msgstr[0]": "Clique em 'Continuar' para duplicar o seguinte Site.",
+            "msgstr[1]": "Clique em 'Continuar' para duplicar todos os seguintes Sites."
           },
           "flags": []
         },
@@ -7077,8 +7078,8 @@
         },
         "tr-TR": {
           "fields": {
-            "msgstr[0]": "Aşağıdaki Ağacı silmek için &#39;Devam Et&#39;i tıklayın.",
-            "msgstr[1]": "Aşağıdaki Ağaçları silmek için &#39;Devam Et&#39;i tıklayın."
+            "msgstr[0]": "Aşağıdaki Siteyi çoğaltmak için 'Devam Et'i tıklayın.",
+            "msgstr[1]": "Aşağıdaki tüm Siteleri çoğaltmak için 'Devam Et'i tıklayın."
           },
           "flags": []
         },
@@ -7099,13 +7100,14 @@
         },
         "vi-VN": {
           "fields": {
-            "msgstr[0]": "Nhấp vào &#39;Tiếp tục&#39; để xóa Cây sau."
+            "msgstr[0]": "Nhấp vào 'Tiếp tục' để nhân bản (các) Địa điểm sau."
           },
           "flags": []
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cofa u-'Qhubeka' ukuphinda-phinda ezi Ziza zilandelayo."
+            "msgstr[0]": "Cofa u-'Qhubeka' ukuphinda-phinda esi Siza silandelayo.",
+            "msgstr[1]": "Cofa u-'Qhubeka' ukuphinda-phinda zonke ezi Ziza zilandelayo."
           },
           "flags": []
         },
@@ -7117,13 +7119,13 @@
         },
         "zh-CN": {
           "fields": {
-            "msgstr[0]": "点击 '继续' 删除下面的树."
+            "msgstr[0]": "点击“继续”以复制以下站点。"
           },
           "flags": []
         },
         "zh-TW": {
           "fields": {
-            "msgstr[0]": "單擊“繼續”以刪除以下樹。"
+            "msgstr[0]": "點擊「繼續」以複製以下站台。"
           },
           "flags": []
         },
@@ -7591,9 +7593,9 @@
         "he-IL": {
           "fields": {
             "msgstr[0]": "לחץ על 'המשך' כדי למחוק את הצבע הבא",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[1]": "לחץ על 'המשך' כדי למחוק את שני הצבעים הבאים",
+            "msgstr[2]": "לחץ על 'המשך' כדי למחוק את הצבעים הבאים",
+            "msgstr[3]": "לחץ על 'המשך' כדי למחוק את הצבעים הבאים"
           },
           "flags": []
         },
@@ -7772,7 +7774,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cofa u-'Qhubeka' ukucima le Mibala ilandelayo"
+            "msgstr[0]": "Cofa u-'Qhubeka' ukucima lo Mbala ulandelayo",
+            "msgstr[1]": "Cofa u-'Qhubeka' ukucima le Mibala ilandelayo"
           },
           "flags": []
         },
@@ -8257,10 +8260,10 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr[0]": "לחץ על 'המשך' כדי למחוק את שיטת הזנת הנתונים הבאה",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[0]": "לחץ על 'המשך' כדי למחוק את שיטת קלט הנתונים הבאה",
+            "msgstr[1]": "לחץ על 'המשך' כדי למחוק את שתי שיטות קלט הנתונים הבאות",
+            "msgstr[2]": "לחץ על 'המשך' כדי למחוק את שיטות קלט הנתונים הבאות",
+            "msgstr[3]": "לחץ על 'המשך' כדי למחוק את שיטות קלט הנתונים הבאות"
           },
           "flags": []
         },
@@ -8439,7 +8442,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cofa u-'Qhubeka' ukucima ezi Ndlela zokuFaka iDatha zilandelayo"
+            "msgstr[0]": "Cofa u-'Qhubeka' ukucima le Ndlela yokuFaka iDatha ilandelayo",
+            "msgstr[1]": "Cofa u-'Qhubeka' ukucima ezi Ndlela zokuFaka iDatha zilandelayo"
           },
           "flags": []
         },
@@ -8924,10 +8928,10 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr[0]": "לחץ על 'המשך' כדי למחוק את ה - VDEF הבא.",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[0]": "לחץ על 'המשך' כדי למחוק את ה-VDEF הבא.",
+            "msgstr[1]": "לחץ על 'המשך' כדי למחוק את שני ה-VDEFs הבאים.",
+            "msgstr[2]": "לחץ על 'המשך' כדי למחוק את ה-VDEFs הבאים.",
+            "msgstr[3]": "לחץ על 'המשך' כדי למחוק את ה-VDEFs הבאים."
           },
           "flags": []
         },
@@ -9106,7 +9110,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cofa u-'Qhubeka' ukucima ezi VDEF zilandelayo."
+            "msgstr[0]": "Cofa u-'Qhubeka' ukucima le VDEF ilandelayo.",
+            "msgstr[1]": "Cofa u-'Qhubeka' ukucima ezi VDEF zilandelayo."
           },
           "flags": []
         },
@@ -9591,10 +9596,10 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr[0]": "לחץ על 'המשך' כדי לשכפל את ה - VDEF הבא. ניתן לשנות את פורמט הכותרת עבור ה - VDEF החדש.",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[0]": "לחץ על 'המשך' כדי לשכפל את ה-VDEF הבא. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEF החדש.",
+            "msgstr[1]": "לחץ על 'המשך' כדי לשכפל את שני ה-VDEFs הבאים. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEFs החדשים.",
+            "msgstr[2]": "לחץ על 'המשך' כדי לשכפל את ה-VDEFs הבאים. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEFs החדשים.",
+            "msgstr[3]": "לחץ על 'המשך' כדי לשכפל את ה-VDEFs הבאים. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEFs החדשים."
           },
           "flags": []
         },
@@ -9711,8 +9716,8 @@
         },
         "sv-SE": {
           "fields": {
-            "msgstr[0]": "Klicka på \"Fortsätt\" för att duplicera följande VDEF. Du kan valfritt ändra titelformat för den nya VDEF.Klicka på \"Fortsätt\" för att duplicera följande VDEFs. Du kan valfritt ändra titelformat för de nya VDEF: erna.",
-            "msgstr[1]": "PLACEHOLDER"
+            "msgstr[0]": "Klicka på 'Fortsätt' för att duplicera följande VDEF. Du kan valfritt ändra titelformatet för den nya VDEF:en.",
+            "msgstr[1]": "Klicka på 'Fortsätt' för att duplicera följande VDEF:er. Du kan valfritt ändra titelformatet för de nya VDEF:erna."
           },
           "flags": []
         },
@@ -9773,7 +9778,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cofa u-'Qhubeka' ukuphinda-phinda ezi VDEF zilandelayo. Unokutshintsha ngokuzikhethela ifomathi yesihloko yee-VDEF ezitsha."
+            "msgstr[0]": "Cofa u-'Qhubeka' ukuphinda-phinda le VDEF ilandelayo. Unokutshintsha ngokuzikhethela ifomathi yesihloko ye-VDEF entsha.",
+            "msgstr[1]": "Cofa u-'Qhubeka' ukuphinda-phinda ezi VDEF zilandelayo. Unokutshintsha ngokuzikhethela ifomathi yesihloko yee-VDEF ezitsha."
           },
           "flags": []
         },
@@ -10974,7 +10980,7 @@
         },
         "ko-KR": {
           "fields": {
-            "msgstr": "사용중인 색상은 삭제할 수 없습니다. In은 Graph 또는 Graph Template에 의해 참조되는 것으로 정의됩니다."
+            "msgstr": "사용 중인 색상은 삭제할 수 없습니다. 사용 중이란 그래프 또는 그래프 템플릿에서 참조되는 상태를 의미합니다."
           },
           "flags": []
         },
@@ -12379,13 +12385,13 @@
         },
         "ar-SA": {
           "fields": {
-            "msgstr": "لئيم:"
+            "msgstr": "الحالي:"
           },
           "flags": []
         },
         "bg-BG": {
           "fields": {
-            "msgstr": "CUR:"
+            "msgstr": "Тек:"
           },
           "flags": []
         },
@@ -12403,7 +12409,7 @@
         },
         "el-GR": {
           "fields": {
-            "msgstr": "Κοπρίτης:"
+            "msgstr": "Τρέχ.:"
           },
           "flags": []
         },
@@ -12493,13 +12499,13 @@
         },
         "ja-JP": {
           "fields": {
-            "msgstr": "Cur："
+            "msgstr": "現在:"
           },
           "flags": []
         },
         "ko-KR": {
           "fields": {
-            "msgstr": "똥개:"
+            "msgstr": "현재:"
           },
           "flags": []
         },
@@ -12595,7 +12601,7 @@
         },
         "tr-TR": {
           "fields": {
-            "msgstr": "cur:"
+            "msgstr": "Anlık:"
           },
           "flags": []
         },
@@ -12613,7 +12619,7 @@
         },
         "vi-VN": {
           "fields": {
-            "msgstr": "Hay gây:"
+            "msgstr": "Hiện tại:"
           },
           "flags": []
         },
@@ -13113,7 +13119,7 @@
         },
         "el-GR": {
           "fields": {
-            "msgstr": "Μέθοδοι εισαγωγής δεδομένων [new]"
+            "msgstr": "Μέθοδος εισαγωγής δεδομένων [νέο]"
           },
           "flags": []
         },
@@ -13209,7 +13215,7 @@
         },
         "ko-KR": {
           "fields": {
-            "msgstr": "데이터 입력 방법 [new]"
+            "msgstr": "데이터 입력 방법 [신규]"
           },
           "flags": []
         },
@@ -13885,7 +13891,7 @@
         },
         "sv-SE": {
           "fields": {
-            "msgstr": "Data Inputs som är i bruk kan inte raderas. Används definieras som att det refereras till antingen av en datakälla eller en datamall."
+            "msgstr": "Datainmatningar som används kan inte tas bort. Med att den används avses att den refereras av antingen en datakälla eller en datamall."
           },
           "flags": []
         },
@@ -14119,9 +14125,9 @@
         "he-IL": {
           "fields": {
             "msgstr[0]": "מחיקת צבע",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[1]": "מחיקת שני צבעים",
+            "msgstr[2]": "מחיקת צבעים",
+            "msgstr[3]": "מחיקת צבעים"
           },
           "flags": []
         },
@@ -14300,7 +14306,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cima iMibala"
+            "msgstr[0]": "Cima uMbala",
+            "msgstr[1]": "Cima iMibala"
           },
           "flags": []
         },
@@ -14785,10 +14792,10 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr[0]": "מחק שיטת קלט נתונים",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[0]": "מחיקת שיטת קלט נתונים",
+            "msgstr[1]": "מחיקת שתי שיטות קלט נתונים",
+            "msgstr[2]": "מחיקת שיטות קלט נתונים",
+            "msgstr[3]": "מחיקת שיטות קלט נתונים"
           },
           "flags": []
         },
@@ -14967,7 +14974,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cima iiNdlela zokuFaka iDatha"
+            "msgstr[0]": "Cima iNdlela yokuFaka iDatha",
+            "msgstr[1]": "Cima iiNdlela zokuFaka iDatha"
           },
           "flags": []
         },
@@ -15453,9 +15461,9 @@
         "he-IL": {
           "fields": {
             "msgstr[0]": "מחיקת אתר",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[1]": "מחיקת שני אתרים",
+            "msgstr[2]": "מחיקת אתרים",
+            "msgstr[3]": "מחיקת אתרים"
           },
           "flags": []
         },
@@ -15536,8 +15544,8 @@
         },
         "pt-BR": {
           "fields": {
-            "msgstr[0]": "Excluir MInha Conta",
-            "msgstr[1]": "Excluir sites"
+            "msgstr[0]": "Excluir Site",
+            "msgstr[1]": "Excluir Sites"
           },
           "flags": []
         },
@@ -15634,7 +15642,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cima iZiza"
+            "msgstr[0]": "Cima iSiza",
+            "msgstr[1]": "Cima iZiza"
           },
           "flags": []
         },
@@ -15815,9 +15824,9 @@
         "he-IL": {
           "fields": {
             "msgstr[0]": "מחיקת VDEF",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[1]": "מחיקת שני VDEFs",
+            "msgstr[2]": "מחיקת VDEFs",
+            "msgstr[3]": "מחיקת VDEFs"
           },
           "flags": []
         },
@@ -15996,7 +16005,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Cima ii-VDEF"
+            "msgstr[0]": "Cima i-VDEF",
+            "msgstr[1]": "Cima ii-VDEF"
           },
           "flags": []
         },
@@ -17373,7 +17383,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Phinda-phinda iZiza"
+            "msgstr[0]": "Phinda-phinda iSiza",
+            "msgstr[1]": "Phinda-phinda iZiza"
           },
           "flags": []
         },
@@ -17554,9 +17565,9 @@
         "he-IL": {
           "fields": {
             "msgstr[0]": "שכפול VDEF",
-            "msgstr[1]": "",
-            "msgstr[2]": "",
-            "msgstr[3]": ""
+            "msgstr[1]": "שכפול שני VDEFs",
+            "msgstr[2]": "שכפול VDEFs",
+            "msgstr[3]": "שכפול VDEFs"
           },
           "flags": []
         },
@@ -17735,7 +17746,8 @@
         },
         "xh-ZA": {
           "fields": {
-            "msgstr[0]": "Phinda-phinda ii-VDEF"
+            "msgstr[0]": "Phinda-phinda i-VDEF",
+            "msgstr[1]": "Phinda-phinda ii-VDEF"
           },
           "flags": []
         },
@@ -21370,7 +21382,7 @@
         },
         "ja-JP": {
           "fields": {
-            "msgstr": "外部リンク[new]"
+            "msgstr": "外部リンク [新規]"
           },
           "flags": []
         },
@@ -25067,13 +25079,13 @@
         },
         "pt-BR": {
           "fields": {
-            "msgstr": "Importar cores do file local"
+            "msgstr": "Importar cores de arquivo local"
           },
           "flags": []
         },
         "pt-PT": {
           "fields": {
-            "msgstr": "Importar cores do file local"
+            "msgstr": "Importar cores de ficheiro local"
           },
           "flags": []
         },
@@ -29299,7 +29311,7 @@
         },
         "de-DE": {
           "fields": {
-            "msgstr": "Längengrad"
+            "msgstr": "Breitengrad"
           },
           "flags": []
         },
@@ -32098,7 +32110,7 @@
         },
         "fr-SN": {
           "fields": {
-            "msgstr": "Couleurs nommÃ©es%1 is the number of paths, %2 is the list of paths (with newlines between them)"
+            "msgstr": "Couleurs nommées"
           },
           "flags": []
         },
@@ -32110,7 +32122,7 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr": "& צבע"
+            "msgstr": "צבעים בעלי שם"
           },
           "flags": []
         },
@@ -32260,7 +32272,7 @@
         },
         "vi-VN": {
           "fields": {
-            "msgstr": "% 1 is the number of paths,% 2 is the list of paths (with newlines between them)"
+            "msgstr": "Màu được đặt tên"
           },
           "flags": []
         },
@@ -32415,7 +32427,7 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr": "ניו מסוף סעיף"
+            "msgstr": "סעיף מסוף חדש"
           },
           "flags": []
         },
@@ -32852,7 +32864,7 @@
         },
         "tr-TR": {
           "fields": {
-            "msgstr": "Yeni Otel"
+            "msgstr": "Yeni Saha"
           },
           "flags": []
         },
@@ -33557,7 +33569,7 @@
         },
         "bg-BG": {
           "fields": {
-            "msgstr": "Полета за въвеждане на данни"
+            "msgstr": "Няма входни полета"
           },
           "flags": []
         },
@@ -33611,7 +33623,7 @@
         },
         "fr-FR": {
           "fields": {
-            "msgstr": "Champ d'entrée"
+            "msgstr": "Aucun champ d'entrée"
           },
           "flags": []
         },
@@ -33623,7 +33635,7 @@
         },
         "fr-SN": {
           "fields": {
-            "msgstr": "Champ d'entrée"
+            "msgstr": "Aucun champ d'entrée"
           },
           "flags": []
         },
@@ -33635,7 +33647,7 @@
         },
         "he-IL": {
           "fields": {
-            "msgstr": "שדות קלט"
+            "msgstr": "אין שדות קלט"
           },
           "flags": []
         },
@@ -33659,13 +33671,13 @@
         },
         "it-IT": {
           "fields": {
-            "msgstr": "Input Fields"
+            "msgstr": "Nessun campo di input"
           },
           "flags": []
         },
         "ja-JP": {
           "fields": {
-            "msgstr": "入力項目"
+            "msgstr": "入力フィールドなし"
           },
           "flags": []
         },
@@ -33701,13 +33713,13 @@
         },
         "pl-PL": {
           "fields": {
-            "msgstr": "Pola formularza"
+            "msgstr": "Brak pól wejściowych"
           },
           "flags": []
         },
         "pt-BR": {
           "fields": {
-            "msgstr": "Campos de entrada"
+            "msgstr": "Sem Campos de Entrada"
           },
           "flags": []
         },
@@ -33964,13 +33976,13 @@
         },
         "it-IT": {
           "fields": {
-            "msgstr": "Campi di Emissione"
+            "msgstr": "Nessun campo di output"
           },
           "flags": []
         },
         "ja-JP": {
           "fields": {
-            "msgstr": "出力項目"
+            "msgstr": "出力フィールドなし"
           },
           "flags": []
         },
@@ -34700,7 +34712,7 @@
         },
         "vi-VN": {
           "fields": {
-            "msgstr": "Không tìm thấy trang nào"
+            "msgstr": "Không tìm thấy địa điểm nào"
           },
           "flags": []
         },
@@ -34789,7 +34801,7 @@
         },
         "de-DE": {
           "fields": {
-            "msgstr": "VDEFs"
+            "msgstr": "Keine VDEFs"
           },
           "flags": []
         },
@@ -34921,7 +34933,7 @@
         },
         "pl-PL": {
           "fields": {
-            "msgstr": "Nr VDEF"
+            "msgstr": "Brak VDEF-ów"
           },
           "flags": []
         },
@@ -37419,7 +37431,7 @@
         },
         "it-IT": {
           "fields": {
-            "msgstr": "Aggiorna tavolo a rulli per ciclo"
+            "msgstr": "Aggiorna tabella del poller per ciclo"
           },
           "flags": []
         },
@@ -39805,7 +39817,7 @@
         },
         "fr-CA": {
           "fields": {
-            "msgstr": "Pour commander"
+            "msgstr": "Trier pour le classement"
           },
           "flags": []
         },
@@ -40672,7 +40684,7 @@
         },
         "bg-BG": {
           "fields": {
-            "msgstr": "Tab / Menu Name"
+            "msgstr": "Име на раздел/меню"
           },
           "flags": []
         },
@@ -42502,7 +42514,7 @@
         },
         "bg-BG": {
           "fields": {
-            "msgstr": "Latitude за този сайт."
+            "msgstr": "Географската ширина за този сайт."
           },
           "flags": []
         },
@@ -42514,7 +42526,7 @@
         },
         "de-DE": {
           "fields": {
-            "msgstr": "Der Längengrad für diese Lokation."
+            "msgstr": "Der Breitengrad für diesen Standort."
           },
           "flags": []
         },
@@ -42616,13 +42628,13 @@
         },
         "ko-KR": {
           "fields": {
-            "msgstr": "이 사이트의 위치 찾기."
+            "msgstr": "이 사이트의 위도입니다."
           },
           "flags": []
         },
         "lv-LV": {
           "fields": {
-            "msgstr": "Šīs vietnes Latitude."
+            "msgstr": "Šīs vietnes ģeogrāfiskais platums."
           },
           "flags": []
         },
@@ -42730,7 +42742,7 @@
         },
         "vi-VN": {
           "fields": {
-            "msgstr": "Latitude cho trang web này."
+            "msgstr": "Vĩ độ cho Địa điểm này."
           },
           "flags": []
         },
@@ -43411,7 +43423,7 @@
         },
         "ar-SA": {
           "fields": {
-            "msgstr": "The TimeZone للموقع."
+            "msgstr": "المنطقة الزمنية للموقع."
           },
           "flags": []
         },
@@ -44787,13 +44799,13 @@
         },
         "pt-BR": {
           "fields": {
-            "msgstr": "O file deve conter uma linha de cabeçalho com os seguintes títulos de coluna."
+            "msgstr": "O arquivo deve conter uma linha de cabeçalho com os seguintes títulos de coluna."
           },
           "flags": []
         },
         "pt-PT": {
           "fields": {
-            "msgstr": "O file deve conter uma linha de cabeçalho com os seguintes títulos de coluna."
+            "msgstr": "O ficheiro tem de conter uma linha de cabeçalho com os seguintes títulos de coluna."
           },
           "flags": []
         },
@@ -45385,7 +45397,7 @@
         },
         "nl-NL": {
           "fields": {
-            "msgstr": "De interne database ID voor deze data template. Handig voor automatisering of debugging."
+            "msgstr": "De interne database-ID voor deze gegevensinvoermethode. Handig bij het uitvoeren van automatisering of foutopsporing."
           },
           "flags": []
         },
@@ -51449,7 +51461,7 @@
         },
         "it-IT": {
           "fields": {
-            "msgstr": "Emerillon è distribuito nella speranza che possa risultare utile, ma SENZA ALCUNA GARANZIA, nemmeno la garanzia implicita di COMMERCIABILITÀ o APPLICABILITÀ PER UNO SCOPO PARTICOLARE. Per maggiori dettagli consultare la GNU General Public License."
+            "msgstr": "Questo programma è distribuito nella speranza che possa risultare utile, ma SENZA ALCUNA GARANZIA, nemmeno la garanzia implicita di COMMERCIABILITÀ o IDONEITÀ PER UNO SCOPO PARTICOLARE. Per maggiori dettagli consultare la GNU General Public License."
           },
           "flags": []
         },
@@ -51575,7 +51587,7 @@
         },
         "vi-VN": {
           "fields": {
-            "msgstr": "Chương trình này được phân phối với hy vọng nó sẽ hữu ích, nhưng KHÔNG CÓ BẤT K WAR ĐẢM BẢO NÀO; thậm chí không có bảo hành ngụ ý của MERCHANTABILITY hoặc FITNESS CHO MỘT MỤC ĐÍCH THAM GIA. Xem Giấy phép Công cộng GNU để biết thêm chi tiết."
+            "msgstr": "Chương trình này được phân phối với hy vọng nó sẽ hữu ích, nhưng KHÔNG CÓ BẤT KỲ BẢO ĐẢM NÀO; thậm chí không có bảo đảm ngụ ý về KHẢ NĂNG THƯƠNG MẠI hoặc TÍNH PHÙ HỢP CHO MỘT MỤC ĐÍCH CỤ THỂ. Xem Giấy phép Công cộng GNU để biết thêm chi tiết."
           },
           "flags": []
         },
@@ -55159,7 +55171,7 @@
         },
         "es-ES": {
           "fields": {
-            "msgstr": "Items VDEF [edit: %s]"
+            "msgstr": "Elementos VDEF [editar: %s]"
           },
           "flags": [
             "php-format"
@@ -57901,7 +57913,7 @@
         },
         "fr-FR": {
           "fields": {
-            "msgstr": "VDEFs[new] (nouveau)"
+            "msgstr": "VDEFs [nouveau]"
           },
           "flags": []
         },
@@ -59211,7 +59223,7 @@
         },
         "pl-PL": {
           "fields": {
-            "msgstr": "URL URL URL Lokalizacja"
+            "msgstr": "Lokalizacja adresu URL w sieci"
           },
           "flags": []
         },

@@ -45,7 +45,7 @@ msgstr "Bu program yararlı olması ümidiyle, ancak HİÇBİR GARANTİ OLMAKSIZ
 
 #: aggregate_graphs.php
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "[Uygulanan Özel Grafik Listesi - Listeden Filtrele]"
+msgstr " [ Özel Grafik Listesi Uygulandı - Sıfırlamak için Temizle ]"
 
 #: aggregate_graphs.php graphs.php
 msgid "Add Graphs to Report"
@@ -62,7 +62,7 @@ msgstr "Erişilen Birleşik Grafik Mevcut Değil"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
-msgstr "Toplam Grafik Ayarları"
+msgstr "Toplu Grafik Mevcut Değil"
 
 #: aggregate_graphs.php include/global_arrays.php
 msgid "Aggregate Graphs"
@@ -177,7 +177,7 @@ msgstr "Aşağıdaki Toplam Grafiği / Grafikleri tek bir Toplam Grafiğe ekleme
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Aşağıdaki Toplam Grafiği / Grafikleri tek bir Toplam Grafiğe eklemek için &#39;Devam Et&#39;i tıklayın."
+msgstr "Aşağıdaki Toplu Grafik(ler)i normal bir Grafiğe dönüştürmek için 'Devam Et'e tıklayın."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -248,7 +248,7 @@ msgstr "Detaylar"
 
 #: aggregate_graphs.php
 msgid "Dis-Associate Graph(s)"
-msgstr "İlişkilendir (Grafik)"
+msgstr "Grafik(ler)in İlişkisini Kaldır"
 
 #: aggregate_graphs.php
 msgid "Disassociate with Aggregate"
@@ -692,7 +692,7 @@ msgstr "Erişim Reddedildi!  Misafir kullanıcı kimliği %s mevcut değil.  Lü
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
-msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
+msgstr "Erişim Reddedildi!  Oturum Açma Başarısız."
 
 #: auth_login.php
 msgid "Access Denied!  User account disabled."
@@ -736,7 +736,7 @@ msgstr "Şifre"
 
 #: auth_login.php user_admin.php user_group_admin.php
 msgid "Realm"
-msgstr "Ülke:"
+msgstr "Yetki Alanı"
 
 #: auth_login.php
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
@@ -752,7 +752,7 @@ msgstr "Kullanıcının Kimliği Doğrulandı, ancak Şablon Hesabı devre dış
 
 #: auth_login.php
 msgid "You do not have access to any area of Kadupul.  Contact your administrator."
-msgstr "Bunun bir hata olduğunu düşünüyorsanız. Lütfen Kadupul Yöneticinizle görüşün."
+msgstr "Kadupul'un hiçbir alanına erişiminiz yok. Yöneticinizle iletişime geçin."
 
 #: auth_profile.php include/global_form.php
 msgid "A more descriptive name for this user, that can include spaces or special characters."
@@ -867,7 +867,7 @@ msgstr "Kullanılabilirlik Yöntemi"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "Aşağıdaki Keşfedilen cihazları eklemek için &#39;Devam Et&#39;i tıklayın."
+msgstr "Aşağıdaki Keşfedilen aygıt(lar)ı silmek için 'Devam Et'e tıklayın."
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -1197,7 +1197,7 @@ msgstr "Filtreyi Temizle"
 
 #: automation_networks.php
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
-msgstr "Ağ Bulma (larını) iptal etmeyi iptal etmek için &#39;Devam Et&#39;i tıklayın."
+msgstr "Devam eden Ağ Keşif(ler)ini iptal etmek için 'Devam Et'e tıklayın."
 
 #: automation_networks.php
 msgid "Click 'Continue' to delete the following Network(s)."
@@ -1279,7 +1279,7 @@ msgstr "Ağ Bulunamadı"
 
 #: automation_networks.php
 msgid "Pending/Running/Done"
-msgstr "Beklemede / Running / Bitti"
+msgstr "Beklemede/Çalışıyor/Tamamlandı"
 
 #: automation_networks.php
 msgid "Progress"
@@ -1320,7 +1320,7 @@ msgstr "Toplam IP"
 
 #: automation_networks.php
 msgid "Up/SNMP Hosts"
-msgstr "Up / SNMP Sunucuları"
+msgstr "Açık/SNMP Ana Bilgisayarları"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
@@ -1509,7 +1509,7 @@ msgstr "Ayarlar Veri Toplayıcıya kaydedildi %d Başarısız."
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Ayarlar Veri Toplayıcıya kaydedildi %d Başarısız."
+msgstr "Kalp atışı nedeniyle %d numaralı Veri Toplayıcıya ayarların kaydedilmesi atlandı."
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -1674,7 +1674,7 @@ msgstr "Veri Kaynağı"
 
 #: data_debug.php
 msgid "Data Source Repair Recommendations"
-msgstr "Veri Kaynağı Alanları"
+msgstr "Veri Kaynağı Onarım Önerileri"
 
 #: data_debug.php
 #, php-format
@@ -1706,7 +1706,7 @@ msgstr "Veri Kaynağı hata ayıklaması başladı."
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
-msgstr "Veri Kaynağı yoklamadı"
+msgstr "Veri Kaynağı RRDfile ile eşleşiyor mu?"
 
 #: data_debug.php
 msgid "Data Source repair received an invalid Data Source ID."
@@ -1776,7 +1776,7 @@ msgstr "İlk Kontrol TimeStamp"
 #: data_debug.php
 #, php-format
 msgid "For attribute '%s', issue found '%s'"
-msgstr "' %s' attrbitute için, ' %s' sorunu bulundu"
+msgstr "'%s' özniteliği için '%s' sorunu bulundu"
 
 #: data_debug.php
 msgid "Is RRA Folder writeable by poller?"
@@ -1804,11 +1804,11 @@ msgstr "Hatalar bulundu! RRD dosyası güncellemesi bekleniyor"
 
 #: data_debug.php
 msgid "No Checks"
-msgstr "Kontroller"
+msgstr "Kontrol Yok"
 
 #: data_debug.php
 msgid "No Device"
-msgstr "Cihaz:"
+msgstr "Cihaz Yok"
 
 #: data_debug.php
 msgid "No Initial found!  Waiting on RRDfile update"
@@ -1820,11 +1820,11 @@ msgstr "Uygulanamaz"
 
 #: data_debug.php
 msgid "Not Checked Yet"
-msgstr "Çek yok"
+msgstr "Henüz Kontrol Edilmedi"
 
 #: data_debug.php
 msgid "Not Debugging"
-msgstr "Hata Ayıklama"
+msgstr "Hata Ayıklanmıyor"
 
 #: data_debug.php lib/api_automation.php lib/graphs.php templates_import.php
 msgid "Not Found"
@@ -1945,7 +1945,7 @@ msgstr "Veri Kaynağı Kontrolünün Tamamlanmasını Bekliyor"
 
 #: data_debug.php
 msgid "Waiting on analysis and RRDfile update"
-msgstr "RRD dosyası güncellendi mi?"
+msgstr "Analiz ve RRD dosyası güncellemesi bekleniyor"
 
 #: data_debug.php lib/installer.php
 msgid "Warning"
@@ -1969,7 +1969,7 @@ msgstr "Yazılabilir"
 
 #: data_input.php
 msgid "(Not In Use)"
-msgstr "Özel Yazı Tiplerini Kullan"
+msgstr "(Kullanımda Değil)"
 
 #: data_input.php
 msgid "Click 'Continue' to delete the following Data Input Field."
@@ -2174,8 +2174,8 @@ msgstr "Aşağıdaki Veri Sorgusu Grafiği Birliği&#39;ni silmek için &#39;Dev
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "Aşağıdaki Veri Sorgusunu silmek için &#39;Devam Et&#39;i tıklayın."
-msgstr[1] "Aşağıdaki Veri Sorgularını silmek için &#39;Devam Et&#39;i tıklayın."
+msgstr[0] "Aşağıdaki Veri Sorgusunu çoğaltmak için 'Devam Et'i tıklayın."
+msgstr[1] "Aşağıdaki Veri Sorgularını çoğaltmak için 'Devam Et'i tıklayın."
 
 #: data_queries.php
 msgid "Could not locate XML file."
@@ -2220,8 +2220,8 @@ msgstr[1] "Veri Sorgusunu Sil"
 #: data_queries.php
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "Veri Sorgusunu Sil"
-msgstr[1] "Veri Sorgusunu Sil"
+msgstr[0] "Veri Sorgusunu Çoğalt"
+msgstr[1] "Veri Sorgularını Çoğalt"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
@@ -2295,7 +2295,7 @@ msgstr "Sipariş"
 
 #: data_queries.php
 msgid "Remove Data Query Graph Template"
-msgstr "Grafik Şablonuna Dönüştür"
+msgstr "Veri Sorgusu Grafik Şablonunu Kaldır"
 
 #: data_queries.php
 msgid "Successfully located XML file"
@@ -2450,7 +2450,7 @@ msgstr "Veri Kaynakları [ %s]"
 
 #: data_sources.php
 msgid "Data Sources [ All Devices ]"
-msgstr "Veri Kaynakları [Aygıt Yok]"
+msgstr "Veri Kaynakları [ Tüm Cihazlar ]"
 
 #: data_sources.php
 msgid "Data Sources [ Non Device Based ]"
@@ -2546,7 +2546,7 @@ msgstr "Yeni cihaz:"
 
 #: data_sources.php
 msgid "No Aggregates"
-msgstr "Agregalar"
+msgstr "Agrega Yok"
 
 #: data_sources.php
 msgid "No Data Sources Found"
@@ -2554,7 +2554,7 @@ msgstr "Veri Kaynağı Bulunamadı"
 
 #: data_sources.php
 msgid "No Graphs"
-msgstr "Grafikler"
+msgstr "Grafik Yok"
 
 #: data_sources.php data_templates.php
 msgid "No Input Fields for the Selected Data Input Source"
@@ -2675,7 +2675,7 @@ msgstr "Aşağıdaki Veri Şablonları için varsayılan Veri Kaynağı Profilin
 
 #: data_templates.php
 msgid "Click 'Continue' to delete the following Data Template(s).  Any data sources attached to these templates will become individual Data Source(s) and all Templating benefits will be removed."
-msgstr "Aşağıdaki Veri Şablonlarını silmek için &#39;Devam Et&#39;i tıklayın. Bu şablonlara ekli herhangi bir veri kaynağı bireysel Veri Kaynağı (ları) haline gelecektir ve tüm Templating avantajları kaldırılacaktır."
+msgstr "Aşağıdaki Veri Şablon(lar)ını silmek için 'Devam Et'e tıklayın.  Bu şablonlara bağlı tüm veri kaynakları bağımsız Veri Kaynakları haline gelecek ve tüm Şablonlama avantajları kaldırılacaktır."
 
 #: data_templates.php
 msgid "Click 'Continue' to duplicate the following Data Template(s). You can optionally change the title format for the new Data Template(s)."
@@ -2696,7 +2696,7 @@ msgstr "Veri Kaynakları Kullanımı"
 
 #: data_templates.php
 msgid "Data Sources based on Inactive Data Templates will not be updated when the poller runs."
-msgstr "Etkinleştirici Veri Şablonlarını temel alan Veri Kaynakları, sorgulayıcı çalışırken güncellenmeyecektir."
+msgstr "Etkin Olmayan Veri Şablonlarına dayalı Veri Kaynakları, yoklayıcı çalıştığında güncellenmeyecektir."
 
 #: data_templates.php
 msgid "Data Template Name"
@@ -2924,7 +2924,7 @@ msgstr "Grafiklerinizi aşağıdaki Grafik Şablonları ile Senkronize etmek iç
 
 #: graph_templates.php
 msgid "Click 'Continue' to perform a Quick Synchronization of your Graphs for the following Graph Template(s). Use this option if your Graphs have Graph Items that do not match your Graph Template.  If this option does not work, use the Full Sync Graphs option, which will take more time to complete."
-msgstr "Grafiklerinizi aşağıdaki Grafik Şablonları ile Senkronize etmek için &#39;Devam Et&#39;i tıklayın. Bu işlev, bir Grafik Şablonunun birden fazla sürümünde bulunan Grafiklere sahipseniz ve bunların hepsini görünüşte yaygınlaştırmak istiyorsanız önemlidir."
+msgstr "Aşağıdaki Grafik Şablon(lar)ı için Grafiklerinize Hızlı Senkronizasyon uygulamak üzere 'Devam Et'e tıklayın. Grafik Öğeleriniz Grafik Şablonunuzla eşleşmiyorsa bu seçeneği kullanın.  Bu seçenek işe yaramazsa, tamamlanması daha uzun sürecek olan Grafikleri Tam Senkronize Et seçeneğini kullanın."
 
 #: graph_templates.php
 msgid "Click 'Continue' to resize the following Graph Template(s) and Graph(s) to the Height and Width below.  The defaults below are maintained in Settings."
@@ -3049,7 +3049,7 @@ msgstr "Ort:"
 
 #: graph_templates_items.php graphs_items.php
 msgid "Cur:"
-msgstr "cur:"
+msgstr "Anlık:"
 
 #: graph_templates_items.php
 msgid "Data Template Filter"
@@ -3136,7 +3136,7 @@ msgstr "Bu Grafiğin Başlığı. Genel olarak programlı olarak Grafik Şablonu
 
 #: graph_view.php
 msgid "The device for this Graph."
-msgstr "Bu grubun adı."
+msgstr "Bu Grafik için cihaz."
 
 #: graph_view.php graphs.php
 msgid "The size of this Graph when not in Preview mode."
@@ -3156,15 +3156,15 @@ msgstr "Grafikleri Görüntüle"
 
 #: graph_view.php
 msgid "YOU DO NOT HAVE RIGHTS FOR LIST VIEW"
-msgstr "LİSTE GÖRÜNÜMÜ İÇİN HAKLARINIZ VAR"
+msgstr "LİSTE GÖRÜNÜMÜ İÇİN YETKİNİZ YOK"
 
 #: graph_view.php
 msgid "YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW"
-msgstr "ÖNİZLEME İNCELEME İÇİN HAKLARINIZ VAR"
+msgstr "ÖNİZLEME GÖRÜNÜMÜ İÇİN YETKİNİZ YOK"
 
 #: graph_view.php
 msgid "YOU DO NOT HAVE RIGHTS FOR TREE VIEW"
-msgstr "AĞAÇ GÖRÜNÜMÜ İÇİN HAKLARINIZ VAR"
+msgstr "AĞAÇ GÖRÜNÜMÜ İÇİN YETKİNİZ YOK"
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filter FROM List ]"
@@ -3339,7 +3339,7 @@ msgstr "Grafik Şablonu Düzenle."
 
 #: graphs.php
 msgid "Empty Graph"
-msgstr "Grafiği kopyala"
+msgstr "Boş Grafik"
 
 #: graphs.php
 msgid "Graph Fields"
@@ -3648,7 +3648,7 @@ msgstr "İlişkili Veri Sorguları"
 
 #: host_templates.php include/global_form.php
 msgid "Class"
-msgstr "Klasik"
+msgstr "Sınıf"
 
 #: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
@@ -3689,7 +3689,7 @@ msgstr "Aygıt Şablonlarını Sil"
 
 #: host_templates.php
 msgid "Device Class"
-msgstr "Cihaz Kuralları"
+msgstr "Cihaz Sınıfı"
 
 #: host_templates.php lib/api_automation.php
 msgid "Device Template Name"
@@ -3702,7 +3702,7 @@ msgstr "Cihaz Şablonları"
 #: host_templates.php
 #, php-format
 msgid "Device Templates [edit: %s]"
-msgstr "Cihaz Şablonları [edit: %s]"
+msgstr "Cihaz Şablonları [düzenle: %s]"
 
 #: host_templates.php
 msgid "Device Templates [new]"
@@ -3822,7 +3822,7 @@ msgstr "Ana Veri Toplayıcı Çevrimdışı veya Kurtarma Durumuna geçti"
 
 #: include/global.php
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "Bu Veri Toplayıcı&#39;nın en son ana Kadupul sitesiyle tam olarak eşitlendiği."
+msgstr "Ana Veri Toplayıcı Çevrimiçi Durumuna geri döndü"
 
 #: include/global_arrays.php
 #, php-format
@@ -4011,7 +4011,7 @@ msgstr "6 Saat"
 
 #: include/global_arrays.php
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php
 msgid "AES-128"
@@ -4120,7 +4120,7 @@ msgstr "Başka bir CDEF"
 
 #: include/global_arrays.php
 msgid "Application Related"
-msgstr "Otomasyon Kurallarını Uygula"
+msgstr "Uygulama ile İlgili"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -4162,7 +4162,7 @@ msgstr "Otomasyon"
 
 #: include/global_arrays.php
 msgid "Base Graph Order"
-msgstr "Grafikleri var"
+msgstr "Temel Grafik Sırası"
 
 #: include/global_arrays.php utilities.php
 msgid "Boost Status"
@@ -4623,7 +4623,7 @@ msgstr "Cuma"
 
 #: include/global_arrays.php
 msgid "Function"
-msgstr "Olası nedeni: Host firmanız mail() işlevini devre dışı bırakmış olabilir"
+msgstr "İşlev"
 
 #: include/global_arrays.php
 msgid "GPRINT Preset"
@@ -4643,7 +4643,7 @@ msgstr "Genel Yönetim"
 
 #: include/global_arrays.php
 msgid "Generic Device"
-msgstr "Genel Günlük Seviyesi"
+msgstr "Genel Cihaz"
 
 #: include/global_arrays.php
 msgid "German"
@@ -4882,7 +4882,7 @@ msgstr "Grafik Türlerini Koru"
 
 #: include/global_arrays.php
 msgid "Keep Type and STACK"
-msgstr "Türü ve YAKIN TUTUN"
+msgstr "Türü ve STACK'i Koru"
 
 #: include/global_arrays.php
 msgid "Korean"
@@ -5102,15 +5102,15 @@ msgstr "Doğal Sipariş"
 
 #: include/global_arrays.php
 msgid "Network Firewalls"
-msgstr "Ağ Filtreleri"
+msgstr "Ağ Güvenlik Duvarları"
 
 #: include/global_arrays.php
 msgid "Network Router"
-msgstr "Ağ Filtreleri"
+msgstr "Ağ Yönlendiricisi"
 
 #: include/global_arrays.php
 msgid "Network Switch"
-msgstr "Ağ Filtreleri"
+msgstr "Ağ Anahtarı"
 
 #: include/global_arrays.php lib/html_form_template.php
 msgid "New Graphs"
@@ -5142,7 +5142,7 @@ msgstr "Kuzey"
 
 #: include/global_arrays.php
 msgid "Not In Use"
-msgstr "Özel Yazı Tiplerini Kullan"
+msgstr "Kullanımda Değil"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -5216,7 +5216,7 @@ msgstr "Ping veya SNMP Çalışma Süresi"
 
 #: include/global_arrays.php
 msgid "Plugin Administration"
-msgstr "Günlük Yönetimi"
+msgstr "Eklenti Yönetimi"
 
 #: include/global_arrays.php
 msgid "Polish"
@@ -5269,7 +5269,7 @@ msgstr "Yalnızca toplam Legend Öğelerini Yazdır"
 
 #: include/global_arrays.php
 msgid "Printer Related"
-msgstr "Veritabanı"
+msgstr "Yazıcı ile İlgili"
 
 #: include/global_arrays.php
 msgid "RRD Check"
@@ -5321,7 +5321,7 @@ msgstr "Raporlama"
 
 #: include/global_arrays.php
 msgid "Reports Administration"
-msgstr "Günlük Yönetimi"
+msgstr "Raporlar Yönetimi"
 
 #: include/global_arrays.php
 msgid "Reports Creation"
@@ -5467,7 +5467,7 @@ msgstr "Ayarlar / Kamu"
 
 #: include/global_arrays.php
 msgid "Show Graph Action Icons"
-msgstr "Grafik Başlığını Göster"
+msgstr "Grafik İşlem Simgelerini Göster"
 
 #: include/global_arrays.php
 msgid "Show User Help Links"
@@ -5576,7 +5576,7 @@ msgstr "Teknik destek"
 
 #: include/global_arrays.php
 msgid "Telco Related"
-msgstr "Şablonu Seç"
+msgstr "Telekom ile İlgili"
 
 #: include/global_arrays.php
 msgid "Template Editor"
@@ -5738,7 +5738,7 @@ msgstr "Profili Güncelle"
 
 #: include/global_arrays.php
 msgid "Use the First Handler Found"
-msgstr "PHP GetText İşleyicisini kullanın"
+msgstr "Bulunan İlk İşleyiciyi Kullan"
 
 #: include/global_arrays.php
 msgid "Use the MonoTranslator GetText Handler"
@@ -5960,7 +5960,7 @@ msgstr "[None]"
 
 #: include/global_arrays.php
 msgid "[Restart]"
-msgstr "Kısıtlı"
+msgstr "[Yeniden Başlat]"
 
 #: include/global_arrays.php
 msgid "[Skipped]"
@@ -6044,11 +6044,11 @@ msgstr "boş değil"
 
 #: include/global_arrays.php
 msgid "is not equal to"
-msgstr "değer eşitse"
+msgstr "eşit değildir"
 
 #: include/global_arrays.php
 msgid "is not unknown"
-msgstr "bilinmiyen"
+msgstr "bilinmeyen değil"
 
 #: include/global_arrays.php
 msgid "is unknown"
@@ -6148,7 +6148,7 @@ msgstr "Grafiğin sağına ikinci bir eksen çizilecektir. Ölçek ve kaydırma 
 
 #: include/global_form.php
 msgid "A suitable Class for the Device Template."
-msgstr "Bu Şablon için faydalı bir isim."
+msgstr "Aygıt Şablonu için uygun bir Sınıf."
 
 #: include/global_form.php
 msgid "A useful name for this CDEF."
@@ -6462,7 +6462,7 @@ msgstr "Çizgi işaretleyicilerini çizgi olarak çizin."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "Dinamik Etiketler (--dinamik-etiketler)"
+msgstr "Dinamik Etiketler (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6540,7 +6540,7 @@ msgstr "SNMPv2 ve SNMPv3 Cihazları için, SNMP Bulk Walk maksimum tekrar boyutu
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Zorla Kuralları Efsanesi (--force-kural-efsanesi)"
+msgstr "Kurallar Göstergesini Zorla (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6730,7 +6730,7 @@ msgstr "Bu şablonu taşımak mı?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Sol Eksen Formatlayıcı (--ft eksen ekseni formatlayıcı &lt;formatname&gt;)"
+msgstr "Sol Eksen Biçimlendirici (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
@@ -6886,7 +6886,7 @@ msgstr "Lütfen bu Toplu Şablonu adlandırın."
 
 #: include/global_form.php
 msgid "Poller Association"
-msgstr "Anket Derneği"
+msgstr "Yoklayıcı İlişkilendirmesi"
 
 #: include/global_form.php
 msgid "Polling Interval"
@@ -7126,7 +7126,7 @@ msgstr "Sekme Genişliği (--tabwidth &lt;pixels&gt;)"
 
 #: include/global_form.php
 msgid "Test Data Sources"
-msgstr "Veri Kaynakları Var"
+msgstr "Veri Kaynaklarını Test Et"
 
 #: include/global_form.php
 msgid "Text Alignment (TEXTALIGN)"
@@ -7150,7 +7150,7 @@ msgstr "Bu Toplam Şablonun dayandığı Grafik Şablonu."
 
 #: include/global_form.php package_import.php
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Grafik Genişliği."
+msgstr "Grafik Şablonları içe aktarılırken veya güncellenirken kullanılacak Yükseklik."
 
 #: include/global_form.php package_import.php
 msgid "The Image Format to be used when importing or updating Graph Templates."
@@ -7166,7 +7166,7 @@ msgstr "Eşleştirilecek desen."
 
 #: include/global_form.php
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "Bir Ağaç Başlığı olarak kullanmak için Yedek Dize Kalıbı. <br> İlk maç için eg <strong>\\ $ {1}</strong> ile bir Maça bakın!"
+msgstr "Ağaç Başlığı olarak kullanılacak Değiştirme Dizesi Kalıbı.<br>İlk eşleşme için örneğin <strong>\\${1}</strong> ile bir Eşleşmeye başvurun!"
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
@@ -7338,7 +7338,7 @@ msgstr "Grafik içindeki grafik alanının genişliği (piksel cinsinden). Bu al
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Başlık (- başlık)"
+msgstr "Başlık (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7350,7 +7350,7 @@ msgstr "tutarında"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Birim İhracat Değeri (- birim-üs)"
+msgstr "Birim Üssü Değeri (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
@@ -7454,7 +7454,7 @@ msgstr "Sol eksen etiketini ayarlarken, veri formatına bir kural uygulayın. De
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Doğru eksen etiketini ayarlarken, veri formatına bir kural uygulayın. Desteklenen formatlar, verilerin sayısal olarak değerlendirildiği &quot;sayısal&quot;, değerlerin UNIX zaman damgaları (Ocak 1970&#39;den bu yana saniye sayısı) olarak yorumlandığı ve strftime formatı kullanılarak ifade edilen (varsayılan &quot;% Y-% m-%d% H :%MS&quot;). Ayrıca bkz. - birimler uzunluk ve - dik eksen formatı. Son olarak, değerlerin milisaniye cinsinden süre olarak yorumlandığı &quot;süre&quot;. Biçimlendirme, geçerlilik süresi nitelikli PRINT / GPRINT kurallarına uyar."
+msgstr "Sağ eksen etiketlemesini ayarlarken veri biçimine bir kural uygulayın. Desteklenen biçimler arasında verilerin sayısal olarak işlendiği \"numeric\" ve değerlerin UNIX zaman damgaları (Ocak 1970'ten bu yana geçen saniye sayısı) olarak yorumlanıp strftime biçimi kullanılarak ifade edildiği (varsayılan \"%Y-%m-%d %H:%M:%S\") \"timestamp\" yer alır. Ayrıca --units-length ve --right-axis-format seçeneklerine bakın. Son olarak, değerlerin milisaniye cinsinden süre olarak yorumlandığı \"duration\" bulunur. Biçimlendirme, valstrfduration nitelikli PRINT/GPRINT kurallarını izler."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7513,7 +7513,7 @@ msgstr "%d Değişiklikler"
 #: include/global_settings.php lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Columns"
-msgstr "yaklaşık %d gün önce"
+msgstr "%d Sütun"
 
 #: include/global_settings.php
 #, php-format
@@ -7638,7 +7638,7 @@ msgstr "Hesap Kilitleme"
 
 #: include/global_settings.php
 msgid "Additional Data Collector Settings"
-msgstr "Uzaktan Veri Toplayıcı Durumu:"
+msgstr "Ek Veri Toplayıcı Ayarları"
 
 #: include/global_settings.php lib/html.php
 msgid "Advanced"
@@ -7794,7 +7794,7 @@ msgstr "Eksen Yazı Tipi Boyutu"
 
 #: include/global_settings.php
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "Legend Yazı Tipi Ayarı"
+msgstr "Arka Plan Zaman Aşımı ve Eşzamanlı İşlem Ayarları"
 
 #: include/global_settings.php
 msgid "Backup Retention"
@@ -7810,7 +7810,7 @@ msgstr "Baz zamanı"
 
 #: include/global_settings.php
 msgid "Basic Auth Login Failure Message"
-msgstr "Temel Kimlik Doğrulama Harita Dosyası"
+msgstr "Temel Kimlik Doğrulama Oturum Açma Başarısızlık Mesajı"
 
 #: include/global_settings.php
 msgid "Basic Auth Mapfile"
@@ -7842,7 +7842,7 @@ msgstr "Boost İşleme Modu"
 
 #: include/global_settings.php
 msgid "Business Hours Settings"
-msgstr "Kullanıcı Ayarları"
+msgstr "Çalışma Saatleri Ayarları"
 
 #: include/global_settings.php
 msgid "By Template/Data Query"
@@ -7966,7 +7966,7 @@ msgstr "Veri Kaynağı Alan Uzunluğu"
 
 #: include/global_settings.php
 msgid "Data Source Preservation Preset"
-msgstr "Grafik / Veri Kaynağı Oluşturma Yöntemi"
+msgstr "Veri Kaynağı Koruma Ön Ayarı"
 
 #: include/global_settings.php
 msgid "Data Source Statistics Timeout"
@@ -8014,7 +8014,7 @@ msgstr "Varsayılan Grafik Türü"
 
 #: include/global_settings.php
 msgid "Default Interface Speed"
-msgstr "Varsayılan Grafik Türü"
+msgstr "Varsayılan Arayüz Hızı"
 
 #: include/global_settings.php
 msgid "Default Log Tail Lines"
@@ -8042,7 +8042,7 @@ msgstr "Varsayılan SNMP, tüm yeni Aygıtlar için yeniden dener."
 
 #: include/global_settings.php
 msgid "Default SNMP timeout in milli-seconds for all new Devices."
-msgstr "Tüm yeni Aygıtlar için varsayılan SNMP zaman aşımını saniye cinsinden."
+msgstr "Tüm yeni Cihazlar için milisaniye cinsinden varsayılan SNMP zaman aşımı."
 
 #: include/global_settings.php
 msgid "Default SNMP v3 Authorization Passphrase for all new Devices."
@@ -8122,7 +8122,7 @@ msgstr "Detaylı"
 
 #: include/global_settings.php
 msgid "Device Based"
-msgstr "Aygıt Adı"
+msgstr "Cihaz Tabanlı"
 
 #: include/global_settings.php
 msgid "Device Defaults"
@@ -8142,7 +8142,7 @@ msgstr "Cihaz"
 
 #: include/global_settings.php
 msgid "Device ID/Data Query ID"
-msgstr "Veri Sorgusunu Sil"
+msgstr "Cihaz Kimliği/Veri Sorgusu Kimliği"
 
 #: include/global_settings.php
 msgid "Device Threads"
@@ -8158,7 +8158,7 @@ msgstr "RRDtool Grafik Filigranı"
 
 #: include/global_settings.php
 msgid "Disable Resource Cache Replication"
-msgstr "Kaynak Önbelleğini Yeniden Oluştur"
+msgstr "Kaynak Önbelleği Çoğaltmasını Devre Dışı Bırak"
 
 #: include/global_settings.php
 msgid "Disable increasing OID Check"
@@ -8218,7 +8218,7 @@ msgstr "Drag-N-Drop&#39;u Etkinleştir"
 
 #: include/global_settings.php
 msgid "Enable Gradient Support"
-msgstr "Raporu Etkinleştir"
+msgstr "Gradyan Desteğini Etkinleştir"
 
 #: include/global_settings.php
 msgid "Enable Horizontal Scrolling"
@@ -8246,7 +8246,7 @@ msgstr "İsteğe Bağlı RRD Güncellemesini Etkinleştir"
 
 #: include/global_settings.php
 msgid "Enable RRDfile Check"
-msgstr "Kuralı Etkinleştir"
+msgstr "RRDfile Denetimini Etkinleştir"
 
 #: include/global_settings.php
 msgid "Enable Real-time Graphing"
@@ -8414,7 +8414,7 @@ msgstr "Grafik Şablonu Tabanlı"
 
 #: include/global_settings.php
 msgid "Graph Template Test Data Source"
-msgstr "Grafik, Veri Kaynağı"
+msgstr "Grafik Şablonu Test Veri Kaynağı"
 
 #: include/global_settings.php
 msgid "Graph Templates to Spike Kill"
@@ -8442,7 +8442,7 @@ msgstr "Grafik / Veri Kaynağı / Veri Sorgu Ayarları"
 
 #: include/global_settings.php
 msgid "Graphs Auto Unlock"
-msgstr "Grafik Eşleştirme Kuralı"
+msgstr "Grafiklerin Kilidini Otomatik Aç"
 
 #: include/global_settings.php
 msgid "Graphs Per Page"
@@ -8518,7 +8518,7 @@ msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
 
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
-msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
+msgstr "RRD ne sıklıkla denetlenmelidir?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
@@ -8586,7 +8586,7 @@ msgstr "Takviye çıktı tablosu bu boyutu aşarsa, kayıtlarda bir güncelleme 
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "Destekleyici yoklayıcı bu çalışma zamanını hariç tutarsa, kaktüsler günlüğüne bir uyarı verilir,"
+msgstr "Boost yoklayıcısı bu çalışma süresini aşarsa, Cacti günlüğüne bir uyarı yazılır,"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8702,7 +8702,7 @@ msgstr "Yerel Hesap Karmaşıklığı Gereksinimleri"
 
 #: include/global_settings.php
 msgid "Local Page Help Only"
-msgstr "Yardım İste"
+msgstr "Yalnızca Yerel Sayfa Yardımı"
 
 #: include/global_settings.php
 msgid "Location for Image Files"
@@ -8798,11 +8798,11 @@ msgstr "Maksimum Başlık Uzunluğu"
 
 #: include/global_settings.php
 msgid "Maximum Tree Width"
-msgstr "Maksimum Başlık Uzunluğu"
+msgstr "Maksimum Ağaç Genişliği"
 
 #: include/global_settings.php
 msgid "Maximum number of days to show business hours"
-msgstr "Sayfa başına maksimum satır sayısı"
+msgstr "Çalışma saatlerinin gösterileceği maksimum gün sayısı"
 
 #: include/global_settings.php
 msgid "Maximum number of rows per page"
@@ -8838,7 +8838,7 @@ msgstr "Mod"
 
 #: include/global_settings.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Kaktüslerin LDAP sunucusuna karşı kimlik doğrulaması yapmaya çalıştığı mod. <blockquote> <i>Arama</i> Yok - Ayırt Edici Ad Yok (DN) araması gerçekleşir, verilen Ayırt Edici Ad (DN) biçimiyle bağlanmaya çalışın. <br><br> <i>Anonim Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için adsız bağlama yoluyla LDAP dizininde kullanıcı adı aramaya çalışır. <br><br> <i>Özel Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için bağlama için Belirli Ayırt Edici Ad (DN) ve Belirli Şifre ile LDAP dizininde kullanıcı adı aramaya çalışır."
+msgstr "Cacti'nin LDAP sunucusunda kimlik doğrulaması yapmaya çalışacağı mod.<blockquote><i>Arama Yok</i> - Ayırt Edici Ad (DN) araması yapılmaz, yalnızca belirtilen Ayırt Edici Ad (DN) biçimiyle bağlanmaya çalışılır.<br><br><i>Anonim Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için anonim bağlama yoluyla LDAP dizininde kullanıcı adı aramaya çalışır.<br><br><i>Belirli Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için bağlanmada Belirli Ayırt Edici Ad (DN) ve Belirli Parola kullanarak LDAP dizininde kullanıcı adı aramaya çalışır."
 
 #: include/global_settings.php
 msgid "Monthly on Sunady"
@@ -8970,7 +8970,7 @@ msgstr "Lütfen Kadupul&#39;nizi ciltlemek için mevcut Temalardan birini seçin
 
 #: include/global_settings.php
 msgid "Poller"
-msgstr "İskele babası"
+msgstr "Yoklayıcı"
 
 #: include/global_settings.php
 msgid "Poller Command Concurrent Processes"
@@ -9062,7 +9062,7 @@ msgstr "Proxy Sunucusu"
 
 #: include/global_settings.php
 msgid "RRDChecker Timeout"
-msgstr "DNS Zaman Aşımı"
+msgstr "RRDChecker Zaman Aşımı"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean"
@@ -9106,7 +9106,7 @@ msgstr "RSA Parmak İzi"
 
 #: include/global_settings.php
 msgid "Re-Index All Device Schedule"
-msgstr "Yeniden Dizin Yöntemi"
+msgstr "Tüm Cihazları Yeniden Dizinleme Zamanlaması"
 
 #: include/global_settings.php
 msgid "Re-index Method for Data Queries"
@@ -9166,7 +9166,7 @@ msgstr "Değiştirme yöntemi"
 
 #: include/global_settings.php
 msgid "Report Generation Timeout"
-msgstr "Uzak Ajan Zaman Aşımı"
+msgstr "Rapor Oluşturma Zaman Aşımı"
 
 #: include/global_settings.php
 msgid "Reporting Presets"
@@ -9178,7 +9178,7 @@ msgstr "Grup Üyeliği İste"
 
 #: include/global_settings.php
 msgid "Require Mix Case"
-msgstr "Mix Case gerektir"
+msgstr "Büyük/Küçük Harf Karışımı Gerektir"
 
 #: include/global_settings.php
 msgid "Require Number"
@@ -9294,7 +9294,7 @@ msgstr "<i>&#39;Dc = win2kdomain, dc = local&#39;</i> veya <i>&#39;ou = people, 
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Kullanıcının pencereleri LDAP dizininde bulmak için kullanacağı arama filtresi, örneğin: <i>&#39;(&amp; (objectclass = user) (objectcategory = user) (userPrincipalName = &lt;username&gt; *))&#39;</i> veya OpenLDAP: <i>&#39;(&amp; (objectClass) = hesap) (uid = &lt;kullanıcı adı&gt;)) &#39;</i> . &#39;&lt;username&gt;&#39; giriş isteminde verilen kullanıcı adı ile değiştirildi."
+msgstr "Kullanıcıyı LDAP dizininde bulmak için kullanılacak arama filtresi; örneğin Windows için: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> veya OpenLDAP için: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>. '&lt;username&gt', oturum açma isteminde girilen kullanıcı adıyla değiştirilir. "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9358,7 +9358,7 @@ msgstr "İstemci tarafından alındığında LDAP'ın TLS Sertifikalarını doğ
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
-msgstr "Bu Kadupul sistemi için Veri Kaynağı İstatistikleri toplanmalı mı?"
+msgstr "Bu Kadupul sistemi için RRD dosyası denetimi etkinleştirilmeli mi?"
 
 #: include/global_settings.php
 msgid "Should image caching be enabled?"
@@ -9394,7 +9394,7 @@ msgstr "Yalnızca seçilen bir cihaz tesisinde kullanılabilen konumları göste
 
 #: include/global_settings.php
 msgid "Show only site specific locations"
-msgstr "Grafiğe özel seçenekleri burada ayarlayın."
+msgstr "Yalnızca siteye özgü konumları göster"
 
 #: include/global_settings.php
 msgid "Simple"
@@ -9406,7 +9406,7 @@ msgstr "Site"
 
 #: include/global_settings.php
 msgid "Site Security"
-msgstr "SMTP Güvenlik"
+msgstr "Site Güvenliği"
 
 #: include/global_settings.php
 msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
@@ -9494,11 +9494,11 @@ msgstr "Sistem Seviyesi RRD Güncelleyici"
 
 #: include/global_settings.php
 msgid "System Setting"
-msgstr "Kullanıcı Ayarları"
+msgstr "Sistem Ayarı"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "SSL olmayan iletişim için TCP / UDP bağlantı noktası."
+msgstr "SSL iletişimleri için LDAPS TCP bağlantı noktası. Varsayılan 636'dır."
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
@@ -9542,7 +9542,7 @@ msgstr "Spike kaldırma için Temel Zaman oluşması. Örneğin, &#39;12: 00 &#3
 
 #: include/global_settings.php
 msgid "The Bind Timeout in seconds."
-msgstr "Lütfen SMTP zaman aşımını saniye cinsinden girin."
+msgstr "Saniye cinsinden Bağlama (Bind) Zaman Aşımı."
 
 #: include/global_settings.php
 msgid "The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode."
@@ -9578,7 +9578,7 @@ msgstr "Taahhüt edilecek Ağacın Minimum genişliği."
 
 #: include/global_settings.php
 msgid "The Network Connect Timeout in seconds."
-msgstr "Lütfen SMTP zaman aşımını saniye cinsinden girin."
+msgstr "Saniye cinsinden Ağ Bağlantı Zaman Aşımı."
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
@@ -9626,7 +9626,7 @@ msgstr "Tüm yeni cihazlarda kullanılan varsayılan Cihaz Şablonu."
 
 #: include/global_settings.php
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Grafik Genişliği."
+msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Grafik Yüksekliği."
 
 #: include/global_settings.php
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -10111,7 +10111,7 @@ msgstr "Performansı iyileştirmek için, artırıcı RRD güncelleyicisinin bir
 
 #: include/global_settings.php
 msgid "Tree History"
-msgstr "Şifre Geçmişi"
+msgstr "Ağaç Geçmişi"
 
 #: include/global_settings.php
 msgid "Tree Settings"
@@ -10458,7 +10458,7 @@ msgstr "Grafik Oluşturma Kriteri Yok"
 
 #: lib/api_automation.php
 msgid "No Items Found"
-msgstr "Hiç bir Firma bulunamadı"
+msgstr "Hiçbir Öğe Bulunamadı"
 
 #: lib/api_automation.php
 msgid "No Matching Devices"
@@ -10470,7 +10470,7 @@ msgstr "Ağaç Yaratma Kriteri Yok"
 
 #: lib/api_automation.php
 msgid "Not Up"
-msgstr "Up değil"
+msgstr "Etkin Değil"
 
 #: lib/api_automation.php
 msgid "Objects"
@@ -10531,7 +10531,7 @@ msgstr "İletişim:"
 
 #: lib/api_device.php
 msgid "Device Availability Check Bypassed"
-msgstr "Cihaz Kullanılabilirliği Kontrolü Bypassed"
+msgstr "Cihaz Erişilebilirlik Denetimi Atlandı"
 
 #: lib/api_device.php
 msgid "Device is Disabled"
@@ -10714,12 +10714,12 @@ msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
 #: lib/boost.php
 #, php-format
 msgid "%s Bytes"
-msgstr "%s GBytes"
+msgstr "%s Bayt"
 
 #: lib/boost.php
 #, php-format
 msgid "%s KBytes"
-msgstr "%s GBytes"
+msgstr "%s KBayt"
 
 #: lib/boost.php utilities.php
 #, php-format
@@ -10823,7 +10823,7 @@ msgstr "Temizleme Günlüğü"
 
 #: lib/clog_webapi.php
 msgid "Recaches"
-msgstr "maçlar"
+msgstr "Yeniden Önbelleklemeler"
 
 #: lib/clog_webapi.php utilities.php
 msgid "SQL Calls"
@@ -10835,7 +10835,7 @@ msgstr "İstatistikler"
 
 #: lib/clog_webapi.php
 msgid "System Device"
-msgstr "Cihazları Eşitle"
+msgstr "Sistem Cihazı"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Tail Lines"
@@ -10851,7 +10851,7 @@ msgstr "Uyarı"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "XML dosyasında &lt;arg_num_indexes&gt; eksik, &#39;Dizin Sayısı Değiştirildi&#39; desteklenmiyor"
+msgstr "XML dosyasında &lt;arg_num_indexes&gt; mevcut ancak veri döndürülmedi, 'Dizin Sayısı Değişti' desteklenmiyor"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
@@ -10925,7 +10925,7 @@ msgstr "Yeni Sıralama Alanı Algılandı: &#39; %s&#39; Eski Sıralama Alanı &
 
 #: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
-msgstr "Yinelenen Veri Kaynağı Profili"
+msgstr "Veri Kaynağı Başlık Önbelleği güncellemesi tamamlandı"
 
 #: lib/data_query.php
 msgid "Done updating Graph Title Cache"
@@ -11020,7 +11020,7 @@ msgstr "&#39;Rewrite_index&#39; veya &#39;oid_suffix&#39; tanımlandığından y
 #: lib/data_query.php
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr "Dönüştürülecek%s tablo bulundu"
+msgstr "Doğrulanacak %s Yerel Veri Kimliği bulundu"
 
 #: lib/data_query.php
 #, php-format
@@ -11264,7 +11264,7 @@ msgstr "OID&#39;de oid_rewrite: &#39; %s&#39; yeni OID: &#39; %s&#39;"
 #: lib/data_query.php
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
-msgstr "OID&#39;de oid_rewrite: &#39; %s&#39; yeni OID: &#39; %s&#39;"
+msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
 msgid "Failed to alter password field length, can not continue as may corrupt password"
@@ -11389,7 +11389,7 @@ msgstr "Bağlantı %s"
 
 #: lib/functions.php
 msgid "Logged in a Guest"
-msgstr "olarak giriş yaptı"
+msgstr "Misafir olarak oturum açıldı"
 
 #: lib/functions.php
 msgid "Logged in as"
@@ -11517,7 +11517,7 @@ msgstr "Kaldırma işlemi başarısız oldu. Kalıcı işlem temizliği ayrıca 
 
 #: lib/graph_item_choices.php
 msgid "No Device - "
-msgstr "Cihaz"
+msgstr "Cihaz Yok - "
 
 #: lib/graph_item_editor.php
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
@@ -11533,7 +11533,7 @@ msgstr "Toplanan Aygıt"
 
 #: lib/graphs.php
 msgid "Damaged Graph"
-msgstr "Veri Kaynağı, Grafik"
+msgstr "Hasarlı Grafik"
 
 #: lib/html.php
 msgid "#"
@@ -11684,7 +11684,7 @@ msgstr "Geçerli Sayfa: %s"
 
 #: lib/html.php
 msgid "Dark Color Mode"
-msgstr "Renk Bulunamadı"
+msgstr "Koyu Renk Modu"
 
 #: lib/html.php
 msgid "Dashboards"
@@ -11716,7 +11716,7 @@ msgstr "Cihazı Düzenle"
 
 #: lib/html.php
 msgid "End with"
-msgstr "Bitiş Tarihi"
+msgstr "Şununla biter"
 
 #: lib/html.php
 msgid "Enter a regular expression"
@@ -11772,7 +11772,7 @@ msgstr "Çeviride Yardım"
 
 #: lib/html.php
 msgid "Ignore System Color"
-msgstr "Öğe Rengi"
+msgstr "Sistem Rengini Yoksay"
 
 #: lib/html.php
 msgid "Kadupul"
@@ -11800,7 +11800,7 @@ msgstr "RRA Başına Öldürülenler"
 
 #: lib/html.php
 msgid "Light Color Mode"
-msgstr "Liste Modu"
+msgstr "Açık Renk Modu"
 
 #: lib/html.php managers.php
 msgid "Logs"
@@ -11893,7 +11893,7 @@ msgstr "Nedeni:"
 
 #: lib/html.php
 msgid "Remote Server"
-msgstr "StdDev Kaldır"
+msgstr "Uzak Sunucu"
 
 #: lib/html.php
 msgid "Remove StdDev"
@@ -12030,11 +12030,11 @@ msgstr "Kadupul Rengi (%s)"
 
 #: lib/html_form.php
 msgid "NO FONT VERIFICATION POSSIBLE"
-msgstr "YAZI TİPİ DOĞRULAMASI OLASI"
+msgstr "YAZI TİPİ DOĞRULAMASI MÜMKÜN DEĞİL"
 
 #: lib/html_form.php
 msgid "Path is a Directory and not a File"
-msgstr "Yol bir dizin değil bir dosyadır"
+msgstr "Yol bir dizindir, dosya değildir"
 
 #: lib/html_form.php
 msgid "Path is a File and not a Directory"
@@ -12077,7 +12077,7 @@ msgstr "Sayfada bir SQL Enjeksiyonu denendi"
 #: lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Column"
-msgstr "yaklaşık %d gün önce"
+msgstr "%d Sütun"
 
 #: lib/html_graph.php lib/html_tree.php
 msgid "Columns"
@@ -12194,7 +12194,7 @@ msgstr "Grafik [Şablon: %s]"
 
 #: lib/html_reports.php
 msgid ", Graph Template: All Templates"
-msgstr "Aygıt Şablonuna Grafik Şablonu Ekle"
+msgstr ", Grafik Şablonu: Tüm Şablonlar"
 
 #: lib/html_reports.php
 #, php-format
@@ -12532,7 +12532,7 @@ msgstr "Maddenin Sırası."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
-msgstr "Tüm çocuklar dal grafiklerini oluşturmalı mı?"
+msgstr "Tüm Dal Grafikleri oluşturulsun mu?"
 
 #: lib/html_reports.php
 msgid "Should the Graphs be linked back to the Kadupul site?"
@@ -12693,7 +12693,7 @@ msgstr "Kötü UTF-8 ofset hatası!"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
-msgstr "İndir"
+msgstr "Çevrimdışı (Thold)"
 
 #: lib/html_utility.php lib/installer.php
 msgid "Error"
@@ -12735,7 +12735,7 @@ msgstr "%s değişkeni için %s değişkeni için doğrulama hatası. Daha fazla
 
 #: lib/import.php
 msgid "Damaged"
-msgstr "Veri Kaynağı, Grafik"
+msgstr "Hasarlı"
 
 #: lib/import.php
 msgid "Found Dependency:"
@@ -12855,12 +12855,12 @@ msgstr "%d Veri Kaynağının RRDfile yolu RRA dizininin dışında. Bu sürüm 
 #: lib/installer.php
 #, php-format
 msgid "%s - N/A"
-msgstr "%s saat"
+msgstr "%s - Mevcut Değil"
 
 #: lib/installer.php
 #, php-format
 msgid "%s - No"
-msgstr "%s saat"
+msgstr "%s - Hayır"
 
 #: lib/installer.php
 #, php-format
@@ -12873,7 +12873,7 @@ msgstr "GPL Lisans Sözleşmesini Kabul Et"
 
 #: lib/installer.php
 msgid "Adding Device to Default Tree"
-msgstr "Aygıt Varsayılanları"
+msgstr "Aygıt Varsayılan Ağaca Ekleniyor"
 
 #: lib/installer.php
 msgid "Adding extra snmp settings for automation"
@@ -13017,7 +13017,7 @@ msgstr "VERİ KAYNAKLARI:"
 
 #: lib/installer.php
 msgid "DOWNGRADE DETECTED"
-msgstr "AŞAĞIDAKİ İNDİR"
+msgstr "SÜRÜM DÜŞÜRME ALGILANDI"
 
 #: lib/installer.php
 msgid "Database Collation"
@@ -13142,7 +13142,7 @@ msgstr "%s belirtilen profil uygulanamadı! = %s"
 
 #: lib/installer.php
 msgid "Failed to find any automation option set"
-msgstr "Kopyalanacak veri bulunamadı!"
+msgstr "Hiçbir otomasyon seçenek kümesi bulunamadı"
 
 #: lib/installer.php
 msgid "Failed to find automation network, no changes were made"
@@ -13175,7 +13175,7 @@ msgstr "Dosya bulunamadı"
 #: lib/installer.php
 #, php-format
 msgid "Finished %s Process for v%s"
-msgstr "V%s için%s işlemi tamamlandı"
+msgstr "v%2$s için %1$s işlemi tamamlandı"
 
 #: lib/installer.php
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
@@ -13373,7 +13373,7 @@ msgstr "Yeni Uzaktan Poller"
 #: lib/installer.php
 #, php-format
 msgid "No - %s"
-msgstr "%s saat"
+msgstr "Hayır - %s"
 
 #: lib/installer.php
 msgid "No Remote Data Collectors found for full synchronization"
@@ -13490,7 +13490,7 @@ msgstr "Lütfen bunu Kadupul Grubuna bildirin."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "Kadupul&#39;den vermek istediğiniz Şablon türünü seçin."
+msgstr "Lütfen Yükseltme sırasında güncellemek istediğiniz Cihaz Şablonlarını seçin."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
@@ -13670,7 +13670,7 @@ msgstr "Tablolar"
 
 #: lib/installer.php
 msgid "Template Setup"
-msgstr "Template Kurulum"
+msgstr "Şablon Kurulumu"
 
 #: lib/installer.php pollers.php
 msgid "Test Connection"
@@ -13792,7 +13792,7 @@ msgstr "Bu program, ücretsiz bir yazılımdır; Özgür Yazılım Vakfı taraf�
 
 #: lib/installer.php
 msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Bu komut dosyası seçeneği, şu anda yasaklanmış olan Veri Giriş Yöntemlerini yasaklar."
+msgstr "Bu betik seçeneği, şu anda yasaklanmış olan Veri Giriş Yöntemlerinin yasağını kaldırır."
 
 #: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
@@ -13856,7 +13856,7 @@ msgstr "Otomasyon ağını güncelleme (%s), mod \"%s\" => \"%s\", alt ağ \"%s\
 
 #: lib/installer.php
 msgid "Updating remote configuration file"
-msgstr "Yapılandırma bekleniyor"
+msgstr "Uzak yapılandırma dosyası güncelleniyor"
 
 #: lib/installer.php
 msgid "Upgrade"
@@ -13894,7 +13894,7 @@ msgstr "Ayrıca MySQL Zaman Dilimi bilgilerini MySQL'e <b>MUTLAKA</b> içe aktar
 
 #: lib/installer.php
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
-msgstr "Daha sonra yeni veritabanına işaret edecek &quot;/ config.php include&quot; <b>GÜNCELLEMELİSİNİZ.</b>"
+msgstr "Daha sonra yeni veritabanına işaret edecek şekilde \"include/config.php\" dosyasını <b>MUTLAKA</b> güncellemelisiniz."
 
 #: lib/installer.php
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
@@ -14353,7 +14353,7 @@ msgstr "Minimal Kalp Atışı"
 
 #: lib/rrd.php
 msgid "Optional Tuning Recommendations"
-msgstr "Veri Kaynağı Alanları"
+msgstr "İsteğe Bağlı İnce Ayar Önerileri"
 
 #: lib/rrd.php
 msgid "PDP per Row"
@@ -14470,7 +14470,7 @@ msgstr "Toplama öncesinde poller_output kuyruğu InnoDB kullanmalıdır. Uzak t
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "İşlem doğrulanamadı. Yeniden denemeden önce değişiklik geçmişini inceleyin."
+msgstr "kullanılamıyor"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
@@ -14758,7 +14758,7 @@ msgstr "Pencere Başlangıcı: %s (%s)"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "Şablondan Toplama Oluştur"
+msgstr "Şablon Olmayan Kaynaktan Grafik Oluşturulmaya Çalışılıyor"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -15134,7 +15134,7 @@ msgstr "Kadupul'dan Çıkış Yap"
 #: logout.php
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
-msgstr "Lütfen tarayıcınızı kapatın veya %sLogin Again %s"
+msgstr "Lütfen tarayıcınızı kapatın veya %sTekrar Giriş Yapın%s"
 
 #: logout.php utilities.php
 #, php-format
@@ -15238,7 +15238,7 @@ msgstr "Temizleme Günlüğü Kaydı"
 
 #: managers.php
 msgid "Receivers"
-msgstr "Tanklar"
+msgstr "Alıcılar"
 
 #: managers.php
 #, php-format
@@ -15279,11 +15279,11 @@ msgstr "En az bir bildirim nesnesi seçmelisiniz."
 
 #: package_import.php
 msgid "Automatically Trust Signer"
-msgstr "Kaktüslere Otomatik Olarak Ekle"
+msgstr "İmzalayana Otomatik Olarak Güven"
 
 #: package_import.php templates_import.php
 msgid "Changes/Diffferences"
-msgstr "Cihazı Değiştir"
+msgstr "Değişiklikler/Farklar"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
@@ -15291,7 +15291,7 @@ msgstr "Bulunması gereken dosyalar için paket deposu dosyasını kontrol edin 
 
 #: package_import.php
 msgid "Copyright"
-msgstr "sağ"
+msgstr "Telif Hakkı"
 
 #: package_import.php
 msgid "Device class"
@@ -15303,7 +15303,7 @@ msgstr "Farklılıklar"
 
 #: package_import.php
 msgid "Error in Package"
-msgstr "Veri sorgusunda hata"
+msgstr "Pakette Hata"
 
 #: package_import.php
 msgid "Error: Invalid file path."
@@ -15315,7 +15315,7 @@ msgstr "Dosya Farklılıkları:"
 
 #: package_import.php
 msgid "Filename"
-msgstr "Yeniden Adlandır"
+msgstr "Dosya Adı"
 
 #: package_import.php
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
@@ -15339,7 +15339,7 @@ msgstr "Eklentiyi Kullanmak İçin Anahtar Oluşturma Gerekli"
 
 #: package_import.php
 msgid "Local Package Import File"
-msgstr "Paket Dosyaları"
+msgstr "Yerel Paket İçe Aktarma Dosyası"
 
 #: package_import.php templates_import.php
 msgid "Orphans"
@@ -15359,11 +15359,11 @@ msgstr "Paket Anahtar Bilgileri Bulunamadı"
 
 #: package_import.php
 msgid "Package XML File Damaged."
-msgstr "Paket Dosyaları"
+msgstr "Paket XML Dosyası Hasarlı."
 
 #: package_import.php
 msgid "Packages Details"
-msgstr "Paket Dosyaları"
+msgstr "Paket Ayrıntıları"
 
 #: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
@@ -15478,7 +15478,7 @@ msgstr "Eklenti Bulunamadı"
 
 #: plugins.php
 msgid "Not Compatible"
-msgstr "Uyumlu"
+msgstr "Uyumlu Değil"
 
 #: plugins.php
 #, php-format
@@ -15681,14 +15681,14 @@ msgstr "İstatistikleri Temizle"
 #: pollers.php
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "Bu Veri Toplayıcı&#39;nın Durumu."
-msgstr[1] "Bu Veri Toplayıcı&#39;nın Durumu."
+msgstr[0] "Veri Toplayıcının İstatistiklerini Temizle"
+msgstr[1] "Veri Toplayıcıların İstatistiklerini Temizle"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "Aşağıdaki Veri Toplayıcı&#39;yı etkinleştirmek için &#39;Devam Et&#39;i tıklayın."
-msgstr[1] "Aşağıdaki Veri Toplayıcıları etkinleştirmek için &#39;Devam Et&#39;i tıklayın."
+msgstr[0] "Veri Toplayıcı için Veri Toplayıcı İstatistiklerini temizlemek üzere 'Devam Et'i tıklayın."
+msgstr[1] "Veri Toplayıcılar için Veri Toplayıcı İstatistiklerini temizlemek üzere 'Devam Et'i tıklayın."
 
 #: pollers.php
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
@@ -15736,7 +15736,7 @@ msgstr "Veri Toplayıcı Bilgisi"
 
 #: pollers.php
 msgid "Data Collector Statistics cleared."
-msgstr "Veri Kaynakları İstatistikleri"
+msgstr "Veri Toplayıcı İstatistikleri temizlendi."
 
 #: pollers.php
 msgid "Delete Data Collector"
@@ -15826,7 +15826,7 @@ msgstr "Uzak Veritabanı Bağlantı Noktası"
 
 #: pollers.php
 msgid "Remote Database Retries"
-msgstr "Uzak Veritabanı Kullanıcısı"
+msgstr "Uzak Veritabanı Yeniden Deneme Sayısı"
 
 #: pollers.php
 msgid "Remote Database SSL"
@@ -16208,14 +16208,14 @@ msgstr "Şehir"
 #: sites.php
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
 msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
-msgstr[0] "Aşağıdaki Siteyi silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu siteden ayrılmayacağını unutmayın."
-msgstr[1] "Aşağıdaki tüm Siteleri silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu siteden ayrılmayacağını unutmayın."
+msgstr[0] "Aşağıdaki Siteyi silmek için 'Devam Et'i tıklayın. Tüm cihazların bu siteden ayrılacağını unutmayın."
+msgstr[1] "Aşağıdaki tüm Siteleri silmek için 'Devam Et'i tıklayın. Tüm cihazların bu siteden ayrılacağını unutmayın."
 
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "Aşağıdaki Ağacı silmek için &#39;Devam Et&#39;i tıklayın."
-msgstr[1] "Aşağıdaki Ağaçları silmek için &#39;Devam Et&#39;i tıklayın."
+msgstr[0] "Aşağıdaki Siteyi çoğaltmak için 'Devam Et'i tıklayın."
+msgstr[1] "Aşağıdaki tüm Siteleri çoğaltmak için 'Devam Et'i tıklayın."
 
 #: sites.php
 msgid "Country"
@@ -16275,7 +16275,7 @@ msgstr "Boylam"
 
 #: sites.php
 msgid "New Site"
-msgstr "Yeni Otel"
+msgstr "Yeni Saha"
 
 #: sites.php
 msgid "No Sites Found"
@@ -16527,7 +16527,7 @@ msgstr "HATA"
 
 #: templates_import.php
 msgid "Error in Template"
-msgstr "Şablonları Dışa Aktar"
+msgstr "Şablonda Hata"
 
 #: templates_import.php
 msgid "Failed to access temporary folder, import functionality is disabled"
@@ -16535,7 +16535,7 @@ msgstr "Geçici klasöre erişilemedi, içe aktarma işlevi devre dışı bırak
 
 #: templates_import.php
 msgid "File Name"
-msgstr "Alan Adı"
+msgstr "Dosya Adı"
 
 #: templates_import.php
 msgid "Import Files [ If Files are missing, locate and install before using ]"
@@ -16556,7 +16556,7 @@ msgstr "Karşılanan: %d"
 
 #: templates_import.php
 msgid "Not Readable"
-msgstr "Yazılabilir değil"
+msgstr "Okunabilir Değil"
 
 #: templates_import.php
 #, php-format
@@ -16632,8 +16632,8 @@ msgstr[1] "Aşağıdaki Ağaçları yayınlamak için &#39;Devam Et&#39;i tıkla
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
 msgid_plural "Click 'Continue' to un-lock following Trees."
-msgstr[0] "Aşağıdaki Ağacı kaldırmak için &#39;Devam Et&#39;i tıklayın."
-msgstr[1] "Aşağıdaki Ağaçları kaldırmak için &#39;Devam Et&#39;i tıklayın."
+msgstr[0] "Aşağıdaki Ağacın kilidini açmak için 'Devam Et'i tıklayın."
+msgstr[1] "Aşağıdaki Ağaçların kilidini açmak için 'Devam Et'i tıklayın."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
@@ -16643,7 +16643,7 @@ msgstr[1] "Aşağıdaki Ağaçları kaldırmak için &#39;Devam Et&#39;i tıklay
 
 #: tree.php
 msgid "Cut"
-msgstr "Taşma / gizlenen herhangi Slayt sarma kabına gizlenmiş unsurları kesecek . Çoğunlukla Carousel Kaydırıcılar kullanılır."
+msgstr "Kes"
 
 #: tree.php
 msgid "Delete Tree"
@@ -16716,7 +16716,7 @@ msgstr "Site Adı"
 
 #: tree.php
 msgid "Sort Trees Ascending"
-msgstr "Azalan Ağaçları Sırala"
+msgstr "Ağaçları Artan Sırayla Sırala"
 
 #: tree.php
 msgid "Sort Trees Descending"
@@ -16795,7 +16795,7 @@ msgstr "Ağaçlar [yeni]"
 #: tree.php
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "Kilitli"
+msgstr "Kilidi Aç"
 
 #: tree.php
 msgctxt "dropdown action"
@@ -16805,13 +16805,13 @@ msgstr "Yayını Kaldır"
 #: tree.php
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "Ağacı Yayımla"
-msgstr[1] "Ağaçları Yayından Kaldır"
+msgstr[0] "Ağacın Kilidini Aç"
+msgstr[1] "Ağaçların Kilidini Aç"
 
 #: tree.php
 msgid "Un-publish Tree"
 msgid_plural "Un-publish Trees"
-msgstr[0] "Ağacı Yayımla"
+msgstr[0] "Ağacı Yayından Kaldır"
 msgstr[1] "Ağaçları Yayından Kaldır"
 
 #: tree.php
@@ -16857,11 +16857,11 @@ msgstr "< 1 Hafta Önce"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>Not:</b> Sistem Grafiği Politikası &#39;Kısıtlayıcı&#39;dır; yani, Grafiğe erişebilmek için Kullanıcının Grafiğe veya Cihaz ve Grafik Şablonuna erişebilmesi gerekir"
+msgstr "<b>Not:</b> Sistem Grafik Politikası 'Aygıt'tır; yani Kullanıcının Grafiğe erişebilmesi için Grafiğe veya Aygıta erişim iznine sahip olması gerekir"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>Not:</b> Sistem Grafiği Politikası &#39;İzin Vericidir&#39; anlamına gelir, yani Kullanıcı Grafiğe erişmek için Grafik, Aygıt veya Grafik Şablonundan en az birine erişebilmelidir."
+msgstr "<b>Not:</b> Sistem Grafik Politikası 'Grafik Şablonu'dur; yani Kullanıcının Grafiğe erişebilmesi için Grafiğe veya Grafik Şablonuna erişim iznine sahip olması gerekir"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
@@ -16921,7 +16921,7 @@ msgstr "Seçilen Kullanıcıları silmek için &#39;Devam Et&#39;i tıklayın."
 
 #: user_admin.php
 msgid "Click 'Continue' to disable the selected User(s)."
-msgstr "Seçilen Kullanıcıları kaldırmak için &#39;Devam Et&#39;i tıklayın."
+msgstr "Seçilen Kullanıcı(lar)ı devre dışı bırakmak için 'Devam Et'e tıklayın."
 
 #: user_admin.php
 msgid "Click 'Continue' to enable the selected User(s)."
@@ -17060,7 +17060,7 @@ msgstr "Son Giriş"
 
 #: user_admin.php user_group_admin.php
 msgid "Legacy Permissions"
-msgstr "Kullanıcı İzinleri"
+msgstr "Eski İzinler"
 
 #: user_admin.php
 msgid "Member"
@@ -17216,11 +17216,11 @@ msgstr "Kullanıcı Adı:"
 
 #: user_admin.php
 msgid "You are not allowed to delete the current login account"
-msgstr "Şifrenizi değiştiremezsiniz."
+msgstr "Geçerli oturum açma hesabını silmenize izin verilmiyor"
 
 #: user_admin.php
 msgid "You are not allowed to disable the current login account"
-msgstr "Şifrenizi değiştiremezsiniz."
+msgstr "Geçerli oturum açma hesabını devre dışı bırakmanıza izin verilmiyor"
 
 #: user_admin.php
 msgid "You are not allowed to disable the primary administrator account"
@@ -17330,7 +17330,7 @@ msgstr "Seçili Etki Alanını Varsayılan Yap"
 
 #: user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Kaktüslerin LDAP sunucusuna karşı kimlik doğrulaması yapmaya çalıştığı mod. <blockquote> <i>Arama</i> Yok - Ayırt Edici Ad Yok (DN) araması gerçekleşir, verilen Ayırt Edici Ad (DN) biçimiyle bağlanmaya çalışın. <br><br> <i>Adsız Arama</i> - Kullanıcıları Ayırt Edici Ad&#39;ı (DN) bulmak için adsız bağlama yoluyla LDAP dizinine karşı kullanıcı adı aramaya çalışır. <br><br> <i>Özel Arama</i> - Kullanıcıları Ayırt Edici Adını (DN) bulmak için bağlama için Özel Ayırt Edici Ad (DN) ve Özel Parola ile LDAP dizininde kullanıcı adı aramaya çalışır."
+msgstr "Cacti'nin LDAP sunucusunda kimlik doğrulaması yapmaya çalışacağı mod.<blockquote><i>Arama Yok</i> - Ayırt Edici Ad (DN) araması yapılmaz, yalnızca belirtilen Ayırt Edici Ad (DN) biçimiyle bağlanmaya çalışılır.<br><br><i>Anonim Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için anonim bağlama yoluyla LDAP dizininde kullanıcı adı aramaya çalışır.<br><br><i>Belirli Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için bağlanmada Belirli Ayırt Edici Ad (DN) ve Belirli Parola kullanarak LDAP dizininde kullanıcı adı aramaya çalışır."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17350,7 +17350,7 @@ msgstr "<i>&quot;Dc = win2kdomain, dc = local&quot;</i> veya <i>&quot;ou = peopl
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Kullanıcının pencereleri olduğu gibi LDAP dizininde bulmak için kullanılacak arama filtresi: <i>&quot;(&amp; (objectclass = user) (objectcategory = user) (userPrincipalName = &lt;username&gt; *))&quot;</i> veya OpenLDAP için: <i>&quot;(&amp; (objectClass) = hesap) (uid = &lt;kullanıcı adı&gt;)) &quot;</i> . &quot;&lt;username&gt;&quot;, oturum açma isteminde verilen kullanıcı adıyla değiştirildi."
+msgstr "Kullanıcıyı LDAP dizininde bulmak için kullanılacak arama filtresi; örneğin Windows için: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> veya OpenLDAP için: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>. \"&lt;username&gt\", oturum açma isteminde girilen kullanıcı adıyla değiştirilir."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."
@@ -17683,7 +17683,7 @@ msgstr "Dizin açılamıyor"
 
 #: utilities.php
 msgid "ChangeLog"
-msgstr "DeğişimGünlüğüLanguage"
+msgstr "Değişiklik Günlüğü"
 
 #: utilities.php
 msgctxt "Button: reset filter settings"
@@ -17740,7 +17740,7 @@ msgstr "Veri Sorgu Önbellek Öğeleri"
 
 #: utilities.php
 msgid "Data Source Statistics Purged."
-msgstr "Veri Kaynakları İstatistikleri"
+msgstr "Veri Kaynağı İstatistikleri Temizlendi."
 
 #: utilities.php
 msgid "Data Source Statistics Utilities"
@@ -17780,7 +17780,7 @@ msgstr "Dizin mevcut değil!"
 
 #: utilities.php
 msgid "Display Order"
-msgstr "Siparişi Görüntüle"
+msgstr "Görüntüleme Sırası"
 
 #: utilities.php
 #, php-format
@@ -17872,7 +17872,7 @@ msgstr "Kadupul teknik destek sayfası. Geliştiriciler ve teknik destek persone
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "Son Başlangıç Saati:"
+msgstr "Son Bitiş Zamanı:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -17924,7 +17924,7 @@ msgstr "Olası Maksimum Bağlantı Belleği"
 
 #: utilities.php
 msgid "Max Core Memory Possible"
-msgstr "İzin Verilen Maksimum Poller Belleği:"
+msgstr "Mümkün Olan Maksimum Çekirdek Belleği"
 
 #: utilities.php
 msgid "Max OID"
@@ -17944,7 +17944,7 @@ msgstr "Maksimum konu"
 
 #: utilities.php
 msgid "Max Total Memory Possible"
-msgstr "İzin Verilen Maksimum Poller Belleği:"
+msgstr "Mümkün Olan Maksimum Toplam Bellek"
 
 #: utilities.php
 msgid "Maximum Allowed Runtime:"
@@ -17956,7 +17956,7 @@ msgstr "Maksimum Kayıtlar:"
 
 #: utilities.php
 msgid "Minimum Connections:"
-msgstr "Test bağlantısı"
+msgstr "Minimum Bağlantı:"
 
 #: utilities.php
 msgid "MySQL Table Information - Sizes in KBytes"
@@ -18086,7 +18086,7 @@ msgstr "Temizle"
 
 #: utilities.php
 msgid "Purge Data Source Statistics"
-msgstr "Veri Kaynakları İstatistikleri"
+msgstr "Veri Kaynağı İstatistiklerini Temizle"
 
 #: utilities.php
 msgid "Purge User Log"
@@ -18163,7 +18163,7 @@ msgstr "Yenileme aralığı"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
-msgstr "Veri Kaynağında Hata Ayıklama"
+msgstr "Kalan Veri Kaynakları:"
 
 #: utilities.php
 msgid "Result"
@@ -18187,7 +18187,7 @@ msgstr "SNMPAgent Bildirim Günlüğü"
 
 #: utilities.php
 msgid "SNMP Agent Utilities"
-msgstr "SNMPAgent Utilities"
+msgstr "SNMP Ajanı Yardımcı Programları"
 
 #: utilities.php
 msgid "SNMP Version:"
@@ -18230,7 +18230,7 @@ msgstr "Durum: <span class=\"deviceUp\"><b>Çalışıyor</b></span>, Kalan: %s (
 
 #: utilities.php
 msgid "Success - Password"
-msgstr "Başarı - Pswd"
+msgstr "Başarılı - Parola"
 
 #: utilities.php
 msgid "Success - Password Change"

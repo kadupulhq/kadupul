@@ -14448,7 +14448,7 @@ msgstr "คิว poller_output ต้องใช้ InnoDB ก่อนกา�
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "ไม่สามารถยืนยันการดำเนินการได้ โปรดตรวจสอบประวัติการเปลี่ยนแปลงก่อนลองอีกครั้ง"
+msgstr "ไม่พร้อมใช้งาน"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."

@@ -62,7 +62,7 @@ msgstr "הגרף המצטבר שניגשו אליו אינו קיים"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
-msgstr "הגדרות גרף מצטברות"
+msgstr "גרף מצטבר אינו קיים"
 
 #: aggregate_graphs.php include/global_arrays.php
 msgid "Aggregate Graphs"
@@ -177,7 +177,7 @@ msgstr "לחץ על &#39;המשך&#39; כדי לשלב את הגרפים המצ�
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "לחץ על &#39;המשך&#39; כדי לשלב את הגרפים המצטברים הבאים בגרף מצטבר יחיד."
+msgstr "לחץ על 'המשך' כדי להמיר את הגרפים המצטברים הבאים לגרף רגיל."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -202,11 +202,11 @@ msgstr "המשך"
 
 #: aggregate_graphs.php
 msgid "Convert to Normal Graph"
-msgstr "המר לתרשים LINE1"
+msgstr "המר לגרף רגיל"
 
 #: aggregate_graphs.php
 msgid "Convert to normal Graph(s)"
-msgstr "המר לתרשים LINE1"
+msgstr "המר לגרפים רגילים"
 
 #: aggregate_graphs.php
 msgid "Create New Aggregate from Aggregates"
@@ -248,7 +248,7 @@ msgstr "פרטים"
 
 #: aggregate_graphs.php
 msgid "Dis-Associate Graph(s)"
-msgstr "גרף גרפים של עמיתים"
+msgstr "בטל שיוך גרף(ים)"
 
 #: aggregate_graphs.php
 msgid "Disassociate with Aggregate"
@@ -303,7 +303,7 @@ msgstr "כדי להעביר את הגרפים המצטברים להלן לצבי
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "כדי להעביר את הגרפים המצטברים להלן לצבירה מבוססת תבנית, עליהם להשתמש רק בתבנית גרפית אחת. לחץ על &#39;Return&#39; ולאחר מכן בחר רק תרשים מצטבר המשתמש באותה תבנית גרף."
+msgstr "כדי להעביר את הגרפים המצטברים להלן לשימוש בתבנית מצטברת, חייבת להיות קיימת תבנית כזו כבר. אנא לחץ על 'חזרה' ולאחר מכן צור תחילה את התבנית המצטברת שלך לפני שתנסה שוב."
 
 #: aggregate_graphs.php
 msgid "Included in Aggregate"
@@ -354,7 +354,7 @@ msgstr "ללא"
 
 #: aggregate_graphs.php graph.php graphs.php
 msgid "Not Checked"
-msgstr "אין צ&#39;קים"
+msgstr "לא נבדק"
 
 #: aggregate_graphs.php
 msgid "Part of Aggregate"
@@ -379,7 +379,7 @@ msgstr "לחץ על &#39;Return&#39; כדי להמשיך."
 
 #: aggregate_graphs.php aggregate_templates.php graphs.php
 msgid "Prefix Replacement Values"
-msgstr "דפוס החלפה"
+msgstr "ערכי החלפת קידומת"
 
 #: aggregate_graphs.php lib/html.php lib/html_reports.php
 msgid "Preview"
@@ -456,7 +456,7 @@ msgstr "מזהה מסד הנתונים הפנימי עבור אובייקט זה
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
-msgstr "הגרפים המצטברים שנבחרו מייצגים אלמנטים מיותר מתבנית גרף אחת."
+msgstr "נראה שלגרפים המצטברים שנבחרו אין תבניות מצטברות תואמות."
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
@@ -692,7 +692,7 @@ msgstr "הגישה נדחתה! מזהה משתמש אורח %s אינו קיים
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
-msgstr "הגישה נדחתה, חשבון המשתמש מושבת."
+msgstr "הגישה נדחתה! ההתחברות נכשלה."
 
 #: auth_login.php
 msgid "Access Denied!  User account disabled."
@@ -708,7 +708,7 @@ msgstr "הזן את שם המשתמש והסיסמה שלך למטה"
 
 #: auth_login.php
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
-msgstr "הגישה נדחתה, אנא צור קשר עם מנהל Kadupul."
+msgstr "Kadupul אינו תומך עוד במצב ללא אימות. אנא פנה למנהל המערכת שלך."
 
 #: auth_login.php
 msgid "Keep me signed in"
@@ -740,7 +740,7 @@ msgstr "תחום"
 
 #: auth_login.php
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
-msgstr "הגישה נדחתה, אנא צור קשר עם מנהל Kadupul."
+msgstr "לא ניתן לקבוע את תחום ההתחברות או הדומיין של המשתמש. אנא פנה למנהל המערכת שלך."
 
 #: auth_login.php
 msgid "User Login"
@@ -752,7 +752,7 @@ msgstr "המשתמש אומת, אך חשבון התבנית מושבת. שימו
 
 #: auth_login.php
 msgid "You do not have access to any area of Kadupul.  Contact your administrator."
-msgstr "אם אתה מרגיש שזאת טעות. אנא צור קשר עם מנהל Kadupul שלך."
+msgstr "אין לך גישה לאף אזור של Kadupul. פנה למנהל המערכת שלך."
 
 #: auth_profile.php include/global_form.php
 msgid "A more descriptive name for this user, that can include spaces or special characters."
@@ -867,7 +867,7 @@ msgstr "שיטת זמינות"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "לחץ על &#39;המשך&#39; כדי להוסיף את המכשירים הבאים שהתגלו."
+msgstr "לחץ על 'המשך' כדי למחוק את ההתקנים הבאים שהתגלו."
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -1271,7 +1271,7 @@ msgstr "לעולם לא"
 
 #: automation_networks.php
 msgid "Next Start"
-msgstr "לחץ על התחל"
+msgstr "התחלה הבאה"
 
 #: automation_networks.php
 msgid "No Networks Found"
@@ -1312,7 +1312,7 @@ msgstr "פג תוקפו של טופס טווח גילוי רשת זה. פתח ש
 
 #: automation_networks.php pollers.php
 msgid "Threads"
-msgstr "ליכי"
+msgstr "תהליכונים"
 
 #: automation_networks.php
 msgid "Total IPs"
@@ -1336,7 +1336,7 @@ msgstr "אוטומציה של אפשרויות SNMP"
 
 #: automation_snmp.php
 msgid "Automation SNMP Options has been Duplicated."
-msgstr "אוטומציה של אפשרויות SNMP"
+msgstr "אפשרויות SNMP לאוטומציה שוכפלו."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
@@ -1509,7 +1509,7 @@ msgstr "הגדרות שמור ל - Data Collector %d נכשל."
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "הגדרות שמור ל - Data Collector %d נכשל."
+msgstr "שמירת ההגדרות באוסף הנתונים %d דולגה עקב אות חיים."
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -1527,9 +1527,9 @@ msgstr "האם לאפשר שורות קיימות להתעדכן?"
 msgid "Click 'Continue' to delete the following Color"
 msgid_plural "Click 'Continue' to delete the following Colors"
 msgstr[0] "לחץ על 'המשך' כדי למחוק את הצבע הבא"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני הצבעים הבאים"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את הצבעים הבאים"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את הצבעים הבאים"
 
 #: color.php
 msgid "Color Name"
@@ -1552,9 +1552,9 @@ msgstr "לא ניתן למחוק את צבעי השימוש. בשימוש מוג
 msgid "Delete Color"
 msgid_plural "Delete Colors"
 msgstr[0] "מחיקת צבע"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחיקת שני צבעים"
+msgstr[2] "מחיקת צבעים"
+msgstr[3] "מחיקת צבעים"
 
 #: color.php
 msgid "Export Colors"
@@ -1582,7 +1582,7 @@ msgstr "צבע בשם"
 
 #: color.php
 msgid "Named Colors"
-msgstr "& צבע"
+msgstr "צבעים בעלי שם"
 
 #: color.php
 msgid "No Colors Found"
@@ -1710,7 +1710,7 @@ msgstr "ניפוי באגים של מקור הנתונים"
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
-msgstr "מקור הנתונים לא נסקר"
+msgstr "האם מקור הנתונים תואם לקובץ ה-RRD?"
 
 #: data_debug.php
 msgid "Data Source repair received an invalid Data Source ID."
@@ -1767,7 +1767,7 @@ msgstr "האם קיים RRDfile?"
 
 #: data_debug.php templates_import.php
 msgid "Exists"
-msgstr "שגיאה: השדה כבר קיים עבור רשימה זו"
+msgstr "קיים"
 
 #: data_debug.php utilities.php
 msgid "Failed"
@@ -1784,11 +1784,11 @@ msgstr "עבור ' %s' שנמצאו, הבעיה נמצאה ' %s'"
 
 #: data_debug.php
 msgid "Is RRA Folder writeable by poller?"
-msgstr "האם תיקיית RRA ניתן לכתוב על ידי אבקה?"
+msgstr "האם תיקיית ה-RRA ניתנת לכתיבה על ידי תהליך הדגימה?"
 
 #: data_debug.php
 msgid "Is RRDfile writeable by poller?"
-msgstr "האם RRDfile ניתן לכתוב על ידי אבנר?"
+msgstr "האם RRDfile ניתן לכתיבה על ידי תהליך הדגימה?"
 
 #: data_debug.php
 msgid "Is the Data Source set as Active?"
@@ -1824,11 +1824,11 @@ msgstr "לא ישים"
 
 #: data_debug.php
 msgid "Not Checked Yet"
-msgstr "אין צ&#39;קים"
+msgstr "טרם נבדק"
 
 #: data_debug.php
 msgid "Not Debugging"
-msgstr "ניפוי שגיאות"
+msgstr "ללא ניפוי שגיאות"
 
 #: data_debug.php lib/api_automation.php lib/graphs.php templates_import.php
 msgid "Not Found"
@@ -1873,11 +1873,11 @@ msgstr "שלבי תיקון [ %s]"
 
 #: data_debug.php
 msgid "Repair Steps [ Run Fix from Command Line ]"
-msgstr "תיקון שלבים [Run Fix from Command Line]"
+msgstr "שלבי תיקון [ הפעלת תיקון משורת הפקודה ]"
 
 #: data_debug.php
 msgid "Rerun Analysis"
-msgstr "Rerun ניתוח"
+msgstr "הרץ ניתוח מחדש"
 
 #: data_debug.php
 msgid "Results"
@@ -1949,7 +1949,7 @@ msgstr "ממתין על בדיקת מקור הנתונים להשלמה"
 
 #: data_debug.php
 msgid "Waiting on analysis and RRDfile update"
-msgstr "האם RRDfile עודכן?"
+msgstr "ממתין לניתוח ולעדכון RRDfile"
 
 #: data_debug.php lib/installer.php
 msgid "Warning"
@@ -1982,10 +1982,10 @@ msgstr "לחץ על &#39;המשך&#39; כדי למחוק את שדה קלט הנ
 #: data_input.php
 msgid "Click 'Continue' to delete the following Data Input Method"
 msgid_plural "Click 'Continue' to delete the following Data Input Method"
-msgstr[0] "לחץ על 'המשך' כדי למחוק את שיטת הזנת הנתונים הבאה"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את שיטת קלט הנתונים הבאה"
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שתי שיטות קלט הנתונים הבאות"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את שיטות קלט הנתונים הבאות"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את שיטות קלט הנתונים הבאות"
 
 #: data_input.php
 msgid "Click 'Continue' to duplicate the following Data Input Method(s). You can optionally change the title format for the new Data Input Method(s)."
@@ -2015,10 +2015,10 @@ msgstr "מחק שדה קלט נתונים"
 #: data_input.php
 msgid "Delete Data Input Method"
 msgid_plural "Delete Data Input Methods"
-msgstr[0] "מחק שיטת קלט נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחיקת שיטת קלט נתונים"
+msgstr[1] "מחיקת שתי שיטות קלט נתונים"
+msgstr[2] "מחיקת שיטות קלט נתונים"
+msgstr[3] "מחיקת שיטות קלט נתונים"
 
 #: data_input.php
 #, php-format
@@ -2073,7 +2073,7 @@ msgstr "לא נמצאו שיטות קלט נתונים"
 
 #: data_input.php
 msgid "No Input Fields"
-msgstr "שדות קלט"
+msgstr "אין שדות קלט"
 
 #: data_input.php
 msgid "No Output Fields"
@@ -2263,7 +2263,7 @@ msgstr "שם תבנית גרף"
 
 #: data_queries.php
 msgid "If this Graph Template requires the Data Template Data Source to the left, select the correct XML output column and then to enable the mapping either check or toggle here."
-msgstr "אם תבנית גרף זו דורשת את Data Data Template Data בצד שמאל, בחר בעמודה המתאימה של פלט XML ולאחר מכן כדי לאפשר את המיפוי לבדוק או להחליף כאן."
+msgstr "אם תבנית גרף זו דורשת את מקור הנתונים של תבנית הנתונים שמשמאל, בחר בעמודת פלט ה-XML הנכונה ולאחר מכן סמן או הפעל כאן כדי לאפשר את המיפוי."
 
 #: data_queries.php
 msgid "Mapped Graph Templates with Graphs are read only"
@@ -2311,7 +2311,7 @@ msgstr "הזמנה"
 
 #: data_queries.php
 msgid "Remove Data Query Graph Template"
-msgstr "המר לתבנית גרף"
+msgstr "הסר תבנית גרף של שאילתת נתונים"
 
 #: data_queries.php
 msgid "Successfully located XML file"
@@ -2437,7 +2437,7 @@ msgstr[3] "לחץ על 'המשך' כדי להחיל מחדש את השמות ה�
 
 #: data_sources.php
 msgid "Custom Data"
-msgstr "צבעים"
+msgstr "נתונים מותאמים אישית"
 
 #: data_sources.php data_templates.php
 #, php-format
@@ -2476,7 +2476,7 @@ msgstr "מקורות נתונים [ %s]"
 
 #: data_sources.php
 msgid "Data Sources [ All Devices ]"
-msgstr "מקורות נתונים [ללא מכשיר]"
+msgstr "מקורות נתונים [ כל ההתקנים ]"
 
 #: data_sources.php
 msgid "Data Sources [ Non Device Based ]"
@@ -2584,7 +2584,7 @@ msgstr "מכשיר חדש:"
 
 #: data_sources.php
 msgid "No Aggregates"
-msgstr "אגרגטים"
+msgstr "אין אגרגטים"
 
 #: data_sources.php
 msgid "No Data Sources Found"
@@ -2592,7 +2592,7 @@ msgstr "לא נמצאו מקורות נתונים"
 
 #: data_sources.php
 msgid "No Graphs"
-msgstr "גרפים"
+msgstr "אין גרפים"
 
 #: data_sources.php data_templates.php
 msgid "No Input Fields for the Selected Data Input Source"
@@ -2673,7 +2673,7 @@ msgstr "השם של מקור נתונים זה. בדרך כלל נוצר באו�
 
 #: data_sources.php
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
-msgstr "מספר תבניות הגרפים באמצעות שאילתת הנתונים."
+msgstr "מספר הגרפים והגרפים המצטברים המשתמשים במקור הנתונים."
 
 #: data_sources.php
 msgid "Turn Off Data Source Debug Mode."
@@ -2930,7 +2930,7 @@ msgstr "ההרשאה נדחתה"
 
 #: graph_realtime.php
 msgid "Real-time has been disabled by your administrator."
-msgstr "בזמן אמת, מנהל המערכת שלך הושבת."
+msgstr "זמן אמת הושבת על ידי מנהל המערכת שלך."
 
 #: graph_realtime.php
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
@@ -3178,7 +3178,7 @@ msgstr "כותרת גרף זה. בדרך כלל נוצר באופן שיטתי �
 
 #: graph_view.php
 msgid "The device for this Graph."
-msgstr "שם קבוצה זו."
+msgstr "ההתקן עבור גרף זה."
 
 #: graph_view.php graphs.php
 msgid "The size of this Graph when not in Preview mode."
@@ -3238,7 +3238,7 @@ msgstr "מזהה מנחה"
 
 #: graph_xport.php
 msgid "Nth Percentile"
-msgstr "Nth אחוזים"
+msgstr "אחוזון ה-N"
 
 #: graph_xport.php
 msgid "Start Date"
@@ -3381,7 +3381,7 @@ msgstr "ערוך תבנית גרף."
 
 #: graphs.php
 msgid "Empty Graph"
-msgstr "גרף העתק"
+msgstr "גרף ריק"
 
 #: graphs.php
 msgid "Graph Fields"
@@ -3512,7 +3512,7 @@ msgstr "הפעל מצב גרף Debug."
 
 #: graphs.php
 msgid "Unlock Graph."
-msgstr "גרף נעילה."
+msgstr "בטל נעילת גרף."
 
 #: graphs_items.php
 msgid "Choose the Data Source to associate with this Graph Item."
@@ -3727,7 +3727,7 @@ msgstr "מחק תבניות מכשיר"
 
 #: host_templates.php
 msgid "Delete Item from Device Template"
-msgstr "מחק תבניות מכשיר"
+msgstr "מחק פריט מתבנית ההתקן"
 
 #: host_templates.php
 msgid "Device Class"
@@ -3899,7 +3899,7 @@ msgstr "‫%d שעה"
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "%d Hours"
-msgstr "%d לפני מספר ימים"
+msgstr "%d שעות"
 
 #: include/global_arrays.php
 #, php-format
@@ -4053,7 +4053,7 @@ msgstr "6 שעות"
 
 #: include/global_arrays.php
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php
 msgid "AES-128"
@@ -4162,7 +4162,7 @@ msgstr "עוד CDEF"
 
 #: include/global_arrays.php
 msgid "Application Related"
-msgstr "החלת כללי אוטומציה"
+msgstr "קשור ליישום"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -4204,7 +4204,7 @@ msgstr "אוטומציה"
 
 #: include/global_arrays.php
 msgid "Base Graph Order"
-msgstr "יש גרפים"
+msgstr "סדר גרפים בסיסי"
 
 #: include/global_arrays.php utilities.php
 msgid "Boost Status"
@@ -4631,7 +4631,7 @@ msgstr "קישור חיצוני"
 
 #: include/global_arrays.php user_admin.php user_group_admin.php
 msgid "External Links"
-msgstr "ויקיפדיה:קישורים חיצוניים"
+msgstr "קישורים חיצוניים"
 
 #: include/global_arrays.php
 msgid "Facilities Related"
@@ -4813,7 +4813,7 @@ msgstr "אם אתה מכריח שינוי סיסמה, עליך גם לאפשר �
 
 #: include/global_arrays.php
 msgid "Import Packages"
-msgstr "יבאי תבניות"
+msgstr "ייבוא חבילות"
 
 #: include/global_arrays.php
 msgid "Import Templates"
@@ -5045,11 +5045,11 @@ msgstr "קובץ יומן שצוין היה קובץ ארכיון Kadupul והו
 
 #: include/global_arrays.php
 msgid "Logfile Only"
-msgstr "Logfile בלבד"
+msgstr "קובץ יומן בלבד"
 
 #: include/global_arrays.php
 msgid "Logfile and Syslog/Eventlog"
-msgstr "Logfile ו Syslog / Eventlog"
+msgstr "קובץ יומן ו-Syslog/Eventlog"
 
 #: include/global_arrays.php
 msgid "MD5"
@@ -5144,15 +5144,15 @@ msgstr "הזמנה טבעית"
 
 #: include/global_arrays.php
 msgid "Network Firewalls"
-msgstr "מסנני רשת"
+msgstr "חומות אש ברשת"
 
 #: include/global_arrays.php
 msgid "Network Router"
-msgstr "מסנני רשת"
+msgstr "נתב רשת"
 
 #: include/global_arrays.php
 msgid "Network Switch"
-msgstr "מסנני רשת"
+msgstr "מתג רשת"
 
 #: include/global_arrays.php lib/html_form_template.php
 msgid "New Graphs"
@@ -5258,7 +5258,7 @@ msgstr "Ping או SNMP Uptime"
 
 #: include/global_arrays.php
 msgid "Plugin Administration"
-msgstr "יומן מנהל"
+msgstr "ניהול תוספים"
 
 #: include/global_arrays.php
 msgid "Polish"
@@ -5311,7 +5311,7 @@ msgstr "הדפסה סה&quot;כ פריטים מקרא בלבד"
 
 #: include/global_arrays.php
 msgid "Printer Related"
-msgstr "מסד נתונים"
+msgstr "קשור למדפסת"
 
 #: include/global_arrays.php
 msgid "RRD Check"
@@ -5509,7 +5509,7 @@ msgstr "הגדרות / כלי עזר"
 
 #: include/global_arrays.php
 msgid "Show Graph Action Icons"
-msgstr "הצג כותרת גרף"
+msgstr "הצג סמלי פעולה של גרף"
 
 #: include/global_arrays.php
 msgid "Show User Help Links"
@@ -5618,7 +5618,7 @@ msgstr "תמיכה טכנית"
 
 #: include/global_arrays.php
 msgid "Telco Related"
-msgstr "בחירת טמפלייט"
+msgstr "קשור לטלקום"
 
 #: include/global_arrays.php
 msgid "Template Editor"
@@ -5780,7 +5780,7 @@ msgstr "עדכן פרופיל"
 
 #: include/global_arrays.php
 msgid "Use the First Handler Found"
-msgstr "השתמש ב-PHP GetText Handler"
+msgstr "השתמש במטפל הראשון שנמצא"
 
 #: include/global_arrays.php
 msgid "Use the MonoTranslator GetText Handler"
@@ -5836,7 +5836,7 @@ msgstr "קבוצות המשתמש"
 
 #: include/global_arrays.php
 msgid "Utilities"
-msgstr "Comment"
+msgstr "כלי עזר"
 
 #: include/global_arrays.php lib/html.php
 msgid "VDEF"
@@ -6002,7 +6002,7 @@ msgstr "[אף אחד]"
 
 #: include/global_arrays.php
 msgid "[Restart]"
-msgstr "מוגבל"
+msgstr "[הפעלה מחדש]"
 
 #: include/global_arrays.php
 msgid "[Skipped]"
@@ -6090,11 +6090,11 @@ msgstr "לא שווה ל"
 
 #: include/global_arrays.php
 msgid "is not unknown"
-msgstr "פעולות URL"
+msgstr "אינו בלתי ידוע"
 
 #: include/global_arrays.php
 msgid "is unknown"
-msgstr "פעולות URL"
+msgstr "הוא בלתי ידוע"
 
 #: include/global_arrays.php
 msgid "left"
@@ -6190,7 +6190,7 @@ msgstr "ציר שני ימשוך מימין לגרף. היא קשורה לציר
 
 #: include/global_form.php
 msgid "A suitable Class for the Device Template."
-msgstr "שם שימושי עבור תבנית זו."
+msgstr "מחלקה מתאימה עבור תבנית ההתקן."
 
 #: include/global_form.php
 msgid "A useful name for this CDEF."
@@ -6484,7 +6484,7 @@ msgstr "קובע אם המשתמש יכול להתחבר."
 
 #: include/global_form.php
 msgid "Device Site Association"
-msgstr "אתר אתר האגודה"
+msgstr "שיוך התקן לאתר"
 
 #: include/global_form.php
 msgid "Disable Device"
@@ -6634,7 +6634,7 @@ msgstr "גובה תבנית גרף"
 
 #: include/global_form.php include/global_settings.php package_import.php
 msgid "Graph Template Image Format"
-msgstr "תבנית תבנית תבנית גרף"
+msgstr "פורמט תמונה של תבנית גרף"
 
 #: include/global_form.php include/global_settings.php package_import.php
 msgid "Graph Template Width"
@@ -6740,7 +6740,7 @@ msgstr "על מנת למנוע אפקטים נגד טשטוש נגד RRDtool מ�
 
 #: include/global_form.php
 msgid "Include Prefix Text"
-msgstr "כלול אינדקס"
+msgstr "כלול טקסט קידומת"
 
 #: include/global_form.php
 msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
@@ -6772,11 +6772,11 @@ msgstr "האם זה נושא את התבנית?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "שמאל ציר מעצב (- ציר ציר, פורמט&gt;&gt;)"
+msgstr "מעצב ציר שמאלי (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "מקרא כיוון (- ליגת כיוון = &lt;כיוון&gt;)"
+msgstr "כיוון מקרא (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6796,7 +6796,7 @@ msgstr "נעול"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Logarithmic קנה מידה (--logarithmic)"
+msgstr "קנה מידה לוגריתמי (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6808,7 +6808,7 @@ msgstr "אפשרויות כניסה"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "גבול תחתון (- להגביל את הגבול)"
+msgstr "גבול תחתון (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6828,7 +6828,7 @@ msgstr "ערך מקסימלי (&quot;U&quot; ללא מקסימום)"
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
-msgstr "ערך מינימלי (&quot;U&quot; עבור No Minimum)"
+msgstr "ערך מינימלי (\"U\" עבור ללא מינימום)"
 
 #: include/global_form.php
 msgid "Multiple Instances"
@@ -6852,7 +6852,7 @@ msgstr "לא Gridfit (- לא gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
-msgstr "הסר חשבונות נבחרים"
+msgstr "לא נבחר"
 
 #: include/global_form.php pollers.php
 msgid "Notes"
@@ -6968,7 +6968,7 @@ msgstr "גודל RRDfile (בבתים)"
 
 #: include/global_form.php
 msgid "Read Only"
-msgstr "Éxito: Limesurvey חדש נוצר"
+msgstr "קריאה בלבד"
 
 #: include/global_form.php
 msgid "Regular Expression Match"
@@ -7092,7 +7092,7 @@ msgstr "שם משתמש V3 SNMP עבור התקן זה."
 
 #: include/global_form.php
 msgid "Scaling Options"
-msgstr "סובב & 90"
+msgstr "אפשרויות שינוי קנה מידה"
 
 #: include/global_form.php package_import.php
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
@@ -7164,7 +7164,7 @@ msgstr "יציאת TCP או UDP כדי לנסות להתחבר."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
-msgstr "רוחב לשונית (- רוחב פס &lt;פיקסלים&gt;)"
+msgstr "רוחב טאב (--tabwidth &lt;pixels&gt;)"
 
 #: include/global_form.php
 msgid "Test Data Sources"
@@ -7292,7 +7292,7 @@ msgstr "המספר המרבי של אלפיות השנייה Kadupul יחכה ל
 
 #: include/global_form.php
 msgid "The maximum value of data that is allowed to be collected."
-msgstr "הערך המרבי של נתונים שאסור לאסוף."
+msgstr "הערך המרבי של נתונים שמותר לאסוף."
 
 #: include/global_form.php
 msgid "The maximum vertical value for the graph."
@@ -7304,7 +7304,7 @@ msgstr "השיטה Kadupul ישתמשו כדי לקבוע אם המארח זמי
 
 #: include/global_form.php
 msgid "The minimum value of data that is allowed to be collected."
-msgstr "הערך המינימלי של נתונים שאסור לאסוף."
+msgstr "הערך המינימלי של נתונים שמותר לאסוף."
 
 #: include/global_form.php
 msgid "The minimum vertical value for the graph."
@@ -7396,7 +7396,7 @@ msgstr "ערך יחידת הערך (יחידות - מעריך)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "יחידה Grid Unit (--unit / - y-grid)"
+msgstr "ערך יחידת רשת (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7492,11 +7492,11 @@ msgstr "בעת הצגת תרשים המבוסס על RRA המדובר, בריר�
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "כאשר אתה מגדיר את תיוג ציר שמאל, להחיל כלל על פורמט הנתונים. הפורמטים הנתמכים כוללים &quot;numeric&quot; כאשר הנתונים מטופלים כמספריים, &quot;חותמת זמן&quot; שבה ערכים מתפרשים כחותמות זמן של UNIX (מספר שניות מאז ינואר 1970) והמוצגות באמצעות תבנית strftime (ברירת המחדל היא% Y-% m-%d% H :%גברת&quot;). ראה גם - אורך. לבסוף &quot;משך&quot; שבו ערכים מפורשים כמו משך אלפיות השנייה. עיצוב עוקב אחר הכללים של valstrfduration מוסמך הדפסה / GPRINT."
+msgstr "בעת הגדרת תיוג הציר השמאלי, החל כלל על פורמט הנתונים.  הפורמטים הנתמכים כוללים \"numeric\" שבו הנתונים מטופלים כמספריים, \"timestamp\" שבו הערכים מתפרשים כחותמות זמן של UNIX (מספר השניות מאז ינואר 1970) ומיוצגים באמצעות תבנית strftime (ברירת המחדל היא \"%Y-%m-%d %H:%M:%S\").  ראה גם --units-length.  לבסוף, \"duration\" שבו הערכים מתפרשים כמשך זמן באלפיות השנייה.  העיצוב פועל לפי הכללים של PRINT/GPRINT עם ההגדרה valstrfduration."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "כאשר אתה מגדיר את תיוג ציר הנכון, להחיל כלל על פורמט הנתונים. הפורמטים הנתמכים כוללים &quot;numeric&quot; כאשר הנתונים מטופלים כמספריים, &quot;חותמת זמן&quot; שבה ערכים מתפרשים כחותמות זמן של UNIX (מספר שניות מאז ינואר 1970) והמוצגות באמצעות תבנית strftime (ברירת המחדל היא% Y-% m-%d% H :%גברת&quot;). ראה גם - אורך - ו - ציר ציר בפורמט. לבסוף &quot;משך&quot; שבו ערכים מפורשים כמו משך אלפיות השנייה. עיצוב עוקב אחר הכללים של valstrfduration מוסמך הדפסה / GPRINT."
+msgstr "בעת הגדרת תיוג הציר הימני, החל כלל על פורמט הנתונים.  הפורמטים הנתמכים כוללים \"numeric\" שבו הנתונים מטופלים כמספריים, \"timestamp\" שבו הערכים מתפרשים כחותמות זמן של UNIX (מספר השניות מאז ינואר 1970) ומיוצגים באמצעות תבנית strftime (ברירת המחדל היא \"%Y-%m-%d %H:%M:%S\").  ראה גם --units-length וכן --right-axis-format.  לבסוף, \"duration\" שבו הערכים מתפרשים כמשך זמן באלפיות השנייה.  העיצוב פועל לפי הכללים של PRINT/GPRINT עם ההגדרה valstrfduration."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7612,7 +7612,7 @@ msgstr "1 ניסיון"
 
 #: include/global_settings.php
 msgid "1 Change"
-msgstr "1 שנה"
+msgstr "שינוי אחד"
 
 #: include/global_settings.php
 msgid "1 Column"
@@ -7680,7 +7680,7 @@ msgstr "נעילת חשבון"
 
 #: include/global_settings.php
 msgid "Additional Data Collector Settings"
-msgstr "נתונים מרוחקים מצב אספן:"
+msgstr "הגדרות נוספות של אוסף הנתונים"
 
 #: include/global_settings.php lib/html.php
 msgid "Advanced"
@@ -7736,7 +7736,7 @@ msgstr "נתיב פולרים חלופי"
 
 #: include/global_settings.php
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
-msgstr "חשבון יבוטל באופן אוטומטי לאחר מספר דקות. גם אם הוזן הסיסמא הנכונה, החשבון לא יבטל את הנעילה עד להגבלת מגבלת הזמן הזו. מקסימום של 1440 דקות (יום אחד)"
+msgstr "חשבון ישוחרר מנעילה באופן אוטומטי לאחר מספר דקות זה. גם אם הוזנה הסיסמה הנכונה, נעילת החשבון לא תוסר עד שיעבור פרק זמן זה. מקסימום 1440 דקות (יום אחד)"
 
 #: include/global_settings.php
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
@@ -7776,7 +7776,7 @@ msgstr "משתמש Auth (v3)"
 
 #: include/global_settings.php lib/functions.php
 msgid "Authentication"
-msgstr "שיטת האימות לא חוקי"
+msgstr "אימות"
 
 #: include/global_settings.php
 msgid "Authentication Method"
@@ -7836,7 +7836,7 @@ msgstr "גודל גופן ציר"
 
 #: include/global_settings.php
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "הגדרת גופן מקרא"
+msgstr "הגדרות פסק זמן ברקע ותהליכים במקביל"
 
 #: include/global_settings.php
 msgid "Backup Retention"
@@ -7852,7 +7852,7 @@ msgstr "זמן הבסיס"
 
 #: include/global_settings.php
 msgid "Basic Auth Login Failure Message"
-msgstr "קובץ מייפל אותנטי בסיסי"
+msgstr "הודעת כישלון התחברות באימות בסיסי"
 
 #: include/global_settings.php
 msgid "Basic Auth Mapfile"
@@ -7968,11 +7968,11 @@ msgstr "מרווח Cron"
 
 #: include/global_settings.php
 msgid "Custom Date Format"
-msgstr "צבעים"
+msgstr "תבנית תאריך מותאמת אישית"
 
 #: include/global_settings.php
 msgid "Custom Watermark"
-msgstr "צבעים"
+msgstr "סימן מים מותאם אישית"
 
 #: include/global_settings.php
 msgid "DNS Options"
@@ -8056,7 +8056,7 @@ msgstr "סוג גרף ברירת מחדל"
 
 #: include/global_settings.php
 msgid "Default Interface Speed"
-msgstr "סוג גרף ברירת מחדל"
+msgstr "מהירות ממשק ברירת מחדל"
 
 #: include/global_settings.php
 msgid "Default Log Tail Lines"
@@ -8164,7 +8164,7 @@ msgstr "פרטים"
 
 #: include/global_settings.php
 msgid "Device Based"
-msgstr "שם ההתקן:% 1"
+msgstr "מבוסס התקן"
 
 #: include/global_settings.php
 msgid "Device Defaults"
@@ -8172,7 +8172,7 @@ msgstr "הגדרות ברירת מחדל של ההתקן"
 
 #: include/global_settings.php
 msgid "Device Hash/Device ID"
-msgstr "שם ההתקן:% 1"
+msgstr "גיבוב התקן/מזהה התקן"
 
 #: include/global_settings.php
 msgid "Device Hash/Device ID/Data Query ID"
@@ -8184,7 +8184,7 @@ msgstr "התקן"
 
 #: include/global_settings.php
 msgid "Device ID/Data Query ID"
-msgstr "מחק שאילתת נתונים"
+msgstr "מזהה התקן/מזהה שאילתת נתונים"
 
 #: include/global_settings.php
 msgid "Device Threads"
@@ -8192,15 +8192,15 @@ msgstr "אשכולות המכשיר"
 
 #: include/global_settings.php
 msgid "Directory Pattern"
-msgstr "נמצאו מדריך"
+msgstr "דפוס תיקייה"
 
 #: include/global_settings.php
 msgid "Disable RRDtool Watermark"
-msgstr "RRDtool גרף סימן מים"
+msgstr "השבת סימן מים של RRDtool"
 
 #: include/global_settings.php
 msgid "Disable Resource Cache Replication"
-msgstr "לבנות מחדש מטמון משאבים"
+msgstr "השבת שכפול מטמון משאבים"
 
 #: include/global_settings.php
 msgid "Disable increasing OID Check"
@@ -8260,7 +8260,7 @@ msgstr "הפעל Drag-N-Drop"
 
 #: include/global_settings.php
 msgid "Enable Gradient Support"
-msgstr "הפעל דוח"
+msgstr "הפעל תמיכה במעברי צבע"
 
 #: include/global_settings.php
 msgid "Enable Horizontal Scrolling"
@@ -8288,7 +8288,7 @@ msgstr "אפשר על פי דרישה RRD מעדכן"
 
 #: include/global_settings.php
 msgid "Enable RRDfile Check"
-msgstr "הפעל כלל"
+msgstr "הפעל בדיקת RRDfile"
 
 #: include/global_settings.php
 msgid "Enable Real-time Graphing"
@@ -8304,7 +8304,7 @@ msgstr "אפשר צופן קוד עבור טיפול ספציפי של לקוח�
 
 #: include/global_settings.php
 msgid "Enable direct population of poller_output_boost table"
-msgstr "הפעל אוכלוסייה ישירה של tableer_ruput_boost"
+msgstr "הפעל אכלוס ישיר של הטבלה poller_output_boost"
 
 #: include/global_settings.php user_domains.php
 msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed of searches."
@@ -8468,7 +8468,7 @@ msgstr "הגדרות תרשים ממוזערות"
 
 #: include/global_settings.php lib/html_reports.php
 msgid "Graph Timespan"
-msgstr "גרף Timespan"
+msgstr "טווח זמן של גרף"
 
 #: include/global_settings.php
 msgid "Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph's device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations."
@@ -8484,7 +8484,7 @@ msgstr "תרשים / מקור נתונים / הגדרות שאילתת נתונ�
 
 #: include/global_settings.php
 msgid "Graphs Auto Unlock"
-msgstr "כלל התאמה של גרף"
+msgstr "ביטול נעילה אוטומטי של גרפים"
 
 #: include/global_settings.php
 msgid "Graphs Per Page"
@@ -8560,7 +8560,7 @@ msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יו
 
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
-msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יומיים?"
+msgstr "באיזו תדירות יש לבדוק את ה-RRD?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
@@ -8592,7 +8592,7 @@ msgstr "כיצד תרצה ש-Kadupul יציג תאריכים? הגדרה זו ת
 
 #: include/global_settings.php
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
-msgstr "איך היית רוצה שגיאות פלט השדרה נרשמה? האפשרויות הן: &quot;מפורט&quot; אשר דומה רישום cmd.php; &#39;סיכום&#39; המספק את מספר שגיאות הפלט למכשיר; ו &#39;ללא&#39;, אשר אינו מספק ספירת שגיאות."
+msgstr "כיצד תרצה לתעד ביומן את שגיאות הפלט של אוסף הנתונים? האפשרויות כוללות: 'מפורט' המפרט כל שגיאה, 'סיכום' המספק את מספר שגיאות הפלט לכל התקן, ו-'ללא', שאינו מספק ספירת שגיאות."
 
 #: include/global_settings.php
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
@@ -8612,7 +8612,7 @@ msgstr "אם משתמש מאמת ובוחר באפשרות &#39;שמור אות�
 
 #: include/global_settings.php
 msgid "If both main and backup proxy are receivable this option allows to spread all requests against RRDtool."
-msgstr "אם הן proxy הראשי גיבוי הם receivable אפשרות זו מאפשרת להפיץ את כל הבקשות נגד RRDtool."
+msgstr "אם הן הפרוקסי הראשי והן פרוקסי הגיבוי זמינים לקבלת בקשות, אפשרות זו מאפשרת לפזר את כל הבקשות מול RRDtool."
 
 #: include/global_settings.php
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
@@ -8628,7 +8628,7 @@ msgstr "אם הטבלה להגביר את הפלט עולה על גודל זה, 
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "אם אבזר להגביר excceds זה זמן ריצה, אזהרה תוצב ביומן קקטוסים,"
+msgstr "אם מנגנון הדגימה של boost חורג מזמן ריצה זה, תירשם אזהרה ביומן של cacti,"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8648,7 +8648,7 @@ msgstr "אם אתה נתקל בבעיות עם Kadupul&#39;s Data Collectors, ה
 
 #: include/global_settings.php
 msgid "If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process."
-msgstr "אם תבחר באפשרות זו, Kadupul תנסה לאזן את העומס של כל תהליך אבנר על ידי הפצה שווה פריטים פריטים לכל תהליך."
+msgstr "אם תבחר באפשרות זו, Kadupul תנסה לאזן את העומס של כל תהליך דגימה על ידי חלוקה שווה של פריטי הדגימה לכל תהליך."
 
 #: include/global_settings.php
 msgid "If you choose this option, Kadupul will check for output that exceeds Kadupul's ability to store it and issue a warning when it finds it."
@@ -8840,11 +8840,11 @@ msgstr "אורך כותרת מרבי"
 
 #: include/global_settings.php
 msgid "Maximum Tree Width"
-msgstr "אורך כותרת מרבי"
+msgstr "רוחב עץ מרבי"
 
 #: include/global_settings.php
 msgid "Maximum number of days to show business hours"
-msgstr "מספר השורות המרבי לכל דף"
+msgstr "מספר הימים המרבי להצגת שעות עסקים"
 
 #: include/global_settings.php
 msgid "Maximum number of rows per page"
@@ -8920,7 +8920,7 @@ msgstr "מספר תהליכים Boost"
 
 #: include/global_settings.php
 msgid "Number of DSStats Processes"
-msgstr "מספר תהליכים Boost"
+msgstr "מספר תהליכי DSStats"
 
 #: include/global_settings.php
 msgid "Number of PHP Script Servers"
@@ -8928,7 +8928,7 @@ msgstr "מספר שרתי PHP Script"
 
 #: include/global_settings.php
 msgid "Number of RRDfile Check Processes"
-msgstr "מספר תהליכים Boost"
+msgstr "מספר תהליכי בדיקת RRDfile"
 
 #: include/global_settings.php
 msgid "Number of Standard Deviations"
@@ -9032,7 +9032,7 @@ msgstr "נתיב תקלה של רשם נתיב רישום"
 
 #: include/global_settings.php
 msgid "Poller Sync Interval"
-msgstr "סולם המרווח סנכרון"
+msgstr "מרווח סנכרון המתשאל"
 
 #: include/global_settings.php
 msgid "Poller Type"
@@ -9116,7 +9116,7 @@ msgstr "RRDfile אוטומטי ניקוי שיטה"
 
 #: include/global_settings.php
 msgid "RRDfile Backup Directory"
-msgstr "RRDfile גיבוי Directory"
+msgstr "תיקיית גיבוי RRDfile"
 
 #: include/global_settings.php
 msgid "RRDfile Check"
@@ -9312,7 +9312,7 @@ msgstr "‫SSL"
 
 #: include/global_settings.php
 msgid "Script and Script Server Timeout Value"
-msgstr "סקריפט וסקריפט"
+msgstr "ערך פסק זמן של סקריפט ושרת סקריפטים"
 
 #: include/global_settings.php user_domains.php
 msgid "Search Base"
@@ -9336,7 +9336,7 @@ msgstr "חפש בסיס לחיפוש בספריית LDAP, כגון <i>&#39;dc = 
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "מסנן חיפוש שבו ניתן להשתמש כדי לאתר את המשתמש בספריית LDAP, כגון עבור Windows: <i>&#39;((&amp; objectclass = user) (objectcategory = user) (userPrincipalName = &lt;שם משתמש&gt; *))&#39;</i> או עבור OpenLDAP: <i>&#39;((&amp; objectClass חשבון =) (uid = &lt;username&gt;)) &#39;</i> . &#39;&lt;שם משתמש&#39; &#39;מוחלף בשם המשתמש שסופק בהודעת ההתחברות."
+msgstr "מסנן חיפוש לשימוש כדי לאתר את המשתמש בספריית LDAP, כגון עבור Windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> או עבור OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' מוחלף בשם המשתמש שסופק בהנחיית ההתחברות. "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9384,7 +9384,7 @@ msgstr "כתובת אתר של שרת בסיס"
 
 #: include/global_settings.php user_domains.php
 msgid "Server(s)"
-msgstr "Serveurs"
+msgstr "שרת(ים)"
 
 #: include/global_settings.php
 msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
@@ -9400,7 +9400,7 @@ msgstr "האם על LDAP לאמת תעודות TLS בעת קבלתן על ידי
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
-msgstr "האם יש לאסוף נתונים מקור נתונים עבור מערכת זו Kadupul?"
+msgstr "האם להפעיל בדיקת RRDfile עבור מערכת Kadupul זו?"
 
 #: include/global_settings.php
 msgid "Should image caching be enabled?"
@@ -9436,7 +9436,7 @@ msgstr "הצג רק מיקומים שזמינים באתר שנבחר במכשי
 
 #: include/global_settings.php
 msgid "Show only site specific locations"
-msgstr "הגדר כאן אפשרויות ספציפיות לתרשים."
+msgstr "הצג מיקומים ספציפיים לאתר בלבד"
 
 #: include/global_settings.php
 msgid "Simple"
@@ -9448,7 +9448,7 @@ msgstr "אתר"
 
 #: include/global_settings.php
 msgid "Site Security"
-msgstr "אבטחה של SMTP"
+msgstr "אבטחת אתר"
 
 #: include/global_settings.php
 msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
@@ -9484,7 +9484,7 @@ msgstr "השדרה מיקום קובץ בינארי"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
-msgstr "השדרה תצורת קובץ השדרה"
+msgstr "נתיב קובץ התצורה של Spine"
 
 #: include/global_settings.php
 msgid "Standard Deviation"
@@ -9500,7 +9500,7 @@ msgstr "יום תחילת העסק"
 
 #: include/global_settings.php
 msgid "Start of Daily Shift"
-msgstr "התחלה של Shift יומי"
+msgstr "תחילת משמרת יומית"
 
 #: include/global_settings.php
 msgid "Statistics"
@@ -9540,7 +9540,7 @@ msgstr "הגדרות משתמש"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "יציאת TCP / UDP לתקשורת שאינה SSL."
+msgstr "יציאת TCP עבור LDAPS לתקשורת SSL.  ברירת המחדל היא 636."
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
@@ -9668,7 +9668,7 @@ msgstr "ברירת המחדל של תבנית המכשיר משמשת בכל ה�
 
 #: include/global_settings.php
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "ברירת המחדל של רוחב התרשים לשימוש בכל תבניות הגרפים החדשות."
+msgstr "גובה הגרף ברירת המחדל לשימוש בכל תבניות הגרפים החדשות."
 
 #: include/global_settings.php
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -9728,7 +9728,7 @@ msgstr "מספר השורות המוגדר כברירת מחדל כדי לחזו
 
 #: include/global_settings.php
 msgid "The default polling sync interval to use when creating a poller.  This setting will affect how often remote pollers are checked and updated."
-msgstr "ברירת המחדל של סנכרון הסריקה מרווח לשימוש בעת יצירת אבקה. הגדרה זו תשפיע על התדירות שבה בודקים מרוחקים ומעודכנים."
+msgstr "מרווח סנכרון הדגימה ברירת המחדל לשימוש בעת יצירת דוגם.  הגדרה זו תשפיע על התדירות שבה דוגמים מרוחקים נבדקים ומעודכנים."
 
 #: include/global_settings.php
 msgid "The encryption method to use for the Email."
@@ -9796,7 +9796,7 @@ msgstr "פרק הזמן המרבי שסקריפט סטטיסטיקות מקור�
 
 #: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "משך הזמן המרבי שסקריפט Spikekill של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
+msgstr "פרק הזמן המרבי שסקריפט בדיקת ה-RRDfile של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
 #: include/global_settings.php
 msgid "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
@@ -10153,7 +10153,7 @@ msgstr "כדי לייעל את הביצועים, המעלה RRD Updater צריך
 
 #: include/global_settings.php
 msgid "Tree History"
-msgstr "היסטוריית סיסמאות"
+msgstr "היסטוריית עץ"
 
 #: include/global_settings.php
 msgid "Tree Settings"
@@ -10209,7 +10209,7 @@ msgstr "המשתמש הגדיר מספר שורות עבור CLOG כדי הזנ�
 
 #: include/global_settings.php
 msgid "Variance Based w/Outliers Removed"
-msgstr "שונות מבוסס w / outliers הוסרו"
+msgstr "מבוסס שונות עם הסרת חריגים"
 
 #: include/global_settings.php
 msgid "Variance Number of Outliers"
@@ -10573,7 +10573,7 @@ msgstr "איש קשר:"
 
 #: lib/api_device.php
 msgid "Device Availability Check Bypassed"
-msgstr "זמינות זמינות המחסומים"
+msgstr "בדיקת זמינות ההתקן נעקפה"
 
 #: lib/api_device.php
 msgid "Device is Disabled"
@@ -10682,7 +10682,7 @@ msgstr "הגישה נדחתה! מזהה משתמש התבנית %s אינו קי
 
 #: lib/auth.php
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
-msgstr "אימות לא הוגדר בעבר. ניסיתי להגדיר לאימות מקומית, אך לא נמצא חשבון Admintrative."
+msgstr "האימות לא הוגדר בעבר. בוצע ניסיון להגדיר אימות מקומי, אך לא נמצא חשבון מנהל מערכת."
 
 #: lib/auth.php
 msgid "Branch:"
@@ -10726,7 +10726,7 @@ msgstr "גרף:(%s%s)"
 
 #: lib/auth.php
 msgid "Kadupul Login Failure"
-msgstr "Kadupul יומן מסומנת"
+msgstr "כשל התחברות ל-Kadupul"
 
 #: lib/auth.php
 msgid "Restricted"
@@ -10756,12 +10756,12 @@ msgstr "הגישה נדחתה, אנא צור קשר עם מנהל Kadupul."
 #: lib/boost.php
 #, php-format
 msgid "%s Bytes"
-msgstr "%s GBytes"
+msgstr "%s בתים"
 
 #: lib/boost.php
 #, php-format
 msgid "%s KBytes"
-msgstr "%s GBytes"
+msgstr "%s קילובתים"
 
 #: lib/boost.php utilities.php
 #, php-format
@@ -10774,7 +10774,7 @@ msgstr "- מסנן מנהל פעיל"
 
 #: lib/clog_webapi.php
 msgid " - Admin Unfiltered"
-msgstr "- Admin מסוננים"
+msgstr " - ללא סינון (מנהל)"
 
 #: lib/clog_webapi.php
 msgid " - Admin view"
@@ -10811,7 +10811,7 @@ msgstr "הצג"
 
 #: lib/clog_webapi.php
 msgid "Does Not Match"
-msgstr "סיסמאות לא תואמות"
+msgstr "אינו תואם"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Entries"
@@ -10877,7 +10877,7 @@ msgstr "סטטיסטיקה"
 
 #: lib/clog_webapi.php
 msgid "System Device"
-msgstr "סנכרון התקנים"
+msgstr "התקן מערכת"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Tail Lines"
@@ -10893,7 +10893,7 @@ msgstr "אזהרות"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt; חסר בקובץ XML, &#39;ספירת אינדקס שונתה&#39; אינה נתמכת"
+msgstr "&lt;arg_num_indexes&gt; קיים בקובץ XML אך לא הוחזרו נתונים, 'ספירת אינדקס שונתה' אינה נתמכת"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
@@ -10967,7 +10967,7 @@ msgstr "שדה מיון חדש זוהה: &#39; %s&#39; שדה מיון ישן &#
 
 #: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
-msgstr "פרופיל מקור נתונים כפולים"
+msgstr "עדכון מטמון כותרות מקורות הנתונים הושלם"
 
 #: lib/data_query.php
 msgid "Done updating Graph Title Cache"
@@ -11062,7 +11062,7 @@ msgstr "תיקון שדה &#39;שיטה&#39; שגוי עבור &#39; %s&#39; מ�
 #: lib/data_query.php
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr "נמצאו טבלאות%s להמרה"
+msgstr "נמצאו %s מזהי נתונים מקומיים לאימות"
 
 #: lib/data_query.php
 #, php-format
@@ -11136,7 +11136,7 @@ msgstr "מדד השינוי זוהה! נוכחי: %s, הקודםהבא: %s"
 #: lib/data_query.php
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
-msgstr "הסרת אינדקס זוהתה! הקודם Endex: %s"
+msgstr "זוהתה הסרת אינדקס! אינדקס קודם: %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11175,7 +11175,7 @@ msgstr "שדה קלט נמצא &#39; %s&#39; [walk]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "חייב להכיל שדות &lt;כיוון&gt; כיוון &lt;/ כיוון&gt; או &lt;כיוון&gt; קלט / פלט &lt;/ כיוון&gt; בלבד"
+msgstr "חייב להכיל שדות &lt;direction&gt;input&lt;/direction&gt; או &lt;direction&gt;input-output&lt;/direction&gt; בלבד"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field be updated."
@@ -11228,7 +11228,7 @@ msgstr "התוצאה דילגה עבור נתונים @ &#39; %s&#39; [key = &#3
 #: lib/data_query.php
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
-msgstr "שדה מיון לא החזיר נתונים. לא ניתן להמשיך בהדפסה מחדש עבור OID [ %s]"
+msgstr "שדה המיון לא החזיר נתונים עבור OID[%s], מדלג."
 
 #: lib/data_query.php
 #, php-format
@@ -11306,7 +11306,7 @@ msgstr "oid_rewrite ב- OID: &#39; %s&#39; חדש OID: &#39; %s&#39;"
 #: lib/data_query.php
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
-msgstr "oid_rewrite ב- OID: &#39; %s&#39; חדש OID: &#39; %s&#39;"
+msgstr "שכתוב ערך: '%s' => '%s'"
 
 #: lib/database.php
 msgid "Failed to alter password field length, can not continue as may corrupt password"
@@ -11472,7 +11472,7 @@ msgstr "שיטה: SMTP"
 
 #: lib/functions.php lib/html_tree.php
 msgid "Non Query Based"
-msgstr "מבוסס על שאילתה"
+msgstr "לא מבוסס שאילתה"
 
 #: lib/functions.php
 msgid "Not Shown for Security Reasons"
@@ -11559,7 +11559,7 @@ msgstr "ההסרה נכשלה. ניקוי טרנזקציות מתמידות נו
 
 #: lib/graph_item_choices.php
 msgid "No Device - "
-msgstr "התקן"
+msgstr "ללא התקן - "
 
 #: lib/graph_item_editor.php
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
@@ -11575,7 +11575,7 @@ msgstr "התקן מצטבר"
 
 #: lib/graphs.php
 msgid "Damaged Graph"
-msgstr "מקור נתונים, גרף"
+msgstr "גרף פגום"
 
 #: lib/html.php
 msgid "#"
@@ -11625,7 +11625,7 @@ msgstr "אפשר או הגבל את עמודות הטבלה לחריגה ממג�
 
 #: lib/html.php
 msgid "Alpha %"
-msgstr "קרני אלפאElectron capture method"
+msgstr "אלפא %"
 
 #: lib/html.php
 msgid "Always Off"
@@ -11726,7 +11726,7 @@ msgstr "עמוד נוכחי: %s"
 
 #: lib/html.php
 msgid "Dark Color Mode"
-msgstr "לא נמצאו צבעים"
+msgstr "מצב צבע כהה"
 
 #: lib/html.php
 msgid "Dashboards"
@@ -11758,7 +11758,7 @@ msgstr "ערוך את המכשיר"
 
 #: lib/html.php
 msgid "End with"
-msgstr "תאריך סיום"
+msgstr "מסתיים ב-"
 
 #: lib/html.php
 msgid "Enter a regular expression"
@@ -11814,7 +11814,7 @@ msgstr "עזרה בתרגום"
 
 #: lib/html.php
 msgid "Ignore System Color"
-msgstr "צבע פריט"
+msgstr "התעלם מצבע המערכת"
 
 #: lib/html.php
 msgid "Kadupul"
@@ -11842,7 +11842,7 @@ msgstr "הורג לפי RRA"
 
 #: lib/html.php
 msgid "Light Color Mode"
-msgstr "מצב רשימה"
+msgstr "מצב צבע בהיר"
 
 #: lib/html.php managers.php
 msgid "Logs"
@@ -11863,7 +11863,7 @@ msgstr "אין %s"
 
 #: lib/html.php
 msgid "No Source"
-msgstr "מקור"
+msgstr "ללא מקור"
 
 #: lib/html.php
 msgid "No file selected"
@@ -11935,7 +11935,7 @@ msgstr "סיבה:"
 
 #: lib/html.php
 msgid "Remote Server"
-msgstr "הסר את StdDev"
+msgstr "שרת מרוחק"
 
 #: lib/html.php
 msgid "Remove StdDev"
@@ -11975,7 +11975,7 @@ msgstr "תוצאות SpikeKill"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "עַמוּד הַשִׁדרָה"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -11983,7 +11983,7 @@ msgstr "סטיות תקן"
 
 #: lib/html.php
 msgid "Standard Mode"
-msgstr "מצב סריקה"
+msgstr "מצב רגיל"
 
 #: lib/html.php settings.php
 msgid "Templates Selected"
@@ -12007,7 +12007,7 @@ msgstr "חותם זמן"
 
 #: lib/html.php
 msgid "Use System Color"
-msgstr "צבע פריט"
+msgstr "השתמש בצבע מערכת"
 
 #: lib/html.php
 msgid "Zoom In"
@@ -12236,7 +12236,7 @@ msgstr "גרף [תבנית: %s]"
 
 #: lib/html_reports.php
 msgid ", Graph Template: All Templates"
-msgstr "הוסף תבנית גרף לתבנית מכשיר"
+msgstr ", תבנית גרף: כל התבניות"
 
 #: lib/html_reports.php
 #, php-format
@@ -12492,7 +12492,7 @@ msgstr "הפרד בין כתובות מרובות בפסיק (,)"
 
 #: lib/html_reports.php
 msgid "Report Disabled - No Owner"
-msgstr "דווח על נכה - אין בעלים"
+msgstr "הדוח מושבת - אין בעלים"
 
 #: lib/html_reports.php
 msgid "Report Interval"
@@ -12550,7 +12550,7 @@ msgstr "בחר תבנית גרף עבור ההתקן שתשמש לסינון א�
 
 #: lib/html_reports.php
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "בחר התקן כדי לציין תרשים"
+msgstr "בחר אתר לסינון התקנים וגרפים."
 
 #: lib/html_reports.php
 msgid "Select a Tree Branch to use for Graphs and Devices.  Devices will be considered as Branches."
@@ -12735,7 +12735,7 @@ msgstr "שגיאת היסט לקויה של UTF-8!"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
-msgstr "הורדה"
+msgstr "מושבת (Thold)"
 
 #: lib/html_utility.php lib/installer.php
 msgid "Error"
@@ -12777,7 +12777,7 @@ msgstr "שגיאת אימות עבור משתנה %s עם ערך של %s. ראה
 
 #: lib/import.php
 msgid "Damaged"
-msgstr "מקור נתונים, גרף"
+msgstr "פגום"
 
 #: lib/import.php
 msgid "Found Dependency:"
@@ -12915,7 +12915,7 @@ msgstr "קבל את הסכם הרישיון של GPL"
 
 #: lib/installer.php
 msgid "Adding Device to Default Tree"
-msgstr "הגדרות ברירת מחדל של ההתקן"
+msgstr "הוספת התקן לעץ ברירת המחדל"
 
 #: lib/installer.php
 msgid "Adding extra snmp settings for automation"
@@ -13116,7 +13116,7 @@ msgstr "שדרג לאחור מ- <strong> %s</strong> ל- <strong> %s</strong>"
 
 #: lib/installer.php
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
-msgstr "Downgrading צריך להתבצע רק כאשר הכרחי לחלוטין לעשות זאת עשויה לשבור את האינפלציה שלך"
+msgstr "שנמוך גרסה צריך להתבצע רק כאשר הדבר הכרחי לחלוטין, וביצועו עלול לשבש את ההתקנה שלך"
 
 #: lib/installer.php
 msgid "ERROR:"
@@ -13143,7 +13143,7 @@ msgstr "דוגמא:"
 
 #: lib/installer.php utilities.php
 msgid "Engine"
-msgstr "נפח מנוע"
+msgstr "מנוע"
 
 #: lib/installer.php
 msgid "Error Locating Profiles"
@@ -13175,7 +13175,7 @@ msgstr "החלת מרווח ה- cron שצוין נכשלה"
 #: lib/installer.php
 #, php-format
 msgid "Failed to apply specified mode: %s"
-msgstr "החלת המצב שצוין: %s"
+msgstr "נכשל בהחלת המצב שצוין: %s"
 
 #: lib/installer.php
 #, php-format
@@ -13184,7 +13184,7 @@ msgstr "החלת הפרופיל שצוין %s! = %s נכשלה"
 
 #: lib/installer.php
 msgid "Failed to find any automation option set"
-msgstr "נכשל הניסיון למצוא נתונים להעתקה!"
+msgstr "נכשל במציאת ערכת אפשרויות אוטומציה כלשהי"
 
 #: lib/installer.php
 msgid "Failed to find automation network, no changes were made"
@@ -13323,7 +13323,7 @@ msgstr "ערכת נושא לא חוקית הוגדרה"
 
 #: lib/installer.php
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
-msgstr "זה לא מומלץ לשדרג לאחור כמו מבנה מסד הנתונים עשוי להיות עקבי"
+msgstr "לא מומלץ לשנמך גרסה, שכן מבנה מסד הנתונים עלול להיות בלתי עקבי"
 
 #: lib/installer.php
 msgid "It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
@@ -13532,7 +13532,7 @@ msgstr "אנא דווח על כך לקבוצת Kadupul."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "בחר את סוג התבנית שברצונך לייצא מ- Kadupul."
+msgstr "אנא בחר את תבניות ההתקן שברצונך לעדכן במהלך השדרוג."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
@@ -13561,7 +13561,7 @@ msgstr "בעיות אפשריות באישור"
 
 #: lib/installer.php
 msgid "Pre-installation Checks"
-msgstr "בדיקות מתקדמות"
+msgstr "בדיקות טרום-התקנה"
 
 #: lib/installer.php
 #, php-format
@@ -13624,7 +13624,7 @@ msgstr "טבלאות ליבה נדרשות במסד הנתונים חסרות: %
 #: lib/installer.php
 #, php-format
 msgid "Resequencing Automation Option Set %s"
-msgstr "ערכת אפשרויות לאוטומציה של Resequencing %s"
+msgstr "סידור מחדש של ערכת אפשרויות האוטומציה %s"
 
 #: lib/installer.php
 msgid "Resource is not writable"
@@ -13898,7 +13898,7 @@ msgstr "מעדכן רשת אוטומציה (%s), מצב \"%s\" => \"%s\", רשת
 
 #: lib/installer.php
 msgid "Updating remote configuration file"
-msgstr "ממתין לתצורה"
+msgstr "מעדכן קובץ תצורה מרוחק"
 
 #: lib/installer.php
 msgid "Upgrade"
@@ -14264,7 +14264,7 @@ msgstr "ההתקן '%s' נוסף לדוח בהצלחה."
 
 #: lib/reports.php
 msgid "Device not found! Unable to add to Report"
-msgstr "גרף לא נמצא מנסה להוסיף לדוח"
+msgstr "ההתקן לא נמצא! לא ניתן להוסיף לדוח"
 
 #: lib/reports.php
 #, php-format
@@ -14277,7 +14277,7 @@ msgstr "תרשים יישור:"
 
 #: lib/reports.php
 msgid "Graph Timespan:"
-msgstr "תרשים Timespan:"
+msgstr "טווח זמן של גרף:"
 
 #: lib/reports.php
 #, php-format
@@ -14348,7 +14348,7 @@ msgstr "שגיאה: נתיב קובץ ה-RRD של מקור נתונים זה נ�
 
 #: lib/rrd.php
 msgid "Error while parsing the XML of RRDtool dump"
-msgstr "שגיאה בעת ניתוח XML של DDR"
+msgstr "שגיאה בעת פענוח ה-XML של RRDtool dump"
 
 #: lib/rrd.php
 msgid "Error while parsing the XML of rrdtool dump"
@@ -14800,7 +14800,7 @@ msgstr "תחילת חלון:  %s (%s)"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "צור צבירה מתוך תבנית"
+msgstr "ניסיון ליצור גרף ממקור שאינו תבנית"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -14901,7 +14901,7 @@ msgstr "InnoDB תחזיק בזיכרון המערכת כמה שיותר טבלא
 #: lib/utility.php
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
-msgstr "מומלץ להפעיל את InnoDB בכל גרסת %s יותר מ -5.1."
+msgstr "מומלץ מאוד להפעיל את InnoDB בכל גרסת %s הגדולה מ-5.5.3."
 
 #: lib/utility.php
 #, php-format
@@ -15099,7 +15099,7 @@ msgstr "קישורים"
 
 #: links.php
 msgid "New Console Section"
-msgstr "ניו מסוף סעיף"
+msgstr "סעיף מסוף חדש"
 
 #: links.php
 msgid "No Pages Found"
@@ -15176,7 +15176,7 @@ msgstr "התנתקות של Kadupul"
 #: logout.php
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
-msgstr "סגור את הדפדפן שלך או %sLogin שוב %s"
+msgstr "אנא סגור את הדפדפן שלך או %sהתחבר שוב%s"
 
 #: logout.php utilities.php
 #, php-format
@@ -15185,15 +15185,15 @@ msgstr "גרסה %s"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
-msgstr "אתה כבר מחובר מתוך Kadupul עקב פסק זמן הפגישה."
+msgstr "נותקת מ-Kadupul עקב שינוי מצב של אוסף נתונים מרוחק"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a session timeout."
-msgstr "אתה כבר מחובר מתוך Kadupul עקב פסק זמן הפגישה."
+msgstr "נותקת מ-Kadupul עקב תפוגת זמן ההפעלה."
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to an account suspension."
-msgstr "אתה כבר מחובר מתוך Kadupul עקב פסק זמן הפגישה."
+msgstr "נותקת מ-Kadupul עקב השעיית חשבון."
 
 #: managers.php
 #, php-format
@@ -15242,7 +15242,7 @@ msgstr "מזהה"
 
 #: managers.php
 msgid "Kind"
-msgstr "סוגAll other platforms"
+msgstr "סוג"
 
 #: managers.php utilities.php
 msgid "MIB"
@@ -15327,11 +15327,11 @@ msgstr "עליך לבחור לפחות אובייקט התראה אחד."
 
 #: package_import.php
 msgid "Automatically Trust Signer"
-msgstr "הוסף אוטומטית ל Kadupul"
+msgstr "אמון אוטומטי בחותם"
 
 #: package_import.php templates_import.php
 msgid "Changes/Diffferences"
-msgstr "שינוי התקן"
+msgstr "שינויים/הבדלים"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
@@ -15339,7 +15339,7 @@ msgstr "בדוק את קובץ מאגר החבילות עבור קבצים שא�
 
 #: package_import.php
 msgid "Copyright"
-msgstr "ימין"
+msgstr "זכויות יוצרים"
 
 #: package_import.php
 msgid "Device class"
@@ -15351,7 +15351,7 @@ msgstr "הבדלים"
 
 #: package_import.php
 msgid "Error in Package"
-msgstr "שגיאה בשאילתת הנתונים"
+msgstr "שגיאה בחבילה"
 
 #: package_import.php
 msgid "Error: Invalid file path."
@@ -15407,7 +15407,7 @@ msgstr "מידע על מפתח החבילה לא נמצא"
 
 #: package_import.php
 msgid "Package XML File Damaged."
-msgstr "חבילת קבצים"
+msgstr "קובץ ה-XML של החבילה פגום."
 
 #: package_import.php
 msgid "Packages Details"
@@ -15716,7 +15716,7 @@ msgstr "אזהרה: מסד הנתונים הראשי של Kadupul %s לא מקו
 
 #: poller_boost.php
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
-msgstr "אזהרה: זוהתה הצפה של Booster Boost, אפשרי התרסקות עגלת עגלות"
+msgstr "אזהרה: זוהתה חריגת Poller Boost, תיתכן קריסה של Boost Poller"
 
 #: pollers.php
 msgid "Avg/Max"
@@ -15729,10 +15729,10 @@ msgstr "נקה סטטיסטיקה"
 #: pollers.php
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "מעמדו של אספן נתונים זה."
-msgstr[1] "מעמדו של אספן נתונים זה."
-msgstr[2] "מעמדו של אספן נתונים זה."
-msgstr[3] "מעמדו של אספן נתונים זה."
+msgstr[0] "ניקוי סטטיסטיקות עבור אוסף נתונים"
+msgstr[1] "ניקוי סטטיסטיקות עבור שני אוספי נתונים"
+msgstr[2] "ניקוי סטטיסטיקות עבור אוספי נתונים"
+msgstr[3] "ניקוי סטטיסטיקות עבור אוספי נתונים"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
@@ -15796,7 +15796,7 @@ msgstr "מידע אספן נתונים"
 
 #: pollers.php
 msgid "Data Collector Statistics cleared."
-msgstr "נתונים סטטיסטיים"
+msgstr "סטטיסטיקת אוסף הנתונים נוקתה."
 
 #: pollers.php
 msgid "Delete Data Collector"
@@ -15892,7 +15892,7 @@ msgstr "מרחוק נמל מסד נתונים"
 
 #: pollers.php
 msgid "Remote Database Retries"
-msgstr "משתמש מסד נתונים מרחוק"
+msgstr "ניסיונות חוזרים למסד נתונים מרוחק"
 
 #: pollers.php
 msgid "Remote Database SSL"
@@ -15924,7 +15924,7 @@ msgstr "סקריפטים"
 
 #: pollers.php
 msgid "Servers"
-msgstr "Serveurs"
+msgstr "שרתים"
 
 #: pollers.php
 #, php-format
@@ -16037,7 +16037,7 @@ msgstr "מספר שיחות שרת הסקריפט המשויכות לאספן נ
 
 #: pollers.php
 msgid "The number of times to attempt to retry to connect to the remote database."
-msgstr "שם המשתמש שישמש לחיבור למסד הנתונים המרוחק."
+msgstr "מספר הפעמים לנסות להתחבר מחדש למסד הנתונים המרוחק."
 
 #: pollers.php
 msgid "The polling sync interval in use.  This setting will affect how often this poller is checked and updated."
@@ -16274,18 +16274,18 @@ msgstr "עיר"
 #: sites.php
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
 msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את האתר הבא.  שים לב, כל המכשירים ינותקו מאתר זה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את האתר הבא.  שים לב, כל ההתקנים ינותקו מאתר זה."
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני האתרים הבאים.  שים לב, כל ההתקנים ינותקו מאתרים אלה."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את כל האתרים הבאים.  שים לב, כל ההתקנים ינותקו מאתרים אלה."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את כל האתרים הבאים.  שים לב, כל ההתקנים ינותקו מאתרים אלה."
 
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
 msgstr[0] "לחץ על 'המשך' כדי לשכפל את האתר הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את שני האתרים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את כל האתרים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את כל האתרים הבאים."
 
 #: sites.php
 msgid "Country"
@@ -16295,9 +16295,9 @@ msgstr "מדינה"
 msgid "Delete Site"
 msgid_plural "Delete Sites"
 msgstr[0] "מחיקת אתר"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחיקת שני אתרים"
+msgstr[2] "מחיקת אתרים"
+msgstr[3] "מחיקת אתרים"
 
 #: sites.php
 msgid "Duplicate Site"
@@ -16601,7 +16601,7 @@ msgstr "שגיאה"
 
 #: templates_import.php
 msgid "Error in Template"
-msgstr "תבניות ייצוא"
+msgstr "שגיאה בתבנית"
 
 #: templates_import.php
 msgid "Failed to access temporary folder, import functionality is disabled"
@@ -16630,7 +16630,7 @@ msgstr "התקיימו: %d"
 
 #: templates_import.php
 msgid "Not Readable"
-msgstr "בלתי ניתן לכתיבה"
+msgstr "לא ניתן לקריאה"
 
 #: templates_import.php
 #, php-format
@@ -16881,7 +16881,7 @@ msgstr "עצים [חדש]"
 #: tree.php
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "נעול"
+msgstr "בטל נעילה"
 
 #: tree.php
 msgctxt "dropdown action"
@@ -16915,7 +16915,7 @@ msgstr "אין לך הרשאה לשנות עץ זה."
 #: tree.php
 msgctxt "ordering of tree items"
 msgid "alpha"
-msgstr "קרני אלפאElectron capture method"
+msgstr "אלפביתי"
 
 #: tree.php
 msgctxt "ordering of tree items"
@@ -16947,11 +16947,11 @@ msgstr "< לפני פחות משבוע"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>הערה:</b> מדיניות התרשים של המערכת היא &quot;מוגבלת&quot;, כלומר למשתמש יש גישה לגרף או לתבנית גרף ולגרף כדי לקבל גישה לגרף"
+msgstr "<b>הערה:</b> מדיניות הגרפים של המערכת היא 'התקן', כלומר על המשתמש להיות בעל גישה לגרף או להתקן כדי לקבל גישה לגרף"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>הערה:</b> מדיניות התרשים של המערכת היא &quot;מתירנית&quot; כלומר, על המשתמש להיות בעל גישה לפחות לאחד מהתבניות של גרף, מכשיר או גרף כדי לקבל גישה לגרף"
+msgstr "<b>הערה:</b> מדיניות הגרפים של המערכת היא 'תבנית גרף', כלומר על המשתמש להיות בעל גישה לגרף או לתבנית הגרף כדי לקבל גישה לגרף"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
@@ -17306,11 +17306,11 @@ msgstr "שם משתמש"
 
 #: user_admin.php
 msgid "You are not allowed to delete the current login account"
-msgstr "אינך מורשה לשנות את הסיסמה שלך."
+msgstr "אינך מורשה למחוק את חשבון ההתחברות הנוכחי"
 
 #: user_admin.php
 msgid "You are not allowed to disable the current login account"
-msgstr "אינך מורשה לשנות את הסיסמה שלך."
+msgstr "אינך מורשה להשבית את חשבון ההתחברות הנוכחי"
 
 #: user_admin.php
 msgid "You are not allowed to disable the primary administrator account"
@@ -17450,7 +17450,7 @@ msgstr "חפש בסיס לחיפוש במדריך LDAP, כגון <i>&quot;dc = w
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "מסנן חיפוש לשימוש כדי לאתר את המשתמש בספריית LDAP, כגון עבור Windows: <i>&quot;(&amp; objectclass = user) (objectcategory = user) (userPrincipalName = &lt;שם משתמש&gt; *))</i> או עבור OpenLDAP: <i>&quot; (&amp; חשבון =) (uid = &lt;שם משתמש&gt;)) &quot;</i> . &quot;&lt;שם משתמש&quot; מוחלף בשם המשתמש שסופק בהודעת ההתחברות."
+msgstr "מסנן חיפוש לשימוש כדי לאתר את המשתמש בספריית LDAP, כגון עבור Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> או עבור OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" מוחלף בשם המשתמש שסופק בהנחיית ההתחברות."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."
@@ -17799,7 +17799,7 @@ msgstr "לא ניתן לפתוח את המדריך"
 
 #: utilities.php
 msgid "ChangeLog"
-msgstr "ChangeLogLanguage"
+msgstr "יומן שינויים"
 
 #: utilities.php
 msgctxt "Button: reset filter settings"
@@ -17972,7 +17972,7 @@ msgstr "זה מאוד הציע לך לשנות לך php.ini memory_limit ל %s �
 
 #: utilities.php
 msgid "Kadupul Log Cleared"
-msgstr "Kadupul יומן מסומנת"
+msgstr "יומן Kadupul נוקה"
 
 #: utilities.php
 msgid "Kadupul OS"
@@ -17988,7 +17988,7 @@ msgstr "Kadupul דף תמיכה טכנית. בשימוש על ידי מפתחי�
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "זמן התחלה אחרון:"
+msgstr "זמן סיום אחרון:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -18202,7 +18202,7 @@ msgstr "מחק"
 
 #: utilities.php
 msgid "Purge Data Source Statistics"
-msgstr "נתונים סטטיסטיים"
+msgstr "ניקוי סטטיסטיקות מקור נתונים"
 
 #: utilities.php
 msgid "Purge User Log"
@@ -18254,7 +18254,7 @@ msgstr "קולט"
 
 #: utilities.php
 msgid "Records"
-msgstr "הסוכן רשומות יומן עבור הפניה זו"
+msgstr "רשומות"
 
 #: utilities.php
 #, php-format
@@ -18263,7 +18263,7 @@ msgstr "רשומות: %s (שורות ds), זמן: %s (שניות), GetRows: %s (
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "צמצם את זיכרון MySQL/MariaDB לפחות מ -80% of זיכרון מערכת.  שמור זיכרון מטמון נוסף עבור קבצי RRD אם מסד הנתונים נמצא באותה מערכת כמו קבצי RRD.  ראה סיכומי ליבה ולקוחות להלן להסבר על שיטת החישוב."
+msgstr "צמצם את זיכרון MySQL/MariaDB לפחות מ-80% מזיכרון המערכת.  שמור זיכרון מטמון נוסף עבור קבצי RRD אם מסד הנתונים נמצא באותה מערכת כמו קבצי ה-RRD.  ראה את סיכומי הליבה והלקוחות להלן להסבר על שיטת החישוב."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"
@@ -18279,7 +18279,7 @@ msgstr "מרווח רענון"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
-msgstr "ניפוי מקור נתונים"
+msgstr "מקורות נתונים שנותרו:"
 
 #: utilities.php
 msgid "Result"
@@ -18346,7 +18346,7 @@ msgstr "סטטוס: <span class=\"deviceUp\"><b>פועל</b></span>, נותר: %
 
 #: utilities.php
 msgid "Success - Password"
-msgstr "הצלחה - Pswd"
+msgstr "הצלחה - סיסמה"
 
 #: utilities.php
 msgid "Success - Password Change"
@@ -18415,7 +18415,7 @@ msgstr "ערך זיכרון מוצע זה מחושב על סמך מספר מקו
 
 #: utilities.php
 msgid "Threads: "
-msgstr "ליכי"
+msgstr "תהליכונים: "
 
 #: utilities.php
 msgid "Timed Out"
@@ -18493,26 +18493,26 @@ msgstr "לחץ על &#39;המשך&#39; כדי למחוק את הקבצים הב�
 #: vdef.php
 msgid "Click 'Continue' to delete the following VDEF."
 msgid_plural "Click 'Continue' to delete following VDEFs."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את ה - VDEF הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את ה-VDEF הבא."
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני ה-VDEFs הבאים."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את ה-VDEFs הבאים."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את ה-VDEFs הבאים."
 
 #: vdef.php
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
-msgstr[0] "לחץ על 'המשך' כדי לשכפל את ה - VDEF הבא. ניתן לשנות את פורמט הכותרת עבור ה - VDEF החדש."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי לשכפל את ה-VDEF הבא. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEF החדש."
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את שני ה-VDEFs הבאים. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEFs החדשים."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את ה-VDEFs הבאים. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEFs החדשים."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את ה-VDEFs הבאים. ניתן לשנות באופן אופציונלי את פורמט הכותרת עבור ה-VDEFs החדשים."
 
 #: vdef.php
 msgid "Delete VDEF"
 msgid_plural "Delete VDEFs"
 msgstr[0] "מחיקת VDEF"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחיקת שני VDEFs"
+msgstr[2] "מחיקת VDEFs"
+msgstr[3] "מחיקת VDEFs"
 
 #: vdef.php
 msgid "Delete VDEF Item"
@@ -18522,9 +18522,9 @@ msgstr "מחק פריט VDEF"
 msgid "Duplicate VDEF"
 msgid_plural "Duplicate VDEFs"
 msgstr[0] "שכפול VDEF"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "שכפול שני VDEFs"
+msgstr[2] "שכפול VDEFs"
+msgstr[3] "שכפול VDEFs"
 
 #: vdef.php
 msgid "Enter a value for this VDEF item."
