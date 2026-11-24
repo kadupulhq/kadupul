@@ -111,7 +111,7 @@ msgstr "حذف"
 
 #: aggregate_graphs.php:43
 msgid "Convert to Normal Graph"
-msgstr "تحويل إلى LINE1 Graph"
+msgstr "تحويل إلى رسم بياني عادي"
 
 #: aggregate_graphs.php:44 graphs.php:59
 msgid "Place Graphs on Report"
@@ -131,7 +131,7 @@ msgstr "مشارك مع التجميع"
 
 #: aggregate_graphs.php:51
 msgid "Disassociate with Aggregate"
-msgstr "لا تتفق مع الركام"
+msgstr "فك الارتباط بالتجميع"
 
 #: aggregate_graphs.php:84 graphs.php:212 host.php:273
 #, php-format
@@ -298,7 +298,7 @@ msgstr "زمن"
 
 #: aggregate_graphs.php:480 graph_view.php:901 graphs.php:1354 host.php:598
 msgid "Align"
-msgstr "محاذاة نص العنوان بطل"
+msgstr "محاذاة"
 
 #: aggregate_graphs.php:484 graphs.php:1358
 msgid "Add Graphs to Report"
@@ -310,11 +310,11 @@ msgstr "ليس لديك حاليا أي تقارير محددة."
 
 #: aggregate_graphs.php:492
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "انقر فوق &quot;متابعة&quot; لدمج الرسم البياني الإجمالي (الرسوم) التجميعية في Graph Aggregate واحد."
+msgstr "انقر فوق 'متابعة' لتحويل الرسم البياني التجميعي (الرسوم البيانية التجميعية) التالية إلى رسم بياني عادي."
 
 #: aggregate_graphs.php:497
 msgid "Convert to normal Graph(s)"
-msgstr "تحويل إلى LINE1 Graph"
+msgstr "تحويل إلى رسم (رسوم) بيانية عادية"
 
 #: aggregate_graphs.php:501
 msgid "Click 'Continue' to associate the following Graph(s) with the Aggregate Graph."
@@ -330,7 +330,7 @@ msgstr "انقر فوق &quot;متابعة&quot; لفصل الرسم البيا�
 
 #: aggregate_graphs.php:515
 msgid "Dis-Associate Graph(s)"
-msgstr "Dis-Associate Graph (s)"
+msgstr "إلغاء ربط الرسم البياني (الرسوم البيانية)"
 
 #: aggregate_graphs.php:519
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
@@ -352,7 +352,7 @@ msgstr "[عدل: %s]"
 
 #: aggregate_graphs.php:603 aggregate_graphs.php:711 aggregate_graphs.php:713
 msgid "Aggregate Graph does not Exist"
-msgstr "اعدادات الرسم الكلي"
+msgstr "الرسم البياني التجميعي غير موجود"
 
 #: aggregate_graphs.php:618 aggregate_graphs.php:625 lib/html_reports.php:1498
 #: lib/html_reports.php:1500 utilities.php:2279
@@ -387,7 +387,7 @@ msgstr "اظهار تفاصيل البند"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "معاينة التجميع [٪ s]"
+msgstr "معاينة التجميع غير موجودة"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -413,7 +413,7 @@ msgstr "الرسم البياني المجمّع %s"
 
 #: aggregate_graphs.php:790 aggregate_templates.php:416 graphs.php:1130
 msgid "Prefix Replacement Values"
-msgstr "نمط الاستبدال"
+msgstr "قيم استبدال البادئة"
 
 #: aggregate_graphs.php:791 aggregate_templates.php:417 graphs.php:1131
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
@@ -626,7 +626,7 @@ msgstr "المدرجة في التجميع"
 #: graphs.php:2364 lib/html_graph.php:354 lib/html_tree.php:1173
 #: lib/spikekill.php:1782
 msgid "Size"
-msgstr "مداخل خلفية الحجم"
+msgstr "الحجم"
 
 #: aggregate_graphs.php:1322 aggregate_templates.php:735
 #: automation_tree_rules.php:784 cdef.php:914 color.php:801 color.php:803
@@ -663,7 +663,7 @@ msgstr "لا توجد الرسوم البيانية"
 
 #: aggregate_graphs.php:1518
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "[تطبيق قائمة الرسم البياني المخصص - تصفية قائمة FROM]"
+msgstr " [ تم تطبيق قائمة الرسوم البيانية المخصصة - مسح لإعادة التعيين ]"
 
 #: aggregate_graphs.php:1518 aggregate_graphs.php:1632
 #: include/global_arrays.php:2792
@@ -749,7 +749,7 @@ msgstr "قالب التجميع"
 
 #: aggregate_graphs.php:1643
 msgid "The Aggregate Template that this Aggregate Graphs is based upon"
-msgstr "The Aggregate Template that that Aggregate Graphs based on"
+msgstr "القالب التجميعي الذي يستند إليه هذا الرسم البياني التجميعي"
 
 #: aggregate_graphs.php:1662
 msgid "No Aggregate Graphs Found"
@@ -808,7 +808,7 @@ msgstr "لا يمكن حذف القوالب التجميعية قيد الاست
 #: gprint_presets.php:487 graph_templates.php:905 host_templates.php:1096
 #: vdef.php:928
 msgid "Deletable"
-msgstr "به deletable"
+msgstr "قابل للحذف"
 
 #: aggregate_templates.php:719 cdef.php:898 color.php:779 data_queries.php:1369
 #: data_queries.php:1649 gprint_presets.php:492 graph_templates.php:910
@@ -1168,7 +1168,7 @@ msgstr "إضافة جهاز (أجهزة)"
 
 #: automation_devices.php:229
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "انقر فوق &quot;متابعة&quot; لإضافة الأجهزة (الأجهزة) المكتشفة التالية."
+msgstr "انقر فوق 'متابعة' لحذف الجهاز (الأجهزة) المكتشفة التالية."
 
 #: automation_devices.php:234 host.php:550
 msgid "Delete Device(s)"
@@ -2113,7 +2113,7 @@ msgstr "مؤشر التقدم"
 
 #: automation_networks.php:1101
 msgid "Up/SNMP Hosts"
-msgstr "Up / SNMP Hosts"
+msgstr "المضيفون المتصلون / مضيفو SNMP"
 
 #: automation_networks.php:1102 pollers.php:113
 msgid "Threads"
@@ -2202,7 +2202,7 @@ msgstr "اسم"
 
 #: automation_snmp.php:301
 msgid "Automation SNMP Options has been Duplicated."
-msgstr "أتمتة SNMP خيارات"
+msgstr "تم تكرار خيارات أتمتة SNMP."
 
 #: automation_snmp.php:303
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -2592,7 +2592,7 @@ msgstr "تحذير: Cacti Daemon PID ["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
-msgstr "Cacti System Utilities"
+msgstr "تنبيه نظام Cacti"
 
 #: cactid.php:132
 msgid "Notice: Cacti Daemon PID["
@@ -2622,7 +2622,7 @@ msgstr[5] "حذف عناصر CDEF"
 msgid "Click 'Continue' to duplicate the following CDEF. You can optionally change the title format for the new CDEF."
 msgid_plural "Click 'Continue' to duplicate the following CDEFs. You can optionally change the title format for the new CDEFs."
 msgstr[0] "انقر على 'متابعة' لتكرار عناصر CDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر CDEF الجديدة."
-msgstr[1] "انقر على 'متابعة' لتكرار CDEF التالي. يمكنك اختياريًا تغيير تنسيق العنوان لـ CDEF الجديد."
+msgstr[1] "انقر على 'متابعة' لتكرار عنصر CDEF التالي. يمكنك اختياريًا تغيير تنسيق العنوان لعنصر CDEF الجديد."
 msgstr[2] "انقر على 'متابعة' لتكرار عنصرَي CDEF التاليين. يمكنك اختياريًا تغيير تنسيق العنوان لعنصرَي CDEF الجديدين."
 msgstr[3] "انقر على 'متابعة' لتكرار عناصر CDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر CDEF الجديدة."
 msgstr[4] "انقر على 'متابعة' لتكرار عناصر CDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر CDEF الجديدة."
@@ -3191,7 +3191,7 @@ msgstr "مصادر البيانات"
 
 #: data_debug.php:642 data_debug.php:1110
 msgid "Not Debugging"
-msgstr "تصحيح الأخطاء"
+msgstr "ليس في وضع التصحيح"
 
 #: data_debug.php:658
 msgid "No Checks"
@@ -3216,7 +3216,7 @@ msgstr "لا يوجد مبدئي! في انتظار تحديث RRDfile"
 
 #: data_debug.php:749
 msgid "Waiting on analysis and RRDfile update"
-msgstr "هل تم تحديث RRDfile؟"
+msgstr "في انتظار التحليل وتحديث ملف RRDfile"
 
 #: data_debug.php:756
 msgid "RRDfile Owner"
@@ -3268,7 +3268,7 @@ msgstr "هل كنا قادرين على تحويل العنوان؟"
 
 #: data_debug.php:817
 msgid "Data Source matches the RRDfile?"
-msgstr "لم يتم استقصاء مصدر البيانات"
+msgstr "هل يتطابق مصدر البيانات مع ملف RRDfile؟"
 
 #: data_debug.php:831
 #, php-format
@@ -3312,7 +3312,7 @@ msgstr "لم يتم التعيين"
 
 #: data_debug.php:888 data_debug.php:939
 msgid "Data Source Repair Recommendations"
-msgstr "حقول مصدر البيانات"
+msgstr "توصيات إصلاح مصدر البيانات"
 
 #: data_debug.php:893
 msgid "Issue"
@@ -3355,7 +3355,7 @@ msgstr "مستكشف أخطاء مصدر البيانات ومصلحها [ %s ]"
 
 #: data_debug.php:1029
 msgid "No Device"
-msgstr "الجهاز:"
+msgstr "لا يوجد جهاز"
 
 #: data_debug.php:1068
 msgid "Delete All Checks"
@@ -3673,7 +3673,7 @@ msgstr "اسم الرسم البياني: %s"
 
 #: data_queries.php:685
 msgid "Remove Data Query Graph Template"
-msgstr "تحويل إلى قالب الرسم البياني"
+msgstr "إزالة قالب الرسم البياني لاستعلام البيانات"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
@@ -3686,7 +3686,7 @@ msgstr "قوالب الرسم البياني / البيانات المرتبطة
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "قوالب الرسم البياني / البيانات المرتبطة [تحرير:٪ s]"
+msgstr "قوالب الرسوم البيانية / البيانات المرتبطة [جديد]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -3888,7 +3888,7 @@ msgstr "لا يمكن حذف ملفات تعريف مصادر البيانات �
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
-msgstr "فشل واحد أو أكثر من الإصلاحات RRDfile. انظر سجل Cacti عن الأخطاء."
+msgstr "تعذر تكرار ملف تعريف مصدر البيانات. تحقق من سجل Cacti بحثًا عن الأخطاء."
 
 #: data_source_profiles.php:507
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
@@ -3944,7 +3944,7 @@ msgstr "الاحتفاظ بالبيانات"
 #: data_source_profiles.php:763 include/global_settings.php:1023
 #: lib/html_reports.php:1168
 msgid "Graph Timespan"
-msgstr "الرسم البياني Timespan"
+msgstr "النطاق الزمني للرسم البياني"
 
 #: data_source_profiles.php:764
 msgid "Steps"
@@ -4386,7 +4386,7 @@ msgstr "1 دقيقة"
 
 #: data_sources.php:1460
 msgid "Data Sources [ All Devices ]"
-msgstr "مصادر البيانات [لا يوجد جهاز]"
+msgstr "مصادر البيانات [ جميع الأجهزة ]"
 
 #: data_sources.php:1462
 msgid "Data Sources [ Non Device Based ]"
@@ -4423,7 +4423,7 @@ msgstr "معرف قاعدة البيانات الداخلية لمصدر الب�
 
 #: data_sources.php:1740
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
-msgstr "عدد قوالب الرسومات البيانية التي تستخدم هذا الاستعلام عن البيانات."
+msgstr "عدد الرسوم البيانية والرسوم البيانية التجميعية التي تستخدم مصدر البيانات."
 
 #: data_sources.php:1746
 msgid "The frequency that data is collected for this Data Source."
@@ -4451,7 +4451,7 @@ msgstr "لم يتم العثور على مصادر البيانات"
 
 #: data_sources.php:1873
 msgid "No Graphs"
-msgstr "الرسوم"
+msgstr "لا توجد رسوم بيانية"
 
 #: data_sources.php:1877 include/global_arrays.php:1013
 msgid "Aggregates"
@@ -4459,7 +4459,7 @@ msgstr "المجاميع"
 
 #: data_sources.php:1879
 msgid "No Aggregates"
-msgstr "المجاميع"
+msgstr "لا توجد تجميعات"
 
 #: data_templates.php:36
 msgid "Change Profile"
@@ -4942,7 +4942,7 @@ msgstr "العنصر #%s"
 #: graph_templates_items.php:162 graph_templates_items.php:188
 #: graphs_items.php:167
 msgid "Cur:"
-msgstr "لئيم:"
+msgstr "الحالي:"
 
 #: graph_templates_items.php:169 graph_templates_items.php:195
 #: graphs_items.php:174
@@ -5037,7 +5037,7 @@ msgstr "عنوان هذا الرسم البياني.  يتم إنشاؤها بر
 
 #: graph_view.php:805
 msgid "The device for this Graph."
-msgstr "اسم هذه المجموعة."
+msgstr "الجهاز الخاص بهذا الرسم البياني."
 
 #: graph_view.php:808 graphs.php:2352
 msgid "Source Type"
@@ -5148,7 +5148,7 @@ msgstr "تحويل إلى قالب الرسم البياني"
 
 #: graphs.php:157 graphs.php:172
 msgid "No Device - "
-msgstr "جهاز"
+msgstr "لا يوجد جهاز - "
 
 #: graphs.php:268
 #, php-format
@@ -5341,7 +5341,7 @@ msgstr "مجالات البند الرسم البياني"
 
 #: graphs.php:2073
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "[تطبيق قائمة الرسم البياني المخصص - تصفية قائمة FROM]"
+msgstr "إدارة الرسوم البيانية [ تم تطبيق قائمة الرسوم البيانية المخصصة - امسح لإعادة التعيين ]"
 
 #: graphs.php:2075
 msgid "Graph Management [ All Devices ]"
@@ -5349,7 +5349,7 @@ msgstr "رسومات بيانية جديدة لـ [جميع الأجهزة]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "إدارة مجموعة المستخدمين [تحرير:٪ s]"
+msgstr "إدارة الرسوم البيانية [ غير معتمد على جهاز ]"
 
 #: graphs.php:2080
 #, php-format
@@ -5370,7 +5370,7 @@ msgstr "معرف قاعدة البيانات الداخلي لهذا الرسم 
 
 #: graphs.php:2393
 msgid "Empty Graph"
-msgstr "نسخ الرسم البياني"
+msgstr "رسم بياني فارغ"
 
 #: graphs_items.php:362
 msgid "Data Sources [No Device]"
@@ -5410,7 +5410,7 @@ msgstr "رسومات بيانية جديدة لـ [جميع الأجهزة]"
 
 #: graphs_new.php:357
 msgid "New Graphs for None Host Type"
-msgstr "رسومات بيانية جديدة لـ None Host Type"
+msgstr "رسوم بيانية جديدة لنوع المضيف بلا"
 
 #: graphs_new.php:387 lib/html.php:2858
 msgid "Filter Settings Saved"
@@ -5558,7 +5558,7 @@ msgstr "وضع الجهاز في التقرير"
 
 #: host.php:141
 msgid "Data Query Re-indexed."
-msgstr "فهرس استعلام البيانات"
+msgstr "تمت إعادة فهرسة استعلام البيانات."
 
 #: host.php:151
 msgid "Device Data Query Re-indexed.  Verbose output displayed."
@@ -5570,7 +5570,7 @@ msgstr "تم تمكين تصحيح أخطاء الجهاز للجهاز."
 
 #: host.php:181
 msgid "Device Debugging Disabled for Device."
-msgstr "الجهاز معطل"
+msgstr "تم تعطيل تصحيح أخطاء الجهاز للجهاز."
 
 #: host.php:191
 msgid "Poller Cache for Device Refreshed."
@@ -5578,7 +5578,7 @@ msgstr "تم تحديث ذاكرة التخزين المؤقت للجهاز."
 
 #: host.php:193
 msgid "ERROR: Invalid Device ID."
-msgstr "خطأ: جهاز ["
+msgstr "خطأ: معرّف الجهاز غير صالح."
 
 #: host.php:226
 msgid "A Re-Index of this Device is already running.  Try again after it finishes."
@@ -5890,7 +5890,7 @@ msgstr "إجمالي عدد مصادر البيانات التي تم إنشاؤ
 
 #: host.php:1611
 msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
-msgstr "حالة مراقبة الجهاز بناءً على نتائج اختبار ping. إذا كان هذا الجهاز جهازًا من نوع خاص ، باستخدام اسم المضيف &quot;localhost&quot; ، أو بسبب الإعداد لعدم إجراء فحص التوفر ، فسيظل دائمًا للأعلى. عند استخدام أداة تجميع البيانات cmd.php ، لا يتم اختراق جهاز يحتوي على رسوم بيانية من قبل جامع البيانات وسيبقى في حالة &quot;غير معروف&quot;."
+msgstr "حالة مراقبة الجهاز بناءً على نتائج ping. إذا كان هذا الجهاز جهازًا من نوع خاص، باستخدام اسم المضيف \"localhost\"، أو بسبب الإعداد لعدم إجراء فحص التوفر، فسيظل دائمًا في حالة تشغيل. عند استخدام جامع البيانات cmd.php، فإن الجهاز الذي لا يحتوي على رسوم بيانية لا يتم إرسال ping إليه بواسطة جامع البيانات وسيبقى في حالة \"غير معروف\"."
 
 #: host.php:1614
 msgid "In State"
@@ -5914,7 +5914,7 @@ msgstr "مقدار الوقت المستغرق لجمع البيانات من ه
 
 #: host.php:1632
 msgid "Current (ms)"
-msgstr "الحالي (بالثانية)"
+msgstr "الحالي (مللي ثانية)"
 
 #: host.php:1635
 msgid "The current ping time in milliseconds to reach the Device."
@@ -6035,7 +6035,7 @@ msgstr "إضافة استعلام بيانات إلى قالب الجهاز"
 
 #: host_templates.php:749
 msgid "Delete Item from Device Template"
-msgstr "حذف قالب (نماذج) الجهاز"
+msgstr "حذف عنصر من قالب الجهاز"
 
 #: host_templates.php:848 host_templates.php:945 host_templates.php:1109
 #: include/global_arrays.php:1255 include/global_arrays.php:2300
@@ -7073,7 +7073,7 @@ msgstr "المستخدمين"
 
 #: include/global_arrays.php:1050 include/global_arrays.php:2636
 msgid "User Groups"
-msgstr "مجموعات الطالب"
+msgstr "مجموعات المستخدمين"
 
 #: include/global_arrays.php:1051 include/global_arrays.php:2624
 #: user_domains.php:699 user_domains.php:798
@@ -7224,7 +7224,7 @@ msgstr "تحديث الملف الشخصي"
 
 #: include/global_arrays.php:1237
 msgid "Users/Groups"
-msgstr "مجموعات الطالب"
+msgstr "المستخدمون/المجموعات"
 
 #: include/global_arrays.php:1238
 msgid "Settings/Utilities"
@@ -7252,7 +7252,7 @@ msgstr "عرض السجل"
 
 #: include/global_arrays.php:1263
 msgid "Reports Administration"
-msgstr "إدارة السجل"
+msgstr "إدارة التقارير"
 
 #: include/global_arrays.php:1264
 msgid "Reports Creation"
@@ -7260,7 +7260,7 @@ msgstr "إنشاء التقارير"
 
 #: include/global_arrays.php:1265
 msgid "Show Graph Action Icons"
-msgstr "إظهار عنوان الرسم البياني"
+msgstr "إظهار أيقونات إجراءات الرسم البياني"
 
 #: include/global_arrays.php:1266
 msgid "Show User Help Links"
@@ -7268,7 +7268,7 @@ msgstr "إظهار ارتباطات تعليمات المستخدم"
 
 #: include/global_arrays.php:1267
 msgid "Plugin Administration"
-msgstr "إدارة السجل"
+msgstr "إدارة الإضافات"
 
 #: include/global_arrays.php:1271
 msgid "Normal User"
@@ -7599,15 +7599,15 @@ msgstr "صورة GIF المرفقة"
 
 #: include/global_arrays.php:1705
 msgid "Inline PNG Image, LN Style"
-msgstr "Inline PNG Image، LN Style"
+msgstr "صورة PNG مضمّنة، نمط LN"
 
 #: include/global_arrays.php:1707
 msgid "Inline JPEG Image, LN Style"
-msgstr "Inline JPEG Image، LN Style"
+msgstr "صورة JPEG مضمّنة، نمط LN"
 
 #: include/global_arrays.php:1708
 msgid "Inline GIF Image, LN Style"
-msgstr "Inline GIF Image، LN Style"
+msgstr "صورة GIF مضمّنة، نمط LN"
 
 #: include/global_arrays.php:1713
 msgid "Text"
@@ -7635,7 +7635,7 @@ msgstr "اليمين"
 
 #: include/global_arrays.php:1727
 msgid "Minute(s)"
-msgstr "دقائق(s)"
+msgstr "دقيقة/دقائق"
 
 #: include/global_arrays.php:1728
 msgid "Hour(s)"
@@ -7731,7 +7731,7 @@ msgstr "الرسم البياني ، مصدر البيانات"
 
 #: include/global_arrays.php:1763
 msgid "Base Graph Order"
-msgstr "لديه الرسوم البيانية"
+msgstr "ترتيب الرسم البياني الأساسي"
 
 #: include/global_arrays.php:1770
 msgid "contains"
@@ -7787,11 +7787,11 @@ msgstr "غير معروف"
 
 #: include/global_arrays.php:1783
 msgid "is not unknown"
-msgstr "غير معروف"
+msgstr "ليس غير معروف"
 
 #: include/global_arrays.php:1784
 msgid "is empty"
-msgstr "( غير فارغ)"
+msgstr "فارغ"
 
 #: include/global_arrays.php:1785
 msgid "is not empty"
@@ -8522,7 +8522,7 @@ msgstr "عند عرض الرسم البياني على أساس RRA في الس�
 
 #: include/global_form.php:315
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
-msgstr "استنادًا إلى مستوى التجميع ، والصفوف ، وفاصل الاستقصاء ، كمية البيانات التي سيتم الاحتفاظ بها في اتفاقية روتردام"
+msgstr "بناءً على مستوى التجميع والصفوف وفاصل الاستطلاع، مقدار البيانات التي سيتم الاحتفاظ بها في RRA"
 
 #: include/global_form.php:320
 msgid "RRA Size (in Bytes)"
@@ -8835,7 +8835,7 @@ msgstr "استخدم وحدات SI لتحجيم لوغاريتمي بدلاً م
 
 #: include/global_form.php:809
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "وضع الحدود الصلبة (-)"
+msgstr "وضع الحدود الثابتة (--rigid)"
 
 #: include/global_form.php:812
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
@@ -8879,7 +8879,7 @@ msgstr "ما وحدة Cacti يجب أن تستخدم على المحور ص. ا�
 
 #: include/global_form.php:852
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "طول الوحدة (- طول طولها &lt;length&gt;)"
+msgstr "طول الوحدة (--units-length &lt;length&gt;)"
 
 #: include/global_form.php:857
 msgid "How many digits should RRDtool assume the y-axis labels to be? You may have to use this option to make enough space once you start fiddling with the y-axis labeling."
@@ -8907,7 +8907,7 @@ msgstr "خيارات المحور"
 
 #: include/global_form.php:877
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "المحور الأيمن (- محور -عكس &lt;scale: shift&gt;)"
+msgstr "المحور الأيمن (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php:882
 msgid "A second axis will be drawn to the right of the graph. It is tied to the left axis via the scale and shift parameters."
@@ -8915,7 +8915,7 @@ msgstr "سيتم رسم المحور الثاني على يمين الرسم ا�
 
 #: include/global_form.php:885
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "تسمية المحور الأيمن (- محور - تسمية العلامة &lt;string&gt;)"
+msgstr "تسمية المحور الأيمن (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php:890
 msgid "The label for the right axis."
@@ -8923,7 +8923,7 @@ msgstr "التسمية للمحور الصحيح."
 
 #: include/global_form.php:893
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "تنسيق المحور الأيمن (- محور - تنسيق - تنسيق &lt;تنسيق&gt;)"
+msgstr "تنسيق المحور الأيمن (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php:898
 #, php-format
@@ -8932,7 +8932,7 @@ msgstr "بشكل افتراضي ، يتم تحديد تنسيق تسميات ا�
 
 #: include/global_form.php:901
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "محاور المحور الأيمن (- منضام المحور المنسق &lt;formatname&gt;)"
+msgstr "منسّق المحور الأيمن (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
@@ -9128,7 +9128,7 @@ msgstr "حدد مربع الاختيار هذا إذا كان هناك أكثر 
 
 #: include/global_form.php:1122
 msgid "Test Data Sources"
-msgstr "لديه مصادر البيانات"
+msgstr "اختبار مصادر البيانات"
 
 #: include/global_form.php:1123
 msgid "Check this checkbox if you wish to test the Data Sources prior to their creation.  With Test Data Sources enabled, if the Data Source does not return valid data, the Graph will not be created.  This setting is important if you wish to have a more generic Device Template that can include more Graph Templates that can be selectively applied depending on the characteristics of the Device itself.  Note: If you have a long running script as a Data Source, the time to create Graphs will be increased."
@@ -9168,7 +9168,7 @@ msgstr "الموقع الفعلي للجهاز. يمكن أن يكون نص ال
 
 #: include/global_form.php:1215
 msgid "Poller Association"
-msgstr "جمعية المستضد"
+msgstr "اقتران أداة الاستطلاع"
 
 #: include/global_form.php:1223
 msgid "Device Site Association"
@@ -9204,7 +9204,7 @@ msgstr "توافر / خيارات قابلية الوصول"
 
 #: include/global_form.php:1267 include/global_settings.php:802
 msgid "Downed Device Detection"
-msgstr "كشف جهاز Downed"
+msgstr "اكتشاف الأجهزة المتوقفة"
 
 #: include/global_form.php:1268
 msgid "The method Cacti will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
@@ -9880,7 +9880,7 @@ msgstr "سجل الاحتفاظ"
 
 #: include/global_settings.php:206
 msgid "How many log files do you wish to retain?  Use 0 to never remove any logs. (0-365)"
-msgstr "كم عدد ملفات السجل التي ترغب في الاحتفاظ بها؟ استخدم 0 لإزالة أي سجلات مطلقًا. (0-365)"
+msgstr "كم عدد ملفات السجل التي ترغب في الاحتفاظ بها؟ استخدم 0 لعدم إزالة أي سجلات مطلقًا. (0-365)"
 
 #: include/global_settings.php:213
 msgid "Alternate Poller Path"
@@ -9960,7 +9960,7 @@ msgstr "سجل عندما يتم الوصول إلى الحقول دون الم�
 
 #: include/global_settings.php:289
 msgid "Data Source Tracing"
-msgstr "مصادر البيانات باستخدام"
+msgstr "تتبع مصدر البيانات"
 
 #: include/global_settings.php:290
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
@@ -9968,7 +9968,7 @@ msgstr "خيار المطور فقط لتتبع إنشاء مصادر البيا
 
 #: include/global_settings.php:295
 msgid "Selective File Debug"
-msgstr "انتقائية File Debug"
+msgstr "تصحيح الملفات الانتقائي"
 
 #: include/global_settings.php:296
 msgid "Select which files you wish to place in Debug mode regardless of the Generic Log Level setting.  Any files selected will be treated as they are in Debug mode."
@@ -10136,7 +10136,7 @@ msgstr "في حالة التعيين على Simple ، لا يمكن إنشاء �
 
 #: include/global_settings.php:444
 msgid "Simple"
-msgstr "منتج بسيط"
+msgstr "بسيط"
 
 #: include/global_settings.php:445 lib/html.php:2948
 msgid "Advanced"
@@ -10168,7 +10168,7 @@ msgstr "مستخدم موجه قبل حذف البند."
 
 #: include/global_settings.php:467
 msgid "Data Source Preservation Preset"
-msgstr "طريقة إنشاء مصدر الرسم البياني / البيانات"
+msgstr "إعداد مسبق لحفظ مصدر البيانات"
 
 #: include/global_settings.php:468
 msgid "When enabled, Cacti will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Cacti will not allow the removal of Data Sources if they are used in other Graphs."
@@ -10176,7 +10176,7 @@ msgstr "عند التمكين ، سيقوم Cacti بتعيين زر الاختي
 
 #: include/global_settings.php:473
 msgid "Graphs Auto Unlock"
-msgstr "قاعدة مطابقة الرسم البياني"
+msgstr "إلغاء القفل التلقائي للرسوم البيانية"
 
 #: include/global_settings.php:474
 msgid "When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
@@ -10200,7 +10200,7 @@ msgstr "تدعم بعض واجهات Cacti خاصية السحب-N-Drop. في ح
 
 #: include/global_settings.php:491
 msgid "Site Security"
-msgstr "SMTP تأمين"
+msgstr "أمان الموقع"
 
 #: include/global_settings.php:496
 msgid "Force Connections over HTTPS"
@@ -10378,7 +10378,7 @@ msgstr "طريقة Re-index الافتراضية المراد استخدامها
 
 #: include/global_settings.php:676
 msgid "Default Interface Speed"
-msgstr "نوع الرسم البياني الافتراضي"
+msgstr "سرعة الواجهة الافتراضية"
 
 #: include/global_settings.php:677
 msgid "If Cacti can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
@@ -10599,7 +10599,7 @@ msgstr "الحد الأدنى لعرض الشجرة المراد التعاقد 
 
 #: include/global_settings.php:917 include/global_settings.php:2814
 msgid "Maximum Tree Width"
-msgstr "الحد الأقصى لطول العنوان"
+msgstr "الحد الأقصى لعرض الشجرة"
 
 #: include/global_settings.php:918 include/global_settings.php:2815
 msgid "The Maximum width of the Tree to expand to, after which time, Tree branches will scroll on the page."
@@ -10619,7 +10619,7 @@ msgstr "عند عرض القوائم المنسدلة لعامل تصفية اس
 
 #: include/global_settings.php:936
 msgid "Graph/Data Source/Data Query Settings"
-msgstr "Graph / Data Source / Data Query Settings"
+msgstr "إعدادات الرسم البياني / مصدر البيانات / استعلام البيانات"
 
 #: include/global_settings.php:941
 msgid "Maximum Title Length"
@@ -10735,7 +10735,7 @@ msgstr "خيارات الرسم البياني"
 
 #: include/global_settings.php:1050
 msgid "Custom Watermark"
-msgstr "البيانات المخصصة"
+msgstr "علامة مائية مخصصة"
 
 #: include/global_settings.php:1051
 msgid "Text placed at the bottom center of every Graph."
@@ -10743,7 +10743,7 @@ msgstr "تم وضع النص في منتصف الجزء السفلي من كل G
 
 #: include/global_settings.php:1058
 msgid "Custom Date Format"
-msgstr "البيانات المخصصة"
+msgstr "تنسيق التاريخ المخصص"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
@@ -10751,7 +10751,7 @@ msgstr "يُستخدم عند تنسيق |date_time| على الرسم البي�
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
-msgstr "RRDtool الرسم البياني علامة مائية"
+msgstr "تعطيل العلامة المائية لـ RRDtool"
 
 #: include/global_settings.php:1067
 msgid "Provided your RRDtool version supports it, you may disable RRDtool advertisement on your Graphs by checking this option."
@@ -10929,7 +10929,7 @@ msgstr "Poller Sync Interval"
 
 #: include/global_settings.php:1227
 msgid "The default polling sync interval to use when creating a poller.  This setting will affect how often remote pollers are checked and updated."
-msgstr "الفاصل الزمني الافتراضي لمزامنة الاقتراع الافتراضي الذي يتم استخدامه عند إنشاء مستنقع. سيؤثر هذا الإعداد على مدى فحص واستقصاء أدوات الاستقصاء عن بُعد."
+msgstr "الفاصل الزمني الافتراضي لمزامنة الاستطلاع المستخدم عند إنشاء أداة استطلاع. سيؤثر هذا الإعداد على مدى تكرار فحص وتحديث أدوات الاستطلاع البعيدة."
 
 #: include/global_settings.php:1234
 msgid "The polling interval in use.  This setting will affect how often RRDfiles are checked and updated.  <strong><u>NOTE: If you change this value, you must re-populate the poller cache.  Failure to do so, may result in lost data.</u></strong>"
@@ -10985,7 +10985,7 @@ msgstr "كم يجب أن تعاد OID في طلب snmpbulkwalk؟ بالنسبة 
 
 #: include/global_settings.php:1299
 msgid "SNMP Get OID Limit"
-msgstr "SNMP"
+msgstr "حد جلب OID في SNMP"
 
 #: include/global_settings.php:1300
 msgid "The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Cacti's SNMP API natively in your scripts or plugins."
@@ -11001,7 +11001,7 @@ msgstr "هذا الإعداد مخصص لأنظمة استطلاع واحد فق
 
 #: include/global_settings.php:1313
 msgid "Disable Resource Cache Replication"
-msgstr "إعادة بناء ذاكرة التخزين المؤقت للمورد"
+msgstr "تعطيل نسخ ذاكرة التخزين المؤقت للموارد"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
@@ -11009,7 +11009,7 @@ msgstr "بشكل افتراضي ، سيقوم Cacti Data Collector الرئيس�
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
-msgstr "حالة جامع البيانات عن بعد:"
+msgstr "إعدادات جامع البيانات الإضافية"
 
 #: include/global_settings.php:1324
 msgid "Invalid Data Logging"
@@ -11017,7 +11017,7 @@ msgstr "تسجيل بيانات غير صالح"
 
 #: include/global_settings.php:1325
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
-msgstr "كيف تريد تسجيل أخطاء إخراج Spine؟ الخيارات هي: &quot;مفصلة&quot; والتي تشبه تسجيل cmd.php ؛ &quot;الملخص&quot; الذي يوفر عدد أخطاء الإخراج لكل جهاز ؛ و &quot;بلا&quot; ، التي لا توفر أعداد أخطاء."
+msgstr "كيف ترغب في تسجيل أخطاء مخرجات جامع البيانات؟ تشمل الخيارات: 'مفصّل' الذي يفصّل كل خطأ، و'ملخص' الذي يوفر عدد أخطاء المخرجات لكل جهاز، و'بلا' الذي لا يوفر أعداد الأخطاء."
 
 #: include/global_settings.php:1330 utilities.php:180
 msgid "Summary"
@@ -11033,7 +11033,7 @@ msgstr "عدد خوادم برمجة PHP"
 
 #: include/global_settings.php:1336
 msgid "The number of concurrent script server processes to run per spine process.  Settings between 1 and 15 are accepted.  This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector."
-msgstr "عدد عمليات خادم البرنامج النصي المتزامن لتشغيل كل عملية Spine. يتم قبول الإعدادات بين 1 و 10. ستساعد هذه المعلمة إذا كنت تقوم بتشغيل العديد من البرامج النصية وخوادم البرامج النصية."
+msgstr "عدد عمليات خادم البرامج النصية المتزامنة المراد تشغيلها لكل عملية Spine. تُقبل الإعدادات بين 1 و15. سيساعد هذا المعامل إذا كنت تشغّل عدة مسارات وبرامج نصية لخادم البرامج النصية، وهو صالح فقط لمُجمِّع البيانات Spine."
 
 #: include/global_settings.php:1343
 msgid "Script and Script Server Timeout Value"
@@ -11069,7 +11069,7 @@ msgstr "مهلة الخلفية وإعدادات العملية المتزامن
 
 #: include/global_settings.php:1373
 msgid "Report Generation Timeout"
-msgstr "عامل عن بعد"
+msgstr "مهلة إنشاء التقرير"
 
 #: include/global_settings.php:1374
 msgid "The maximum amount of time Cacti's Reports Generation script can run without generating a timeout error and being killed."
@@ -11084,7 +11084,7 @@ msgstr "دقيقة %s"
 
 #: include/global_settings.php:1386
 msgid "Data Source Statistics Timeout"
-msgstr "احصائيات مصادر البيانات"
+msgstr "مهلة إحصائيات مصدر البيانات"
 
 #: include/global_settings.php:1387
 msgid "The maximum amount of time Cacti's Data Source Statistics script can run without generating a timeout error and being killed."
@@ -11239,7 +11239,7 @@ msgstr "اسم الحساب الإداري الأساسي الذي سيتلقى 
 #: include/global_settings.php:1536 include/global_settings.php:1544
 #: include/global_settings.php:1552 user_domains.php:394
 msgid "No User"
-msgstr "المستخدم.:"
+msgstr "لا يوجد مستخدم"
 
 #: include/global_settings.php:1541
 msgid "Guest User"
@@ -11420,7 +11420,7 @@ msgstr "ميناء SSL"
 
 #: include/global_settings.php:1722
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "منفذ TCP / UDP لاتصالات غير SSL."
+msgstr "منفذ TCP لبروتوكول LDAPS لاتصالات SSL. القيمة الافتراضية هي 636."
 
 #: include/global_settings.php:1729 user_domains.php:444
 msgid "Protocol Version"
@@ -11484,7 +11484,7 @@ msgstr "الوضع"
 
 #: include/global_settings.php:1783
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "الوضع الذي سيحاول الصبار المصادقة على خادم LDAP. <blockquote style=\";text-align:right;direction:rtl\"> <i>لا بحث</i> - لا يوجد بحث عن الاسم المميز (DN) ، فقط حاول الربط مع تنسيق الاسم المميز المميز (DN). <br><br> <i>البحث المجهول</i> - محاولات للبحث عن اسم المستخدم مقابل دليل LDAP عبر ربط مجهول لتحديد اسم المستخدم المميز (DN). <br><br> <i>البحث النوعي</i> - محاولات البحث عن اسم المستخدم مقابل دليل LDAP عبر الاسم المميز المميز (DN) وكلمة المرور المحددة للتثبيت لتحديد الاسم المميز للمستخدم (DN)."
+msgstr "الوضع الذي سيحاول به Cacti المصادقة أمام خادم LDAP.<blockquote><i>دون بحث</i> - لا يتم البحث عن الاسم المميز (DN)، بل تتم محاولة الربط فقط بتنسيق الاسم المميز (DN) المقدم.<br><br><i>بحث مجهول</i> - يحاول البحث عن اسم المستخدم في دليل LDAP عبر ربط مجهول لتحديد موقع الاسم المميز (DN) للمستخدم.<br><br><i>بحث محدد</i> - يحاول البحث عن اسم المستخدم في دليل LDAP عبر اسم مميز (DN) محدد وكلمة مرور محددة للربط لتحديد موقع الاسم المميز (DN) للمستخدم."
 
 #: include/global_settings.php:1789 user_domains.php:472
 msgid "Distinguished Name (DN)"
@@ -11868,7 +11868,7 @@ msgstr "أقصى وقت تشغيل Script تحديث RRD"
 
 #: include/global_settings.php:2151
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "إذا تجاوز استطلاع التعزيز وقت التشغيل هذا ، وضع تحذير في سجل الصبار ،"
+msgstr "إذا تجاوز مستطلع Boost وقت التشغيل هذا، فسيتم وضع تحذير في سجل Cacti،"
 
 #: include/global_settings.php:2157
 msgid "Enable direct population of poller_output_boost table"
@@ -12109,7 +12109,7 @@ msgstr "الانحراف المعياري"
 
 #: include/global_settings.php:2422
 msgid "Variance Based w/Outliers Removed"
-msgstr "التباين القائم w / القيم المتطرفة إزالتها"
+msgstr "قائم على التباين مع إزالة القيم المتطرفة"
 
 #: include/global_settings.php:2426 lib/html.php:2668
 msgid "Replacement Method"
@@ -12202,7 +12202,7 @@ msgstr "دليل النسخ الاحتياطي RRDfile"
 
 #: include/global_settings.php:2524
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
-msgstr "إذا كان هذا الدليل فارغًا ، فسيتم الاحتفاظ بنسخة احتياطية من ملف RRDfiles الأصلي الخاص بك إلى هذا الموقع."
+msgstr "إذا لم يكن هذا الدليل فارغًا، فسيتم نسخ ملفات RRDfiles الأصلية احتياطيًا إلى هذا الموقع."
 
 #: include/global_settings.php:2531
 msgid "Batch Spike Kill Settings"
@@ -12230,7 +12230,7 @@ msgstr "الوقت الأساسي"
 
 #: include/global_settings.php:2550
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
-msgstr "The Base Time لإزالة سبايك يحدث. على سبيل المثال ، إذا كنت تستخدم &quot;12: 00 صباحًا&quot; واخترت مرة واحدة يوميًا ، فستبدأ عملية إزالة المجموعة في منتصف الليل تقريبًا كل يوم."
+msgstr "الوقت الأساسي لحدوث إزالة الارتفاعات المفاجئة. على سبيل المثال، إذا استخدمت '12:00am' واخترت مرة واحدة يومياً، فستبدأ عملية الإزالة المجمّعة عند منتصف الليل تقريباً كل يوم."
 
 #: include/global_settings.php:2557
 msgid "Graph Templates to Spike Kill"
@@ -12467,7 +12467,7 @@ msgstr "اختر ما إذا كنت تريد توسيع قوالب الرسم ا
 
 #: include/global_settings.php:2800
 msgid "Tree History"
-msgstr "سجل كلمة المرور"
+msgstr "سجل الشجرة"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
@@ -12535,7 +12535,7 @@ msgstr "إعدادات المستخدم"
 
 #: include/global_settings.php:2920
 msgid "1 Week"
-msgstr "٪ d أسبوع"
+msgstr "أسبوع واحد"
 
 #: include/global_settings.php:2933
 msgid "Auto Log Out Time"
@@ -12618,7 +12618,7 @@ msgstr "خادم Cacti الإصدار v%s - معالج التثبيت"
 
 #: install/install.php:107
 msgid "Refresh current page"
-msgstr "الفاصل الزمني للتحديث"
+msgstr "تحديث الصفحة الحالية"
 
 #: install/install.php:113
 msgid "Initializing"
@@ -12639,7 +12639,7 @@ msgstr "انظر دليل PHP: <a href=\"http://php.net/manual/en/book.json.php\
 
 #: install/install.php:121
 msgid "The php-json module must also be installed."
-msgstr "إصدار RRDtool الذي قمت بتثبيته."
+msgstr "يجب أيضًا تثبيت وحدة php-json."
 
 #: install/install.php:125
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/ini.core.php#ini.disable-functions\">Disable Functions</a>."
@@ -12909,7 +12909,7 @@ msgstr "نتائج بينغ"
 
 #: lib/api_device.php:1647
 msgid "No Ping or SNMP Availability Check in Use"
-msgstr "لا يوجد Ping أو SNMP Availability Check in Use"
+msgstr "لا يتم استخدام فحص توفر Ping أو SNMP"
 
 #: lib/api_tree.php:254
 msgid "New Branch"
@@ -13104,7 +13104,7 @@ msgstr "خطوط الذيل"
 
 #: lib/clog_webapi.php:586 utilities.php:1502
 msgid "Stats"
-msgstr "انقر لإظهار إحصائيات الشعار"
+msgstr "الإحصائيات"
 
 #: lib/clog_webapi.php:588
 msgid "Warnings++"
@@ -13132,7 +13132,7 @@ msgstr "غير احصائيات"
 
 #: lib/clog_webapi.php:595
 msgid "Boost"
-msgstr "ویژه کردن"
+msgstr "التسريع"
 
 #: lib/clog_webapi.php:596
 msgid "Device Up/Down"
@@ -13234,7 +13234,7 @@ msgstr "التحقق من اكتمال معرف البيانات المحلي %s
 
 #: lib/data_query.php:170 lib/data_query.php:177
 msgid "Done updating Data Source Title Cache"
-msgstr "تكرار مصدر بيانات الملف"
+msgstr "تم تحديث ذاكرة التخزين المؤقت لعناوين مصادر البيانات"
 
 #: lib/data_query.php:173 lib/data_query.php:180
 msgid "Done updating Graph Title Cache"
@@ -13251,7 +13251,7 @@ msgstr "اكتمل تحديث ذاكرة التخزين المؤقت لإعاد�
 
 #: lib/data_query.php:201
 msgid "Update Poller Cache for Query complete"
-msgstr "اكتمل تحديث Poller Cache for Query"
+msgstr "اكتمل تحديث ذاكرة التخزين المؤقت للمستطلع للاستعلام"
 
 #~ msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 #~ msgstr "لم يتم اكتشاف أي تغييرات في الفهرس ، وإعادة تخطي إعادة الفهرسة وإعادة مخبأ Poller"
@@ -13306,7 +13306,7 @@ msgstr "حقل غير صالح &lt;index_order&gt;%s&lt;/index_order&gt;"
 
 #: lib/data_query.php:736 lib/data_query.php:919
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "يجب أن تحتوي على حقول &lt;input&gt; input &lt;/ direction&gt; أو &lt;direction&gt; input-output &lt;/ direction&gt; فقط"
+msgstr "يجب أن يحتوي على حقول &lt;direction&gt;input&lt;/direction&gt; أو &lt;direction&gt;input-output&lt;/direction&gt; فقط"
 
 #: lib/data_query.php:753
 msgid "Data Query returned no indexes."
@@ -13314,7 +13314,7 @@ msgstr "خطأ: لم يُرجع استعلام البيانات أي فهارس.
 
 #: lib/data_query.php:754
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt; مفقودة في ملف XML ، &quot;عدد الفهرس غيرت&quot; غير مدعوم"
+msgstr "&lt;arg_num_indexes&gt; موجود في ملف XML ولكن لم يتم إرجاع أي بيانات، 'تم تغيير عدد الفهارس' غير مدعوم"
 
 #: lib/data_query.php:757
 #, php-format
@@ -13764,7 +13764,7 @@ msgstr "التحقق من التكوين ... <br>"
 
 #: lib/functions.php:5767
 msgid "PHP's Mailer Class"
-msgstr "PHP&#39;s Mailer Class"
+msgstr "فئة البريد في PHP"
 
 #: lib/functions.php:5773
 msgid "Method: SMTP"
@@ -13842,11 +13842,11 @@ msgstr "جهاز تجميع"
 
 #: lib/graphs.php:59
 msgid "Not Applicable"
-msgstr "لا تفضيلات"
+msgstr "غير منطبق"
 
 #: lib/graphs.php:86
 msgid "Damaged Graph"
-msgstr "مصدر البيانات ، الرسم البياني"
+msgstr "رسم بياني تالف"
 
 #: lib/html.php:76
 msgid "Remote Server"
@@ -13926,7 +13926,7 @@ msgstr "ألفا( الحرف الإغريقي الأول ألفا)"
 
 #: lib/html.php:1595
 msgid "No Source"
-msgstr "المصدر"
+msgstr "لا يوجد مصدر"
 
 #: lib/html.php:1940
 msgid "Choose an action"
@@ -14011,7 +14011,7 @@ msgstr "وضع التكبير"
 
 #: lib/html.php:2873
 msgid "Dark Color Mode"
-msgstr "لا توجد ألوان"
+msgstr "وضع الألوان الداكن"
 
 #: lib/html.php:2874
 msgid "Light Color Mode"
@@ -14019,7 +14019,7 @@ msgstr "وضع قائمة"
 
 #: lib/html.php:2875
 msgid "Use System Color"
-msgstr "بند اللون"
+msgstr "استخدام لون النظام"
 
 #: lib/html.php:2876
 msgid "Ignore System Color"
@@ -14199,7 +14199,7 @@ msgstr "توقف"
 
 #: lib/html.php:2935
 msgid "Zoom In"
-msgstr "تصغير"
+msgstr "تكبير"
 
 #: lib/html.php:2936
 msgid "Zoom Out"
@@ -14235,7 +14235,7 @@ msgstr "32X"
 
 #: lib/html.php:2944
 msgid "Zoom Out Positioning"
-msgstr "تكبير المواقع"
+msgstr "موضع التصغير"
 
 #: lib/html.php:2945
 msgid "Zoom Mode"
@@ -14243,7 +14243,7 @@ msgstr "وضع التكبير"
 
 #: lib/html.php:2947
 msgid "Quick"
-msgstr "سريع. حي. حبلى"
+msgstr "سريع"
 
 #: lib/html.php:2949
 msgid "Open in new tab"
@@ -14279,7 +14279,7 @@ msgstr "إبتدئ ب"
 
 #: lib/html.php:2958
 msgid "End with"
-msgstr "تاريخ النهاية"
+msgstr "ينتهي بـ"
 
 #: lib/html.php:2960 lib/html_form.php:1671
 msgid "Close"
@@ -14741,7 +14741,7 @@ msgstr "الرسم البياني لاستخدامه في عنصر التقري�
 
 #: lib/html_reports.php:1171
 msgid "The Graph End time will be set to the scheduled report send time.  So, if you wish the end time on the various Graphs to be midnight, ensure you send the report at midnight.  The Graph Start time will be the End Time minus the Graph Timespan."
-msgstr "سيتم تعيين وقت الانتهاء من Graph إلى وقت إرسال التقرير المجدول. لذا ، إذا كنت ترغب في أن يكون وقت الانتهاء على الرسوم البيانية المختلفة في منتصف الليل ، تأكد من إرسال التقرير عند منتصف الليل. سوف يكون وقت البدء Graph وقت النهاية مطروحاً Timpran Graph."
+msgstr "سيتم تعيين وقت انتهاء الرسم البياني إلى وقت إرسال التقرير المجدول. لذا، إذا كنت ترغب في أن يكون وقت الانتهاء على الرسوم البيانية المختلفة عند منتصف الليل، فتأكد من إرسال التقرير عند منتصف الليل. سيكون وقت بدء الرسم البياني هو وقت الانتهاء مطروحاً منه النطاق الزمني للرسم البياني."
 
 #: lib/html_reports.php:1176 lib/html_reports.php:1748
 msgid "Alignment"
@@ -14921,7 +14921,7 @@ msgstr "متعدد"
 
 #: lib/html_reports.php:2195
 msgid "Invalid"
-msgstr "عاجز، مقعد"
+msgstr "غير صالح"
 
 #: lib/html_reports.php:2202
 msgid "No Reports Found"
@@ -15018,7 +15018,7 @@ msgstr "لا تدعم عوامل تصفية RLIKE في Cacti محارف التن
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
-msgstr "أسفل (قال)"
+msgstr "متوقف (Thold)"
 
 #: lib/html_utility.php:1467 lib/installer.php:2021 lib/installer.php:3902
 msgid "Error"
@@ -15031,7 +15031,7 @@ msgstr "خطأ في التحقق من الصحة للمتغير %s بقيمة %s
 
 #: lib/html_validate.php:95
 msgid "Validation Error"
-msgstr "عنوان / خطأ التحقق  مساحة الخريطة"
+msgstr "خطأ في التحقق من الصحة"
 
 #: lib/import.php:358
 msgid "The Data Input Method repair was skipped because you do not have permission to edit Data Input Methods."
@@ -15055,7 +15055,7 @@ msgstr "لا يوجد"
 
 #: lib/import.php:776
 msgid "not writable"
-msgstr "قابل للكتابة"
+msgstr "غير قابل للكتابة"
 
 #: lib/import.php:2024 lib/import.php:2041
 #, php-format
@@ -15394,7 +15394,7 @@ msgstr "توصيات PHP ("
 
 #: lib/installer.php:1980
 msgid "Current"
-msgstr "بريدك الإلكتروني الحالي غير مسموح"
+msgstr "الحالي"
 
 #: lib/installer.php:1980
 msgid "Recommended"
@@ -15402,7 +15402,7 @@ msgstr "مستحسن"
 
 #: lib/installer.php:1987
 msgid "PHP Binary"
-msgstr "PHP Binary Path"
+msgstr "ملف PHP التنفيذي"
 
 #: lib/installer.php:1990
 msgid "The PHP binary location is not valid and must be updated."
@@ -15641,7 +15641,7 @@ msgstr "يبدو أن مسارًا واحدًا أو أكثر غير صحيح ،
 
 #: lib/installer.php:2398
 msgid "Directory Permission Checks"
-msgstr "دليل التحقق من الشيكات"
+msgstr "فحوصات أذونات الدليل"
 
 #: lib/installer.php:2399
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
@@ -15670,7 +15670,7 @@ msgstr "مطلوب للكتابة في وقت التثبيت فقط"
 #: lib/installer.php:2435 lib/installer.php:2468 lib/installer.php:2476
 #: package_import.php:633
 msgid "Not Writable"
-msgstr "قابل للكتابة"
+msgstr "غير قابل للكتابة"
 
 #: lib/installer.php:2447
 msgid "Required Writable after Install Complete"
@@ -15819,7 +15819,7 @@ msgstr "إعداد القالب"
 
 #: lib/installer.php:2669
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "حدد نوع القالب الذي ترغب في تصديره من Cacti."
+msgstr "يرجى تحديد قوالب الأجهزة التي ترغب في تحديثها أثناء الترقية."
 
 #: lib/installer.php:2670
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
@@ -15932,7 +15932,7 @@ msgstr "تثبيت"
 
 #: lib/installer.php:2831
 msgid "DOWNGRADE DETECTED"
-msgstr "تم الكشف عن DOWNECTED"
+msgstr "تم اكتشاف الرجوع إلى إصدار أقدم"
 
 #: lib/installer.php:2832
 msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
@@ -16049,7 +16049,7 @@ msgstr "لم يتم تحديد أي قوالب للاستيراد"
 
 #: lib/installer.php:3322
 msgid "Updating remote configuration file"
-msgstr "في انتظار التكوين"
+msgstr "جارٍ تحديث ملف التكوين البعيد"
 
 #: lib/installer.php:3354
 #, php-format
@@ -16101,7 +16101,7 @@ msgstr "فشل تحديث مجموعة خيارات التنفيذ التلقا�
 
 #: lib/installer.php:3432
 msgid "Failed to find any automation option set"
-msgstr "تعذّر العثور على البيانات لنسخها!"
+msgstr "تعذّر العثور على أي مجموعة خيارات أتمتة"
 
 #: lib/installer.php:3462
 #, php-format
@@ -16114,7 +16114,7 @@ msgstr "إنشاء الرسوم البيانية لهذا الجهاز"
 
 #: lib/installer.php:3495
 msgid "Adding Device to Default Tree"
-msgstr "افتراضيات الجهاز"
+msgstr "إضافة الجهاز إلى الشجرة الافتراضية"
 
 #: lib/installer.php:3503
 msgid "No templated graphs for Default Device were found"
@@ -16218,7 +16218,7 @@ msgstr "%s - لا"
 
 #: lib/installer.php:3783
 msgid "Cli"
-msgstr "كلاسيكي"
+msgstr "واجهة سطر الأوامر (CLI)"
 
 #: lib/installer.php:3788
 #, php-format
@@ -16544,7 +16544,7 @@ msgstr "يحتوي ملف RRA '%s' على نفس CF / الخطوات (%s ، %s) 
 #: lib/rrd.php:3978
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
-msgstr "pdp_per_row \"%s\" غير صالح ل RRA \"%s\" يجب أن يكون \"%s\".  ضع في اعتبارك حذف Cacti والسماح له بإعادة إنشاء ملف RRDfile."
+msgstr "قيمة pdp_per_row البالغة '%s' غير صالحة لـ RRA '%s' ويجب أن تكون '%s'. فكّر في حذف ملف RRDfile والسماح لـ Cacti بإعادة إنشائه."
 
 #: lib/rrd.php:3982
 #, php-format
@@ -16600,7 +16600,7 @@ msgstr "جولة روبن الأرشيف"
 
 #: lib/rrd.php:4125
 msgid "Cur Row"
-msgstr "صف كو"
+msgstr "الصف الحالي"
 
 #: lib/rrd.php:4126
 msgid "PDP per Row"
@@ -16703,7 +16703,7 @@ msgstr "يجب أن تستخدم قائمة انتظار poller_output محرك 
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "تعذّر تأكيد العملية. افحص سجل التغييرات قبل إعادة المحاولة."
+msgstr "غير متاح"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
@@ -16997,7 +16997,7 @@ msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "إنشاء تجميع من القالب"
+msgstr "محاولة إنشاء رسم بياني من غير قالب"
 
 #: lib/template.php:1530
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -17108,7 +17108,7 @@ msgstr "الحد الأقصى لأداء الإدخال / الإخراج يحد�
 #: lib/utility.php:1430
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
-msgstr "يعني تعيين هذه القيمة على 2 أنك ستقوم بمسح جميع المعاملات كل ثانية بدلا من الالتزام.  هذا يسمح %s بأداء الكتابة في كثير من الأحيان."
+msgstr "يعني تعيين هذه القيمة إلى 2 أنه سيتم تفريغ جميع المعاملات كل ثانية بدلاً من التفريغ عند الاعتماد. يتيح ذلك لـ %s إجراء عمليات الكتابة بوتيرة أقل."
 
 #: lib/utility.php:1435
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
@@ -17381,7 +17381,7 @@ msgstr "لقد تم تسجيل خروجك من Cacti بسبب انتهاء مه�
 
 #: logout.php:61
 msgid "You have been logged out of Cacti due to an account suspension."
-msgstr "لقد تم تسجيل خروجك من Cacti بسبب انتهاء مهلة الجلسة."
+msgstr "لقد تم تسجيل خروجك من Cacti بسبب تعليق الحساب."
 
 #: logout.php:63
 msgid "You have been logged out of Cacti due to a Remote Data Collector state change"
@@ -17751,7 +17751,7 @@ msgstr "مؤلف هذا البرنامج المساعد."
 
 #: plugins.php:627
 msgid "Requires"
-msgstr "نیاز به در"
+msgstr "يتطلب"
 
 #: plugins.php:630
 msgid "This Plugin requires the following Plugins be installed first."
@@ -17898,7 +17898,7 @@ msgstr "بولر في وضع نبضات القلب"
 
 #: poller.php:1263
 msgid "Cacti System Notification"
-msgstr "Cacti System Utilities"
+msgstr "إشعار نظام Cacti"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
@@ -17919,7 +17919,7 @@ msgstr "يتطلب تقرير Cacti Automation عميل بريد إلكترون�
 
 #: poller_boost.php:505
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
-msgstr "تحذير: تم الكشف عن تجاوز استطلاعات الرأي ، وتحطم محتمل للمستقبل"
+msgstr "تحذير: تم اكتشاف تجاوز في مستطلع Boost، احتمال تعطل مستطلع Boost"
 
 #: pollers.php:44
 msgid "Full Sync"
@@ -17955,7 +17955,7 @@ msgstr "وحدة زمنية"
 
 #: pollers.php:84
 msgid "The TimeZone for the Data Collector."
-msgstr "The TimeZone لمجمع البيانات."
+msgstr "المنطقة الزمنية لمُجمِّع البيانات."
 
 #: pollers.php:93
 msgid "Notes for this Data Collectors Database."
@@ -18082,7 +18082,7 @@ msgstr "لقد استخدمت بالفعل اسم مضيف قاعدة البيا
 
 #: pollers.php:541
 msgid "Data Collector Statistics cleared."
-msgstr "احصائيات مصادر البيانات"
+msgstr "تم مسح إحصائيات جامع البيانات."
 
 #: pollers.php:576
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Cacti Data Collector."
@@ -18611,7 +18611,7 @@ msgstr "أدخل البلد"
 
 #: sites.php:110
 msgid "The TimeZone for the Site."
-msgstr "The TimeZone للموقع."
+msgstr "المنطقة الزمنية للموقع."
 
 #: sites.php:118
 msgid "Geolocation Information"
@@ -18877,7 +18877,7 @@ msgstr "تالف"
 #: templates_import.php:335
 #, php-format
 msgid "Met: %d"
-msgstr "ميت: %d"
+msgstr "مستوفى: %d"
 
 #: templates_import.php:339
 #, php-format
@@ -18908,12 +18908,12 @@ msgstr "نشر"
 #: tree.php:34
 msgctxt "dropdown action"
 msgid "Un-Publish"
-msgstr "انشر"
+msgstr "إلغاء النشر"
 
 #: tree.php:35
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "مغلق"
+msgstr "إلغاء القفل"
 
 #: tree.php:233 tree.php:634
 #: graphs.php:652 graphs.php:1025
@@ -19101,11 +19101,11 @@ msgstr "طبيعي"
 
 #: tree.php:1891 tree.php:1965 tree.php:2073
 msgid "Cut"
-msgstr "يقطع. يجرح. يبزغ (السن). جرح. قطع"
+msgstr "قص"
 
 #: tree.php:1924
 msgid "Paste"
-msgstr "معجون، رب"
+msgstr "لصق"
 
 #: tree.php:2288
 msgid "Add Tree"
@@ -19430,7 +19430,7 @@ msgstr "لم يتم العثور على أشجار مطابقة"
 
 #: user_admin.php:1561 user_group_admin.php:1499
 msgid "User Permissions"
-msgstr "صلاحيات المتدرب"
+msgstr "صلاحيات المستخدم"
 
 #: user_admin.php:1618 user_group_admin.php:1558
 msgid "External Link Permissions"
@@ -19463,15 +19463,15 @@ msgstr "الأيقونات البيانية"
 
 #: user_admin.php:1894 user_group_admin.php:1834
 msgid "Device Perms"
-msgstr "جهاز Perms"
+msgstr "أذونات الجهاز"
 
 #: user_admin.php:1895 user_group_admin.php:1835
 msgid "Template Perms"
-msgstr "قالب Perms"
+msgstr "صلاحيات القوالب"
 
 #: user_admin.php:1896 user_group_admin.php:1836
 msgid "Tree Perms"
-msgstr "شجرة Perms"
+msgstr "صلاحيات الشجرة"
 
 #: user_admin.php:1916
 msgid "User not found."
@@ -19702,7 +19702,7 @@ msgstr "تشفير يدعم الخادم. لا يتم دعم TLS إلا من خ�
 
 #: user_domains.php:466
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "الوضع الذي سيحاول الصبار المصادقة على خادم LDAP. <blockquote style=\";text-align:right;direction:rtl\"> <i>لا بحث</i> - لا يوجد بحث عن الاسم المميز (DN) ، فقط حاول الربط مع تنسيق الاسم المميز المميز (DN). <br><br> <i>البحث المجهول</i> - محاولات للبحث عن اسم المستخدم مقابل دليل LDAP عبر ربط مجهول لتحديد موقع المستخدمين المميزين (DN). <br><br> <i>البحث النوعي</i> - محاولات البحث عن اسم المستخدم مقابل دليل LDAP عبر الاسم المميز المميز (DN) وكلمة المرور الخاصة للربط لتحديد موقع الاسم المميز (DN)."
+msgstr "الوضع الذي سيحاول به Cacti المصادقة أمام خادم LDAP.<blockquote><i>دون بحث</i> - لا يتم البحث عن الاسم المميز (DN)، بل تتم محاولة الربط فقط بتنسيق الاسم المميز (DN) المقدم.<br><br><i>بحث مجهول</i> - يحاول البحث عن اسم المستخدم في دليل LDAP عبر ربط مجهول لتحديد موقع الاسم المميز (DN) للمستخدمين.<br><br><i>بحث محدد</i> - يحاول البحث عن اسم المستخدم في دليل LDAP عبر اسم مميز (DN) محدد وكلمة مرور محددة للربط لتحديد موقع الاسم المميز (DN) للمستخدمين."
 
 #: user_domains.php:516
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."
@@ -19958,7 +19958,7 @@ msgstr "نهج الشجرة الافتراضي لمجموعة المستخدم �
 
 #: user_group_admin.php:1831 user_group_admin.php:2132
 msgid "Members"
-msgstr "الطلاب"
+msgstr "الأعضاء"
 
 #: user_group_admin.php:1850
 #, php-format
@@ -19992,7 +19992,7 @@ msgstr "عملية إعادة بناء ذاكرة التخزين المؤقت ل
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
-msgstr "احصائيات مصادر البيانات"
+msgstr "تم تطهير إحصائيات مصدر البيانات."
 
 #: utilities.php:181
 msgid "Database"
@@ -20064,7 +20064,7 @@ msgstr "الإجمالي: %s"
 
 #: utilities.php:375
 msgid "Poller Information"
-msgstr "معلومات مستضد"
+msgstr "معلومات أداة الاستطلاع"
 
 #: utilities.php:383
 msgid "Different version of Cacti and Spine!"
@@ -20085,7 +20085,7 @@ msgstr "الاسم:"
 
 #: utilities.php:413
 msgid "Procs: "
-msgstr "1 عملية"
+msgstr "العمليات: "
 
 #: utilities.php:420
 msgid "Threads: "
@@ -20115,7 +20115,7 @@ msgstr "الخادم المحلي: الحالي: %s ، الحد الأدنى ا�
 
 #: utilities.php:499
 msgid "Minimum Connections:"
-msgstr "اختبار الاتصال"
+msgstr "الحد الأدنى للاتصالات:"
 
 #: utilities.php:501
 msgid "Assumes 100 spare connections for Web page users and other various connections."
@@ -20162,7 +20162,7 @@ msgstr "أقصى إجمالي ممكن للذاكرة"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "تقليل ذاكرة MySQL / MariaDB إلى أقل من 80% of ذاكرة النظام.  الاحتفاظ بذاكرة التخزين المؤقت الإضافية لملفات RRD إذا كانت قاعدة البيانات على نفس نظام ملفات RRD.  انظر الإجماليات الأساسية والعملاء أدناه للحصول على شرح لطريقة الحساب."
+msgstr "قلّل ذاكرة MySQL/MariaDB إلى أقل من 80% of ذاكرة النظام.  احتفظ بذاكرة تخزين مؤقت إضافية لملفات RRD إذا كانت قاعدة البيانات على نفس النظام الذي توجد عليه ملفات RRD.  راجع إجماليات النواة والعميل أدناه للاطلاع على شرح طريقة الحساب."
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"
@@ -20466,11 +20466,11 @@ msgstr "يتيح لك هذا الاختيار من القائمة عرض إعد�
 
 #: utilities.php:2397
 msgid "Data Source Statistics Utilities"
-msgstr "احصائيات مصادر البيانات"
+msgstr "أدوات إحصائيات مصدر البيانات"
 
 #: utilities.php:2398
 msgid "Purge Data Source Statistics"
-msgstr "احصائيات مصادر البيانات"
+msgstr "مسح إحصائيات مصادر البيانات"
 
 #: utilities.php:2402
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
@@ -20562,7 +20562,7 @@ msgstr "مجموع مصادر البيانات:"
 
 #: utilities.php:2768
 msgid "Remaining Data Sources:"
-msgstr "تصحيح مصدر البيانات"
+msgstr "مصادر البيانات المتبقية:"
 
 #: utilities.php:2768
 msgid "TBD"
@@ -20570,7 +20570,7 @@ msgstr "يحدد لاحقًا"
 
 #: utilities.php:2772
 msgid "Queued Boost Records:"
-msgstr "المشاركات المعلقة"
+msgstr "سجلات Boost في قائمة الانتظار:"
 
 #: utilities.php:2776
 msgid "Approximate in Process:"
@@ -20738,7 +20738,7 @@ msgstr "حجم الملفات المخزنة مؤقتًا:"
 
 #: utilities.php:3087
 msgid "SNMP Agent Cache"
-msgstr "SNMPAgent Cache"
+msgstr "ذاكرة التخزين المؤقت لوكيل SNMP"
 
 #: utilities.php:3121
 msgid "OIDs"
@@ -20777,7 +20777,7 @@ msgstr "لم يتم العثور على VDEF."
 msgid "Click 'Continue' to delete the following VDEF."
 msgid_plural "Click 'Continue' to delete following VDEFs."
 msgstr[0] "انقر على 'متابعة' لحذف عناصر VDEF التالية."
-msgstr[1] "انقر على 'متابعة' لحذف VDEF التالي."
+msgstr[1] "انقر على 'متابعة' لحذف عنصر VDEF التالي."
 msgstr[2] "انقر على 'متابعة' لحذف عنصرَي VDEF التاليين."
 msgstr[3] "انقر على 'متابعة' لحذف عناصر VDEF التالية."
 msgstr[4] "انقر على 'متابعة' لحذف عناصر VDEF التالية."
@@ -20797,7 +20797,7 @@ msgstr[5] "حذف عناصر VDEF"
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
 msgstr[0] "انقر على 'متابعة' لتكرار عناصر VDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر VDEF الجديدة."
-msgstr[1] "انقر على 'متابعة' لتكرار VDEF التالي. يمكنك اختياريًا تغيير تنسيق العنوان لـ VDEF الجديد."
+msgstr[1] "انقر على 'متابعة' لتكرار عنصر VDEF التالي. يمكنك اختياريًا تغيير تنسيق العنوان لعنصر VDEF الجديد."
 msgstr[2] "انقر على 'متابعة' لتكرار عنصرَي VDEF التاليين. يمكنك اختياريًا تغيير تنسيق العنوان لعنصرَي VDEF الجديدين."
 msgstr[3] "انقر على 'متابعة' لتكرار عناصر VDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر VDEF الجديدة."
 msgstr[4] "انقر على 'متابعة' لتكرار عناصر VDEF التالية. يمكنك اختياريًا تغيير تنسيق العنوان لعناصر VDEF الجديدة."

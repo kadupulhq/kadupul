@@ -16560,7 +16560,7 @@ msgstr "Foleni ya poller_output ni lazima itumie InnoDB kabla ya ukusanyaji. Sim
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "Operesheni haikuweza kuthibitishwa. Kagua historia ya mabadiliko kabla ya kujaribu tena."
+msgstr "haipatikani"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"

@@ -16560,7 +16560,7 @@ msgstr "সংগ্রহের আগে poller_output সারিতে অ�
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "অপারেশনটি নিশ্চিত করা যায়নি। পুনরায় চেষ্টা করার আগে পরিবর্তনের ইতিহাস পরীক্ষা করুন।"
+msgstr "অনুপলব্ধ"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"

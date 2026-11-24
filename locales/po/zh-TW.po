@@ -33,7 +33,7 @@ msgstr "請參閱官方 %sCacti 網站%s，以取得有關如何使用 Cacti、�
 
 #: about.php:48
 msgid "Active Developers"
-msgstr "仙人掌開發人員"
+msgstr "活躍開發人員"
 
 #: about.php:49
 msgid "Developers working on Cacti, its Architecture, Documentation and Future Releases."
@@ -41,7 +41,7 @@ msgstr "致力於 Cacti 及其架構、文件與未來版本的開發人員。"
 
 #: about.php:61
 msgid "Honorable Mentions"
-msgstr "控制台菜單部分"
+msgstr "特別鳴謝"
 
 #: about.php:62
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
@@ -247,7 +247,7 @@ msgstr "所選的彙總圖表似乎沒有任何相符的彙總範本。"
 
 #: aggregate_graphs.php:398
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "為了將下面的聚合圖遷移到基於模板的聚合，它們只能使用一個圖模板。請按“返回”，然後僅選擇使用相同圖表模板的聚合圖。"
+msgstr "若要將下列彙總圖表遷移為使用彙總範本，必須先存在一個彙總範本。請按「返回」，然後先建立您的彙總範本再重試。"
 
 #: aggregate_graphs.php:414
 msgid "Click 'Continue' and the following Aggregate Graph(s) will be migrated to use the Aggregate Template that you choose below."
@@ -310,7 +310,7 @@ msgstr "您目前尚未定義任何報表。"
 
 #: aggregate_graphs.php:492
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "單擊“繼續”將以下聚合圖組合到單個聚合圖中。"
+msgstr "按一下「繼續」以將下列彙總圖表轉換為一般圖表。"
 
 #: aggregate_graphs.php:497
 msgid "Convert to normal Graph(s)"
@@ -322,7 +322,7 @@ msgstr "單擊“繼續”將以下圖表與聚合圖表相關聯。"
 
 #: aggregate_graphs.php:506
 msgid "Associate Graph(s)"
-msgstr "Associate Graph（s）"
+msgstr "關聯圖表"
 
 #: aggregate_graphs.php:510
 msgid "Click 'Continue' to disassociate the following Graph(s) from the Aggregate."
@@ -330,7 +330,7 @@ msgstr "單擊“繼續”以取消以下圖表與聚合的關聯。"
 
 #: aggregate_graphs.php:515
 msgid "Dis-Associate Graph(s)"
-msgstr "Dis-Associate Graph（s）"
+msgstr "取消關聯圖表"
 
 #: aggregate_graphs.php:519
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
@@ -936,11 +936,11 @@ msgstr "密碼匹配"
 
 #: auth_login.php:88
 msgid "Cacti no longer supports No Authentication mode. Please contact your System Administrator."
-msgstr "訪問被拒絕，請與您聯繫Cacti管理員。"
+msgstr "Cacti 已不再支援無驗證模式。請聯絡您的系統管理員。"
 
 #: auth_login.php:123
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
-msgstr "訪問被拒絕，請與您聯繫Cacti管理員。"
+msgstr "無法判斷使用者的登入領域或網域。請聯絡您的系統管理員。"
 
 #: auth_login.php:151
 msgid "User was Authenticated, but the Template Account is disabled.  Using Guest Account"
@@ -2910,12 +2910,12 @@ msgstr[0] "重複的顏色模板"
 #: color_templates.php:259
 msgid "Click 'Continue' to Synchronize all Aggregate Graphs with the selected Color Template."
 msgid_plural "Click 'Continue' to Synchronize all Aggregate Graphs with the selected Color Templates."
-msgstr[0] "單擊“繼續”以從選定的圖形創建聚合圖。"
+msgstr[0] "點擊「繼續」以將所有彙總圖表與所選色彩範本同步。"
 
 #: color_templates.php:264
 msgid "Synchronize Color Template"
 msgid_plural "Synchronize Color Templates"
-msgstr[0] "將圖表同步到圖表模板"
+msgstr[0] "同步色彩範本"
 
 #: color_templates.php:307
 msgid "Color Template Items [new]"
@@ -3557,7 +3557,7 @@ msgstr[0] "刪除數據查詢"
 #: data_queries.php:434
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "單擊“繼續”以刪除以下數據查詢。"
+msgstr[0] "點擊「繼續」以複製以下資料查詢。"
 
 #: data_queries.php:436 lib/html_reports.php:591
 msgid "Name Format:"
@@ -3566,7 +3566,7 @@ msgstr "名稱格式："
 #: data_queries.php:444
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "刪除數據查詢"
+msgstr[0] "複製資料查詢"
 
 #: data_queries.php:584
 msgid "The item does not belong to this Data Query."
@@ -4505,7 +4505,7 @@ msgstr "沒有 GPRINT 預設集"
 
 #: graph.php:68
 msgid "GRAPH DOES NOT EXIST"
-msgstr "聚合圖設置"
+msgstr "圖表不存在"
 
 #: graph.php:101
 msgid "Viewing Graph"
@@ -4667,7 +4667,7 @@ msgstr "將圖表同步到圖表模板"
 
 #: graph_templates.php:456
 msgid "Click 'Continue' to perform a Quick Synchronization of your Graphs for the following Graph Template(s). Use this option if your Graphs have Graph Items that do not match your Graph Template.  If this option does not work, use the Full Sync Graphs option, which will take more time to complete."
-msgstr "點擊“繼續”以使您的圖表與以下圖表模板同步。如果您的圖形與圖形模板的多個版本一起存在並希望使它們在外觀上都很常見，則此功能非常重要。"
+msgstr "按一下「繼續」以針對下列圖表範本執行圖表的快速同步。如果您的圖表包含與圖表範本不相符的圖表項目，請使用此選項。如果此選項無效，請使用「完整同步圖表」選項，但這將需要較長的時間來完成。"
 
 #: graph_templates.php:529
 #, php-format
@@ -4858,7 +4858,7 @@ msgstr "圖表名稱"
 
 #: graph_view.php:800 graph_view.php:828 graphs.php:2343
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
-msgstr "該圖的標題。通常以編程方式從“圖表模板”定義或“建議命名”規則生成。標題的最大長度在Settings-&gt; Visual下控制。"
+msgstr "此圖表的標題。通常由程式根據圖表範本定義或建議命名規則自動產生。標題的最大長度可在「設定->視覺」下控制。"
 
 #: graph_view.php:805
 msgid "The device for this Graph."
@@ -5379,7 +5379,7 @@ msgstr "同步至裝置範本"
 
 #: host.php:49
 msgid "Place Device on Report"
-msgstr "將設備放在樹上"
+msgstr "將裝置加入報表"
 
 #: host.php:141
 msgid "Data Query Re-indexed."
@@ -5675,7 +5675,7 @@ msgstr "SNMP GetNext"
 
 #: host.php:1328
 msgid "Delete Item from Device"
-msgstr "刪除設備模板"
+msgstr "從裝置刪除項目"
 
 #: host.php:1547 host.php:1670 host.php:1856
 msgid "Undefined"
@@ -5869,7 +5869,7 @@ msgstr "裝置範本"
 
 #: host_templates.php:857 include/global_form.php:1356
 msgid "Class"
-msgstr "經典"
+msgstr "類別"
 
 #: host_templates.php:962
 msgid "Has Devices"
@@ -5972,7 +5972,7 @@ msgstr "返回 Cacti：%s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "此數據收集器最後一次與主Cacti站點完全同步。"
+msgstr "主資料收集器已恢復為線上狀態"
 
 #: include/global.php:568
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
@@ -6657,7 +6657,7 @@ msgstr "LDAPS"
 
 #: include/global_arrays.php:905
 msgid "LDAP + TLS"
-msgstr "服務器支持的加密。 TLS僅受協議版本3支持。"
+msgstr "LDAP + TLS"
 
 #: include/global_arrays.php:910
 msgid "Hard"
@@ -6935,7 +6935,7 @@ msgstr "無線基地台、控制器"
 
 #: include/global_arrays.php:1096
 msgid "Application Related"
-msgstr "應用自動化規則"
+msgstr "應用程式相關"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
@@ -6951,7 +6951,7 @@ msgstr "設施相關"
 
 #: include/global_arrays.php:1100
 msgid "Generic Device"
-msgstr "通用日誌級別"
+msgstr "一般裝置"
 
 #: include/global_arrays.php:1101
 msgid "HPC/Grid Computing"
@@ -6979,11 +6979,11 @@ msgstr "負載均衡"
 
 #: include/global_arrays.php:1107
 msgid "Network Switch"
-msgstr "網絡過濾器"
+msgstr "網路交換器"
 
 #: include/global_arrays.php:1108
 msgid "Network Router"
-msgstr "網絡過濾器"
+msgstr "網路路由器"
 
 #: include/global_arrays.php:1109
 msgid "NAS/SAN Related"
@@ -6991,7 +6991,7 @@ msgstr "NAS/SAN 相關"
 
 #: include/global_arrays.php:1110
 msgid "Network Firewalls"
-msgstr "網絡過濾器"
+msgstr "網路防火牆"
 
 #: include/global_arrays.php:1111
 msgid "Power Related PDUs/STS, etc."
@@ -6999,7 +6999,7 @@ msgstr "電源相關（PDU/STS 等）"
 
 #: include/global_arrays.php:1112
 msgid "Printer Related"
-msgstr "資料庫"
+msgstr "印表機相關"
 
 #: include/global_arrays.php:1113
 msgid "Storage Related"
@@ -7007,7 +7007,7 @@ msgstr "儲存體相關"
 
 #: include/global_arrays.php:1114
 msgid "Telco Related"
-msgstr "選取範本"
+msgstr "電信相關"
 
 #: include/global_arrays.php:1115
 msgid "Web Server Related"
@@ -7713,7 +7713,7 @@ msgstr "12月"
 
 #: include/global_arrays.php:1949
 msgid "Use the First Handler Found"
-msgstr "使用 PHP GetText 處理程序"
+msgstr "使用找到的第一個處理常式"
 
 #: include/global_arrays.php:1953
 msgid "Use the PHP GetText Handler"
@@ -7884,7 +7884,7 @@ msgstr "[警告]"
 
 #: include/global_arrays.php:2021
 msgid "[Restart]"
-msgstr "受限"
+msgstr "[重新啟動]"
 
 #: include/global_arrays.php:2022
 msgid "[Success]"
@@ -9219,7 +9219,7 @@ msgstr "從範本建立新項目"
 
 #: include/global_form.php:1709 package_import.php:905
 msgid "Graph/Data Template Overrides"
-msgstr "圖形模板選項"
+msgstr "圖表/資料範本覆寫"
 
 #: include/global_form.php:1714 package_import.php:910
 msgid "Remove Orphaned Graph Items"
@@ -9253,7 +9253,7 @@ msgstr "圖表範本高度"
 
 #: include/global_form.php:1736 package_import.php:933
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "所有新圖表模板使用的默認圖表寬度。"
+msgstr "匯入或更新圖表範本時要使用的高度。"
 
 #: include/global_form.php:1743 include/global_settings.php:612
 #: package_import.php:941
@@ -9262,7 +9262,7 @@ msgstr "圖表範本寬度"
 
 #: include/global_form.php:1744 package_import.php:942
 msgid "The Width to be used when importing or updating Graph Templates."
-msgstr "所有新圖表模板使用的默認圖表寬度。"
+msgstr "匯入或更新圖表範本時要使用的寬度。"
 
 #: include/global_form.php:1755
 msgid "General SNMP Entity Options"
@@ -9901,7 +9901,7 @@ msgstr "其他設定"
 
 #: include/global_settings.php:402
 msgid "Show only site specific locations"
-msgstr "在此處設置任何圖表特定選項。"
+msgstr "僅顯示站台特定位置"
 
 #: include/global_settings.php:403
 msgid "Show only locations that are available at a devices selected site."
@@ -9925,7 +9925,7 @@ msgstr "您安裝的 RRDtool 版本。"
 
 #: include/global_settings.php:421
 msgid "Enable Gradient Support"
-msgstr "啟用報告"
+msgstr "啟用漸層支援"
 
 #: include/global_settings.php:422
 msgid "Enabled Gradient Support for AREA and STACK charts."
@@ -10149,7 +10149,7 @@ msgstr "所有新圖表範本使用的預設圖片格式。"
 
 #: include/global_settings.php:605
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "所有新圖表模板使用的默認圖表寬度。"
+msgstr "所有新圖表範本要使用的預設圖表高度。"
 
 #: include/global_settings.php:613
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -10674,7 +10674,7 @@ msgstr "用於圖表單位項目的字型。請輸入有效的 TrueType 字型�
 
 #: include/global_settings.php:1149
 msgid "Business Hours Settings"
-msgstr "使用者設定"
+msgstr "營業時間設定"
 
 #: include/global_settings.php:1154
 msgid "Start of Business Day"
@@ -10718,7 +10718,7 @@ msgstr "營業時間要顯示的顏色"
 
 #: include/global_settings.php:1190
 msgid "Maximum number of days to show business hours"
-msgstr "每頁的最大行數"
+msgstr "顯示營業時間的最大天數"
 
 #: include/global_settings.php:1191
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
@@ -10874,7 +10874,7 @@ msgstr "定期重新建立所有裝置索引"
 
 #: include/global_settings.php:1356
 msgid "Re-Index All Device Schedule"
-msgstr "重新索引方法"
+msgstr "重新索引所有裝置排程"
 
 #: include/global_settings.php:1357
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
@@ -10890,7 +10890,7 @@ msgstr "每月一次"
 
 #: include/global_settings.php:1368
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "圖例字體設置"
+msgstr "背景逾時與並行處理程序設定"
 
 #: include/global_settings.php:1373
 msgid "Report Generation Timeout"
@@ -10917,11 +10917,11 @@ msgstr "Cacti 的資料來源統計指令碼在產生逾時錯誤並被終止前
 
 #: include/global_settings.php:1401
 msgid "RRDChecker Timeout"
-msgstr "DNS超時"
+msgstr "RRDChecker 逾時"
 
 #: include/global_settings.php:1402
 msgid "The maximum amount of time Cacti's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "Cacti的Spikekill腳本可以運行的最長時間，而不會產生超時錯誤並被殺死。"
+msgstr "Cacti 的 RRDfile 檢查指令碼在不產生逾時錯誤並被終止的情況下可執行的最長時間。"
 
 #: include/global_settings.php:1408 include/global_settings.php:1409
 #: include/global_settings.php:1410 include/global_settings.php:1465
@@ -11088,7 +11088,7 @@ msgstr "Web基本身份驗證"
 
 #: include/global_settings.php:1562
 msgid "Basic Auth Login Failure Message"
-msgstr "基本身份驗證映射文件"
+msgstr "基本驗證登入失敗訊息"
 
 #: include/global_settings.php:1563
 msgid "When using basic authentication, if there are issues mapping the username to a valid Cacti account, the message included here will be displayed to users.  It can include both text and HTML."
@@ -11245,7 +11245,7 @@ msgstr "SSL 連接埠"
 
 #: include/global_settings.php:1722
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "用於非SSL通信的TCP / UDP端口。"
+msgstr "用於 SSL 通訊的 LDAPS TCP 連接埠。預設值為 636。"
 
 #: include/global_settings.php:1729 user_domains.php:444
 msgid "Protocol Version"
@@ -11261,15 +11261,15 @@ msgstr "連接超時"
 
 #: include/global_settings.php:1737
 msgid "The Network Connect Timeout in seconds."
-msgstr "請輸入SMTP超時（以秒為單位）。"
+msgstr "網路連線逾時時間（以秒為單位）。"
 
 #: include/global_settings.php:1744
 msgid "Bind Timeout"
-msgstr "已逾時"
+msgstr "繫結逾時"
 
 #: include/global_settings.php:1745
 msgid "The Bind Timeout in seconds."
-msgstr "請輸入SMTP超時（以秒為單位）。"
+msgstr "繫結逾時時間（以秒為單位）。"
 
 #: include/global_settings.php:1752
 msgid "LDAP Debug Mode"
@@ -11693,7 +11693,7 @@ msgstr "RRD 更新指令碼最長執行時間"
 
 #: include/global_settings.php:2151
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "如果boost poller刪除了此運行時，則會在cacti日誌中發出警告，"
+msgstr "如果 boost poller 超過此執行時間，將在 Cacti 日誌中記錄警告，"
 
 #: include/global_settings.php:2157
 msgid "Enable direct population of poller_output_boost table"
@@ -11745,7 +11745,7 @@ msgstr "是否要為此 Cacti 系統收集資料來源統計資料？"
 
 #: include/global_settings.php:2202
 msgid "Number of DSStats Processes"
-msgstr "Boost進程數"
+msgstr "DSStats 處理程序數量"
 
 #: include/global_settings.php:2203
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
@@ -11785,19 +11785,19 @@ msgstr "Cacti 輪詢器與資料來源統計輪詢器的最大記憶體用量"
 
 #: include/global_settings.php:2259
 msgid "RRDfile Check"
-msgstr "RRDfile清理器"
+msgstr "RRDfile 檢查"
 
 #: include/global_settings.php:2264
 msgid "Enable RRDfile Check"
-msgstr "啟用規則"
+msgstr "啟用 RRDfile 檢查"
 
 #: include/global_settings.php:2265
 msgid "Should RRDfile check be enabled for this Cacti system?"
-msgstr "是否應該為此Cacti系統收集數據源統計信息？"
+msgstr "是否應為此 Cacti 系統啟用 RRDfile 檢查？"
 
 #: include/global_settings.php:2270
 msgid "Number of RRDfile Check Processes"
-msgstr "Boost進程數"
+msgstr "RRDfile 檢查處理程序數量"
 
 #: include/global_settings.php:2271
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
@@ -11809,7 +11809,7 @@ msgstr "頻率"
 
 #: include/global_settings.php:2299
 msgid "How frequent should RRD be checked ?"
-msgstr "Daily Stats應該多久更新一次？"
+msgstr "應該多久檢查一次 RRD？"
 
 #: include/global_settings.php:2305
 msgid "Data Storage Settings"
@@ -11837,7 +11837,7 @@ msgstr "為每台主機的 RRD 檔案使用單獨的子資料夾。RRDfiles 的�
 
 #: include/global_settings.php:2330
 msgid "Directory Pattern"
-msgstr "找到目錄"
+msgstr "目錄模式"
 
 #: include/global_settings.php:2331
 msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
@@ -11849,7 +11849,7 @@ msgstr "裝置"
 
 #: include/global_settings.php:2336
 msgid "Device ID/Data Query ID"
-msgstr "刪除數據查詢"
+msgstr "裝置 ID/資料查詢 ID"
 
 #: include/global_settings.php:2337
 msgid "Device Hash/Device ID"
@@ -12429,7 +12429,7 @@ msgstr "新增輪詢器"
 
 #: install/install.php:89
 msgid "Cacti Install Help"
-msgstr "主動/安裝"
+msgstr "Cacti 安裝說明"
 
 #: install/install.php:97
 #, php-format
@@ -12850,7 +12850,7 @@ msgstr "您的密碼必須包含至少 1 個特殊字元！"
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "Cacti Log清除"
+msgstr "Cacti 登入失敗"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12953,7 +12953,7 @@ msgstr "自動"
 
 #: lib/clog_webapi.php:594
 msgid "Non Stats"
-msgstr "沒有說明"
+msgstr "非統計資料"
 
 #: lib/clog_webapi.php:595
 msgid "Boost"
@@ -12965,7 +12965,7 @@ msgstr "設備使用"
 
 #: lib/clog_webapi.php:597
 msgid "Recaches"
-msgstr "符合"
+msgstr "重新快取"
 
 #: lib/clog_webapi.php:601
 msgid "Threshold"
@@ -13475,7 +13475,7 @@ msgstr "未發現問題"
 
 #: lib/dsdebug.php:315
 msgid "RRDfile not created yet"
-msgstr "輪詢後RRD文件未更新"
+msgstr "RRDfile 尚未建立"
 
 #: lib/functions.php:451 settings.php:274
 #, php-format
@@ -13675,7 +13675,7 @@ msgstr "已損壞的圖表"
 
 #: lib/html.php:76
 msgid "Remote Server"
-msgstr "刪除StdDev"
+msgstr "遠端伺服器"
 
 #: lib/html.php:138
 msgid "Get Page Help"
@@ -13743,7 +13743,7 @@ msgstr "#"
 
 #: lib/html.php:1535
 msgid "GPrint"
-msgstr "刪除GPRINT預設"
+msgstr "GPrint"
 
 #: lib/html.php:1538
 msgid "Alpha %"
@@ -14538,7 +14538,7 @@ msgstr "是否應該呈現所有子分支圖形？"
 
 #: lib/html_reports.php:1110
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "選擇設備以指定圖表"
+msgstr "選取站台以篩選裝置和圖表。"
 
 #: lib/html_reports.php:1120
 msgid "Select a Device Template to use to filter for Devices or Graphs."
@@ -14656,7 +14656,7 @@ msgstr "裝置：%s"
 
 #: lib/html_reports.php:1774
 msgid ", Graph Template: All Templates"
-msgstr "將圖表模板添加到設備模板"
+msgstr "，圖表範本：所有範本"
 
 #: lib/html_reports.php:1776
 #, php-format
@@ -14843,7 +14843,7 @@ msgstr "Cacti RLIKE 篩選器不支援選擇 (|) 或限定次數重複字元。"
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
-msgstr "下載"
+msgstr "離線 (Thold)"
 
 #: lib/html_utility.php:1467 lib/installer.php:2021 lib/installer.php:3902
 msgid "Error"
@@ -15247,7 +15247,7 @@ msgstr "警告"
 
 #: lib/installer.php:2015
 msgid "Restart Required"
-msgstr "必须"
+msgstr "需要重新啟動"
 
 #: lib/installer.php:2015
 msgid "The specified value appears to be different in the running config versus the INI file."
@@ -16030,7 +16030,7 @@ msgstr "否 - %s"
 #: lib/installer.php:3778
 #, php-format
 msgid "%s - N/A"
-msgstr "%s Minutes"
+msgstr "%s - 不適用"
 
 #: lib/installer.php:3778 lib/installer.php:3780
 msgid "Web"
@@ -16266,7 +16266,7 @@ msgstr "裝置 '%s' 已成功加入報表。"
 
 #: lib/reports.php:142
 msgid "Device not found! Unable to add to Report"
-msgstr "未找到圖表嘗試添加到報告"
+msgstr "找不到裝置！無法新增至報表"
 
 #: lib/reports.php:146
 #, php-format
@@ -16445,7 +16445,7 @@ msgstr "發現錯誤"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
-msgstr "數據源字段"
+msgstr "選用調校建議"
 
 #: lib/rrd.php:4231 lib/rrd.php:4234
 #, php-format
@@ -17206,11 +17206,11 @@ msgstr "由於會話超時，您已退出Cacti。"
 
 #: logout.php:61
 msgid "You have been logged out of Cacti due to an account suspension."
-msgstr "由於會話超時，您已退出Cacti。"
+msgstr "由於帳號遭停權，您已登出 Cacti。"
 
 #: logout.php:63
 msgid "You have been logged out of Cacti due to a Remote Data Collector state change"
-msgstr "由於會話超時，您已退出Cacti。"
+msgstr "由於遠端資料收集器狀態變更，您已登出 Cacti"
 
 #: logout.php:71
 msgid "Logout of Cacti"
@@ -17384,7 +17384,7 @@ msgstr "錯誤：無效的檔案路徑。"
 #: package_import.php:388 package_import.php:394 package_import.php:480
 #: package_import.php:483
 msgid "Error in Package"
-msgstr "數據查詢錯誤"
+msgstr "套件發生錯誤"
 
 #: package_import.php:388
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
@@ -17405,7 +17405,7 @@ msgstr "套件下載或驗證失敗"
 
 #: package_import.php:480
 msgid "Package XML File Damaged."
-msgstr "包文件"
+msgstr "套件 XML 檔案已損毀。"
 
 #: package_import.php:480
 msgid "The XML files appears to be invalid.  Please contact the package author"
@@ -17421,7 +17421,7 @@ msgstr "套件的 XML 檔案不存在"
 
 #: package_import.php:527
 msgid "Packages Details"
-msgstr "包文件"
+msgstr "套件詳細資訊"
 
 #: package_import.php:540
 msgid "Device class"
@@ -17429,7 +17429,7 @@ msgstr "設備規則"
 
 #: package_import.php:546
 msgid "Copyright"
-msgstr "右"
+msgstr "著作權"
 
 #: package_import.php:571
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -17441,7 +17441,7 @@ msgstr "包文件"
 
 #: package_import.php:578
 msgid "Filename"
-msgstr "重新命名"
+msgstr "檔案名稱"
 
 #: package_import.php:629 package_import.php:729 templates_import.php:367
 msgid "Differences"
@@ -17461,7 +17461,7 @@ msgstr "模版標題"
 
 #: package_import.php:669 templates_import.php:283
 msgid "Changes/Diffferences"
-msgstr "更改設備"
+msgstr "變更/差異"
 
 #: package_import.php:694 templates_import.php:304
 msgid "Updated"
@@ -17922,7 +17922,7 @@ msgstr[0] "單擊“繼續”以啟用以下Data Collector。"
 #: pollers.php:599 pollers.php:608
 msgid "Enable Data Collector"
 msgid_plural "Enable Data Collectors"
-msgstr[0] "啟用Data Collector"
+msgstr[0] "啟用資料收集器"
 
 #: pollers.php:603
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
@@ -17932,12 +17932,12 @@ msgstr[0] "單擊“繼續”以同步遠程數據收集器以進行脫機操作
 #: pollers.php:612
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "單擊“繼續”以啟用以下Data Collector。"
+msgstr[0] "點擊「繼續」以清除資料收集器的統計資料。"
 
 #: pollers.php:617
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "此數據收集器的狀態。"
+msgstr[0] "清除資料收集器統計資料"
 
 #: pollers.php:669
 msgid "The Main Data Collector can not be deleted or disabled."
@@ -18078,11 +18078,11 @@ msgstr "RRD 檢查已停用，請於「設定 -> 系統設定 -> 資料」中啟
 
 #: rrdcheck.php:106 utilities.php:2413
 msgid "RRDfile Checker"
-msgstr "RRDfile清理器"
+msgstr "RRDfile 檢查器"
 
 #: rrdcheck.php:147
 msgid "RRDcheck Problems"
-msgstr "找不到設備模板"
+msgstr "RRDcheck 問題"
 
 #: rrdcheck.php:157
 msgid "Host Description"
@@ -18090,7 +18090,7 @@ msgstr "描述"
 
 #: rrdcheck.php:165
 msgid "Local Data ID"
-msgstr "有效數據"
+msgstr "本機資料 ID"
 
 #: rrdcheck.php:170
 msgid "Message"
@@ -18102,11 +18102,11 @@ msgstr "已刪除"
 
 #: rrdcheck.php:203
 msgid "No RRDcheck Problems Found"
-msgstr "找不到設備模板"
+msgstr "未發現 RRDcheck 問題"
 
 #: rrdcheck.php:239
 msgid "Age"
-msgstr "八月"
+msgstr "存在時間"
 
 #: rrdcheck.php:243 rrdcheck.php:244 rrdcheck.php:245
 #, php-format
@@ -18468,7 +18468,7 @@ msgstr[0] "刪除網站"
 #: sites.php:445
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "單擊“繼續”以刪除以下樹。"
+msgstr[0] "點擊「繼續」以複製以下站台。"
 
 #: sites.php:447
 msgid "Site Name:"
@@ -18583,7 +18583,7 @@ msgstr "範本匯入成功。"
 
 #: templates_import.php:147
 msgid "Error in Template"
-msgstr "非模板化"
+msgstr "範本發生錯誤"
 
 #: templates_import.php:147
 #, php-format
@@ -18605,7 +18605,7 @@ msgstr "字段名稱"
 
 #: templates_import.php:250
 msgid "Not Readable"
-msgstr "可寫入"
+msgstr "無法讀取"
 
 #: templates_import.php:267
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
@@ -18617,7 +18617,7 @@ msgstr "包括依賴項"
 
 #: templates_import.php:308
 msgid "Damaged"
-msgstr "數據源，圖表"
+msgstr "已損壞"
 
 #: templates_import.php:335
 #, php-format
@@ -18736,12 +18736,12 @@ msgstr[0] "取消發布樹"
 #: tree.php:872
 msgid "Click 'Continue' to un-lock the following Tree."
 msgid_plural "Click 'Continue' to un-lock following Trees."
-msgstr[0] "單擊“繼續”以取消發布以下樹。"
+msgstr[0] "點擊「繼續」以解除鎖定以下樹狀目錄。"
 
 #: tree.php:877
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "取消發布樹"
+msgstr[0] "解除鎖定樹狀目錄"
 
 #: tree.php:927
 #, php-format
@@ -18902,11 +18902,11 @@ msgstr "批次複製"
 
 #: user_admin.php:285
 msgid "You are not allowed to delete the current login account"
-msgstr "無法成功更改您的密碼。"
+msgstr "不允許您刪除目前的登入帳號"
 
 #: user_admin.php:297
 msgid "You are not allowed to disable the current login account"
-msgstr "無法成功更改您的密碼。"
+msgstr "不允許您停用目前的登入帳號"
 
 #: user_admin.php:377
 msgid "Click 'Continue' to delete the selected User(s)."
@@ -18986,11 +18986,11 @@ msgstr "<b>注意：</b>系統圖表原則為「嚴格限制模式」，表示�
 
 #: user_admin.php:817 user_group_admin.php:865
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>注意：</b>系統圖策略是“限制性”，意味著用戶必須能夠訪問圖表或設備和圖表模板才能訪問圖表"
+msgstr "<b>注意：</b>系統圖表原則為「裝置」，表示使用者必須擁有圖表或裝置的存取權限，才能存取該圖表"
 
 #: user_admin.php:819 user_group_admin.php:867
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>注意：</b>系統圖策略是“允許的”意味著用戶必須能夠訪問圖形，設備或圖形模板中的至少一個才能訪問圖形"
+msgstr "<b>注意：</b>系統圖表原則為「圖表範本」，表示使用者必須擁有圖表或圖表範本的存取權限，才能存取該圖表"
 
 #: user_admin.php:823 user_group_admin.php:875
 msgid "Default Graph Policy"
@@ -20263,7 +20263,7 @@ msgstr "上次開始時間："
 
 #: utilities.php:2853
 msgid "Last End Time:"
-msgstr "上次開始時間："
+msgstr "上次結束時間："
 
 #: utilities.php:2853
 msgid "Never Run"

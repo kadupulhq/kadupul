@@ -16560,7 +16560,7 @@ msgstr "صف poller_output پیش از جمع‌آوری باید از InnoDB ا
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "عملیات قابل تأیید نبود. پیش از تلاش مجدد، تاریخچه تغییرات را بررسی کنید."
+msgstr "در دسترس نیست"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"

@@ -13288,7 +13288,7 @@ msgstr "OID येथे निर्देशांक आढळला: '%s' �
 #: lib/data_query.php:1042
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
-msgstr "'%s' येथे मूल्याद्वारे फिल्टर केलेल्या निर्देशांकांची सूची Index Count: %s"
+msgstr "'%s' येथे मूल्याद्वारे फिल्टर केलेल्या निर्देशांकांची सूची निर्देशांक संख्या: %s"
 
 #: lib/data_query.php:1046
 #, php-format
@@ -16560,7 +16560,7 @@ msgstr "संकलनापूर्वी poller_output रांग InnoDB �
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "क्रियेची पुष्टी होऊ शकली नाही. पुन्हा प्रयत्न करण्यापूर्वी बदल इतिहासाचे निरीक्षण करा."
+msgstr "अनुपलब्ध"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"

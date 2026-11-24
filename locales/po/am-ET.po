@@ -17255,7 +17255,7 @@ msgstr "ራስ-ሰር መውጣት"
 #: logout.php:81
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
-msgstr "እባክዎ አሳሽዎን ይዝጉ ወይም %sLogin Again%s"
+msgstr "እባክዎ አሳሽዎን ይዝጉ ወይም %sእንደገና ይግቡ%s"
 
 #: logout.php:85 utilities.php:870
 #, php-format

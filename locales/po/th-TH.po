@@ -16525,7 +16525,7 @@ msgstr "คิว poller_output ต้องใช้ InnoDB ก่อนกา�
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "ไม่สามารถยืนยันการดำเนินการได้ โปรดตรวจสอบประวัติการเปลี่ยนแปลงก่อนลองอีกครั้ง"
+msgstr "ไม่พร้อมใช้งาน"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
