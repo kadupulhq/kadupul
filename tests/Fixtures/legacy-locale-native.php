@@ -8,7 +8,7 @@ declare(strict_types=1);
 // Runs the real include/global_languages.php the way include/global.php does:
 // before the Composer autoloader and before global_settings.php. Only the
 // settings, user-setting and plugin database reads are doubles; the request
-// helpers, locale table, catalogs and php-gettext handler are the shipped ones.
+// helpers, locale table, catalogs and language handler are the shipped ones.
 
 $root = $argv[1];
 $fixture = json_decode($argv[2], true, 512, JSON_THROW_ON_ERROR);
