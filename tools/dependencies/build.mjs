@@ -1,7 +1,9 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { readFile, writeFile, mkdir, cp, rm } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { syncAssets } from './sync.mjs';
 import { installFontAwesome } from './fontawesome.mjs';
 import { versionCssImports } from './css-imports.mjs';
@@ -50,6 +52,19 @@ const icons = await installFontAwesome(
   new URL('include/fa/', root),
 );
 console.log(`Font Awesome ${icons.version}: stylesheet and ${icons.fonts.length} fonts installed`);
+
+// The application's own browser modules are TypeScript under frontend/. Clear
+// the output first so a renamed or deleted source leaves no stale module, and
+// compile here rather than in an npm script because the offline builder and the
+// build test run this file directly. tsc exits non-zero and emits nothing on a
+// type error, which fails the build.
+await rm(new URL('include/js/app/', root), { recursive: true, force: true });
+execFileSync(
+  process.execPath,
+  [fileURLToPath(new URL('node_modules/typescript/bin/tsc', root)), '--project', fileURLToPath(new URL('tsconfig.json', root))],
+  { stdio: 'inherit' },
+);
+console.log('TypeScript: browser modules compiled into include/js/app');
 
 await versionCssImports(new URL('include/themes/midwinter/main.css', root));
 console.log('Midwinter: source CSS import versions refreshed');

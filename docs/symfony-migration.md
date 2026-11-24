@@ -2689,7 +2689,8 @@ returned as printed, after csrf-magic's rewriter, under the native CSP its
 nonces match. Otherwise an AJAX request gets the 401 text of
 `raise_ajax_permission_denied()` and a page request gets the Twig page, which
 uses the existing gettext messages and moves the history-back handler to
-`include/js/permission-denied.js`. Status stays 200 for the page.
+`frontend/permission-denied.ts`, built to `include/js/app/`. Status stays 200
+for the page.
 
 The page no longer loads the legacy header bundle, so `page_head` and the
 `global_session.php` footer hooks do not run there, as on About. Output a

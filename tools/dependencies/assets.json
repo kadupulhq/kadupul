@@ -403,10 +403,5 @@
     "file": "console-home.js",
     "owned": true,
     "note": "Written for this project and maintained here; no upstream."
-  },
-  {
-    "file": "permission-denied.js",
-    "owned": true,
-    "note": "Written for this project and maintained here; no upstream."
   }
 ]
