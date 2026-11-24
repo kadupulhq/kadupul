@@ -1009,7 +1009,7 @@ test("DOMPurify keeps harmless markup and strips executable HTML and SVG", async
     };
   });
   expect(result).toEqual({
-    version: "3.4.17",
+    version: "3.4.18",
     text: "safe",
     scripts: 0,
     handlers: 0,

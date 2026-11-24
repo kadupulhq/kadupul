@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Game da Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul aiki ne mai zaman kansa na buɗaɗɗen tushe don sa ido kan hanyar sadarwa da zana jadawalan jerin lokaci."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Ci gaba, gudummawa, da yanke shawarar saki suna ƙarƙashin kulawar ƙungiyar Kadupul."
+"For documentation and support, visit the Kadupul project.": "Don takardu da tallafi, ziyarci aikin Kadupul."
+"License": "Lasisi"
+"Kadupul is licensed under the GNU GPL:": "An ba wa Kadupul lasisi ƙarƙashin GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Wannan shirin software ce kyauta; za ka iya sake rarraba ta da/ko gyara ta ƙarƙashin sharuɗɗan Lasisin Jama'a na GNU kamar yadda Free Software Foundation ta buga; ko dai sigar 2 ta Lasisin, ko (a zaɓinka) kowace siga ta baya."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Ana rarraba wannan shirin ne da fatan zai yi amfani, amma BA TARE DA WANI GARANTI BA; ko da ba tare da garantin da aka ambata na KASUWANCI ko DACEWA DA WATA MANUFA TA MUSAMMAN ba. Duba Lasisin Jama'a na GNU (GNU General Public License) don ƙarin bayani."
+"Access denied.": "An hana shiga."
+"Open About Kadupul to view project information.": "Buɗe Game da Kadupul don duba bayanan aikin."
+"Version %version%": "Siga %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Ƙungiyar Kadupul"
+"Kadupul project": "Aikin Kadupul"

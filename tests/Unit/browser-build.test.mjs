@@ -42,6 +42,9 @@ test('locked npm packages produce the legacy browser assets and compatibility al
   // A leftover from an older full-package copy must not survive a rebuild.
   await mkdir(new URL('include/fa/svgs/solid/', root), { recursive: true });
   await writeFile(new URL('include/fa/svgs/solid/stale.svg', root), '<svg/>');
+  // Nor may a module whose TypeScript source was renamed or deleted.
+  await mkdir(new URL('include/js/app/', root), { recursive: true });
+  await writeFile(new URL('include/js/app/stale.js', root), '');
   await import('../../tools/dependencies/build.mjs');
   const flags = JSON.parse(await readFile(new URL('include/vendor/flag-icons/package.json', root), 'utf8'));
   assert.equal(flags.name, 'flag-icons');
@@ -52,6 +55,12 @@ test('locked npm packages produce the legacy browser assets and compatibility al
   assert.match(iconCss, /\.fa-circle-notch \{\s*--fa: "\\f1ce";\s*\}/);
   assert.match(iconCss, /\.fa\)::before \{\s*content: var\(--fa\)/);
   assert.match(await readFile(new URL('include/js/purify.js', root), 'utf8'), /DOMPurify/);
+  const sources = (await readdir(new URL('frontend/', root))).filter((file) => file.endsWith('.ts'));
+  assert.ok(sources.includes('permission-denied.ts'));
+  assert.deepEqual(await tree(new URL('include/js/app/', root)), sources.map((file) => file.replace(/\.ts$/, '.js')).sort(), 'one module per source and nothing stale');
+  const module = await readFile(new URL('include/js/app/permission-denied.js', root), 'utf8');
+  assert.match(module, /SPDX-License-Identifier: GPL-3\.0-or-later/);
+  assert.match(module, /querySelectorAll\('a\.returnTo'\)/);
 });
 
 test('the Font Awesome build ships only the stylesheet, its fonts, the licence and directory guards', async () => {

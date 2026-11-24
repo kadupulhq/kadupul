@@ -1,0 +1,26 @@
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "types": [],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    // Only syntax that disappears when types are removed: the emitted module
+    // keeps the source's statements, and Node runs the sources directly in
+    // unit tests.
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "rewriteRelativeImportExtensions": true,
+    "noEmitOnError": true,
+    "rootDir": "frontend",
+    "outDir": "include/js/app"
+  },
+  "include": ["frontend"]
+}

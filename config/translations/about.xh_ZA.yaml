@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Malunga ne-Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "I-Kadupul yiprojekthi ye-open-source ezimeleyo yokubeka iliso kwinethiwekhi kunye nokwenza iigrafu zexesha eliqhubekayo."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Uphuhliso, iminikelo, kunye nezigqibo zokukhupha zilawulwa ngumbutho we-Kadupul."
+"For documentation and support, visit the Kadupul project.": "Ukufumana amaxwebhu nenkxaso, ndwendwela i-Kadupul project."
+"License": "Ilayisensi"
+"Kadupul is licensed under the GNU GPL:": "I-Kadupul inelayisensi phantsi kwe-GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Le program yisoftware ekhululekileyo; ungayisasaza kwakhona kwaye/okanye uyiguqule phantsi kwemiqathango ye-GNU General Public License njengoko ipapashwe yi-Free Software Foundation; nokuba uguqulelo lwesi-2 lweLayisensi, okanye (ngokokhetho lwakho) naluphi na uguqulelo lwamva."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Le program isasazwa ngethemba lokuba iya kuba luncedo, kodwa NGAPHANDLE KWASIPHI NA ISIQINISEKISO; kwanangaphandle kwesiqinisekiso esichaziweyo sokuRHWEBA okanye UKULUNGELA INJONGO ETHILE. Jonga i-GNU General Public License ukufumana iinkcukacha ezithe vetshe."
+"Access denied.": "Ufikelelo lwaliwe."
+"Open About Kadupul to view project information.": "Vula i-About Kadupul ukuze ujonge ulwazi lweprojekthi."
+"Version %version%": "Uguqulelo %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Umbutho we-Kadupul"
+"Kadupul project": "Iprojekthi ye-Kadupul"

@@ -3534,22 +3534,31 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         }
 
         $message = __('Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade.');
-        $process = new \Symfony\Component\Process\Process(
-            array($php, $config['base_path'] . '/bin/console', 'cache:clear', '--env=prod', '--no-debug', '--no-interaction'),
-            $config['base_path'],
-            array('APP_ENV' => 'prod', 'APP_DEBUG' => '0'),
-            null,
-            120
-        );
-        // Compiler diagnostics can contain configuration; report the operation only.
-        $process->disableOutput();
-        try {
-            $status = $process->run();
-        } catch (Throwable $error) {
-            throw new RuntimeException($message, 0, $error);
-        }
-        if ($status !== 0) {
-            throw new RuntimeException($message);
+        // cache:clear holds the exclusive cache lock, and web requests wait
+        // for it only briefly (CacheDirectoryLock). It builds the container
+        // alone; cache:warmup then compiles the optional caches, the
+        // translation catalogues of every shipped locale among them, without
+        // that lock, so the web installer's status polling keeps answering.
+        // The children read php.ini afresh, so the limit this worker lifted for
+        // itself is passed on: compiling every shipped locale exceeds 128M.
+        foreach (array(array('cache:clear', '--no-optional-warmers'), array('cache:warmup')) as $command) {
+            $process = new \Symfony\Component\Process\Process(
+                array_merge(array($php, '-d', 'memory_limit=-1', $config['base_path'] . '/bin/console'), $command, array('--env=prod', '--no-debug', '--no-interaction')),
+                $config['base_path'],
+                array('APP_ENV' => 'prod', 'APP_DEBUG' => '0'),
+                null,
+                120
+            );
+            // Compiler diagnostics can contain configuration; report the operation only.
+            $process->disableOutput();
+            try {
+                $status = $process->run();
+            } catch (Throwable $error) {
+                throw new RuntimeException($message, 0, $error);
+            }
+            if ($status !== 0) {
+                throw new RuntimeException($message);
+            }
         }
     }
 

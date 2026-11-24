@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Kadupul గురించి"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul అనేది నెట్‌వర్క్ పర్యవేక్షణ మరియు సమయ-శ్రేణి గ్రాఫింగ్ కోసం ఒక స్వతంత్ర ఓపెన్-సోర్స్ ప్రాజెక్ట్."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "అభివృద్ధి, సహకారాలు మరియు విడుదల నిర్ణయాలు Kadupul సంస్థ ద్వారా నిర్వహించబడతాయి."
+"For documentation and support, visit the Kadupul project.": "డాక్యుమెంటేషన్ మరియు మద్దతు కోసం, Kadupul ప్రాజెక్ట్‌ను సందర్శించండి."
+"License": "లైసెన్స్"
+"Kadupul is licensed under the GNU GPL:": "Kadupul GNU GPL క్రింద లైసెన్స్ పొందింది:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "ఈ ప్రోగ్రామ్ ఉచిత సాఫ్ట్‌వేర్; Free Software Foundation ప్రచురించిన GNU General Public License యొక్క వెర్షన్ 2 లేదా (మీ ఎంపిక ప్రకారం) తదుపరి ఏదైనా వెర్షన్ నిబంధనల ప్రకారం మీరు దీనిని పునఃపంపిణీ చేయవచ్చు మరియు/లేదా సవరించవచ్చు."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "ఈ ప్రోగ్రామ్ ఉపయోగకరంగా ఉంటుందనే ఆశతో పంపిణీ చేయబడుతోంది, కానీ ఎలాంటి వారంటీ లేకుండా; వ్యాపారయోగ్యత లేదా నిర్దిష్ట ప్రయోజనం కోసం అనుకూలతకు సూచించిన వారంటీ కూడా లేకుండా. మరిన్ని వివరాల కోసం GNU General Public License చూడండి."
+"Access denied.": "యాక్సెస్ నిరాకరించబడింది."
+"Open About Kadupul to view project information.": "ప్రాజెక్ట్ సమాచారాన్ని వీక్షించడానికి 'Kadupul గురించి' తెరవండి."
+"Version %version%": "వెర్షన్ %version%"
+"- Beta %beta%": "- బీటా %beta%"
+"Kadupul organization": "Kadupul సంస్థ"
+"Kadupul project": "Kadupul ప్రాజెక్ట్"

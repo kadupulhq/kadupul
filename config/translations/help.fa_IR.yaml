@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "راهنما"
+"Access denied.": "دسترسی رد شد."
+"Choose a topic to open the Kadupul documentation.": "برای باز کردن مستندات Kadupul یک موضوع انتخاب کنید."
+"Get started": "شروع کنید"
+"Graphs": "نمودارها"
+"Templates": "الگوها"
+"Data queries": "پرس‌وجوهای داده"
+"Remote data collectors": "گردآورنده‌های داده راه‌دور"
+"Users and permissions": "کاربران و مجوزها"
+"Plugins": "افزونه‌ها"
+"Troubleshoot missing data": "عیب‌یابی داده‌های مفقود"
+"Not available locally.": "به‌صورت محلی در دسترس نیست."
+"Back to console": "بازگشت به کنسول"

@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "সহায়তা"
+"Access denied.": "অ্যাক্সেস প্রত্যাখ্যাত হয়েছে।"
+"Choose a topic to open the Kadupul documentation.": "Kadupul ডকুমেন্টেশন খুলতে একটি বিষয় নির্বাচন করুন।"
+"Get started": "শুরু করুন"
+"Graphs": "গ্রাফসমূহ"
+"Templates": "টেমপ্লেটসমূহ"
+"Data queries": "ডেটা কোয়েরিসমূহ"
+"Remote data collectors": "রিমোট ডেটা কালেক্টরসমূহ"
+"Users and permissions": "ব্যবহারকারী ও অনুমতিসমূহ"
+"Plugins": "প্লাগইনসমূহ"
+"Troubleshoot missing data": "অনুপস্থিত ডেটা সমস্যার সমাধান করুন"
+"Not available locally.": "স্থানীয়ভাবে উপলব্ধ নয়।"
+"Back to console": "কনসোলে ফিরে যান"

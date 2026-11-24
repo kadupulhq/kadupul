@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Hulp"
+"Access denied.": "Toegang geweier."
+"Choose a topic to open the Kadupul documentation.": "Kies 'n onderwerp om die Kadupul-dokumentasie oop te maak."
+"Get started": "Begin"
+"Graphs": "Grafieke"
+"Templates": "Sjablone"
+"Data queries": "Datanavrae"
+"Remote data collectors": "Afgeleë dataversamelaars"
+"Users and permissions": "Gebruikers en toestemmings"
+"Plugins": "Inproppe"
+"Troubleshoot missing data": "Foutspoor ontbrekende data"
+"Not available locally.": "Nie plaaslik beskikbaar nie."
+"Back to console": "Terug na konsole"

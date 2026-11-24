@@ -19,6 +19,20 @@ same-origin requests and forms, as the 1.2 LTS copy does.
 See [Symfony migration and offline bundles](../../docs/symfony-migration.md) for
 source installation, compatibility exceptions and disconnected deployment.
 
+## Application browser modules
+
+Browser code written for this project is TypeScript under `frontend/`.
+`npm run build` compiles it with the pinned `typescript` package into
+`include/js/app/`, which is ignored by Git and cleared on each build, and
+`asset-map:compile` fingerprints the result with the other scripts. A template
+loads a module as `asset('include/js/app/<name>.js', 'legacy')`. A type error
+fails the build and emits nothing; `npm run typecheck` reports errors without
+writing files. `tsconfig.json` allows only syntax that disappears when the types
+are removed (no enums, namespaces or parameter properties), so Node runs a
+source file directly in a `node --test` unit test. The inherited scripts,
+including `include/layout.js` and the libraries in `include/js`, stay
+JavaScript, and LTS is unchanged.
+
 ## Browser assets
 
 `assets.json` inventories every file directly under `include/js`. Each entry
