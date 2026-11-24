@@ -308,7 +308,7 @@ msgstr "Vous n'avez actuellement aucun état défini."
 
 #: aggregate_graphs.php:492
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Cliquez sur 'Continuer' pour combiner le(s) graphique(s) agrégé(s) suivant(s) en un unique graphique agrégé."
+msgstr "Cliquez sur 'Continuer' pour convertir le(s) graphique(s) agrégé(s) suivant(s) en un graphique normal."
 
 #: aggregate_graphs.php:497
 msgid "Convert to normal Graph(s)"
@@ -350,7 +350,7 @@ msgstr "[éditer : %s]"
 
 #: aggregate_graphs.php:603 aggregate_graphs.php:711 aggregate_graphs.php:713
 msgid "Aggregate Graph does not Exist"
-msgstr "Réglages du graphique agrégé"
+msgstr "Le graphique agrégé n'existe pas"
 
 #: aggregate_graphs.php:618 aggregate_graphs.php:625 lib/html_reports.php:1498
 #: lib/html_reports.php:1500 utilities.php:2279
@@ -385,7 +385,7 @@ msgstr "Afficher les détails de l'élément"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Aperçu de l'agrégat %s."
+msgstr "L'aperçu de l'agrégat n'existe pas"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -886,7 +886,7 @@ msgstr "Veuillez entrer votre mot de passe courant et votre nouveau<br>mot de pa
 
 #: auth_changepassword.php:354
 msgid "Please enter your new Cacti password."
-msgstr "Veuillez entrer votre mot de passe actuel et votre nouveau mot de passe <br>Cacti."
+msgstr "Veuillez saisir votre nouveau mot de passe Cacti."
 
 #: auth_changepassword.php:362 auth_login.php:341 auth_login.php:344
 #: include/global_settings.php:1826 lib/functions.php:5789
@@ -1166,7 +1166,7 @@ msgstr "Ajouter appareil(s)"
 
 #: automation_devices.php:229
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "Cliquez sur 'Continuer' pour ajouter le(s) dispositif(s) découvert(s) suivant(s)."
+msgstr "Cliquez sur 'Continuer' pour supprimer le(s) équipement(s) découvert(s) suivant(s)."
 
 #: automation_devices.php:234 host.php:550
 msgid "Delete Device(s)"
@@ -1376,7 +1376,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer la règle'%s' ?"
 #: automation_graph_rules.php:602
 #, php-format
 msgid "Rule Selection [edit: %s]"
-msgstr "Sélection de règle [edit : %s]"
+msgstr "Sélection de règle [modifier : %s]"
 
 #: automation_graph_rules.php:608
 msgid "Rule Selection [new]"
@@ -2571,7 +2571,7 @@ msgstr "Utilisation du regroupement"
 
 #: automation_tree_rules.php:1048
 msgid "ROOT"
-msgstr "Racines de végétal"
+msgstr "RACINE"
 
 #: automation_tree_rules.php:1064
 msgid "No Tree Rules Found"
@@ -2812,7 +2812,7 @@ msgstr "Couleurs"
 
 #: color.php:623
 msgid "Named Colors"
-msgstr "Couleurs nommÃ©es%1 is the number of paths, %2 is the list of paths (with newlines between them)"
+msgstr "Couleurs nommées"
 
 #: color.php:640 lib/html_form.php:1673
 msgid "Import"
@@ -3141,11 +3141,11 @@ msgstr "Sources de données"
 
 #: data_debug.php:642 data_debug.php:1110
 msgid "Not Debugging"
-msgstr "Déboguage"
+msgstr "Pas de débogage"
 
 #: data_debug.php:658
 msgid "No Checks"
-msgstr "Contrôles"
+msgstr "Aucun contrôle"
 
 #: data_debug.php:701 lib/api_automation.php:892 lib/graphs.php:79
 #: lib/graphs.php:103 templates_import.php:252
@@ -3166,7 +3166,7 @@ msgstr "Aucune initiale trouvée !  En attente de la mise à jour du fichier RRD
 
 #: data_debug.php:749
 msgid "Waiting on analysis and RRDfile update"
-msgstr "Le fichier RRD a-t-il été mis à jour ?"
+msgstr "En attente de l'analyse et de la mise à jour du fichier RRD"
 
 #: data_debug.php:756
 msgid "RRDfile Owner"
@@ -3218,7 +3218,7 @@ msgstr "Avons-nous pu convertir le titre ?"
 
 #: data_debug.php:817
 msgid "Data Source matches the RRDfile?"
-msgstr "La source des données n'a pas été consultée"
+msgstr "La source de données correspond-elle au fichier RRD ?"
 
 #: data_debug.php:831
 #, php-format
@@ -3262,7 +3262,7 @@ msgstr "<not set>"
 
 #: data_debug.php:888 data_debug.php:939
 msgid "Data Source Repair Recommendations"
-msgstr "Champs de la source de données"
+msgstr "Recommandations de réparation de source de données"
 
 #: data_debug.php:893
 msgid "Issue"
@@ -3271,7 +3271,7 @@ msgstr "Problème"
 #: data_debug.php:905
 #, php-format
 msgid "For attribute '%s', issue found '%s'"
-msgstr "Pour les'%s' en orbite, l'émission trouvée est'%s'."
+msgstr "Pour l'attribut '%s', problème trouvé : '%s'"
 
 #: data_debug.php:920
 msgid "Apply Suggested Fixes"
@@ -3305,7 +3305,7 @@ msgstr "Dépannage de la source de données[%s]"
 
 #: data_debug.php:1029
 msgid "No Device"
-msgstr "Numéro de symbole"
+msgstr "Aucun équipement"
 
 #: data_debug.php:1068
 msgid "Delete All Checks"
@@ -3471,7 +3471,7 @@ msgstr "Pas utilisé"
 
 #: data_input.php:836
 msgid "No Input Fields"
-msgstr "Champ d'entrée"
+msgstr "Aucun champ d'entrée"
 
 #: data_input.php:840
 msgid "Output Fields"
@@ -3571,8 +3571,8 @@ msgstr[1] "Supprimer une requête de données"
 #: data_queries.php:434
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "Cliquez sur 'Continuer' pour supprimer la requête suivante."
-msgstr[1] "Cliquez sur 'Continuer' pour supprimer les requêtes suivantes."
+msgstr[0] "Cliquez sur 'Continuer' pour dupliquer la requête de données suivante."
+msgstr[1] "Cliquez sur 'Continuer' pour dupliquer les requêtes de données suivantes."
 
 #: data_queries.php:436 lib/html_reports.php:591
 msgid "Name Format:"
@@ -3581,8 +3581,8 @@ msgstr "Format du nom"
 #: data_queries.php:444
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "Supprimer une requête de données"
-msgstr[1] "Supprimer une requête de données"
+msgstr[0] "Dupliquer une requête de données"
+msgstr[1] "Dupliquer des requêtes de données"
 
 #: data_queries.php:584
 msgid "The item does not belong to this Data Query."
@@ -3599,7 +3599,7 @@ msgstr "Nom du graphique : %s"
 
 #: data_queries.php:685
 msgid "Remove Data Query Graph Template"
-msgstr "Convertir en modèle graphique"
+msgstr "Supprimer le modèle de graphique de requête de données"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
@@ -4412,7 +4412,7 @@ msgstr "La valeur sera dérivée de l'appareil si ce champ est laissé vide."
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Données personnalisées [données entrées : %s]."
+msgstr "Message d'avertissement de données personnalisées"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -4790,7 +4790,7 @@ msgstr "La relation d'entrée de l'élément de graphique est invalide."
 #: graph_templates_inputs.php:187
 #, php-format
 msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "Graphique Entrées d'éléments[graphique d'édition : %s][graphique d'édition"
+msgstr "Entrées d'éléments de graphique [modifier le graphique : %s]"
 
 #: graph_templates_inputs.php:238
 msgid "Associated Graph Items"
@@ -4827,7 +4827,7 @@ msgstr "Eléments du modèle de graphique[Modifier le graphique : %s]"
 
 #: graph_templates_items.php:565
 msgid "Data Template Filter"
-msgstr "Poste de modèle de données"
+msgstr "Filtre de modèle de données"
 
 #: graph_templates_items.php:571
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
@@ -5010,7 +5010,7 @@ msgstr "Convertir en modèle graphique"
 
 #: graphs.php:157 graphs.php:172
 msgid "No Device - "
-msgstr "Modèles d'équipement"
+msgstr "Aucun équipement - "
 
 #: graphs.php:268
 #, php-format
@@ -5897,7 +5897,7 @@ msgstr "Ajouter une requête de données au modèle d'équipement"
 
 #: host_templates.php:749
 msgid "Delete Item from Device Template"
-msgstr "Supprimer le(s) modèle(s) d'équipement"
+msgstr "Supprimer un élément du modèle d'équipement"
 
 #: host_templates.php:848 host_templates.php:945 host_templates.php:1109
 #: include/global_arrays.php:1255 include/global_arrays.php:2300
@@ -6009,7 +6009,7 @@ msgstr "Retour à Cacti : %s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "La dernière fois que ce collecteur a été entièrement synchronisé avec le site principal de Kadupul."
+msgstr "Le collecteur de données principal est revenu à l'état en ligne"
 
 #: include/global.php:568
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
@@ -6185,7 +6185,7 @@ msgstr "Sauvegarder Succès. Paramètres répliqués sur les collecteurs de donn
 
 #: include/global_arrays.php:279
 msgid "Save Failed.  Minimum Values must be less than Maximum Value."
-msgstr "Sauvegarder Failed.  Les valeurs minimales doivent être inférieures à la valeur maximale."
+msgstr "Échec de l'enregistrement.  Les valeurs minimales doivent être inférieures à la valeur maximale."
 
 #: include/global_arrays.php:282
 msgid "Unable to change password.  User account not found."
@@ -6521,7 +6521,7 @@ msgstr "DES"
 
 #: include/global_arrays.php:671
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php:672
 msgid "AES-128"
@@ -6666,7 +6666,7 @@ msgstr "Chaque jour"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "%d Thread(s)"
+msgstr "1 thread"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -6972,7 +6972,7 @@ msgstr "Points d'Accès, Contrôleurs"
 
 #: include/global_arrays.php:1096
 msgid "Application Related"
-msgstr "Appliquer les règles d'automatisation"
+msgstr "Lié à l'application"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
@@ -6980,7 +6980,7 @@ msgstr "Rapport Cacti"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
-msgstr "Etat de la base de données"
+msgstr "Lié à la base de données"
 
 #: include/global_arrays.php:1099
 msgid "Facilities Related"
@@ -6988,7 +6988,7 @@ msgstr "Installations connexes"
 
 #: include/global_arrays.php:1100
 msgid "Generic Device"
-msgstr "Niveau Log générique"
+msgstr "Équipement générique"
 
 #: include/global_arrays.php:1101
 msgid "HPC/Grid Computing"
@@ -7044,7 +7044,7 @@ msgstr "Lié au stockage"
 
 #: include/global_arrays.php:1114
 msgid "Telco Related"
-msgstr "Sélection du modèle"
+msgstr "Lié aux télécoms"
 
 #: include/global_arrays.php:1115
 msgid "Web Server Related"
@@ -7114,7 +7114,7 @@ msgstr "Visualisation du journal"
 
 #: include/global_arrays.php:1263
 msgid "Reports Administration"
-msgstr "Administration des logs"
+msgstr "Administration des rapports"
 
 #: include/global_arrays.php:1264
 msgid "Reports Creation"
@@ -7122,7 +7122,7 @@ msgstr "Création de rapports"
 
 #: include/global_arrays.php:1265
 msgid "Show Graph Action Icons"
-msgstr "Afficher le titre du graphique"
+msgstr "Afficher les icônes d'action du graphique"
 
 #: include/global_arrays.php:1266
 msgid "Show User Help Links"
@@ -7130,7 +7130,7 @@ msgstr "Afficher les liens d'aide utilisateur"
 
 #: include/global_arrays.php:1267
 msgid "Plugin Administration"
-msgstr "Administration des logs"
+msgstr "Administration des plugins"
 
 #: include/global_arrays.php:1271
 msgid "Normal User"
@@ -7649,7 +7649,7 @@ msgstr "Inconnu"
 
 #: include/global_arrays.php:1783
 msgid "is not unknown"
-msgstr "Inconnu"
+msgstr "n'est pas inconnu"
 
 #: include/global_arrays.php:1784
 msgid "is empty"
@@ -7750,7 +7750,7 @@ msgstr "Déc"
 
 #: include/global_arrays.php:1949
 msgid "Use the First Handler Found"
-msgstr "Utiliser le gestionnaire PHP GetText"
+msgstr "Utiliser le premier gestionnaire trouvé"
 
 #: include/global_arrays.php:1953
 msgid "Use the PHP GetText Handler"
@@ -7921,7 +7921,7 @@ msgstr "ATTENTION :"
 
 #: include/global_arrays.php:2021
 msgid "[Restart]"
-msgstr "Limité"
+msgstr "[Redémarrer]"
 
 #: include/global_arrays.php:2022
 msgid "[Success]"
@@ -8741,7 +8741,7 @@ msgstr "Quelle unité Cacti devrait utiliser sur l'axe Y. Utilisez 3 pour tout a
 
 #: include/global_form.php:852
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Unit Length (--units-length &lt;length&gt ;)"
+msgstr "Longueur d'unité (--units-length &lt;length&gt;)"
 
 #: include/global_form.php:857
 msgid "How many digits should RRDtool assume the y-axis labels to be? You may have to use this option to make enough space once you start fiddling with the y-axis labeling."
@@ -8769,7 +8769,7 @@ msgstr "Options d'axe"
 
 #: include/global_form.php:877
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Axe droit (--axe droit &lt;scale:shift&gt ;)"
+msgstr "Axe droit (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php:882
 msgid "A second axis will be drawn to the right of the graph. It is tied to the left axis via the scale and shift parameters."
@@ -8777,7 +8777,7 @@ msgstr "Un deuxième axe sera dessiné à droite du graphique. Elle est liée à
 
 #: include/global_form.php:885
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Étiquette de l'axe droit (--étiquette de l'axe droit &lt;string&gt ;)"
+msgstr "Étiquette de l'axe droit (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php:890
 msgid "The label for the right axis."
@@ -8785,7 +8785,7 @@ msgstr "L'étiquette pour l'axe droit."
 
 #: include/global_form.php:893
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Format de l'axe droit (format de l'axe droit &lt;format&gt ;)"
+msgstr "Format de l'axe droit (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php:898
 #, php-format
@@ -8794,7 +8794,7 @@ msgstr "Par défaut, le format des étiquettes des axes est déterminé automati
 
 #: include/global_form.php:901
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formatter de l'axe droit (---formatter du format de l'axe droit &lt;formatname&gt ;)"
+msgstr "Formateur de l'axe droit (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
@@ -8854,7 +8854,7 @@ msgstr "Placez la légende sur le côté donné du graphique."
 
 #: include/global_form.php:956
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Legend Direction (--legend-direction=&lt;direction&gt ;)"
+msgstr "Direction de la légende (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php:960
 msgid "Place the legend items in the given vertical order."
@@ -8934,7 +8934,7 @@ msgstr "Alignement du texte (TEXTALIGN)"
 
 #: include/global_form.php:1052
 msgid "All subsequent legend line(s) will be aligned as given here.  You may use this command multiple times in a single graph.  This command does not produce tabular layout.<br/><strong>Note: </strong>You may want to insert a &lt;HR&gt; on the preceding graph item.<br/> <strong>Note: </strong>A &lt;HR&gt; on this legend line will obsolete this setting!"
-msgstr "Toutes les lignes de légende suivantes seront alignées comme indiqué ici.  Vous pouvez utiliser cette commande plusieurs fois dans un seul graphique.  Cette commande ne produit pas de disposition tabulaire.<br/><strong>Note : </strong>Note : </strong>Vous voudrez peut-être insérer un paramètre &lt;HR&gt ; sur l'élément graphique précédent.<br/> <strong>Note : </strong>A &lt;HR&gt ; sur cette ligne de légende va obsolete ce paramètre !"
+msgstr "Toutes les lignes de légende suivantes seront alignées comme indiqué ici. Vous pouvez utiliser cette commande plusieurs fois dans un même graphique. Cette commande ne produit pas de disposition tabulaire.<br/><strong>Note : </strong>Vous souhaiterez peut-être insérer un &lt;HR&gt; sur l'élément de graphique précédent.<br/> <strong>Note : </strong>Un &lt;HR&gt; sur cette ligne de légende rendra ce paramètre obsolète !"
 
 #: include/global_form.php:1055
 msgid "Text Format"
@@ -8990,7 +8990,7 @@ msgstr "Cochez cette case s'il peut y avoir plus d'un graphique de ce type par a
 
 #: include/global_form.php:1122
 msgid "Test Data Sources"
-msgstr "A des sources de données"
+msgstr "Tester les sources de données"
 
 #: include/global_form.php:1123
 msgid "Check this checkbox if you wish to test the Data Sources prior to their creation.  With Test Data Sources enabled, if the Data Source does not return valid data, the Graph will not be created.  This setting is important if you wish to have a more generic Device Template that can include more Graph Templates that can be selectively applied depending on the characteristics of the Device itself.  Note: If you have a long running script as a Data Source, the time to create Graphs will be increased."
@@ -9248,7 +9248,7 @@ msgstr "Si le fichier XML contenant le modèle de donnée est sur votre machine,
 
 #: include/global_form.php:1695 package_import.php:891
 msgid "Data Source Overrides"
-msgstr "Profils des sources de données"
+msgstr "Substitutions de source de données"
 
 #: include/global_form.php:1704 package_import.php:900
 msgid "Create New from Template"
@@ -9290,7 +9290,7 @@ msgstr "Hauteur du gabarit du graphique"
 
 #: include/global_form.php:1736 package_import.php:933
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "La largeur de graphique par défaut à utiliser pour tous les nouveaux modèles de graphiques."
+msgstr "La hauteur à utiliser lors de l'importation ou de la mise à jour des modèles de graphiques."
 
 #: include/global_form.php:1743 include/global_settings.php:612
 #: package_import.php:941
@@ -9550,7 +9550,7 @@ msgstr "Propagez toutes les options de ce formulaire (à l'exception de'Titre') 
 
 #: include/global_form.php:2347
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "Le String Pattern (Expression régulière) à comparer avec.<br>Enclosing'/' doit <strong>NOT</strong>être fourni !"
+msgstr "Le motif de chaîne (expression régulière) à faire correspondre.<br>Les '/' englobants ne doivent <strong>PAS</strong> être fournis !"
 
 #: include/global_form.php:2354
 msgid "Replacement Pattern"
@@ -9714,7 +9714,7 @@ msgstr "Le chemin d'accès à votre fichier journal Cacti (si vide, par défaut 
 
 #: include/global_settings.php:182
 msgid "Poller Standard Error Log Path"
-msgstr "Poller Standard Error Log Path (chemin du journal d'erreurs standard)"
+msgstr "Chemin du journal d'erreurs standard du poller"
 
 #: include/global_settings.php:183
 msgid "If you are having issues with Cacti's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
@@ -9750,7 +9750,7 @@ msgstr "Autre voie d'acheminement du pollueur"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Emplacement des fichiers binaires de la colonne vertébrale"
+msgstr "Emplacement du fichier binaire Spine"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
@@ -9758,7 +9758,7 @@ msgstr "Le chemin vers la colonne vertébrale binaire."
 
 #: include/global_settings.php:226
 msgid "Spine Config File Path"
-msgstr "Chemin du fichier de configuration de la colonne vertébrale"
+msgstr "Chemin du fichier de configuration Spine"
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
@@ -9790,7 +9790,7 @@ msgstr "Répertoire d'archives"
 
 #: include/global_settings.php:256
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
-msgstr "C'est le répertoire où les fichiers RRD sont <strong>moved</strong> pour l'archivage"
+msgstr "Il s'agit du répertoire vers lequel les fichiers RRD sont <strong>déplacés</strong> pour l'archivage"
 
 #: include/global_settings.php:264
 msgid "Log Settings"
@@ -9822,7 +9822,7 @@ msgstr "Enregistrer l'accès aux champs de demande sans passer par une validatio
 
 #: include/global_settings.php:289
 msgid "Data Source Tracing"
-msgstr "Sources de données à l'aide de"
+msgstr "Traçage de source de données"
 
 #: include/global_settings.php:290
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
@@ -9938,7 +9938,7 @@ msgstr "Autres paramètres"
 
 #: include/global_settings.php:402
 msgid "Show only site specific locations"
-msgstr "Définissez ici toutes les options spécifiques à un graphique."
+msgstr "Afficher uniquement les emplacements spécifiques au site"
 
 #: include/global_settings.php:403
 msgid "Show only locations that are available at a devices selected site."
@@ -10030,7 +10030,7 @@ msgstr "Prévenir l'utilisateur avant de suprimer un élément."
 
 #: include/global_settings.php:467
 msgid "Data Source Preservation Preset"
-msgstr "Méthode de création d'un graphique ou d'une source de données"
+msgstr "Préréglage de préservation de source de données"
 
 #: include/global_settings.php:468
 msgid "When enabled, Cacti will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Cacti will not allow the removal of Data Sources if they are used in other Graphs."
@@ -10038,7 +10038,7 @@ msgstr "Lorsqu'il est activé, Cacti définira le bouton radio pour supprimer le
 
 #: include/global_settings.php:473
 msgid "Graphs Auto Unlock"
-msgstr "Règle de correspondance des graphiques"
+msgstr "Déverrouillage automatique des graphiques"
 
 #: include/global_settings.php:474
 msgid "When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
@@ -10062,7 +10062,7 @@ msgstr "Certaines interfaces de Cacti supportent le glisser-déposer.  Si cette 
 
 #: include/global_settings.php:491
 msgid "Site Security"
-msgstr "SMTP  Sécurité"
+msgstr "Sécurité du site"
 
 #: include/global_settings.php:496
 msgid "Force Connections over HTTPS"
@@ -10186,7 +10186,7 @@ msgstr "Format d'image par défaut à utiliser pour tous les nouveaux modèles d
 
 #: include/global_settings.php:605
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "La largeur de graphique par défaut à utiliser pour tous les nouveaux modèles de graphiques."
+msgstr "La hauteur de graphique par défaut à utiliser pour tous les nouveaux modèles de graphiques."
 
 #: include/global_settings.php:613
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -10214,7 +10214,7 @@ msgstr "Filets d'appareil"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Le nombre par défaut de threads de périphériques.  Ceci ne s'applique qu'en cas d'utilisation du Collecteur de données sur la colonne vertébrale."
+msgstr "Le nombre par défaut de threads par équipement.  Ceci s'applique uniquement lors de l'utilisation du collecteur de données Spine."
 
 #: include/global_settings.php:656
 #, php-format
@@ -10332,7 +10332,7 @@ msgstr "Mot de passe SNMP (v3)"
 
 #: include/global_settings.php:749
 msgid "Default SNMPv3 Privacy Passphrase for all new Devices."
-msgstr "SNMPv3 Privacy Passphrase par défaut pour tous les nouveaux périphériques."
+msgstr "Phrase secrète de confidentialité SNMPv3 par défaut pour tous les nouveaux équipements."
 
 #: include/global_settings.php:757
 msgid "Enter the SNMP v3 Context for all new Devices."
@@ -10557,7 +10557,7 @@ msgstr "Exclusion Regex"
 
 #: include/global_settings.php:1005
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
-msgstr "Toutes les chaînes qui correspondent à ce regex seront exclues de l'affichage de l'utilisateur.  <Par exemple, si vous voulez exclure toutes les lignes de log qui contiennent les mots'Admin' ou'Login', vous devez taper '(Admin ||| Login)'</strong>."
+msgstr "Toutes les chaînes correspondant à cette expression régulière seront exclues de l'affichage utilisateur. <strong>Par exemple, si vous souhaitez exclure toutes les lignes de journal contenant les mots 'Admin' ou 'Login', vous devez saisir '(Admin || Login)'</strong>"
 
 #: include/global_settings.php:1012
 msgid "Real-time Graphs"
@@ -10597,7 +10597,7 @@ msgstr "Options des graphiques"
 
 #: include/global_settings.php:1050
 msgid "Custom Watermark"
-msgstr "Données personnalisées"
+msgstr "Filigrane personnalisé"
 
 #: include/global_settings.php:1051
 msgid "Text placed at the bottom center of every Graph."
@@ -10613,7 +10613,7 @@ msgstr "A utiliser lors du formatage |date_time| sur un graphique"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
-msgstr "Filigrane du graphique RRDtool"
+msgstr "Désactiver le filigrane RRDtool"
 
 #: include/global_settings.php:1067
 msgid "Provided your RRDtool version supports it, you may disable RRDtool advertisement on your Graphs by checking this option."
@@ -10711,7 +10711,7 @@ msgstr "La police à utiliser pour les éléments de l'unité graphique.  Saisis
 
 #: include/global_settings.php:1149
 msgid "Business Hours Settings"
-msgstr "Paramètres de l'utilisateur"
+msgstr "Paramètres des heures ouvrables"
 
 #: include/global_settings.php:1154
 msgid "Start of Business Day"
@@ -10731,7 +10731,7 @@ msgstr "L'heure de fin de vos heures d'ouverture. Format : hh :mm"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "%d semaines"
+msgstr "Masquer les week-ends"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -10847,7 +10847,7 @@ msgstr "Combien d'OID doivent être retournés par demande snmpbulkwalk ?  Pour 
 
 #: include/global_settings.php:1299
 msgid "SNMP Get OID Limit"
-msgstr "Obtenir SNMP"
+msgstr "Limite d'OID pour SNMP Get"
 
 #: include/global_settings.php:1300
 msgid "The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Cacti's SNMP API natively in your scripts or plugins."
@@ -10863,7 +10863,7 @@ msgstr "Ce paramètre est destiné à un seul système de poller uniquement pour
 
 #: include/global_settings.php:1313
 msgid "Disable Resource Cache Replication"
-msgstr "Reconstituer le cache des ressources"
+msgstr "Désactiver la réplication du cache des ressources"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
@@ -10871,7 +10871,7 @@ msgstr "Par défaut, le collecteur de données Cacti principal mettra en cache l
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
-msgstr "État du collecteur de données à distance :"
+msgstr "Paramètres supplémentaires du collecteur de données"
 
 #: include/global_settings.php:1324
 msgid "Invalid Data Logging"
@@ -10879,7 +10879,7 @@ msgstr "Enregistrement de données invalide"
 
 #: include/global_settings.php:1325
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
-msgstr "Comment voulez-vous que les erreurs de sortie de la colonne vertébrale soient enregistrées ?  Les options sont : Détaillé' qui est similaire à l'enregistrement cmd.php;'Résumé' qui fournit le nombre d'erreurs de sortie par périphérique ; et'Aucun', qui ne fournit pas le nombre d'erreurs."
+msgstr "Comment souhaitez-vous que les erreurs de sortie du collecteur de données soient journalisées ? Les options incluent : 'Détaillé' qui détaille chaque erreur, 'Résumé' qui fournit le nombre d'erreurs de sortie par équipement, et 'Aucun', qui ne fournit pas le nombre d'erreurs."
 
 #: include/global_settings.php:1330 utilities.php:180
 msgid "Summary"
@@ -10927,11 +10927,11 @@ msgstr "Mensuel le jour"
 
 #: include/global_settings.php:1368
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "Réglage de la police de légende"
+msgstr "Paramètres de délai d'attente en arrière-plan et de processus simultanés"
 
 #: include/global_settings.php:1373
 msgid "Report Generation Timeout"
-msgstr "Délai d'attente de l'agent distant"
+msgstr "Délai d'attente de génération de rapport"
 
 #: include/global_settings.php:1374
 msgid "The maximum amount of time Cacti's Reports Generation script can run without generating a timeout error and being killed."
@@ -10946,7 +10946,7 @@ msgstr "%s minute"
 
 #: include/global_settings.php:1386
 msgid "Data Source Statistics Timeout"
-msgstr "Chemin de la source de données"
+msgstr "Délai d'attente des statistiques de source de données"
 
 #: include/global_settings.php:1387
 msgid "The maximum amount of time Cacti's Data Source Statistics script can run without generating a timeout error and being killed."
@@ -10954,11 +10954,11 @@ msgstr "Durée maximale pendant laquelle le script de statistiques de la source 
 
 #: include/global_settings.php:1401
 msgid "RRDChecker Timeout"
-msgstr "Délai d'attente DNS"
+msgstr "Délai d'attente de RRDChecker"
 
 #: include/global_settings.php:1402
 msgid "The maximum amount of time Cacti's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "Durée maximale pendant laquelle un script Spikekill de Cacti peut s'exécuter sans générer d'erreur de délai d'attente et être tué."
+msgstr "La durée maximale pendant laquelle le script de vérification de fichier RRD de Cacti peut s'exécuter sans générer d'erreur de délai d'attente et être arrêté."
 
 #: include/global_settings.php:1408 include/global_settings.php:1409
 #: include/global_settings.php:1410 include/global_settings.php:1465
@@ -11068,7 +11068,7 @@ msgstr "Threads par défaut par processus"
 
 #: include/global_settings.php:1501
 msgid "The Default Threads allowed per process.  NOTE: Starting in Cacti 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
-msgstr "Les Threads par défaut autorisés par processus.  REMARQUE : A partir de Cacti 1.2+, ce paramètre est conservé dans le collecteur de données, et c'est simplement le Preset.  L'utilisation d'un nombre plus élevé lors de l'utilisation de la colonne vertébrale améliorera la performance.  Cependant, assurez-vous d'avoir suffisamment de connexions MySQL/MariaDB pour supporter l'équation suivante : connexions = collecteurs de données * processus * (threads + serveurs de scripts).  Vous devez également vous assurer que vous disposez d'un nombre suffisant de connexions de rechange pour les connexions de connexion utilisateur."
+msgstr "Le nombre de threads par défaut autorisé par processus.  REMARQUE : À partir de Cacti 1.2+, ce paramètre est géré dans le collecteur de données, et ceci correspond simplement au préréglage.  L'utilisation d'une valeur plus élevée avec Spine améliorera les performances.  Toutefois, assurez-vous de disposer de suffisamment de connexions MySQL/MariaDB pour prendre en charge l'équation suivante : connexions = collecteurs de données * processus * (threads + serveurs de scripts).  Vous devez également vous assurer de disposer de suffisamment de connexions de réserve pour les connexions des utilisateurs."
 
 #: include/global_settings.php:1515
 msgid "Authentication Method"
@@ -11125,7 +11125,7 @@ msgstr "Méthode d'authentification Web Basic"
 
 #: include/global_settings.php:1562
 msgid "Basic Auth Login Failure Message"
-msgstr "Mapfile d'authentification de base"
+msgstr "Message d'échec de connexion par authentification de base"
 
 #: include/global_settings.php:1563
 msgid "When using basic authentication, if there are issues mapping the username to a valid Cacti account, the message included here will be displayed to users.  It can include both text and HTML."
@@ -11153,7 +11153,7 @@ msgstr "Il s'agit de la longueur minimale des mots de passe autorisés."
 
 #: include/global_settings.php:1592
 msgid "Require Mix Case"
-msgstr "Nécessite une mallette de mélange"
+msgstr "Exiger une casse mixte"
 
 #: include/global_settings.php:1593
 msgid "This will require new passwords to contains both lower and upper-case characters."
@@ -11282,7 +11282,7 @@ msgstr "Port SSL"
 
 #: include/global_settings.php:1722
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "Port TCP/UDP pour les communications non SSL."
+msgstr "Port TCP pour LDAPS pour les communications SSL.  La valeur par défaut est 636."
 
 #: include/global_settings.php:1729 user_domains.php:444
 msgid "Protocol Version"
@@ -11298,7 +11298,7 @@ msgstr "Délai de connection dépassé"
 
 #: include/global_settings.php:1737
 msgid "The Network Connect Timeout in seconds."
-msgstr "Veuillez entrer le délai d'attente SMTP en secondes."
+msgstr "Le délai d'attente de connexion réseau en secondes."
 
 #: include/global_settings.php:1744
 msgid "Bind Timeout"
@@ -11306,7 +11306,7 @@ msgstr "Délai"
 
 #: include/global_settings.php:1745
 msgid "The Bind Timeout in seconds."
-msgstr "Veuillez entrer le délai d'attente SMTP en secondes."
+msgstr "Le délai d'attente de liaison (Bind) en secondes."
 
 #: include/global_settings.php:1752
 msgid "LDAP Debug Mode"
@@ -11346,7 +11346,7 @@ msgstr "Mode"
 
 #: include/global_settings.php:1783
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Mode dans lequel les cactus tenteront de s'authentifier sur le serveur LDAP. <blockquote><i>No Searching</i> - Aucune recherche par nom distinctif (DN) n'a lieu, il suffit de tenter de se lier au format DN (Distinguished Name) fourni.<br><br><br><i>Recherche anonyme </i> - Tentatives de recherche de nom d'utilisateur dans l'annuaire LDAP par liaison anonyme pour localiser le nom distinctif de l'utilisateur (DN).<br><br><br><i>Recherche spécifique</i> - Tentatives de recherche de nom d'utilisateur dans le répertoire LDAP par Nom spécifique distingué (DN) et Mot de passe spécifique pour relier pour localiser le nom distinct (DN) de l'utilisateur."
+msgstr "Mode selon lequel Cacti tentera de s'authentifier auprès du serveur LDAP.<blockquote><i>Aucune recherche</i> - Aucune recherche de nom distinctif (DN) n'est effectuée ; tente simplement une liaison avec le format de nom distinctif (DN) fourni.<br><br><i>Recherche anonyme</i> - Tente de rechercher le nom d'utilisateur dans l'annuaire LDAP via une liaison anonyme afin de localiser le nom distinctif (DN) de l'utilisateur.<br><br><i>Recherche spécifique</i> - Tente de rechercher le nom d'utilisateur dans l'annuaire LDAP à l'aide d'un nom distinctif (DN) spécifique et d'un mot de passe spécifique pour la liaison afin de localiser le nom distinctif (DN) de l'utilisateur."
 
 #: include/global_settings.php:1789 user_domains.php:472
 msgid "Distinguished Name (DN)"
@@ -11730,7 +11730,7 @@ msgstr "Durée maximale d'exécution du script de mise à jour RRD"
 
 #: include/global_settings.php:2151
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "Si le serveur de sondage d'appoint exccède ce runtime, un avertissement sera placé dans le journal des cactus,"
+msgstr "Si le collecteur boost dépasse cette durée d'exécution, un avertissement sera consigné dans le journal Cacti,"
 
 #: include/global_settings.php:2157
 msgid "Enable direct population of poller_output_boost table"
@@ -11782,7 +11782,7 @@ msgstr "Devrait-on recueillir des statistiques sur les sources de données pour 
 
 #: include/global_settings.php:2202
 msgid "Number of DSStats Processes"
-msgstr "Nombre de processus d'impulsion"
+msgstr "Nombre de processus DSStats"
 
 #: include/global_settings.php:2203
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
@@ -11822,7 +11822,7 @@ msgstr "La quantité maximale de mémoire pour le Poller Cacti et le Poller Data
 
 #: include/global_settings.php:2259
 msgid "RRDfile Check"
-msgstr "Nettoyeur de fichiers RRD"
+msgstr "Vérification des fichiers RRD"
 
 #: include/global_settings.php:2264
 msgid "Enable RRDfile Check"
@@ -11830,11 +11830,11 @@ msgstr "Activer la règle"
 
 #: include/global_settings.php:2265
 msgid "Should RRDfile check be enabled for this Cacti system?"
-msgstr "Devrait-on recueillir des statistiques sur les sources de données pour ce système Cacti ?"
+msgstr "La vérification des fichiers RRD doit-elle être activée pour ce système Cacti ?"
 
 #: include/global_settings.php:2270
 msgid "Number of RRDfile Check Processes"
-msgstr "Nombre de processus d'impulsion"
+msgstr "Nombre de processus de vérification RRDfile"
 
 #: include/global_settings.php:2271
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
@@ -11846,7 +11846,7 @@ msgstr "Fréquence"
 
 #: include/global_settings.php:2299
 msgid "How frequent should RRD be checked ?"
-msgstr "Quelle devrait être la fréquence de mise à jour de Daily Stats ?"
+msgstr "À quelle fréquence le RRD doit-il être vérifié ?"
 
 #: include/global_settings.php:2305
 msgid "Data Storage Settings"
@@ -11886,7 +11886,7 @@ msgstr "Équipement"
 
 #: include/global_settings.php:2336
 msgid "Device ID/Data Query ID"
-msgstr "Supprimer une requête de données"
+msgstr "ID de l'équipement / ID de la requête de données"
 
 #: include/global_settings.php:2337
 msgid "Device Hash/Device ID"
@@ -12128,7 +12128,7 @@ msgstr "Comment aimeriez-vous que Cacti présente les dates ?  Ce paramètre ch
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Server v%s - Maintenance"
+msgstr "Fuseau horaire du serveur Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12160,7 +12160,7 @@ msgstr "Masque les périphériques et les graphiques désactivés lors de l'affi
 
 #: include/global_settings.php:2619
 msgid "Show Device Aggregates"
-msgstr "Granulats"
+msgstr "Afficher les agrégats d'équipements"
 
 #: include/global_settings.php:2620
 msgid "If a Device Data Source is included in an Aggregate Graph, show that Graph along with other Device Graphs"
@@ -12329,7 +12329,7 @@ msgstr "Choisissez s'il faut développer les modèles de graphiques et les requ�
 
 #: include/global_settings.php:2800
 msgid "Tree History"
-msgstr "Historique des mots de passe"
+msgstr "Historique de l'arborescence"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
@@ -12676,7 +12676,7 @@ msgstr "Élément de règle [modifier l'élément de règle pour %s : %s]"
 #: lib/api_automation.php:2314
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
-msgstr "Élément de règle [new rule item for %s : %s]"
+msgstr "Élément de règle [nouvel élément de règle pour %s : %s]"
 
 #: lib/api_automation.php:3203
 msgid "Added by Cacti Automation"
@@ -12887,7 +12887,7 @@ msgstr "Votre mot de passe doit contenir au moins 1 caractère spécial !"
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "Cacti Log Cleared"
+msgstr "Échec de connexion à Cacti"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12901,12 +12901,12 @@ msgstr "%s Mo"
 #: lib/boost.php:153
 #, php-format
 msgid "%s KBytes"
-msgstr "GBytes %s"
+msgstr "%s Ko"
 
 #: lib/boost.php:156
 #, php-format
 msgid "%s Bytes"
-msgstr "GBytes %s"
+msgstr "%s octets"
 
 #: lib/clog_webapi.php:136 utilities.php:1672
 #, php-format
@@ -12958,7 +12958,7 @@ msgstr "Fichier"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "%d lignes"
+msgstr "Lignes d'en-tête"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13002,7 +13002,7 @@ msgstr "Equipement utilisés"
 
 #: lib/clog_webapi.php:597
 msgid "Recaches"
-msgstr "corresponds"
+msgstr "Reconstructions du cache"
 
 #: lib/clog_webapi.php:601
 msgid "Threshold"
@@ -13030,11 +13030,11 @@ msgstr "Les mots de passe ne correspondent pas"
 
 #: lib/clog_webapi.php:804
 msgid "System Device"
-msgstr "Synchroniser les équipements"
+msgstr "Équipement système"
 
 #: lib/data_query.php:89 lib/data_query.php:275
 msgid "Automation Execution for Data Query complete"
-msgstr "Automation Execution for Data Query complète"
+msgstr "Exécution de l'automatisation pour la requête de données terminée"
 
 #: lib/data_query.php:92 lib/data_query.php:278
 msgid "Plugin Hooks complete"
@@ -13090,7 +13090,7 @@ msgstr "Vérification de %s ID de données locales terminée"
 
 #: lib/data_query.php:170 lib/data_query.php:177
 msgid "Done updating Data Source Title Cache"
-msgstr "Dupliquer le profil de la source de données"
+msgstr "Mise à jour du cache des titres des sources de données terminée"
 
 #: lib/data_query.php:173 lib/data_query.php:180
 msgid "Done updating Graph Title Cache"
@@ -13159,7 +13159,7 @@ msgstr "Champ non valide &lt;index_order&gt;%s&lt;/index_order&gt ;"
 
 #: lib/data_query.php:736 lib/data_query.php:919
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Doit contenir des champs d'entrée ou de sortie d'entrée et de sortie de direction uniquement."
+msgstr "Doit contenir uniquement des champs &lt;direction&gt;input&lt;/direction&gt; ou &lt;direction&gt;input-output&lt;/direction&gt;"
 
 #: lib/data_query.php:753
 msgid "Data Query returned no indexes."
@@ -13167,7 +13167,7 @@ msgstr "ERREUR : Data Query n'a retourné aucun index."
 
 #: lib/data_query.php:754
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt ; manquant dans le fichier XML,'Index Count Changed' non supporté"
+msgstr "&lt;arg_num_indexes&gt; existe dans le fichier XML mais aucune donnée n'a été renvoyée., 'Index Count Changed' non pris en charge"
 
 #: lib/data_query.php:757
 #, php-format
@@ -13288,7 +13288,7 @@ msgstr "Index trouvé à l'OID : '%s' valeur : '%s'"
 #: lib/data_query.php:1042
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
-msgstr "Filtrage de la liste des index @'%s' Index Count : %s"
+msgstr "Liste des index filtrés par valeur @ '%s' Nombre d'index : %s"
 
 #: lib/data_query.php:1046
 #, php-format
@@ -13368,7 +13368,7 @@ msgstr "Résultat sauté pour les données @'%s'[key='%s', value='%s']]."
 #: lib/data_query.php:1267
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
-msgstr "Got SNMP get result for data @'%s'[value='%s'] (index : %s)"
+msgstr "Résultat SNMP GET obtenu pour les données @ '%s' [valeur='%s'] (index : %s)"
 
 #: lib/data_query.php:1297
 #, php-format
@@ -13404,7 +13404,7 @@ msgstr "Chaîne OCTET trouvée Valeur décodée'%s':'%s'."
 #: lib/data_query.php:1450 lib/data_query.php:1499
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
-msgstr "Index[%s='%s'] trouvé : %s[de regexp oid parse]"
+msgstr "Élément trouvé [%s='%s'] index : %s [depuis l'analyse OID par expression régulière]"
 
 #: lib/data_query.php:1527
 #, php-format
@@ -13503,17 +13503,17 @@ msgstr "Aucun problème trouvé"
 
 #: lib/dsdebug.php:315
 msgid "RRDfile not created yet"
-msgstr "Fichier RRD non mis à jour après l'interrogation"
+msgstr "Fichier RRD pas encore créé"
 
 #: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Les réglages sont sauvegardés dans Data Collector %d Failed."
+msgstr "L'enregistrement des paramètres sur le collecteur de données %d a été ignoré en raison du signal de vie."
 
 #: lib/functions.php:463 settings.php:286
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "Les réglages sont sauvegardés dans Data Collector %d Failed."
+msgstr "Échec de l'enregistrement des paramètres sur le collecteur de données %d."
 
 #: lib/functions.php:932 lib/functions.php:1023
 msgid "Message Not Found."
@@ -13699,11 +13699,11 @@ msgstr "Non Applicable"
 
 #: lib/graphs.php:86
 msgid "Damaged Graph"
-msgstr "Source des données, graphique"
+msgstr "Graphique endommagé"
 
 #: lib/html.php:76
 msgid "Remote Server"
-msgstr "Supprimer StdDev"
+msgstr "Serveur distant"
 
 #: lib/html.php:138
 msgid "Get Page Help"
@@ -13864,7 +13864,7 @@ msgstr "Mode compact"
 
 #: lib/html.php:2873
 msgid "Dark Color Mode"
-msgstr "Mode de prévisualisation"
+msgstr "Mode couleur sombre"
 
 #: lib/html.php:2874
 msgid "Light Color Mode"
@@ -13876,7 +13876,7 @@ msgstr "Couleur de l’objet"
 
 #: lib/html.php:2876
 msgid "Ignore System Color"
-msgstr "Couleur de l’objet"
+msgstr "Ignorer la couleur du système"
 
 #: lib/html.php:2877
 msgid "Help"
@@ -13904,7 +13904,7 @@ msgstr "Page du projet Cacti"
 
 #: lib/html.php:2888
 msgid "Spine"
-msgstr "Colonne vertébrale"
+msgstr "Spine"
 
 #: lib/html.php:2889
 msgid "RRDProxy"
@@ -13920,7 +13920,7 @@ msgstr "Raccourcis"
 
 #: lib/html.php:2892
 msgid "Contribute to the Cacti Project"
-msgstr "Faire pivoter le Cacti Log"
+msgstr "Contribuer au projet Cacti"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
@@ -14566,7 +14566,7 @@ msgstr "Tous les graphiques des branches enfants doivent-ils être affichés ?"
 
 #: lib/html_reports.php:1110
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "Sélectionnez un équipement pour spécifier un graphique"
+msgstr "Sélectionnez un site pour filtrer les équipements et les graphiques."
 
 #: lib/html_reports.php:1120
 msgid "Select a Device Template to use to filter for Devices or Graphs."
@@ -14684,7 +14684,7 @@ msgstr "Périphérique : %s"
 
 #: lib/html_reports.php:1774
 msgid ", Graph Template: All Templates"
-msgstr "Ajouter un modèle de graphique au modèle d'équipement"
+msgstr ", Modèle de graphique : Tous les modèles"
 
 #: lib/html_reports.php:1776
 #, php-format
@@ -14758,7 +14758,7 @@ msgstr "Prochaine exécution"
 
 #: lib/html_reports.php:2153
 msgid "Report Title"
-msgstr "Rapport mis à jour"
+msgstr "Titre du rapport"
 
 #: lib/html_reports.php:2184
 msgid "Report Disabled - No Owner"
@@ -14871,7 +14871,7 @@ msgstr "Les filtres RLIKE de Cacti ne prennent pas en charge l'alternance ni les
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
-msgstr "Télécharger"
+msgstr "Hors ligne (Thold)"
 
 #: lib/html_utility.php:1467 lib/installer.php:2021 lib/installer.php:3902
 msgid "Error"
@@ -14908,7 +14908,7 @@ msgstr "non écrit"
 
 #: lib/import.php:773
 msgid "not exists"
-msgstr "不存在"
+msgstr "n'existe pas"
 
 #: lib/import.php:776
 msgid "not writable"
@@ -15116,11 +15116,11 @@ msgstr "Vous essayez d'installer Cacti %s sur une base de données 0.6.x. Malheu
 
 #: lib/installer.php:1685
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Pour pouvoir continuer, vous devez <b>MUST</b> créer une nouvelle base de données, importer \"cacti.sql\" dans celle-ci :"
+msgstr "Pour pouvoir continuer, vous <b>DEVEZ</b> créer une nouvelle base de données et y importer \"cacti.sql\" :"
 
 #: lib/installer.php:1687
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
-msgstr "Vous <b>MUST</b> puis mettez à jour \"include/config.php\" pour pointer vers la nouvelle base."
+msgstr "Vous <b>DEVEZ</b> ensuite mettre à jour \"include/config.php\" pour pointer vers la nouvelle base de données."
 
 #: lib/installer.php:1688
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
@@ -15136,7 +15136,7 @@ msgstr "Cette erreur peut également être générée si l'utilisateur de la bas
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
-msgstr "Vous <b>MUST</b>importez également les informations MySQL TimeZone dans MySQL et accordez à l'utilisateur Cacti un accès SELECT à la table mysql.time_zone_name."
+msgstr "Vous <b>DEVEZ</b> également importer les informations de fuseau horaire MySQL dans MySQL et accorder à l'utilisateur Cacti l'accès SELECT à la table mysql.time_zone_name"
 
 #: lib/installer.php:1701
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15446,7 +15446,7 @@ msgstr "Informations de connexion à la base de données centrale"
 
 #: lib/installer.php:2272
 msgid "Configuration Readonly!"
-msgstr "Configuration Readonly !"
+msgstr "Configuration en lecture seule !"
 
 #: lib/installer.php:2274
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
@@ -15458,7 +15458,7 @@ msgstr "Configuration de Poller"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "Les informations de votre Remote Cacti Poller n'ont pas été incluses dans votre fichier config.php.  Veuillez revoir le fichier config.php.dist, et définir les variables : <i>$database_default, $database_username</i>, etc.  Ces variables doivent être définies et renvoyées vers votre serveur de base de données Cacti primaire.  Corrigez ceci et réessayez."
+msgstr "Les informations de votre collecteur distant Cacti n'ont pas été incluses dans votre fichier config.php.  Veuillez consulter le fichier config.php.dist et définir les variables : <i>$rdatabase_default, $rdatabase_username</i>, etc.  Ces variables doivent être définies et pointer vers votre serveur de base de données principal Cacti.  Corrigez cela et réessayez."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15676,7 +15676,7 @@ msgstr "Configuration du gabarit"
 
 #: lib/installer.php:2669
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "Sélectionnez le type de modèle que vous souhaitez exporter depuis Kadupul."
+msgstr "Veuillez sélectionner les modèles d'équipement que vous souhaitez mettre à jour lors de la mise à niveau."
 
 #: lib/installer.php:2670
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
@@ -15906,7 +15906,7 @@ msgstr "Aucun modèle n'a été sélectionné pour l'importation"
 
 #: lib/installer.php:3322
 msgid "Updating remote configuration file"
-msgstr "En attente de configuration"
+msgstr "Mise à jour du fichier de configuration distant"
 
 #: lib/installer.php:3354
 #, php-format
@@ -15971,7 +15971,7 @@ msgstr "Créer des graphiques pour cet appareil"
 
 #: lib/installer.php:3495
 msgid "Adding Device to Default Tree"
-msgstr "Valeurs par défaut de l'appareil"
+msgstr "Ajout de l'équipement à l'arborescence par défaut"
 
 #: lib/installer.php:3503
 msgid "No templated graphs for Default Device were found"
@@ -16057,12 +16057,12 @@ msgstr "Les deux"
 #: lib/installer.php:3773
 #, php-format
 msgid "No - %s"
-msgstr "%s Jours"
+msgstr "Non - %s"
 
 #: lib/installer.php:3778
 #, php-format
 msgid "%s - N/A"
-msgstr "%s Jours"
+msgstr "%s - N/D"
 
 #: lib/installer.php:3778 lib/installer.php:3780
 msgid "Web"
@@ -16071,7 +16071,7 @@ msgstr "Web"
 #: lib/installer.php:3780 lib/installer.php:3783
 #, php-format
 msgid "%s - No"
-msgstr "%s Jours"
+msgstr "%s - Non"
 
 #: lib/installer.php:3783
 msgid "Cli"
@@ -16184,7 +16184,7 @@ msgstr "Erreur inattendue %s (Erreur Ldap : %s) sur le serveur (%s)"
 
 #: lib/ping.php:138
 msgid "ICMP Ping timed out"
-msgstr "ICMP Ping timeed out"
+msgstr "Délai d'attente du ping ICMP dépassé"
 
 #: lib/ping.php:226 lib/ping.php:244
 #, php-format
@@ -16317,7 +16317,7 @@ msgstr "Le rapport '%s' a bien été envoyé"
 
 #: lib/reports.php:1082 lib/reports.php:1414
 msgid "(No Graph Template)"
-msgstr "Modèle de graphique :"
+msgstr "(Aucun modèle de graphique)"
 
 #: lib/reports.php:1479
 msgid "(Non Query Based)"
@@ -16473,11 +16473,11 @@ msgstr "CDP Inconnu Points de données (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Pas de %s trouvé(e)(s)"
+msgstr "Erreurs trouvées"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
-msgstr "Champs de la source de données"
+msgstr "Recommandations d'optimisation facultatives"
 
 #: lib/rrd.php:4231 lib/rrd.php:4234
 #, php-format
@@ -16854,7 +16854,7 @@ msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "Créer un agrégat à partir d'un modèle"
+msgstr "Tentative de création d'un graphique sans modèle"
 
 #: lib/template.php:1530
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -16881,7 +16881,7 @@ msgstr "REMARQUE : le graphique n'a pas été ajouté pour la requête de donn�
 
 #: lib/utility.php:1258
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
-msgstr "MySQL 5.6+ et MariaDB 10.0+ sont d'excellentes versions, et sont de très bonnes versions à choisir. Assurez-vous d'utiliser la toute dernière version qui corrige un problème de réseautage de bas niveau de longue date qui causait de nombreux problèmes de colonne vertébrale avec fiabilité."
+msgstr "MySQL 5.6+ et MariaDB 10.0+ sont d'excellentes versions, et de très bons choix. Assurez-vous toutefois d'exécuter la toute dernière version corrective, qui résout un ancien problème réseau de bas niveau causant de nombreux problèmes de fiabilité à Spine."
 
 #: lib/utility.php:1270
 #, php-format
@@ -16956,7 +16956,7 @@ msgstr "C'est là que les métadonnées sont stockées. Si vous aviez beaucoup d
 
 #: lib/utility.php:1415
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
-msgstr "Les requêtes frauduleuses ne doivent pas empêcher la base de données d'être hors ligne.  Tuez ces requêtes avant qu'elles ne tuent votre système."
+msgstr "Les requêtes aberrantes ne doivent pas forcer la base de données à passer hors ligne pour les autres.  Tuez ces requêtes avant qu'elles ne tuent votre système."
 
 #: lib/utility.php:1420
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
@@ -17255,7 +17255,7 @@ msgstr "Déconnexion automatique"
 #: logout.php:81
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
-msgstr "Veuillez fermer votre navigateur ou %sLogin Again%s"
+msgstr "Veuillez fermer votre navigateur ou %svous reconnecter%s"
 
 #: logout.php:85 utilities.php:870
 #, php-format
@@ -17285,11 +17285,11 @@ msgstr "Aucun récepteur de notification SNMP"
 #: managers.php:295
 #, php-format
 msgid "SNMP Notification Receiver [edit: %s]"
-msgstr "Récepteur de notification SNMP [edit : %s]"
+msgstr "Récepteur de notifications SNMP [modifier : %s]"
 
 #: managers.php:297
 msgid "SNMP Notification Receiver [new]"
-msgstr "SNMP Notification Receiver[nouveau] (Récepteur de notification SNMP)"
+msgstr "Récepteur de notifications SNMP [nouveau]"
 
 #: managers.php:499 managers.php:589 utilities.php:3106 utilities.php:3182
 msgid "MIB"
@@ -17297,7 +17297,7 @@ msgstr "MIB"
 
 #: managers.php:588 utilities.php:1935 utilities.php:3182
 msgid "OID"
-msgstr "Obligation à prime d'émission"
+msgstr "OID"
 
 #: managers.php:590
 msgid "Kind"
@@ -17321,7 +17321,7 @@ msgstr "Sévérité"
 
 #: managers.php:806 utilities.php:3419
 msgid "Purge Notification Log"
-msgstr "Purge Notification Log (Journal des notifications de purge)"
+msgstr "Purger le journal des notifications"
 
 #: managers.php:860 utilities.php:3480
 msgid "Time"
@@ -17423,7 +17423,7 @@ msgstr "Erreur dans la requête des données."
 
 #: package_import.php:388
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
-msgstr "Voir le cactus.log pour plus d'informations.  Il se peut que vous ayez une erreur de clé API, que le package ait été modifié ou que l'emplacement ne soit pas disponible."
+msgstr "Consultez le fichier cacti.log pour plus d'informations.  Il se peut que vous ayez rencontré une erreur de clé API, que le paquet ait été altéré ou que l'emplacement ne soit pas disponible."
 
 #: package_import.php:388
 #, php-format
@@ -17432,7 +17432,7 @@ msgstr "Le téléchargement ou la validation du package « %s » a échoué"
 
 #: package_import.php:394
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
-msgstr "Voir le cactus.log pour plus d'informations.  Il se peut que vous ayez eu une erreur de clé API ou que le package ait été modifié, ou que l'emplacement ne soit pas disponible"
+msgstr "Consultez le fichier cacti.log pour plus d'informations.  Il se peut que vous ayez rencontré une erreur de clé API, que le paquet ait été altéré ou que l'emplacement ne soit pas disponible"
 
 #: package_import.php:394
 msgid "The package download or validation failed"
@@ -17440,7 +17440,7 @@ msgstr "Échec du téléchargement ou de la validation du package"
 
 #: package_import.php:480
 msgid "Package XML File Damaged."
-msgstr "Fichiers de paquets"
+msgstr "Fichier XML du paquet endommagé."
 
 #: package_import.php:480
 msgid "The XML files appears to be invalid.  Please contact the package author"
@@ -17464,7 +17464,7 @@ msgstr "Règles des équipements"
 
 #: package_import.php:546
 msgid "Copyright"
-msgstr "droite"
+msgstr "Droits d'auteur"
 
 #: package_import.php:571
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -17492,11 +17492,11 @@ msgstr "Importer des modèles de package [ Aucun n'importe tout, cochez pour imp
 
 #: package_import.php:660 templates_import.php:271
 msgid "Template Type"
-msgstr "Titre du modèle"
+msgstr "Type de modèle"
 
 #: package_import.php:669 templates_import.php:283
 msgid "Changes/Diffferences"
-msgstr "Changer d'équipement"
+msgstr "Modifications/Différences"
 
 #: package_import.php:694 templates_import.php:304
 msgid "Updated"
@@ -17872,11 +17872,11 @@ msgstr "Le port TCP à utiliser pour se connecter à la base de données distant
 
 #: pollers.php:179
 msgid "Remote Database Retries"
-msgstr "Utilisateur de base de données à distance"
+msgstr "Nouvelles tentatives de la base de données distante"
 
 #: pollers.php:180
 msgid "The number of times to attempt to retry to connect to the remote database."
-msgstr "Le nom d'utilisateur à utiliser pour se connecter à la base de données distante."
+msgstr "Le nombre de tentatives de reconnexion à la base de données distante."
 
 #: pollers.php:188
 msgid "Remote Database SSL"
@@ -17927,7 +17927,7 @@ msgstr "Vous avez déjà utilisé ce nom d'hôte de base de données '%s'. Veuil
 
 #: pollers.php:541
 msgid "Data Collector Statistics cleared."
-msgstr "Chemin de la source de données"
+msgstr "Statistiques du collecteur de données effacées."
 
 #: pollers.php:576
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Cacti Data Collector."
@@ -17974,14 +17974,14 @@ msgstr[1] "Cliquez sur'Continuer' pour synchroniser les collecteurs de données 
 #: pollers.php:612
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "Cliquez sur'Continuer' pour activer le Collecteur de données suivant."
-msgstr[1] "Cliquez sur'Continuer' pour activer les collecteurs de données suivants."
+msgstr[0] "Cliquez sur 'Continuer' pour effacer les statistiques du collecteur de données."
+msgstr[1] "Cliquez sur 'Continuer' pour effacer les statistiques des collecteurs de données."
 
 #: pollers.php:617
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "Le statut de ce collecteur de données."
-msgstr[1] "Le statut de ce collecteur de données."
+msgstr[0] "Effacer les statistiques du collecteur de données"
+msgstr[1] "Effacer les statistiques des collecteurs de données"
 
 #: pollers.php:669
 msgid "The Main Data Collector can not be deleted or disabled."
@@ -18122,7 +18122,7 @@ msgstr "La vérification RRD est désactivée, veuillez l'activer dans Configura
 
 #: rrdcheck.php:106 utilities.php:2413
 msgid "RRDfile Checker"
-msgstr "Nettoyeur de fichiers RRD"
+msgstr "Vérificateur de fichiers RRD"
 
 #: rrdcheck.php:147
 msgid "RRDcheck Problems"
@@ -18514,8 +18514,8 @@ msgstr[1] "Supprimer des sites"
 #: sites.php:445
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "Cliquez sur 'Continuer' pour supprimer l'arbre suivant."
-msgstr[1] "Cliquez sur 'Continuer' pour supprimer les arbres suivants."
+msgstr[0] "Cliquez sur 'Continuer' pour dupliquer le site suivant."
+msgstr[1] "Cliquez sur 'Continuer' pour dupliquer tous les sites suivants."
 
 #: sites.php:447
 msgid "Site Name:"
@@ -18631,12 +18631,12 @@ msgstr "L'importation du modèle a réussi."
 
 #: templates_import.php:147
 msgid "Error in Template"
-msgstr "Exporter les modèles"
+msgstr "Erreur dans le modèle"
 
 #: templates_import.php:147
 #, php-format
 msgid "See the cacti.log for more information, and review the XML file for proper syntax.  The error details are shown below.<br><br><b>Errors:</b><br>%s"
-msgstr "Consultez le cactus.log pour plus d'informations et examinez le fichier XML pour la syntaxe appropriée.  Les détails de l'erreur sont indiqués ci-dessous.<br><br><b>Erreurs&nbsp;:</b><br>%s"
+msgstr "Consultez le fichier cacti.log pour plus d'informations et vérifiez que la syntaxe du fichier XML est correcte.  Les détails de l'erreur sont affichés ci-dessous.<br><br><b>Erreurs :</b><br>%s"
 
 #: templates_import.php:147
 #, php-format
@@ -18665,7 +18665,7 @@ msgstr "Inclure les dépendances"
 
 #: templates_import.php:308
 msgid "Damaged"
-msgstr "Source des données, graphique"
+msgstr "Endommagé"
 
 #: templates_import.php:335
 #, php-format
@@ -18706,7 +18706,7 @@ msgstr "Annuler la publication"
 #: tree.php:35
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "Verrouillé"
+msgstr "Déverrouiller"
 
 #: tree.php:233 tree.php:634
 #: graphs.php:652 graphs.php:1025
@@ -18790,14 +18790,14 @@ msgstr[1] "Arbres non publiés"
 #: tree.php:872
 msgid "Click 'Continue' to un-lock the following Tree."
 msgid_plural "Click 'Continue' to un-lock following Trees."
-msgstr[0] "Cliquez sur 'Continuer' pour annuler la publication de l'arbre suivant."
-msgstr[1] "Cliquez sur 'Continuer' pour annuler la publication des arbres suivants."
+msgstr[0] "Cliquez sur 'Continuer' pour déverrouiller l'arbre suivant."
+msgstr[1] "Cliquez sur 'Continuer' pour déverrouiller les arbres suivants."
 
 #: tree.php:877
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "Arbre non publié"
-msgstr[1] "Arbres non publiés"
+msgstr[0] "Déverrouiller l'arbre"
+msgstr[1] "Déverrouiller les arbres"
 
 #: tree.php:927
 #, php-format
@@ -18958,11 +18958,11 @@ msgstr "Copie par lot"
 
 #: user_admin.php:285
 msgid "You are not allowed to delete the current login account"
-msgstr "Vous n'êtes pas autorisé à changer votre mot de passe."
+msgstr "Vous n'êtes pas autorisé à supprimer le compte de connexion actuel"
 
 #: user_admin.php:297
 msgid "You are not allowed to disable the current login account"
-msgstr "Vous n'êtes pas autorisé à changer votre mot de passe."
+msgstr "Vous n'êtes pas autorisé à désactiver le compte de connexion actuel"
 
 #: user_admin.php:377
 msgid "Click 'Continue' to delete the selected User(s)."
@@ -19042,11 +19042,11 @@ msgstr "<Note:</b> La politique graphique du système est'Restrictive', ce qui s
 
 #: user_admin.php:817 user_group_admin.php:865
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Restrictive', ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de dispositif et de graphique pour accéder au graphique."
+msgstr "<b>Note :</b> La politique de graphique système est 'Équipement', ce qui signifie que l'utilisateur doit avoir accès au graphique ou à l'équipement pour accéder au graphique"
 
 #: user_admin.php:819 user_group_admin.php:867
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Permissive' ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, dispositif ou modèle graphique pour accéder au graphique."
+msgstr "<b>Note :</b> La politique de graphique système est 'Modèle de graphique', ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de graphique pour accéder au graphique"
 
 #: user_admin.php:823 user_group_admin.php:875
 msgid "Default Graph Policy"
@@ -19443,7 +19443,7 @@ msgstr "Chiffrement supporté par le serveur. TLS n'est disponible qu'en protoco
 
 #: user_domains.php:466
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Mode dans lequel les cactus tenteront de s'authentifier sur le serveur LDAP. <blockquote><i>No Searching</i> - Aucune recherche par nom distinctif (DN) n'a lieu, il suffit de tenter de se lier au format DN (Distinguished Name) fourni.<br><br><br><i>Recherche anonyme </i> - Tentatives de recherche de nom d'utilisateur dans l'annuaire LDAP par liaison anonyme pour localiser les utilisateurs Distinguished Name (DN).<br><br>br><i>Specific Searching</i> - Recherche de nom d'utilisateur par liaison par nom spécifique (DN) et mot de passe spécifique pour liaison afin de localiser les utilisateurs Distinguished Name (DN)."
+msgstr "Mode selon lequel Cacti tentera de s'authentifier auprès du serveur LDAP.<blockquote><i>Aucune recherche</i> - Aucune recherche de nom distinctif (DN) n'est effectuée ; tente simplement une liaison avec le format de nom distinctif (DN) fourni.<br><br><i>Recherche anonyme</i> - Tente de rechercher le nom d'utilisateur dans l'annuaire LDAP via une liaison anonyme afin de localiser le nom distinctif (DN) des utilisateurs.<br><br><i>Recherche spécifique</i> - Tente de rechercher le nom d'utilisateur dans l'annuaire LDAP à l'aide d'un nom distinctif (DN) spécifique et d'un mot de passe spécifique pour la liaison afin de localiser le nom distinctif (DN) des utilisateurs."
 
 #: user_domains.php:516
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."
@@ -19639,7 +19639,7 @@ msgstr "Adhésion"
 
 #: user_group_admin.php:801
 msgid "Group Member"
-msgstr "Membro do Grupo"
+msgstr "Membre du groupe"
 
 #: user_group_admin.php:811
 msgid "No Matching Group Members Found"
@@ -19701,7 +19701,7 @@ msgstr "Une reconstruction du cache du poller est déjà en cours."
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
-msgstr "Chemin de la source de données"
+msgstr "Statistiques de source de données purgées."
 
 #: utilities.php:181
 msgid "Database"
@@ -20099,7 +20099,7 @@ msgstr "Quartier :"
 
 #: utilities.php:2307 utilities.php:2311
 msgid "OID:"
-msgstr "Obligation à prime d'émission"
+msgstr "OID :"
 
 #: utilities.php:2311
 msgid "User:"
@@ -20107,7 +20107,7 @@ msgstr "Utilisateur:"
 
 #: utilities.php:2314
 msgid "Script:"
-msgstr "Votre discours :"
+msgstr "Script :"
 
 #: utilities.php:2316
 msgid "Script Server:"
@@ -20175,11 +20175,11 @@ msgstr "Ce menu vous permet d'afficher divers paramètres et statistiques de boo
 
 #: utilities.php:2397
 msgid "Data Source Statistics Utilities"
-msgstr "Chemin de la source de données"
+msgstr "Utilitaires de statistiques de source de données"
 
 #: utilities.php:2398
 msgid "Purge Data Source Statistics"
-msgstr "Chemin de la source de données"
+msgstr "Purger les statistiques des sources de données"
 
 #: utilities.php:2402
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
@@ -20271,7 +20271,7 @@ msgstr "Total de toutes les sources de données"
 
 #: utilities.php:2768
 msgid "Remaining Data Sources:"
-msgstr "Débogage de la source de données"
+msgstr "Sources de données restantes :"
 
 #: utilities.php:2768
 msgid "TBD"
@@ -20287,7 +20287,7 @@ msgstr "Approximatif en cours :"
 
 #: utilities.php:2779
 msgid "Total Boost Records:"
-msgstr "Total Boost Records :"
+msgstr "Total des enregistrements Boost :"
 
 #: utilities.php:2784
 msgid "Boost Storage Statistics"
@@ -20332,7 +20332,7 @@ msgstr "Dernière heure de début :"
 
 #: utilities.php:2853
 msgid "Last End Time:"
-msgstr "Dernière heure de début :"
+msgstr "Dernière heure de fin :"
 
 #: utilities.php:2853
 msgid "Never Run"
@@ -20419,7 +20419,7 @@ msgstr "Heure de début suivante :"
 
 #: utilities.php:2973
 msgid "Maximum Records:"
-msgstr "Maximum Records :"
+msgstr "Nombre maximal d'enregistrements :"
 
 #: utilities.php:2973
 msgid "Records"

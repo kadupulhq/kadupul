@@ -16560,7 +16560,7 @@ msgstr "సేకరణకు ముందు poller_output క్యూ తప�
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "చర్య నిర్ధారించబడలేదు. మళ్లీ ప్రయత్నించే ముందు మార్పుల చరిత్రను పరిశీలించండి."
+msgstr "అందుబాటులో లేదు"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"

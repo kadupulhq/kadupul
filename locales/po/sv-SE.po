@@ -242,7 +242,7 @@ msgstr "De valda Aggregatgraferna representerar element från mer än en grafmal
 
 #: aggregate_graphs.php:398
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "För att migrera Aggregatgraferna nedan till ett Mallbaserat aggregat måste de bara använda en grafmall. Vänligen tryck på &#39;Retur&#39; och välj sedan endast Aggregatgraf som använder samma grafmall."
+msgstr "För att migrera aggregatgraferna nedan till att använda en aggregatmall måste en sådan redan finnas. Tryck på 'Tillbaka' och skapa först din aggregatmall innan du försöker igen."
 
 #: aggregate_graphs.php:414
 msgid "Click 'Continue' and the following Aggregate Graph(s) will be migrated to use the Aggregate Template that you choose below."
@@ -309,7 +309,7 @@ msgstr "Klicka på &quot;Fortsätt&quot; för att kombinera följande Aggregate 
 
 #: aggregate_graphs.php:497
 msgid "Convert to normal Graph(s)"
-msgstr "Konvertera till LINE1-graf"
+msgstr "Konvertera till normal(a) graf(er)"
 
 #: aggregate_graphs.php:501
 msgid "Click 'Continue' to associate the following Graph(s) with the Aggregate Graph."
@@ -325,7 +325,7 @@ msgstr "Klicka på &quot;Fortsätt&quot; för att avbryta följande graf (er) fr
 
 #: aggregate_graphs.php:515
 msgid "Dis-Associate Graph(s)"
-msgstr "Dis-Associate Graph (s)"
+msgstr "Koppla bort graf(er)"
 
 #: aggregate_graphs.php:519
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
@@ -2197,7 +2197,7 @@ msgstr "namn"
 
 #: automation_snmp.php:301
 msgid "Automation SNMP Options has been Duplicated."
-msgstr "Automation SNMP Options har duplicerats."
+msgstr "SNMP-alternativ för automatisering har duplicerats."
 
 #: automation_snmp.php:303
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -4063,8 +4063,8 @@ msgstr[1] "Ta bort datakällor"
 #: data_sources.php:554
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
-msgstr[0] "Välj en ny enhet för den här datakällan och klicka på &quot;Fortsätt&quot;."
-msgstr[1] "Välj en ny enhet för dessa datakällor och klicka på &quot;Fortsätt&quot;"
+msgstr[0] "Välj en ny enhet för den här datakällan och klicka på 'Fortsätt'."
+msgstr[1] "Välj en ny enhet för dessa datakällor och klicka på 'Fortsätt'"
 
 #: data_sources.php:556
 msgid "New Device:"
@@ -4073,8 +4073,8 @@ msgstr "Ny enhet:"
 #: data_sources.php:566
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att aktivera följande datakälla."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att aktivera alla följande datakällor."
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande datakälla."
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera alla följande datakällor."
 
 #: data_sources.php:571
 msgid "Enable Data Source"
@@ -4085,8 +4085,8 @@ msgstr[1] "Aktivera datakällor"
 #: data_sources.php:575
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande datakälla."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att inaktivera alla följande datakällor."
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande datakälla."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera alla följande datakällor."
 
 #: data_sources.php:580
 msgid "Disable Data Source"
@@ -4097,8 +4097,8 @@ msgstr[1] "Inaktivera datakällor"
 #: data_sources.php:584
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att tillämpa det föreslagna namnet på följande datakälla."
-msgstr[1] "Klicka på Fortsätt för att tillämpa de föreslagna namnen på alla följande datakällor."
+msgstr[0] "Klicka på 'Fortsätt' för att tillämpa det föreslagna namnet på nytt på följande datakälla."
+msgstr[1] "Klicka på 'Fortsätt' för att tillämpa de föreslagna namnen på nytt på alla följande datakällor."
 
 #: data_sources.php:589
 msgid "Reapply Suggested Naming to Data Source"
@@ -4347,7 +4347,7 @@ msgstr "mall_titel"
 
 #: data_templates.php:525
 msgid "Duplicate Data Template(s)"
-msgstr "Duplicate Data Template (s)"
+msgstr "Duplicera datamall(ar)"
 
 #: data_templates.php:529
 msgid "Click 'Continue' to change the default Data Source Profile for the following Data Template(s)."
@@ -4832,7 +4832,7 @@ msgstr "DU HAR INTE RÄTTIGHETER FÖR TREE VISNING"
 
 #: graph_view.php:400
 msgid "YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW"
-msgstr "DU HAR INTE RÄTTIGHETER FÖR FÖRSIKTIGHETSFRÅGOR"
+msgstr "DU HAR INTE RÄTTIGHETER FÖR FÖRHANDSGRANSKNINGSVY"
 
 #: graph_view.php:418
 msgid "Graph Preview Filters"
@@ -5831,7 +5831,7 @@ msgstr "Klicka på &quot;Fortsätt&quot; för att duplicera följande Device Tem
 
 #: host_templates.php:294
 msgid "Duplicate Device Template(s)"
-msgstr "Duplicate Device Template (s)"
+msgstr "Duplicera enhetsmall(ar)"
 
 #: host_templates.php:298
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
@@ -6514,7 +6514,7 @@ msgstr "DES"
 
 #: include/global_arrays.php:671
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php:672
 msgid "AES-128"
@@ -10951,7 +10951,7 @@ msgstr "DNS Timeout"
 
 #: include/global_settings.php:1402
 msgid "The maximum amount of time Cacti's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "Den maximala tiden ett Cactis Spikekill-skript kan köras utan att generera ett timeout-fel och dödas."
+msgstr "Den maximala tiden Cactis RRD-filkontrollskript kan köras utan att generera ett timeout-fel och dödas."
 
 #: include/global_settings.php:1408 include/global_settings.php:1409
 #: include/global_settings.php:1410 include/global_settings.php:1465
@@ -11228,7 +11228,7 @@ msgstr "Låsa ett konto efter detta många misslyckade försök på 1 timme."
 
 #: include/global_settings.php:1674
 msgid "1 Attempt"
-msgstr "Försök till brott"
+msgstr "1 försök"
 
 #: include/global_settings.php:1675 include/global_settings.php:1676
 #: include/global_settings.php:1677 include/global_settings.php:1678
@@ -11275,7 +11275,7 @@ msgstr "Port SSL"
 
 #: include/global_settings.php:1722
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "TCP / UDP-port för icke-SSL-kommunikation."
+msgstr "TCP-port för LDAPS för SSL-kommunikation. Standard är 636."
 
 #: include/global_settings.php:1729 user_domains.php:444
 msgid "Protocol Version"
@@ -11291,7 +11291,7 @@ msgstr "Anslutningstidsavbrott"
 
 #: include/global_settings.php:1737
 msgid "The Network Connect Timeout in seconds."
-msgstr "Vänligen ange SMTP-timeout på några sekunder."
+msgstr "Timeout för nätverksanslutning i sekunder."
 
 #: include/global_settings.php:1744
 msgid "Bind Timeout"
@@ -11299,7 +11299,7 @@ msgstr "Timeout"
 
 #: include/global_settings.php:1745
 msgid "The Bind Timeout in seconds."
-msgstr "Vänligen ange SMTP-timeout på några sekunder."
+msgstr "Bind-timeout i sekunder."
 
 #: include/global_settings.php:1752
 msgid "LDAP Debug Mode"
@@ -11823,7 +11823,7 @@ msgstr "Aktivera regel"
 
 #: include/global_settings.php:2265
 msgid "Should RRDfile check be enabled for this Cacti system?"
-msgstr "Ska datakällans statistik samlas in för detta Cacti-system?"
+msgstr "Ska RRD-filkontroll aktiveras för detta Cacti-system?"
 
 #: include/global_settings.php:2270
 msgid "Number of RRDfile Check Processes"
@@ -11831,7 +11831,7 @@ msgstr "Antal Boost Processer"
 
 #: include/global_settings.php:2271
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
-msgstr "Antalet samtidiga boostprocesser som ska användas för att bearbeta alla RRD i boost-tabellen."
+msgstr "Antalet samtidiga processer för RRD-filkontroll som ska användas för att bearbeta alla RRD-filer."
 
 #: include/global_settings.php:2298
 msgid "Check Frequency"
@@ -13894,7 +13894,7 @@ msgstr "Diverse"
 
 #: lib/html.php:2881
 msgid "Dashboards"
-msgstr "Dölj Cacti Dashboard"
+msgstr "Instrumentpaneler"
 
 #: lib/html.php:2883
 msgid "Charts"
@@ -15622,7 +15622,7 @@ msgstr "Cron Intervall"
 
 #: lib/installer.php:2600
 msgid "Default Automation Network"
-msgstr "Standard Automation Network"
+msgstr "Standardnätverk för automatisering"
 
 #: lib/installer.php:2601
 msgid "Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
@@ -17236,7 +17236,7 @@ msgstr "Du har blivit utloggad av Cacti på grund av en session timeout."
 
 #: logout.php:61
 msgid "You have been logged out of Cacti due to an account suspension."
-msgstr "Du har blivit utloggad av Cacti på grund av en session timeout."
+msgstr "Du har blivit utloggad från Cacti på grund av en kontoavstängning."
 
 #: logout.php:63
 msgid "You have been logged out of Cacti due to a Remote Data Collector state change"
@@ -17350,14 +17350,14 @@ msgstr[1] "Klicka på &quot;Fortsätt&quot; för att radera följande Meddelande
 #: managers.php:1127
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable following Notification Receiver"
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att aktivera följande Meddelande Mottagare"
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att aktivera följande Notifieringsmottagare"
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande meddelandemottagare"
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera följande meddelandemottagare"
 
 #: managers.php:1129
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable following Notification Receiver"
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande meddelandemottagare"
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande Notifieringsmottagare"
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande meddelandemottagare"
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande meddelandemottagare"
 
 #: managers.php:1139
 #, php-format
@@ -17942,8 +17942,8 @@ msgstr[1] "Radera datainsamlare"
 #: pollers.php:585
 msgid "Click 'Continue' to disable the following Data Collector."
 msgid_plural "Click 'Continue' to disable the following Data Collectors."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande datasamlare."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande datainsamlare."
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande datainsamlare."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande datainsamlare."
 
 #: pollers.php:590
 msgid "Disable Data Collector"
@@ -17954,8 +17954,8 @@ msgstr[1] "Inaktivera datainsamlare"
 #: pollers.php:594
 msgid "Click 'Continue' to enable the following Data Collector."
 msgid_plural "Click 'Continue' to enable the following Data Collectors."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att aktivera följande datasamlare."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att aktivera följande datainsamlare."
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande datainsamlare."
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera följande datainsamlare."
 
 #: pollers.php:599 pollers.php:608
 msgid "Enable Data Collector"
@@ -17966,14 +17966,14 @@ msgstr[1] "Aktivera datainsamlare"
 #: pollers.php:603
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
 msgid_plural "Click 'Continue' to Synchronize the Remote Data Collectors for Offline Operation."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att synkronisera fjärrdatasamlaren för offline-användning."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att synkronisera fjärrdatasamlare för offline-användning."
+msgstr[0] "Klicka på 'Fortsätt' för att synkronisera fjärrdatainsamlaren för offlineanvändning."
+msgstr[1] "Klicka på 'Fortsätt' för att synkronisera fjärrdatainsamlarna för offlineanvändning."
 
 #: pollers.php:612
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att aktivera följande datasamlare."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att aktivera följande datainsamlare."
+msgstr[0] "Klicka på 'Fortsätt' för att rensa datainsamlarstatistik för datainsamlaren."
+msgstr[1] "Klicka på 'Fortsätt' för att rensa datainsamlarstatistik för datainsamlarna."
 
 #: pollers.php:617
 msgid "Clear Statistics for Data Collector"
@@ -18812,7 +18812,7 @@ msgstr "Redigera träd"
 
 #: tree.php:972
 msgid "Add Root Branch"
-msgstr "Lägg till Root Branch"
+msgstr "Lägg till rotgren"
 
 #: tree.php:972
 msgid "Finish Editing Tree"
@@ -19363,8 +19363,8 @@ msgstr[1] "Ta bort användardomäner"
 #: user_domains.php:273
 msgid "Click 'Continue' to disable the following User Domain."
 msgid_plural "Click 'Continue' to disable following User Domains."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande användardomän."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande användardomäner."
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande användardomän."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande användardomäner."
 
 #: user_domains.php:278
 msgid "Disable User Domain"
@@ -19586,8 +19586,8 @@ msgstr[1] "Ta bort användargrupper"
 #: user_group_admin.php:534
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att kopiera följande användargrupp till en ny användargrupp."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att kopiera följande användargrupper till nya användargrupper."
+msgstr[0] "Klicka på 'Fortsätt' för att kopiera följande användargrupp till en ny användargrupp."
+msgstr[1] "Klicka på 'Fortsätt' för att kopiera följande användargrupper till nya användargrupper."
 
 #: user_group_admin.php:540
 msgid "Group Prefix:"
@@ -19606,8 +19606,8 @@ msgstr[1] "Kopiera användargrupper"
 #: user_group_admin.php:551
 msgid "Click 'Continue' to enable the following User Group."
 msgid_plural "Click 'Continue' to enable following User Groups."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att aktivera följande användargrupp."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att aktivera följande användargrupper."
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande användargrupp."
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera följande användargrupper."
 
 #: user_group_admin.php:556
 msgid "Enable User Group"
@@ -19618,8 +19618,8 @@ msgstr[1] "Aktivera användargrupper"
 #: user_group_admin.php:562
 msgid "Click 'Continue' to disable the following User Group."
 msgid_plural "Click 'Continue' to disable following User Groups."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att inaktivera följande användargrupp."
-msgstr[1] "Klicka på Fortsätt för att inaktivera följande användargrupper."
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande användargrupp."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande användargrupper."
 
 #: user_group_admin.php:567
 msgid "Disable User Group"
@@ -20495,8 +20495,8 @@ msgstr[1] "Ta bort VDEFs"
 #: vdef.php:283
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att duplicera följande VDEF. Du kan valfritt ändra titelformat för den nya VDEF."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att duplicera följande VDEFs. Du kan valfritt ändra titelformat för de nya VDEF: erna."
+msgstr[0] "Klicka på 'Fortsätt' för att duplicera följande VDEF. Du kan valfritt ändra titelformatet för den nya VDEF:en."
+msgstr[1] "Klicka på 'Fortsätt' för att duplicera följande VDEF:er. Du kan valfritt ändra titelformatet för de nya VDEF:erna."
 
 #: vdef.php:289
 msgid "Duplicate VDEF"

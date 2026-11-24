@@ -125,7 +125,7 @@ msgstr "Buat Agregat Baru dari Agregat"
 
 #: aggregate_graphs.php:50
 msgid "Associate with Aggregate"
-msgstr "Baris Pelengkapan Otomatis"
+msgstr "Kaitkan dengan Agregat"
 
 #: aggregate_graphs.php:51
 msgid "Disassociate with Aggregate"
@@ -296,7 +296,7 @@ msgstr "Rentang Waktu"
 
 #: aggregate_graphs.php:480 graph_view.php:901 graphs.php:1354 host.php:598
 msgid "Align"
-msgstr "Izinkan Metakarakter Tidak Aman dalam Metode Input Data"
+msgstr "Ratakan"
 
 #: aggregate_graphs.php:484 graphs.php:1358
 msgid "Add Graphs to Report"
@@ -320,7 +320,7 @@ msgstr "Klik 'Continue' untuk mengaitkan Grafik berikut dengan Grafik Agregat."
 
 #: aggregate_graphs.php:506
 msgid "Associate Graph(s)"
-msgstr "Pelengkapan Otomatis Diaktifkan"
+msgstr "Kaitkan Grafik"
 
 #: aggregate_graphs.php:510
 msgid "Click 'Continue' to disassociate the following Graph(s) from the Aggregate."
@@ -385,7 +385,7 @@ msgstr "Tampilkan Detail Item"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Semua %d %s"
+msgstr "Pratinjau Agregat Tidak Ada"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -424,7 +424,7 @@ msgstr "Total"
 
 #: aggregate_graphs.php:962 aggregate_templates.php:548 graphs.php:1215
 msgid "All Items"
-msgstr "Memungkinkan Administrator memelihara penerima notifikasi SNMP."
+msgstr "Semua Item"
 
 #: aggregate_graphs.php:980 graphs.php:1776 lib/api_aggregate.php:1932
 msgid "Graph Configuration"
@@ -695,7 +695,7 @@ msgstr "Templat"
 #: utilities.php:1793 utilities.php:2090 utilities.php:2139 utilities.php:2149
 #: utilities.php:3110 utilities.php:3379 utilities.php:3392
 msgid "Any"
-msgstr "Pada frekuensi berapa Anda ingin Mengindeks Ulang semua Perangkat. Pengindeksan Ulang ini akan terjadi pada tengah malam pada frekuensi yang Anda pilih."
+msgstr "Apa pun"
 
 #: aggregate_graphs.php:1542 aggregate_graphs.php:1656
 #: automation_graph_rules.php:1000 automation_graph_rules.php:1001
@@ -755,7 +755,7 @@ msgstr "Tidak Ada Grafik Agregat Ditemukan"
 
 #: aggregate_templates.php:119 aggregate_templates.php:370
 msgid "Aggregate Template not found."
-msgstr "Semua perbaikan RRDfile berhasil."
+msgstr "Templat Agregat tidak ditemukan."
 
 #: aggregate_templates.php:318
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
@@ -959,7 +959,7 @@ msgstr "Anda tidak memiliki akses ke area mana pun di Cacti.  Hubungi administra
 
 #: auth_login.php:225
 msgid "Access Denied! User account locked."
-msgstr "Pengembang Aktif"
+msgstr "Akses Ditolak! Akun pengguna terkunci."
 
 #: auth_login.php:314 lib/html_tree.php:164
 msgid "Login to Cacti"
@@ -1051,7 +1051,7 @@ msgstr "Alamat Email"
 
 #: auth_profile.php:334
 msgid "An Email Address you be reached at."
-msgstr "Kueri Data Terkait"
+msgstr "Alamat Email tempat Anda dapat dihubungi."
 
 #: auth_profile.php:341 auth_profile.php:343
 msgid "Clear User Settings"
@@ -1091,7 +1091,7 @@ msgstr "Data Pribadi Anda telah dibersihkan."
 
 #: auth_profile.php:493
 msgid "All your login sessions have been cleared."
-msgstr "Upaya injeksi SQL terdeteksi dalam otomatisasi Grafik"
+msgstr "Semua sesi login Anda telah dihapus."
 
 #: auth_profile.php:493
 msgid "User Sessions Cleared"
@@ -1329,7 +1329,7 @@ msgstr "Nonaktifkan"
 
 #: automation_graph_rules.php:162 automation_graph_rules.php:213
 msgid "An attempt was made to perform a SQL injection in Graph automation"
-msgstr "Item Grafik Terkait"
+msgstr "Terjadi upaya untuk melakukan injeksi SQL dalam otomatisasi Grafik"
 
 #: automation_graph_rules.php:317
 msgid "Press 'Continue' to delete the following Graph Rules."
@@ -1362,11 +1362,11 @@ msgstr "Klik 'Continue' untuk menonaktifkan Aturan berikut."
 
 #: automation_graph_rules.php:351 automation_tree_rules.php:327
 msgid "Apply requested action"
-msgstr "Autentikasi"
+msgstr "Terapkan tindakan yang diminta"
 
 #: automation_graph_rules.php:487 automation_tree_rules.php:549
 msgid "Are You Sure?"
-msgstr "Waktu Keluar Otomatis"
+msgstr "Apakah Anda Yakin?"
 
 #: automation_graph_rules.php:487
 #, php-format
@@ -1918,7 +1918,7 @@ msgstr "Maret"
 
 #: automation_networks.php:676 include/global_arrays.php:1922
 msgid "April"
-msgstr "Autentikasi Berhasil"
+msgstr "April"
 
 #: automation_networks.php:677 include/global_arrays.php:1923
 msgid "May"
@@ -1934,7 +1934,7 @@ msgstr "Juli"
 
 #: automation_networks.php:680 include/global_arrays.php:1926
 msgid "August"
-msgstr "Grafik Tersedia"
+msgstr "Agustus"
 
 #: automation_networks.php:681 include/global_arrays.php:1927
 msgid "September"
@@ -2482,7 +2482,7 @@ msgstr "Templat Perangkat Otomatisasi Tidak Ditemukan"
 
 #: automation_tree_rules.php:148
 msgid "An attempt was made to perform a SQL injection in Tree automation"
-msgstr "Templat Grafik/Data Terkait [edit: %s]"
+msgstr "Terjadi upaya untuk melakukan injeksi SQL dalam otomatisasi Pohon"
 
 #: automation_tree_rules.php:197
 msgid "Invalid Field Name specified for Tree Rule Item."
@@ -2559,7 +2559,7 @@ msgstr "Tautkan ke Pohon"
 
 #: automation_tree_rules.php:1037
 msgid "At Subtree"
-msgstr "Item Otomatisasi tidak ada. Tidak dapat Menduplikasi."
+msgstr "Di Subpohon"
 
 #: automation_tree_rules.php:1038
 msgid "This Type"
@@ -2772,7 +2772,7 @@ msgstr "Haruskah proses impor diizinkan untuk menimpa data yang ada?  Harap dipe
 
 #: color.php:451
 msgid "Allow Existing Rows to be Updated?"
-msgstr "Warna bernama apa pun harus bersifat hanya-baca."
+msgstr "Izinkan Baris yang Ada untuk Diperbarui?"
 
 #: color.php:457
 msgid "Required File Format Notes"
@@ -3012,7 +3012,7 @@ msgstr "Debug Sumber Data menerima ID Sumber Data yang tidak valid."
 
 #: data_debug.php:79
 msgid "All RRDfile repairs succeeded."
-msgstr "Alfabetis"
+msgstr "Semua perbaikan RRDfile berhasil."
 
 #: data_debug.php:81
 msgid "One or more RRDfile repairs failed.  See Cacti log for errors."
@@ -3263,7 +3263,7 @@ msgstr "Untuk atribut '%s', masalah ditemukan '%s'"
 
 #: data_debug.php:920
 msgid "Apply Suggested Fixes"
-msgstr "Pengguna Auth (v3)"
+msgstr "Terapkan Perbaikan yang Disarankan"
 
 #: data_debug.php:920
 #, php-format
@@ -3284,7 +3284,7 @@ msgstr "Menunggu Pemeriksaan Sumber Data Selesai"
 
 #: data_debug.php:1029
 msgid "All Devices"
-msgstr "Izinkan penentuan otomatis bahasa 'default' pengguna dan menampilkannya saat login jika bahasa tersebut didukung oleh Cacti. Jika dinonaktifkan, bahasa default akan berlaku sampai pengguna memilih bahasa lain."
+msgstr "Semua Perangkat"
 
 #: data_debug.php:1029
 #, php-format
@@ -3321,7 +3321,7 @@ msgstr "Profil"
 #: user_admin.php:2239 user_admin.php:2261 user_admin.php:2275
 #: utilities.php:1077 utilities.php:1501
 msgid "All"
-msgstr "Izinkan unsafe-eval dan JavaScript Inline Tanpa Nonce"
+msgstr "Semua"
 
 #: data_debug.php:1098 utilities.php:1099 utilities.php:1237
 msgid "Failed"
@@ -3594,11 +3594,11 @@ msgstr "Associated Graph/Data Templates [edit: %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Arsipkan atau hapus RRDfile secara otomatis saat Sumber Data yang sesuai dihapus dari Cacti"
+msgstr "Templat Grafik/Data Terkait [baru]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
-msgstr "Logout Otomatis"
+msgstr "Templat Data Terkait"
 
 #: data_queries.php:824
 #, php-format
@@ -3677,7 +3677,7 @@ msgstr "Tidak dapat menemukan berkas XML."
 #: data_queries.php:1364 host.php:837 host_templates.php:578
 #: include/global_arrays.php:2444
 msgid "Associated Graph Templates"
-msgstr "Tambahkan Secara Otomatis ke Cacti"
+msgstr "Templat Grafik Terkait"
 
 #: data_queries.php:1368 graph_templates.php:893 graphs_new.php:575
 #: host.php:841 lib/api_automation.php:672
@@ -3690,7 +3690,7 @@ msgstr "ID Pemetaan"
 
 #: data_queries.php:1395
 msgid "Association Read Only until XML file located"
-msgstr "Eksekusi Otomatisasi untuk Kueri Data selesai"
+msgstr "Asosiasi Hanya Baca hingga file XML ditemukan"
 
 #: data_queries.php:1412
 msgid "Mapped Graph Templates with Graphs are read only"
@@ -4278,7 +4278,7 @@ msgstr "Tidak Ada Grafik"
 
 #: data_sources.php:1877 include/global_arrays.php:1013
 msgid "Aggregates"
-msgstr "Izinkan Grafik meluas ke Masa Depan"
+msgstr "Agregat"
 
 #: data_sources.php:1879
 msgid "No Aggregates"
@@ -4759,7 +4759,7 @@ msgstr "Input Item Grafik [edit grafik: %s]"
 
 #: graph_templates_inputs.php:238
 msgid "Associated Graph Items"
-msgstr "Pembersihan RRD lokal otomatis tidak tersedia di Windows. Hentikan semua penulis RRD sebelum pembersihan manual."
+msgstr "Item Grafik Terkait"
 
 #: graph_templates_inputs.php:262
 #, php-format
@@ -4845,7 +4845,7 @@ msgstr "Laporan"
 #: graph_view.php:694 lib/html.php:242 lib/html.php:247 lib/html_graph.php:168
 #: lib/html_tree.php:994
 msgid "All Graphs & Templates"
-msgstr "Izinkan penentuan otomatis bahasa 'default' pengguna dan menampilkannya saat login jika bahasa tersebut didukung oleh Kadupul. Jika dinonaktifkan, bahasa default akan berlaku sampai pengguna memilih bahasa lain."
+msgstr "Semua Grafik & Templat"
 
 #: graph_view.php:695 include/global_arrays.php:2918 lib/graphs.php:58
 #: lib/graphs.php:67 lib/html.php:250 lib/html_graph.php:169
@@ -4967,7 +4967,7 @@ msgstr "Buat Agregat dari Templat"
 
 #: graphs.php:62 graphs.php:1329 host.php:47
 msgid "Apply Automation Rules"
-msgstr "Kata Sandi Auth"
+msgstr "Terapkan Aturan Otomatisasi"
 
 #: graphs.php:68 graphs.php:1023
 msgid "Convert to Graph Template"
@@ -5594,7 +5594,7 @@ msgstr "Sembunyikan"
 
 #: host.php:961 host_templates.php:654
 msgid "Associated Data Queries"
-msgstr "Debug Sumber Data otomatis dijalankan ulang setelah perbaikan."
+msgstr "Kueri Data Terkait"
 
 #: host.php:966 host.php:1062
 msgid "Re-Index Method"
@@ -5924,7 +5924,7 @@ msgstr "Tidak Ada Templat Perangkat Ditemukan"
 #: lib/auth.php:4086 lib/auth.php:4130 lib/auth.php:4141
 #: lib/auth.php:4186 lib/auth.php:4283 lib/auth.php:4302 lib/auth.php:4605 lib/auth.php:4644 lib/auth.php:4670 lib/auth.php:4683 lib/auth.php:4707
 msgid "Access Denied!  Login Failed."
-msgstr "Opsi Akun"
+msgstr "Akses Ditolak! Login Gagal."
 
 #: include/auth.php:192
 msgid "Not Logged In"
@@ -6126,7 +6126,7 @@ msgstr "File yang disorot tidak ada.  Harap masukkan nama file yang valid."
 
 #: include/global_arrays.php:261
 msgid "All User Settings have been returned to their default values."
-msgstr "Selalu Nyala"
+msgstr "Semua Pengaturan Pengguna telah dikembalikan ke nilai bawaannya."
 
 #: include/global_arrays.php:264
 msgid "Suggested Field Name was not entered.  Please enter a field name and try again."
@@ -6298,7 +6298,7 @@ msgstr "Anda harus memilih setidaknya satu Grafik untuk ditambahkan ke Laporan."
 
 #: include/global_arrays.php:390
 msgid "All Graphs have been added to the Report.  Duplicate Graphs with the same Timespan were skipped."
-msgstr "Memungkinkan Administrator menelusuri log pengguna. Administrator juga dapat memfilter dan mengekspor log."
+msgstr "Semua Grafik telah ditambahkan ke Laporan. Grafik Duplikat dengan Rentang Waktu yang sama dilewati."
 
 #: include/global_arrays.php:393
 msgid "Poller Resource Cache cleared.  Main Data Collector will rebuild at the next poller start, and Remote Data Collectors will sync afterwards."
@@ -6351,7 +6351,7 @@ msgstr "Verifikasi Semua"
 
 #: include/global_arrays.php:548
 msgid "All Re-Indexing will be manual or managed through scripts or Device Automation."
-msgstr "Pengurutan Alfabetis"
+msgstr "Semua Pengindeksan Ulang akan dilakukan secara manual atau dikelola melalui skrip atau Otomatisasi Perangkat."
 
 #: include/global_arrays.php:549
 msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
@@ -6486,11 +6486,11 @@ msgstr "DES"
 
 #: include/global_arrays.php:671
 msgid "AES"
-msgstr "Tentang Cacti"
+msgstr "AES"
 
 #: include/global_arrays.php:672
 msgid "AES-128"
-msgstr "Akan mengimpor Paket #%s '%s'."
+msgstr "AES-128"
 
 #: include/global_arrays.php:673
 msgid "AES-192"
@@ -6502,7 +6502,7 @@ msgstr "Akses Ditolak! Templat domain belum dikonfigurasi. Silakan hubungi Admin
 
 #: include/global_arrays.php:675
 msgid "AES-256"
-msgstr "Akses Ditolak! ID pengguna tamu %s tidak ada. Silakan hubungi Administrator Anda."
+msgstr "AES-256"
 
 #: include/global_arrays.php:676
 msgid "AES-256-C"
@@ -6671,7 +6671,7 @@ msgstr "Permintaan"
 
 #: include/global_arrays.php:912 user_admin.php:781 user_group_admin.php:843
 msgid "Allow"
-msgstr "Contoh cara mengatur izin folder ditunjukkan di sini, meskipun Anda mungkin perlu menyesuaikannya tergantung pada sistem operasi, akun pengguna, dan izin yang diinginkan."
+msgstr "Izinkan"
 
 #: include/global_arrays.php:913
 msgid "Try"
@@ -6683,7 +6683,7 @@ msgstr "Tanpa Pencarian"
 
 #: include/global_arrays.php:918
 msgid "Anonymous Searching"
-msgstr "Asosiasi Hanya Baca hingga file XML ditemukan"
+msgstr "Pencarian Anonim"
 
 #: include/global_arrays.php:919
 msgid "Specific Searching"
@@ -6701,7 +6701,7 @@ msgstr "Operator"
 
 #: include/global_arrays.php:943
 msgid "Another CDEF"
-msgstr "Mengasumsikan 100 koneksi cadangan untuk pengguna halaman Web dan berbagai koneksi lainnya."
+msgstr "CDEF Lainnya"
 
 #: include/global_arrays.php:962
 msgid "Inherit Parent Sorting"
@@ -6713,7 +6713,7 @@ msgstr "Pengurutan Manual (Tanpa Pengurutan)"
 
 #: include/global_arrays.php:964
 msgid "Alphabetic Ordering"
-msgstr "Apakah Anda Yakin?"
+msgstr "Pengurutan Alfabetis"
 
 #: include/global_arrays.php:965
 msgid "Natural Ordering"
@@ -6743,23 +6743,23 @@ msgstr "Interval Polling Item Grafik Saat Ini"
 
 #: include/global_arrays.php:983
 msgid "All Data Sources (Do not Include Duplicates)"
-msgstr "Izinkan istilah pencarian menyertakan kolom indeks"
+msgstr "Semua Sumber Data (Jangan Sertakan Duplikat)"
 
 #: include/global_arrays.php:984
 msgid "All Data Sources (Include Duplicates)"
-msgstr "Izinkan penggunaan Sertifikat yang Ditandatangani Sendiri dan izinkan nama host Sertifikat berbeda dari nama host Pengumpul Data Jarak Jauh."
+msgstr "Semua Sumber Data (Sertakan Duplikat)"
 
 #: include/global_arrays.php:985
 msgid "All Similar Data Sources (Do not Include Duplicates)"
-msgstr "Selain itu, jika ini adalah pemutakhiran, pastikan untuk membaca file informasi <a href=\"%s\">Upgrade</a>."
+msgstr "Semua Sumber Data Serupa (Jangan Sertakan Duplikat)"
 
 #: include/global_arrays.php:986
 msgid "All Similar Data Sources (Do not Include Duplicates) Polling Interval"
-msgstr "Nama Alternatif"
+msgstr "Interval Polling Semua Sumber Data Serupa (Jangan Sertakan Duplikat)"
 
 #: include/global_arrays.php:987
 msgid "All Similar Data Sources (Include Duplicates)"
-msgstr "Jalur Poller Alternatif"
+msgstr "Semua Sumber Data Serupa (Sertakan Duplikat)"
 
 #: include/global_arrays.php:988
 msgid "Current Data Source Item: Minimum Value"
@@ -6937,7 +6937,7 @@ msgstr "Tambah"
 
 #: include/global_arrays.php:1096
 msgid "Application Related"
-msgstr "Agu"
+msgstr "Terkait Aplikasi"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
@@ -7025,7 +7025,7 @@ msgstr "Terkait UPS"
 
 #: include/global_arrays.php:1141
 msgid "All Lines"
-msgstr "Alfa %"
+msgstr "Semua Baris"
 
 #: include/global_arrays.php:1142 include/global_arrays.php:1143
 #: include/global_arrays.php:1144 include/global_arrays.php:1145
@@ -7273,7 +7273,7 @@ msgstr "Tahun, Nama Bulan, Hari"
 
 #: include/global_arrays.php:1540 include/global_arrays.php:1571
 msgid "After Boost"
-msgstr "Pratinjau Agregat %s"
+msgstr "Setelah Boost"
 
 #: include/global_arrays.php:1550 include/global_arrays.php:1551
 #: include/global_arrays.php:1552 include/global_arrays.php:1553
@@ -7414,15 +7414,15 @@ msgstr "Gambar GIF Sebaris"
 
 #: include/global_arrays.php:1697
 msgid "Attached PNG Image"
-msgstr "Opsi SNMP Otomatisasi telah Diduplikasi."
+msgstr "Gambar PNG Terlampir"
 
 #: include/global_arrays.php:1700
 msgid "Attached JPEG Image"
-msgstr "Opsi SNMP Otomatisasi"
+msgstr "Gambar JPEG Terlampir"
 
 #: include/global_arrays.php:1701
 msgid "Attached GIF Image"
-msgstr "Email Penerima Notifikasi Otomatisasi"
+msgstr "Gambar GIF Terlampir"
 
 #: include/global_arrays.php:1705
 msgid "Inline PNG Image, LN Style"
@@ -7671,7 +7671,7 @@ msgstr "Mar"
 #: include/global_arrays.php:1937
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
-msgstr "Metode Autentikasi"
+msgstr "Apr"
 
 #: include/global_arrays.php:1938
 msgctxt "A short textual representation of a month, three letters"
@@ -7691,7 +7691,7 @@ msgstr "Jul"
 #: include/global_arrays.php:1941
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
-msgstr "Perangkat Tersedia"
+msgstr "Agu"
 
 #: include/global_arrays.php:1942
 msgctxt "A short textual representation of a month, three letters"
@@ -7766,7 +7766,7 @@ msgstr "Sab"
 
 #: include/global_arrays.php:1985
 msgid "Arabic"
-msgstr "Autentikasi gagal: %s"
+msgstr "Bahasa Arab"
 
 #: include/global_arrays.php:1986
 msgid "Bulgarian"
@@ -8244,11 +8244,11 @@ msgstr "Untuk Perangkat SNMPv2 dan SNMPv3, ukuran max-repetitions SNMP Bulk Walk
 
 #: include/global_form.php:177
 msgid "Auto Detect on Re-Index"
-msgstr "Batas backtrack habis!"
+msgstr "Deteksi Otomatis saat Indeks Ulang"
 
 #: include/global_form.php:178
 msgid "Auto Detect/Set on first Re-Index"
-msgstr "Retensi Cadangan"
+msgstr "Deteksi/Atur Otomatis saat Pengindeksan Ulang Pertama"
 
 #: include/global_form.php:179
 #, php-format
@@ -8329,7 +8329,7 @@ msgstr "RRA Profil Baru"
 
 #: include/global_form.php:290
 msgid "Aggregation Level"
-msgstr "Izinkan JavaScript Inline Tanpa Nonce"
+msgstr "Tingkat Agregasi"
 
 #: include/global_form.php:291
 msgid "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1."
@@ -8377,7 +8377,7 @@ msgstr "Nilai heksadesimal untuk warna ini; rentang yang valid: 000000-FFFFFF."
 
 #: include/global_form.php:375
 msgid "Any named color should be read only."
-msgstr "Pada frekuensi berapa Anda ingin merotasi log Anda?"
+msgstr "Warna bernama apa pun harus bersifat hanya-baca."
 
 #: include/global_form.php:400 include/global_form.php:466
 msgid "Enter a meaningful name for this data input method."
@@ -8440,7 +8440,7 @@ msgstr "Jika Anda ingin mewajibkan ekspresi reguler tertentu agar cocok dengan d
 
 #: include/global_form.php:489
 msgid "Allow Empty Input"
-msgstr "Pencarian Anonim"
+msgstr "Izinkan Input Kosong"
 
 #: include/global_form.php:490
 msgid "Check here if you want to allow NULL input in this field from the user."
@@ -8722,7 +8722,7 @@ msgstr "Untuk menghindari efek kabur anti-aliasing, RRDtool menempelkan titik ke
 
 #: include/global_form.php:866
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Mulai %s %s, Anda dapat mengontrol seberapa sering %s menulis transaksi ke disk. Default-nya adalah 1 detik, tetapi pada sistem I/O tinggi, menyetel ke nilai yang lebih besar dari 1 memungkinkan I/O disk menjadi lebih berurutan"
+msgstr "Kisi Y Alternatif (--alt-y-grid)"
 
 #: include/global_form.php:869
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
@@ -8899,7 +8899,7 @@ msgstr "Perataan Teks (TEXTALIGN)"
 
 #: include/global_form.php:1052
 msgid "All subsequent legend line(s) will be aligned as given here.  You may use this command multiple times in a single graph.  This command does not produce tabular layout.<br/><strong>Note: </strong>You may want to insert a &lt;HR&gt; on the preceding graph item.<br/> <strong>Note: </strong>A &lt;HR&gt; on this legend line will obsolete this setting!"
-msgstr "Akun akan terbuka kuncinya secara otomatis setelah sekian menit. Meskipun kata sandi yang benar dimasukkan, akun tidak akan terbuka kuncinya hingga batas waktu ini terpenuhi. Maksimal 1440 menit (1 Hari)"
+msgstr "Semua baris legenda berikutnya akan diratakan seperti yang diberikan di sini. Anda dapat menggunakan perintah ini beberapa kali dalam satu grafik. Perintah ini tidak menghasilkan tata letak tabel.<br/><strong>Catatan: </strong>Anda mungkin ingin menyisipkan &lt;HR&gt; pada item grafik sebelumnya.<br/> <strong>Catatan: </strong>&lt;HR&gt; pada baris legenda ini akan menjadikan pengaturan ini usang!"
 
 #: include/global_form.php:1055
 msgid "Text Format"
@@ -9121,7 +9121,7 @@ msgstr "Haruskah Pohon ini diterbitkan agar dapat diakses pengguna?"
 
 #: include/global_form.php:1533
 msgid "An Email Address where the User can be reached."
-msgstr "Kaitkan dengan Agregat"
+msgstr "Alamat Email tempat Pengguna dapat dihubungi."
 
 #: include/global_form.php:1541
 msgid "Enter the password for this user twice. Remember that passwords are case sensitive!"
@@ -9197,7 +9197,7 @@ msgstr "Tampilkan layar grafik default."
 
 #: include/global_form.php:1633 utilities.php:1201
 msgid "Authentication Realm"
-msgstr "File Font Sumbu"
+msgstr "Realm Autentikasi"
 
 #: include/global_form.php:1634
 msgid "Only used if you have LDAP or Web Basic Authentication enabled.  Changing this to a non-enabled realm will effectively disable the user."
@@ -9451,7 +9451,7 @@ msgstr "Urutan."
 
 #: include/global_form.php:2221 include/global_form.php:2266
 msgid "A useful name for this Rule."
-msgstr "Terima kasih yang sangat khusus kepada %sTobi Oetiker%s, pencipta %sRRDtool%s dan %sMRTG%s yang sangat populer."
+msgstr "Nama yang berguna untuk Aturan ini."
 
 #: include/global_form.php:2229
 msgid "Choose a Data Query to apply to this rule."
@@ -9563,7 +9563,7 @@ msgstr "Visual"
 
 #: include/global_settings.php:45 lib/functions.php:5788 lib/functions.php:5793
 msgid "Authentication"
-msgstr "Panjang Baris Rata-rata"
+msgstr "Autentikasi"
 
 #: include/global_settings.php:46
 msgid "Performance"
@@ -9699,7 +9699,7 @@ msgstr "Frekuensi Rotasi"
 
 #: include/global_settings.php:199
 msgid "At what frequency would you like to rotate your logs?"
-msgstr "Nama Pengirim Notifikasi Otomatisasi"
+msgstr "Seberapa sering Anda ingin merotasi log Anda?"
 
 #: include/global_settings.php:205
 msgid "Log Retention"
@@ -9711,7 +9711,7 @@ msgstr "Berapa banyak file log yang ingin Anda simpan? Gunakan 0 untuk tidak per
 
 #: include/global_settings.php:213
 msgid "Alternate Poller Path"
-msgstr "Apakah Anda yakin ingin melanjutkan?"
+msgstr "Jalur Poller Alternatif"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
@@ -9747,11 +9747,11 @@ msgstr "Metode yang digunakan untuk Membersihkan RRDfile dari Cacti setelah Sumb
 
 #: include/global_settings.php:250
 msgid "Archive"
-msgstr "Autentikasi sebelumnya belum diatur. Mencoba mengatur ke Autentikasi Lokal, tetapi tidak ditemukan akun Administrator."
+msgstr "Arsip"
 
 #: include/global_settings.php:255
 msgid "Archive directory"
-msgstr "Deteksi Bahasa Otomatis"
+msgstr "Direktori arsip"
 
 #: include/global_settings.php:256
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
@@ -9791,7 +9791,7 @@ msgstr "Pelacakan Sumber Data"
 
 #: include/global_settings.php:290
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
-msgstr "Waktu eksekusi minimal %s m"
+msgstr "Opsi khusus pengembang untuk melacak pembuatan Sumber Data terutama terkait pemeriksaan keunikan"
 
 #: include/global_settings.php:295
 msgid "Selective File Debug"
@@ -9859,7 +9859,7 @@ msgstr "Bahasa default untuk sistem ini."
 
 #: include/global_settings.php:356
 msgid "Auto Language Detection"
-msgstr "Indeks Rusak"
+msgstr "Deteksi Bahasa Otomatis"
 
 #: include/global_settings.php:357
 msgid "Allow to automatically determine the 'default' language of the user and provide it at login time if that language is supported by Cacti. If disabled, the default language will be in force until the user elects another language."
@@ -10039,15 +10039,15 @@ msgstr "Saat dicentang, setiap upaya untuk mengakses Cacti akan dialihkan ke HTT
 
 #: include/global_settings.php:502
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "Nilai apa pun yang berada sekian simpangan baku di atas rata-rata akan dikecualikan. Angka yang baik bergantung pada jenis data yang dioperasikan. Kami menyarankan angka tidak lebih rendah dari 5 Simpangan Baku."
+msgstr "Izinkan HTTPS Pengumpul Data Jarak Jauh yang Tidak Aman"
 
 #: include/global_settings.php:503
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
-msgstr "Perkiraan Sedang Diproses:"
+msgstr "Izinkan penggunaan Sertifikat yang Ditandatangani Sendiri dan izinkan nama host Sertifikat berbeda dari nama host Pengumpul Data Jarak Jauh."
 
 #: include/global_settings.php:508
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
-msgstr "Tabel apa pun yang dibuat oleh plugin mungkin mengalami masalah saat ditautkan ke tabel Inti Kadupul jika kolasinya tidak cocok. Pastikan basis data Anda diubah ke 'utf8mb4_unicode_ci' dengan menjalankan perintah berikut: "
+msgstr "Izinkan Metakarakter Tidak Aman dalam Metode Input Data"
 
 #: include/global_settings.php:509
 msgid "Historically, Cacti administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Cacti Graphs.  In earlier versions of Cacti, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Cacti, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Cacti restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Cacti continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
@@ -10063,11 +10063,11 @@ msgstr "Mengontrol kebijakan CSP script-src. Dalam Mode Nonce, Plugin Cacti yang
 
 #: include/global_settings.php:519
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr "Tabel apa pun yang dibuat oleh plugin mungkin mengalami masalah saat ditautkan ke tabel Inti Cacti jika kolasinya tidak cocok. Pastikan basis data Anda diubah ke 'utf8mb4_unicode_ci' dengan menjalankan perintah berikut: "
+msgstr "Izinkan JavaScript Inline Tanpa Nonce"
 
 #: include/global_settings.php:520
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
-msgstr "Terapkan Aturan Otomatisasi"
+msgstr "Izinkan baik unsafe-eval maupun JavaScript Inline Tanpa Nonce"
 
 #: include/global_settings.php:521
 msgid "Nonce Mode - Reporting Only"
@@ -10261,7 +10261,7 @@ msgstr "Tingkat Keamanan SNMP v3 default untuk semua Perangkat baru."
 
 #: include/global_settings.php:718
 msgid "Auth Protocol (v3)"
-msgstr "Rata-rata (ms)"
+msgstr "Protokol Auth (v3)"
 
 #: include/global_settings.php:719
 msgid "Default SNMPv3 Authorization Protocol for all new Devices."
@@ -10269,7 +10269,7 @@ msgstr "Protokol Otorisasi SNMPv3 default untuk semua Perangkat baru."
 
 #: include/global_settings.php:724
 msgid "Auth User (v3)"
-msgstr "Rata-rata"
+msgstr "Pengguna Auth (v3)"
 
 #: include/global_settings.php:725
 msgid "Default SNMP v3 Authorization User for all new Devices."
@@ -10277,7 +10277,7 @@ msgstr "Pengguna Otorisasi SNMP v3 default untuk semua Perangkat baru."
 
 #: include/global_settings.php:732
 msgid "Auth Passphrase (v3)"
-msgstr "Situs Tersedia"
+msgstr "Frasa Sandi Auth (v3)"
 
 #: include/global_settings.php:733
 msgid "Default SNMP v3 Authorization Passphrase for all new Devices."
@@ -10478,7 +10478,7 @@ msgstr "Saat membuat grafik, Jenis Grafik apa yang ingin Anda pilih sebelumnya?"
 
 #: include/global_settings.php:967
 msgid "All Types"
-msgstr "Selalu Mati"
+msgstr "Semua Jenis"
 
 #: include/global_settings.php:968
 msgid "By Template/Data Query"
@@ -10522,7 +10522,7 @@ msgstr "Regex Pengecualian"
 
 #: include/global_settings.php:1005
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
-msgstr "Percobaan Injeksi SQL"
+msgstr "String apa pun yang cocok dengan regex ini akan dikecualikan dari tampilan pengguna. <strong>Misalnya, jika Anda ingin mengecualikan semua baris log yang menyertakan kata 'Admin' atau 'Login', Anda dapat mengetik '(Admin || Login)'</strong>"
 
 #: include/global_settings.php:1012
 msgid "Real-time Graphs"
@@ -10880,7 +10880,7 @@ msgstr "Jadwal Indeks Ulang Semua Perangkat"
 
 #: include/global_settings.php:1357
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
-msgstr "Email Pengirim Notifikasi Otomatisasi"
+msgstr "Seberapa sering Anda ingin Mengindeks Ulang semua Perangkat. Pengindeksan Ulang ini akan dilakukan pada tengah malam sesuai frekuensi yang Anda pilih."
 
 #: include/global_settings.php:1363
 msgid "Weekly on Sunday"
@@ -11037,7 +11037,7 @@ msgstr "Utas Default yang diizinkan per proses.  CATATAN: Mulai di Cacti 1.2+, p
 
 #: include/global_settings.php:1515
 msgid "Authentication Method"
-msgstr "Rata-rata:"
+msgstr "Metode Autentikasi"
 
 #: include/global_settings.php:1516
 msgid "<blockquote><i>Built-in Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Cacti resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
@@ -11215,7 +11215,7 @@ msgstr "Auto Unlock"
 
 #: include/global_settings.php:1683
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
-msgstr "Templat Data Terkait"
+msgstr "Akun akan terbuka kuncinya secara otomatis setelah sekian menit. Meskipun kata sandi yang benar dimasukkan, akun tidak akan terbuka kuncinya hingga batas waktu ini terpenuhi. Maksimal 1440 menit (1 Hari)"
 
 #: include/global_settings.php:1699 include/global_settings.php:2919
 msgid "1 Day"
@@ -11964,7 +11964,7 @@ msgstr "Jumlah Simpangan Baku"
 
 #: include/global_settings.php:2438
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
-msgstr "Percobaan"
+msgstr "Nilai apa pun yang berada sekian simpangan baku di atas rata-rata akan dikecualikan. Angka yang baik bergantung pada jenis data yang dioperasikan. Kami menyarankan angka tidak lebih rendah dari 5 Simpangan Baku."
 
 #: include/global_settings.php:2442 include/global_settings.php:2443
 #: include/global_settings.php:2444 include/global_settings.php:2445
@@ -12185,7 +12185,7 @@ msgstr "Pergeseran Waktu default yang ditampilkan saat melihat Grafik dan data s
 
 #: include/global_settings.php:2688
 msgid "Allow Graph to extend to Future"
-msgstr "String apa pun yang cocok dengan regex ini akan dikecualikan dari tampilan pengguna. <strong>Misalnya, jika Anda ingin mengecualikan semua baris log yang menyertakan kata 'Admin' atau 'Login' Anda dapat mengetik '(Admin || Login)'</strong>"
+msgstr "Izinkan Grafik meluas ke Masa Depan"
 
 #: include/global_settings.php:2689
 msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
@@ -12366,7 +12366,7 @@ msgstr "1 Minggu"
 
 #: include/global_settings.php:2933
 msgid "Auto Log Out Time"
-msgstr "Kesalahan UTF-8 buruk!"
+msgstr "Waktu Keluar Otomatis"
 
 #: include/global_settings.php:2934
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
@@ -12808,7 +12808,7 @@ msgstr "Akun Anda telah dikunci.  Silakan hubungi Administrator Anda."
 
 #: lib/auth.php:3652
 msgid "Access Denied!  Login Disabled."
-msgstr "Penguncian Akun"
+msgstr "Akses Ditolak! Login Dinonaktifkan."
 
 #: lib/auth.php:3720
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
@@ -12856,7 +12856,7 @@ msgstr "Kegagalan Login Cacti"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
-msgstr "Opsi Sumbu"
+msgstr "Autentikasi sebelumnya belum diatur. Mencoba mengatur ke Autentikasi Lokal, tetapi tidak ditemukan akun Administrator."
 
 #: lib/boost.php:150 utilities.php:2882
 #, php-format
@@ -13202,7 +13202,7 @@ msgstr "host_id tidak valid: %s"
 
 #: lib/data_query.php:929
 msgid "Auto Bulk Walk Size Selected."
-msgstr "Latar belakang sudah dimulai pada %s, upaya pada %s ini dilewati"
+msgstr "Ukuran Bulk Walk Otomatis Dipilih."
 
 #: lib/data_query.php:939 lib/data_query.php:984
 msgid "Failed to load SNMP session."
@@ -13656,7 +13656,7 @@ msgstr "PERINGATAN:  File Include Cacti Utama %s hilang.  Harap temukan dan gant
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
-msgstr "Izinkan Baris yang Ada untuk Diperbarui?"
+msgstr "Perangkat Teragregasi"
 
 #: lib/graphs.php:59
 msgid "Not Applicable"
@@ -13740,7 +13740,7 @@ msgstr "GPrint"
 
 #: lib/html.php:1538
 msgid "Alpha %"
-msgstr "Arsipkan Semua RRDfile Tidak Dikenal"
+msgstr "Alpha %"
 
 #: lib/html.php:1595
 msgid "No Source"
@@ -13793,7 +13793,7 @@ msgstr "Rentang Float Uji Kering"
 
 #: lib/html.php:2853
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
-msgstr "Terapkan Perbaikan yang Disarankan"
+msgstr "Izinkan atau batasi kolom tabel untuk melampaui batas jendela saat ini."
 
 #: lib/html.php:2854 lib/html_filter.php:66
 msgid "Enter a search term"
@@ -13981,7 +13981,7 @@ msgstr "Alasan:"
 
 #: lib/html.php:2923
 msgid "Action failed"
-msgstr "Tambah Perangkat"
+msgstr "Tindakan gagal"
 
 #: lib/html.php:2924 pollers.php:876
 msgid "Connection Successful"
@@ -14081,15 +14081,15 @@ msgstr "Salin tautan grafik"
 
 #: lib/html.php:2953
 msgid "Always On"
-msgstr "Kaitkan Grafik"
+msgstr "Selalu Nyala"
 
 #: lib/html.php:2954
 msgid "Auto"
-msgstr "Pengaturan Batas Waktu Latar Belakang dan Proses Bersamaan"
+msgstr "Otomatis"
 
 #: lib/html.php:2955
 msgid "Always Off"
-msgstr "Tetapkan Keanggotaan"
+msgstr "Selalu Mati"
 
 #: lib/html.php:2956
 msgid "Begin with"
@@ -14109,7 +14109,7 @@ msgstr "Tombol Mouse ke-3"
 
 #: lib/html_filter.php:82
 msgid "Apply filter to table"
-msgstr "Nama Pengguna Auth"
+msgstr "Terapkan filter ke tabel"
 
 #: lib/html_filter.php:87
 msgid "Reset filter to default values"
@@ -14563,11 +14563,11 @@ msgstr "Waktu Akhir Grafik akan diatur ke waktu pengiriman laporan terjadwal.  J
 
 #: lib/html_reports.php:1176 lib/html_reports.php:1748
 msgid "Alignment"
-msgstr "Izinkan HTTPS Pengumpul Data Jarak Jauh yang Tidak Aman"
+msgstr "Perataan"
 
 #: lib/html_reports.php:1179
 msgid "Alignment of the Item"
-msgstr "Izinkan Pengguna dari Grup ini menyimpan Pengaturan Pengguna kustom"
+msgstr "Perataan Item"
 
 #: lib/html_reports.php:1184
 msgid "Fixed Text"
@@ -14771,7 +14771,7 @@ msgstr "Templat Perangkat:"
 
 #: lib/html_tree.php:975
 msgid "Applied"
-msgstr "Frasa Sandi Auth (v3)"
+msgstr "Diterapkan"
 
 #: lib/html_tree.php:975
 msgid "Filter"
@@ -15162,7 +15162,7 @@ msgstr "Proses ini akan memandu Anda melalui langkah-langkah untuk meningkatkan 
 #: lib/installer.php:1856
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
-msgstr "Apakah Anda yakin ingin MENGHAPUS Aturan '%s'?"
+msgstr "Selain itu, jika ini adalah peningkatan versi, pastikan untuk membaca file informasi <a href=\"%s\">Peningkatan Versi</a>."
 
 #: lib/installer.php:1860
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
@@ -15443,7 +15443,7 @@ msgstr "Setelah semua variabel diatur dalam file config.php, Anda juga harus mem
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
-msgstr "Setelah Anda menghapus centang pada kotak ini dan kemudian Menyimpan Templat Data, Sumber Data apa pun yang ada berdasarkan Templat Data ini akan kehilangan Data Kustomnya. Hal ini dapat mengakibatkan Pengumpulan Data dan Grafik menjadi rusak"
+msgstr "Langkah Tambahan Setelah Instalasi"
 
 #: lib/installer.php:2304
 msgid "It is essential that the Central Cacti server can communicate via MySQL to each remote Cacti database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
@@ -15517,7 +15517,7 @@ msgstr "Pengguna '%s' harus memiliki izin MODIFY untuk mengaktifkan baca/tulis."
 
 #: lib/installer.php:2517
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
-msgstr "Templat Grafik/Data Terkait [baru]"
+msgstr "Contoh cara mengatur izin folder ditunjukkan di sini, meskipun Anda mungkin perlu menyesuaikannya tergantung pada sistem operasi, akun pengguna, dan izin yang diinginkan."
 
 #: lib/installer.php:2518
 msgid "EXAMPLE:"
@@ -15529,7 +15529,7 @@ msgstr "Setelah instalasi selesai, jalur CSRF harus diatur menjadi hanya-baca."
 
 #: lib/installer.php:2521
 msgid "All folders are writable"
-msgstr "Alamat Email tempat Pengguna dapat dihubungi."
+msgstr "Semua folder dapat ditulisi"
 
 #: lib/installer.php:2533
 msgid "Input Validation Whitelist Protection"
@@ -15601,7 +15601,7 @@ msgstr "Jika perangkat Anda memerlukan kumpulan opsi berbeda untuk digunakan ter
 
 #: lib/installer.php:2603
 msgid "All options may be adjusted post installation"
-msgstr "Alamat Email tempat Anda dapat dihubungi."
+msgstr "Semua opsi dapat disesuaikan setelah instalasi"
 
 #: lib/installer.php:2607
 msgid "Default Options"
@@ -15653,7 +15653,7 @@ msgstr "Silakan pilih Templat Perangkat yang ingin Anda gunakan setelah Instalas
 
 #: lib/installer.php:2678 package_import.php:531 plugins.php:621
 msgid "Author"
-msgstr "Alamat BCC"
+msgstr "Penulis"
 
 #: lib/installer.php:2678 package_import.php:534
 msgid "Homepage"
@@ -15734,7 +15734,7 @@ msgstr "Tabel berikut harus dikonversi ke UTF8 dan InnoDB dengan format baris Dy
 
 #: lib/installer.php:2807
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
-msgstr "Upaya injeksi SQL terdeteksi dalam otomatisasi Pohon"
+msgstr "Semua tabel Anda tampaknya sudah sesuai dengan format baris UTF8 dan Dynamic"
 
 #: lib/installer.php:2817
 msgid "Confirm Upgrade"
@@ -16058,11 +16058,11 @@ msgstr "Tidak Ada Pengumpul Data Jarak Jauh ditemukan untuk sinkronisasi penuh"
 
 #: lib/ldap.php:283
 msgid "Authentication Success"
-msgstr "Pengaturan Font Sumbu"
+msgstr "Autentikasi Berhasil"
 
 #: lib/ldap.php:287
 msgid "Authentication Failure"
-msgstr "Rata-rata/Maks"
+msgstr "Kegagalan Autentikasi"
 
 #: lib/ldap.php:291
 msgid "PHP LDAP not enabled"
@@ -16525,7 +16525,7 @@ msgstr "Antrean poller_output harus menggunakan InnoDB sebelum pengumpulan. Hent
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "Operasi tidak dapat dikonfirmasi. Periksa riwayat perubahan sebelum mencoba lagi."
+msgstr "tidak tersedia"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
@@ -16819,11 +16819,11 @@ msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "Ketersediaan"
+msgstr "Mencoba Membuat Grafik dari Non-Templat"
 
 #: lib/template.php:1530
 msgid "Attempting to Create Graph from Removed Graph Template"
-msgstr "Ketersediaan/Keterjangkauan"
+msgstr "Mencoba Membuat Grafik dari Templat Grafik yang Dihapus"
 
 #: lib/template.php:2161 lib/template.php:2195
 #, php-format
@@ -17074,7 +17074,7 @@ msgstr "Tautan"
 
 #: links.php:353
 msgid "Apply Filter"
-msgstr "Protokol Auth (v3)"
+msgstr "Terapkan Filter"
 
 #: links.php:354
 msgid "Reset filters"
@@ -17586,7 +17586,7 @@ msgstr "Mencopot instalasi Plugin ini akan menghapus semua Data dan Pengaturan P
 
 #: plugins.php:684
 msgid "Are you sure you want to Uninstall?"
-msgstr "Skala Otomatis"
+msgstr "Apakah Anda yakin ingin Menghapus Instalasi?"
 
 #: plugins.php:751 plugins.php:762
 #, php-format
@@ -18152,7 +18152,7 @@ msgstr "Hapus"
 #: rrdcleaner.php:33
 msgctxt "dropdown action"
 msgid "Archive"
-msgstr "Autentikasi sebelumnya belum diatur. Mencoba mengatur ke Autentikasi Lokal, tetapi tidak ditemukan akun Administrator."
+msgstr "Arsipkan"
 
 #: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
@@ -18220,11 +18220,11 @@ msgstr "Hapus Semua RRDfile Tidak Dikenal"
 
 #: rrdcleaner.php:581
 msgid "Archive All"
-msgstr "Otomatis"
+msgstr "Arsipkan Semua"
 
 #: rrdcleaner.php:581
 msgid "Archive All Unknown RRDfiles"
-msgstr "Ukuran Bulk Walk Otomatis Dipilih."
+msgstr "Arsipkan Semua RRDfile yang Tidak Diketahui"
 
 #: settings.php:382
 msgid "NOTE: Path Settings on this Tab are only saved locally!"
@@ -18273,7 +18273,7 @@ msgstr "Pilih Templat"
 
 #: settings.php:601
 msgid "All Templates Selected"
-msgstr "Kisi Y Alternatif (--alt-y-grid)"
+msgstr "Semua Templat Dipilih"
 
 #: settings.php:675
 msgid "Send a Test Email"
@@ -18317,11 +18317,11 @@ msgstr "Item Agregat tidak dapat diedit"
 
 #: sites.php:65
 msgid "Additional address information for the Site."
-msgstr "Grafik Agregat %s"
+msgstr "Informasi alamat tambahan untuk Situs."
 
 #: sites.php:67
 msgid "Additional Site Address information"
-msgstr "Setelah mengubah Model Izin Grafik, Anda harus mengaudit izin Grafik Efektif Pengguna dan Grup Pengguna Anda untuk memastikan bahwa Anda masih memiliki kontrol yang memadai atas Grafik Anda. CATATAN: Jika Anda ingin membatasi semua Grafik pada Model Izin Grafik Perangkat atau Templat Grafik, Kebijakan Grafik default harus diatur ke 'Deny'."
+msgstr "Informasi Alamat Situs tambahan"
 
 #: sites.php:73 sites.php:681
 msgid "City"
@@ -18429,7 +18429,7 @@ msgstr "Masukkan beberapa informasi berguna tentang Situs."
 
 #: sites.php:167
 msgid "Alternate Name"
-msgstr "Apakah Anda yakin ingin menghapus Aturan '%s'?"
+msgstr "Nama Alternatif"
 
 #: sites.php:168
 msgid "Used for cases where a Site has an alternate named used to describe it"
@@ -18795,7 +18795,7 @@ msgstr "Warisi"
 
 #: tree.php:1840
 msgid "Alphabetic"
-msgstr "Direktori arsip"
+msgstr "Alfabetis"
 
 #: tree.php:1854
 msgid "Natural"
@@ -19054,7 +19054,7 @@ msgstr "Bukan Anggota"
 #: user_admin.php:2441 user_group_admin.php:2154 user_group_admin.php:2155
 #: user_group_admin.php:2156
 msgid "ALLOW"
-msgstr "Akses Ditolak! Login Gagal."
+msgstr "IZINKAN"
 
 #: user_admin.php:1064 user_admin.php:2439 user_admin.php:2440
 #: user_admin.php:2441 user_group_admin.php:2154 user_group_admin.php:2155
@@ -19068,7 +19068,7 @@ msgstr "Tidak Ada Grup Pengguna yang Cocok Ditemukan"
 
 #: user_admin.php:1084
 msgid "Assign Membership"
-msgstr "AutoM8"
+msgstr "Tetapkan Keanggotaan"
 
 #: user_admin.php:1085
 msgid "Remove Membership"
@@ -19096,7 +19096,7 @@ msgstr "Aktif/Terinstal"
 #: user_group_admin.php:1302 user_group_admin.php:1306
 #: user_group_admin.php:1436 user_group_admin.php:1440
 msgid "Access Restricted"
-msgstr "Tambahkan Kueri Data ke Perangkat"
+msgstr "Akses Terbatas"
 
 #: user_admin.php:1230 user_group_admin.php:1172
 msgid "No Matching Devices Found"
@@ -19479,7 +19479,7 @@ msgstr "Atur opsi khusus akun pengguna apa pun di sini."
 
 #: user_group_admin.php:100
 msgid "Allow Users of this Group to keep custom User Settings"
-msgstr "Diterapkan"
+msgstr "Izinkan Pengguna dari Grup ini untuk menyimpan Pengaturan Pengguna kustom"
 
 #: user_group_admin.php:107
 msgid "Tree Rights"
@@ -19756,7 +19756,7 @@ msgstr "Koneksi Minimum:"
 
 #: utilities.php:501
 msgid "Assumes 100 spare connections for Web page users and other various connections."
-msgstr "Eksekusi Otomatisasi untuk Kueri Data selesai"
+msgstr "Mengasumsikan 100 koneksi cadangan untuk pengguna halaman Web dan berbagai koneksi lainnya."
 
 #: utilities.php:502
 msgid "The minimum required can vary greatly if there is heavy user Graph viewing activity."
@@ -19920,7 +19920,7 @@ msgstr "Berhasil - Ubah Kata Sandi"
 
 #: utilities.php:1103
 msgid "Attempts"
-msgstr "Opsi Ketersediaan/Keterjangkauan"
+msgstr "Percobaan"
 
 #: utilities.php:1119 utilities.php:1487 utilities.php:1825 utilities.php:2116
 #: utilities.php:3137 utilities.php:3417 vdef.php:769
@@ -19995,7 +19995,7 @@ msgstr "Nama Kueri"
 
 #: utilities.php:1859
 msgid "Allow the search term to include the index column"
-msgstr "Terapkan aksi yang diminta"
+msgstr "Izinkan istilah pencarian menyertakan kolom indeks"
 
 #: utilities.php:1860
 msgid "Include Index"
@@ -20055,7 +20055,7 @@ msgstr "Log Cacti menyimpan statistik, kesalahan, dan pesan lainnya tergantung p
 
 #: utilities.php:2359
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
-msgstr "Arsipkan"
+msgstr "Mengizinkan Administrator untuk menelusuri log pengguna. Administrator juga dapat memfilter dan mengekspor log tersebut."
 
 #: utilities.php:2363
 msgid "Poller Cache Administration"
@@ -20151,7 +20151,7 @@ msgstr "Pilihan menu ini memungkinkan Anda melihat peristiwa terbaru yang ditang
 
 #: utilities.php:2442
 msgid "Allows Administrators to maintain SNMP notification receivers."
-msgstr "Arsipkan Semua"
+msgstr "Mengizinkan Administrator untuk mengelola penerima notifikasi SNMP."
 
 #: utilities.php:2449
 msgid "Cacti System Utilities"
@@ -20211,7 +20211,7 @@ msgstr "Rekaman Boost dalam Antrean:"
 
 #: utilities.php:2776
 msgid "Approximate in Process:"
-msgstr "Kegagalan Autentikasi"
+msgstr "Perkiraan dalam Proses:"
 
 #: utilities.php:2779
 msgid "Total Boost Records:"

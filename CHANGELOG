@@ -10,6 +10,7 @@ Cacti CHANGELOG
 -issue#1499: Repair remaining brand-name mistranslations, shifted placeholders, HTML tag mismatches, mojibake, foreign-script leaks, and stray blank lines across all 23 existing shipped gettext catalogs
 -issue#1499: Repair corrupted, offensive, wrong-language, hallucinated, and inverted-action Russian (ru-RU) and Ukrainian (uk-UA) translations and recompile their catalogs
 -issue#1499: Repair corrupted, wrong-language, hallucinated, broken-format, and inverted-action Hindi (hi-IN) translations and recompile the catalog
+-issue#1499: Repair remaining high-severity semantic, wrong-language, polarity-inversion, and shifted-string defects across 37 shipped gettext catalogs, expand Xhosa (xh-ZA) to nplurals=2 across all 76 plural entries, and recompile all affected catalogs
 -feature#1499: Complete all 23 existing shipped gettext catalogs and add 17 top-25 world and African language catalogs (af-ZA, am-ET, bn-BD, fa-IR, fr-SN, ha-NG, id-ID, ig-NG, mr-IN, sw-KE, ta-IN, te-IN, th-TH, ur-PK, xh-ZA, yo-NG, zu-ZA) for 40 translated locales total
 -feature#1499: Add regional gettext catalogs for English (Britain) (en-GB), Spanish (Mexico) (es-MX), and French (Canada) (fr-CA) for 43 translated locales total
 -feature#1499: Add African and regional gettext catalogs for Arabic (Egypt) (ar-EG), Arabic (Morocco) (ar-MA), French (Morocco) (fr-MA), Kinyarwanda (rw-RW), Malagasy (mg-MG), and Somali (so-SO) for 49 translated locales total

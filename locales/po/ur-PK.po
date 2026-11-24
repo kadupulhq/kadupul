@@ -16560,7 +16560,7 @@ msgstr "جمع کرنے سے پہلے poller_output قطار کا InnoDB است�
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "عمل کی تصدیق نہیں ہو سکی۔ دوبارہ کوشش کرنے سے پہلے تبدیلیوں کی تاریخ کا معائنہ کریں۔"
+msgstr "غیر دستیاب"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"

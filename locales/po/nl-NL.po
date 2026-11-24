@@ -41,7 +41,7 @@ msgstr "Ontwikkelaars die werken aan Cacti, de architectuur, documentatie en toe
 
 #: about.php:61
 msgid "Honorable Mentions"
-msgstr "Console menu sectie"
+msgstr "Eervolle vermeldingen"
 
 #: about.php:62
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
@@ -111,7 +111,7 @@ msgstr "Verwijder"
 
 #: aggregate_graphs.php:43
 msgid "Convert to Normal Graph"
-msgstr "Converteer naar LINE1 grafiek"
+msgstr "Converteren naar normale grafiek"
 
 #: aggregate_graphs.php:44 graphs.php:59
 msgid "Place Graphs on Report"
@@ -243,11 +243,11 @@ msgstr "Terug"
 
 #: aggregate_graphs.php:397
 msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
-msgstr "De geselecteerde geaggregeerde grafiek heeft elementen uit meer dan een grafiektemplate."
+msgstr "De geselecteerde geaggregeerde grafieken lijken geen overeenkomende aggregatiesjablonen te hebben."
 
 #: aggregate_graphs.php:398
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "Voordat u deze geaggregeerde grafiek kunt migreren naar een template gebaseerd aggregaat, moeten deze uitsluitend een template grafiek gebruiken. Klik op 'Terug' en selecteer uitsluitend geaggregeerde grafieken die hetzelfde grafiektemplate gebruiken."
+msgstr "Om de onderstaande geaggregeerde grafieken te kunnen migreren naar een aggregaatsjabloon, moet er al een bestaan. Klik op 'Terug' en maak eerst uw aggregaatsjabloon aan voordat u het opnieuw probeert."
 
 #: aggregate_graphs.php:414
 msgid "Click 'Continue' and the following Aggregate Graph(s) will be migrated to use the Aggregate Template that you choose below."
@@ -259,7 +259,7 @@ msgstr "Aggregeer template:"
 
 #: aggregate_graphs.php:434
 msgid "There are currently no Aggregate Templates defined for the selected Legacy Aggregates."
-msgstr "Er zijn alleen geaggregeerde templates gedefinieerd voor de geselecteerde legacy aggregaten."
+msgstr "Er zijn momenteel geen aggregatiesjablonen gedefinieerd voor de geselecteerde legacy-aggregaten."
 
 #: aggregate_graphs.php:435
 #, php-format
@@ -310,11 +310,11 @@ msgstr "U heeft momenteel geen rapporten gedefinieerd."
 
 #: aggregate_graphs.php:492
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Klik op 'Volgende' om de volgende geaggregeerde grafiek(en) naar een enkele geaggregeerde grafiek te combineren."
+msgstr "Klik op 'Doorgaan' om de volgende geaggregeerde grafiek(en) te converteren naar een normale grafiek."
 
 #: aggregate_graphs.php:497
 msgid "Convert to normal Graph(s)"
-msgstr "Converteer naar LINE1 grafiek"
+msgstr "Converteren naar normale grafiek(en)"
 
 #: aggregate_graphs.php:501
 msgid "Click 'Continue' to associate the following Graph(s) with the Aggregate Graph."
@@ -352,7 +352,7 @@ msgstr "[wijzig %s]"
 
 #: aggregate_graphs.php:603 aggregate_graphs.php:711 aggregate_graphs.php:713
 msgid "Aggregate Graph does not Exist"
-msgstr "Geaggregeerde grafiek instellingen"
+msgstr "Geaggregeerde grafiek bestaat niet"
 
 #: aggregate_graphs.php:618 aggregate_graphs.php:625 lib/html_reports.php:1498
 #: lib/html_reports.php:1500 utilities.php:2279
@@ -936,7 +936,7 @@ msgstr "Wachtwoorden komen overeen"
 
 #: auth_login.php:88
 msgid "Cacti no longer supports No Authentication mode. Please contact your System Administrator."
-msgstr "Toegang geweigerd, neem alstublieft contact op uw Cacti beheerder."
+msgstr "Cacti ondersteunt de modus 'Geen authenticatie' niet langer. Neem contact op met uw systeembeheerder."
 
 #: auth_login.php:123
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
@@ -957,7 +957,7 @@ msgstr "Toegang geweigerd, gebruikersaccount is uitgeschakeld."
 
 #: auth_login.php:205
 msgid "You do not have access to any area of Cacti.  Contact your administrator."
-msgstr "Als u van mening bent dat dit foutief is, neem dan alstublieft contact op met uw Cacti beheerder."
+msgstr "U heeft geen toegang tot enig onderdeel van Cacti.  Neem contact op met uw beheerder."
 
 #: auth_login.php:225
 msgid "Access Denied! User account locked."
@@ -1134,12 +1134,12 @@ msgstr "Handmatig toegevoegd door apparaat automatiseringsinterface."
 #: automation_devices.php:130
 #, php-format
 msgid "Device %s Added to Cacti"
-msgstr "Apparaat %s toegevoegd aan cactussen"
+msgstr "Apparaat %s toegevoegd aan Cacti"
 
 #: automation_devices.php:132
 #, php-format
 msgid "Device %s Not Added to Cacti"
-msgstr "Apparaat %s niet toegevoegd aan cactussen"
+msgstr "Apparaat %s niet toegevoegd aan Cacti"
 
 #: automation_devices.php:142
 msgid "Devices Removed from Cacti Automation database"
@@ -1168,7 +1168,7 @@ msgstr "Appara(a)t(en) toevoegen"
 
 #: automation_devices.php:229
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "Klik op 'Volgende' om de volgende gedetecteerde appara(a)t(en) toe te voegen."
+msgstr "Klik op 'Doorgaan' om de volgende gedetecteerde appara(a)t(en) te verwijderen."
 
 #: automation_devices.php:234 host.php:550
 msgid "Delete Device(s)"
@@ -1492,12 +1492,12 @@ msgstr "Annuleer zoeken"
 #: automation_networks.php:147
 #, php-format
 msgid "Can Not Restart Discovery for Discovery in Progress for Network '%s'"
-msgstr "Kan Discovery for Discovery in Progress niet herstarten voor Discovery in Progress voor Netwerk '%s'."
+msgstr "Kan detectie niet herstarten terwijl detectie al bezig is voor netwerk '%s'"
 
 #: automation_networks.php:151
 #, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
-msgstr "Kan geen Discovery for Disabled Network '%s' uitvoeren"
+msgstr "Kan geen detectie uitvoeren voor uitgeschakeld netwerk '%s'"
 
 #: automation_networks.php:218
 #, php-format
@@ -2202,7 +2202,7 @@ msgstr "Naam"
 
 #: automation_snmp.php:301
 msgid "Automation SNMP Options has been Duplicated."
-msgstr "Automatisering SNMP opties"
+msgstr "Automatisering SNMP-opties zijn gedupliceerd."
 
 #: automation_snmp.php:303
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -2592,11 +2592,11 @@ msgstr "WAARSCHUWING: Cacti Daemon PID["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
-msgstr "Hulpprogramma's voor cactussen"
+msgstr "Cacti-systeemmededeling"
 
 #: cactid.php:132
 msgid "Notice: Cacti Daemon PID["
-msgstr "Opmerking: Cactussen Daemon PID["
+msgstr "Melding: Cacti-daemon PID["
 
 #: cdef.php:271
 msgid "Click 'Continue' to delete the following CDEF."
@@ -2875,7 +2875,7 @@ msgstr "Geen kleuren gevonden"
 
 #: color_templates.php:30
 msgid "Sync Aggregates"
-msgstr "Geaggregeerde"
+msgstr "Aggregaten synchroniseren"
 
 #: color_templates.php:73
 msgid "Color Item"
@@ -2920,14 +2920,14 @@ msgstr[1] "Dupliceer kleurtemplates"
 #: color_templates.php:259
 msgid "Click 'Continue' to Synchronize all Aggregate Graphs with the selected Color Template."
 msgid_plural "Click 'Continue' to Synchronize all Aggregate Graphs with the selected Color Templates."
-msgstr[0] "Klik op 'Volgende' om een geaggregeerde grafiek te maken van de geselecteerde grafiek(en)."
-msgstr[1] "Klik op 'Volgende' om een geaggregeerde grafiek te maken van de geselecteerde grafiek(en)."
+msgstr[0] "Klik op 'Doorgaan' om alle geaggregeerde grafieken te synchroniseren met het geselecteerde kleursjabloon."
+msgstr[1] "Klik op 'Doorgaan' om alle geaggregeerde grafieken te synchroniseren met de geselecteerde kleursjablonen."
 
 #: color_templates.php:264
 msgid "Synchronize Color Template"
 msgid_plural "Synchronize Color Templates"
-msgstr[0] "Synchroniseer grafieken naar (een) grafiektemplate(s)"
-msgstr[1] "Synchroniseer grafieken naar (een) grafiektemplate(s)"
+msgstr[0] "Kleursjabloon synchroniseren"
+msgstr[1] "Kleursjablonen synchroniseren"
 
 #: color_templates.php:307
 msgid "Color Template Items [new]"
@@ -3143,11 +3143,11 @@ msgstr "Data bronnen"
 
 #: data_debug.php:642 data_debug.php:1110
 msgid "Not Debugging"
-msgstr "Debugging"
+msgstr "Niet aan het debuggen"
 
 #: data_debug.php:658
 msgid "No Checks"
-msgstr "Checks"
+msgstr "Geen controles"
 
 #: data_debug.php:701 lib/api_automation.php:892 lib/graphs.php:79
 #: lib/graphs.php:103 templates_import.php:252
@@ -3156,7 +3156,7 @@ msgstr "Niet gevonden"
 
 #: data_debug.php:719 data_debug.php:724
 msgid "Not Checked Yet"
-msgstr "Pre installatie controle"
+msgstr "Nog niet gecontroleerd"
 
 #: data_debug.php:742
 msgid "Issues found!  Waiting on RRDfile update"
@@ -3168,7 +3168,7 @@ msgstr "Geen Oorspronkelijke gevonden!  Wachten op RRD file update"
 
 #: data_debug.php:749
 msgid "Waiting on analysis and RRDfile update"
-msgstr "Is het RRD-document bijgewerkt?"
+msgstr "Wachten op analyse en bijwerken van RRDfile"
 
 #: data_debug.php:756
 msgid "RRDfile Owner"
@@ -3518,7 +3518,7 @@ msgstr "De naam van deze data invoer methode."
 
 #: data_input.php:1146
 msgid "The internal database ID for this Data Input Method.  Useful when performing automation or debugging."
-msgstr "De interne database ID voor deze data template. Handig voor automatisering of debugging."
+msgstr "De interne database-ID voor deze gegevensinvoermethode. Handig bij het uitvoeren van automatisering of foutopsporing."
 
 #: data_input.php:1151
 msgid "Data Inputs that are in use cannot be Deleted. In use is defined as being referenced either by a Data Source or a Data Template."
@@ -3573,8 +3573,8 @@ msgstr[1] "Verwijder data queries"
 #: data_queries.php:434
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "Klik op 'Volgende' om de volgende data query te verwijderen."
-msgstr[1] "Klik op 'Volgende' om de volgende data queries te verwijderen."
+msgstr[0] "Klik op 'Doorgaan' om de volgende gegevensquery te dupliceren."
+msgstr[1] "Klik op 'Doorgaan' om de volgende gegevensqueries te dupliceren."
 
 #: data_queries.php:436 lib/html_reports.php:591
 msgid "Name Format:"
@@ -3583,8 +3583,8 @@ msgstr "Naamlayout:"
 #: data_queries.php:444
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "Verwijder data query"
-msgstr[1] "Verwijder data queries"
+msgstr[0] "Gegevensquery dupliceren"
+msgstr[1] "Gegevensqueries dupliceren"
 
 #: data_queries.php:584
 msgid "The item does not belong to this Data Query."
@@ -3601,7 +3601,7 @@ msgstr "Grafieknaam: %s"
 
 #: data_queries.php:685
 msgid "Remove Data Query Graph Template"
-msgstr "Converteer naar grafiektemplate"
+msgstr "Grafieksjabloon voor gegevensquery verwijderen"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
@@ -3800,7 +3800,7 @@ msgstr "Gegevensbronprofielen die door gegevenssjablonen of gegevensbronnen word
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
-msgstr "Een of meer reparaties aan RRD-file zijn mislukt.  Zie Cacti logboek voor fouten."
+msgstr "Kan gegevensbronprofiel niet dupliceren.  Controleer het Cacti-logboek op fouten."
 
 #: data_source_profiles.php:507
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
@@ -4246,7 +4246,7 @@ msgstr "1 Minuut"
 
 #: data_sources.php:1460
 msgid "Data Sources [ All Devices ]"
-msgstr "Data bron [geen apparaat]"
+msgstr "Gegevensbronnen [ Alle apparaten ]"
 
 #: data_sources.php:1462
 msgid "Data Sources [ Non Device Based ]"
@@ -4259,7 +4259,7 @@ msgstr "Data bronnen [%s]"
 
 #: data_sources.php:1538
 msgid "Bad Indexes"
-msgstr "Index"
+msgstr "Ongeldige indexen"
 
 #: data_sources.php:1544 graphs.php:2130
 msgid "Note that this query may take some time to run."
@@ -4267,7 +4267,7 @@ msgstr "Houd er rekening mee dat het enige tijd kan duren voordat deze query wor
 
 #: data_sources.php:1544 graphs.php:2130
 msgid "Orphaned"
-msgstr "Overerfd"
+msgstr "Verweesd"
 
 #: data_sources.php:1725 utilities.php:2277
 msgid "Data Source Name"
@@ -4283,7 +4283,7 @@ msgstr "De interne database ID voor deze data bron. Handig voor automatisering o
 
 #: data_sources.php:1740
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
-msgstr "Het aantal grafiektemplates dat deze data query gebruikt."
+msgstr "Het aantal grafieken en geaggregeerde grafieken dat de gegevensbron gebruikt."
 
 #: data_sources.php:1746
 msgid "The frequency that data is collected for this Data Source."
@@ -4311,7 +4311,7 @@ msgstr "Geen data bron gevonden"
 
 #: data_sources.php:1873
 msgid "No Graphs"
-msgstr "Grafieken"
+msgstr "Geen grafieken"
 
 #: data_sources.php:1877 include/global_arrays.php:1013
 msgid "Aggregates"
@@ -4319,7 +4319,7 @@ msgstr "Geaggregeerde"
 
 #: data_sources.php:1879
 msgid "No Aggregates"
-msgstr "Geaggregeerde"
+msgstr "Geen aggregaties"
 
 #: data_templates.php:36
 msgid "Change Profile"
@@ -4897,7 +4897,7 @@ msgstr "De titel van deze grafiek. Geprogrammeerd uit de definities van de grafi
 
 #: graph_view.php:805
 msgid "The device for this Graph."
-msgstr "De naam van deze groep."
+msgstr "Het apparaat voor deze grafiek."
 
 #: graph_view.php:808 graphs.php:2352
 msgid "Source Type"
@@ -5230,7 +5230,7 @@ msgstr "De interne database ID van deze grafiek. Handig voor automation of debug
 
 #: graphs.php:2393
 msgid "Empty Graph"
-msgstr "Grafiek kopiëren"
+msgstr "Lege grafiek"
 
 #: graphs_items.php:362
 msgid "Data Sources [No Device]"
@@ -5375,7 +5375,7 @@ msgstr "Stel in als standaard"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "WAARSCHUWING: cactuspagina:%s voor gebruiker:%s heeft een fatale fout gegenereerd %d!"
+msgstr "WAARSCHUWING: Cacti-pagina:%s voor gebruiker:%s heeft een fatale fout %d gegenereerd!"
 
 #: help.php:99
 #, php-format
@@ -5393,7 +5393,7 @@ msgstr "Open een ticket op "
 #: help.php:113
 #, php-format
 msgid "The Help File %s was not located on the Cacti Documentation Website."
-msgstr "Het Help-bestand %s bevindt zich niet op de website met cactusdocumentatie."
+msgstr "Het helpbestand %s is niet gevonden op de Cacti-documentatiewebsite."
 
 #: help.php:127
 #, php-format
@@ -5418,7 +5418,7 @@ msgstr "Plaats appara(a)t(en) in de boomstructuur"
 
 #: host.php:141
 msgid "Data Query Re-indexed."
-msgstr "Data query index"
+msgstr "Dataquery opnieuw geïndexeerd."
 
 #: host.php:151
 msgid "Device Data Query Re-indexed.  Verbose output displayed."
@@ -5430,7 +5430,7 @@ msgstr "Apparaatfoutopsporing ingeschakeld voor apparaat."
 
 #: host.php:181
 msgid "Device Debugging Disabled for Device."
-msgstr "Apparaat is uitgeschakeld"
+msgstr "Apparaatfoutopsporing uitgeschakeld voor apparaat."
 
 #: host.php:191
 msgid "Poller Cache for Device Refreshed."
@@ -5438,7 +5438,7 @@ msgstr "Poller-cache voor apparaat vernieuwd."
 
 #: host.php:193
 msgid "ERROR: Invalid Device ID."
-msgstr "ERROR: Apparaat["
+msgstr "FOUT: Ongeldig apparaat-ID."
 
 #: host.php:226
 msgid "A Re-Index of this Device is already running.  Try again after it finishes."
@@ -5570,7 +5570,7 @@ msgstr "Maak grafieken voor dit apparaat"
 
 #: host.php:799
 msgid "Re-Index Device"
-msgstr "Herindexeringsmethode"
+msgstr "Apparaat opnieuw indexeren"
 
 #: host.php:802
 msgid "Data Source List"
@@ -5710,7 +5710,7 @@ msgstr "SNMP GetNext"
 
 #: host.php:1328
 msgid "Delete Item from Device"
-msgstr "Verwijder apparaattemplate(s)"
+msgstr "Item van apparaat verwijderen"
 
 #: host.php:1547 host.php:1670 host.php:1856
 msgid "Undefined"
@@ -5866,7 +5866,7 @@ msgstr "Klik op 'Volgende' om de volgende data query te verwijderen en los te ko
 #: host_templates.php:472
 #, php-format
 msgid "Data Query Name: %s"
-msgstr "Data bron naam: %s"
+msgstr "Naam gegevensquery: %s"
 
 #: host_templates.php:554
 #, php-format
@@ -5895,7 +5895,7 @@ msgstr "Data query aan apparaat template toevoegen"
 
 #: host_templates.php:749
 msgid "Delete Item from Device Template"
-msgstr "Verwijder apparaattemplate(s)"
+msgstr "Item verwijderen uit apparaattemplate"
 
 #: host_templates.php:848 host_templates.php:945 host_templates.php:1109
 #: include/global_arrays.php:1255 include/global_arrays.php:2300
@@ -5904,7 +5904,7 @@ msgstr "Apparaattemplate"
 
 #: host_templates.php:857 include/global_form.php:1356
 msgid "Class"
-msgstr "Klassiek"
+msgstr "Klasse"
 
 #: host_templates.php:962
 msgid "Has Devices"
@@ -6007,7 +6007,7 @@ msgstr "Terug naar Cacti: %s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "De laatste keer dat deze Dataverzamelaar volledig gesynchroniseerd werd met de hoofdsite van Cacti."
+msgstr "De hoofddataverzamelaar is teruggekeerd naar de status Online"
 
 #: include/global.php:568
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
@@ -6519,7 +6519,7 @@ msgstr "DES"
 
 #: include/global_arrays.php:671
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php:672
 msgid "AES-128"
@@ -6974,7 +6974,7 @@ msgstr "Automatiseringsregels toepassen"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
-msgstr "Cacti rapportage"
+msgstr "Cacti-gerelateerd"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
@@ -6986,7 +6986,7 @@ msgstr "Faciliteitengerelateerd"
 
 #: include/global_arrays.php:1100
 msgid "Generic Device"
-msgstr "Generiek log niveau"
+msgstr "Generiek apparaat"
 
 #: include/global_arrays.php:1101
 msgid "HPC/Grid Computing"
@@ -7014,11 +7014,11 @@ msgstr "Load balancing"
 
 #: include/global_arrays.php:1107
 msgid "Network Switch"
-msgstr "Netwerkfilters"
+msgstr "Netwerkswitch"
 
 #: include/global_arrays.php:1108
 msgid "Network Router"
-msgstr "Netwerkfilters"
+msgstr "Netwerkrouter"
 
 #: include/global_arrays.php:1109
 msgid "NAS/SAN Related"
@@ -7026,7 +7026,7 @@ msgstr "NAS/SAN GERELATEERD"
 
 #: include/global_arrays.php:1110
 msgid "Network Firewalls"
-msgstr "Netwerkfilters"
+msgstr "Netwerkfirewalls"
 
 #: include/global_arrays.php:1111
 msgid "Power Related PDUs/STS, etc."
@@ -7034,7 +7034,7 @@ msgstr "Stroomgerelateerde PDU 's/STS, enz."
 
 #: include/global_arrays.php:1112
 msgid "Printer Related"
-msgstr "Database status"
+msgstr "Printergerelateerd"
 
 #: include/global_arrays.php:1113
 msgid "Storage Related"
@@ -7042,7 +7042,7 @@ msgstr "Opslaggerelateerd"
 
 #: include/global_arrays.php:1114
 msgid "Telco Related"
-msgstr "Selecteer template"
+msgstr "Telco-gerelateerd"
 
 #: include/global_arrays.php:1115
 msgid "Web Server Related"
@@ -7112,7 +7112,7 @@ msgstr "Log inzien"
 
 #: include/global_arrays.php:1263
 msgid "Reports Administration"
-msgstr "Log beheer"
+msgstr "Rapportbeheer"
 
 #: include/global_arrays.php:1264
 msgid "Reports Creation"
@@ -7120,7 +7120,7 @@ msgstr "Rapportage creëren"
 
 #: include/global_arrays.php:1265
 msgid "Show Graph Action Icons"
-msgstr "Toon grafiektitel"
+msgstr "Actiepictogrammen voor grafieken weergeven"
 
 #: include/global_arrays.php:1266
 msgid "Show User Help Links"
@@ -7591,7 +7591,7 @@ msgstr "Grafiek, data bron"
 
 #: include/global_arrays.php:1763
 msgid "Base Graph Order"
-msgstr "Heeft grafieken"
+msgstr "Basisgrafiekvolgorde"
 
 #: include/global_arrays.php:1770
 msgid "contains"
@@ -7907,7 +7907,7 @@ msgstr "Poot"
 
 #: include/global_arrays.php:2015
 msgid "Sunrise"
-msgstr "Doel.nu"
+msgstr "Zonsopgang"
 
 #: include/global_arrays.php:2019
 msgid "[Fail]"
@@ -7919,7 +7919,7 @@ msgstr "WAARSCHUWING:"
 
 #: include/global_arrays.php:2021
 msgid "[Restart]"
-msgstr "Beperkt"
+msgstr "[Herstarten]"
 
 #: include/global_arrays.php:2022
 msgid "[Success]"
@@ -8046,7 +8046,7 @@ msgstr "Technische ondersteuning"
 
 #: include/global_arrays.php:2534 utilities.php:2553
 msgid "Boost Status"
-msgstr "Verhoog de status"
+msgstr "Boost-status"
 
 #: include/global_arrays.php:2540 utilities.php:2423
 msgid "View SNMP Agent Cache"
@@ -8078,7 +8078,7 @@ msgstr "(Actie)"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "Cacti home"
+msgstr "Cacti Help"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8164,7 +8164,7 @@ msgstr "Voer de SNMP read community waarde in voor dit apparaat."
 
 #: include/global_form.php:53
 msgid "SNMP Security Level"
-msgstr "SMTP Security"
+msgstr "SNMP-beveiligingsniveau"
 
 #: include/global_form.php:54
 msgid "SNMP v3 Security Level to use when querying the device."
@@ -8747,7 +8747,7 @@ msgstr "Hoeveel cijfers moet RRDtool uitgaan van de y-aslabels? Het kan zijn dat
 
 #: include/global_form.php:860
 msgid "No Gridfit (--no-gridfit)"
-msgstr "Geen Gridfit (--geen-gridfit)"
+msgstr "Geen Gridfit (--no-gridfit)"
 
 #: include/global_form.php:863
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
@@ -8796,15 +8796,15 @@ msgstr "Rechterasformatter (--rechts-asformatter &lt;formatname&gt;)"
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Wanneer u de rechter aslabeling instelt, past u een regel toe op het gegevensformaat.  Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime formaat (standaard is \"%Y-%m-%m-%%%M:%M:%S\").  Zie ook -eenheden-lengte en -rechts-as-formaat.  Tot slot \"duur\" waarbij de waarden worden geïnterpreteerd als duur in milliseconden.  De opmaak volgt de regels van valstrfduration gekwalificeerde PRINT/GPRINT."
+msgstr "Wanneer u de labeling van de rechteras instelt, past u een regel toe op het gegevensformaat. Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, en \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime-formaat (standaard is \"%Y-%m-%d %H:%M:%S\"). Zie ook --units-length en --right-axis-format. Tot slot \"duur\", waarbij de waarden worden geïnterpreteerd als een duur in milliseconden. De opmaak volgt de regels van valstrfduration-gekwalificeerde PRINT/GPRINT."
 
 #: include/global_form.php:909
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Linkerasformatter (--linker-asformatter &lt;formatname&gt;)"
+msgstr "Opmaak voor linkeras (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php:914
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Wanneer u de linker aslabeling instelt, past u een regel toe op het gegevensformaat.  Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime formaat (standaard is \"%Y-%m-%m-%%%M:%M:%S\").  Zie ook -eenheden-lengte.  Tot slot \"duur\" waarbij de waarden worden geïnterpreteerd als duur in milliseconden.  De opmaak volgt de regels van valstrfduration gekwalificeerde PRINT/GPRINT."
+msgstr "Wanneer u de labeling van de linkeras instelt, past u een regel toe op het gegevensformaat. Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, en \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime-formaat (standaard is \"%Y-%m-%d %H:%M:%S\"). Zie ook --units-length. Tot slot \"duur\", waarbij de waarden worden geïnterpreteerd als een duur in milliseconden. De opmaak volgt de regels van valstrfduration-gekwalificeerde PRINT/GPRINT."
 
 #: include/global_form.php:917
 msgid "Legend Options"
@@ -8828,7 +8828,7 @@ msgstr "Trek lijnmarkeringen als een lijn."
 
 #: include/global_form.php:935
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Krachtregels Legende (--krachtregels-legend)"
+msgstr "Regellegenda forceren (--force-rules-legend)"
 
 #: include/global_form.php:938
 msgid "Force the generation of HRULE and VRULE legends."
@@ -9060,7 +9060,7 @@ msgstr "Activeer deze box om alle controles voor deze host uit te schakelen."
 
 #: include/global_form.php:1263
 msgid "Availability/Reachability Options"
-msgstr "Beschikbaarheid/Reachability Opties"
+msgstr "Opties voor beschikbaarheid/bereikbaarheid"
 
 #: include/global_form.php:1267 include/global_settings.php:802
 msgid "Downed Device Detection"
@@ -9288,7 +9288,7 @@ msgstr "Grafiek template hoogte"
 
 #: include/global_form.php:1736 package_import.php:933
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "De standaard grafiekbreedte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
+msgstr "De hoogte die moet worden gebruikt bij het importeren of bijwerken van grafieksjablonen."
 
 #: include/global_form.php:1743 include/global_settings.php:612
 #: package_import.php:941
@@ -9297,7 +9297,7 @@ msgstr "Grafiek template breedte"
 
 #: include/global_form.php:1744 package_import.php:942
 msgid "The Width to be used when importing or updating Graph Templates."
-msgstr "De standaard grafiekbreedte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
+msgstr "De breedte die moet worden gebruikt bij het importeren of bijwerken van grafieksjablonen."
 
 #: include/global_form.php:1755
 msgid "General SNMP Entity Options"
@@ -9347,7 +9347,7 @@ msgstr "Een voorvoegsel voor alle GPRINT lijnen om bijvoorbeeld verschillende ap
 #: include/global_form.php:1846 include/global_form.php:1932
 #: include/global_form.php:2037
 msgid "Include Prefix Text"
-msgstr "Inclusief index"
+msgstr "Voorvoegseltekst opnemen"
 
 #: include/global_form.php:1847 include/global_form.php:1933
 #: include/global_form.php:2038
@@ -9454,7 +9454,7 @@ msgstr "Een naam voor dit template."
 #: include/global_form.php:2137 include/global_form.php:2179
 #: lib/api_automation.php:1481 lib/api_automation.php:1543
 msgid "Operation"
-msgstr "Atie"
+msgstr "Operatie"
 
 #: include/global_form.php:2138 include/global_form.php:2180
 msgid "Logical operation to combine rules."
@@ -9556,7 +9556,7 @@ msgstr "Vervangingspatroon"
 
 #: include/global_form.php:2355
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "Het Replacement String Pattern voor gebruik als Tree Header.<br>Refer to a Match door bijv. <strong>String${1}</strong> voor de eerste wedstrijd!"
+msgstr "Het vervangende tekenreekspatroon voor gebruik als boomstructuurkop.<br>Verwijs naar een overeenkomst via bijv. <strong>\\${1}</strong> voor de eerste overeenkomst!"
 
 #: include/global_languages.php:909
 msgid " T"
@@ -9748,7 +9748,7 @@ msgstr "Afwisselend Poller Pad"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "De plaats van het ruggegraat Binaire Bestand"
+msgstr "Locatie van het binaire Spine-bestand"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
@@ -9788,7 +9788,7 @@ msgstr "Archiefdirectorie"
 
 #: include/global_settings.php:256
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
-msgstr "Dit is de directory waar RRD-files <strong>moved</strong> zijn voor archivering"
+msgstr "Dit is de map waarnaar RRDfiles worden <strong>verplaatst</strong> voor archivering"
 
 #: include/global_settings.php:264
 msgid "Log Settings"
@@ -9880,7 +9880,7 @@ msgstr "Taal support"
 
 #: include/global_settings.php:343
 msgid "Choose 'enabled' to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "Kies 'enabled' om de lokalisatie van Cactussen toe te staan. De strikte modus vereist dat de gevraagde taal ook wordt ondersteund door alle plugins die op uw systeem worden geïnstalleerd. Als dat niet het geval is, wordt alles in het Engels weergegeven."
+msgstr "Kies 'enabled' om de lokalisatie van Cacti toe te staan. De strikte modus vereist dat de gevraagde taal ook wordt ondersteund door alle plugins die op uw systeem zijn geïnstalleerd. Als dat niet het geval is, wordt alles in het Engels weergegeven."
 
 #: include/global_settings.php:349
 msgid "Language"
@@ -9904,7 +9904,7 @@ msgstr "Voorkeurstaalverwerker"
 
 #: include/global_settings.php:367
 msgid "Cacti includes support for multiple alternate Language Translation Processors.  If none is selected Cacti will attempt to use the first one found."
-msgstr "Cactussen bieden ondersteuning voor meerdere alternatieve taalvertaalprocessors. Het zal standaard de ingebouwde PHP-ondersteuning gebruiken, maar niet alle Linux-varianten bevatten ingebouwde taalondersteuning. Als deze niet is geselecteerd, kiest Cacti de eerste die wordt gevonden."
+msgstr "Cacti biedt ondersteuning voor meerdere alternatieve taalvertaalprocessors. Als er geen is geselecteerd, zal Cacti proberen de eerstgevonden processor te gebruiken."
 
 #: include/global_settings.php:373
 msgid "Client TimeZone Support"
@@ -9912,7 +9912,7 @@ msgstr "MySQL - TimeZone ondersteuning"
 
 #: include/global_settings.php:374
 msgid "How should Cacti support Client Dates based upon the Client browsers timezone."
-msgstr "Hoe moeten cactussen klantdatums ondersteunen op basis van de tijdzone van de klantbrowser."
+msgstr "Hoe Cacti clientdatums moet ondersteunen op basis van de tijdzone van de browser van de client."
 
 #: include/global_settings.php:383 include/global_settings.php:2631
 msgid "Date Display Format"
@@ -9928,7 +9928,7 @@ msgstr "Datum scheidingsteken"
 
 #: include/global_settings.php:391
 msgid "The System default date separator to be used in Cacti."
-msgstr "Het systeem standaard datumscheidingsteken voor gebruik in Cactussen."
+msgstr "Het standaard datumscheidingsteken van het systeem dat in Cacti wordt gebruikt."
 
 #: include/global_settings.php:397
 msgid "Other Settings"
@@ -9936,7 +9936,7 @@ msgstr "Andere instellingen"
 
 #: include/global_settings.php:402
 msgid "Show only site specific locations"
-msgstr "Stel hier eventuele grafiekspecifieke opties in."
+msgstr "Alleen sitespecifieke locaties weergeven"
 
 #: include/global_settings.php:403
 msgid "Show only locations that are available at a devices selected site."
@@ -9960,7 +9960,7 @@ msgstr "De versie van RRDtool die u heeft geïnstalleerd."
 
 #: include/global_settings.php:421
 msgid "Enable Gradient Support"
-msgstr "Rapportage inschakelen"
+msgstr "Ondersteuning voor kleurverloop inschakelen"
 
 #: include/global_settings.php:422
 msgid "Enabled Gradient Support for AREA and STACK charts."
@@ -10012,7 +10012,7 @@ msgstr "Wanneer deze optie is aangevinkt, worden de Help voor Formulier en Inste
 
 #: include/global_settings.php:455
 msgid "Local Page Help Only"
-msgstr "Hulp vragen"
+msgstr "Alleen lokale paginahulp"
 
 #: include/global_settings.php:456
 msgid "By default Cacti page help is located at docs.cacti.net.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Cacti server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
@@ -10036,7 +10036,7 @@ msgstr "Indien ingeschakeld, stelt Cacti het keuzerondje in om gerelateerde gege
 
 #: include/global_settings.php:473
 msgid "Graphs Auto Unlock"
-msgstr "Grafiek koppelregels"
+msgstr "Grafieken automatisch ontgrendelen"
 
 #: include/global_settings.php:474
 msgid "When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
@@ -10044,7 +10044,7 @@ msgstr "Indien ingeschakeld, zal Cacti grafieken niet vergrendelen. Dit maakt ee
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
-msgstr "Verberg Cactussen Dashboard"
+msgstr "Cacti-dashboard verbergen"
 
 #: include/global_settings.php:480
 msgid "For use with Cacti's External Link Support.  Using this setting, you can hide the Cacti Dashboard, so you can display just your own page."
@@ -10060,7 +10060,7 @@ msgstr "Sommige interfaces van Cacti ondersteunen Drag-N-Drop.  Indien aangevink
 
 #: include/global_settings.php:491
 msgid "Site Security"
-msgstr "SMTP Security"
+msgstr "Sitebeveiliging"
 
 #: include/global_settings.php:496
 msgid "Force Connections over HTTPS"
@@ -10184,7 +10184,7 @@ msgstr "Het standaard beeldformaat dat voor alle nieuwe grafieksjablonen moet wo
 
 #: include/global_settings.php:605
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "De standaard grafiekbreedte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
+msgstr "De standaard grafiekhoogte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
 
 #: include/global_settings.php:613
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -10238,7 +10238,7 @@ msgstr "De standaard Re-index methode om te gebruiken voor alle Data Queries."
 
 #: include/global_settings.php:676
 msgid "Default Interface Speed"
-msgstr "Standaard grafiek type"
+msgstr "Standaard interfacesnelheid"
 
 #: include/global_settings.php:677
 msgid "If Cacti can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
@@ -10358,7 +10358,7 @@ msgstr "Het standaard aantal SNMP pogingen voor alle nieuwe apparaten."
 
 #: include/global_settings.php:797
 msgid "Availability/Reachability"
-msgstr "Beschikbaarheid/Reachability"
+msgstr "Beschikbaarheid/Bereikbaarheid"
 
 #: include/global_settings.php:803
 msgid "Default Availability/Reachability for all new Devices.  The method Cacti will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
@@ -10382,7 +10382,7 @@ msgstr "Standaard Ping Timeout waarde in milli-seconden voor alle nieuwe apparat
 
 #: include/global_settings.php:833
 msgid "The number of times Cacti will attempt to ping a Device before marking it as down."
-msgstr "Het aantal keren dat Cactussen proberen een apparaat te pingen voordat ze het als down markeren."
+msgstr "Het aantal keren dat Cacti zal proberen een apparaat te pingen voordat het als down wordt gemarkeerd."
 
 #: include/global_settings.php:840
 msgid "Up/Down Settings"
@@ -10459,7 +10459,7 @@ msgstr "De minimale breedte van de boom om mee samen te trekken."
 
 #: include/global_settings.php:917 include/global_settings.php:2814
 msgid "Maximum Tree Width"
-msgstr "Maximale titel lengte"
+msgstr "Maximale boombreedte"
 
 #: include/global_settings.php:918 include/global_settings.php:2815
 msgid "The Maximum width of the Tree to expand to, after which time, Tree branches will scroll on the page."
@@ -10595,7 +10595,7 @@ msgstr "Grafiek opties"
 
 #: include/global_settings.php:1050
 msgid "Custom Watermark"
-msgstr "Aangepaste data"
+msgstr "Aangepast watermerk"
 
 #: include/global_settings.php:1051
 msgid "Text placed at the bottom center of every Graph."
@@ -10709,7 +10709,7 @@ msgstr "Het lettertype dat wordt gebruikt voor de grafiek eenheden. Vul een geld
 
 #: include/global_settings.php:1149
 msgid "Business Hours Settings"
-msgstr "Gebruikersinstellingen"
+msgstr "Instellingen voor kantooruren"
 
 #: include/global_settings.php:1154
 msgid "Start of Business Day"
@@ -10753,7 +10753,7 @@ msgstr "De kleur die moet worden weergegeven voor kantooruren"
 
 #: include/global_settings.php:1190
 msgid "Maximum number of days to show business hours"
-msgstr "Maximum aantal rijen per pagina"
+msgstr "Maximaal aantal dagen om kantooruren weer te geven"
 
 #: include/global_settings.php:1191
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
@@ -10817,7 +10817,7 @@ msgstr "Debug Outputbreedte"
 
 #: include/global_settings.php:1254
 msgid "If you choose this option, Cacti will check for output that exceeds Cacti's ability to store it and issue a warning when it finds it."
-msgstr "Als u deze optie kiest, zal Cacti controleren op uitvoer die de mogelijkheid van Cacti's om het op te slaan overschrijdt en een waarschuwing geven wanneer het het het vindt."
+msgstr "Als u deze optie kiest, controleert Cacti op uitvoer die de opslagcapaciteit van Cacti overschrijdt en geeft een waarschuwing wanneer dit wordt gevonden."
 
 #: include/global_settings.php:1259
 msgid "Disable increasing OID Check"
@@ -10861,7 +10861,7 @@ msgstr "Deze instelling is alleen voor een enkel poller-systeem om de poller-uit
 
 #: include/global_settings.php:1313
 msgid "Disable Resource Cache Replication"
-msgstr "Resource cache opnieuw opbouwen"
+msgstr "Replicatie van resourcecache uitschakelen"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
@@ -10909,7 +10909,7 @@ msgstr "Periodieke herindexering van alle apparaten"
 
 #: include/global_settings.php:1356
 msgid "Re-Index All Device Schedule"
-msgstr "Herindexeringsmethode"
+msgstr "Planning voor het opnieuw indexeren van alle apparaten"
 
 #: include/global_settings.php:1357
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
@@ -10925,11 +10925,11 @@ msgstr "Maandelijks op dag"
 
 #: include/global_settings.php:1368
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "Legenda lettertype instellingen"
+msgstr "Instellingen voor achtergrondtime-out en gelijktijdige processen"
 
 #: include/global_settings.php:1373
 msgid "Report Generation Timeout"
-msgstr "Time-out agent op afstand"
+msgstr "Time-out voor het genereren van rapporten"
 
 #: include/global_settings.php:1374
 msgid "The maximum amount of time Cacti's Reports Generation script can run without generating a timeout error and being killed."
@@ -10952,11 +10952,11 @@ msgstr "De maximale hoeveelheid tijd die het Cacti's Data Source Statistics-scri
 
 #: include/global_settings.php:1401
 msgid "RRDChecker Timeout"
-msgstr "DNS timeout"
+msgstr "RRDChecker-time-out"
 
 #: include/global_settings.php:1402
 msgid "The maximum amount of time Cacti's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "De maximale tijd dat een Cacti's Spikekill-script kan worden uitgevoerd zonder een time-outfout te genereren en te worden gedood."
+msgstr "De maximale tijd dat het RRDfile-controlescript van Cacti kan worden uitgevoerd zonder een time-outfout te genereren en te worden beëindigd."
 
 #: include/global_settings.php:1408 include/global_settings.php:1409
 #: include/global_settings.php:1410 include/global_settings.php:1465
@@ -11123,7 +11123,7 @@ msgstr "Web basic authenticatie"
 
 #: include/global_settings.php:1562
 msgid "Basic Auth Login Failure Message"
-msgstr "Basic Auth Mapfile"
+msgstr "Foutmelding bij Basic Auth-aanmelding"
 
 #: include/global_settings.php:1563
 msgid "When using basic authentication, if there are issues mapping the username to a valid Cacti account, the message included here will be displayed to users.  It can include both text and HTML."
@@ -11151,7 +11151,7 @@ msgstr "Dit is de minimale lengte van toegestane wachtwoorden."
 
 #: include/global_settings.php:1592
 msgid "Require Mix Case"
-msgstr "Hoofdletter/kleine letter ontbreekt"
+msgstr "Hoofdletters en kleine letters vereisen"
 
 #: include/global_settings.php:1593
 msgid "This will require new passwords to contains both lower and upper-case characters."
@@ -11159,7 +11159,7 @@ msgstr "Dit maakt het gebruik van hoofdletters en kleine letters in nieuwe wacht
 
 #: include/global_settings.php:1598
 msgid "Require Number"
-msgstr "Getal ontbreekt"
+msgstr "Cijfer vereisen"
 
 #: include/global_settings.php:1599
 msgid "This will require new passwords to contain at least 1 numerical character."
@@ -11167,7 +11167,7 @@ msgstr "Dit maakt het verplicht om tenminste 1 getal te gebruiken in een nieuw w
 
 #: include/global_settings.php:1604
 msgid "Require Special Character"
-msgstr "Speciaal karakter ontbreekt"
+msgstr "Speciaal teken vereisen"
 
 #: include/global_settings.php:1605
 msgid "This will require new passwords to contain at least 1 special character."
@@ -11280,7 +11280,7 @@ msgstr "SSL poort"
 
 #: include/global_settings.php:1722
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "TCP/UDP poort voor niet-SSL verbindingen."
+msgstr "TCP-poort voor LDAPS voor SSL-communicatie. Standaard is 636."
 
 #: include/global_settings.php:1729 user_domains.php:444
 msgid "Protocol Version"
@@ -11296,7 +11296,7 @@ msgstr "Connectie timeout"
 
 #: include/global_settings.php:1737
 msgid "The Network Connect Timeout in seconds."
-msgstr "Voer de SMTP timeout in seconden in."
+msgstr "De time-out voor netwerkverbinding in seconden."
 
 #: include/global_settings.php:1744
 msgid "Bind Timeout"
@@ -11304,7 +11304,7 @@ msgstr "Timeout"
 
 #: include/global_settings.php:1745
 msgid "The Bind Timeout in seconds."
-msgstr "Voer de SMTP timeout in seconden in."
+msgstr "De Bind-time-out in seconden."
 
 #: include/global_settings.php:1752
 msgid "LDAP Debug Mode"
@@ -11312,7 +11312,7 @@ msgstr "LDAP-foutopsporingsmodus"
 
 #: include/global_settings.php:1753
 msgid "If Checked Cacti will log extra LDAP information to the Cacti log during Binding and Searching activities."
-msgstr "If Checked Cacti logt extra LDAP-informatie in het Cacti-logboek tijdens Binding- en zoekactiviteiten."
+msgstr "Indien aangevinkt, logt Cacti extra LDAP-informatie naar het Cacti-logboek tijdens bind- en zoekactiviteiten."
 
 #: include/global_settings.php:1758 user_domains.php:451
 msgid "Encryption"
@@ -11344,7 +11344,7 @@ msgstr "Modus"
 
 #: include/global_settings.php:1783
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Modus die cactussen proberen te authenticeren tegen de LDAP-server.<blockquote><i><i>No Searching</i> - No Distinguished Name (DN) search occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><br><i>Anoniem zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via anonieme binding om de onderscheidende naam (DN) van de gebruiker te vinden.<br><br><br><i><i>Specifiek zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via specifieke onderscheidende naam (DN) en specifiek wachtwoord om de onderscheidende naam (DN) van de gebruiker te vinden."
+msgstr "Modus waarin Cacti probeert te authenticeren bij de LDAP-server.<blockquote><i>Niet zoeken</i> - Er wordt niet gezocht naar een Distinguished Name (DN); er wordt alleen geprobeerd te binden met de opgegeven opmaak voor de Distinguished Name (DN).<br><br><i>Anoniem zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via anonieme binding om de Distinguished Name (DN) van de gebruiker te vinden.<br><br><i>Specifiek zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via een specifieke Distinguished Name (DN) en een specifiek wachtwoord voor binding om de Distinguished Name (DN) van de gebruiker te vinden."
 
 #: include/global_settings.php:1789 user_domains.php:472
 msgid "Distinguished Name (DN)"
@@ -11436,7 +11436,7 @@ msgstr "LDAP CN instellingen"
 
 #: include/global_settings.php:1863 user_domains.php:548
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
-msgstr "Veld dat de volledige naam vervangt bij het aanmaken van een nieuwe gebruiker, overgenomen uit LDAP. (op ramen: verplaatsingsnaam)"
+msgstr "Veld dat de volledige naam vervangt bij het aanmaken van een nieuwe gebruiker, overgenomen uit LDAP. (op Windows: displayname) "
 
 #: include/global_settings.php:1868 package_import.php:537
 msgid "Email"
@@ -11676,7 +11676,7 @@ msgstr "Voordat RRD On-demand Update kan worden gewist, moet een pollerloop alti
 
 #: include/global_settings.php:2085
 msgid "How Often Should Boost Update All RRDs"
-msgstr "Hoe vaak moet Boost Update Alle RRD's"
+msgstr "Hoe vaak moet Boost alle RRD's bijwerken"
 
 #: include/global_settings.php:2086
 msgid "When you enable boost, your RRD files are only updated when they are requested by a user, or when this time period elapses."
@@ -11780,11 +11780,11 @@ msgstr "Moeten voor dit Cacti-systeem gegevensbronstatistieken worden verzameld?
 
 #: include/global_settings.php:2202
 msgid "Number of DSStats Processes"
-msgstr "Aantal boost processen"
+msgstr "Aantal DSStats-processen"
 
 #: include/global_settings.php:2203
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
-msgstr "Het aantal gelijktijdige boost processen om te gebruiken om alle RRD's in de boost tabel te verwerken."
+msgstr "Het aantal gelijktijdige DSStats-processen dat moet worden gebruikt om alle gegevensbronnen te verwerken."
 
 #: include/global_settings.php:2230
 msgid "Daily Update Frequency"
@@ -11824,19 +11824,19 @@ msgstr "RRDfile Cleaner"
 
 #: include/global_settings.php:2264
 msgid "Enable RRDfile Check"
-msgstr "Activeer regel"
+msgstr "RRDfile-controle inschakelen"
 
 #: include/global_settings.php:2265
 msgid "Should RRDfile check be enabled for this Cacti system?"
-msgstr "Moeten voor dit Cacti-systeem gegevensbronstatistieken worden verzameld?"
+msgstr "Moet RRDfile-controle worden ingeschakeld voor dit Cacti-systeem?"
 
 #: include/global_settings.php:2270
 msgid "Number of RRDfile Check Processes"
-msgstr "Aantal boost processen"
+msgstr "Aantal RRDfile-controleprocessen"
 
 #: include/global_settings.php:2271
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
-msgstr "Het aantal gelijktijdige boost processen om te gebruiken om alle RRD's in de boost tabel te verwerken."
+msgstr "Het aantal gelijktijdige RRDfile-controleprocessen dat moet worden gebruikt om alle RRD-bestanden te verwerken."
 
 #: include/global_settings.php:2298
 msgid "Check Frequency"
@@ -11844,7 +11844,7 @@ msgstr "Frequentie"
 
 #: include/global_settings.php:2299
 msgid "How frequent should RRD be checked ?"
-msgstr "Hoe vaak moeten Daily Stats worden bijgewerkt?"
+msgstr "Hoe vaak moet RRD worden gecontroleerd?"
 
 #: include/global_settings.php:2305
 msgid "Data Storage Settings"
@@ -11884,7 +11884,7 @@ msgstr "Apparaat"
 
 #: include/global_settings.php:2336
 msgid "Device ID/Data Query ID"
-msgstr "Verwijder data query"
+msgstr "Apparaat-ID/Gegevensquery-ID"
 
 #: include/global_settings.php:2337
 msgid "Device Hash/Device ID"
@@ -11969,7 +11969,7 @@ msgstr "Standaard afwijking"
 
 #: include/global_settings.php:2422
 msgid "Variance Based w/Outliers Removed"
-msgstr "Variantie gebaseerd op w/Outliers Verwijderd"
+msgstr "Op variantie gebaseerd met verwijderde uitschieters"
 
 #: include/global_settings.php:2426 lib/html.php:2668
 msgid "Replacement Method"
@@ -12122,7 +12122,7 @@ msgstr "MySQL - TimeZone ondersteuning"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "Hoe wil je dat Cacti datums presenteert?  Deze instelling verandert ook de manier waarop datums van cactusgrafieken worden weergegeven."
+msgstr "Hoe wilt u dat Cacti datums weergeeft? Deze instelling verandert ook de manier waarop datums in Cacti-grafieken worden weergegeven."
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
@@ -12178,7 +12178,7 @@ msgstr "Het datumformaat om te gebruiken in Cacti."
 
 #: include/global_settings.php:2639
 msgid "The date separator to be used in Cacti."
-msgstr "Het datumscheidingsteken dat in Cactussen moet worden gebruikt."
+msgstr "Het datumscheidingsteken dat in Cacti moet worden gebruikt."
 
 #: include/global_settings.php:2645
 msgid "Page Refresh"
@@ -12218,7 +12218,7 @@ msgstr "De standaard Timeshift die wordt weergegeven bij het bekijken van grafie
 
 #: include/global_settings.php:2688
 msgid "Allow Graph to extend to Future"
-msgstr "Sta Graph toe om uit te breiden naar Future"
+msgstr "Sta grafiek toe om uit te breiden naar de toekomst"
 
 #: include/global_settings.php:2689
 msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
@@ -12254,7 +12254,7 @@ msgstr "Thumbnail secties"
 
 #: include/global_settings.php:2720
 msgid "Which portions of Cacti display Thumbnails by default."
-msgstr "Welke delen van de Cactussen tonen standaard Thumbnails."
+msgstr "Welke delen van Cacti standaard miniaturen weergeven."
 
 #: include/global_settings.php:2734
 msgid "Preview Thumbnail Columns"
@@ -12327,7 +12327,7 @@ msgstr "Kies of u de grafieksjablonen en gegevensvragen die door een apparaat in
 
 #: include/global_settings.php:2800
 msgid "Tree History"
-msgstr "Wachtwoord history"
+msgstr "Boomgeschiedenis"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
@@ -12391,7 +12391,7 @@ msgstr "Nieuw Scherm"
 
 #: include/global_settings.php:2912
 msgid "System Setting"
-msgstr "Gebruikersinstellingen"
+msgstr "Systeeminstelling"
 
 #: include/global_settings.php:2920
 msgid "1 Week"
@@ -12464,7 +12464,7 @@ msgstr "Nieuwe Poller"
 
 #: install/install.php:89
 msgid "Cacti Install Help"
-msgstr "Actief/geinstalleerd"
+msgstr "Cacti-installatiehelp"
 
 #: install/install.php:97
 #, php-format
@@ -12478,7 +12478,7 @@ msgstr "Cacti-server v%s - Installatiewizard"
 
 #: install/install.php:107
 msgid "Refresh current page"
-msgstr "Vernieuwingsinterval"
+msgstr "Huidige pagina vernieuwen"
 
 #: install/install.php:113
 msgid "Initializing"
@@ -12499,7 +12499,7 @@ msgstr "Zie de PHP-handleiding: <a href=\"http://php.net/manual/en/book.json.php
 
 #: install/install.php:121
 msgid "The php-json module must also be installed."
-msgstr "De versie van RRDtool die u heeft geïnstalleerd."
+msgstr "De php-json-module moet ook geïnstalleerd zijn."
 
 #: install/install.php:125
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/ini.core.php#ini.disable-functions\">Disable Functions</a>."
@@ -12628,7 +12628,7 @@ msgstr "Geen apparaat selectie criteria"
 
 #: lib/api_automation.php:1588
 msgid "No Graph Creation Criteria"
-msgstr "Criteria voor het maken van een grafiek"
+msgstr "Geen criteria voor het maken van grafieken"
 
 #: lib/api_automation.php:1611
 msgid "Propagate Change"
@@ -12644,7 +12644,7 @@ msgstr "Patroon vervangen"
 
 #: lib/api_automation.php:1657
 msgid "No Tree Creation Criteria"
-msgstr "Criteria voor het aanmaken van een menuitem"
+msgstr "Geen criteria voor het maken van boomstructuren"
 
 #: lib/api_automation.php:2163 lib/api_automation.php:2228
 msgid "Device Match Rule"
@@ -12885,7 +12885,7 @@ msgstr "Het wachtwoord moet tenminste 1 vreemd teken bevatten!"
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "Cacti log leeggemaakt"
+msgstr "Cacti-inlogfout"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12899,12 +12899,12 @@ msgstr "%s MBytes"
 #: lib/boost.php:153
 #, php-format
 msgid "%s KBytes"
-msgstr "%s GBytes"
+msgstr "%s KBytes"
 
 #: lib/boost.php:156
 #, php-format
 msgid "%s Bytes"
-msgstr "%s GBytes"
+msgstr "%s Bytes"
 
 #: lib/clog_webapi.php:136 utilities.php:1672
 #, php-format
@@ -13000,7 +13000,7 @@ msgstr "Gebruikt door apparaten"
 
 #: lib/clog_webapi.php:597
 msgid "Recaches"
-msgstr "komt overeen"
+msgstr "Cachevernieuwingen"
 
 #: lib/clog_webapi.php:601
 msgid "Threshold"
@@ -13028,7 +13028,7 @@ msgstr "Wachtwoorden komen niet overeen"
 
 #: lib/clog_webapi.php:804
 msgid "System Device"
-msgstr "Synchroniseer apparaten"
+msgstr "Systeemapparaat"
 
 #: lib/data_query.php:89 lib/data_query.php:275
 msgid "Automation Execution for Data Query complete"
@@ -13064,7 +13064,7 @@ msgstr "Update Data Query Sorteer Cache compleet"
 #: lib/data_query.php:382
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr "%s tabellen gevonden om te converteren"
+msgstr "%s lokale gegevens-ID's gevonden om te verifiëren"
 
 #: lib/data_query.php:458
 #, php-format
@@ -13094,7 +13094,7 @@ msgstr "Verificatie van %s lokale gegevens-ID 's voltooid"
 
 #: lib/data_query.php:170 lib/data_query.php:177
 msgid "Done updating Data Source Title Cache"
-msgstr "Dupliceer data bron profiel"
+msgstr "Bijwerken van de gegevensbrontitelcache voltooid"
 
 #: lib/data_query.php:173 lib/data_query.php:180
 msgid "Done updating Graph Title Cache"
@@ -13166,7 +13166,7 @@ msgstr "Ongeldig veld &lt;index_order&gt;%s&lt;/index_order&gt;"
 
 #: lib/data_query.php:736 lib/data_query.php:919
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Moet &lt;richting&gt;input&lt;/richting&gt; of &lt;richting&gt;input-output&lt;/richting&gt; velden alleen bevatten"
+msgstr "Mag alleen &lt;direction&gt;input&lt;/direction&gt;- of &lt;direction&gt;input-output&lt;/direction&gt;-velden bevatten"
 
 #: lib/data_query.php:753
 msgid "Data Query returned no indexes."
@@ -13174,7 +13174,7 @@ msgstr "ERROR: Data Query leverde geen indexen op."
 
 #: lib/data_query.php:754
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_num_indexes&gt; ontbreekt in XML-bestand, 'Index Count Changed' niet ondersteund"
+msgstr "&lt;arg_num_indexes&gt; bestaat in XML-bestand maar er zijn geen gegevens geretourneerd., 'Index Count Changed' wordt niet ondersteund"
 
 #: lib/data_query.php:757
 #, php-format
@@ -13201,7 +13201,7 @@ msgstr "ERROR: Data Query leverde geen indexen op."
 #: lib/data_query.php:781
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
-msgstr "Het uitvoeren van een script voor de lijst van indexen '%s', Index Count: %s"
+msgstr "Script uitvoeren voor lijst met indexen '%s', Aantal indexen: %s"
 
 #: lib/data_query.php:783
 msgid "Click to show Data Query output for 'index'"
@@ -13281,7 +13281,7 @@ msgstr "&lt;oid_num_num_indexes&gt; ontbreekt in XML-bestand, 'Index Count Chang
 #: lib/data_query.php:1002
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
-msgstr "SNMP-wandeling uitvoeren voor lijst van indexen @ '%s' Index Count: %s"
+msgstr "SNMP-walk uitvoeren voor lijst met indexen @ '%s' Aantal indexen: %s"
 
 #: lib/data_query.php:1006
 msgid "No SNMP data returned"
@@ -13335,7 +13335,7 @@ msgstr "OID-herschrijvingsregel gevonden: 's/%s/%s/'"
 #: lib/data_query.php:1118
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
-msgstr "oid_rewrite at oid: '%s' new oid: '%s'"
+msgstr "oid_rewrite bij OID: '%s' nieuwe OID: '%s'"
 
 #: lib/data_query.php:1139
 #, php-format
@@ -13421,7 +13421,7 @@ msgstr "Gevonden item [%s='%s'] index: %s [van regexp oid waarde parse]"
 #: lib/data_query.php:1753
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
-msgstr "Bogus rewrite_value item gevonden, index='%s'"
+msgstr "Ongeldig rewrite_value-item gevonden, index='%s'"
 
 #: lib/data_query.php:1766
 msgid "Could not parse translation map (rewrite_value)"
@@ -13515,7 +13515,7 @@ msgstr "RRD Bestand niet bijgewerkt na polling"
 #: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Instellingen opslaan op Dataverzamelaar %d Mislukt."
+msgstr "Opslaan van instellingen naar gegevensverzamelaar %d overgeslagen vanwege heartbeat."
 
 #: lib/functions.php:463 settings.php:286
 #, php-format
@@ -13669,7 +13669,7 @@ msgstr "Bericht Niet verzonden als gevolg van een pingstoring."
 #: lib/functions.php:6328 lib/functions.php:6397
 #, php-format
 msgid "Cacti disabled plugin %s due to the following error: %s!  See the Cacti logfile for more details."
-msgstr "Cactussen uitgeschakeld plugin %s als gevolg van de volgende fout: %s!  Zie het Cacti logbestand voor meer details."
+msgstr "Cacti heeft plugin %s uitgeschakeld vanwege de volgende fout: %s! Zie het Cacti-logbestand voor meer details."
 
 #: lib/functions.php:6503
 #, php-format
@@ -13694,7 +13694,7 @@ msgstr "%s %s"
 #: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
-msgstr "WAARSCHUWING:  Sleutelcactussen bevatten bestand %s ontbreekt.  Zoek en vervang dit bestand"
+msgstr "WAARSCHUWING:  Belangrijk Cacti-includebestand %s ontbreekt.  Zoek dit bestand op en vervang het"
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
@@ -13710,7 +13710,7 @@ msgstr "Beschadigde grafiek"
 
 #: lib/html.php:76
 msgid "Remote Server"
-msgstr "StdDev verwijderen"
+msgstr "Externe server"
 
 #: lib/html.php:138
 msgid "Get Page Help"
@@ -13778,7 +13778,7 @@ msgstr "#"
 
 #: lib/html.php:1535
 msgid "GPrint"
-msgstr "Verwijder GRPINT voorinstelling(en)"
+msgstr "GPrint"
 
 #: lib/html.php:1538
 msgid "Alpha %"
@@ -13863,27 +13863,27 @@ msgstr "Klik nogmaals om deze grafiek uit Realtime te halen"
 
 #: lib/html.php:2871
 msgid "Standard Mode"
-msgstr "Scanmodus"
+msgstr "Standaardmodus"
 
 #: lib/html.php:2872
 msgid "Compact Mode"
-msgstr "Gezoemwijze"
+msgstr "Compacte modus"
 
 #: lib/html.php:2873
 msgid "Dark Color Mode"
-msgstr "Ontwikkelmodus"
+msgstr "Donkere kleurmodus"
 
 #: lib/html.php:2874
 msgid "Light Color Mode"
-msgstr "Lijst modus"
+msgstr "Lichte kleurmodus"
 
 #: lib/html.php:2875
 msgid "Use System Color"
-msgstr "Kleur item"
+msgstr "Systeemkleur gebruiken"
 
 #: lib/html.php:2876
 msgid "Ignore System Color"
-msgstr "Kleur item"
+msgstr "Systeemkleur negeren"
 
 #: lib/html.php:2877
 msgid "Help"
@@ -13903,7 +13903,7 @@ msgstr "Dashboards"
 
 #: lib/html.php:2883
 msgid "Charts"
-msgstr "Grootboekschema"
+msgstr "Diagrammen"
 
 #: lib/html.php:2884
 msgid "Cacti Project Page"
@@ -13911,7 +13911,7 @@ msgstr "Cacti project pagina"
 
 #: lib/html.php:2888
 msgid "Spine"
-msgstr "Ruggengraat"
+msgstr "Spine"
 
 #: lib/html.php:2889
 msgid "RRDProxy"
@@ -13927,7 +13927,7 @@ msgstr "Snelkoppelingen"
 
 #: lib/html.php:2892
 msgid "Contribute to the Cacti Project"
-msgstr "Roteer de Cacti log"
+msgstr "Bijdragen aan het Cacti-project"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
@@ -14573,7 +14573,7 @@ msgstr "Moeten alle kinderen filiaalgrafieken worden weergegeven?"
 
 #: lib/html_reports.php:1110
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "Selecteer een apparaat om een grafiek op te geven"
+msgstr "Selecteer een site om te filteren op apparaten en grafieken."
 
 #: lib/html_reports.php:1120
 msgid "Select a Device Template to use to filter for Devices or Graphs."
@@ -14691,7 +14691,7 @@ msgstr "Apparaat: %s"
 
 #: lib/html_reports.php:1774
 msgid ", Graph Template: All Templates"
-msgstr "Grafiektemplate toevoegen aan apparaat template"
+msgstr ", Grafiektemplate: Alle templates"
 
 #: lib/html_reports.php:1776
 #, php-format
@@ -14842,11 +14842,11 @@ msgstr "De zoekterm \"%s\" is niet geldig. Foutmelding is %s"
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "Reguliere expressies van cactussen zijn om veiligheidsredenen beperkt tot 50 tekens."
+msgstr "Reguliere expressies in Cacti zijn om veiligheidsredenen beperkt tot 50 tekens."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "Cactussen reguliere expressies kunnen het semi-kleurige teken niet bevatten."
+msgstr "Reguliere expressies in Cacti mogen geen puntkomma bevatten."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -14878,7 +14878,7 @@ msgstr "Cacti RLIKE-filters ondersteunen geen alternatie- of begrensde-herhaling
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
-msgstr "Download"
+msgstr "Offline (Thold)"
 
 #: lib/html_utility.php:1467 lib/installer.php:2021 lib/installer.php:3902
 msgid "Error"
@@ -15119,11 +15119,11 @@ msgstr "U probeert Cacti %s op een 0.6.x database te installeren. Helaas kan dit
 
 #: lib/installer.php:1685
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Om verder te kunnen gaan, maak je <b>MUST</b> een nieuwe database, importeer je \"cacti.sql\" erin:"
+msgstr "Om verder te kunnen gaan, <b>MOET</b> u een nieuwe database aanmaken en \"cacti.sql\" daarin importeren:"
 
 #: lib/installer.php:1687
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
-msgstr "U <b>MUST</b> werkt dan \"include/config.php\" bij om naar de nieuwe database te verwijzen."
+msgstr "Vervolgens <b>MOET</b> u \"include/config.php\" bijwerken zodat dit naar de nieuwe database verwijst."
 
 #: lib/installer.php:1688
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
@@ -15139,7 +15139,7 @@ msgstr "Deze fout kan ook worden gegenereerd als de cacti database gebruiker nie
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
-msgstr "U <b>MUST</b> importeert ook MySQL TimeZone-informatie in MySQL en verleent de Cacti gebruiker SELECT toegang tot de mysql.time_zone_name tabel"
+msgstr "U <b>MOET</b> ook MySQL-tijdzone-informatie in MySQL importeren en de Cacti-gebruiker SELECT-toegang verlenen tot de tabel mysql.time_zone_name"
 
 #: lib/installer.php:1701
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15282,7 +15282,7 @@ msgstr "Waarschuwing"
 
 #: lib/installer.php:2015
 msgid "Restart Required"
-msgstr "Verplicht"
+msgstr "Herstart vereist"
 
 #: lib/installer.php:2015
 msgid "The specified value appears to be different in the running config versus the INI file."
@@ -15542,7 +15542,7 @@ msgstr "Mogelijke vergunningsproblemen"
 
 #: lib/installer.php:2496
 msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
-msgstr "Zorg ervoor dat uw webserver lees/schrijftoegang heeft tot de cactusmappen die hieronder fouten tonen."
+msgstr "Zorg ervoor dat uw webserver lees- en schrijftoegang heeft tot de Cacti-mappen die hieronder fouten weergeven."
 
 #: lib/installer.php:2499
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -15571,7 +15571,7 @@ msgstr "Alle directories zijn schrijfbaar"
 
 #: lib/installer.php:2533
 msgid "Input Validation Whitelist Protection"
-msgstr "Inputvalidatie Whitelist Protection"
+msgstr "Beveiliging met witte lijst voor invoervalidatie"
 
 #: lib/installer.php:2534
 msgid "Cacti Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Cacti poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -15595,7 +15595,7 @@ msgstr "Deze scriptoptie zoekt naar gegevensinvoermethoden die momenteel zijn ve
 
 #: lib/installer.php:2542
 msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Deze scriptoptie heft de gegevensinvoermethoden op die momenteel zijn verbannen."
+msgstr "Deze scriptoptie heft de ban op van de gegevensinvoermethoden die momenteel verbannen zijn."
 
 #: lib/installer.php:2543
 msgid "This script option will re-enable any disabled Data Sources."
@@ -15603,7 +15603,7 @@ msgstr "Met deze scriptoptie worden alle uitgeschakelde gegevensbronnen weer ing
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "We raden u ten zeerste aan om uw config.php bij te werken om deze functie in te schakelen door de <b>$input_whitelist-</b> variabele te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
+msgstr "Het wordt sterk aanbevolen om uw config.php bij te werken om deze functie in te schakelen door het commentaarteken voor de variabele <b>$input_whitelist</b> te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -15631,7 +15631,7 @@ msgstr "Standaard Automatiseringsnetwerk"
 
 #: lib/installer.php:2601
 msgid "Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "Cactussen kunnen het netwerk automatisch scannen zodra de installatie is voltooid. Hierbij wordt gebruik gemaakt van het onderstaande netwerkbereik om het bereik van IP-adressen uit te werken dat gescand kan worden.  Voor het scannen zijn vooraf gedefinieerde opties gedefinieerd, waaronder het gebruik van zowel 'publieke' als 'private' gemeenschappen."
+msgstr "Cacti kan het netwerk automatisch scannen zodra de installatie is voltooid. Hierbij wordt het onderstaande netwerkbereik gebruikt om het bereik van scanbare IP-adressen te bepalen. Er is een vooraf gedefinieerde set scanopties ingesteld, waaronder het gebruik van zowel de 'public'- als de 'private'-community."
 
 #: lib/installer.php:2602
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -15679,7 +15679,7 @@ msgstr "Template installatie"
 
 #: lib/installer.php:2669
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "Selecteer het type sjabloon dat u wilt exporteren vanuit Cacti."
+msgstr "Selecteer de apparaatsjablonen die u tijdens de upgrade wilt bijwerken."
 
 #: lib/installer.php:2670
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
@@ -15796,7 +15796,7 @@ msgstr "GECONSTATEERDE VERSLECHTERING"
 
 #: lib/installer.php:2832
 msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
-msgstr "U MOET HANDELIJKE HANDELIJKE WIJZIGING VAN DE CACTI-DATABASE VOOR EEN UPGHANDELIJKE WIJZIGING VAN EEN UPGRADE WIJZIGE WIJZIGINGEN DIE HEBBEN MADE.<br/>THE INSTALLER HEEFT GEEN BEREIK om deze AUTOMATISCHE WIJZIGINGEN VOOR U te DOEN"
+msgstr "U MOET DE CACTI-DATABASE HANDMATIG AANPASSEN OM EVENTUELE UITGEVOERDE UPGRADEWIJZIGINGEN TERUG TE DRAAIEN.<br/>HET INSTALLATIEPROGRAMMA HEEFT GEEN METHODE OM DIT AUTOMATISCH VOOR U TE DOEN"
 
 #: lib/installer.php:2833
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
@@ -15814,7 +15814,7 @@ msgstr "Druk op '%s' en klik vervolgens op '%s' om het installatieproces te volt
 #: lib/installer.php:2855
 #, php-format
 msgid "Installing Cacti Server v%s"
-msgstr "Cactusserver installeren v%s"
+msgstr "Cacti-server v%s installeren"
 
 #: lib/installer.php:2856
 msgid "Your Cacti Server is now installing"
@@ -15909,7 +15909,7 @@ msgstr "Er zijn geen sjablonen geselecteerd om te importeren"
 
 #: lib/installer.php:3322
 msgid "Updating remote configuration file"
-msgstr "In afwachting van configuratie"
+msgstr "Extern configuratiebestand bijwerken"
 
 #: lib/installer.php:3354
 #, php-format
@@ -15961,7 +15961,7 @@ msgstr "Bijwerken automatiseringsoptieset %s mislukt"
 
 #: lib/installer.php:3432
 msgid "Failed to find any automation option set"
-msgstr "Geen gegevens gevonden om te kopiëren!"
+msgstr "Kan geen automatiseringsoptieset vinden"
 
 #: lib/installer.php:3462
 #, php-format
@@ -15982,7 +15982,7 @@ msgstr "Er zijn geen sjabloongrafieken voor het standaardapparaat gevonden"
 
 #: lib/installer.php:3507
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server."
-msgstr "WAARSCHUWING: apparaatsjabloon voor uw besturingssysteem niet gevonden. U moet apparaatsjablonen of cactussenpakketten importeren om uw cactusserver te bewaken."
+msgstr "WAARSCHUWING: Apparaatsjabloon voor uw besturingssysteem niet gevonden.  U moet apparaatsjablonen of Cacti-pakketten importeren om uw Cacti-server te bewaken."
 
 #: lib/installer.php:3514
 msgid "Running first-time data query for local host"
@@ -16078,7 +16078,7 @@ msgstr "%s - Nee"
 
 #: lib/installer.php:3783
 msgid "Cli"
-msgstr "Klassiek"
+msgstr "CLI"
 
 #: lib/installer.php:3788
 #, php-format
@@ -16187,7 +16187,7 @@ msgstr "Onverwachte fout %s (LDAP-fout: %s) op server (%s)"
 
 #: lib/ping.php:138
 msgid "ICMP Ping timed out"
-msgstr "ICMP ping timed out"
+msgstr "Time-out bij ICMP-ping"
 
 #: lib/ping.php:226 lib/ping.php:244
 #, php-format
@@ -16196,7 +16196,7 @@ msgstr "ICMP Ping succes (%s ms)"
 
 #: lib/ping.php:231 lib/ping.php:249
 msgid "ICMP ping Timed out"
-msgstr "ICMP ping timed out"
+msgstr "Time-out bij ICMP-ping"
 
 #: lib/ping.php:256 lib/ping.php:483 lib/ping.php:623
 msgid "Destination address not specified"
@@ -16394,7 +16394,7 @@ msgstr "DS \"%s\" ontbreekt in de definitie van cactussen"
 #: lib/rrd.php:3931 lib/rrd.php:3932
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "Cactussen RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
+msgstr "Cacti RRA '%s' heeft dezelfde CF/stappen (%s, %s) als '%s'"
 
 #: lib/rrd.php:3945 lib/rrd.php:3946
 #, php-format
@@ -16404,12 +16404,12 @@ msgstr "Bestand RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
 #: lib/rrd.php:3978
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
-msgstr "De pdp_per_row van '%s' is ongeldig voor RRA '%s' moet '%s' zijn.  Overweeg om RRD-bestanden te verwijderen en toe te staan dat Cactussen deze opnieuw maken."
+msgstr "De pdp_per_row van '%s' is ongeldig voor RRA '%s' en moet '%s' zijn.  Overweeg het RRD-bestand te verwijderen zodat Cacti het opnieuw kan aanmaken."
 
 #: lib/rrd.php:3982
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
-msgstr "XFF voor cactussen RRA id \"%s\" moet \"%s\" zijn"
+msgstr "De XFF voor de Cacti RRA-ID is '%s', maar moet '%s' zijn"
 
 #: lib/rrd.php:3986
 #, php-format
@@ -16480,7 +16480,7 @@ msgstr "Fouten gevonden"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
-msgstr "Data bron velden"
+msgstr "Optionele optimalisatie-aanbevelingen"
 
 #: lib/rrd.php:4231 lib/rrd.php:4234
 #, php-format
@@ -16857,7 +16857,7 @@ msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "Maak geaggregeerde grafiek vanaf template"
+msgstr "Poging om grafiek te maken vanaf niet-template"
 
 #: lib/template.php:1530
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -16938,7 +16938,7 @@ msgstr "Wanneer de InnoDB storage engine wordt gebruikt is het belangrijk om de 
 
 #: lib/utility.php:1387
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Cacti tables."
-msgstr "Bij het gebruik van innodb_file_per_table is het belangrijk om het innodb_file_format in te stellen op Barracuda.  Deze instelling maakt langere indexen mogelijk die belangrijk zijn voor bepaalde Cactustabellen."
+msgstr "Bij gebruik van innodb_file_per_table is het belangrijk om innodb_file_format in te stellen op Barracuda.  Deze instelling maakt langere indexen mogelijk die belangrijk zijn voor bepaalde Cacti-tabellen."
 
 #: lib/utility.php:1393
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
@@ -17241,11 +17241,11 @@ msgstr "U bent uitgelogd uit Cacti omdat de sessie is verlopen."
 
 #: logout.php:61
 msgid "You have been logged out of Cacti due to an account suspension."
-msgstr "U bent uitgelogd uit Cacti omdat de sessie is verlopen."
+msgstr "U bent uitgelogd bij Cacti omdat uw account is opgeschort."
 
 #: logout.php:63
 msgid "You have been logged out of Cacti due to a Remote Data Collector state change"
-msgstr "U bent uitgelogd uit Cacti omdat de sessie is verlopen."
+msgstr "U bent uitgelogd bij Cacti vanwege een statuswijziging van een externe gegevensverzamelaar"
 
 #: logout.php:71
 msgid "Logout of Cacti"
@@ -17271,7 +17271,7 @@ msgstr "Notificaties"
 
 #: managers.php:149 utilities.php:2439
 msgid "SNMP Notification Receivers"
-msgstr "Geen SNMP notificatie ontvangers"
+msgstr "SNMP-meldingsontvangers"
 
 #: managers.php:168 managers.php:238 managers.php:524 managers.php:865
 msgid "Receivers"
@@ -17422,7 +17422,7 @@ msgstr "Fout: Ongeldig bestandspad."
 #: package_import.php:388 package_import.php:394 package_import.php:480
 #: package_import.php:483
 msgid "Error in Package"
-msgstr "Fout in data query"
+msgstr "Fout in pakket"
 
 #: package_import.php:388
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
@@ -17443,7 +17443,7 @@ msgstr "Het downloaden of valideren van het pakket is mislukt"
 
 #: package_import.php:480
 msgid "Package XML File Damaged."
-msgstr "Pakketbestanden"
+msgstr "Pakket-XML-bestand is beschadigd."
 
 #: package_import.php:480
 msgid "The XML files appears to be invalid.  Please contact the package author"
@@ -17467,7 +17467,7 @@ msgstr "Apparaatregels"
 
 #: package_import.php:546
 msgid "Copyright"
-msgstr "rechts"
+msgstr "Auteursrecht"
 
 #: package_import.php:571
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -17479,7 +17479,7 @@ msgstr "Pakketbestanden"
 
 #: package_import.php:578
 msgid "Filename"
-msgstr "Hernoem"
+msgstr "Bestandsnaam"
 
 #: package_import.php:629 package_import.php:729 templates_import.php:367
 msgid "Differences"
@@ -17499,7 +17499,7 @@ msgstr "Templatetitel"
 
 #: package_import.php:669 templates_import.php:283
 msgid "Changes/Diffferences"
-msgstr "Wijzig apparaat"
+msgstr "Wijzigingen/Verschillen"
 
 #: package_import.php:694 templates_import.php:304
 msgid "Updated"
@@ -17507,7 +17507,7 @@ msgstr "Bijwerken"
 
 #: package_import.php:733 templates_import.php:371
 msgid "Orphans"
-msgstr "Overerfd"
+msgstr "Wezen"
 
 #: package_import.php:786
 msgid "File Differences for: "
@@ -17733,7 +17733,7 @@ msgstr "Maximale looptijd van %d seconden overschreden voor poller-id %d. Bezig 
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "WAARSCHUWING: Polling-cyclus cactussen overschreden poller-interval met"
+msgstr "WAARSCHUWING: Cacti-pollingcyclus heeft het poller-interval overschreden met "
 
 #: poller.php:961
 #, php-format
@@ -17746,7 +17746,7 @@ msgstr "Poller in hartslagmodus"
 
 #: poller.php:1263
 msgid "Cacti System Notification"
-msgstr "Hulpprogramma's voor cactussen"
+msgstr "Cacti-systeemmelding"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
@@ -17759,7 +17759,7 @@ msgstr "WAARSCHUWING: Hoofddatabase %s van Cacti is offline of wordt hersteld"
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
-msgstr "Cactussen Primaire Admin"
+msgstr "Primaire Cacti-beheerder"
 
 #: poller_automation.php:1159
 msgid "Cacti Automation Report requires an html based Email client"
@@ -17875,11 +17875,11 @@ msgstr "De TCP-poort om te gebruiken om verbinding te maken met de externe datab
 
 #: pollers.php:179
 msgid "Remote Database Retries"
-msgstr "Externe database gebruiker"
+msgstr "Herpogingen voor externe database"
 
 #: pollers.php:180
 msgid "The number of times to attempt to retry to connect to the remote database."
-msgstr "De gebruikersnaam om verbinding te maken met de externe database."
+msgstr "Het aantal pogingen om opnieuw verbinding te maken met de externe database."
 
 #: pollers.php:188
 msgid "Remote Database SSL"
@@ -17930,7 +17930,7 @@ msgstr "U hebt deze databasehostnaam '%s' al gebruikt. Geef een niet-dubbele dat
 
 #: pollers.php:541
 msgid "Data Collector Statistics cleared."
-msgstr "Gegevensbronnen Statistieken"
+msgstr "Gegevensverzamelaarstatistieken gewist."
 
 #: pollers.php:576
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Cacti Data Collector."
@@ -17977,14 +17977,14 @@ msgstr[1] "Klik op 'Doorgaan' om de externe gegevensverzamelaars voor offline ge
 #: pollers.php:612
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "Klik op 'Doorgaan' om de volgende gegevensverzamelaar in te schakelen."
-msgstr[1] "Klik op 'Doorgaan' om de volgende gegevensverzamelaars in te schakelen."
+msgstr[0] "Klik op 'Doorgaan' om de gegevensverzamelaarstatistieken voor de gegevensverzamelaar te wissen."
+msgstr[1] "Klik op 'Doorgaan' om de gegevensverzamelaarstatistieken voor de gegevensverzamelaars te wissen."
 
 #: pollers.php:617
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "De status van deze gegevensverzamelaar."
-msgstr[1] "De status van deze gegevensverzamelaar."
+msgstr[0] "Statistieken voor gegevensverzamelaar wissen"
+msgstr[1] "Statistieken voor gegevensverzamelaars wissen"
 
 #: pollers.php:669
 msgid "The Main Data Collector can not be deleted or disabled."
@@ -18129,7 +18129,7 @@ msgstr "RRDfile Cleaner"
 
 #: rrdcheck.php:147
 msgid "RRDcheck Problems"
-msgstr "Geen apparaattemplates gevonden"
+msgstr "RRDcheck-problemen"
 
 #: rrdcheck.php:157
 msgid "Host Description"
@@ -18137,7 +18137,7 @@ msgstr "Omschrijving"
 
 #: rrdcheck.php:165
 msgid "Local Data ID"
-msgstr "Geldige gegevens"
+msgstr "Lokale data-ID"
 
 #: rrdcheck.php:170
 msgid "Message"
@@ -18149,11 +18149,11 @@ msgstr "Verwijderd"
 
 #: rrdcheck.php:203
 msgid "No RRDcheck Problems Found"
-msgstr "Geen apparaattemplates gevonden"
+msgstr "Geen RRDcheck-problemen gevonden"
 
 #: rrdcheck.php:239
 msgid "Age"
-msgstr "Aug"
+msgstr "Leeftijd"
 
 #: rrdcheck.php:243 rrdcheck.php:244 rrdcheck.php:245
 #, php-format
@@ -18283,7 +18283,7 @@ msgstr "OPMERKING: Padinstellingen op dit tabblad worden alleen lokaal opgeslage
 #: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
-msgstr "Cactusinstellingen (%s)%s"
+msgstr "Cacti-instellingen (%s)%s"
 
 #: settings.php:505
 msgid "Changing Permission Model Warning"
@@ -18323,7 +18323,7 @@ msgstr "Selecteer template(s)"
 
 #: settings.php:601
 msgid "All Templates Selected"
-msgstr "Alle templates geselected"
+msgstr "Alle templates geselecteerd"
 
 #: settings.php:675
 msgid "Send a Test Email"
@@ -18517,8 +18517,8 @@ msgstr[1] "Verwijder locaties"
 #: sites.php:445
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "Klik op 'Doorgaan' om de volgende boom te verwijderen."
-msgstr[1] "Klik op 'Doorgaan' om de volgende bomen te verwijderen."
+msgstr[0] "Klik op 'Doorgaan' om de volgende locatie te dupliceren."
+msgstr[1] "Klik op 'Doorgaan' om alle volgende locaties te dupliceren."
 
 #: sites.php:447
 msgid "Site Name:"
@@ -18634,7 +18634,7 @@ msgstr "De sjabloonimport is geslaagd."
 
 #: templates_import.php:147
 msgid "Error in Template"
-msgstr "Exporteer templates"
+msgstr "Fout in sjabloon"
 
 #: templates_import.php:147
 #, php-format
@@ -18652,11 +18652,11 @@ msgstr "Bestanden importeren [ Als er bestanden ontbreken, zoek en installeer ze
 
 #: templates_import.php:235
 msgid "File Name"
-msgstr "Veldnaam"
+msgstr "Bestandsnaam"
 
 #: templates_import.php:250
 msgid "Not Readable"
-msgstr "Niet schrijfbaar"
+msgstr "Niet leesbaar"
 
 #: templates_import.php:267
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
@@ -18709,7 +18709,7 @@ msgstr "Niet meer publiceren"
 #: tree.php:35
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "Geblokkeerd"
+msgstr "Ontgrendelen"
 
 #: tree.php:233 tree.php:634
 #: graphs.php:652 graphs.php:1025
@@ -18799,8 +18799,8 @@ msgstr[1] "Klik op 'Doorgaan' om de volgende bomen niet te publiceren."
 #: tree.php:877
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "Onuitgegeven boom"
-msgstr[1] "Niet-publiceer bomen"
+msgstr[0] "Boom ontgrendelen"
+msgstr[1] "Bomen ontgrendelen"
 
 #: tree.php:927
 #, php-format
@@ -18961,11 +18961,11 @@ msgstr "Batchkopie"
 
 #: user_admin.php:285
 msgid "You are not allowed to delete the current login account"
-msgstr "U mag uw wachtwoord niet wijzigen."
+msgstr "U mag het huidige inlogaccount niet verwijderen"
 
 #: user_admin.php:297
 msgid "You are not allowed to disable the current login account"
-msgstr "U mag uw wachtwoord niet wijzigen."
+msgstr "U mag het huidige inlogaccount niet uitschakelen"
 
 #: user_admin.php:377
 msgid "Click 'Continue' to delete the selected User(s)."
@@ -19045,11 +19045,11 @@ msgstr "<b>Note:</b> Systeem Grafiekbeleid is 'Restrictief', wat betekent dat de
 
 #: user_admin.php:817 user_group_admin.php:865
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>Note:</b> Systeem Grafiekbeleid is 'Restrictief', wat betekent dat de gebruiker toegang moet hebben tot de grafiek of het apparaat en het grafieksjabloon om toegang te krijgen tot de grafiek."
+msgstr "<b>Opmerking:</b> Het systeemgrafiekbeleid is 'Apparaat', wat betekent dat de gebruiker toegang moet hebben tot de grafiek of het apparaat om toegang te krijgen tot de grafiek"
 
 #: user_admin.php:819 user_group_admin.php:867
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>Let op:</b> Grafiekrechten zijn permissief. Dit betekent dat de gebruiker op zijn minst toegang moet hebben tot een grafiek, apparaat of grafiektemplate om toegang te krijgen tot de grafiek"
+msgstr "<b>Opmerking:</b> Het systeemgrafiekbeleid is 'Grafiektemplate', wat betekent dat de gebruiker toegang moet hebben tot de grafiek of het grafiektemplate om toegang te krijgen tot de grafiek"
 
 #: user_admin.php:823 user_group_admin.php:875
 msgid "Default Graph Policy"
@@ -19206,7 +19206,7 @@ msgstr "Plugin rechten"
 
 #: user_admin.php:1714 user_group_admin.php:1652
 msgid "Legacy Permissions"
-msgstr "Controleer rechten"
+msgstr "Verouderde rechten"
 
 #: user_admin.php:1776 user_group_admin.php:1716
 #, php-format
@@ -19446,7 +19446,7 @@ msgstr "Encryptie die de server ondersteund. TLS is alleen ondersteund door prot
 
 #: user_domains.php:466
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Modus die cactussen proberen te authenticeren tegen de LDAP-server.<blockquote><i><i>No Searching</i> - No Distinguished Name (DN) search occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><br><i>Anoniem zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via anonieme binding om de gebruikers Distinguished Name (DN) te vinden.<br><br><i><i>Specifiek zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via Specific Distinguished Name (DN) en Specific Password for binding om de gebruikers Distinguished Name (DN) te vinden."
+msgstr "Modus waarin Cacti probeert te authenticeren bij de LDAP-server.<blockquote><i>Niet zoeken</i> - Er wordt niet gezocht naar een Distinguished Name (DN); er wordt alleen geprobeerd te binden met de opgegeven opmaak voor de Distinguished Name (DN).<br><br><i>Anoniem zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via anonieme binding om de Distinguished Name (DN) van de gebruiker te vinden.<br><br><i>Specifiek zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via een specifieke Distinguished Name (DN) en een specifiek wachtwoord voor binding om de Distinguished Name (DN) van de gebruiker te vinden."
 
 #: user_domains.php:516
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."
@@ -19704,7 +19704,7 @@ msgstr "Een herbouw van de pollercache is al actief."
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
-msgstr "Gegevensbronnen Statistieken"
+msgstr "Gegevensbronstatistieken opgeschoond."
 
 #: utilities.php:181
 msgid "Database"
@@ -19797,7 +19797,7 @@ msgstr "Naam: "
 
 #: utilities.php:413
 msgid "Procs: "
-msgstr "1 Proces"
+msgstr "Proc.: "
 
 #: utilities.php:420
 msgid "Threads: "
@@ -19827,7 +19827,7 @@ msgstr "Huidig: %s, min. vereist: %s"
 
 #: utilities.php:499
 msgid "Minimum Connections:"
-msgstr "Test verbinding"
+msgstr "Minimaal aantal verbindingen:"
 
 #: utilities.php:501
 msgid "Assumes 100 spare connections for Web page users and other various connections."
@@ -19870,7 +19870,7 @@ msgstr "MySQL/MariaDB-geheugenstatistieken (bron: MySQL Tuner)"
 
 #: utilities.php:685 utilities.php:694 utilities.php:700
 msgid "Max Total Memory Possible"
-msgstr "Maximaal toegestaan Pollergeheugen:"
+msgstr "Maximaal mogelijk totaalgeheugen"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
@@ -19878,7 +19878,7 @@ msgstr "Verminder het MySQL/MariaDB-geheugen tot minder dan 80% of systeemgeheug
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"
-msgstr "Maximaal toegestaan Pollergeheugen:"
+msgstr "Maximaal mogelijk kerngeheugen"
 
 #: utilities.php:709
 msgid "Reduce Total Core Memory"
@@ -20166,7 +20166,7 @@ msgstr "Wanneer u meerdere gegevensverzamelaars in Cacti gebruikt, zal Cacti pro
 
 #: utilities.php:2390
 msgid "Boost Utilities"
-msgstr "Verhoogt nutsbedrijven"
+msgstr "Boost-hulpprogramma's"
 
 #: utilities.php:2391
 msgid "View Boost Status"
@@ -20182,7 +20182,7 @@ msgstr "Gegevensbronnen Statistieken"
 
 #: utilities.php:2398
 msgid "Purge Data Source Statistics"
-msgstr "Gegevensbronnen Statistieken"
+msgstr "Gegevensbronstatistieken opschonen"
 
 #: utilities.php:2402
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
@@ -20230,7 +20230,7 @@ msgstr "Hiermee kunnen beheerders SNMP-kennisgevingsontvangers onderhouden."
 
 #: utilities.php:2449
 msgid "Cacti System Utilities"
-msgstr "Hulpprogramma's voor cactussen"
+msgstr "Cacti-systeemhulpprogramma's"
 
 #: utilities.php:2672
 msgid "Overrun Warning"
@@ -20266,7 +20266,7 @@ msgstr "Lopende processen"
 
 #: utilities.php:2758
 msgid "Total Poller Items:"
-msgstr "Poller gecachede items"
+msgstr "Totaal aantal poller-items:"
 
 #: utilities.php:2764
 msgid "Total Data Sources:"
@@ -20274,7 +20274,7 @@ msgstr "Totale gegevensbronnen:"
 
 #: utilities.php:2768
 msgid "Remaining Data Sources:"
-msgstr "Debugging Gegevensbron"
+msgstr "Resterende gegevensbronnen:"
 
 #: utilities.php:2768
 msgid "TBD"
@@ -20335,7 +20335,7 @@ msgstr "Laatste starttijd:"
 
 #: utilities.php:2853
 msgid "Last End Time:"
-msgstr "Laatste starttijd:"
+msgstr "Laatste eindtijd:"
 
 #: utilities.php:2853
 msgid "Never Run"

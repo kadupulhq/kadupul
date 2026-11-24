@@ -13288,7 +13288,7 @@ msgstr "OID: '%s' value: '%s' இல் குறியீடு கண்டற
 #: lib/data_query.php:1042
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
-msgstr "'%s' இல் மதிப்பால் வடிகட்டப்பட்ட குறியீடுகளின் பட்டியல் Index Count: %s"
+msgstr "'%s' இல் மதிப்பால் வடிகட்டப்பட்ட குறியீடுகளின் பட்டியல் குறியீட்டு எண்ணிக்கை: %s"
 
 #: lib/data_query.php:1046
 #, php-format
@@ -16560,7 +16560,7 @@ msgstr "சேகரிப்புக்கு முன் poller_output வ�
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "செயல்பாட்டை உறுதிப்படுத்த முடியவில்லை. மீண்டும் முயற்சிக்கும் முன் மாற்ற வரலாற்றை ஆய்வு செய்யவும்."
+msgstr "கிடைக்கவில்லை"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"

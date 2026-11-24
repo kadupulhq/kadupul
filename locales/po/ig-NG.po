@@ -16066,7 +16066,7 @@ msgstr "Ọdịda Nkwado Njirimara"
 
 #: lib/ldap.php:291
 msgid "PHP LDAP not enabled"
-msgstr "Agbanyụghị PHP LDAP"
+msgstr "Agbanyeghị PHP LDAP"
 
 #: lib/ldap.php:295
 msgid "No username defined"

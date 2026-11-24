@@ -308,7 +308,7 @@ msgstr "Vous n'avez actuellement aucun état défini."
 
 #: aggregate_graphs.php:492
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Cliquez sur 'Continuer' pour combiner le(s) graphique(s) agrégé(s) suivant(s) en un unique graphique agrégé."
+msgstr "Cliquez sur « Continuer » pour convertir le(s) graphique(s) agrégé(s) suivant(s) en un graphique normal."
 
 #: aggregate_graphs.php:497
 msgid "Convert to normal Graph(s)"
@@ -843,7 +843,7 @@ msgstr "Votre nouveau mot de passe ne peut pas être identique à l'ancien mot d
 
 #: auth_changepassword.php:248
 msgid "Forced password change"
-msgstr "Annuler le changement de mot de passe forcé"
+msgstr "Changement de mot de passe forcé"
 
 #: auth_changepassword.php:252
 msgid "Password requirements include:"
@@ -1166,7 +1166,7 @@ msgstr "Ajouter appareil(s)"
 
 #: automation_devices.php:229
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "Cliquez sur 'Continuer' pour ajouter le(s) dispositif(s) découvert(s) suivant(s)."
+msgstr "Cliquez sur « Continuer » pour supprimer le(s) appareil(s) découvert(s) suivant(s)."
 
 #: automation_devices.php:234 host.php:550
 msgid "Delete Device(s)"
@@ -1376,7 +1376,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer la règle'%s' ?"
 #: automation_graph_rules.php:602
 #, php-format
 msgid "Rule Selection [edit: %s]"
-msgstr "Sélection de règle [edit : %s]"
+msgstr "Sélection de règle [modifier : %s]"
 
 #: automation_graph_rules.php:608
 msgid "Rule Selection [new]"
@@ -2571,7 +2571,7 @@ msgstr "Utilisation du regroupement"
 
 #: automation_tree_rules.php:1048
 msgid "ROOT"
-msgstr "Racines de végétal"
+msgstr "RACINE"
 
 #: automation_tree_rules.php:1064
 msgid "No Tree Rules Found"
@@ -3145,7 +3145,7 @@ msgstr "Pas de débogage"
 
 #: data_debug.php:658
 msgid "No Checks"
-msgstr "On n’accepte pas les chèques"
+msgstr "Aucune vérification"
 
 #: data_debug.php:701 lib/api_automation.php:892 lib/graphs.php:79
 #: lib/graphs.php:103 templates_import.php:252
@@ -3305,7 +3305,7 @@ msgstr "Dépannage de la source de données [ %s ]"
 
 #: data_debug.php:1029
 msgid "No Device"
-msgstr "Numéro de symbole"
+msgstr "Aucun appareil"
 
 #: data_debug.php:1068
 msgid "Delete All Checks"
@@ -4469,7 +4469,7 @@ msgstr "Les sources de données fondées sur des modèles de données inactifs n
 
 #: data_templates.php:1411
 msgid "No Data Templates Found"
-msgstr "Mes modèles"
+msgstr "Aucun modèle de données trouvé"
 
 #: gprint_presets.php:174
 msgid "GPRINT Presets referenced by a Graph or Graph Template were not Deleted."
@@ -5095,7 +5095,7 @@ msgstr "Nouvel équipement"
 
 #: graphs.php:1055
 msgid "Change Graph(s) Associated Device"
-msgstr "Changer le(s) graphique(s) Graphique(s) associé(s) Appareil associé"
+msgstr "Modifier l'appareil associé au(x) graphique(s)"
 
 #: graphs.php:1059
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
@@ -6501,7 +6501,7 @@ msgstr "SHA"
 
 #: include/global_arrays.php:662
 msgid "SHA-224"
-msgstr "SHA-224name of the hash algorithm"
+msgstr "SHA-224"
 
 #: include/global_arrays.php:663
 msgid "SHA-256"
@@ -6513,7 +6513,7 @@ msgstr "SHA-384"
 
 #: include/global_arrays.php:665
 msgid "SHA-512"
-msgstr "SHA-512name of the hash algorithm"
+msgstr "SHA-512"
 
 #: include/global_arrays.php:670
 msgid "DES"
@@ -7316,7 +7316,7 @@ msgstr "Après Boost"
 #: include/global_arrays.php:1617
 #, php-format
 msgid "%d MBytes"
-msgstr "d Mo octets %d"
+msgstr "%d Mo"
 
 #: include/global_arrays.php:1555
 msgid "1 GByte"
@@ -7393,7 +7393,7 @@ msgstr "%s heures"
 #: include/global_arrays.php:1618
 #, php-format
 msgid "%d GByte"
-msgstr "GBytes %d"
+msgstr "%d Go"
 
 #: include/global_arrays.php:1626 utilities.php:2830 utilities.php:2831
 #: utilities.php:2880
@@ -8613,7 +8613,7 @@ msgstr "Le type de graphique généré ; PNG, GIF ou SVG.  La sélection du typ
 
 #: include/global_form.php:728
 msgid "Height (--height)"
-msgstr "'height' =&gt; 'Hauteur',"
+msgstr "Hauteur (--height)"
 
 #: include/global_form.php:732
 msgid "The height (in pixels) of the graph area within the graph. This area does not include the legend, axis legends, or title."
@@ -9750,7 +9750,7 @@ msgstr "Chemin de sondage alternatif"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Emplacement du fichier binaire de la colonne vertébrale"
+msgstr "Emplacement du fichier binaire Spine"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
@@ -9758,7 +9758,7 @@ msgstr "Le chemin vers le binaire de la colonne vertébrale."
 
 #: include/global_settings.php:226
 msgid "Spine Config File Path"
-msgstr "Chemin du fichier de configuration de la colonne verté"
+msgstr "Chemin du fichier de configuration de Spine"
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
@@ -10122,7 +10122,7 @@ msgstr "Contenus - Sources alternatives de sécurité"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Les noms de domaine délimités par l'espace qui seront autorisés à être accessibles en dehors du serveur Web lui-même. Ceci est important pour les utilisateurs qui choisissent d'utiliser un CDN ou un site d'hébergement. Les sources peuvent inclure des caractères génériques par exemple : *.mydomain.com, ou un protocole, par exemple : https://*.example.com. Ces sources alternatives incluent uniquement les types Image, CSS et JavaScript."
+msgstr "Noms de domaine séparés par des espaces qui seront autorisés à être consultés en dehors du serveur Web lui-même. Ceci est important pour les utilisateurs qui choisissent d'utiliser un CDN ou un site d'hébergement. Les sources peuvent inclure des caractères génériques, par exemple : *.mydomain.com, ou un protocole, par exemple : https://*.example.com. Ces sources alternatives incluent uniquement les types Image, CSS et JavaScript."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10214,7 +10214,7 @@ msgstr "Filets de l'appareil"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Le nombre par défaut de threads de périphérique.  Ceci s'applique uniquement lors de l'utilisation du collecteur de données de la colonne vertébrale."
+msgstr "Le nombre par défaut de threads de périphérique. Cela s'applique uniquement lors de l'utilisation du collecteur de données Spine."
 
 #: include/global_settings.php:656
 #, php-format
@@ -11153,7 +11153,7 @@ msgstr "Il s'agit d'une longueur minimale des mots de passe autorisés."
 
 #: include/global_settings.php:1592
 msgid "Require Mix Case"
-msgstr "Nécessite une mallette de mélange"
+msgstr "Exiger une casse mixte"
 
 #: include/global_settings.php:1593
 msgid "This will require new passwords to contains both lower and upper-case characters."
@@ -11161,7 +11161,7 @@ msgstr "Cela nécessitera que les nouveaux mots de passe contiennent à la fois 
 
 #: include/global_settings.php:1598
 msgid "Require Number"
-msgstr "Exiger un N° de TVA"
+msgstr "Exiger un chiffre"
 
 #: include/global_settings.php:1599
 msgid "This will require new passwords to contain at least 1 numerical character."
@@ -11209,7 +11209,7 @@ msgstr "Mémoriser ce nombre d'anciens mots de passe et interdire leur réutilis
 
 #: include/global_settings.php:1649
 msgid "1 Change"
-msgstr "1. Change"
+msgstr "1 modification"
 
 #: include/global_settings.php:1650 include/global_settings.php:1651
 #: include/global_settings.php:1652 include/global_settings.php:1653
@@ -11282,7 +11282,7 @@ msgstr "Port SSL"
 
 #: include/global_settings.php:1722
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "Port TCP/UDP pour les communications non SSL."
+msgstr "Port TCP de LDAPS pour les communications SSL. La valeur par défaut est 636."
 
 #: include/global_settings.php:1729 user_domains.php:444
 msgid "Protocol Version"
@@ -11730,7 +11730,7 @@ msgstr "Durée d'exécution maximale du script de mise à jour RRD"
 
 #: include/global_settings.php:2151
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "Si le boost poller dépasse cette durée d'exécution, un avertissement sera placé dans le journal des cactus,"
+msgstr "Si le collecteur Boost dépasse cette durée d'exécution, un avertissement sera inscrit dans le journal de Cacti,"
 
 #: include/global_settings.php:2157
 msgid "Enable direct population of poller_output_boost table"
@@ -12056,7 +12056,7 @@ msgstr "Cette valeur représente le nombre maximal de pics à supprimer d'un gra
 #: include/global_settings.php:2518 include/global_settings.php:2519
 #, php-format
 msgid "%d Spikes"
-msgstr "d Pointes %d"
+msgstr "%d pointes"
 
 #: include/global_settings.php:2523
 msgid "RRDfile Backup Directory"
@@ -12676,7 +12676,7 @@ msgstr "Élément de règle [modifier l'élément de règle pour %s : %s]"
 #: lib/api_automation.php:2314
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
-msgstr "Élément de règle [new rule item for %s : %s]"
+msgstr "Élément de règle [nouvel élément de règle pour %s : %s]"
 
 #: lib/api_automation.php:3203
 msgid "Added by Cacti Automation"
@@ -12901,7 +12901,7 @@ msgstr "%s Mo"
 #: lib/boost.php:153
 #, php-format
 msgid "%s KBytes"
-msgstr "GBytes %s"
+msgstr "%s Ko"
 
 #: lib/boost.php:156
 #, php-format
@@ -12990,7 +12990,7 @@ msgstr "AutoM8"
 
 #: lib/clog_webapi.php:594
 msgid "Non Stats"
-msgstr "Statistiques"
+msgstr "Sans statistiques"
 
 #: lib/clog_webapi.php:595
 msgid "Boost"
@@ -13159,7 +13159,7 @@ msgstr "Champ non valide <index_order>%s</index_order>"
 
 #: lib/data_query.php:736 lib/data_query.php:919
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Doit contenir uniquement des champs d'entrée< direction> </direction> ou d'entrée-sortie< direction> </direction>"
+msgstr "Doit contenir uniquement des champs &lt;direction&gt;input&lt;/direction&gt; ou &lt;direction&gt;input-output&lt;/direction&gt;"
 
 #: lib/data_query.php:753
 msgid "Data Query returned no indexes."
@@ -13368,7 +13368,7 @@ msgstr "Résultat ignoré pour les données @ '%s' [key='%s', value='%s']"
 #: lib/data_query.php:1267
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
-msgstr "Got SNMP get result for data @ '%s' [value='%s'] (index : %s)"
+msgstr "Résultat SNMP get obtenu pour les données à '%s' [valeur='%s'] (index : %s)"
 
 #: lib/data_query.php:1297
 #, php-format
@@ -13404,12 +13404,12 @@ msgstr "CHAÎNE D'OCTET trouvée '%s' valeur décodée : '%s'"
 #: lib/data_query.php:1450 lib/data_query.php:1499
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
-msgstr "Article trouvé [%s='%s'] index : %s [from regexp oid parse]"
+msgstr "Élément trouvé [%s='%s'] index : %s [depuis l'analyse OID par expression régulière]"
 
 #: lib/data_query.php:1527
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
-msgstr "Article trouvé [%s='%s'] index : %s [from regexp oid value parse]"
+msgstr "Élément trouvé [%s='%s'] index : %s [depuis l'analyse de valeur OID par expression régulière]"
 
 #: lib/data_query.php:1753
 #, php-format
@@ -13588,7 +13588,7 @@ msgstr "L'authentification a échoué pour %s"
 #: lib/functions.php:5734
 #, php-format
 msgid "HELO failed: %s"
-msgstr "Échec de l'HÉLICOPTÈRE : %s"
+msgstr "Échec de HELO : %s"
 
 #: lib/functions.php:5737
 #, php-format
@@ -13924,7 +13924,7 @@ msgstr "Contribuer au projet"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
-msgstr "<g id=\"1\">tionnels</g><g id=\"2\">\t</g><g id=\"3\">• Aide élaboration de</g>"
+msgstr "Aide au développement"
 
 #: lib/html.php:2894
 msgid "Donation & Sponsoring"
@@ -14168,7 +14168,7 @@ msgstr "Entrez un chemin de réseau valable"
 
 #: lib/html_form.php:821
 msgid "Directory Found"
-msgstr "Aucune annonce n'à été trouvé"
+msgstr "Répertoire trouvé"
 
 #: lib/html_form.php:823
 msgid "Path is a File and not a Directory"
@@ -15116,7 +15116,7 @@ msgstr "Vous essayez d'installer Cacti %s sur une base de données 0.6.x. Malheu
 
 #: lib/installer.php:1685
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Pour pouvoir continuer, vous <b>DEVEZ</b> créer une nouvelle base de données, y importer «&nbsp;cactus.sql&nbsp;»&nbsp;:"
+msgstr "Pour pouvoir continuer, vous <b>DEVEZ</b> créer une nouvelle base de données et y importer « cacti.sql » :"
 
 #: lib/installer.php:1687
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
@@ -15128,7 +15128,7 @@ msgstr "REMARQUE : vos données existantes ne seront pas modifiées, ni elles n
 
 #: lib/installer.php:1695
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
-msgstr "Vous avez créé une nouvelle base de données, mais vous n'avez pas encore importé le fichier 'cactus.sql'. Sur la ligne de commande, exécutez ce qui suit pour continuer :"
+msgstr "Vous avez créé une nouvelle base de données, mais vous n'avez pas encore importé le fichier 'cacti.sql'. En ligne de commande, exécutez ce qui suit pour continuer :"
 
 #: lib/installer.php:1697
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
@@ -15668,11 +15668,11 @@ msgstr "L'installation ne peut pas continuer car aucun profil n'a pu être trouv
 
 #: lib/installer.php:2658
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
-msgstr "Cela peut se produire si vous avez une base de données vierge et que vous n'avez pas encore importé le fichier cactus.sql"
+msgstr "Cela peut se produire si vous avez une base de données vierge et que vous n'avez pas encore importé le fichier cacti.sql"
 
 #: lib/installer.php:2666
 msgid "Template Setup"
-msgstr "Quitter le paramétrage du modèle"
+msgstr "Configuration du modèle"
 
 #: lib/installer.php:2669
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
@@ -16062,7 +16062,7 @@ msgstr "Pas de %s"
 #: lib/installer.php:3778
 #, php-format
 msgid "%s - N/A"
-msgstr "%s Jours"
+msgstr "%s - N/D"
 
 #: lib/installer.php:3778 lib/installer.php:3780
 msgid "Web"
@@ -16071,7 +16071,7 @@ msgstr "Web"
 #: lib/installer.php:3780 lib/installer.php:3783
 #, php-format
 msgid "%s - No"
-msgstr "%s Numéro"
+msgstr "%s - Non"
 
 #: lib/installer.php:3783
 msgid "Cli"
@@ -16905,7 +16905,7 @@ msgstr "Il est recommandé d'activer InnoDB dans toute %s version supérieure à
 #: lib/utility.php:1341
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
-msgstr "En fonction du nombre de connexions et de l'utilisation du collecteur de données de la colonne vertébrale, %s aura besoin de nombreuses connexions.  Le calcul pour la colonne vertébrale est : total_connections = total_processes * (total_threads + script_servers + 1), alors vous devez laisser de la marge pour les connexions des utilisateurs, qui changeront en fonction du nombre de comptes de connexion simultanés."
+msgstr "Selon le nombre de connexions et l'utilisation du collecteur de données Spine, %s aura besoin de nombreuses connexions. Le calcul pour Spine est : total_connections = total_processes * (total_threads + script_servers + 1), puis vous devez prévoir une marge pour les connexions utilisateurs, qui variera selon le nombre de comptes connectés simultanément."
 
 #: lib/utility.php:1346
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
@@ -17145,7 +17145,7 @@ msgstr "Voir page"
 
 #: links.php:444
 msgid "Sort for Ordering"
-msgstr "Pour commander"
+msgstr "Trier pour le classement"
 
 #: links.php:453
 msgid "No Pages Found"
@@ -17285,7 +17285,7 @@ msgstr "Aucun récepteur de notification SNMP"
 #: managers.php:295
 #, php-format
 msgid "SNMP Notification Receiver [edit: %s]"
-msgstr "Récepteur de notification SNMP [edit : %s]"
+msgstr "Récepteur de notifications SNMP [modifier : %s]"
 
 #: managers.php:297
 msgid "SNMP Notification Receiver [new]"
@@ -17423,7 +17423,7 @@ msgstr "Erreur dans la requête des données."
 
 #: package_import.php:388
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
-msgstr "Voir le cactus.log pour plus d'informations.  Il se peut que vous ayez une erreur de clé API, que le package ait été modifié ou que l'emplacement ne soit pas disponible."
+msgstr "Consultez le fichier cacti.log pour plus d'informations. Il se peut qu'une erreur de clé API se soit produite, que le paquet ait été altéré ou que l'emplacement ne soit pas disponible."
 
 #: package_import.php:388
 #, php-format
@@ -17432,7 +17432,7 @@ msgstr "Le téléchargement ou la validation du paquet « %s » a échoué."
 
 #: package_import.php:394
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
-msgstr "Voir le cactus.log pour plus d'informations.  Il se peut que vous ayez eu une erreur de clé API ou que le package ait été modifié, ou que l'emplacement ne soit pas disponible"
+msgstr "Consultez le fichier cacti.log pour plus d'informations. Il se peut qu'une erreur de clé API se soit produite, que le paquet ait été altéré ou que l'emplacement ne soit pas disponible"
 
 #: package_import.php:394
 msgid "The package download or validation failed"
@@ -17604,7 +17604,7 @@ msgstr "Ce plugin nécessite d'abord l'installation des plugins suivants."
 
 #: plugins.php:636
 msgid "The version of this Plugin."
-msgstr "Une version premium de ce plugin est disponible à ce lien."
+msgstr "La version de ce plugiciel."
 
 #: plugins.php:639
 msgid "Load Order"
@@ -18312,7 +18312,7 @@ msgstr "Sélectionner les fichiers"
 
 #: settings.php:573
 msgid "Files Selected"
-msgstr "Supprimez tous les éléments sélectionnés"
+msgstr "Fichiers sélectionnés"
 
 #: settings.php:596
 msgid "Select Template(s)"
@@ -18636,7 +18636,7 @@ msgstr "Erreur dans le modèle"
 #: templates_import.php:147
 #, php-format
 msgid "See the cacti.log for more information, and review the XML file for proper syntax.  The error details are shown below.<br><br><b>Errors:</b><br>%s"
-msgstr "Consultez le cactus.log pour plus d'informations et examinez le fichier XML pour la syntaxe appropriée.  Les détails de l'erreur sont indiqués ci-dessous.<br><br><b>Erreurs&nbsp;:</b><br>%s"
+msgstr "Consultez le fichier cacti.log pour plus d'informations et vérifiez la syntaxe du fichier XML. Les détails des erreurs sont affichés ci-dessous.<br><br><b>Erreurs :</b><br>%s"
 
 #: templates_import.php:147
 #, php-format
@@ -19639,7 +19639,7 @@ msgstr "Adhésion"
 
 #: user_group_admin.php:801
 msgid "Group Member"
-msgstr "Membro do Grupo"
+msgstr "Membre du groupe"
 
 #: user_group_admin.php:811
 msgid "No Matching Group Members Found"
@@ -19684,7 +19684,7 @@ msgstr "Gestion des groupes d'utilisateurs"
 
 #: user_group_admin.php:2162
 msgid "No User Groups Found"
-msgstr "Keine Benutzergruppe gefunden"
+msgstr "Aucun groupe d'utilisateurs trouvé"
 
 #: user_group_admin.php:2858
 msgid "Show Members"
@@ -19806,7 +19806,7 @@ msgstr "Processus Simultanés"
 
 #: utilities.php:431
 msgid "Max Threads"
-msgstr "Max OSM Threads"
+msgstr "Nombre maximal de fils d'exécution"
 
 #: utilities.php:438
 msgid "PHP Servers"
@@ -20139,7 +20139,7 @@ msgstr "Il s'agit des données qui sont transmises au collecteur à chaque exéc
 
 #: utilities.php:2370
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
-msgstr "Le cache de requête de données stocke les informations recueillies à partir des types d'entrée de requête de données. Les valeurs de ces champs peuvent être utilisées dans la zone de texte de Graphs for Legends, Vertical Labels et GPRINTS ainsi que dans les CDEF."
+msgstr "Le cache de requête de données stocke les informations recueillies à partir des types d'entrée de requête de données. Les valeurs de ces champs peuvent être utilisées dans la zone de texte des graphiques pour les légendes, les étiquettes verticales et les GPRINT, ainsi que dans les CDEF."
 
 #: utilities.php:2372
 msgid "Rebuild Poller Cache"
@@ -20259,7 +20259,7 @@ msgstr "Améliorez les mises à jour à la demande :"
 
 #: utilities.php:2753
 msgid "Running Processes:"
-msgstr "Citation :"
+msgstr "Processus en cours :"
 
 #: utilities.php:2758
 msgid "Total Poller Items:"
@@ -20455,7 +20455,7 @@ msgstr "OIDs"
 
 #: utilities.php:3202
 msgid "Column Data"
-msgstr "Mapper le champ"
+msgstr "Données de colonne"
 
 #: utilities.php:3202
 msgid "Scalar"
