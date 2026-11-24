@@ -283,7 +283,7 @@ function collectThemeCoverage(test) {
   if (!directory) return;
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.browserSourceSnapshot = sourceHashes(producerSources());
-    await page.coverage.startJSCoverage();
+    await page.coverage.startJSCoverage({ resetOnNavigation: false });
   });
   test.afterEach(async ({ page }, testInfo) => {
     const map = createCoverageMap({});
