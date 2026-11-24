@@ -2224,7 +2224,7 @@ msgstr "Версія SNMP: <b>%s</b>"
 #: automation_snmp.php:370
 #, php-format
 msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP Community/Ім`я користувача: %s"
+msgstr "SNMP Community/Ім'я користувача: <b>%s</b>"
 
 #: automation_snmp.php:376
 msgid "Remove SNMP Item"
@@ -5216,7 +5216,7 @@ msgstr "Оберіть Шаблон Графіків"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Виберіть Шаблон Графіків для застосування до цього Графіка. Будь ласка, зверніть увагу, що ви можете змінити лише Шаблони Графіків на 100%% сумісний Шаблон Графіків, що означає, що він містить ідентичні Джерела Даних."
+msgstr "Виберіть шаблон графіка для застосування до цього графіка. Зверніть увагу, що шаблон графіка можна змінити лише на 100%% сумісний шаблон графіка, тобто такий, що містить ідентичні джерела даних."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -6699,7 +6699,7 @@ msgstr "Кожен день"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "%d Потік"
+msgstr "1 потік"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -10764,7 +10764,7 @@ msgstr "Час завершення робочих годин. Формат: hh:
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "%d Тижнів"
+msgstr "Приховати вихідні"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -12430,7 +12430,7 @@ msgstr "Налаштування користувача"
 
 #: include/global_settings.php:2920
 msgid "1 Week"
-msgstr "%d Тиждень"
+msgstr "1 тиждень"
 
 #: include/global_settings.php:2933
 msgid "Auto Log Out Time"
@@ -16956,7 +16956,7 @@ msgstr "За можливостей віддаленого опитування 
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Під час використання Cacti Performance Booster та вибору рушія зберігання в пам'яті (MEMORY) потрібно встигати скидати буфер Performance Booster до того, як закінчиться пам'ять таблиць. Це робиться двома способами: по-перше, зменшенням розміру стовпця виводу до оптимального (у таблицях poller_output та poller_output_boost); по-друге, виділенням більшої кількості пам'яті для таблиць у пам'яті. Ми умовно рекомендуємо 10%% системної пам'яті, але якщо ви використовуєте SSD-накопичувачі або маєте меншу систему, можете проігнорувати цю рекомендацію чи обрати інший рушій зберігання. Очікуване споживання пам'яті таблицями Performance Booster можна переглянути в меню Консоль -> Системні утиліти -> Перегляд стану Boost."
+msgstr "Під час використання Cacti Performance Booster та вибору рушія зберігання в пам'яті (MEMORY) потрібно встигати скидати буфер Performance Booster до того, як у системі закінчиться місце для таблиць у пам'яті. Це робиться двома способами: по-перше, зменшенням розміру стовпця виводу до оптимального (у таблицях poller_output та poller_output_boost); по-друге, виділенням більшої кількості пам'яті для таблиць у пам'яті. Ми умовно рекомендуємо 10%% системної пам'яті, але якщо ви використовуєте SSD-накопичувачі або маєте меншу систему, можете проігнорувати цю рекомендацію чи обрати інший рушій зберігання. Очікуване споживання таблиць Performance Booster можна переглянути в розділі Консоль -> Системні утиліти -> Перегляд стану Boost."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -20722,7 +20722,6 @@ msgstr "Змін індексів не виявлено, кеш опитувач
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
 msgstr "Синхронізація не вдалася. Докладніше див. у журналі."
 
 #: graph.php:512

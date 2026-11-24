@@ -20,7 +20,7 @@ msgstr ""
 
 #: about.php:29 include/global_arrays.php:2654 lib/html.php:2900
 msgid "About Cacti"
-msgstr "حول الصبار"
+msgstr "حول Cacti"
 
 #: about.php:42
 msgid "Cacti is designed to be a complete graphing solution based on the RRDtool Time Series Database (TSDB) and Graphing solution. Its goal is to make the Network Administrator's job easier by taking care of all the important details necessary to create meaningful Graphs."
@@ -29,7 +29,7 @@ msgstr "تم تصميم Cacti ليكون حلا بيانيا كاملا يعتم
 #: about.php:44
 #, php-format
 msgid "Please see the official %sCacti website%s for information on how to use Cacti, get support, and updates."
-msgstr "يرجى الاطلاع على موقع %sCacti الرسمي%s للحصول على معلومات حول كيفية استخدام الصبار والحصول على الدعم والتحديثات."
+msgstr "يُرجى زيارة %sموقع Cacti الرسمي%s للحصول على معلومات حول كيفية استخدام Cacti والحصول على الدعم والتحديثات."
 
 #: about.php:48
 msgid "Active Developers"
@@ -37,7 +37,7 @@ msgstr "المطورون النشطون"
 
 #: about.php:49
 msgid "Developers working on Cacti, its Architecture, Documentation and Future Releases."
-msgstr "المطورين الذين يعملون على الصبار وهندسته المعمارية وتوثيقه والإصدارات المستقبلية."
+msgstr "المطورون العاملون على Cacti وبنيته المعمارية ووثائقه وإصداراته المستقبلية."
 
 #: about.php:61
 msgid "Honorable Mentions"
@@ -53,7 +53,7 @@ msgstr "الأعضاء الفخريون"
 
 #: about.php:71
 msgid "Members of the original Cacti Group that have since moved on in their careers.  We continue to wish them the best."
-msgstr "أعضاء مجموعة الصبار الأصلية الذين انتقلوا منذ ذلك الحين في حياتهم المهنية.  وما زلنا نتمنى لهم الأفضل."
+msgstr "أعضاء مجموعة Cacti الأصلية الذين انتقلوا منذ ذلك الحين إلى مراحل أخرى في مسيرتهم المهنية. ما زلنا نتمنى لهم كل التوفيق."
 
 #: about.php:84
 msgid "Thanks"
@@ -66,11 +66,11 @@ msgstr "شكر خاص جدا ل %sTobi Oetiker%s ، مبتكر %sRRDtool%s و %s
 
 #: about.php:90
 msgid "The users of Cacti"
-msgstr "مستخدمي الصبار"
+msgstr "مستخدمو Cacti"
 
 #: about.php:91
 msgid "Especially anyone who has taken the time to create an issue report, or otherwise help fix a Cacti related problems. Also to anyone who has contributed to supporting Cacti."
-msgstr "خاصةً أي شخص استغرق وقتًا لإنشاء تقرير المشكلة ، أو يساعد في حل مشكلات متعلقة بـ Cacti. أيضا لأي شخص ساهم في دعم الصبار."
+msgstr "ولا سيما كل من خصص وقتًا لإنشاء تقرير مشكلة أو ساعد في حل مشكلات متعلقة بـ Cacti، وكذلك كل من ساهم في دعم Cacti."
 
 #: about.php:96
 msgid "License"
@@ -578,7 +578,7 @@ msgstr "مجموعة / تحديث الفلاتر"
 #: user_admin.php:2952 user_admin.php:3052 user_admin.php:3152
 #: user_admin.php:3252 user_domains.php:735
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1576 automation_snmp.php:741
 #: automation_templates.php:433 cdef.php:788 color.php:635 data_debug.php:1067
@@ -884,11 +884,11 @@ msgstr "تغيير كلمة المرور"
 
 #: auth_changepassword.php:352
 msgid "Please enter your current password and your new<br>Cacti password."
-msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر الصبار."
+msgstr "يُرجى إدخال كلمة المرور الحالية وكلمة مرور<br>Cacti الجديدة."
 
 #: auth_changepassword.php:354
 msgid "Please enter your new Cacti password."
-msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر الصبار."
+msgstr "يُرجى إدخال كلمة مرور Cacti الجديدة."
 
 #: auth_changepassword.php:362 auth_login.php:341 auth_login.php:344
 #: include/global_settings.php:1826 lib/functions.php:5789
@@ -965,7 +965,7 @@ msgstr "تم رفض الوصول! حساب المستخدم مقفل."
 
 #: auth_login.php:314 lib/html_tree.php:164
 msgid "Login to Cacti"
-msgstr "تسجيل الدخول إلى الصبار"
+msgstr "تسجيل الدخول إلى Cacti"
 
 #: auth_login.php:321
 msgid "User Login"
@@ -1117,7 +1117,7 @@ msgstr "حذف الجهاز (الأجهزة)"
 #: lib/api_automation.php:226 lib/api_automation.php:1265
 #: lib/html_utility.php:1458 pollers.php:51
 msgid "Down"
-msgstr "المرض"
+msgstr "متوقف"
 
 #: automation_devices.php:55 automation_devices.php:313
 #: automation_devices.php:425 automation_devices.php:436
@@ -1279,7 +1279,7 @@ msgstr "تصدير إلى ملف"
 #: automation_devices.php:529 data_debug.php:1068 lib/clog_webapi.php:253
 #: lib/clog_webapi.php:571 managers.php:806
 msgid "Purge"
-msgstr "شربة، مسهل. يسهل"
+msgstr "تطهير"
 
 #: automation_devices.php:529
 msgid "Purge Discovered Devices"
@@ -1777,7 +1777,7 @@ msgstr "استخدم NetBIOS لمحاولة حل اسم المضيف لأعلى 
 
 #: automation_networks.php:569
 msgid "Automatically Add to Cacti"
-msgstr "تلقائيا إضافة إلى الصبار"
+msgstr "إضافة تلقائية إلى Cacti"
 
 #: automation_networks.php:570
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Cacti."
@@ -1984,7 +1984,7 @@ msgstr "ثانية"
 
 #: automation_networks.php:704
 msgid "Third"
-msgstr "﻿الأول"
+msgstr "الثالث"
 
 #: automation_networks.php:712
 msgid "Day(s) of Week"
@@ -2584,7 +2584,7 @@ msgstr "لم يتم العثور على قواعد شجرة"
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
-msgstr "تحذير نظام الصبار"
+msgstr "تحذير نظام Cacti"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
@@ -4750,7 +4750,7 @@ msgstr "لا يمكن للكتابة في دليل ذاكرة التخزين ا�
 
 #: graph_realtime.php:474 graph_realtime.php:487
 msgid "Cacti Real-time Graphing"
-msgstr "الصبار في الوقت الحقيقي الرسوم البيانية"
+msgstr "الرسوم البيانية الفورية في Cacti"
 
 #: graph_realtime.php:505 utilities.php:2579
 msgid "Refresh Interval"
@@ -5321,7 +5321,7 @@ msgstr "قالب الرسم البياني المحدد"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "اختر قالب الرسم البياني لتطبيقه على هذا الرسم البياني. يرجى ملاحظة أنه يمكنك فقط تغيير قوالب الرسم البياني إلى قالب رسم بياني متوافق بنسبة 100٪ ، مما يعني أنه يحتوي على مصادر بيانات متطابقة."
+msgstr "اختر قالب رسم بياني لتطبيقه على هذا الرسم البياني. يُرجى ملاحظة أنه لا يمكنك تغيير قوالب الرسم البياني إلا إلى قالب رسم بياني متوافق بنسبة 100%% بحيث يتضمن مصادر بيانات متطابقة."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5515,16 +5515,16 @@ msgstr "تعين كافتراضي"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "تحذير: صفحة الصبار: %s للمستخدم: %s إنشاء خطأ فادح %d!"
+msgstr "تحذير: صفحة Cacti:%s للمستخدم:%s ولّدت خطأً فادحًا %d!"
 
 #: help.php:99
 #, php-format
 msgid "The Document page '%s' count not be reached.  The Cacti Documentation site is not reachable.  The http error was '%s'.  Consider downloading an official release to obtain the latest documentation and hosting the documentation locally."
-msgstr "لم يتم الوصول إلى عدد \"%s\" لصفحة المستند.  لا يمكن الوصول إلى موقع توثيق الصبار.  كان خطأ http \"%s\".  ضع في اعتبارك تنزيل إصدار رسمي للحصول على أحدث الوثائق واستضافة الوثائق محليا."
+msgstr "تعذر الوصول إلى صفحة المستند '%s'. لا يمكن الوصول إلى موقع وثائق Cacti. كان خطأ HTTP هو '%s'. فكّر في تنزيل إصدار رسمي للحصول على أحدث الوثائق واستضافتها محليًا."
 
 #: help.php:113
 msgid "Cacti GitHub Site"
-msgstr "موقع جيثب الصبار"
+msgstr "موقع Cacti على GitHub"
 
 #: help.php:113
 msgid "Open a ticket at "
@@ -7114,7 +7114,7 @@ msgstr "التطبيق ذات الصلة"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
-msgstr "الصبار ذات الصلة"
+msgstr "مرتبط بـ Cacti"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
@@ -8206,7 +8206,7 @@ msgstr "عرض استقبال إشعارات SNMP"
 
 #: include/global_arrays.php:2594
 msgid "Cacti Settings"
-msgstr "إعدادات الصبار"
+msgstr "إعدادات Cacti"
 
 #: include/global_arrays.php:2600
 msgid "External Link"
@@ -8218,7 +8218,7 @@ msgstr "العمل:"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "مساعدة الصبار"
+msgstr "مساعدة Cacti"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8634,7 +8634,7 @@ msgstr "الاسم المعطى لقالب البيانات هذا."
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "اختر اسمًا لمصدر البيانات هذا. يمكن أن تتضمن متغيرات الاستبدال مثل | host_description | أو | query_fieldName |. للحصول على قائمة كاملة بعلامات الاستبدال المعتمدة ، يرجى الاطلاع على وثائق Cacti."
+msgstr "اختر اسمًا لمصدر البيانات هذا. يمكن أن يتضمن متغيرات استبدال مثل |host_description| أو |query_fieldName|. للحصول على قائمة كاملة بوسوم الاستبدال المدعومة، يُرجى الرجوع إلى وثائق Cacti."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8731,7 +8731,7 @@ msgstr "العنوان (- العنوان)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "الاسم الذي تتم طباعته على الرسم البياني. يمكن أن تتضمن متغيرات الاستبدال مثل | host_description | أو | query_fieldName |. للحصول على قائمة كاملة بعلامات الاستبدال المعتمدة ، يرجى الاطلاع على وثائق Cacti."
+msgstr "الاسم الذي يُطبع على الرسم البياني. يمكن أن يتضمن متغيرات استبدال مثل |host_description| أو |query_fieldName|. للحصول على قائمة كاملة بوسوم الاستبدال المدعومة، يُرجى الرجوع إلى وثائق Cacti."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9844,7 +9844,7 @@ msgstr "تسجيل الدخول"
 
 #: include/global_settings.php:172
 msgid "Cacti Log Path"
-msgstr "الصبار سجل المسار"
+msgstr "مسار سجل Cacti"
 
 #: include/global_settings.php:173
 msgid "The path to your Cacti log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9908,7 +9908,7 @@ msgstr "RRDfile السيارات النظيفة"
 
 #: include/global_settings.php:240
 msgid "Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Cacti"
-msgstr "أرشفة تلقائيا أو حذف RRDfiles عندما تتم إزالة مصادر البيانات المقابلة لها من الصبار"
+msgstr "أرشفة ملفات RRDfiles أو حذفها تلقائيًا عند إزالة مصادر البيانات المقابلة لها من Cacti"
 
 #: include/global_settings.php:245
 msgid "RRDfile Auto Clean Method"
@@ -9916,7 +9916,7 @@ msgstr "RRDfile طريقة تنظيف السيارات"
 
 #: include/global_settings.php:246
 msgid "The method used to Clean RRDfiles from Cacti after their Data Sources are deleted."
-msgstr "الطريقة المستخدمة لتنظيف RRDfiles من الصبار بعد حذف مصادر البيانات الخاصة بهم."
+msgstr "الطريقة المستخدمة لتنظيف ملفات RRDfiles من Cacti بعد حذف مصادر البيانات الخاصة بها."
 
 #: include/global_settings.php:250
 msgid "Archive"
@@ -10020,7 +10020,7 @@ msgstr "دعم اللغة"
 
 #: include/global_settings.php:343
 msgid "Choose 'enabled' to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "اختر &quot;تمكين&quot; للسماح بترجمة الصبار. يتطلب الوضع المقيد أن يتم دعم اللغة المطلوبة أيضًا من خلال جميع المكونات الإضافية التي يتم تثبيتها على نظامك. إذا لم تكن هذه هي الحقيقة فسيتم عرض كل شيء باللغة الإنجليزية."
+msgstr "اختر 'مفعّل' للسماح بترجمة واجهة Cacti. يتطلب الوضع الصارم أن تكون اللغة المطلوبة مدعومة أيضًا من قِبل جميع المكوّنات الإضافية المثبّتة على نظامك، وإلا فسيتم عرض كل شيء باللغة الإنجليزية."
 
 #: include/global_settings.php:349
 msgid "Language"
@@ -10184,7 +10184,7 @@ msgstr "عند التمكين ، لن يقفل Cacti الرسوم البياني
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
-msgstr "إخفاء الصبار لوحة القيادة"
+msgstr "إخفاء لوحة تحكم Cacti"
 
 #: include/global_settings.php:480
 msgid "For use with Cacti's External Link Support.  Using this setting, you can hide the Cacti Dashboard, so you can display just your own page."
@@ -10555,7 +10555,7 @@ msgstr "قالب"
 
 #: include/global_settings.php:869 include/global_settings.php:2577
 msgid "Please select one of the available Themes to skin your Cacti with."
-msgstr "يرجى تحديد واحد من الموضوعات المتاحة للبشرة مع الصبار."
+msgstr "يُرجى تحديد أحد السمات المتاحة لتخصيص مظهر Cacti."
 
 #: include/global_settings.php:875
 msgid "Table Settings"
@@ -10747,7 +10747,7 @@ msgstr "البيانات المخصصة"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "لاستخدامها عند تنسيق | date_time | على الرسم البياني"
+msgstr "يُستخدم عند تنسيق |date_time| على الرسم البياني"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10941,7 +10941,7 @@ msgstr "كرون الفاصل"
 
 #: include/global_settings.php:1241
 msgid "The frequency that the Cacti data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Cacti data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
-msgstr "تكرار بدء تشغيل مجمع بيانات الصبار. يمكنك استخدام crontab ، أو مهمة مجدولة (لنظام التشغيل windows) ، أو خدمة cactid systemd للتحكم في تشغيل مُجمع بيانات Cacti. للحصول على إرشادات حول استخدام البرنامج الخفي Cactid ، راجع ملف README.md في دليل الخدمة."
+msgstr "التكرار الذي سيُبدأ به تشغيل مجمّع بيانات Cacti. يمكنك استخدام crontab أو مهمة مجدولة (لنظام Windows) أو خدمة systemd الخاصة بـ cactid للتحكم في تشغيل مجمّع بيانات Cacti. للحصول على إرشادات حول استخدام الخدمة الخلفية cactid، راجع ملف README.md في دليل الخدمة."
 
 #: include/global_settings.php:1247
 msgid "Balance Process Load"
@@ -11752,7 +11752,7 @@ msgstr "الحد الأقصى لحجم رسالة البريد الإلكترو�
 
 #: include/global_settings.php:2026
 msgid "Poller Logging Level for Cacti Reporting"
-msgstr "مستوى تسجيل مستقطب لتقارير الصبار"
+msgstr "مستوى تسجيل المستطلِع (Poller) لتقارير Cacti"
 
 #: include/global_settings.php:2027
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -11804,7 +11804,7 @@ msgstr "تمكين تحديث RRD عند الطلب"
 
 #: include/global_settings.php:2074
 msgid "Should Boost enable on demand RRD updating in Cacti?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
-msgstr "يجب تمكين Boost على تحديث الطلب على RRD في الصبار؟ في حالة تعطيل هذا التغيير ، لن يسري هذا التغيير إلا بعد دورة الاستقصاء التالية. عندما يكون لديك أدوات تجميع البيانات عن بُعد ، يجب تشغيل هذه الإعدادات."
+msgstr "هل ينبغي لميزة Boost تمكين تحديث ملفات RRD عند الطلب في Cacti؟ في حال التعطيل، لن يسري هذا التغيير إلا بعد دورة الاستطلاع التالية. عندما يكون لديك مجمّعو بيانات عن بُعد، يجب أن يكون هذا الإعداد مفعّلًا."
 
 #: include/global_settings.php:2079
 msgid "System Level RRD Updater"
@@ -11968,7 +11968,7 @@ msgstr "تمكين فحص ملف RRDfile"
 
 #: include/global_settings.php:2265
 msgid "Should RRDfile check be enabled for this Cacti system?"
-msgstr "هل يجب تمكين فحص ملف RRDلنظام الصبار هذا؟"
+msgstr "هل ينبغي تمكين فحص ملف RRDfile لنظام Cacti هذا؟"
 
 #: include/global_settings.php:2270
 msgid "Number of RRDfile Check Processes"
@@ -12157,7 +12157,7 @@ msgstr "النسبة المئوية للتغيير"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "تمثل هذه القيمة النسبة المئوية فوق متوسط العينة المعدل بعد إزالة القيم المتطرفة من العينة. على سبيل المثال ، فإن نسبة التباين بنسبة 100 ٪٪ على متوسط معدّل قدره 50 ستزيل أي عينة أعلى من الكمية 100 من الرسم البياني."
+msgstr "تمثل هذه القيمة النسبة المئوية فوق متوسط العينة المعدّل بعد إزالة القيم الشاذة من العينة. على سبيل المثال، فإن نسبة تباين تبلغ 100%% على متوسط معدّل قدره 50 ستزيل أي عينة تتجاوز القيمة 100 من الرسم البياني."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12262,11 +12262,11 @@ msgstr "دعم المنطقة الزمنية"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "كيف تريد أن يقدم الصبار التواريخ؟  سيؤدي هذا الإعداد أيضا إلى تغيير طريقة تمثيل تواريخ Cacti Graphs."
+msgstr "كيف ترغب في أن يعرض Cacti التواريخ؟ سيؤدي هذا الإعداد أيضًا إلى تغيير طريقة تمثيل التواريخ في رسوم Cacti البيانية."
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "المنطقة الزمنية لخادم الصبار"
+msgstr "المنطقة الزمنية لخادم Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12314,11 +12314,11 @@ msgstr "تمكين التمرير الأفقي للجداول ، وتعطيل ر
 
 #: include/global_settings.php:2632
 msgid "The date format to use in Cacti."
-msgstr "تنسيق التاريخ لاستخدامها في الصبار."
+msgstr "تنسيق التاريخ المستخدم في Cacti."
 
 #: include/global_settings.php:2639
 msgid "The date separator to be used in Cacti."
-msgstr "فاصل التاريخ ليتم استخدامه في الصبار."
+msgstr "فاصل التاريخ المستخدم في Cacti."
 
 #: include/global_settings.php:2645
 msgid "Page Refresh"
@@ -12604,17 +12604,17 @@ msgstr "بولير جديد"
 
 #: install/install.php:89
 msgid "Cacti Install Help"
-msgstr "تعليمات تثبيت الصبار"
+msgstr "تعليمات تثبيت Cacti"
 
 #: install/install.php:97
 #, php-format
 msgid "Cacti Server v%s - Maintenance"
-msgstr "خادم الصبار v%s - الصيانة"
+msgstr "خادم Cacti الإصدار v%s - الصيانة"
 
 #: install/install.php:107
 #, php-format
 msgid "Cacti Server v%s - Installation Wizard"
-msgstr "خادم الصبار v%s - معالج التثبيت"
+msgstr "خادم Cacti الإصدار v%s - معالج التثبيت"
 
 #: install/install.php:107
 msgid "Refresh current page"
@@ -13025,7 +13025,7 @@ msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على ح
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "فشل تسجيل الدخول إلى الصبار"
+msgstr "فشل تسجيل الدخول إلى Cacti"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -13049,7 +13049,7 @@ msgstr "%s بايت"
 #: lib/clog_webapi.php:136 utilities.php:1672
 #, php-format
 msgid "%s - WEBUI NOTE: Cacti Log Cleared from Web Management Interface."
-msgstr "%s - ملاحظة WEBUI: تم مسح سجل الصبار من واجهة إدارة الويب."
+msgstr "%s - ملاحظة واجهة الويب (WEBUI): تم مسح سجل Cacti من واجهة إدارة الويب."
 
 #: lib/clog_webapi.php:257
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Cacti and Syslog, the log information will remain in Syslog."
@@ -13725,7 +13725,7 @@ msgstr "رابط %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "ميلر خطأ: لا <b>لمعالجة</b> وضع !! <br> إذا كنت تستخدم رابط <i>اختبار البريد</i> ، فيرجى ضبط إعداد <b>البريد الإلكتروني التنبيه</b> ."
+msgstr "خطأ في المرسل: لم يتم تعيين عنوان المستلم!!<br>إذا كنت تستخدم رابط <i>اختبار البريد</i>، فيُرجى ضبط إعداد <b>بريد التنبيه الإلكتروني</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13796,7 +13796,7 @@ msgstr "إرسال رسالة …"
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "رسالة اختبار الصبار"
+msgstr "رسالة اختبار Cacti"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -13809,7 +13809,7 @@ msgstr "رسالة غير مرسلة بسبب فشل اختبار الاتصال
 #: lib/functions.php:6328 lib/functions.php:6397
 #, php-format
 msgid "Cacti disabled plugin %s due to the following error: %s!  See the Cacti logfile for more details."
-msgstr "قام Cacti بتعطيل البرنامج المساعد %s بسبب الخطأ التالي: %s!  راجع ملف سجل الصبار لمزيد من التفاصيل."
+msgstr "قام Cacti بتعطيل المكوّن الإضافي %s بسبب الخطأ التالي: %s! راجع ملف سجل Cacti لمزيد من التفاصيل."
 
 #: lib/functions.php:6503
 #, php-format
@@ -13834,7 +13834,7 @@ msgstr "%s %s"
 #: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
-msgstr "تحذير: مفتاح الصبار تضمين ملف %s مفقود.  الرجاء تحديد موقع هذا الملف واستبداله"
+msgstr "تحذير: ملف التضمين الأساسي %s الخاص بـ Cacti مفقود. يُرجى تحديد موقع هذا الملف واستبداله"
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
@@ -14047,7 +14047,7 @@ msgstr "المخططات"
 
 #: lib/html.php:2884
 msgid "Cacti Project Page"
-msgstr "صفحة مشروع الصبار"
+msgstr "صفحة مشروع Cacti"
 
 #: lib/html.php:2888
 msgid "Spine"
@@ -14067,7 +14067,7 @@ msgstr "اختصارات"
 
 #: lib/html.php:2892
 msgid "Contribute to the Cacti Project"
-msgstr "المساهمة في مشروع الصبار"
+msgstr "المساهمة في مشروع Cacti"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
@@ -14091,7 +14091,7 @@ msgstr "الإبلاغ عن خطأ"
 
 #: lib/html.php:2901
 msgid "Cacti"
-msgstr "صبار"
+msgstr "Cacti"
 
 #: lib/html.php:2903
 msgid "Click to Show/Hide Filter"
@@ -14332,7 +14332,7 @@ msgstr "أدخل مسار دليل صالح"
 #: lib/html_form.php:1484
 #, php-format
 msgid "Cacti Color (%s)"
-msgstr "لون الصبار (%s)"
+msgstr "لون Cacti (%s)"
 
 #: lib/html_form.php:1567
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14594,7 +14594,7 @@ msgstr "الموضوع"
 
 #: lib/html_reports.php:172
 msgid "Cacti Report"
-msgstr "تقرير الصبار"
+msgstr "تقرير Cacti"
 
 #: lib/html_reports.php:173
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14982,11 +14982,11 @@ msgstr "التعبير العادي \"%s\" غير صالح. الخطأ %s"
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "تقتصر تعبيرات الصبار العادية على 50 حرفا فقط لأسباب أمنية."
+msgstr "تقتصر التعبيرات النمطية في Cacti على 50 حرفًا فقط لأسباب أمنية."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "لا يمكن أن تتضمن تعبيرات الصبار العادية الحرف شبه اللوني."
+msgstr "لا يمكن أن تتضمن التعبيرات النمطية في Cacti حرف الفاصلة المنقوطة."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -15091,7 +15091,7 @@ msgstr "نتائج الاستيراد"
 
 #: lib/import.php:3102
 msgid "Cacti would make the following changes if the Package was imported:"
-msgstr "الصبار سيجعل التغييرات التالية إذا تم استيراد الحزمة:"
+msgstr "سيجري Cacti التغييرات التالية إذا تم استيراد الحزمة:"
 
 #: lib/import.php:3104
 msgid "Cacti has imported the following items for the Package:"
@@ -15107,7 +15107,7 @@ msgstr "معاينة"
 
 #: lib/import.php:3116
 msgid "Cacti would make the following changes if the Template was imported:"
-msgstr "الصبار سيجعل التغييرات التالية إذا تم استيراد القالب:"
+msgstr "سيجري Cacti التغييرات التالية إذا تم استيراد القالب:"
 
 #: lib/import.php:3118
 msgid "Cacti has imported the following items for the Template:"
@@ -15255,7 +15255,7 @@ msgstr "سبب غير معروف: %s"
 #: lib/installer.php:1684
 #, php-format
 msgid "You are attempting to install Cacti %s onto a 0.6.x database. Unfortunately, this can not be performed."
-msgstr "تحاول تثبيت %s الصبار على قاعدة بيانات 0.6.x. لسوء الحظ ، لا يمكن تنفيذ هذا."
+msgstr "أنت تحاول تثبيت Cacti %s على قاعدة بيانات 0.6.x. للأسف، لا يمكن تنفيذ ذلك."
 
 #: lib/installer.php:1685
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
@@ -15312,7 +15312,7 @@ msgstr "تخفيض"
 
 #: lib/installer.php:1845 utilities.php:307
 msgid "Cacti Version"
-msgstr "نسخة الصبار"
+msgstr "إصدار Cacti"
 
 #: lib/installer.php:1845
 msgid "License Agreement"
@@ -15743,7 +15743,7 @@ msgstr "سيعيد خيار البرنامج النصي هذا تمكين أي �
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "يُقترح بشدة أن تقوم بتحديث config.php الخاص بك لتمكين هذه الميزة عن طريق إلغاء <b>التعليق على</b> المتغير <b>$input_whitelist</b> ثم تشغيل خيارات البرنامج النصي CLI الثلاثة أعلاه بعد اكتمال التثبيت المستند إلى الويب."
+msgstr "يُوصى بشدة بتحديث ملف config.php لتمكين هذه الميزة عبر إزالة التعليق عن المتغير <b>$input_whitelist</b> ثم تشغيل خيارات نصوص واجهة سطر الأوامر (CLI) الثلاثة أعلاه بعد اكتمال التثبيت عبر الويب."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -15954,7 +15954,7 @@ msgstr "اضغط على \"%s\" ثم انقر فوق \"%s\" لإكمال عملي
 #: lib/installer.php:2855
 #, php-format
 msgid "Installing Cacti Server v%s"
-msgstr "تثبيت خادم الصبار v%s"
+msgstr "جارٍ تثبيت خادم Cacti الإصدار v%s"
 
 #: lib/installer.php:2856
 msgid "Your Cacti Server is now installing"
@@ -15972,7 +15972,7 @@ msgstr "مكتمّل"
 #: lib/installer.php:2970
 #, php-format
 msgid "Your Cacti Server v%s has been installed/updated.  You may now start using the software."
-msgstr "تم تثبيت / تحديث خادم الصبار v%s الخاص بك.  يمكنك الآن البدء في استخدام البرنامج."
+msgstr "تم تثبيت/تحديث خادم Cacti الإصدار v%s الخاص بك. يمكنك الآن البدء في استخدام البرنامج."
 
 #: lib/installer.php:2974
 #, php-format
@@ -16106,7 +16106,7 @@ msgstr "تعذّر العثور على البيانات لنسخها!"
 #: lib/installer.php:3462
 #, php-format
 msgid "Device Template for First Cacti Device is %s"
-msgstr "قالب الجهاز لجهاز الصبار الأول هو %s"
+msgstr "قالب الجهاز لأول جهاز في Cacti هو %s"
 
 #: lib/installer.php:3488
 msgid "Creating Graphs for Default Device"
@@ -16424,7 +16424,7 @@ msgstr "الإضافات"
 #: lib/plugins.php:1217 lib/plugins.php:1223
 #, php-format
 msgid "Requires: Cacti >= %s"
-msgstr "يتطلب: الصبار > = %s"
+msgstr "يتطلب: Cacti >= %s"
 
 #: lib/plugins.php:1220
 msgid "Legacy Plugin"
@@ -16529,7 +16529,7 @@ msgstr "يجب أن يكون الحد الأدنى لمصدر البيانات \
 #: lib/rrd.php:3917
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
-msgstr "DS '%s' مفقود في تعريف الصبار"
+msgstr "مصدر البيانات '%s' مفقود في تعريف Cacti"
 
 #: lib/rrd.php:3931 lib/rrd.php:3932
 #, php-format
@@ -16564,7 +16564,7 @@ msgstr "RRA '%s' مفقود في ملف Cacti RRD الحالي"
 #: lib/rrd.php:4011
 #, php-format
 msgid "RRA '%s' missing in Cacti definition"
-msgstr "RRA \"%s\" مفقود في تعريف الصبار"
+msgstr "RRA '%s' مفقود في تعريف Cacti"
 
 #: lib/rrd.php:4032
 msgid "RRD File Information"
@@ -17061,7 +17061,7 @@ msgstr "مع إمكانات الاستقصاء عن بعد ، ستتم مزام�
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "في حالة استخدام Cacti Performance Booster واختيار محرك تخزين ذاكرة ، يجب أن تكون حذراً لتدفق المخزن المؤقت Performance Booster قبل نفاد مساحة ذاكرة النظام. يتم ذلك بطريقتين ، أولاً تقليل حجم عمود الإخراج الخاص بك إلى الحجم الصحيح فقط. هذا العمود موجود في الجداول poller_output ، و poller_output_boost. الشيء الثاني الذي يمكنك القيام به هو تخصيص المزيد من الذاكرة إلى جداول الذاكرة. لقد اخترنا بشكل عشوائي القيمة الموصى بها بنسبة 10 ٪٪ من ذاكرة النظام ، ولكن إذا كنت تستخدم محركات أقراص SSD أو لديك نظام أصغر ، فيمكنك تجاهل هذه التوصية أو اختيار محرك تخزين مختلف. قد ترى الاستهلاك المتوقع لجداول Booster Performance ضمن Console -&gt; System Utilities -&gt; View Boost Status."
+msgstr "عند استخدام مسرّع الأداء (Performance Booster) في Cacti واختيار محرك تخزين في الذاكرة، يجب الحرص على تفريغ المخزن المؤقت لمسرّع الأداء قبل نفاد مساحة جداول الذاكرة في النظام. يتم ذلك بطريقتين: الأولى تقليل حجم عمود الإخراج إلى الحجم المناسب تمامًا، ويوجد هذا العمود في الجدولين poller_output وpoller_output_boost. والثانية تخصيص مزيد من الذاكرة لجداول الذاكرة. لقد اخترنا قيمة موصى بها تبلغ 10%% من ذاكرة النظام، ولكن إذا كنت تستخدم أقراص SSD أو كان لديك نظام أصغر، يمكنك تجاهل هذه التوصية أو اختيار محرك تخزين مختلف. يمكنك الاطلاع على الاستهلاك المتوقع لجداول مسرّع الأداء ضمن Console -> System Utilities -> View Boost Status."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -17087,7 +17087,7 @@ msgstr "إذا كانت جداولك تحتوي على فهارس كبيرة ج�
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "يحتفظ InnoDB بالكثير من الجداول والفهارس في ذاكرة النظام قدر الإمكان. لذلك ، يجب أن تجعل innodb_buffer_pool كبيرًا بما يكفي لاستيعاب الكثير من الجداول والفهرس في الذاكرة. سيساعدك فحص حجم / var / lib / mysql / cacti directory في تحديد هذه القيمة. نوصي بـ 25 ٪٪ من الذاكرة الإجمالية لنظامك ، ولكن ستختلف متطلباتك حسب حجم الأنظمة لديك."
+msgstr "يحتفظ محرك InnoDB بأكبر قدر ممكن من الجداول والفهارس في ذاكرة النظام. لذلك، يجب جعل innodb_buffer_pool كبيرًا بما يكفي لاستيعاب أكبر قدر من الجداول والفهارس في الذاكرة. سيساعدك التحقق من حجم الدليل /var/lib/mysql/cacti في تحديد هذه القيمة. نوصي بتخصيص 25%% من إجمالي ذاكرة النظام، ولكن قد تختلف متطلباتك حسب حجم أنظمتك."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17389,7 +17389,7 @@ msgstr "لقد تم تسجيل خروجك من Cacti بسبب تغيير حال�
 
 #: logout.php:71
 msgid "Logout of Cacti"
-msgstr "الخروج من الصبار"
+msgstr "تسجيل الخروج من Cacti"
 
 #: logout.php:78
 msgid "Automatic Logout"
@@ -17848,7 +17848,7 @@ msgstr "البرنامج المساعد يفتقر إلى ملف INFO"
 
 #: plugins.php:897
 msgid "Plugin is integrated into Cacti core"
-msgstr "تم دمج البرنامج المساعد في الصبار الأساسية"
+msgstr "المكوّن الإضافي مدمج في نواة Cacti"
 
 #: plugins.php:899
 msgid "Plugin is not compatible"
@@ -17885,7 +17885,7 @@ msgstr "تم تجاوز الحد الأقصى لوقت التشغيل البال
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "تحذير: تجاوزت دورة استقصاء الصبار فترة الاستقصاء بمقدار"
+msgstr "تحذير: تجاوزت دورة استطلاع Cacti فترة المستطلِع بمقدار "
 
 #: poller.php:961
 #, php-format
@@ -18375,12 +18375,12 @@ msgstr "أذهب"
 #: user_group_admin.php:2662 user_group_admin.php:2763
 msgctxt "filter: reset"
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: rrdcheck.php:270
 msgctxt "filter: purge"
 msgid "Purge"
-msgstr "شربة، مسهل. يسهل"
+msgstr "تطهير"
 
 #: rrdcleaner.php:32 tree.php:32
 msgctxt "dropdown action"
@@ -18471,7 +18471,7 @@ msgstr "ملاحظة: يتم حفظ إعدادات المسار في علامة 
 #: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
-msgstr "إعدادات الصبار (%s)%s"
+msgstr "إعدادات Cacti (%s)%s"
 
 #: settings.php:505
 msgid "Changing Permission Model Warning"
@@ -18817,7 +18817,7 @@ msgstr "اختر التنسيق لإخراج ملف XML الناتج في."
 
 #: templates_export.php:143
 msgid "Output to the Browser (within Cacti)"
-msgstr "الإخراج إلى المتصفح (داخل الصبار)"
+msgstr "الإخراج إلى المتصفح (داخل Cacti)"
 
 #: templates_export.php:147
 msgid "Output to the Browser (raw XML)"
@@ -19984,7 +19984,7 @@ msgstr "عرض الأعضاء"
 #: user_group_admin.php:2864
 msgctxt "filter reset"
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: utilities.php:61
 msgid "A Poller Cache rebuild is already running."
@@ -20043,7 +20043,7 @@ msgstr "معلومات عامة"
 
 #: utilities.php:312
 msgid "Cacti OS"
-msgstr "نظام التشغيل الصبار"
+msgstr "نظام تشغيل Cacti"
 
 #: utilities.php:322
 msgid "NET-SNMP Version"
@@ -20068,7 +20068,7 @@ msgstr "معلومات مستضد"
 
 #: utilities.php:383
 msgid "Different version of Cacti and Spine!"
-msgstr "نسخة مختلفة من الصبار والعمود الفقري!"
+msgstr "إصدار مختلف من Cacti وSpine!"
 
 #: utilities.php:401
 #, php-format
@@ -20295,12 +20295,12 @@ msgstr "أذهب"
 #: utilities.php:3138 utilities.php:3418 vdef.php:770
 msgctxt "Button: reset filter settings"
 msgid "Clear"
-msgstr "واضح"
+msgstr "مسح"
 
 #: utilities.php:1121 utilities.php:1489 utilities.php:3419
 msgctxt "Button: delete all table entries"
 msgid "Purge"
-msgstr "شربة، مسهل. يسهل"
+msgstr "تطهير"
 
 #: utilities.php:1121
 msgid "Purge User Log"
@@ -20334,11 +20334,11 @@ msgstr "السجل [إجمالي الأسطر: %d - جميع العناصر ال
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
-msgstr "واضح الصبار سجل"
+msgstr "مسح سجل Cacti"
 
 #: utilities.php:1674
 msgid "Cacti Log Cleared"
-msgstr "سجل الصبار مسح"
+msgstr "تم مسح سجل Cacti"
 
 #: utilities.php:1676
 msgid "Error: Unable to clear log, no write permissions."
@@ -20410,7 +20410,7 @@ msgstr "RRD:"
 
 #: utilities.php:2351
 msgid "Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues."
-msgstr "صفحة الدعم الفني Cacti. المستخدمة من قبل المطورين والأشخاص الدعم الفني للمساعدة في القضايا في الصبار. يتضمن الشيكات لمشاكل التكوين المشتركة."
+msgstr "صفحة الدعم الفني لـ Cacti. يستخدمها المطورون وفريق الدعم الفني للمساعدة في حل المشكلات في Cacti. تتضمن فحوصات لمشكلات التهيئة الشائعة."
 
 #: utilities.php:2355
 msgid "The Cacti Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
@@ -20991,7 +20991,6 @@ msgstr "لم يتم اكتشاف تغييرات في الفهرس، تم تحد�
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
 msgstr "فشلت المزامنة. راجع السجل للحصول على التفاصيل."
 
 #: graph.php:512

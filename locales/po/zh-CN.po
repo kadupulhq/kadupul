@@ -387,7 +387,7 @@ msgstr "显示项目详情"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "聚合预览 [%s]"
+msgstr "聚合预览不存在"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -2588,7 +2588,7 @@ msgstr "Cacti 系统警告"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
-msgstr "警告：仙人掌守护进程PID["
+msgstr "警告：Cacti 守护进程 PID["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
@@ -3018,7 +3018,7 @@ msgstr "所有RRDfile修复成功。"
 
 #: data_debug.php:81
 msgid "One or more RRDfile repairs failed.  See Cacti log for errors."
-msgstr "一个或多个RRDfile修复失败。有关错误，请参阅仙人掌日志。"
+msgstr "一个或多个 RRDfile 修复失败。有关错误详情，请参阅 Cacti 日志。"
 
 #: data_debug.php:89
 msgid "Automatic Data Source debug being rerun after repair."
@@ -3596,7 +3596,7 @@ msgstr "关联的图形/数据模板 [编辑: %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "关联的图形/数据模板 [编辑: %s]"
+msgstr "关联的图形/数据模板 [新建]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -3778,7 +3778,7 @@ msgstr "正在被数据模板或数据源使用的数据源配置文件无法删
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
-msgstr "一个或多个RRDfile修复失败。有关错误，请参阅仙人掌日志。"
+msgstr "无法复制数据源配置文件。请检查 Cacti 日志以了解错误详情。"
 
 #: data_source_profiles.php:507
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
@@ -4379,7 +4379,7 @@ msgstr "如果此字段为空,则值将从设备派生."
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "自定义数据[数据输入: %s]"
+msgstr "自定义数据警告消息"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -5146,7 +5146,7 @@ msgstr "选择图形模板"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "选择一个图表模板应用到这个图表。 请注意，您只能将图形模板更改为百会之百兼容的图形模板，这意味着它包含相同的数据源。"
+msgstr "选择一个图形模板应用到此图形。请注意，您只能将图形模板更改为 100%% 兼容的图形模板，这意味着它包含相同的数据源。"
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5174,7 +5174,7 @@ msgstr "所有设备的新图"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "用户组管理 [编辑: %s]"
+msgstr "图形管理 [ 非基于设备 ]"
 
 #: graphs.php:2080
 #, php-format
@@ -6629,7 +6629,7 @@ msgstr "每天"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "%d 线程"
+msgstr "1 线程"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -8459,7 +8459,7 @@ msgstr "数据模板的名称."
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "为此数据源选择一个名称. 它可以包含替换变量,如| host_description | 或| query_fieldName |. 有关支持的替换标签的完整列表,请参阅Cacti文档."
+msgstr "为此数据源选择一个名称。它可以包含替换变量，例如 |host_description| 或 |query_fieldName|。有关支持的替换标签的完整列表，请参阅 Cacti 文档。"
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8556,7 +8556,7 @@ msgstr "标题 (--title)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "图形上打印的名称. 它可以包含替换变量,如| host_description | 或| query_fieldName |. 有关支持的替换标签的完整列表,请参阅Cacti文档."
+msgstr "显示在图形上的名称。它可以包含替换变量，例如 |host_description| 或 |query_fieldName|。有关支持的替换标签的完整列表，请参阅 Cacti 文档。"
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -8624,7 +8624,7 @@ msgstr "自动缩放选项"
 
 #: include/global_form.php:775
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "使用<br> --alt-autoscale缩放到绝对最小值和最大值<br> --alt-autoscale-max使用给定的下限值缩放到最大值<br> --alt-autoscale-min to 缩放至最小值,使用给定上限<br> <br> - 自动缩放(带有限制)使用下限和上限进行缩放(RRDtool默认值)<br>"
+msgstr "使用 <br> --alt-autoscale 缩放到绝对最小值和最大值 <br> --alt-autoscale-max 使用给定的下限值缩放到最大值 <br> --alt-autoscale-min 使用给定的上限值缩放到最小值 <br> --alt-autoscale（带限制）同时使用下限和上限进行缩放（RRDtool 默认值） <br>"
 
 #: include/global_form.php:779
 msgid "Use --alt-autoscale (ignoring given limits)"
@@ -8724,7 +8724,7 @@ msgstr "备用Y坐标"
 
 #: include/global_form.php:869
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
-msgstr "该算法确保您始终拥有一个网格,有足够但不是太多的网格线,并且网格是度量标准. 此参数还可以确保即使图形从69.998变为70.001,也可以显示足够的小数.<br> <strong>注意:</ strong>此参数可能会影响--alt-autoscale选项."
+msgstr "该算法可确保始终显示网格、网格线数量适中，且网格符合十进制度量标准。此参数还可确保即使您的图形数值仅从 69.998 变化到 70.001，也能显示足够的小数位数。<br><strong>注意：</strong>此参数可能会干扰 --alt-autoscale 选项。"
 
 #: include/global_form.php:872
 msgid "Axis Options"
@@ -9981,7 +9981,7 @@ msgstr "获取帮助"
 
 #: include/global_settings.php:456
 msgid "By default Cacti page help is located at docs.cacti.net.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Cacti server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
-msgstr "默认情况下，仙人掌页面帮助位于 docs.cacti.net。 但是，如果您的系统无法访问 Internet，您可以以 HTML 格式在本地下载文档并将其托管在 Cacti 服务器的“文档”位置。 如果选择仅利用本地位置获取页面帮助文档，请选中此复选框。"
+msgstr "默认情况下，Cacti 页面帮助位于 docs.cacti.net。但是，如果您的系统无法访问 Internet，您可以下载本地 HTML 格式的文档，并将其托管在 Cacti 服务器的 'docs' 目录中。如果选择仅使用本地路径获取页面帮助文档，请选中此复选框。"
 
 #: include/global_settings.php:461
 msgid "Deletion Verification"
@@ -10085,7 +10085,7 @@ msgstr "内容安全替代来源"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "将允许在 Web 服务器本身之外访问的空格分隔的域名。这对于选择使用 CDN 或托管站点的用户来说很重要。来源可以包括通配符，例如：*.mydomain.com，或协议，例如：https://*.example.com。这些替代源仅包括图像、CSS 和 JavaScript 类型。"
+msgstr "以空格分隔的域名，允许在 Web 服务器本身之外访问。这对于选择使用 CDN 或外部托管站点的用户来说非常重要。源可以包含通配符（例如 *.mydomain.com），或包含协议，例如：https://*.example.com. 这些替代源仅包含图像、CSS 和 JavaScript 类型。"
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10694,7 +10694,7 @@ msgstr "营业时间结束的时间。格式：hh：mm"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "%d 周"
+msgstr "隐藏周末"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -10830,7 +10830,7 @@ msgstr "重建资源缓存"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "默认情况下，主仙人掌数据收集器会将整个网站和插件缓存到资源缓存中。然后，远程数据收集器会定期使用主仙人掌数据收集器的任何更新来更新主题。该资源缓存实质上允许远程数据收集器进行自我升级。如果您不想使用此选项，则可以使用此设置禁用它。"
+msgstr "默认情况下，主 Cacti 数据收集器会将整个网站和插件缓存在资源缓存中。然后，远程数据收集器会定期从主 Cacti 数据收集器获取更新以进行自我更新。该资源缓存实质上允许远程数据收集器自行升级。如果您不想使用此选项，可以通过此设置将其禁用。"
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
@@ -10921,7 +10921,7 @@ msgstr "DNS 超时"
 
 #: include/global_settings.php:1402
 msgid "The maximum amount of time Cacti's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "仙人掌的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Cacti 的 RRDfile 检查脚本在产生超时错误并被终止前可运行的最长时间。"
 
 #: include/global_settings.php:1408 include/global_settings.php:1409
 #: include/global_settings.php:1410 include/global_settings.php:1465
@@ -10999,7 +10999,7 @@ msgstr "维护后台生成超时"
 
 #: include/global_settings.php:1456
 msgid "The maximum amount of time a Cacti's Maintenance script can run without generating a timeout error and being killed."
-msgstr "仙人掌维护脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Cacti 维护脚本在产生超时错误并被终止前可运行的最长时间。"
 
 #: include/global_settings.php:1469
 msgid "Spikekill Background Generation Timeout"
@@ -11007,7 +11007,7 @@ msgstr "Spikekill背景生成超时"
 
 #: include/global_settings.php:1470
 msgid "The maximum amount of time a Cacti's Spikekill script can run without generating a timeout error and being killed."
-msgstr "仙人掌的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Cacti 的 Spikekill 脚本在产生超时错误并被终止前可运行的最长时间。"
 
 #: include/global_settings.php:1486
 msgid "Data Collector Defaults"
@@ -11982,7 +11982,7 @@ msgstr "差异百分比"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "该值表示一旦从样本中去除异常值后,高于调整样本平均值的百分比. 例如,调整后平均值为50的方差百分比为100%%将从图形中移除数量超过100的样本."
+msgstr "该值表示在从样本中去除异常值之后，高于调整后样本平均值的百分比。例如，当调整后平均值为 50 时，100%% 的方差百分比将从图形中移除任何大于 100 的样本值。"
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12087,11 +12087,11 @@ msgstr "MySQL - 时区支持"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "你希望仙人掌如何呈现日期？ 此设置还将更改 Cacti Graphs 日期的表示方式。"
+msgstr "您希望 Cacti 如何显示日期？此设置还将更改 Cacti 图形中日期的显示方式。"
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti 服务器 v%s - 维护"
+msgstr "Cacti 服务器时区"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12296,7 +12296,7 @@ msgstr "历史密码"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "如果启用，则仙人掌将记住两次登录之间以及返回到“图形”页面时的树历史记录。"
+msgstr "如果启用，Cacti 将在两次登录之间以及您返回“图形”页面时记住您的树历史记录。"
 
 #: include/global_settings.php:2824
 msgid "Use Custom Fonts"
@@ -12921,7 +12921,7 @@ msgstr "文件"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "%d 行"
+msgstr "头部行数"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13550,7 +13550,7 @@ msgstr "链接 %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Error: 没有设置<b> 收件人 </b>地址!! 如果使用 <i>邮件测试</i> 链接,请设置<b> 报警邮件 </b>设置."
+msgstr "邮件程序错误：未设置收件人地址！！<br>如果使用 <i>测试邮件</i> 链接，请配置 <b>告警电子邮件</b> 设置。"
 
 #: lib/functions.php:5730
 #, php-format
@@ -13659,7 +13659,7 @@ msgstr "%s %s"
 #: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
-msgstr "警告：缺少密钥仙人掌包含文件%s。 请找到并替换此文件"
+msgstr "警告：缺少关键 Cacti 包含文件 %s。请找到并恢复此文件"
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
@@ -13996,7 +13996,7 @@ msgstr "操作成功"
 
 #: lib/html.php:2925 pollers.php:878
 msgid "Connection Failed"
-msgstr "UNKNOWN STATE FIX ME"
+msgstr "连接失败"
 
 #: lib/html.php:2926
 msgid "The response to the last action was unexpected."
@@ -14811,7 +14811,7 @@ msgstr "出于安全原因，Cacti 正则表达式限制为 50 个字符。"
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "仙人掌正则表达式不能包含半彩色字符。"
+msgstr "Cacti 正则表达式不能包含分号字符。"
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -16441,7 +16441,7 @@ msgstr "CDP 未知数据点(0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "未找到 %s"
+msgstr "发现错误"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16886,7 +16886,7 @@ msgstr "通过远程poller 功能,大量数据将从主服务器同步到远程p
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "如果使用Cacti Performance Booster并选择内存存储引擎，则在系统内存表空间用完之前，必须小心刷新Performance Booster缓冲区。 这通过两种方式完成，首先将输出列的大小减小到合适的大小。 此列位于表poller_output和poller_output_boost中。 你可以做的第二件事是分配更多的内存到内存表中。 我们已经任意选择了系统内存10％的建议值，但是如果您使用的是SSD磁盘驱动器，或者系统较小，则可以忽略此建议或选择其他存储引擎。 您可以在Console - > System Utilities - > View Boost Status下看到Performance Booster表的预期消耗量。"
+msgstr "如果使用 Cacti Performance Booster（性能加速器）并选择内存存储引擎，则必须注意在系统耗尽内存表空间之前刷新 Performance Booster 缓冲区。这可通过两种方式实现：首先是将输出列的大小减小到合适的尺寸，该列位于 poller_output 和 poller_output_boost 表中；其次是为内存表分配更多内存。我们选定了一个系统内存 10%% 的推荐值，但如果您使用的是 SSD 磁盘驱动器，或者系统规模较小，可以忽略此建议或选择其他存储引擎。您可以在 控制台 -> 系统实用工具 -> 查看 Boost 状态 下查看 Performance Booster 表的预期内存消耗。"
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16912,7 +16912,7 @@ msgstr "如果表的索引很大，则必须使用梭子鱼的innodb_file_format
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB将在系统内存中保存尽可能多的表和索引。 因此，你应该让innodb_buffer_pool大到足以容纳内存中的表和索引。 检查/ var / lib / mysql / cacti目录的大小将有助于确定此值。 我们建议您的系统总内存的25％，但是您的要求会因系统大小而异。"
+msgstr "InnoDB 会在系统内存中尽可能多地保留表和索引。因此，您应该将 innodb_buffer_pool 设置得足够大，以便在内存中容纳尽可能多的表和索引。检查 /var/lib/mysql/cacti 目录的大小将有助于确定此值。我们建议设置为系统总内存的 25%% 左右，但您的实际需求会因系统规模而异。"
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17695,7 +17695,7 @@ msgstr "轮询程序id%d超过了%d秒的最大运行时间。正在退出。"
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "警告：仙人掌轮询周期超过轮询间隔 "
+msgstr "警告：Cacti 轮询周期超出轮询间隔 "
 
 #: poller.php:961
 #, php-format
@@ -17712,7 +17712,7 @@ msgstr "Cacti 系统工具"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "注意：已添加第二个仙人掌数据收集器。因此，自动启用增强功能！"
+msgstr "注意：已添加第二个 Cacti 数据收集器。因此，将自动启用 Boost！"
 
 #: poller_automation.php:54
 #, php-format
@@ -19670,7 +19670,7 @@ msgstr "配置设置"
 #: utilities.php:280
 #, php-format
 msgid "ERROR: Installed RRDtool version does not exceed configured version.<br>Please visit the %s and select the correct RRDtool Utility Version."
-msgstr "错误:已安装的RRDtool版本不超过已配置的版本。请访问%s并选择正确的RRDtool实用程序版本。"
+msgstr "错误：已安装的 RRDtool 版本未超过已配置的版本。<br>请访问 %s 并选择正确的 RRDtool 实用工具版本。"
 
 #: utilities.php:285
 #, php-format
@@ -20611,8 +20611,7 @@ msgstr "未检测到索引更改，已刷新轮询器缓存"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "同步失败。详情请参见日志。"
+msgstr "同步失败。有关详情，请参阅日志。"
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."

@@ -387,7 +387,7 @@ msgstr "Εμφάνιση στοιχείων στοιχείου"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Συνολική προεπισκόπηση [ %s]"
+msgstr "Η συγκεντρωτική προεπισκόπηση δεν υπάρχει"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -1134,12 +1134,12 @@ msgstr "Προστέθηκε χειροκίνητα μέσω διεπαφής α
 #: automation_devices.php:130
 #, php-format
 msgid "Device %s Added to Cacti"
-msgstr "Η συσκευή %s προστέθηκε στους κάκτους"
+msgstr "Η συσκευή %s προστέθηκε στο Cacti"
 
 #: automation_devices.php:132
 #, php-format
 msgid "Device %s Not Added to Cacti"
-msgstr "Η συσκευή %s δεν προστέθηκε στους κάκτους"
+msgstr "Η συσκευή %s δεν προστέθηκε στο Cacti"
 
 #: automation_devices.php:142
 msgid "Devices Removed from Cacti Automation database"
@@ -1777,7 +1777,7 @@ msgstr "Χρησιμοποιήστε το NetBIOS για να προσπαθήσ
 
 #: automation_networks.php:569
 msgid "Automatically Add to Cacti"
-msgstr "Προσθήκη αυτόματα σε κάκτους"
+msgstr "Αυτόματη προσθήκη στο Cacti"
 
 #: automation_networks.php:570
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Cacti."
@@ -3307,7 +3307,7 @@ msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομέ�
 
 #: data_debug.php:1029
 msgid "No Device"
-msgstr "设备："
+msgstr "Καμία συσκευή"
 
 #: data_debug.php:1068
 msgid "Delete All Checks"
@@ -3614,7 +3614,7 @@ msgstr "Σχετικά πρότυπα γραφήματος / δεδομένων 
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Σχετικά πρότυπα γραφήματος / δεδομένων [επεξεργασία: %s]"
+msgstr "Συσχετισμένα πρότυπα γραφημάτων/δεδομένων [νέο]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4414,7 +4414,7 @@ msgstr "Από τη συσκευή θα προκύψει τιμή εάν το π
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Προσαρμοσμένα δεδομένα [εισαγωγή δεδομένων: %s]"
+msgstr "Προσαρμοσμένο μήνυμα προειδοποίησης δεδομένων"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -5181,7 +5181,7 @@ msgstr "Επιλεγμένο πρότυπο γραφήματος"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Επιλέξτε ένα πρότυπο γραφήματος για εφαρμογή σε αυτό το γράφημα. Λάβετε υπόψη ότι μπορείτε να αλλάξετε μόνο τα πρότυπα γραφήματος σε ένα 100%% συμβατό πρότυπο γραφήματος, πράγμα που σημαίνει ότι περιλαμβάνει πανομοιότυπες πηγές δεδομένων."
+msgstr "Επιλέξτε ένα Πρότυπο Γραφήματος για εφαρμογή σε αυτό το Γράφημα. Λάβετε υπόψη ότι μπορείτε να αλλάξετε Πρότυπα Γραφήματος μόνο σε ένα 100%% συμβατό Πρότυπο Γραφήματος, το οποίο σημαίνει ότι περιλαμβάνει πανομοιότυπες Πηγές Δεδομένων."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5209,7 +5209,7 @@ msgstr "Νέα γραφήματα για [Όλες οι συσκευές]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Διαχείριση ομάδας χρηστών [επεξεργασία: %s]"
+msgstr "Διαχείριση γραφημάτων [ Μη βασισμένα σε συσκευή ]"
 
 #: graphs.php:2080
 #, php-format
@@ -6664,7 +6664,7 @@ msgstr "Κάθε μέρα"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "% d Νήμα"
+msgstr "1 Νήμα"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -6704,7 +6704,7 @@ msgstr "Εντολή"
 
 #: include/global_arrays.php:912 user_admin.php:781 user_group_admin.php:843
 msgid "Allow"
-msgstr "允许"
+msgstr "Επιτρέπεται"
 
 #: include/global_arrays.php:913
 msgid "Try"
@@ -7507,7 +7507,7 @@ msgstr "Ημέρα(ες)"
 
 #: include/global_arrays.php:1730
 msgid "Week(s)"
-msgstr "Εβδομάδα(ες) %s"
+msgstr "Εβδομάδα(ες)"
 
 #: include/global_arrays.php:1731
 msgid "Month(s), Day of Month"
@@ -7611,7 +7611,7 @@ msgstr "δεν αρχίζει με"
 
 #: include/global_arrays.php:1774
 msgid "ends with"
-msgstr "结束于"
+msgstr "λήγει σε"
 
 #: include/global_arrays.php:1775
 msgid "does not end with"
@@ -7651,11 +7651,11 @@ msgstr "δεν είναι άγνωστο"
 
 #: include/global_arrays.php:1784
 msgid "is empty"
-msgstr "是空的"
+msgstr "είναι κενό"
 
 #: include/global_arrays.php:1785
 msgid "is not empty"
-msgstr "不是空的"
+msgstr "δεν είναι κενό"
 
 #: include/global_arrays.php:1786
 msgid "matches regular expression"
@@ -8494,7 +8494,7 @@ msgstr "Το όνομα που δίνεται σε αυτό το πρότυπο 
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Επιλέξτε ένα όνομα για αυτήν την πηγή δεδομένων. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως | host_description | ή | query_fieldName |. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Cacti."
+msgstr "Επιλέξτε ένα όνομα για αυτήν την πηγή δεδομένων. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως |host_description| ή |query_fieldName|. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Cacti."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8591,7 +8591,7 @@ msgstr "Τίτλος (- τίτλος)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Το όνομα που έχει εκτυπωθεί στο γράφημα. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως | host_description | ή | query_fieldName |. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Cacti."
+msgstr "Το όνομα που εκτυπώνεται στο γράφημα. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως |host_description| ή |query_fieldName|. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Cacti."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9048,7 +9048,7 @@ msgstr "Αριθμός θεμάτων συλλογής"
 
 #: include/global_form.php:1242
 msgid "The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."
-msgstr "Ο αριθμός των ταυτόχρονων κλωστών που θα χρησιμοποιηθούν για την ψηφοφορία αυτής της συσκευής. Αυτό ισχύει μόνο για τον σπόνδυλο της σπονδυλικής στήλης."
+msgstr "Ο αριθμός των ταυτόχρονων νημάτων που θα χρησιμοποιούνται για την εξέταση (polling) αυτής της συσκευής. Αυτό ισχύει μόνο για τον συλλέκτη (poller) Spine."
 
 #: include/global_form.php:1249
 msgid "Disable Device"
@@ -9748,19 +9748,19 @@ msgstr "Εναλλακτικό μονοπάτι πολωνού"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Θέση αρχείου διπλού αρχείου σπονδυλικής στήλης"
+msgstr "Θέση εκτελέσιμου αρχείου Spine"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
-msgstr "Το μονοπάτι προς δυαδικό επίπεδο της σπονδυλικής στήλης."
+msgstr "Η διαδρομή προς το εκτελέσιμο αρχείο του Spine."
 
 #: include/global_settings.php:226
 msgid "Spine Config File Path"
-msgstr "Διαδρομή αρχείου διαμόρφωσης σπονδυλικής στήλης"
+msgstr "Διαδρομή αρχείου ρυθμίσεων Spine"
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "Η διαδρομή προς το αρχείο διαμόρφωσης σπονδυλικής στήλης. Από προεπιλογή, στο cwd της σπονδυλικής στήλης ή / και αν δεν έχει καθοριστεί."
+msgstr "Η διαδρομή προς το αρχείο ρυθμίσεων του Spine. Από προεπιλογή, στον τρέχοντα κατάλογο εργασίας (cwd) του Spine, ή στο /etc εάν δεν καθοριστεί."
 
 #: include/global_settings.php:239
 msgid "RRDfile Auto Clean"
@@ -9904,7 +9904,7 @@ msgstr "Προτιμώμενος επεξεργαστής γλώσσας"
 
 #: include/global_settings.php:367
 msgid "Cacti includes support for multiple alternate Language Translation Processors.  If none is selected Cacti will attempt to use the first one found."
-msgstr "Το Cacti περιλαμβάνει υποστήριξη για πολλαπλούς εναλλακτικούς επεξεργαστές μετάφρασης γλωσσών. Θα είναι προεπιλεγμένη χρήση της ενσωματωμένης υποστήριξης PHP, αλλά δεν περιλαμβάνουν όλες οι παραλλαγές του Linux ενσωματωμένη υποστήριξη γλώσσας. Εάν δεν επιλεγεί, οι κάκτοι θα επιλέξουν τον πρώτο που θα βρεθεί."
+msgstr "Το Cacti περιλαμβάνει υποστήριξη για πολλαπλούς εναλλακτικούς επεξεργαστές μετάφρασης γλωσσών. Εάν δεν επιλεγεί κανένας, το Cacti θα προσπαθήσει να χρησιμοποιήσει τον πρώτο που θα βρεθεί."
 
 #: include/global_settings.php:373
 msgid "Client TimeZone Support"
@@ -10120,7 +10120,7 @@ msgstr "Εναλλακτικές πηγές περιεχομένου-ασφάλ�
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Ονομαστικά χώρου με διαχωρισμό χώρου στα οποία θα επιτρέπεται η πρόσβαση εκτός του ίδιου του διακομιστή Web. Αυτό είναι σημαντικό για τους χρήστες που επιλέγουν να χρησιμοποιήσουν CDN ή ιστότοπο φιλοξενίας. Οι πηγές μπορούν να περιλαμβάνουν μπαλαντέρ για παράδειγμα: *.mydomain.com ή ένα πρωτόκολλο, για παράδειγμα: https: //*.example.com. Αυτές οι Εναλλακτικές Πηγές περιλαμβάνουν μόνο τύπους εικόνας, CSS και JavaScript."
+msgstr "Ονόματα τομέων διαχωρισμένα με κενό, στα οποία θα επιτρέπεται η πρόσβαση εκτός του ίδιου του Διακομιστή Ιστού. Αυτό είναι σημαντικό για χρήστες που επιλέγουν να χρησιμοποιήσουν ένα CDN ή ιστότοπο φιλοξενίας. Οι πηγές μπορούν να περιλαμβάνουν χαρακτήρες μπαλαντέρ, για παράδειγμα: *.mydomain.com, ή ένα πρωτόκολλο, για παράδειγμα: https://*.example.com. Αυτές οι Εναλλακτικές Πηγές περιλαμβάνουν μόνο τύπους Εικόνας, CSS και JavaScript."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10212,7 +10212,7 @@ msgstr "Θέματα συσκευής"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Ο προεπιλεγμένος αριθμός Threads της συσκευής. Αυτό ισχύει μόνο όταν χρησιμοποιείτε τον συλλέκτη δεδομένων σπονδυλικής στήλης."
+msgstr "Ο προεπιλεγμένος αριθμός νημάτων συσκευής. Αυτό ισχύει μόνο κατά τη χρήση του Συλλέκτη Δεδομένων Spine."
 
 #: include/global_settings.php:656
 #, php-format
@@ -10607,7 +10607,7 @@ msgstr "Προσαρμοσμένη Μορφή Ημερομηνίας"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Για χρήση κατά τη μορφοποίηση | ημερομηνία_ ώρα | σε ένα γράφημα"
+msgstr "Για χρήση κατά τη μορφοποίηση του |date_time| σε ένα γράφημα"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10729,7 +10729,7 @@ msgstr "Ο χρόνος λήξης του ωραρίου εργασίας σας
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "% d εβδομάδες"
+msgstr "Απόκρυψη Σαββατοκύριακων"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -11058,7 +11058,7 @@ msgstr "Προεπιλεγμένες διαδικασίες συλλογής δ�
 
 #: include/global_settings.php:1493
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Cacti 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
-msgstr "Ο προεπιλεγμένος αριθμός ταυτόχρονων διεργασιών που εκτελούνται ανά Συλλέκτη Δεδομένων. ΣΗΜΕΙΩΣΗ: Ξεκινώντας από το Cacti 1.2, αυτή η ρύθμιση διατηρείται στον συλλέκτη δεδομένων. Προχωρώντας προς τα εμπρός, αυτή η τιμή είναι μόνο προκαθορισμένη για τον συλλέκτη δεδομένων. Η χρήση ενός μεγαλύτερου αριθμού κατά τη χρήση του cmd.php θα βελτιώσει την απόδοση. Οι βελτιώσεις απόδοσης στη σπονδυλική στήλη επιλύονται καλύτερα με την παράμετρο των νημάτων. Όταν χρησιμοποιείτε τη σπονδυλική στήλη, συνιστούμε έναν μικρότερο αριθμό και το μοχλό μόχλευσης. Όταν χρησιμοποιείτε το cmd.php, χρησιμοποιήστε όχι περισσότερο από 2 φορές τον αριθμό των πυρήνων της CPU."
+msgstr "Ο προεπιλεγμένος αριθμός ταυτόχρονων διεργασιών που εκτελούνται ανά Συλλέκτη Δεδομένων. ΣΗΜΕΙΩΣΗ: Από την έκδοση Cacti 1.2, αυτή η ρύθμιση διατηρείται στον Συλλέκτη Δεδομένων. Στο εξής, αυτή η τιμή αποτελεί μόνο προεπιλογή για τον Συλλέκτη Δεδομένων. Η χρήση μεγαλύτερου αριθμού όταν χρησιμοποιείτε το cmd.php θα βελτιώσει την απόδοση. Οι βελτιώσεις απόδοσης στο Spine επιτυγχάνονται καλύτερα με την παράμετρο των νημάτων (threads). Όταν χρησιμοποιείτε το Spine, συνιστούμε μικρότερο αριθμό διεργασιών και αξιοποίηση των νημάτων αντ' αυτού. Όταν χρησιμοποιείτε το cmd.php, μην χρησιμοποιείτε περισσότερο από 2x τον αριθμό των πυρήνων της CPU."
 
 #: include/global_settings.php:1500
 msgid "Threads per Process"
@@ -11066,7 +11066,7 @@ msgstr "Προεπιλεγμένα θέματα ανά διεργασία"
 
 #: include/global_settings.php:1501
 msgid "The Default Threads allowed per process.  NOTE: Starting in Cacti 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
-msgstr "Τα προκαθορισμένα θέματα επιτρέπονται ανά διαδικασία. ΣΗΜΕΙΩΣΗ: Ξεκινώντας από το Cacti 1.2+, αυτή η ρύθμιση διατηρείται στον συλλέκτη δεδομένων και αυτή είναι απλώς η προκαθορισμένη ρύθμιση. Χρησιμοποιώντας έναν υψηλότερο αριθμό κατά τη χρήση της σπονδυλικής στήλης, θα βελτιωθεί η απόδοση. Ωστόσο, βεβαιωθείτε ότι έχετε αρκετές συνδέσεις MySQL / MariaDB για να υποστηρίξετε την ακόλουθη εξίσωση: connections = collectors data * processes * (threads + script servers). Πρέπει επίσης να βεβαιωθείτε ότι έχετε αρκετές εφεδρικές συνδέσεις για τις συνδέσεις σύνδεσης χρήστη."
+msgstr "Ο προεπιλεγμένος αριθμός νημάτων που επιτρέπονται ανά διεργασία. ΣΗΜΕΙΩΣΗ: Από την έκδοση Cacti 1.2+, αυτή η ρύθμιση διατηρείται στον Συλλέκτη Δεδομένων (Data Collector) και εδώ αποτελεί απλώς την προεπιλογή. Η χρήση μεγαλύτερου αριθμού όταν χρησιμοποιείτε το Spine θα βελτιώσει την απόδοση. Ωστόσο, βεβαιωθείτε ότι διαθέτετε αρκετές συνδέσεις MySQL/MariaDB ώστε να υποστηρίζεται η ακόλουθη εξίσωση: connections = data collectors * processes * (threads + script servers). Πρέπει επίσης να βεβαιωθείτε ότι έχετε αρκετές εφεδρικές συνδέσεις και για τις συνδέσεις εισόδου χρηστών."
 
 #: include/global_settings.php:1515
 msgid "Authentication Method"
@@ -11074,7 +11074,7 @@ msgstr "Μέθοδος ταυτοποίησης"
 
 #: include/global_settings.php:1516
 msgid "<blockquote><i>Built-in Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Cacti resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote> <i>Ενσωματωμένος έλεγχος ταυτότητας</i> - ο Cacti χειρίζεται τον έλεγχο ταυτότητας χρήστη, ο οποίος σας επιτρέπει να δημιουργείτε χρήστες και να τους παρέχετε δικαιώματα σε διαφορετικές περιοχές εντός του Cacti. <br><br> <i>Βασικός έλεγχος</i> ταυτότητας <i>ιστού</i> - Ο έλεγχος ταυτότητας γίνεται από τον διακομιστή ιστού. Οι χρήστες μπορούν να προστεθούν ή να δημιουργηθούν αυτόματα κατά την πρώτη είσοδο, αν ο χρήστης του προτύπου έχει οριστεί, διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη. <br><br> <i>Έλεγχος ταυτότητας LDAP</i> - Επιτρέπει τον έλεγχο ταυτότητας σε έναν διακομιστή LDAP. Οι χρήστες θα δημιουργηθούν αυτόματα κατά την πρώτη σύνδεσή τους, εάν ο χρήστης του προτύπου έχει οριστεί, διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη. Εάν η λειτουργική μονάδα LDAP της PHP δεν είναι ενεργοποιημένη, ο έλεγχος ταυτότητας LDAP δεν θα εμφανιστεί ως επιλογή επιλογής. <br><br> <i>Πολλαπλή επαλήθευση τομέα LDAP / AD</i> - Επιτρέπει στους διαχειριστές να υποστηρίζουν πολλαπλές διαφορετικές ομάδες από διαφορετικούς καταλόγους LDAP / AD για πρόσβαση σε πόρους του Cacti. Ακριβώς όπως ο έλεγχος ταυτότητας LDAP, η μονάδα LDAP της PHP απαιτείται για να χρησιμοποιήσει αυτή τη μέθοδο. </blockquote>"
+msgstr "<blockquote><i>Ενσωματωμένος έλεγχος ταυτότητας</i> - Το Cacti διαχειρίζεται τον έλεγχο ταυτότητας χρηστών, επιτρέποντάς σας να δημιουργείτε χρήστες και να τους εκχωρείτε δικαιώματα σε διάφορες περιοχές εντός του Cacti.<br><br><i>Βασικός έλεγχος ταυτότητας ιστού</i> - Ο έλεγχος ταυτότητας γίνεται από τον διακομιστή ιστού. Οι χρήστες μπορούν να προστεθούν ή να δημιουργηθούν αυτόματα κατά την πρώτη σύνδεση εάν έχει οριστεί ο Πρότυπος χρήστης, διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη.<br><br><i>Έλεγχος ταυτότητας LDAP</i> - Επιτρέπει τον έλεγχο ταυτότητας σε έναν διακομιστή LDAP. Οι χρήστες θα δημιουργηθούν αυτόματα κατά την πρώτη σύνδεση εάν έχει οριστεί ο Πρότυπος χρήστης, διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη. Εάν η λειτουργική μονάδα LDAP της PHP δεν είναι ενεργοποιημένη, ο έλεγχος ταυτότητας LDAP δεν θα εμφανίζεται ως επιλέξιμη επιλογή.<br><br><i>Έλεγχος ταυτότητας πολλαπλών τομέων LDAP/AD</i> - Επιτρέπει στους διαχειριστές να υποστηρίζουν πολλαπλές ξεχωριστές ομάδες από διαφορετικούς καταλόγους LDAP/AD για πρόσβαση στους πόρους του Cacti. Όπως και στον έλεγχο ταυτότητας LDAP, απαιτείται η λειτουργική μονάδα LDAP της PHP για τη χρήση αυτής της μεθόδου.</blockquote>"
 
 #: include/global_settings.php:1522
 msgid "Support Authentication Cookies"
@@ -11312,7 +11312,7 @@ msgstr "Λειτουργία εντοπισμού σφαλμάτων LDAP"
 
 #: include/global_settings.php:1753
 msgid "If Checked Cacti will log extra LDAP information to the Cacti log during Binding and Searching activities."
-msgstr "Εάν οι Κάκτοι έχουν επιλεγεί, θα καταγράψουν επιπλέον πληροφορίες LDAP στο αρχείο καταγραφής των Κάκτων κατά τη διάρκεια των δραστηριοτήτων δέσμευσης και αναζήτησης."
+msgstr "Εάν επιλεγεί, το Cacti θα καταγράφει επιπλέον πληροφορίες LDAP στο αρχείο καταγραφής του Cacti κατά τη διάρκεια των ενεργειών σύνδεσης (Binding) και αναζήτησης (Searching)."
 
 #: include/global_settings.php:1758 user_domains.php:451
 msgid "Encryption"
@@ -12017,7 +12017,7 @@ msgstr "Ποσοστό απόκλισης"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Αυτή η τιμή αντιπροσωπεύει το ποσοστό πάνω από το προσαρμοσμένο μέσο δείγματος μόλις αφαιρεθούν τα αποθέματα από το δείγμα. Για παράδειγμα, ένα ποσοστό διακύμανσης 100 %% σε έναν προσαρμοσμένο μέσο όρο των 50 θα αφαιρέσει οποιοδήποτε δείγμα πάνω από την ποσότητα των 100 από το γράφημα."
+msgstr "Αυτή η τιμή αντιπροσωπεύει το ποσοστό πάνω από τον προσαρμοσμένο μέσο όρο δείγματος αφού αφαιρεθούν οι ακραίες τιμές από το δείγμα. Για παράδειγμα, ένα Ποσοστό Διακύμανσης 100%% σε έναν προσαρμοσμένο μέσο όρο 50 θα αφαιρούσε κάθε δείγμα πάνω από την ποσότητα 100 από το γράφημα."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12126,7 +12126,7 @@ msgstr "Πώς θα θέλατε οι Cacti να παρουσιάζουν ημε
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Server v %s - Συντήρηση"
+msgstr "Ζώνη ώρας διακομιστή Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12447,7 +12447,7 @@ msgstr "Αριθμός αρχείων εκτός σύνδεσης:"
 
 #: index.php:89
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Cacti Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Cacti's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Cacti Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Cacti Database for updating."
-msgstr "<strong>ΣΗΜΕΙΩΣΗ:</strong> Έχετε συνδεθεί σε έναν απομακρυσμένο συλλέκτη δεδομένων. Όταν είστε <b>συνδεδεμένοι στο διαδίκτυο</b> , θα μπορείτε να βλέπετε και να ελέγχετε μεγάλο μέρος της Ιστοσελίδας του Κύριου Κάκτι, σαν να συνδεθήκατε σε αυτό. Επίσης, είναι σημαντικό να σημειωθεί ότι οι συλλέκτες απομακρυσμένων δεδομένων πρέπει να χρησιμοποιούν τη λειτουργία της υπηρεσίας βελτίωσης απόδοσης Cacti <b>&#39;On Demand Updating&#39;</b> και πάντα συνιστούμε τη χρήση της σπονδυλικής στήλης. Όταν ο απομακρυσμένος συλλέκτης δεδομένων είναι <b>«εκτός σύνδεσης»</b> , ο ιστότοπος συλλογής δεδομένων απομακρυσμένων δεδομένων θα περιέχει πολύ λιγότερες πληροφορίες. Ωστόσο, θα αποθηκεύσει προσωρινά όλες τις ενημερώσεις έως ότου επιτευχθεί η πρόσβαση στη Βάση Δεδομένων Κύριου Κατσί και στον Διακομιστή Web. Στη συνέχεια, θα αφαιρεθεί ο πίνακας Boost που επιστρέφει στη βάση δεδομένων του κύριου κατόχου για ενημέρωση."
+msgstr "<strong>ΣΗΜΕΙΩΣΗ:</strong> Έχετε συνδεθεί σε έναν Απομακρυσμένο Συλλέκτη Δεδομένων. Όταν είναι <b>'σε σύνδεση'</b>, θα μπορείτε να προβάλλετε και να ελέγχετε μεγάλο μέρος του Κύριου Ιστότοπου του Cacti, ακριβώς σαν να είχατε συνδεθεί σε αυτόν. Επίσης, είναι σημαντικό να σημειωθεί ότι οι Απομακρυσμένοι Συλλέκτες Δεδομένων απαιτείται να χρησιμοποιούν τη λειτουργία <b>'Ενημέρωση κατ' απαίτηση'</b> των Υπηρεσιών Βελτίωσης Απόδοσης του Cacti και συνιστούμε πάντα τη χρήση του Spine. Όταν ο Απομακρυσμένος Συλλέκτης Δεδομένων είναι <b>'εκτός σύνδεσης'</b>, ο ιστότοπος του Απομακρυσμένου Συλλέκτη Δεδομένων θα περιέχει πολύ λιγότερες πληροφορίες. Ωστόσο, θα αποθηκεύει προσωρινά όλες τις ενημερώσεις έως ότου η Κύρια Βάση Δεδομένων του Cacti και ο Διακομιστής Ιστού γίνουν προσβάσιμοι. Στη συνέχεια, θα αποστείλει την έξοδο του πίνακα Boost πίσω στην Κύρια Βάση Δεδομένων του Cacti για ενημέρωση."
 
 #: index.php:94
 msgid "<strong>NOTE:</strong> None of the Core Cacti Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -12833,7 +12833,7 @@ msgstr "Κλαδί:"
 #: lib/auth.php:2738 lib/auth.php:2772 lib/html_tree.php:966
 #: lib/reports.php:1059
 msgid "Device:"
-msgstr "设备："
+msgstr "Συσκευή:"
 
 #: lib/auth.php:3607 lib/auth.php:3687
 msgid "Your account has been locked.  Please contact your Administrator."
@@ -12956,7 +12956,7 @@ msgstr "Αρχείο"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "% d Γραμμές"
+msgstr "Αρχικές γραμμές"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13380,7 +13380,7 @@ msgstr "Λήψη SNMP πάρει αποτέλεσμα για δεδομένα @ 
 #: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Εκτέλεση του SNMP get για δεδομένα @ &#39; %s&#39; [value = &#39;value value&#39;]"
+msgstr "Εκτέλεση SNMP get για δεδομένα @ '%s' [value='$value']"
 
 #: lib/data_query.php:1305
 #, php-format
@@ -13585,7 +13585,7 @@ msgstr "Σύνδεσμος %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Σφάλμα: Δεν <b>Για την</b> αντιμετώπιση που !! <br> Εάν χρησιμοποιείτε το σύνδεσμο <i>Δοκιμαστική αλληλογραφία</i> , ορίστε τη ρύθμιση <b>E-mail ειδοποίησης</b> ."
+msgstr "Σφάλμα αποστολέα (Mailer): Δεν έχει οριστεί διεύθυνση παραλήπτη!!<br>Εάν χρησιμοποιείτε τον σύνδεσμο <i>Δοκιμαστικό μήνυμα (Test Mail)</i>, ορίστε τη ρύθμιση <b>E-mail ειδοποίησης</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13656,7 +13656,7 @@ msgstr "Αποστολή μηνύματος ..."
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "Μήνυμα δοκιμής κάκτων"
+msgstr "Δοκιμαστικό μήνυμα Cacti"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -14842,11 +14842,11 @@ msgstr "Ο όρος αναζήτησης &quot; %s&quot; δεν είναι έγ�
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "Οι κανονικές εκφράσεις κάκτων περιορίζονται σε 50 χαρακτήρες μόνο για λόγους ασφαλείας."
+msgstr "Οι κανονικές εκφράσεις του Cacti περιορίζονται σε 50 χαρακτήρες μόνο για λόγους ασφαλείας."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "Οι κανονικές εκφράσεις των κάκτων δεν μπορούν να περιλαμβάνουν τον ημίχρωμο χαρακτήρα."
+msgstr "Οι κανονικές εκφράσεις του Cacti δεν μπορούν να περιλαμβάνουν τον χαρακτήρα ερωτηματικού (;)."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -15135,7 +15135,7 @@ msgstr "Δημιουργήσατε μια νέα βάση δεδομένων, α
 
 #: lib/installer.php:1697
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
-msgstr "Αυτό το σφάλμα μπορεί επίσης να δημιουργηθεί εάν ο χρήστης της βάσης δεδομένων κάκτων δεν έχει σωστά δικαιώματα στη βάση δεδομένων Cacti. Βεβαιωθείτε ότι ο χρήστης της βάσης δεδομένων Cacti έχει τη δυνατότητα να επιλέγει, να εισάγει, να διαγράφει, να ενημερώνει, να δημιουργεί, να αλλάζει, να καταγράφει, να καταγράφει, στη βάση δεδομένων Cacti."
+msgstr "Αυτό το σφάλμα ενδέχεται επίσης να προκύψει εάν ο χρήστης βάσης δεδομένων του Cacti δεν διαθέτει τα σωστά δικαιώματα στη βάση δεδομένων του Cacti. Βεβαιωθείτε ότι ο χρήστης βάσης δεδομένων του Cacti έχει δικαιώματα SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX στη βάση δεδομένων του Cacti."
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
@@ -15190,7 +15190,7 @@ msgstr "Σας ευχαριστούμε που αφιερώσατε χρόνο �
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Βεβαιωθείτε ότι έχετε διαβάσει και ακολουθήσει τα απαραίτητα βήματα που απαιτούνται για την εγκατάσταση του Cacti προτού συνεχίσετε. Μπορούν να βρεθούν πληροφορίες εγκατάστασης για λειτουργικά συστήματα που βασίζονται σε <a href=\"%1$s\">Unix</a> και <a href=\"%2$s\">Win32</a> ."
+msgstr "Βεβαιωθείτε ότι έχετε διαβάσει και ακολουθήσει τα απαιτούμενα βήματα για την εγκατάσταση του Cacti προτού συνεχίσετε. Πληροφορίες εγκατάστασης μπορείτε να βρείτε για λειτουργικά συστήματα που βασίζονται σε <a href=\"%s\">Unix</a> και <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15603,7 +15603,7 @@ msgstr "Αυτή η επιλογή σεναρίου θα ενεργοποιήσ�
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Συνιστάται ανεπιφύλακτα να ενημερώσετε το config.php για να ενεργοποιήσετε αυτήν τη δυνατότητα <b>αποσυσκευάζοντας τη</b> μεταβλητή <b>$input_whitelist</b> και στη συνέχεια εκτελώντας τις τρεις παραπάνω επιλογές σεναρίου CLI μετά την ολοκλήρωση της εγκατάστασης μέσω ιστού."
+msgstr "Συνιστάται ανεπιφύλακτα να ενημερώσετε το αρχείο config.php ώστε να ενεργοποιήσετε αυτήν τη λειτουργία αφαιρώντας το σχόλιο από τη μεταβλητή <b>$input_whitelist</b> και στη συνέχεια εκτελώντας τις τρεις παραπάνω επιλογές σεναρίου CLI αφού ολοκληρωθεί η εγκατάσταση μέσω ιστού."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -15631,7 +15631,7 @@ msgstr "Προεπιλεγμένο δίκτυο αυτοματισμού"
 
 #: lib/installer.php:2601
 msgid "Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "Οι κάκτοι μπορούν να σαρώσουν αυτόματα το δίκτυο μετά την ολοκλήρωση της εγκατάστασης. Αυτό θα χρησιμοποιήσει την περιοχή δικτύου παρακάτω για να επεξεργαστεί το φάσμα των διευθύνσεων IP που μπορούν να σαρωθούν. Προεπιλεγμένο σύνολο επιλογών ορίζεται για τη σάρωση, που περιλαμβάνει τη χρήση τόσο κοινών όσο και ιδιωτικών κοινοτήτων."
+msgstr "Το Cacti μπορεί να σαρώσει αυτόματα το δίκτυο μόλις ολοκληρωθεί η εγκατάσταση. Αυτό θα χρησιμοποιήσει το παρακάτω εύρος δικτύου για να υπολογίσει το εύρος των διευθύνσεων IP που μπορούν να σαρωθούν. Έχει οριστεί ένα προκαθορισμένο σύνολο επιλογών για τη σάρωση, το οποίο περιλαμβάνει τη χρήση τόσο των κοινοτήτων 'public' όσο και 'private'."
 
 #: lib/installer.php:2602
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -16404,7 +16404,7 @@ msgstr "Το αρχείο RRA &#39; %s&#39; έχει τα ίδια CF / βήμα
 #: lib/rrd.php:3978
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
-msgstr "Το pdp_per_row του '%s' δεν είναι έγκυρο για το RRA '%s' θα πρέπει να είναι '%s'.  Εξετάστε το ενδεχόμενο να διαγράψετε και να επιτρέψετε στους Κάκτους να δημιουργήσουν ξανά το αρχείο RRD."
+msgstr "Η τιμή pdp_per_row του '%s' δεν είναι έγκυρη για το RRA '%s', θα έπρεπε να είναι '%s'. Εξετάστε το ενδεχόμενο να διαγράψετε το αρχείο RRD και να επιτρέψετε στο Cacti να το δημιουργήσει ξανά."
 
 #: lib/rrd.php:3982
 #, php-format
@@ -16476,7 +16476,7 @@ msgstr "CDP Άγνωστα Σημεία δεδομένων (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Δεν βρέθηκαν %s"
+msgstr "Βρέθηκαν σφάλματα"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16921,7 +16921,7 @@ msgstr "Με τις δυνατότητες απομακρυσμένης διερ
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Εάν χρησιμοποιείτε το Cacti Performance Booster και επιλέγετε μια μηχανή αποθήκευσης μνήμης, θα πρέπει να είστε προσεκτικοί για να ξεπλύνετε το ρυθμιστή απόδοσης Booster πριν το σύστημα ξεπεράσει το χώρο μνήμης. Αυτό γίνεται με δύο τρόπους, αρχικά μειώνοντας το μέγεθος της στήλης εξόδου σας στο σωστό μέγεθος. Αυτή η στήλη βρίσκεται στους πίνακες poller_output και poller_output_boost. Το δεύτερο πράγμα που μπορείτε να κάνετε είναι να διαθέσετε περισσότερη μνήμη στους πίνακες μνήμης. Έχουμε επιλέξει αυθαίρετα μια συνιστώμενη τιμή 10 %% μνήμης συστήματος, αλλά αν χρησιμοποιείτε SSD δίσκους ή έχετε μικρότερο σύστημα, μπορείτε να αγνοήσετε αυτή τη σύσταση ή να επιλέξετε διαφορετική μηχανή αποθήκευσης. Ενδέχεται να δείτε την αναμενόμενη κατανάλωση των πινάκων Performance Booster κάτω από την Κονσόλα -&gt; Συστήματα Utilities -&gt; View Boost Status."
+msgstr "Εάν χρησιμοποιείτε το Cacti Performance Booster και επιλέξετε μια μηχανή αποθήκευσης στη μνήμη, πρέπει να προσέχετε να εκκενώνετε την ενδιάμεση μνήμη του Performance Booster προτού εξαντληθεί ο χώρος πινάκων μνήμης του συστήματος. Αυτό γίνεται με δύο τρόπους: πρώτον, μειώνοντας το μέγεθος της στήλης εξόδου σας στο ακριβές απαιτούμενο μέγεθος. Αυτή η στήλη βρίσκεται στους πίνακες poller_output και poller_output_boost. Το δεύτερο πράγμα που μπορείτε να κάνετε είναι να εκχωρήσετε περισσότερη μνήμη στους πίνακες μνήμης. Έχουμε επιλέξει αυθαίρετα μια συνιστώμενη τιμή 10%% της μνήμης συστήματος, αλλά εάν χρησιμοποιείτε δίσκους SSD ή έχετε μικρότερο σύστημα, μπορείτε να αγνοήσετε αυτήν τη σύσταση ή να επιλέξετε διαφορετική μηχανή αποθήκευσης. Μπορείτε να δείτε την αναμενόμενη κατανάλωση των πινάκων του Performance Booster στην ενότητα Κονσόλα -> Βοηθητικά προγράμματα συστήματος -> Προβολή κατάστασης Boost."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16947,7 +16947,7 @@ msgstr "Εάν τα τραπέζια σας έχουν πολύ μεγάλα ε�
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "Το InnoDB θα κρατήσει όσο το δυνατόν περισσότερους πίνακες και ευρετήρια στη μνήμη του συστήματος. Επομένως, θα πρέπει να κάνετε το innodb_buffer_pool αρκετά μεγάλο για να κρατήσετε όσο περισσότερους πίνακες και ευρετήριο στη μνήμη. Ο έλεγχος του μεγέθους του κατάλογο / var / lib / mysql / cacti θα βοηθήσει στον προσδιορισμό αυτής της τιμής. Συνιστούμε 25 %% από τα συστήματα σας για μνήμη, αλλά οι απαιτήσεις σας θα διαφέρουν ανάλογα με το μέγεθος των συστημάτων σας."
+msgstr "Το InnoDB θα διατηρήσει όσους περισσότερους πίνακες και ευρετήρια είναι δυνατό στη μνήμη του συστήματος. Επομένως, θα πρέπει να ορίσετε το innodb_buffer_pool αρκετά μεγάλο ώστε να χωράει όσο το δυνατόν περισσότερους πίνακες και ευρετήρια στη μνήμη. Ο έλεγχος του μεγέθους του καταλόγου /var/lib/mysql/cacti θα βοηθήσει στον προσδιορισμό αυτής της τιμής. Συνιστούμε το 25%% της συνολικής μνήμης του συστήματός σας, αλλά οι απαιτήσεις σας ενδέχεται να διαφέρουν ανάλογα με το μέγεθος του συστήματός σας."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17733,7 +17733,7 @@ msgstr "Υπέρβαση μέγιστου χρόνου εκτέλεσης %d δ�
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Ο κύκλος ψηφοφορίας κάκτων ξεπέρασε το διάστημα Poller από"
+msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Ο κύκλος συλλογής του Cacti υπερέβη το διάστημα Poller κατά "
 
 #: poller.php:961
 #, php-format
@@ -17823,7 +17823,7 @@ msgstr "Ο αριθμός των διεργασιών συλλογής δεδο�
 
 #: pollers.php:114
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "Ο αριθμός των νημάτων της σπονδυλικής στήλης που χρησιμοποιούνται κατά τη διαδικασία συλλογής δεδομένων."
+msgstr "Ο αριθμός των νημάτων του Spine που θα χρησιμοποιούνται ανά διεργασία Συλλέκτη Δεδομένων."
 
 #: pollers.php:122
 msgid "Sync Interval"
@@ -18723,7 +18723,7 @@ msgstr "Για να επεξεργαστείτε αυτό το δέντρο, π�
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Αυτό το δέντρο έχει κλειδωθεί για επεξεργασία στο%1$s από%2$s."
+msgstr "Αυτό το δέντρο έχει κλειδωθεί για επεξεργασία στις %s από %s."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -19116,7 +19116,7 @@ msgstr "Μη μέλος"
 #: user_admin.php:2441 user_group_admin.php:2154 user_group_admin.php:2155
 #: user_group_admin.php:2156
 msgid "ALLOW"
-msgstr "允许"
+msgstr "ΕΠΙΤΡΕΠΕΤΑΙ"
 
 #: user_admin.php:1064 user_admin.php:2439 user_admin.php:2440
 #: user_admin.php:2441 user_group_admin.php:2154 user_group_admin.php:2155
@@ -19780,7 +19780,7 @@ msgstr "Περισσότερες πληροφορίες"
 
 #: utilities.php:383
 msgid "Different version of Cacti and Spine!"
-msgstr "Διαφορετική έκδοση του Cacti και της σπονδυλικής στήλης!"
+msgstr "Διαφορετική έκδοση του Cacti και του Spine!"
 
 #: utilities.php:401
 #, php-format
@@ -20687,8 +20687,7 @@ msgstr "Δεν εντοπίστηκαν αλλαγές ευρετηρίου, η 
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "Ο συγχρονισμός απέτυχε. Ανατρέξτε στο αρχείο καταγραφής για λεπτομέρειες."
+msgstr "Ο συγχρονισμός απέτυχε. Δείτε το αρχείο καταγραφής για λεπτομέρειες."
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."

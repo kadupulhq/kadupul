@@ -37,7 +37,7 @@ msgstr "Cacti Geliştiriciler"
 
 #: about.php:49
 msgid "Developers working on Cacti, its Architecture, Documentation and Future Releases."
-msgstr "Kaktüsler, Mimarisi, Dokümantasyonu ve Gelecek Sürümleri üzerinde çalışan geliştiriciler."
+msgstr "Cacti, Mimarisi, Belgeleri ve Gelecek Sürümleri üzerinde çalışan geliştiriciler."
 
 #: about.php:61
 msgid "Honorable Mentions"
@@ -387,7 +387,7 @@ msgstr "Öğe Ayrıntılarını Göster"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Toplam Önizleme [ %s]"
+msgstr "Toplu Önizleme Mevcut Değil"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -884,11 +884,11 @@ msgstr "Şifre Değiştir"
 
 #: auth_changepassword.php:352
 msgid "Please enter your current password and your new<br>Cacti password."
-msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kaktüsler şifre."
+msgstr "Lütfen mevcut parolanızı ve yeni<br>Cacti parolanızı girin."
 
 #: auth_changepassword.php:354
 msgid "Please enter your new Cacti password."
-msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kaktüsler şifre."
+msgstr "Lütfen yeni Cacti parolanızı girin."
 
 #: auth_changepassword.php:362 auth_login.php:341 auth_login.php:344
 #: include/global_settings.php:1826 lib/functions.php:5789
@@ -1134,12 +1134,12 @@ msgstr "Cihaz otomasyon arayüzü ile manuel olarak eklenir."
 #: automation_devices.php:130
 #, php-format
 msgid "Device %s Added to Cacti"
-msgstr "%s Cihazı Kaktüslere Eklendi"
+msgstr "%s Cihazı Cacti'ye Eklendi"
 
 #: automation_devices.php:132
 #, php-format
 msgid "Device %s Not Added to Cacti"
-msgstr "%s Cihazı Kaktüslere Eklenmedi"
+msgstr "%s Cihazı Cacti'ye Eklenmedi"
 
 #: automation_devices.php:142
 msgid "Devices Removed from Cacti Automation database"
@@ -1630,7 +1630,7 @@ msgstr "İlişkili Site"
 
 #: automation_networks.php:477
 msgid "Choose the Cacti Site that you wish to associate discovered Devices with."
-msgstr "Bulunan Cihazları ilişkilendirmek istediğiniz Kaktüsler Sitesi&#39;ni seçin."
+msgstr "Keşfedilen Cihazları ilişkilendirmek istediğiniz Cacti Sitesini seçin."
 
 #: automation_networks.php:485
 msgid "Subnet Range"
@@ -1777,7 +1777,7 @@ msgstr "Ana bilgisayarların ana bilgisayar adını çözümlemeye çalışmak i
 
 #: automation_networks.php:569
 msgid "Automatically Add to Cacti"
-msgstr "Kaktüslere Otomatik Olarak Ekle"
+msgstr "Cacti'ye Otomatik Olarak Ekle"
 
 #: automation_networks.php:570
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Cacti."
@@ -2584,7 +2584,7 @@ msgstr "Ağaç Kuralı Bulunamadı"
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
-msgstr "Kaktüsler Sistemi Uyarısı"
+msgstr "Cacti Sistem Uyarısı"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
@@ -2592,7 +2592,7 @@ msgstr "UYARI: Cacti Daemon PID["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
-msgstr "Kaktüsler Sistem Araçları"
+msgstr "Cacti Sistem Duyurusu"
 
 #: cactid.php:132
 msgid "Notice: Cacti Daemon PID["
@@ -3614,7 +3614,7 @@ msgstr "İlişkili Grafik / Veri Şablonları [değiştir: %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "İlişkili Grafik / Veri Şablonları [değiştir: %s]"
+msgstr "İlişkili Grafik/Veri Şablonları [yeni]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4414,7 +4414,7 @@ msgstr "Bu alan boş bırakılırsa değer cihazdan elde edilir."
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Özel Veri [veri girişi: %s]"
+msgstr "Özel Veri Uyarı İletisi"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -4610,7 +4610,7 @@ msgstr "Görüntü Önbelleği Dizini yazılabilir değil. Lütfen izinleri ayar
 
 #: graph_realtime.php:474 graph_realtime.php:487
 msgid "Cacti Real-time Graphing"
-msgstr "Kaktüsler Gerçek Zamanlı Grafikler"
+msgstr "Cacti Gerçek Zamanlı Grafik Oluşturma"
 
 #: graph_realtime.php:505 utilities.php:2579
 msgid "Refresh Interval"
@@ -5181,7 +5181,7 @@ msgstr "Seçilmiş Grafik Şablonu"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Bu Grafiğe uygulanacak bir Grafik Şablonu seçin. Grafik Şablonlarını yalnızca 100%% uyumlu bir Grafik Şablonuna değiştirebileceğinizi lütfen unutmayın; bu, aynı Veri Kaynaklarını içerdiği anlamına gelir."
+msgstr "Bu Grafiğe uygulanacak bir Grafik Şablonu seçin. Grafik Şablonlarını yalnızca aynı Veri Kaynaklarını içeren %%100 uyumlu bir Grafik Şablonuyla değiştirebileceğinizi lütfen unutmayın."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5209,7 +5209,7 @@ msgstr "[Tüm Cihazlar] için Yeni Grafikler"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Kullanıcı Grubu Yönetimi [değiştir: %s]"
+msgstr "Grafik Yönetimi [ Cihaz Tabanlı Olmayan ]"
 
 #: graphs.php:2080
 #, php-format
@@ -5375,7 +5375,7 @@ msgstr "Varsayılana ayarla"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "UYARI: Kullanıcı için Kaktüsler Sayfası:%s: %s Ölümcül Hata Oluşturdu %d!"
+msgstr "UYARI: Cacti Sayfası:%s (Kullanıcı:%s) Ölümcül Hata %d Oluşturdu!"
 
 #: help.php:99
 #, php-format
@@ -5965,11 +5965,11 @@ msgstr "Giriş yapmadınız"
 
 #: include/auth.php:193
 msgid "You must be logged in to access this area of Cacti."
-msgstr "Bu kaktüslere erişmek için giriş yapmalısınız."
+msgstr "Cacti'nin bu alanına erişmek için oturum açmalısınız."
 
 #: include/auth.php:198
 msgid "FATAL: You must be logged in to access this area of Cacti."
-msgstr "FATAL: Bu kaktüsler alanına erişmek için giriş yapmalısınız."
+msgstr "KRİTİK HATA: Cacti'nin bu alanına erişmek için oturum açmış olmanız gerekir."
 
 #: include/auth.php:307 include/auth.php:309 lib/auth.php:5192
 #: permission_denied.php:31 permission_denied.php:33
@@ -5982,7 +5982,7 @@ msgstr "Bunun bir hata olduğunu düşünüyorsanız. Lütfen Cacti Yöneticiniz
 
 #: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "You are not permitted to access this section of Cacti."
-msgstr "Kaktüslerin bu bölümüne erişmene izin verilmiyor."
+msgstr "Cacti'nin bu bölümüne erişim izniniz yok."
 
 #: include/auth.php:318
 msgid "Installation In Progress"
@@ -6071,7 +6071,7 @@ msgstr "SNMP v3 Kimlik Doğrulama Şifreleri eşleşmiyor"
 
 #: include/global_arrays.php:195
 msgid "XML: Cacti version does not exist."
-msgstr "XML: Kaktüs versiyonu mevcut değil."
+msgstr "XML: Cacti sürümü mevcut değil."
 
 #: include/global_arrays.php:198
 msgid "XML: Hash version does not exist."
@@ -6211,15 +6211,15 @@ msgstr "Veri Girişi Alanı Kayıtlı. Veri Toplayıcıları herhangi bir yeni v
 
 #: include/global_arrays.php:300
 msgid "Log file specified is not a Cacti log or archive file."
-msgstr "Belirtilen günlük dosyası kaktüsler günlüğü veya arşiv dosyası değil."
+msgstr "Belirtilen günlük dosyası bir Cacti günlük veya arşiv dosyası değil."
 
 #: include/global_arrays.php:303
 msgid "Log file specified was Cacti archive file and was removed."
-msgstr "Belirtilen günlük dosyası Kaktüs arşiv dosyasıydı ve kaldırıldı."
+msgstr "Belirtilen günlük dosyası bir Cacti arşiv dosyasıydı ve kaldırıldı."
 
 #: include/global_arrays.php:306
 msgid "Cacti log purged successfully"
-msgstr "Kaktüsler günlüğü başarıyla temizlendi"
+msgstr "Cacti günlüğü başarıyla temizlendi"
 
 #: include/global_arrays.php:309
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6283,7 +6283,7 @@ msgstr "Veri Toplayıcı senkronizasyonu ana Cacti sunucusundan başlatılmalıd
 
 #: include/global_arrays.php:354
 msgid "Synchronization does not include the Central Cacti Database server."
-msgstr "Senkronizasyon, Merkezi Kaktüs Veri Tabanı sunucusunu içermez."
+msgstr "Eşitleme, Merkezi Cacti Veritabanı sunucusunu içermez."
 
 #: include/global_arrays.php:357
 msgid "When saving a Remote Data Collector, the Database Hostname must be unique from all others."
@@ -6664,7 +6664,7 @@ msgstr "Her gün"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "% d Konu"
+msgstr "1 İş Parçacığı"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -6974,7 +6974,7 @@ msgstr "Otomasyon Kurallarını Uygula"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
-msgstr "Kaktüsler Raporu"
+msgstr "Cacti ile İlgili"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
@@ -8066,7 +8066,7 @@ msgstr "SNMP Bildirim Alıcılarını Görüntüleyin"
 
 #: include/global_arrays.php:2594
 msgid "Cacti Settings"
-msgstr "Kaktüs Ayarları"
+msgstr "Cacti Ayarları"
 
 #: include/global_arrays.php:2600
 msgid "External Link"
@@ -8078,7 +8078,7 @@ msgstr "Eylem:"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "Kaktüsler Ana Sayfa"
+msgstr "Cacti Yardım"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8240,7 +8240,7 @@ msgstr "SNMP Zaman Aşımı"
 
 #: include/global_form.php:136
 msgid "The maximum number of milliseconds Cacti will wait for an SNMP response (does not work with php-snmp support)."
-msgstr "Maksimum milisaniye kaktüs sayısı SNMP yanıtını bekleyecektir (php-snmp desteği ile çalışmaz)."
+msgstr "Cacti'nin bir SNMP yanıtı için bekleyeceği en fazla milisaniye sayısı (php-snmp desteği ile çalışmaz)."
 
 #: include/global_form.php:147
 msgid "Maximum OIDs Per Get Request"
@@ -8494,7 +8494,7 @@ msgstr "Bu veri şablonuna verilen isim."
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Bu veri kaynağı için bir isim seçin. | Host_description | gibi değiştirme değişkenleri içerebilir. veya | query_fieldName |. Desteklenen yedek etiketlerin tam bir listesi için lütfen Cacti belgelerine bakın."
+msgstr "Bu veri kaynağı için bir ad seçin. |host_description| veya |query_fieldName| gibi değiştirme değişkenleri içerebilir. Desteklenen değiştirme etiketlerinin tam listesi için lütfen Cacti belgelerine bakın."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8591,7 +8591,7 @@ msgstr "Başlık (- başlık)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Grafikte basılan isim. | Host_description | gibi değiştirme değişkenleri içerebilir. veya | query_fieldName |. Desteklenen yedek etiketlerin tam bir listesi için lütfen Cacti belgelerine bakın."
+msgstr "Grafik üzerinde yazdırılan ad. |host_description| veya |query_fieldName| gibi değiştirme değişkenleri içerebilir. Desteklenen değiştirme etiketlerinin tam listesi için lütfen Cacti belgelerine bakın."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9048,7 +9048,7 @@ msgstr "Koleksiyon İpliği Sayısı"
 
 #: include/global_form.php:1242
 msgid "The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."
-msgstr "Bu cihazı sorgulamak için kullanılacak eşzamanlı iş parçacıklarının sayısı. Bu sadece Omurga yoklayıcısı için geçerlidir."
+msgstr "Bu cihazı yoklamak için kullanılacak eşzamanlı iş parçacığı sayısı. Bu yalnızca Spine poller için geçerlidir."
 
 #: include/global_form.php:1249
 msgid "Disable Device"
@@ -9704,7 +9704,7 @@ msgstr "Günlükleme"
 
 #: include/global_settings.php:172
 msgid "Cacti Log Path"
-msgstr "Kaktüsler Günlük Yolu"
+msgstr "Cacti Günlük Yolu"
 
 #: include/global_settings.php:173
 msgid "The path to your Cacti log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9720,7 +9720,7 @@ msgstr "Cacti&#39;nin Veri Toplayıcıları ile ilgili sorunlarınız varsa, bu 
 
 #: include/global_settings.php:192
 msgid "Rotate the Cacti Log"
-msgstr "Kaktüs Günlüğünü Döndür"
+msgstr "Cacti Günlüğünü Döndür"
 
 #: include/global_settings.php:193
 msgid "This option will rotate the Cacti Log periodically."
@@ -9748,15 +9748,15 @@ msgstr "Alternatif Poller Yolu"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Omurga İkili Dosya Konumu"
+msgstr "Spine İkili Dosya Konumu"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
-msgstr "Omurga ikili yolu."
+msgstr "Spine ikili dosyasının yolu."
 
 #: include/global_settings.php:226
 msgid "Spine Config File Path"
-msgstr "Omurga Yapılandırma Dosyası Yolu"
+msgstr "Spine Yapılandırma Dosyası Yolu"
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
@@ -9880,7 +9880,7 @@ msgstr "Dil Desteği"
 
 #: include/global_settings.php:343
 msgid "Choose 'enabled' to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "Kaktüslerin yerelleştirilmesine izin vermek için &#39;etkin&#39; seçeneğini seçin. Sıkı mod, istenen dilin sisteminizde kurulu olan tüm eklentiler tarafından da desteklenmesini gerektirir. Gerçek bu değilse, her şey İngilizce olarak gösterilecektir."
+msgstr "Cacti'nin yerelleştirilmesine izin vermek için 'etkin' seçeneğini seçin. Katı mod, istenen dilin sisteminizde kurulu tüm eklentiler tarafından da desteklenmesini gerektirir. Aksi durumda her şey İngilizce olarak görüntülenecektir."
 
 #: include/global_settings.php:349
 msgid "Language"
@@ -9904,7 +9904,7 @@ msgstr "Tercih Edilen Dil İşlemcisi"
 
 #: include/global_settings.php:367
 msgid "Cacti includes support for multiple alternate Language Translation Processors.  If none is selected Cacti will attempt to use the first one found."
-msgstr "Kaktüsler, birden çok alternatif Dil Çeviri İşlemcisi için destek içerir. Varsayılan olarak yerleşik PHP desteği kullanılacaktır, ancak tüm Linux türevleri yerleşik Dil Desteğini içermez. Seçilmezse, Cacti ilk bulunanı seçecektir."
+msgstr "Cacti, birden fazla alternatif Dil Çeviri İşlemcisi için destek içerir. Hiçbiri seçilmezse Cacti bulunan ilk işlemciyi kullanmaya çalışacaktır."
 
 #: include/global_settings.php:373
 msgid "Client TimeZone Support"
@@ -10032,7 +10032,7 @@ msgstr "Grafik / Veri Kaynağı Oluşturma Yöntemi"
 
 #: include/global_settings.php:468
 msgid "When enabled, Cacti will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Cacti will not allow the removal of Data Sources if they are used in other Graphs."
-msgstr "Etkinleştirildiğinde, Cacti, Grafikleri kaldırırken Radyo Düğmesini Grafiğin İlgili Veri Kaynaklarını Sil olarak ayarlayacaktır. Not: Kaktüsler, diğer Grafiklerde kullanılıyorsa Veri Kaynaklarının kaldırılmasına izin vermez."
+msgstr "Etkinleştirildiğinde Cacti, Grafikler kaldırılırken Radyo Düğmesini Grafiğin İlgili Veri Kaynaklarını Sil olarak ayarlayacaktır. Not: Cacti, başka Grafiklerde kullanılıyorsa Veri Kaynaklarının kaldırılmasına izin vermez."
 
 #: include/global_settings.php:473
 msgid "Graphs Auto Unlock"
@@ -10040,7 +10040,7 @@ msgstr "Grafik Eşleştirme Kuralı"
 
 #: include/global_settings.php:474
 msgid "When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
-msgstr "Etkinleştirildiğinde, Kaktüsler Grafikleri kilitlemez. Bu, bir Grafikle ilgili Veri Kaynaklarının daha hızlı manuel olarak değiştirilmesine izin verir."
+msgstr "Etkinleştirildiğinde Cacti Grafikleri kilitlemez. Bu, bir Grafikle ilgili Veri Kaynaklarının daha hızlı manuel olarak değiştirilmesine olanak tanır."
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
@@ -10212,7 +10212,7 @@ msgstr "Cihaz Konuları"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Varsayılan Aygıt İpliği sayısı. Bu sadece Omurga Veri Toplayıcı kullanılırken geçerlidir."
+msgstr "Varsayılan Cihaz İş Parçacığı sayısı. Bu yalnızca Spine Veri Toplayıcısı kullanılırken geçerlidir."
 
 #: include/global_settings.php:656
 #, php-format
@@ -10607,7 +10607,7 @@ msgstr "Özel Tarih Formatı"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "|tarih_saat| biçimlendirilirken kullanılacak bir grafikte"
+msgstr "Bir grafik üzerinde |date_time| biçimlendirilirken kullanılır"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10729,7 +10729,7 @@ msgstr "Çalışma saatlerinizin sona erdiği saat. Format:ss:dd"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "%d Hafta"
+msgstr "Hafta Sonlarını Gizle"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -10801,7 +10801,7 @@ msgstr "Tekrar (Cron) aralığı"
 
 #: include/global_settings.php:1241
 msgid "The frequency that the Cacti data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Cacti data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
-msgstr "Cacti veri toplayıcının başlatılacağı frekans. Cacti veri toplayıcının başlatılmasını kontrol etmek için crontab, zamanlanmış bir görev (Windows için) veya cactid systemd hizmetini kullanabilirsiniz. Kaktüs arka plan programının kullanımına ilişkin talimatlar için hizmet dizinindeki README.md dosyasını inceleyin."
+msgstr "Cacti veri toplayıcısının başlatılma sıklığı. Cacti veri toplayıcısının başlatılmasını denetlemek için crontab, zamanlanmış bir görev (Windows için) veya cactid systemd hizmetini kullanabilirsiniz. cactid arka plan programının kullanımına ilişkin yönergeler için service dizinindeki README.md dosyasını inceleyin."
 
 #: include/global_settings.php:1247
 msgid "Balance Process Load"
@@ -10833,7 +10833,7 @@ msgstr "Uzak Ajan Zaman Aşımı"
 
 #: include/global_settings.php:1266
 msgid "The amount of time, in seconds, that the Central Cacti web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Cacti Data Collector, the Remote Agent must be used to gather Device information."
-msgstr "Central Cacti web sunucusunun, isteği terk etmeden önce, Uzak Veri Toplayıcı&#39;dan çeşitli Cihaz bilgileri alması için bir yanıt bekleyeceği saniye cinsinden süre. Merkezi Kaktüs Veri Toplayıcısı dışındaki Veri Toplayıcılarla ilişkilendirilen Aygıtlarda, Aygıt bilgilerini toplamak için Uzak Aracı kullanılmalıdır."
+msgstr "Merkezi Cacti web sunucusunun, isteği iptal etmeden önce çeşitli Cihaz bilgilerini almak için Uzak Veri Toplayıcıdan yanıt bekleyeceği saniye cinsinden süre. Merkezi Cacti Veri Toplayıcısı dışındaki Veri Toplayıcılarla ilişkilendirilmiş Cihazlarda, Cihaz bilgilerini toplamak için Uzak Aracı kullanılmalıdır."
 
 #: include/global_settings.php:1279
 msgid "SNMP Bulkwalk Fetch Size"
@@ -10865,7 +10865,7 @@ msgstr "Kaynak Önbelleğini Yeniden Oluştur"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "Varsayılan olarak, ana Kaktüs Veri Toplayıcı tüm web sitesini ve eklentileri bir Kaynak Önbelleği'nde önbelleğe alır. Ardından, Uzak Veri Toplayıcıları periyodik olarak kendilerini ana Kaktüs Veri Toplayıcısından gelen güncellemelerle güncelleyecektir. Bu Kaynak Önbellek, esasen Uzak Veri Toplayıcıların kendi kendini yükseltmelerine izin verir. Bu seçeneği kullanmak istemiyorsanız, bu ayarı kullanarak devre dışı bırakabilirsiniz."
+msgstr "Varsayılan olarak ana Cacti Veri Toplayıcısı tüm web sitesini ve eklentileri bir Kaynak Önbelleğinde önbelleğe alır. Ardından Uzak Veri Toplayıcılar, ana Cacti Veri Toplayıcısından gelen güncellemelerle kendilerini periyodik olarak günceller. Bu Kaynak Önbelleği esasen Uzak Veri Toplayıcıların kendi kendini yükseltmesine olanak tanır. Bu seçeneği kullanmak istemiyorsanız, bu ayarı kullanarak devre dışı bırakabilirsiniz."
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
@@ -11312,7 +11312,7 @@ msgstr "LDAP Hata Ayıklama Modu"
 
 #: include/global_settings.php:1753
 msgid "If Checked Cacti will log extra LDAP information to the Cacti log during Binding and Searching activities."
-msgstr "Kontrol Edilirse Kaktüsler, Bağlama ve Arama faaliyetleri sırasında Kaktüsler günlüğüne fazladan LDAP bilgisi kaydeder."
+msgstr "İşaretlenirse Cacti, Bağlama ve Arama işlemleri sırasında Cacti günlüğüne ek LDAP bilgileri kaydeder."
 
 #: include/global_settings.php:1758 user_domains.php:451
 msgid "Encryption"
@@ -11612,7 +11612,7 @@ msgstr "Tüm ekleri içeren e-posta mesajının maksimum boyutu."
 
 #: include/global_settings.php:2026
 msgid "Poller Logging Level for Cacti Reporting"
-msgstr "Kaktüs Raporlaması için Poller Günlük Seviyesi"
+msgstr "Cacti Raporlaması için Poller Günlük Kaydı Düzeyi"
 
 #: include/global_settings.php:2027
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -12017,7 +12017,7 @@ msgstr "Varyans Yüzdesi"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Bu değer, aykırı değerler numuneden çıkarıldıktan sonra düzeltilmiş numune ortalamasının üzerindeki yüzdeyi temsil eder.  Örneğin, düzeltilmiş ortalama 50 'de 100%% Varyans Yüzdesi, 100' ün üzerindeki herhangi bir örneği grafikten kaldıracaktır."
+msgstr "Bu değer, aykırı değerler örneklemden çıkarıldıktan sonra düzeltilmiş örneklem ortalamasının üzerindeki yüzdeyi temsil eder. Örneğin, 50'lik düzeltilmiş ortalama üzerinde %%100 Varyans Yüzdesi, 100 miktarının üzerindeki tüm örnekleri grafikten kaldıracaktır."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12122,11 +12122,11 @@ msgstr "MySQL - TimeZone Desteği"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "Kaktüslerin tarihleri nasıl sunmasını istersiniz?  Bu ayar aynı zamanda Cacti Graphs tarihlerinin gösterilme şeklini de değiştirecektir."
+msgstr "Cacti'nin tarihleri nasıl göstermesini istersiniz? Bu ayar aynı zamanda Cacti Grafiklerindeki tarihlerin gösterim biçimini de değiştirecektir."
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Sunucu v %s - Bakım"
+msgstr "Cacti Sunucusu Saat Dilimi"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12331,7 +12331,7 @@ msgstr "Şifre Geçmişi"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "Etkinleştirilirse, Kaktüsler girişler arasındaki ve Grafikler sayfasına döndüğünüzde Ağaç Geçmişinizi hatırlar."
+msgstr "Etkinleştirilirse Cacti, oturumlar arasında ve Grafikler sayfasına döndüğünüzde Ağaç Geçmişinizi hatırlar."
 
 #: include/global_settings.php:2824
 msgid "Use Custom Fonts"
@@ -12447,7 +12447,7 @@ msgstr "Çevrimdışı Kayıt Sayısı:"
 
 #: index.php:89
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Cacti Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Cacti's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Cacti Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Cacti Database for updating."
-msgstr "<strong>NOT:</strong> Uzak Veri Toplayıcıya giriş yaptınız. <b>&#39;Online&#39;</b> olduğunda, Ana Cacti Web Sitesinin çoğunu, sanki giriş yapmış gibi görüntüleyebilir ve kontrol edebilirsiniz. Ayrıca, Uzaktan Veri Toplayıcıların Cacti&#39;nin Performans Artırma Hizmetleri <b>&#39;İsteğe Bağlı Güncelleme&#39;</b> özelliğini kullanması gerektiğini unutmayın ve daima Spine kullanmanızı öneririz. Uzak Veri Toplayıcı <b>&#39;çevrimdışı&#39;</b> olduğunda, Uzak Veri Toplayıcıları Web Sitesi çok daha az bilgi içerir. Bununla birlikte, Ana Kaktüs Veri Tabanı ve Web Sunucusu erişilinceye kadar tüm güncellemeleri önbelleğe alır. Ardından, Boost tablo çıkışını güncelleme için Ana Kaktüs Veri Tabanına geri gönderir."
+msgstr "<strong>NOT:</strong> Bir Uzak Veri Toplayıcıya giriş yaptınız. <b>'Çevrimiçi'</b> olduğunda, doğrudan oraya giriş yapmış gibi Ana Cacti Web Sitesinin büyük bölümünü görüntüleyebilir ve kontrol edebilirsiniz. Ayrıca, Uzak Veri Toplayıcıların Cacti'nin Performans Artırma Hizmetleri <b>'İsteğe Bağlı Güncelleme'</b> özelliğini kullanması gerektiğini unutmayın; her zaman Spine kullanmanızı öneririz. Uzak Veri Toplayıcı <b>'çevrimdışı'</b> olduğunda, Uzak Veri Toplayıcı Web Sitesi çok daha az bilgi içerir. Ancak, Ana Cacti Veritabanına ve Web Sunucusuna erişilebilene kadar tüm güncellemeleri önbelleğe alır. Ardından güncelleme için Boost tablo çıktısını Ana Cacti Veritabanına geri aktarır."
 
 #: index.php:94
 msgid "<strong>NOTE:</strong> None of the Core Cacti Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -12474,7 +12474,7 @@ msgstr "Cacti Sunucu v %s - Bakım"
 #: install/install.php:107
 #, php-format
 msgid "Cacti Server v%s - Installation Wizard"
-msgstr "Kaktüsler Server v %s - Kurulum Sihirbazı"
+msgstr "Cacti Sunucusu v%s - Kurulum Sihirbazı"
 
 #: install/install.php:107
 msgid "Refresh current page"
@@ -12482,7 +12482,7 @@ msgstr "Yenileme aralığı"
 
 #: install/install.php:113
 msgid "Initializing"
-msgstr "初始化"
+msgstr "Başlatılıyor"
 
 #: install/install.php:114
 #, php-format
@@ -12748,7 +12748,7 @@ msgstr "Sistem:"
 
 #: lib/api_device.php:1598 lib/api_device.php:1606
 msgid "Uptime:"
-msgstr "ÃalÄ±Åma SÃ¼resi:"
+msgstr "Çalışma Süresi:"
 
 #: lib/api_device.php:1609
 msgid "Hostname:"
@@ -12864,7 +12864,7 @@ msgstr "Erişim Reddedildi!  Şablon kullanıcı kimliği %s mevcut değil.  Lü
 
 #: lib/auth.php:4723
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Kaktüs yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kaktüs şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
+msgstr "Cacti yöneticiniz oturum açma işlemleri için karmaşık parolaları zorunlu kıldı ve mevcut Cacti parolanız yeni gereksinimleri karşılamıyor. Bu nedenle, parolanızı şimdi değiştirmelisiniz."
 
 #: lib/auth.php:4754
 #, php-format
@@ -12885,7 +12885,7 @@ msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "Kaktüs Günlüğü Temizlendi"
+msgstr "Cacti Oturum Açma Hatası"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12909,7 +12909,7 @@ msgstr "%s GBytes"
 #: lib/clog_webapi.php:136 utilities.php:1672
 #, php-format
 msgid "%s - WEBUI NOTE: Cacti Log Cleared from Web Management Interface."
-msgstr "%s - WEBUI NOT: Kaktüs Günlüğü, Web Yönetim Arayüzünden Temizlendi."
+msgstr "%s - WEBUI NOTU: Cacti Günlüğü Web Yönetim Arayüzünden Temizlendi."
 
 #: lib/clog_webapi.php:257
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Cacti and Syslog, the log information will remain in Syslog."
@@ -12956,7 +12956,7 @@ msgstr "Dosya"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "% d Satır"
+msgstr "İlk Satırlar"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13380,7 +13380,7 @@ msgstr "@ &#39; %s&#39; [değer = &#39; %s&#39;] verisi için SNMP sonucu alınd
 #: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "SNMP çalıştırma @ &#39; %s&#39; veri için [değer = &#39;$ değer&#39;]"
+msgstr "Veri için SNMP get yürütülüyor @ '%s' [value='$value']"
 
 #: lib/data_query.php:1305
 #, php-format
@@ -13585,7 +13585,7 @@ msgstr "Bağlantı %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Hata: set adrese <b>İÇİN</b> !! <br> <i>Posta Testi</i> bağlantısını kullanıyorsanız, lütfen <b>Uyarı e-posta</b> ayarını ayarlayın."
+msgstr "Posta Gönderici Hatası: Alıcı adresi ayarlanmamış!!<br><i>Test Mail</i> bağlantısını kullanıyorsanız lütfen <b>Uyarı e-postası</b> ayarını yapılandırın."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13656,7 +13656,7 @@ msgstr "Mesaj Gönderiliyor..."
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "Kaktüsler Test Mesajı"
+msgstr "Cacti Test İletisi"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -13694,7 +13694,7 @@ msgstr "%s %s"
 #: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
-msgstr "UYARI:  Anahtar Kaktüsler %s Dosyasını İçeriyor eksik.  Lütfen bu dosyayı bulun ve değiştirin"
+msgstr "UYARI: Temel Cacti İçerme Dosyası %s eksik. Lütfen bu dosyayı bulun ve yerine koyun"
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
@@ -13891,7 +13891,7 @@ msgstr "Yardım"
 
 #: lib/html.php:2878
 msgid "Cacti Home"
-msgstr "Kaktüsler Ana Sayfa"
+msgstr "Cacti Ana Sayfa"
 
 #: lib/html.php:2880
 msgid "Miscellaneous"
@@ -13907,11 +13907,11 @@ msgstr "Grafikler"
 
 #: lib/html.php:2884
 msgid "Cacti Project Page"
-msgstr "Kaktüsler Proje Sayfası"
+msgstr "Cacti Proje Sayfası"
 
 #: lib/html.php:2888
 msgid "Spine"
-msgstr "Omurga"
+msgstr "Spine"
 
 #: lib/html.php:2889
 msgid "RRDProxy"
@@ -13927,7 +13927,7 @@ msgstr "Kısayollar"
 
 #: lib/html.php:2892
 msgid "Contribute to the Cacti Project"
-msgstr "Kaktüs Günlüğünü Döndür"
+msgstr "Cacti Projesine Katkıda Bulunun"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
@@ -13951,7 +13951,7 @@ msgstr "Hata bildir"
 
 #: lib/html.php:2901
 msgid "Cacti"
-msgstr "Kaktüsgiller"
+msgstr "Cacti"
 
 #: lib/html.php:2903
 msgid "Click to Show/Hide Filter"
@@ -14031,7 +14031,7 @@ msgstr "Operasyon Başarılı"
 
 #: lib/html.php:2925 pollers.php:878
 msgid "Connection Failed"
-msgstr "AÄ adresi ayarlanÄ±yor"
+msgstr "Bağlantı Başarısız"
 
 #: lib/html.php:2926
 msgid "The response to the last action was unexpected."
@@ -14192,7 +14192,7 @@ msgstr "Geçerli bir dizin yolu girin"
 #: lib/html_form.php:1484
 #, php-format
 msgid "Cacti Color (%s)"
-msgstr "Kaktüs Rengi ( %s)"
+msgstr "Cacti Rengi (%s)"
 
 #: lib/html_form.php:1567
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14454,7 +14454,7 @@ msgstr "Konu"
 
 #: lib/html_reports.php:172
 msgid "Cacti Report"
-msgstr "Kaktüsler Raporu"
+msgstr "Cacti Raporu"
 
 #: lib/html_reports.php:173
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14842,11 +14842,11 @@ msgstr "&quot; %s&quot; arama terimi geçerli değil. Hata %s"
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "Kaktüslerin normal ifadeleri yalnızca güvenlik nedeniyle 50 karakterle sınırlıdır."
+msgstr "Cacti düzenli ifadeleri güvenlik nedeniyle yalnızca 50 karakterle sınırlıdır."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "Kaktüslerin düzenli ifadeleri yarı renkli karakteri içeremez."
+msgstr "Cacti düzenli ifadeleri noktalı virgül karakterini içeremez."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -14955,7 +14955,7 @@ msgstr "Paket ithal edildiyse, Cacti aşağıdaki değişiklikleri yapar:"
 
 #: lib/import.php:3104
 msgid "Cacti has imported the following items for the Package:"
-msgstr "Kaktüsler, Paket için aşağıdaki öğeleri içe aktardı:"
+msgstr "Cacti, Paket için aşağıdaki öğeleri içe aktardı:"
 
 #: lib/import.php:3107
 msgid "Package Files"
@@ -14971,7 +14971,7 @@ msgstr "Şablon içe aktarılırsa, Cacti aşağıdaki değişiklikleri yapar:"
 
 #: lib/import.php:3118
 msgid "Cacti has imported the following items for the Template:"
-msgstr "Kaktüsler, Şablon için aşağıdaki öğeleri içe aktardı:"
+msgstr "Cacti, Şablon için aşağıdaki öğeleri içe aktardı:"
 
 #: lib/import.php:3133
 msgid "[success]"
@@ -15135,11 +15135,11 @@ msgstr "Yeni bir veritabanı oluşturdunuz, ancak &#39;cacti.sql&#39; dosyasın�
 
 #: lib/installer.php:1697
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
-msgstr "Bu hata, kaktüs veritabanı kullanıcısı, Kaktüs veritabanı üzerinde doğru izinlere sahip değilse de oluşabilir. Lütfen Cacti veritabanı kullanıcısının Cacti veri tabanında SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX özelliklerine sahip olduğundan emin olun."
+msgstr "Bu hata, cacti veritabanı kullanıcısının Cacti veritabanı üzerinde doğru izinlere sahip olmaması durumunda da oluşabilir. Lütfen cacti veritabanı kullanıcısının Cacti veritabanında SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX yetkilerine sahip olduğundan emin olun."
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
-msgstr "Ayrıca MySQL içine MySQL TimeZone bilgileri almak ve Kaktüs kullanıcıya mysql.time_zone_name masaya SEÇ erişim izni <b>GEREKİR</b>"
+msgstr "Ayrıca MySQL TimeZone bilgilerini MySQL'e içe aktarmanız ve Cacti kullanıcısına mysql.time_zone_name tablosuna SELECT erişim izni vermeniz <b>ZORUNLUDUR</b>"
 
 #: lib/installer.php:1701
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15172,7 +15172,7 @@ msgstr "Versiyon Düşür"
 
 #: lib/installer.php:1845 utilities.php:307
 msgid "Cacti Version"
-msgstr "Kaktüs Versiyonu"
+msgstr "Cacti Sürümü"
 
 #: lib/installer.php:1845
 msgid "License Agreement"
@@ -15190,7 +15190,7 @@ msgstr "Ağınız için eksiksiz bir grafik çözümü olan Cacti&#39;yi indirme
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Devam etmeden önce Cacti&#39;yi yüklemek için gereken adımları okuduğunuzdan ve uyguladığınızdan emin olun. <a href=\"%1$s\">Unix</a> ve <a href=\"%2$s\">Win32</a> tabanlı işletim sistemleri için yükleme bilgilerini bulabilirsiniz."
+msgstr "Devam etmeden önce Cacti'yi kurmak için gereken adımları okuyup uyguladığınızdan emin olun. Kurulum bilgilerine <a href=\"%s\">Unix</a> ve <a href=\"%s\">Win32</a> tabanlı işletim sistemleri için ulaşabilirsiniz."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15208,7 +15208,7 @@ msgstr "Veri tabanı yapısı tutarsız olabileceğinden düşürülmesi öneril
 
 #: lib/installer.php:1863
 msgid "Cacti is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
-msgstr "Kaktüsler, GNU Genel Kamu Lisansı altında lisanslıdır, devam etmeden önce hükümlerini kabul etmeniz gerekir:"
+msgstr "Cacti, GNU Genel Kamu Lisansı altında lisanslanmıştır; devam etmeden önce hükümlerini kabul etmelisiniz:"
 
 #: lib/installer.php:1867
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
@@ -15461,7 +15461,7 @@ msgstr "Poller yapılandırması"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "Remote Cacti Poller bilgileriniz config.php dosyanıza eklenmedi. Lütfen config.php.dist <i>dosyasını inceleyin</i> ve değişkenleri ayarlayın: <i>$rdatabase_default, $rdatabase_username</i> , vb. Bu değişkenlerin ayarlanması ve Birincil Kaktüs veritabanı sunucunuzu göstermesi gerekir. Bunu düzeltin ve tekrar deneyin."
+msgstr "Uzak Cacti Poller bilgileriniz config.php dosyanıza eklenmemiş. Lütfen config.php.dist dosyasını inceleyin ve şu değişkenleri ayarlayın: <i>$rdatabase_default, $rdatabase_username</i> vb. Bu değişkenlerin ayarlanması ve Birincil Cacti veritabanı sunucunuzu işaret etmesi gerekir. Bunu düzeltip tekrar deneyin."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15575,7 +15575,7 @@ msgstr "Giriş Doğrulama Beyaz Listesi Koruması"
 
 #: lib/installer.php:2534
 msgid "Cacti Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Cacti poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
-msgstr "Bir komut dosyasını çağıran Kaktüs Veri Girişi yöntemlerinde, yönetici olmayan bir kişinin poller hesabının sahip olduğu dosyalara zarar verebileceği ve birisinin Cacti poller'ı kök olarak çalıştırdığı durumlarda saldırganların altyapınızı kullanın."
+msgstr "Bir betiği çağıran Cacti Veri Girişi yöntemleri, yönetici olmayan bir kullanıcının poller hesabına ait dosyalara zarar verebileceği şekilde istismar edilebilir ve Cacti poller'ının root olarak çalıştırıldığı durumlarda işletim sistemini tehlikeye atarak saldırganların altyapınızdan yararlanmasına yol açabilir."
 
 #: lib/installer.php:2535
 msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Cacti more thoroughly, it does increase the amount of work required by the Cacti administrator to import and manage Templates and Packages."
@@ -15603,7 +15603,7 @@ msgstr "Bu komut dosyası seçeneği, devre dışı bırakılan Veri Kaynakları
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "<b>$ İnput_whitelist</b> değişkenini <b>kaldırarak</b> ve ardından web tabanlı yükleme tamamlandıktan sonra yukarıdaki üç CLI komut dosyası seçeneğini çalıştırarak config.php'nizi güncellemeniz önemle önerilir."
+msgstr "Web tabanlı kurulum tamamlandıktan sonra <b>$input_whitelist</b> değişkeninin yorum satırını kaldırarak bu özelliği etkinleştirmek için config.php dosyanızı güncellemeniz ve ardından yukarıdaki üç CLI betiği seçeneğini çalıştırmanız önemle önerilir."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -15631,7 +15631,7 @@ msgstr "Varsayılan Otomasyon Ağı"
 
 #: lib/installer.php:2601
 msgid "Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "Kaktüsler kurulum tamamlandığında ağı otomatik olarak tarayabilir. Bu, taranabilecek IP&#39;lerin aralığını belirlemek için aşağıdaki ağ aralığını kullanacaktır. Tarama için, hem &#39;herkese açık&#39; hem de &#39;özel&#39; toplulukları içeren önceden tanımlanmış bir seçenek kümesi tanımlanmıştır."
+msgstr "Cacti, kurulum tamamlandıktan sonra ağı otomatik olarak tarayabilir. Taranabilecek IP aralığını belirlemek için aşağıdaki ağ aralığını kullanacaktır. Tarama için hem 'public' hem de 'private' topluluklarını kullanmayı içeren önceden tanımlanmış bir seçenek kümesi belirlenmiştir."
 
 #: lib/installer.php:2602
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -15982,7 +15982,7 @@ msgstr "Varsayılan Cihaz için şablon grafik bulunamadı"
 
 #: lib/installer.php:3507
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server."
-msgstr "UYARI: İşletim Sisteminizin Aygıt Şablonu Bulunamadı. Cacti sunucunuzu izlemek için Aygıt Şablonlarını veya Kaktüs Paketlerini içe aktarmanız gerekir."
+msgstr "UYARI: İşletim Sisteminiz için Cihaz Şablonu Bulunamadı. Cacti sunucunuzu izlemek için Cihaz Şablonlarını veya Cacti Paketlerini içe aktarmanız gerekecektir."
 
 #: lib/installer.php:3514
 msgid "Running first-time data query for local host"
@@ -16284,7 +16284,7 @@ msgstr "Eklentiler"
 #: lib/plugins.php:1217 lib/plugins.php:1223
 #, php-format
 msgid "Requires: Cacti >= %s"
-msgstr "Gerektirir: Kaktüsler&gt; = %s"
+msgstr "Gereksinimler: Cacti >= %s"
 
 #: lib/plugins.php:1220
 msgid "Legacy Plugin"
@@ -16409,7 +16409,7 @@ msgstr "'%s' değerindeki pdp_per_row, RRA '%s' için geçersiz; '%s' olmalıdı
 #: lib/rrd.php:3982
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
-msgstr "Kaktüsler için XFF RRA kimliği &#39; %s&#39; &#39; %s&#39; olmalıdır"
+msgstr "Cacti RRA kimliği için XFF değeri '%s', ancak '%s' olmalıdır"
 
 #: lib/rrd.php:3986
 #, php-format
@@ -16476,7 +16476,7 @@ msgstr "CDP Bilinmeyen Veri noktaları (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "%s Bulunamadı"
+msgstr "Hatalar Bulundu"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16921,7 +16921,7 @@ msgstr "Uzaktan yoklama yetenekleriyle, ana sunucudan uzak yoklayıcılara büy�
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Cacti Performans Artırıcı (Performance Booster) kullanıyor ve bir bellek depolama motoru seçiyorsanız, sistemin bellek tablo alanı tükenmeden önce Performance Booster arabelleğinizi boşaltmaya dikkat etmelisiniz. Bu iki şekilde yapılır: Birincisi, çıktı sütununuzun boyutunu tam olması gereken boyuta düşürmektir. Bu sütun poller_output ve poller_output_boost tablolarında yer alır. Yapabileceğiniz ikinci şey ise bellek tablolarına daha fazla bellek ayırmaktır. Önerilen değer olarak sistem belleğinin 10%%'unu keyfi olarak seçtik, ancak SSD disk sürücüleri kullanıyorsanız veya daha küçük bir sisteminiz varsa bu öneriyi göz ardı edebilir ya da farklı bir depolama motoru seçebilirsiniz. Performance Booster tablolarının beklenen tüketimini Konsol -> Sistem Yardımcı Programları -> Boost Durumunu Görüntüle altında görebilirsiniz."
+msgstr "Cacti Performance Booster kullanıyor ve bir bellek depolama motoru seçiyorsanız, sistemin bellek tablo alanı tükenmeden önce Performance Booster arabelleğini boşaltmaya dikkat etmelisiniz. Bu iki şekilde yapılır: Birincisi, çıktı sütununuzun boyutunu tam gereken boyuta düşürmektir. Bu sütun poller_output ve poller_output_boost tablolarında yer alır. Yapabileceğiniz ikinci şey ise bellek tablolarına daha fazla bellek ayırmaktır. Önerilen değer olarak sistem belleğinin %%10'unu seçtik, ancak SSD disk sürücüler kullanıyorsanız veya daha küçük bir sisteminiz varsa bu öneriyi göz ardı edebilir ya da farklı bir depolama motoru seçebilirsiniz. Performance Booster tablolarının beklenen tüketimini Konsol -> Sistem Yardımcı Programları -> Boost Durumunu Görüntüle altında görebilirsiniz."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16947,7 +16947,7 @@ msgstr "Tablolarınız çok büyük dizinlere sahipse, Barracuda innodb_file_for
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB, mümkün olduğunca çok sayıda tablo ve dizini sistem belleğinde tutacaktır. Bu nedenle, innodb_buffer_pool değerini tabloların ve dizinin mümkün olduğunca çoğunu bellekte tutacak kadar büyük yapmalısınız. /var/lib/mysql/cacti dizininin boyutunu kontrol etmek bu değeri belirlemede yardımcı olacaktır. Sisteminizin toplam belleğinin 25%%'ini öneriyoruz, ancak gereksinimleriniz sisteminizin boyutuna bağlı olarak değişecektir."
+msgstr "InnoDB, mümkün olduğunca çok tabloyu ve dizini sistem belleğinde tutar. Bu nedenle, innodb_buffer_pool değerini tabloların ve dizinlerin mümkün olduğunca çoğunu bellekte tutacak kadar büyük ayarlamalısınız. /var/lib/mysql/cacti dizininin boyutunu kontrol etmek bu değeri belirlemenize yardımcı olacaktır. Sisteminizin toplam belleğinin %%25'ini öneriyoruz, ancak gereksinimleriniz sisteminizin boyutuna bağlı olarak değişecektir."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17237,19 +17237,19 @@ msgstr "Dış Bağlantılar [yeni]"
 
 #: logout.php:59
 msgid "You have been logged out of Cacti due to a session timeout."
-msgstr "Bir oturum zaman aşımı nedeniyle Kaktüsler&#39;den çıkış yaptınız."
+msgstr "Oturum zaman aşımı nedeniyle Cacti oturumunuz kapatıldı."
 
 #: logout.php:61
 msgid "You have been logged out of Cacti due to an account suspension."
-msgstr "Bir oturum zaman aşımı nedeniyle Kaktüsler&#39;den çıkış yaptınız."
+msgstr "Hesabın askıya alınması nedeniyle Cacti oturumunuz kapatıldı."
 
 #: logout.php:63
 msgid "You have been logged out of Cacti due to a Remote Data Collector state change"
-msgstr "Bir oturum zaman aşımı nedeniyle Kaktüsler&#39;den çıkış yaptınız."
+msgstr "Uzak Veri Toplayıcı durum değişikliği nedeniyle Cacti oturumunuz kapatıldı"
 
 #: logout.php:71
 msgid "Logout of Cacti"
-msgstr "Kaktüsler Oturumu Kapat"
+msgstr "Cacti Oturumunu Kapat"
 
 #: logout.php:78
 msgid "Automatic Logout"
@@ -17733,7 +17733,7 @@ msgstr "Maksimum çalışma süresi olan %d saniye, poller id %d için aşıldı
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "UYARI: Kaktüs Yoklama Döngüsü, Poller Aralığını Şu Kadar Aştı"
+msgstr "UYARI: Cacti Yoklama Döngüsü Poller Aralığını Şu Süreyle Aştı: "
 
 #: poller.php:961
 #, php-format
@@ -17746,7 +17746,7 @@ msgstr "Poller Sinyal (Heartbeat) Modunda"
 
 #: poller.php:1263
 msgid "Cacti System Notification"
-msgstr "Kaktüsler Sistem Araçları"
+msgstr "Cacti Sistem Bildirimi"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
@@ -17759,11 +17759,11 @@ msgstr "UYARI: Ana Cacti veritabanı %s çevrimdışı veya kurtarma modunda"
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
-msgstr "Kaktüsler Birincil Yönetici"
+msgstr "Cacti Birincil Yöneticisi"
 
 #: poller_automation.php:1159
 msgid "Cacti Automation Report requires an html based Email client"
-msgstr "Kaktüsler Otomasyon Raporu, html tabanlı bir E-posta istemcisi gerektirir."
+msgstr "Cacti Otomasyon Raporu, HTML tabanlı bir e-posta istemcisi gerektirir"
 
 #: poller_boost.php:505
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
@@ -17823,7 +17823,7 @@ msgstr "Veri Toplayıcı&#39;nın sayısı üremek için kullanılacak şekilde 
 
 #: pollers.php:114
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "Veri Toplayıcı işlemi için kullanılacak Omurga İpliği sayısı."
+msgstr "Veri Toplayıcı işlemi başına kullanılacak Spine İş Parçacığı sayısı."
 
 #: pollers.php:122
 msgid "Sync Interval"
@@ -18723,7 +18723,7 @@ msgstr "Bu ağacı düzenlemek için önce Ağacı Düzenle düğmesine basarak 
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Bu ağaç%1$s içindeki Düzenleme için%2$s tarafından kilitlendi."
+msgstr "Bu ağaç %s tarihinde %s tarafından Düzenleme için kilitlendi."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -18937,7 +18937,7 @@ msgstr "Bu Ağaçtaki Toplam Site Şube Sayısı."
 
 #: tree.php:2454
 msgid "Branches"
-msgstr "филиалҳо"
+msgstr "Dallar"
 
 #: tree.php:2457
 msgid "The total number of Branches in this Tree."
@@ -19755,7 +19755,7 @@ msgstr "Genel bilgi"
 
 #: utilities.php:312
 msgid "Cacti OS"
-msgstr "Kaktüs İşletim Sistemi"
+msgstr "Cacti İşletim Sistemi"
 
 #: utilities.php:322
 msgid "NET-SNMP Version"
@@ -19780,7 +19780,7 @@ msgstr "Poller Bilgisi"
 
 #: utilities.php:383
 msgid "Different version of Cacti and Spine!"
-msgstr "Kaktüsler ve Omurga Farklı sürümü!"
+msgstr "Cacti ve Spine sürümleri farklı!"
 
 #: utilities.php:401
 #, php-format
@@ -20046,11 +20046,11 @@ msgstr "Günlük [Toplam Satır: %d - Gösterilen Tüm Öğeler]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
-msgstr "Kaktüs Günlüğünü Temizle"
+msgstr "Cacti Günlüğünü Temizle"
 
 #: utilities.php:1674
 msgid "Cacti Log Cleared"
-msgstr "Kaktüs Günlüğü Temizlendi"
+msgstr "Cacti Günlüğü Temizlendi"
 
 #: utilities.php:1676
 msgid "Error: Unable to clear log, no write permissions."
@@ -20122,7 +20122,7 @@ msgstr "RRD:"
 
 #: utilities.php:2351
 msgid "Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues."
-msgstr "Kaktüsler teknik destek sayfası. Geliştiriciler ve teknik destek personeli tarafından Cacti&#39;deki sorunlara yardımcı olmak için kullanılır. Yaygın yapılandırma sorunları için çekleri içerir."
+msgstr "Cacti teknik destek sayfası. Geliştiriciler ve teknik destek personeli tarafından Cacti'deki sorunlara yardımcı olmak için kullanılır. Yaygın yapılandırma sorunlarına yönelik denetimler içerir."
 
 #: utilities.php:2355
 msgid "The Cacti Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
@@ -20230,7 +20230,7 @@ msgstr "Yöneticilerin SNMP bildirim alıcılarını korumalarına izin verir."
 
 #: utilities.php:2449
 msgid "Cacti System Utilities"
-msgstr "Kaktüsler Sistem Araçları"
+msgstr "Cacti Sistem Yardımcı Programları"
 
 #: utilities.php:2672
 msgid "Overrun Warning"
@@ -20681,7 +20681,6 @@ msgstr "Dizin Değişikliği Algılanmadı, Poller Önbelleği Yenilendi"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
 msgstr "Eşitleme başarısız oldu. Ayrıntılar için günlüğe bakın."
 
 #: graph.php:512

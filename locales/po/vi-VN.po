@@ -20,7 +20,7 @@ msgstr ""
 
 #: about.php:29 include/global_arrays.php:2654 lib/html.php:2900
 msgid "About Cacti"
-msgstr "Về xương rồng"
+msgstr "Giới thiệu về Cacti"
 
 #: about.php:42
 msgid "Cacti is designed to be a complete graphing solution based on the RRDtool Time Series Database (TSDB) and Graphing solution. Its goal is to make the Network Administrator's job easier by taking care of all the important details necessary to create meaningful Graphs."
@@ -387,7 +387,7 @@ msgstr "Hiển thị chi tiết mặt hàng"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Xem trước tổng hợp [ %s]"
+msgstr "Bản xem trước tổng hợp không tồn tại"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -884,11 +884,11 @@ msgstr "Thay đổi mật khẩu"
 
 #: auth_changepassword.php:352
 msgid "Please enter your current password and your new<br>Cacti password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu xương rồng."
+msgstr "Vui lòng nhập mật khẩu hiện tại và mật khẩu Cacti<br>mới của bạn."
 
 #: auth_changepassword.php:354
 msgid "Please enter your new Cacti password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu xương rồng."
+msgstr "Vui lòng nhập mật khẩu Cacti mới của bạn."
 
 #: auth_changepassword.php:362 auth_login.php:341 auth_login.php:344
 #: include/global_settings.php:1826 lib/functions.php:5789
@@ -3596,7 +3596,7 @@ msgstr "Biểu đồ liên kết / Mẫu dữ liệu [chỉnh sửa: %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Biểu đồ liên kết / Mẫu dữ liệu [chỉnh sửa: %s]"
+msgstr "Mẫu biểu đồ/dữ liệu liên kết [mới]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4379,7 +4379,7 @@ msgstr "Giá trị sẽ được lấy từ thiết bị nếu trường này b�
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Dữ liệu tùy chỉnh [nhập dữ liệu: %s]"
+msgstr "Thông báo cảnh báo dữ liệu tùy chỉnh"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -5146,7 +5146,7 @@ msgstr "Mẫu đồ thị đã chọn"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Chọn một Mẫu đồ thị để áp dụng cho Đồ thị này. Xin lưu ý rằng bạn chỉ có thể thay đổi sang một Mẫu đồ thị tương thích 100%%, nghĩa là bao gồm các Nguồn dữ liệu giống hệt nhau."
+msgstr "Chọn một Mẫu biểu đồ để áp dụng cho Biểu đồ này. Xin lưu ý rằng bạn chỉ có thể chuyển sang một Mẫu biểu đồ tương thích 100%%, nghĩa là mẫu đó bao gồm các Nguồn dữ liệu giống hệt nhau."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5174,7 +5174,7 @@ msgstr "Đồ thị mới cho [Tất cả thiết bị]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Quản lý nhóm người dùng [chỉnh sửa: %s]"
+msgstr "Quản lý biểu đồ [Không dựa trên thiết bị]"
 
 #: graphs.php:2080
 #, php-format
@@ -6184,7 +6184,7 @@ msgstr "Tệp nhật ký được chỉ định là tệp lưu trữ Cacti và �
 
 #: include/global_arrays.php:306
 msgid "Cacti log purged successfully"
-msgstr "Nhật ký xương rồng đã thanh trừng thành công"
+msgstr "Đã dọn sạch nhật ký Cacti thành công"
 
 #: include/global_arrays.php:309
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6385,7 +6385,7 @@ msgstr "Sáng"
 
 #: include/global_arrays.php:583 include/global_arrays.php:588
 msgid "Mono"
-msgstr "モノ"
+msgstr "Mono"
 
 #: include/global_arrays.php:592
 msgid "North"
@@ -6413,7 +6413,7 @@ msgstr "Phải"
 
 #: include/global_arrays.php:602
 msgid "Justified"
-msgstr "正当化された"
+msgstr "Căn đều"
 
 #: include/global_arrays.php:603 lib/html.php:2957
 msgid "Center"
@@ -6629,7 +6629,7 @@ msgstr "Hàng ngày"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "% d Chủ đề"
+msgstr "1 luồng"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -6939,7 +6939,7 @@ msgstr "Áp dụng quy tắc tự động hóa"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
-msgstr "Báo cáo xương rồng"
+msgstr "Liên quan đến Cacti"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
@@ -7910,7 +7910,7 @@ msgstr "Chế độ danh sách"
 #: lib/functions.php:4062 lib/html.php:2093 lib/html.php:2170 lib/html.php:2879
 #: links.php:367 user_admin.php:1611 user_group_admin.php:1551
 msgid "Console"
-msgstr "ÄÃ³ng"
+msgstr "Bảng điều khiển"
 
 #: include/global_arrays.php:2102
 msgid "Graph Management"
@@ -7954,7 +7954,7 @@ msgstr "Xóa"
 #: include/global_arrays.php:2204 include/global_arrays.php:2210
 #: include/global_arrays.php:2504
 msgid "View Log"
-msgstr "viewログ"
+msgstr "Xem nhật ký"
 
 #: include/global_arrays.php:2216
 msgid "Graph Trees"
@@ -8031,7 +8031,7 @@ msgstr "Xem người nhận thông báo SNMP"
 
 #: include/global_arrays.php:2594
 msgid "Cacti Settings"
-msgstr "Cài đặt xương rồng"
+msgstr "Cài đặt Cacti"
 
 #: include/global_arrays.php:2600
 msgid "External Link"
@@ -8043,7 +8043,7 @@ msgstr "Hành động:"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "Trang chủ xương rồng"
+msgstr "Trợ giúp Cacti"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8459,7 +8459,7 @@ msgstr "Tên được đặt cho mẫu dữ liệu này."
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Chọn tên cho nguồn dữ liệu này. Nó có thể bao gồm các biến thay thế, chẳng hạn như | host_description | hoặc | query_fieldName |. Để biết danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Cacti."
+msgstr "Chọn tên cho nguồn dữ liệu này. Tên có thể bao gồm các biến thay thế như |host_description| hoặc |query_fieldName|. Để xem danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Cacti."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8556,7 +8556,7 @@ msgstr "Tiêu đề (- phụ đề)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Tên được in trên biểu đồ. Nó có thể bao gồm các biến thay thế, chẳng hạn như | host_description | hoặc | query_fieldName |. Để biết danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Cacti."
+msgstr "Tên được hiển thị trên biểu đồ. Tên có thể bao gồm các biến thay thế như |host_description| hoặc |query_fieldName|. Để xem danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Cacti."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9541,7 +9541,7 @@ msgstr " K"
 
 #: include/global_settings.php:40
 msgid "Paths"
-msgstr "ChÃ¨n dÃ²ng"
+msgstr "Đường dẫn"
 
 #: include/global_settings.php:41
 msgid "Device Defaults"
@@ -9685,7 +9685,7 @@ msgstr "Nếu bạn gặp sự cố với Trình thu thập dữ liệu của Ca
 
 #: include/global_settings.php:192
 msgid "Rotate the Cacti Log"
-msgstr "Xoay Nhật ký xương rồng"
+msgstr "Xoay vòng nhật ký Cacti"
 
 #: include/global_settings.php:193
 msgid "This option will rotate the Cacti Log periodically."
@@ -9713,15 +9713,15 @@ msgstr "Đường dẫn xe đẩy thay thế"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Vị trí tệp nhị phân cột sống"
+msgstr "Vị trí tệp nhị phân Spine"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
-msgstr "Đường dẫn đến cột sống nhị phân."
+msgstr "Đường dẫn đến tệp nhị phân Spine."
 
 #: include/global_settings.php:226
 msgid "Spine Config File Path"
-msgstr "Đường dẫn tệp cấu hình cột sống"
+msgstr "Đường dẫn tệp cấu hình Spine"
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
@@ -9757,7 +9757,7 @@ msgstr "Đây là thư mục nơi RRDfiles được <strong>di chuyển</strong>
 
 #: include/global_settings.php:264
 msgid "Log Settings"
-msgstr "ログ設定"
+msgstr "Cài đặt nhật ký"
 
 #: include/global_settings.php:269
 msgid "Log Destination"
@@ -10085,7 +10085,7 @@ msgstr "Nguồn thay thế bảo mật nội dung"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Không gian giới hạn tên miền sẽ được phép truy cập bên ngoài Máy chủ Web. Điều này quan trọng đối với người dùng chọn sử dụng CDN hoặc trang web lưu trữ. Các nguồn có thể bao gồm các ký tự đại diện, ví dụ: * .mydomain.com hoặc một giao thức, ví dụ: https: //*.example.com. Các Nguồn Thay thế này chỉ bao gồm các loại Hình ảnh, CSS và JavaScript."
+msgstr "Danh sách các tên miền phân cách bằng dấu cách được phép truy cập từ bên ngoài chính Máy chủ Web. Điều này quan trọng đối với người dùng chọn sử dụng CDN hoặc trang lưu trữ. Các nguồn có thể bao gồm ký tự đại diện, ví dụ: *.mydomain.com, hoặc giao thức, ví dụ: https://*.example.com. Các Nguồn thay thế này chỉ bao gồm các loại Hình ảnh, CSS và JavaScript."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10177,7 +10177,7 @@ msgstr "Chủ đề thiết bị"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Số lượng chủ đề thiết bị mặc định. Điều này chỉ áp dụng khi sử dụng Bộ thu thập dữ liệu cột sống."
+msgstr "Số lượng luồng thiết bị mặc định. Thiết lập này chỉ áp dụng khi sử dụng Trình thu thập dữ liệu Spine."
 
 #: include/global_settings.php:656
 #, php-format
@@ -10572,7 +10572,7 @@ msgstr "Định dạng Ngày Tùy chỉnh"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Được sử dụng khi định dạng | date_time | trên một đồ thị"
+msgstr "Được sử dụng khi định dạng |date_time| trên biểu đồ"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10694,7 +10694,7 @@ msgstr "Thời gian kết thúc giờ làm việc của bạn. Định dạng: h
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "% d Tuần"
+msgstr "Ẩn cuối tuần"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -11277,7 +11277,7 @@ msgstr "Chế độ gỡ lỗi LDAP"
 
 #: include/global_settings.php:1753
 msgid "If Checked Cacti will log extra LDAP information to the Cacti log during Binding and Searching activities."
-msgstr "Nếu được Kiểm tra Xương rồng sẽ ghi thông tin LDAP bổ sung vào nhật ký Xương rồng trong các hoạt động Ràng buộc và Tìm kiếm."
+msgstr "Nếu được chọn, Cacti sẽ ghi thêm thông tin LDAP vào nhật ký Cacti trong quá trình kết nối (Binding) và tìm kiếm."
 
 #: include/global_settings.php:1758 user_domains.php:451
 msgid "Encryption"
@@ -11477,7 +11477,7 @@ msgstr "Đây là tên thực tế mà Email sẽ xuất hiện."
 
 #: include/global_settings.php:1934
 msgid "Word Wrap"
-msgstr "Biá»u thá»©c chÃ­nh quy"
+msgstr "Tự động xuống dòng"
 
 #: include/global_settings.php:1935
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
@@ -11982,7 +11982,7 @@ msgstr "Tỷ lệ phần trăm phương sai"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Giá trị này biểu thị phần trăm vượt trên mức trung bình mẫu đã điều chỉnh sau khi các giá trị ngoại lai đã bị loại khỏi mẫu. Ví dụ, Tỷ lệ phương sai là 100%% trên mức trung bình đã điều chỉnh là 50 sẽ loại bỏ bất kỳ mẫu nào vượt quá số lượng 100 khỏi đồ thị."
+msgstr "Giá trị này biểu thị phần trăm vượt trên mức trung bình mẫu đã điều chỉnh sau khi loại bỏ các giá trị ngoại lai khỏi mẫu. Ví dụ: Tỷ lệ phương sai là 100%% trên mức trung bình đã điều chỉnh là 50 sẽ loại bỏ mọi mẫu có giá trị vượt quá 100 khỏi biểu đồ."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12091,7 +12091,7 @@ msgstr "Bạn muốn Cacti trình bày ngày tháng như thế nào? Thiết l�
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Máy chủ Cacti v %s - Bảo trì"
+msgstr "Múi giờ máy chủ Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12850,7 +12850,7 @@ msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc bi�
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "Nhật ký xương rồng đã bị xóa"
+msgstr "Đăng nhập Cacti thất bại"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12921,7 +12921,7 @@ msgstr "Tập tin"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "% d Dòng"
+msgstr "Số dòng đầu"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13550,7 +13550,7 @@ msgstr "Liên kết %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Lỗi Mailer: Không có địa chỉ <b>TO</b> được đặt !! <br> Nếu sử dụng liên kết <i>Kiểm tra Thư</i> , vui lòng đặt cài đặt <b>e-mail Thông báo</b> ."
+msgstr "Lỗi trình gửi thư: Chưa thiết lập địa chỉ người nhận!!<br>Nếu sử dụng liên kết <i>Kiểm tra thư</i>, vui lòng thiết lập mục <b>Email cảnh báo</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13621,7 +13621,7 @@ msgstr "Đang gửi tin nhắn…"
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "Thông báo kiểm tra xương rồng"
+msgstr "Thông báo kiểm tra Cacti"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -13856,7 +13856,7 @@ msgstr "Trợ giúp"
 
 #: lib/html.php:2878
 msgid "Cacti Home"
-msgstr "Trang chủ xương rồng"
+msgstr "Trang chủ Cacti"
 
 #: lib/html.php:2880
 msgid "Miscellaneous"
@@ -13872,7 +13872,7 @@ msgstr "Biểu đồ"
 
 #: lib/html.php:2884
 msgid "Cacti Project Page"
-msgstr "Trang dự án xương rồng"
+msgstr "Trang dự án Cacti"
 
 #: lib/html.php:2888
 msgid "Spine"
@@ -13892,7 +13892,7 @@ msgstr "Các Bố Trí Phím Tắt"
 
 #: lib/html.php:2892
 msgid "Contribute to the Cacti Project"
-msgstr "Xoay Nhật ký xương rồng"
+msgstr "Đóng góp cho Dự án Cacti"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
@@ -13916,7 +13916,7 @@ msgstr "Báo cáo lỗi"
 
 #: lib/html.php:2901
 msgid "Cacti"
-msgstr "Xương rồng"
+msgstr "Cacti"
 
 #: lib/html.php:2903
 msgid "Click to Show/Hide Filter"
@@ -13928,7 +13928,7 @@ msgstr "Xóa bộ lọc hiện tại"
 
 #: lib/html.php:2905
 msgid "Clipboard"
-msgstr "Báº­t lÃªn trÃ¬nh ÄÆ¡n khá»i cháº¡y"
+msgstr "Bảng nhớ tạm"
 
 #: lib/html.php:2906
 msgid "Clipboard ID"
@@ -14157,7 +14157,7 @@ msgstr "Nhập một đường dẫn thư mục hợp lệ"
 #: lib/html_form.php:1484
 #, php-format
 msgid "Cacti Color (%s)"
-msgstr "Màu xương rồng ( %s)"
+msgstr "Màu Cacti (%s)"
 
 #: lib/html_form.php:1567
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14419,7 +14419,7 @@ msgstr "Tiêu đề"
 
 #: lib/html_reports.php:172
 msgid "Cacti Report"
-msgstr "Báo cáo xương rồng"
+msgstr "Báo cáo Cacti"
 
 #: lib/html_reports.php:173
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -15137,11 +15137,11 @@ msgstr "Downgrade"
 
 #: lib/installer.php:1845 utilities.php:307
 msgid "Cacti Version"
-msgstr "Phiên bản xương rồng"
+msgstr "Phiên bản Cacti"
 
 #: lib/installer.php:1845
 msgid "License Agreement"
-msgstr "Äiá»u kiá»n giáº¥y phÃ©p"
+msgstr "Thỏa thuận cấp phép"
 
 #: lib/installer.php:1848
 #, php-format
@@ -15155,7 +15155,7 @@ msgstr "Cảm ơn bạn đã dành thời gian để tải xuống và cài đ�
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Hãy chắc chắn rằng bạn đã đọc và làm theo các bước cần thiết để cài đặt Cacti trước khi tiếp tục. Thông tin cài đặt có thể được tìm thấy cho <a href=\"%1$s\">các</a> hệ điều hành dựa trên <a href=\"%1$s\">Unix</a> và <a href=\"%2$s\">Win32</a> ."
+msgstr "Hãy đảm bảo bạn đã đọc và thực hiện các bước cần thiết để cài đặt Cacti trước khi tiếp tục. Thông tin cài đặt có thể xem cho các hệ điều hành nền <a href=\"%s\">Unix</a> và <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15568,7 +15568,7 @@ msgstr "Tùy chọn tập lệnh này sẽ kích hoạt lại mọi Nguồn dữ
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Chúng tôi khuyên bạn nên cập nhật config.php để kích hoạt tính năng này bằng cách bỏ qua biến <b>$ input_whlistist</b> và sau đó chạy ba tùy chọn tập lệnh CLI ở trên sau khi quá trình cài đặt dựa trên web hoàn tất."
+msgstr "Bạn nên cập nhật tệp config.php để bật tính năng này bằng cách bỏ chú thích biến <b>$input_whitelist</b>, sau đó chạy ba tùy chọn tập lệnh CLI ở trên sau khi quá trình cài đặt trên nền web hoàn tất."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -16441,7 +16441,7 @@ msgstr "CDP Điểm dữ liệu không xác định (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Không %s Tìm thấy"
+msgstr "Đã tìm thấy lỗi"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16886,7 +16886,7 @@ msgstr "Với khả năng bỏ phiếu từ xa, một lượng lớn dữ liệu
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Nếu sử dụng Cacti Performance Booster và chọn công cụ lưu trữ bộ nhớ, bạn phải cẩn thận để xóa bộ đệm Performance Booster trước khi hệ thống hết dung lượng bảng nhớ. Điều này được thực hiện theo hai cách, đầu tiên là giảm kích thước cột đầu ra của bạn xuống đúng kích thước. Cột này nằm trong bảng pollerDefput và pollerDefput_boost. Điều thứ hai bạn có thể làm là phân bổ thêm bộ nhớ cho các bảng bộ nhớ. Chúng tôi đã tùy ý chọn giá trị đề xuất là 10 %% bộ nhớ hệ thống, nhưng nếu bạn đang sử dụng ổ đĩa SSD hoặc có hệ thống nhỏ hơn, bạn có thể bỏ qua đề xuất này hoặc chọn một công cụ lưu trữ khác. Bạn có thể thấy mức tiêu thụ dự kiến của các bảng Performance Booster trong Bảng điều khiển -&gt; Tiện ích hệ thống -&gt; Xem Trạng thái tăng."
+msgstr "Nếu sử dụng Cacti Performance Booster và chọn bộ lưu trữ dạng bộ nhớ (memory storage engine), bạn phải chú ý xả bộ đệm Performance Booster trước khi hệ thống hết dung lượng bảng bộ nhớ. Việc này được thực hiện theo hai cách: thứ nhất là giảm kích thước cột đầu ra xuống đúng mức vừa đủ (cột này nằm trong các bảng poller_output và poller_output_boost); thứ hai là cấp phát thêm bộ nhớ cho các bảng bộ nhớ. Chúng tôi chọn giá trị khuyến nghị là 10%% bộ nhớ hệ thống, nhưng nếu bạn đang dùng ổ đĩa SSD hoặc có hệ thống nhỏ hơn, bạn có thể bỏ qua khuyến nghị này hoặc chọn bộ lưu trữ khác. Bạn có thể xem mức tiêu thụ dự kiến của các bảng Performance Booster tại Bảng điều khiển -> Tiện ích hệ thống -> Xem trạng thái Boost."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16912,7 +16912,7 @@ msgstr "Nếu các bảng của bạn có các chỉ mục rất lớn, bạn ph
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB sẽ giữ càng nhiều bảng và chỉ mục trong bộ nhớ hệ thống càng tốt. Do đó, bạn nên làm cho innodb_buffer_pool đủ lớn để chứa càng nhiều bảng và chỉ mục trong bộ nhớ. Kiểm tra kích thước của thư mục / var / lib / mysql / cacti sẽ giúp xác định giá trị này. Chúng tôi khuyến nghị 25 %% tổng bộ nhớ hệ thống của bạn, nhưng yêu cầu của bạn sẽ thay đổi tùy thuộc vào kích thước hệ thống của bạn."
+msgstr "InnoDB sẽ lưu giữ càng nhiều bảng và chỉ mục trong bộ nhớ hệ thống càng tốt. Do đó, bạn nên đặt innodb_buffer_pool đủ lớn để chứa được phần lớn bảng và chỉ mục trong bộ nhớ. Kiểm tra dung lượng thư mục /var/lib/mysql/cacti sẽ giúp xác định giá trị này. Chúng tôi khuyến nghị mức 25%% tổng bộ nhớ hệ thống của bạn, nhưng nhu cầu thực tế sẽ thay đổi tùy theo quy mô hệ thống."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17214,7 +17214,7 @@ msgstr "Bạn đã đăng xuất khỏi Cacti do hết thời gian phiên."
 
 #: logout.php:71
 msgid "Logout of Cacti"
-msgstr "Thoát khỏi xương rồng"
+msgstr "Đăng xuất khỏi Cacti"
 
 #: logout.php:78
 msgid "Automatic Logout"
@@ -17695,7 +17695,7 @@ msgstr "Đã vượt quá thời gian chạy tối đa %d giây cho poller id %d
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "CẢNH BÁO: Chu kỳ thăm dò của xương rồng đã vượt quá khoảng thời gian thăm dò của xương rồng bởi"
+msgstr "CẢNH BÁO: Chu kỳ thăm dò Cacti đã vượt quá khoảng thời gian của trình thăm dò thêm "
 
 #: poller.php:961
 #, php-format
@@ -17785,7 +17785,7 @@ msgstr "Số lượng các quá trình thu thập dữ liệu sẽ sử dụng �
 
 #: pollers.php:114
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "Số lượng Chủ đề cột sống sẽ sử dụng cho mỗi quy trình Thu thập dữ liệu."
+msgstr "Số lượng luồng Spine được sử dụng cho mỗi tiến trình Thu thập dữ liệu."
 
 #: pollers.php:122
 msgid "Sync Interval"
@@ -18672,7 +18672,7 @@ msgstr "Để chỉnh sửa cây này, trước tiên bạn phải khóa nó b�
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Cây này đã bị khóa để Chỉnh sửa trên%1$s bởi%2$s."
+msgstr "Cây này đã bị khóa chỉnh sửa vào %s bởi %s."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -18806,11 +18806,11 @@ msgstr "Thông thường"
 
 #: tree.php:1891 tree.php:1965 tree.php:2073
 msgid "Cut"
-msgstr "カット"
+msgstr "Cắt"
 
 #: tree.php:1924
 msgid "Paste"
-msgstr "ペースト"
+msgstr "Dán"
 
 #: tree.php:2288
 msgid "Add Tree"
@@ -19683,7 +19683,7 @@ msgstr "Thông tin chung"
 
 #: utilities.php:312
 msgid "Cacti OS"
-msgstr "Hệ điều hành xương rồng"
+msgstr "Hệ điều hành Cacti"
 
 #: utilities.php:322
 msgid "NET-SNMP Version"
@@ -19960,7 +19960,7 @@ msgstr "(Đã xóa người dùng)"
 
 #: utilities.php:1510
 msgid "Display Order"
-msgstr "表示順"
+msgstr "Thứ tự hiển thị"
 
 #: utilities.php:1565
 #, php-format
@@ -19974,11 +19974,11 @@ msgstr "Nhật ký [Tổng số dòng: %d - Tất cả các mục được hiể
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
-msgstr "Xóa nhật ký xương rồng"
+msgstr "Xóa nhật ký Cacti"
 
 #: utilities.php:1674
 msgid "Cacti Log Cleared"
-msgstr "Nhật ký xương rồng đã bị xóa"
+msgstr "Đã xóa nhật ký Cacti"
 
 #: utilities.php:1676
 msgid "Error: Unable to clear log, no write permissions."
@@ -20592,7 +20592,6 @@ msgstr "Không phát hiện thay đổi chỉ mục, Đã làm mới Bộ nhớ 
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
 msgstr "Đồng bộ hóa thất bại. Xem nhật ký để biết chi tiết."
 
 #: graph.php:512

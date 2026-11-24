@@ -32,7 +32,7 @@ msgstr "Разработчици на Cacti"
 
 #: about.php:49
 msgid "Developers working on Cacti, its Architecture, Documentation and Future Releases."
-msgstr "Разработчици, работещи по Кактуси, неговата архитектура, документация и бъдещи издания."
+msgstr "Разработчици, работещи по Cacti, неговата архитектура, документация и бъдещи издания."
 
 #: about.php:61
 msgid "Honorable Mentions"
@@ -382,7 +382,7 @@ msgstr "Показване на детайлите на елемента"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Общ преглед [ %s]"
+msgstr "Прегледът на агрегацията не съществува"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -870,7 +870,7 @@ msgstr "Не може да се използва повторно за %d про
 
 #: auth_changepassword.php:325
 msgid "There are problems with the Change Password page.  Contact your Cacti administrator right away."
-msgstr "Възникнаха проблеми със страницата Промяна на паролата.  Свържете се незабавно с вашия администратор на кактуси."
+msgstr "Възникнаха проблеми със страницата за промяна на паролата. Свържете се незабавно с вашия администратор на Cacti."
 
 #: auth_changepassword.php:335 auth_changepassword.php:342
 #: include/global_form.php:1573 lib/functions.php:3855 lib/html.php:2869
@@ -1129,12 +1129,12 @@ msgstr "Добавен ръчно през интерфейса за автом�
 #: automation_devices.php:130
 #, php-format
 msgid "Device %s Added to Cacti"
-msgstr "Устройство %s добавено към кактуси"
+msgstr "Устройство %s е добавено в Cacti"
 
 #: automation_devices.php:132
 #, php-format
 msgid "Device %s Not Added to Cacti"
-msgstr "Устройство %s не е добавено към кактуси"
+msgstr "Устройство %s не е добавено в Cacti"
 
 #: automation_devices.php:142
 msgid "Devices Removed from Cacti Automation database"
@@ -2128,7 +2128,7 @@ msgstr "Последното стартиране"
 
 #: automation_networks.php:1134 pollers.php:49 utilities.php:2670
 msgid "Running"
-msgstr "실행 중"
+msgstr "Изпълнява се"
 
 #: automation_networks.php:1158 pollers.php:50 utilities.php:2668
 msgid "Idle"
@@ -2338,7 +2338,7 @@ msgstr "нищо"
 #: lib/api_automation.php:1636 lib/html.php:1661 lib/html_reports.php:1878
 #: lib/html_reports.php:1880 tree.php:2484 tree.php:2491 vdef.php:642
 msgid "Move Down"
-msgstr "Преместване нагоре"
+msgstr "Преместване надолу"
 
 #: automation_snmp.php:596 automation_templates.php:551 cdef.php:624
 #: color_templates.php:117 data_queries.php:949 data_queries.php:1094
@@ -2579,7 +2579,7 @@ msgstr "Не са намерени правила за дърво"
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
-msgstr "Предупреждение за кактуси"
+msgstr "Системно предупреждение на Cacti"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
@@ -3547,7 +3547,7 @@ msgstr "Методът, използван за събиране на инфор
 #: package_import.php:561 package_import.php:639 utilities.php:246
 #: utilities.php:247 utilities.php:2733
 msgid "Unknown"
-msgstr "알려지지 않음"
+msgstr "Неизвестно"
 
 #: data_input.php:1196
 msgid "No Data Input Methods Found"
@@ -3609,7 +3609,7 @@ msgstr "Асоциирани графики / шаблони за данни [р
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Асоциирани графики / шаблони за данни [редактиране: %s]"
+msgstr "Свързани шаблони за графики/данни [нов]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4409,7 +4409,7 @@ msgstr "Стойността ще бъде получена от устройс�
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Персонализирани данни [въвеждане на данни: %s]"
+msgstr "Предупредително съобщение за персонализирани данни"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -4609,7 +4609,7 @@ msgstr "Графики в реално време в Cacti"
 
 #: graph_realtime.php:505 utilities.php:2579
 msgid "Refresh Interval"
-msgstr "????‚?µ?Ђ???°?» ???° ???±???????Џ???°???µ"
+msgstr "Интервал на опресняване"
 
 #: graph_realtime.php:528 lib/html_graph.php:249 lib/html_reports.php:125
 #: lib/html_tree.php:1068
@@ -5176,7 +5176,7 @@ msgstr "Шаблон за избрана графика"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Изберете шаблон на графиката, който да се приложи към тази графика. Моля, обърнете внимание, че можете да променяте само шаблоните за графики на 100 %% съвместим шаблон за графики, което означава, че включва идентични източници на данни."
+msgstr "Изберете шаблон на графика, който да приложите към тази графика. Моля, обърнете внимание, че можете да променяте шаблона на графиката само към 100%% съвместим шаблон на графика, което означава, че той включва идентични източници на данни."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5204,7 +5204,7 @@ msgstr "Нови графики за [Всички устройства]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Управление на потребителските групи [редактиране: %s]"
+msgstr "Управление на графики [Небазирано на устройство]"
 
 #: graphs.php:2080
 #, php-format
@@ -5370,7 +5370,7 @@ msgstr "Настройки по подразбиране"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "ПРЕДУПРЕЖДЕНИЕ: Страница с кактуси:%s за потребител:%s Генерира фатална грешка %d!"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Страница на Cacti:%s за потребител:%s генерира фатална грешка %d!"
 
 #: help.php:99
 #, php-format
@@ -5388,7 +5388,7 @@ msgstr "Отворете заявка за обслужване на"
 #: help.php:113
 #, php-format
 msgid "The Help File %s was not located on the Cacti Documentation Website."
-msgstr "Помощният файл %s не се намира на уеб сайта за документация на Кактуси."
+msgstr "Помощният файл %s не беше открит на уеб сайта с документацията на Cacti."
 
 #: help.php:127
 #, php-format
@@ -6214,7 +6214,7 @@ msgstr "Лог файлът е указан като Cacti архивен фай
 
 #: include/global_arrays.php:306
 msgid "Cacti log purged successfully"
-msgstr "Кактусният дневник успешно се прочисти"
+msgstr "Дневникът на Cacti беше изчистен успешно"
 
 #: include/global_arrays.php:309
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6659,7 +6659,7 @@ msgstr "Всеки ден"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "% d Тема"
+msgstr "1 нишка"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -7470,7 +7470,7 @@ msgstr "Текст"
 
 #: include/global_arrays.php:1714 include/global_form.php:2273
 msgid "Tree"
-msgstr "‎درخت"
+msgstr "Дърво"
 
 #: include/global_arrays.php:1717
 msgid "Horizontal Rule"
@@ -7638,7 +7638,7 @@ msgstr "е по-голямо или равно"
 
 #: include/global_arrays.php:1782
 msgid "is unknown"
-msgstr "알려지지 않음"
+msgstr "е неизвестно"
 
 #: include/global_arrays.php:1783
 msgid "is not unknown"
@@ -8073,7 +8073,7 @@ msgstr "Действие"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "Кактуси вкъщи"
+msgstr "Помощ за Cacti"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8489,7 +8489,7 @@ msgstr "Името зададено за този шаблон за данни"
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Изберете име за този източник на данни. Тя може да включва заместващи променливи, като например host_description | или | query_fieldName |. За пълен списък на поддържаните маркери за подмяна, моля вижте документацията на Cacti."
+msgstr "Изберете име за този източник на данни. То може да включва заместващи променливи като |host_description| или |query_fieldName|. За пълен списък на поддържаните заместващи маркери, моля, вижте документацията на Cacti."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8586,7 +8586,7 @@ msgstr "Заглавие (- заглавие)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Името, което е отпечатано на графиката. Тя може да включва заместващи променливи, като например host_description | или | query_fieldName |. За пълен списък на поддържаните маркери за подмяна, моля вижте документацията на Cacti."
+msgstr "Името, което се отпечатва върху графиката. То може да включва заместващи променливи като |host_description| или |query_fieldName|. За пълен списък на поддържаните заместващи маркери, моля, вижте документацията на Cacti."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9161,7 +9161,7 @@ msgstr "Определя дали потребителят може да вле�
 
 #: include/global_form.php:1555 tree.php:2418
 msgid "Locked"
-msgstr "قفش شده"
+msgstr "Заключено"
 
 #: include/global_form.php:1556
 msgid "Determines if the user account is locked."
@@ -9699,7 +9699,7 @@ msgstr "Влизане"
 
 #: include/global_settings.php:172
 msgid "Cacti Log Path"
-msgstr "Път на регистрация на кактуси"
+msgstr "Път до дневника на Cacti"
 
 #: include/global_settings.php:173
 msgid "The path to your Cacti log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9743,7 +9743,7 @@ msgstr "Алтернативен път на полета"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Местоположение на двоичния файл на гръбнака"
+msgstr "Местоположение на двоичния файл на Spine"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
@@ -9755,7 +9755,7 @@ msgstr "Път на конфигурацията на гръбначния ст�
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "Пътят до конфигурационния файл на гръбнака. По подразбиране в cwd на Spine или / etc, ако не е посочено."
+msgstr "Пътят до конфигурационния файл на Spine. По подразбиране в текущата работна директория (cwd) на Spine или /etc, ако не е зададен."
 
 #: include/global_settings.php:239
 msgid "RRDfile Auto Clean"
@@ -9899,7 +9899,7 @@ msgstr "Предпочитан езиков процесор"
 
 #: include/global_settings.php:367
 msgid "Cacti includes support for multiple alternate Language Translation Processors.  If none is selected Cacti will attempt to use the first one found."
-msgstr "Cacti включва поддръжка за множество алтернативни процесори за езиков превод. По подразбиране ще се използва вградената поддръжка на PHP, но не всички варианти на Linux включват вградена езикова поддръжка. Ако не е избрано, кактусите ще изберат първия намерен."
+msgstr "Cacti включва поддръжка за множество алтернативни процесори за езиков превод. Ако не е избран нито един, Cacti ще се опита да използва първия намерен."
 
 #: include/global_settings.php:373
 msgid "Client TimeZone Support"
@@ -10027,7 +10027,7 @@ msgstr "Метод за създаване на график / източник 
 
 #: include/global_settings.php:468
 msgid "When enabled, Cacti will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Cacti will not allow the removal of Data Sources if they are used in other Graphs."
-msgstr "Когато е активирано, Cacti ще настрои Радио бутон на Изтриване на свързани източници на данни на графика при премахване на графики. Забележка: Кактусите няма да позволят премахването на източници на данни, ако те се използват в други графики."
+msgstr "Когато е активирано, Cacti ще избира радио бутона за изтриване на свързаните източници на данни на графиката при премахване на графики. Забележка: Cacti няма да позволи премахването на източници на данни, ако те се използват в други графики."
 
 #: include/global_settings.php:473
 msgid "Graphs Auto Unlock"
@@ -10035,7 +10035,7 @@ msgstr "Правило за съответствие на графиката"
 
 #: include/global_settings.php:474
 msgid "When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
-msgstr "Когато са активирани, кактусите няма да заключват графики. Това позволява по-бързо ръчно модифициране на източници на данни, свързани с графика."
+msgstr "Когато е активирано, Cacti няма да заключва графиките. Това позволява по-бърза ръчна промяна на източниците на данни, свързани с дадена графика."
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
@@ -10115,7 +10115,7 @@ msgstr "Алтернативни източници за защита на съ�
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Имена на домейни, разпределени в пространството, до които ще бъде разрешен достъп извън самия уеб сървър. Това е важно за потребителите, избрали да използват CDN или хостинг сайт. Източниците могат да включват заместващи символи например: *.mydomain.com или протокол, например: https: //*.example.com. Тези алтернативни източници включват само изображения, CSS и JavaScript."
+msgstr "Списък, разделен с интервали, от имена на домейни, до които ще бъде разрешен достъп извън самия уеб сървър. Това е важно за потребители, избрали да използват CDN или хостинг сайт. Източниците могат да включват заместващи символи, например: *.mydomain.com, или протокол, например: https://*.example.com. Тези алтернативни източници включват само типове изображения, CSS и JavaScript."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10143,7 +10143,7 @@ msgstr "Известие за автоматизация към имейл"
 
 #: include/global_settings.php:565
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Cacti will use the Primary Cacti Admins Email account."
-msgstr "Имейл адресът, на който да се изпращат имейли за уведомяване по автоматизация, ако не е посочено на ниво Автоматизирана мрежа. Ако или това поле, или стойността на мрежата за автоматизация останат празни, Cacti ще използва имейл акаунта на главния администратор на кактуси."
+msgstr "Имейл адресът, на който да се изпращат имейли за известяване от автоматизацията, ако не е зададен на ниво мрежа за автоматизация. Ако това поле или стойността на мрежата за автоматизация останат празни, Cacti ще използва имейл акаунта на главния администратор на Cacti."
 
 #: include/global_settings.php:571
 msgid "Automation Notification From Name"
@@ -10207,7 +10207,7 @@ msgstr "Конци за устройства"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Номерът по подразбиране на конци за устройства. Това е приложимо само при използване на колектора за данни на гръбнака."
+msgstr "Броят по подразбиране на нишките за устройство. Това е приложимо само при използване на колектора на данни Spine."
 
 #: include/global_settings.php:656
 #, php-format
@@ -10570,7 +10570,7 @@ msgstr "Този период от време, който искате да ви
 
 #: include/global_settings.php:1030
 msgid "Minimum Refresh Interval"
-msgstr "????‚?µ?Ђ???°?» ???° ???±???????Џ???°???µ"
+msgstr "Минимален интервал на опресняване"
 
 #: include/global_settings.php:1031
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
@@ -10602,7 +10602,7 @@ msgstr "Цветове"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Да се използва при форматиране | date_time | върху графика"
+msgstr "Да се използва при форматиране на |date_time| върху графика"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10724,7 +10724,7 @@ msgstr "Часът, в който изтича работното ви врем�
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "% d седмици"
+msgstr "Скриване на почивните дни"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -10860,7 +10860,7 @@ msgstr "Възстановете кеш на ресурсите"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "По подразбиране основният Cacti Data Collector ще кешира целия уеб сайт и ще се включи в Resource Cache. След това от време на време дистанционните колектори на данни ще се актуализират с всички актуализации от основния събирач на данни за кактуси. Този ресурсен кеш по същество позволява на отдалечените колектори на данни да се надграждат самостоятелно. Ако не искате да използвате тази опция, можете да я деактивирате, като използвате тази настройка."
+msgstr "По подразбиране основният колектор на данни на Cacti кешира целия уеб сайт и добавките в кеш за ресурси (Resource Cache). След това отдалечените колектори на данни периодично се обновяват с всички актуализации от основния колектор на данни на Cacti. Този кеш за ресурси на практика позволява на отдалечените колектори на данни да се надграждат самостоятелно. Ако не желаете да използвате тази опция, можете да я деактивирате чрез тази настройка."
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
@@ -11259,7 +11259,7 @@ msgstr "Сървъри"
 
 #: include/global_settings.php:1707 user_domains.php:418
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Cacti will attempt to use the LDAP servers from left to right to authenticate a user."
-msgstr "Списък с разделени с интервал имена на хостове на DNS или IP адрес на за валидни LDAP сървъри. Кактусите ще се опитат да използват LDAP сървърите отляво надясно за удостоверяване на потребител."
+msgstr "Списък, разделен с интервали, от DNS имена на хостове или IP адреси на валидни LDAP сървъри. Cacti ще се опита да използва LDAP сървърите отляво надясно за удостоверяване на потребител."
 
 #: include/global_settings.php:1713 user_domains.php:426
 msgid "Port Standard"
@@ -12012,7 +12012,7 @@ msgstr "Процент на отклонение"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Тази стойност представлява процентът над коригираната средна извадка, след като от извадката са отстранени външните стойности. Например, процентът на променливата от 100 %% на коригирана средна стойност от 50 ще премахне всяка проба над количеството от 100 от графиката."
+msgstr "Тази стойност представлява процента над коригираната средна стойност на извадката, след като отклоненията (outliers) са отстранени от нея. Например процент на отклонение (Variance Percentage) от 100%% при коригирана средна стойност 50 ще премахне от графиката всяка стойност над 100."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12117,11 +12117,11 @@ msgstr "MySQL - Поддръжка на TimeZone"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "Как бихте искали кактусите да представят датите?  Тази настройка също ще промени начина, по който са представени датите на Cacti Graphs."
+msgstr "Как бихте искали Cacti да представя датите? Тази настройка ще промени и начина, по който се представят датите в графиките на Cacti."
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Server v %s - Поддръжка"
+msgstr "Часова зона на сървъра на Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12326,7 +12326,7 @@ msgstr "История на паролите"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "Ако е активирано, кактусите ще запомнят вашата история на дърветата между влизанията и когато се върнете на страницата Графики."
+msgstr "Ако е активирано, Cacti ще запомня историята ви в дървовидната структура между влизанията и при връщане към страницата с графики."
 
 #: include/global_settings.php:2824
 msgid "Use Custom Fonts"
@@ -12442,7 +12442,7 @@ msgstr "Брой на офлайн записите:"
 
 #: index.php:89
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Cacti Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Cacti's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Cacti Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Cacti Database for updating."
-msgstr "<strong>ЗАБЕЛЕЖКА:</strong> Вие сте влезли в Remote Data Collector. Когато сте <b>онлайн</b> , ще можете да преглеждате и контролирате по-голямата част от главния уебсайт на Кактуси, както ако сте влезли в него. Също така е важно да се отбележи, че за дистанционно събиране на данни са задължени да използват Изпълнение на кактуси на Увеличаване на услугите <b>&quot;On Demand Актуализиране&quot;</b> функция, а ние винаги препоръчваме използването на гръбначния стълб. Когато Remote Data Collector е <b>&quot;офлайн&quot;</b> , уеб сайтът на Remote Data Collectors ще съдържа много по-малко информация. Въпреки това, той ще кешира всички актуализации, докато основната база данни на Cacti и уеб сървъра бъдат достигнати. След това ще изхвърли продукцията на Boost таблицата обратно в Main Cacti Database за актуализиране."
+msgstr "<strong>ЗАБЕЛЕЖКА:</strong> Влезли сте в отдалечен колектор на данни (Remote Data Collector). Когато е <b>'онлайн'</b>, ще можете да преглеждате и управлявате по-голямата част от основния уеб сайт на Cacti точно сякаш сте влезли директно в него. Също така е важно да се отбележи, че отдалечените колектори на данни задължително трябва да използват функцията <b>'On Demand Updating'</b> на услугите за повишаване на производителността на Cacti, като винаги препоръчваме използването на Spine. Когато отдалеченият колектор на данни е <b>'офлайн'</b>, неговият уеб сайт ще съдържа значително по-малко информация. Въпреки това той ще кешира всички актуализации, докато основната база данни и уеб сървърът на Cacti не станат достъпни. След това ще прехвърли натрупаните данни от таблицата Boost обратно в основната база данни на Cacti за актуализиране."
 
 #: index.php:94
 msgid "<strong>NOTE:</strong> None of the Core Cacti Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -12473,7 +12473,7 @@ msgstr "Cacti Server v %s - Съветник за инсталиране"
 
 #: install/install.php:107
 msgid "Refresh current page"
-msgstr "????‚?µ?Ђ???°?» ???° ???±???????Џ???°???µ"
+msgstr "Опресняване на текущата страница"
 
 #: install/install.php:113
 msgid "Initializing"
@@ -12880,7 +12880,7 @@ msgstr "Вашата парола трябва да съдържа поне 1 с
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "Изчистена регистрация на кактуси"
+msgstr "Неуспешно влизане в Cacti"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12951,7 +12951,7 @@ msgstr "Файл"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "% d линии"
+msgstr "Начални редове"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13580,7 +13580,7 @@ msgstr "Връзка %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Мейлър Грешка: Не е <b>за</b> справяне <b>с</b> определени !! <br> Ако използвате връзката <i>Test Mail,</i> моля, задайте настройката за <b>електронна поща предупреждение.</b>"
+msgstr "Грешка на пощенския клиент: Не е зададен адрес на получател!!<br>Ако използвате връзката <i>Тестов имейл</i>, моля, задайте настройката <b>Имейл за известяване</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13689,7 +13689,7 @@ msgstr "%s %s"
 #: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
-msgstr "ПРЕДУПРЕЖДЕНИЕ:  Ключовите кактуси включват липсващ файл %s. Моля, намерете и заменете този файл"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Липсва ключов помощен (include) файл %s на Cacti. Моля, намерете и заменете този файл"
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
@@ -13886,7 +13886,7 @@ msgstr "Помощ"
 
 #: lib/html.php:2878
 msgid "Cacti Home"
-msgstr "Кактуси вкъщи"
+msgstr "Начало на Cacti"
 
 #: lib/html.php:2880
 msgid "Miscellaneous"
@@ -13906,7 +13906,7 @@ msgstr "Страница"
 
 #: lib/html.php:2888
 msgid "Spine"
-msgstr "Гръбнак"
+msgstr "Spine"
 
 #: lib/html.php:2889
 msgid "RRDProxy"
@@ -13946,7 +13946,7 @@ msgstr "Доклад за дефект…"
 
 #: lib/html.php:2901
 msgid "Cacti"
-msgstr "Кактусови"
+msgstr "Cacti"
 
 #: lib/html.php:2903
 msgid "Click to Show/Hide Filter"
@@ -14837,11 +14837,11 @@ msgstr "Терминът „ %s“ не е валиден. Грешка е %s"
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "Редовните изрази за кактуси са ограничени до 50 знака само от съображения за сигурност."
+msgstr "Регулярните изрази в Cacti са ограничени до 50 знака от съображения за сигурност."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "Редовните изрази за кактуси не могат да включват полуцветния знак."
+msgstr "Регулярните изрази в Cacti не могат да включват знака точка и запетая."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -15167,7 +15167,7 @@ msgstr "Преминаване към по-стара версия"
 
 #: lib/installer.php:1845 utilities.php:307
 msgid "Cacti Version"
-msgstr "Кактусна версия"
+msgstr "Версия на Cacti"
 
 #: lib/installer.php:1845
 msgid "License Agreement"
@@ -15185,7 +15185,7 @@ msgstr "Благодарим Ви, че отделихте време да из�
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Уверете се, че сте прочели и следвали необходимите стъпки, необходими за инсталиране на Cacti, преди да продължите. Инсталиращата информация може да бъде намерена за <a href=\"%1$s\">Unix</a> и <a href=\"%2$s\">Win32-</a> базирани операционни системи."
+msgstr "Уверете се, че сте прочели и следвали необходимите стъпки за инсталиране на Cacti, преди да продължите. Информация за инсталиране може да бъде намерена за операционни системи, базирани на <a href=\"%s\">Unix</a> и <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15574,7 +15574,7 @@ msgstr "Методите за въвеждане на данни за Cacti, к�
 
 #: lib/installer.php:2535
 msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Cacti more thoroughly, it does increase the amount of work required by the Cacti administrator to import and manage Templates and Packages."
-msgstr "Ето защо, преди няколко версии, Cacti беше подобрен, за да предостави възможности за бял списък за тези видове методи за въвеждане на данни. Макар това да осигурява по-пълноценно кактусите, то увеличава обема работа, необходим на администратора на кактусите за импортиране и управление на шаблони и пакети."
+msgstr "Поради това преди няколко версии Cacti беше разширен, за да предоставя възможности за списък с разрешени (whitelist) за тези типове методи за въвеждане на данни. Макар това да защитава Cacti по-надеждно, то увеличава обема работа, необходим на администратора на Cacti за импортиране и управление на шаблони и пакети."
 
 #: lib/installer.php:2536
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
@@ -15598,7 +15598,7 @@ msgstr "Тази опция за скрипт ще активира отново
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Настоятелно се препоръчва да актуализирате config.php, за да активирате тази функция, като <b>коментирате</b> променливата <b>$input_whitelist</b> и след това стартирате трите опции за скрипт на CLI по-горе, след като уеб базираната инсталация приключи."
+msgstr "Силно се препоръчва да актуализирате config.php, за да активирате тази функция, като разкоментирате променливата <b>$input_whitelist</b> и след това изпълните трите опции на CLI скрипта по-горе, след като уеб базираната инсталация приключи."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -15977,7 +15977,7 @@ msgstr "Не бяха намерени шаблонирани графики з�
 
 #: lib/installer.php:3507
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server."
-msgstr "ПРЕДУПРЕЖДЕНИЕ: Шаблонът на устройството за вашата операционна система не е намерен. Ще трябва да импортирате шаблони за устройства или пакети за кактуси, за да наблюдавате вашия сървър за кактуси."
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Шаблонът на устройство за вашата операционна система не е намерен. Ще трябва да импортирате шаблони за устройства или пакети на Cacti, за да наблюдавате вашия сървър на Cacti."
 
 #: lib/installer.php:3514
 msgid "Running first-time data query for local host"
@@ -16471,7 +16471,7 @@ msgstr "Точки на неизвестни данни за CDP (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Няма намерени %s"
+msgstr "Открити грешки"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16916,7 +16916,7 @@ msgstr "С възможностите за дистанционно проучв
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Ако използвате Cacti Performance Booster и изберете механизъм за съхранение на памет, трябва да внимавате да изчистите буфера за производителност, преди системата да изчерпи пространството за памет. Това се прави по два начина, като първо се намалява размерът на изходната колона до точния размер. Тази колона е в таблиците poller_output и poller_output_boost. Второто нещо, което можете да направите, е да отделите повече памет за таблиците с памет. Ние произволно избрахме препоръчителна стойност от 10%% от системната памет, но ако използвате SSD дискове или имате по-малка система, можете да игнорирате тази препоръка или да изберете различен механизъм за съхранение. Може да видите очакваното потребление на таблиците за подсилване на производителността под Console -&gt; System Utilities -&gt; View Boost Status."
+msgstr "Ако използвате Cacti Performance Booster и изберете механизъм за съхранение в паметта, трябва да внимавате да изпразвате буфера на Performance Booster, преди системата да изчерпи пространството за таблици в паметта. Това се прави по два начина: първо, като намалите размера на изходната колона до точно необходимия размер. Тази колона се намира в таблиците poller_output и poller_output_boost. Второто нещо, което можете да направите, е да заделите повече памет за таблиците в паметта. Избрахме ориентировъчна препоръчителна стойност от 10%% от системната памет, но ако използвате SSD дискове или имате по-малка система, можете да пренебрегнете тази препоръка или да изберете друг механизъм за съхранение. Можете да видите очакваното потребление на таблиците на Performance Booster в Console -> System Utilities -> View Boost Status."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16942,7 +16942,7 @@ msgstr "Ако вашите таблици имат много големи ин
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB ще държи колкото се може повече таблици и индекси в системната памет. Затова трябва да направите innodb_buffer_pool достатъчно голям, за да побере толкова маси и индекси в паметта. Проверката на размера на директорията / var / lib / mysql / cacti ще помогне при определянето на тази стойност. Ние препоръчваме 25%% от общата памет на вашите системи, но вашите изисквания ще варират в зависимост от размера на вашите системи."
+msgstr "InnoDB ще съхранява възможно най-много таблици и индекси в системната памет. Затова трябва да зададете достатъчно голям размер на innodb_buffer_pool, за да побере колкото се може повече таблици и индекси в паметта. Проверката на размера на директорията /var/lib/mysql/cacti ще помогне при определянето на тази стойност. Препоръчваме 25%% от общата памет на системата ви, но изискванията ще варират в зависимост от размера на вашата система."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17728,7 +17728,7 @@ msgstr "Максималното време на изпълнение от %d с
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "ПРЕДУПРЕЖДЕНИЕ: Цикълът на гласуване на кактуси надхвърля интервала на Poller от"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Цикълът на запитване (polling) на Cacti надхвърли интервала на poller с "
 
 #: poller.php:961
 #, php-format
@@ -17745,7 +17745,7 @@ msgstr "Cacti System Utilities"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "ЗАБЕЛЕЖКА: Добавен е втори колектор за данни на кактуси. Затова, позволявайки автоматично усилване!"
+msgstr "ЗАБЕЛЕЖКА: Добавен е втори колектор на данни на Cacti. Поради това Boost се активира автоматично!"
 
 #: poller_automation.php:54
 #, php-format
@@ -17754,7 +17754,7 @@ msgstr "ПРЕДУПРЕЖДЕНИЕ: Основната база данни н�
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
-msgstr "Главен Администратор на Кактуси"
+msgstr "Главен администратор на Cacti"
 
 #: poller_automation.php:1159
 msgid "Cacti Automation Report requires an html based Email client"
@@ -18704,7 +18704,7 @@ msgstr "Un Публикуване"
 #: tree.php:35
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "قفش شده"
+msgstr "Отключване"
 
 #: tree.php:233 tree.php:634
 #: graphs.php:652 graphs.php:1025
@@ -18718,7 +18718,7 @@ msgstr "За да редактирате това дърво, първо тря�
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Това дърво е заключено за редактиране на%1$s от%2$s."
+msgstr "Това дърво е заключено за редактиране на %s от %s."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -20041,11 +20041,11 @@ msgstr "Вход [Общо линии: %d - Показани са всички �
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
-msgstr "Изчистване на дневника на кактусите"
+msgstr "Изчистване на дневника на Cacti"
 
 #: utilities.php:1674
 msgid "Cacti Log Cleared"
-msgstr "Изчистена регистрация на кактуси"
+msgstr "Дневникът на Cacti е изчистен"
 
 #: utilities.php:1676
 msgid "Error: Unable to clear log, no write permissions."
@@ -20682,8 +20682,7 @@ msgstr "Не са открити промени в индекса, кешът н
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "Синхронизацията не бе успешна. Вижте дневника за подробности."
+msgstr "Синхронизацията се провали. Вижте дневника за подробности."
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."

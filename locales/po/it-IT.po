@@ -29,7 +29,7 @@ msgstr "Cacti è stato progettato per essere una soluzione grafica completa basa
 #: about.php:44
 #, php-format
 msgid "Please see the official %sCacti website%s for information on how to use Cacti, get support, and updates."
-msgstr "Consulta il %s sito Web ufficiale dei cactus %s per informazioni su come utilizzare i cactus, ottenere supporto e aggiornamenti."
+msgstr "Consultare il %ssito web ufficiale di Cacti%s per informazioni sull'utilizzo di Cacti, per ottenere supporto e per gli aggiornamenti."
 
 #: about.php:48
 msgid "Active Developers"
@@ -387,7 +387,7 @@ msgstr "Mostra Dettagli"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Anteprima Aggregato [%s]"
+msgstr "Anteprima aggregato non esistente"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -884,7 +884,7 @@ msgstr "Cambia Password"
 
 #: auth_changepassword.php:352
 msgid "Please enter your current password and your new<br>Cacti password."
-msgstr "Inserisci la tua password attuale e la tua nuova password Cacti."
+msgstr "Inserire la password attuale e la nuova<br>password di Cacti."
 
 #: auth_changepassword.php:354
 msgid "Please enter your new Cacti password."
@@ -1134,12 +1134,12 @@ msgstr "Aggiunto manualmente attraverso l'interfaccia di automazione del disposi
 #: automation_devices.php:130
 #, php-format
 msgid "Device %s Added to Cacti"
-msgstr "Dispositivo %s aggiunto a Cactus"
+msgstr "Dispositivo %s aggiunto a Cacti"
 
 #: automation_devices.php:132
 #, php-format
 msgid "Device %s Not Added to Cacti"
-msgstr "Dispositivo %s non aggiunto ai cactus"
+msgstr "Dispositivo %s non aggiunto a Cacti"
 
 #: automation_devices.php:142
 msgid "Devices Removed from Cacti Automation database"
@@ -2588,7 +2588,7 @@ msgstr "Avviso sul sistema Cacti"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
-msgstr "ATTENZIONE: PID del demone cactus["
+msgstr "ATTENZIONE: PID del demone Cacti["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
@@ -2596,7 +2596,7 @@ msgstr "Utilità di sistema Cacti"
 
 #: cactid.php:132
 msgid "Notice: Cacti Daemon PID["
-msgstr "Avviso: PID del demone cactus["
+msgstr "Avviso: PID del demone Cacti["
 
 #: cdef.php:271
 msgid "Click 'Continue' to delete the following CDEF."
@@ -3078,7 +3078,7 @@ msgstr "Lo stato del controllo di debug della sorgente dati."
 #: data_debug.php:486 lib/installer.php:2431 lib/installer.php:2463
 #: package_import.php:635
 msgid "Writable"
-msgstr "可写"
+msgstr "Scrivibile"
 
 #: data_debug.php:489
 msgid "Determines if the Data Collector or the Web Site have Write access."
@@ -3614,7 +3614,7 @@ msgstr "Modelli grafici/dati associati [modifica: %s]."
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Modelli grafici/dati associati [modifica: %s]."
+msgstr "Modelli di grafico/dati associati [nuovo]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4414,7 +4414,7 @@ msgstr "Il valore sarà derivato dal dispositivo se questo campo è lasciato vuo
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Dati personalizzati [immissione dati: %s]."
+msgstr "Messaggio di avviso dati personalizzati"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -5181,7 +5181,7 @@ msgstr "Template grafico selezionato"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Scegliere un modello di grafico da applicare a questo grafico. Si noti che è possibile modificare solo i modelli di grafico in un modello di grafico compatibile con 100%%, il che significa che include origini dati identiche."
+msgstr "Scegliere un modello di grafico da applicare a questo grafico. Tenere presente che è possibile cambiare il modello di grafico solo con un modello compatibile al 100%%, ovvero che includa origini dati identiche."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5209,7 +5209,7 @@ msgstr "Nuovi grafici per [ Tutti i dispositivi ]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Gestione gruppi utenti [modifica: %s]."
+msgstr "Gestione grafici [ Non basati su dispositivo ]"
 
 #: graphs.php:2080
 #, php-format
@@ -5375,16 +5375,16 @@ msgstr "Ripristina impostazioni iniziali"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "ATTENZIONE: pagina cactus:%s per l'utente:%s ha generato un errore irreversibile %d!"
+msgstr "ATTENZIONE: la pagina Cacti:%s per l'utente:%s ha generato un errore irreversibile %d!"
 
 #: help.php:99
 #, php-format
 msgid "The Document page '%s' count not be reached.  The Cacti Documentation site is not reachable.  The http error was '%s'.  Consider downloading an official release to obtain the latest documentation and hosting the documentation locally."
-msgstr "Il conteggio della pagina del documento '%s' non è stato raggiunto.  Il sito della Documentazione Cactus non è raggiungibile.  L'errore http era '%s'.  Prendi in considerazione la possibilità di scaricare una versione ufficiale per ottenere la documentazione più recente e ospitarla localmente."
+msgstr "Impossibile raggiungere la pagina della documentazione '%s'. Il sito della documentazione di Cacti non è raggiungibile. L'errore HTTP è stato '%s'. Valutare di scaricare una versione ufficiale per ottenere la documentazione più recente e ospitarla localmente."
 
 #: help.php:113
 msgid "Cacti GitHub Site"
-msgstr "Sito GitHub Cactus"
+msgstr "Sito GitHub di Cacti"
 
 #: help.php:113
 msgid "Open a ticket at "
@@ -5393,7 +5393,7 @@ msgstr "Apri un ticket su "
 #: help.php:113
 #, php-format
 msgid "The Help File %s was not located on the Cacti Documentation Website."
-msgstr "Il file della Guida %s non si trovava sul sito Web della documentazione dei cactus."
+msgstr "Il file della guida %s non è stato trovato sul sito web della documentazione di Cacti."
 
 #: help.php:127
 #, php-format
@@ -6664,7 +6664,7 @@ msgstr "Ogni Giorno"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "%d Filettatura"
+msgstr "1 thread"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -8078,7 +8078,7 @@ msgstr "Azione:"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "Casa Cactus"
+msgstr "Guida di Cacti"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8659,7 +8659,7 @@ msgstr "Opzioni di scala automatica"
 
 #: include/global_form.php:775
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "Usare <br> --alt-autoscale per scalare al minimo assoluto e al massimo <br> --alt-autoscale-max per scalare al valore massimo, usando un dato limite inferiore <br> --alt-autoscale-min per scalare al valore minimo, usando un dato limite superiore <br> --alt-autoscale (con limiti) per scalare usando entrambi i limiti inferiore e superiore (RRDtool default) <br> <br>."
+msgstr "Usare <br> --alt-autoscale per scalare al minimo e al massimo assoluti <br> --alt-autoscale-max per scalare al valore massimo utilizzando un determinato limite inferiore <br> --alt-autoscale-min per scalare al valore minimo utilizzando un determinato limite superiore <br> --alt-autoscale (con limiti) per scalare utilizzando sia il limite inferiore che quello superiore (predefinito di RRDtool) <br>"
 
 #: include/global_form.php:779
 msgid "Use --alt-autoscale (ignoring given limits)"
@@ -8751,7 +8751,7 @@ msgstr "No Gridfit (--no-gridfit)"
 
 #: include/global_form.php:863
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
-msgstr "Al fine di evitare effetti di sfocatura anti-aliasing RRDDtool scatta i punti ai pixel di risoluzione del dispositivo, questo si traduce in un aspetto più nitido. Se questo non è di vostro gradimento, potete usare questo interruttore per disattivare questo comportamento.<br><strong><strong>Nota: </strong>Il Gridfitting è disattivato per l'output PDF, EPS, SVG di default."
+msgstr "Per evitare effetti di sfocatura dovuti all'anti-aliasing, RRDtool allinea i punti ai pixel di risoluzione del dispositivo, ottenendo un aspetto più nitido. Se questo comportamento non è gradito, è possibile utilizzare questa opzione per disattivarlo.<br><strong>Nota: </strong>il gridfitting è disattivato per impostazione predefinita per l'output PDF, EPS e SVG."
 
 #: include/global_form.php:866
 msgid "Alternative Y Grid (--alt-y-grid)"
@@ -8916,7 +8916,7 @@ msgstr "Offset i dati sull'asse del tempo (asse x) per la quantità specificata 
 
 #: include/global_form.php:1037
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
-msgstr "E' STATO UN PIACERE CONOSCERTI: Il valore della voce del grafico.<br/> [TICK]: La frazione per la linea di spunta.<br/> [SHIFT]: Il tempo si sposta in secondi."
+msgstr "[HRULE|VRULE]: Il valore dell'elemento del grafico.<br/> [TICK]: La frazione per la linea di spunta.<br/> [SHIFT]: Lo scostamento temporale in secondi."
 
 #: include/global_form.php:1040
 msgid "GPRINT Type"
@@ -9048,7 +9048,7 @@ msgstr "Numero di fili di raccolta"
 
 #: include/global_form.php:1242
 msgid "The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."
-msgstr "Il numero di thread simultanei da utilizzare per il polling di questo dispositivo.  Questo vale solo per l'impianto di poller della colonna vertebrale."
+msgstr "Il numero di thread simultanei da utilizzare per il polling di questo dispositivo. Questo si applica solo al poller Spine."
 
 #: include/global_form.php:1249
 msgid "Disable Device"
@@ -9748,19 +9748,19 @@ msgstr "Percorso poller alternativo"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Posizione del file binario della colonna vertebrale"
+msgstr "Percorso del file binario di Spine"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
-msgstr "Il sentiero che porta al binario della colonna vertebrale."
+msgstr "Il percorso del file binario di Spine."
 
 #: include/global_settings.php:226
 msgid "Spine Config File Path"
-msgstr "Percorso file di configurazione della colonna vertebrale"
+msgstr "Percorso del file di configurazione di Spine"
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "Il percorso del file di configurazione della colonna vertebrale.  Per impostazione predefinita, nel cwd di Spine, o /etc se non specificato."
+msgstr "Il percorso del file di configurazione di Spine. Per impostazione predefinita, nella directory di lavoro corrente (cwd) di Spine, o in /etc se non specificato."
 
 #: include/global_settings.php:239
 msgid "RRDfile Auto Clean"
@@ -10016,7 +10016,7 @@ msgstr "Ottieni aiuto"
 
 #: include/global_settings.php:456
 msgid "By default Cacti page help is located at docs.cacti.net.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Cacti server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
-msgstr "Per impostazione predefinita, la guida della pagina Cactus si trova su docs.cacti.net.  Tuttavia, se il tuo sistema non ha accesso a Internet, puoi scaricare la documentazione localmente in formato HTML e ospitarla nella posizione \"docs\" del tuo server Cacti.  Se si sceglie di utilizzare solo la posizione locale per la documentazione della pagina di aiuto, selezionare questa casella di controllo."
+msgstr "Per impostazione predefinita, la guida delle pagine di Cacti si trova su docs.cacti.net. Tuttavia, se il sistema non ha accesso a Internet, è possibile scaricare la documentazione in locale in formato HTML e ospitarla nella directory 'docs' del server Cacti. Se si sceglie di utilizzare esclusivamente il percorso locale per la documentazione della guida, selezionare questa casella di controllo."
 
 #: include/global_settings.php:461
 msgid "Deletion Verification"
@@ -10032,7 +10032,7 @@ msgstr "Metodo di creazione di grafici e fonti di dati"
 
 #: include/global_settings.php:468
 msgid "When enabled, Cacti will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Cacti will not allow the removal of Data Sources if they are used in other Graphs."
-msgstr "Se abilitato, Cacti imposterà il pulsante di opzione su Elimina le origini dati correlate di un grafico durante la rimozione dei grafici. Nota: i cactus non consentiranno la rimozione delle origini dati se utilizzate in altri grafici."
+msgstr "Se abilitato, Cacti imposterà il pulsante di opzione sull'eliminazione delle origini dati correlate durante la rimozione dei grafici. Nota: Cacti non consentirà la rimozione delle origini dati se vengono utilizzate in altri grafici."
 
 #: include/global_settings.php:473
 msgid "Graphs Auto Unlock"
@@ -10040,7 +10040,7 @@ msgstr "Regola di corrispondenza del grafico"
 
 #: include/global_settings.php:474
 msgid "When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
-msgstr "Se abilitato, Cactus non bloccherà i grafici. Ciò consente una modifica manuale più rapida delle origini dati relative a un grafico."
+msgstr "Se abilitato, Cacti non bloccherà i grafici. Ciò consente una modifica manuale più rapida delle origini dati relative a un grafico."
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
@@ -10212,7 +10212,7 @@ msgstr "Filettature del dispositivo"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Il numero predefinito di Device Threads.  Questo è applicabile solo quando si utilizza il rilevatore di dati sulla colonna vertebrale."
+msgstr "Il numero predefinito di thread per dispositivo. Applicabile solo quando si utilizza il Data Collector Spine."
 
 #: include/global_settings.php:656
 #, php-format
@@ -10415,7 +10415,7 @@ msgstr "Tema"
 
 #: include/global_settings.php:869 include/global_settings.php:2577
 msgid "Please select one of the available Themes to skin your Cacti with."
-msgstr "Seleziona uno dei temi disponibili per scuoiare i tuoi Cactus."
+msgstr "Selezionare uno dei temi disponibili per personalizzare l'aspetto di Cacti."
 
 #: include/global_settings.php:875
 msgid "Table Settings"
@@ -10729,7 +10729,7 @@ msgstr "L'orario di fine del tuo orario di lavoro. Formato: hh:mm"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "%d Settimane"
+msgstr "Nascondi fine settimana"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -11034,7 +11034,7 @@ msgstr "Timeout di generazione in background di manutenzione"
 
 #: include/global_settings.php:1456
 msgid "The maximum amount of time a Cacti's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Il tempo massimo che uno script di manutenzione dei cactus può eseguire senza generare un errore di timeout e essere ucciso."
+msgstr "La durata massima per cui uno script di manutenzione di Cacti può essere eseguito senza generare un errore di timeout ed essere terminato."
 
 #: include/global_settings.php:1469
 msgid "Spikekill Background Generation Timeout"
@@ -11058,7 +11058,7 @@ msgstr "Processi predefiniti del raccoglitore di dati"
 
 #: include/global_settings.php:1493
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Cacti 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
-msgstr "Il numero predefinito di processi simultanei da eseguire per Data Collector.  NOTA: a partire da Cacti 1.2, questa impostazione viene mantenuta nel Data Collector.  Spostandosi in avanti, questo valore è preimpostato solo per il Data Collector.  L'uso di un numero più alto quando si utilizza cmd.php migliorerà le prestazioni.  I miglioramenti delle prestazioni nella colonna vertebrale si risolvono al meglio con il parametro threads.  Quando si utilizza la spina dorsale, si consiglia di utilizzare un numero inferiore e di fare leva sulle filettature.  Quando si utilizza cmd.php, utilizzare non più di 2 volte il numero di core della CPU."
+msgstr "Il numero predefinito di processi simultanei da eseguire per ogni Data Collector. NOTA: a partire da Cacti 1.2, questa impostazione è gestita nel Data Collector. D'ora in avanti, questo valore funge solo da preimpostazione per il Data Collector. L'uso di un numero più elevato con cmd.php migliorerà le prestazioni. I miglioramenti delle prestazioni in Spine si ottengono al meglio tramite il parametro dei thread. Quando si utilizza Spine, si consiglia di impostare un numero inferiore e di sfruttare invece i thread. Quando si utilizza cmd.php, non utilizzare più del doppio del numero di core della CPU."
 
 #: include/global_settings.php:1500
 msgid "Threads per Process"
@@ -11074,7 +11074,7 @@ msgstr "Metodo di Autenticazione"
 
 #: include/global_settings.php:1516
 msgid "<blockquote><i>Built-in Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Cacti resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i>Autenticazione incorporata</i> - Cacti gestisce l'autenticazione utente, che permette di creare utenti e dare loro i diritti alle diverse aree all'interno di Cacti.<br><br><br><i>Web Basic Authentication</i> - L'autenticazione è gestita dal server web. Gli utenti possono essere aggiunti o creati automaticamente al primo accesso se il Template User è definito, altrimenti verranno utilizzati i permessi del guest definiti.<br><br><br><i>Autenticazione LDAP</i> - Consente l'autenticazione contro un server LDAP. Gli utenti saranno creati automaticamente al primo accesso se il Template User è definito, altrimenti verranno utilizzate le autorizzazioni definite per il guest.  Se il modulo LDAP di PHP non è abilitato, l'autenticazione LDAP non apparirà come opzione selezionabile.<br><br><br><i>Autenticazione multipla LDAP/AD Domain Authentication</i> - Permette agli amministratori di supportare più gruppi disparati da diverse directory LDAP/AD per accedere alle risorse Cacti.  Proprio come l'autenticazione LDAP, il modulo LDAP di PHP è necessario per utilizzare questo metodo.</blockquote>."
+msgstr "<blockquote><i>Autenticazione integrata</i> - Cacti gestisce l'autenticazione degli utenti, consentendo di creare utenti e assegnare loro i permessi per le diverse aree di Cacti.<br><br><i>Autenticazione Web Basic</i> - L'autenticazione è gestita dal server web. Gli utenti possono essere aggiunti o creati automaticamente al primo accesso se l'utente modello è definito; in caso contrario verranno utilizzati i permessi ospite definiti.<br><br><i>Autenticazione LDAP</i> - Consente l'autenticazione tramite un server LDAP. Gli utenti verranno creati automaticamente al primo accesso se l'utente modello è definito; in caso contrario verranno utilizzati i permessi ospite definiti. Se il modulo LDAP di PHP non è abilitato, l'autenticazione LDAP non apparirà come opzione selezionabile.<br><br><i>Autenticazione multipla su domini LDAP/AD</i> - Consente agli amministratori di supportare più gruppi distinti provenienti da diverse directory LDAP/AD per accedere alle risorse di Cacti. Proprio come per l'autenticazione LDAP, per utilizzare questo metodo è necessario il modulo LDAP di PHP.</blockquote>"
 
 #: include/global_settings.php:1522
 msgid "Support Authentication Cookies"
@@ -12017,7 +12017,7 @@ msgstr "Percentuale di varianza"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Questo valore rappresenta la percentuale superiore alla media rettificata del campione una volta eliminati dal campione i valori erratici.  Ad esempio, una percentuale di variazione del 100%% su una media regolata di 50 eliminerebbe dal grafico qualsiasi campione al di sopra della quantità di 100."
+msgstr "Questo valore rappresenta la percentuale al di sopra della media campionaria corretta una volta rimossi i valori anomali dal campione. Ad esempio, una percentuale di varianza del 100%% applicata a una media corretta di 50 rimuoverebbe dal grafico qualsiasi campione superiore al valore 100."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12122,11 +12122,11 @@ msgstr "MySQL - Supporto TimeZone"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "Come vorresti che Cactus presentasse le date?  Questa impostazione cambierà anche il modo in cui vengono rappresentate le date dei grafici Cactus."
+msgstr "Come si desidera che Cacti visualizzi le date? Questa impostazione modificherà anche il modo in cui vengono rappresentate le date nei grafici di Cacti."
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Server v%s - Manutenzione"
+msgstr "Fuso orario del server Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12331,7 +12331,7 @@ msgstr "Storico password"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "Se abilitato, Cactus ricorderà la tua Cronologia ad albero tra gli accessi e quando torni alla pagina Grafici."
+msgstr "Se abilitato, Cacti ricorderà la cronologia dell'albero tra un accesso e l'altro e al ritorno alla pagina Grafici."
 
 #: include/global_settings.php:2824
 msgid "Use Custom Fonts"
@@ -12744,7 +12744,7 @@ msgstr "Host"
 
 #: lib/api_device.php:1594
 msgid "System:"
-msgstr "系统:"
+msgstr "Sistema:"
 
 #: lib/api_device.php:1598 lib/api_device.php:1606
 msgid "Uptime:"
@@ -12752,7 +12752,7 @@ msgstr "Tempo di funzionamento:"
 
 #: lib/api_device.php:1609
 msgid "Hostname:"
-msgstr "主机名："
+msgstr "Nome host:"
 
 #: lib/api_device.php:1610
 msgid "Location:"
@@ -12864,7 +12864,7 @@ msgstr "Accesso negato! L'ID utente del modello %s non esiste.  Contatta il tuo 
 
 #: lib/auth.php:4723
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "L'amministratore di cactus ha imposto password complesse per gli accessi e la password di cactus corrente non corrisponde ai nuovi requisiti. Pertanto, è necessario modificare la password ora."
+msgstr "L'amministratore di Cacti ha imposto password complesse per l'accesso e la password di Cacti attuale non soddisfa i nuovi requisiti. Pertanto, è necessario cambiare la password ora."
 
 #: lib/auth.php:4754
 #, php-format
@@ -12913,7 +12913,7 @@ msgstr "%s - WEBUI NOTA: Cacti Log cancellato dall'interfaccia di gestione web."
 
 #: lib/clog_webapi.php:257
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Cacti and Syslog, the log information will remain in Syslog."
-msgstr "Fare clic su 'Continua' per eliminare il file di log.<br><br><br><br>Nota: se il logging è impostato sia su Cacti che su Syslog, le informazioni di log rimarranno in Syslog."
+msgstr "Fare clic su 'Continua' per svuotare il file di log.<br><br><br>Nota: se la registrazione è impostata sia su Cacti che su Syslog, le informazioni di log rimarranno in Syslog."
 
 #: lib/clog_webapi.php:263 utilities.php:1489
 msgid "Purge Log"
@@ -12956,7 +12956,7 @@ msgstr "File"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "Linee %d"
+msgstr "Righe iniziali"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13585,7 +13585,7 @@ msgstr "Link %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Errore di Mailer: No <b>TO</b>indirizzo impostato! <br>Se si utilizza il link <i>Test Mail</i>, impostare l'impostazione <b>Avviso e-mail</b>."
+msgstr "Errore del mailer: nessun indirizzo destinatario impostato!!<br>Se si utilizza il link <i>Test Mail</i>, configurare l'impostazione <b>E-mail di avviso</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13620,7 +13620,7 @@ msgstr "Metodo"
 
 #: lib/functions.php:5757
 msgid "Checking Configuration...<br>"
-msgstr "Verifica della configurazione....<br>...<br>."
+msgstr "Verifica della configurazione in corso...<br>"
 
 #: lib/functions.php:5767
 msgid "PHP's Mailer Class"
@@ -13656,7 +13656,7 @@ msgstr "Inviando il messaggio..."
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "Messaggio di test dei cactus"
+msgstr "Messaggio di prova di Cacti"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -13891,7 +13891,7 @@ msgstr "Aiuto"
 
 #: lib/html.php:2878
 msgid "Cacti Home"
-msgstr "Casa Cactus"
+msgstr "Home di Cacti"
 
 #: lib/html.php:2880
 msgid "Miscellaneous"
@@ -13951,7 +13951,7 @@ msgstr "Segnala un bug"
 
 #: lib/html.php:2901
 msgid "Cacti"
-msgstr "Cactus"
+msgstr "Cacti"
 
 #: lib/html.php:2903
 msgid "Click to Show/Hide Filter"
@@ -14842,11 +14842,11 @@ msgstr "Il termine di ricerca \"%s\" non è valido. L'errore è %s"
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "Le espressioni regolari dei cactus sono limitate a 50 caratteri solo per motivi di sicurezza."
+msgstr "Le espressioni regolari di Cacti sono limitate a 50 caratteri solo per motivi di sicurezza."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "Le espressioni regolari dei cactus non possono includere il carattere semicolore."
+msgstr "Le espressioni regolari di Cacti non possono includere il carattere punto e virgola."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -15119,7 +15119,7 @@ msgstr "Si sta tentando di installare Cacti %s su un database 0.6.x. Purtroppo, 
 
 #: lib/installer.php:1685
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Per poter continuare, è necessario creare un nuovo database, importare \"cacti.sql\" in esso:"
+msgstr "Per poter continuare, è <b>NECESSARIO</b> creare un nuovo database e importarvi \"cacti.sql\":"
 
 #: lib/installer.php:1687
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
@@ -15135,7 +15135,7 @@ msgstr "Avete creato un nuovo database, ma non avete ancora importato il file 'c
 
 #: lib/installer.php:1697
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
-msgstr "Questo errore può anche essere generato se l'utente del database dei cactus non ha i permessi corretti sul database Cactus. Assicuratevi che l'utente del database Cacti abbia la possibilità di selezionare, inserire, eliminare, cancellare, aggiornare, creare, creare, ALTER, DROP, INDEX sul database Cacti."
+msgstr "Questo errore può essere generato anche se l'utente del database cacti non dispone dei permessi corretti sul database di Cacti. Assicurarsi che l'utente del database di Cacti disponga dei privilegi SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX sul database di Cacti."
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
@@ -15190,7 +15190,7 @@ msgstr "Grazie per aver dedicato del tempo a scaricare e installare Cacti, la so
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Assicurarsi di aver letto e seguito i passi necessari per installare Cacti prima di continuare. Le informazioni di installazione possono essere trovate per i sistemi operativi basati su <a href=\"%1$s\">Unix</a> e <a href=\"%2$s\">Win32</a>."
+msgstr "Assicurarsi di aver letto e seguito i passaggi necessari per installare Cacti prima di continuare. Le informazioni di installazione sono disponibili per i sistemi operativi basati su <a href=\"%s\">Unix</a> e <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15384,7 +15384,7 @@ msgstr "Declassamento da <strong>%s</strong> a <strong>%s</strong>."
 
 #: lib/installer.php:2178
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
-msgstr "Sembra che tu stia retrocedendo ad una versione precedente.  Le modifiche apportate al database per la versione più recente non saranno invertite e <i>potrebbero causare problemi."
+msgstr "Sembra che si stia eseguendo il downgrade a una versione precedente. Le modifiche al database apportate per la versione più recente non verranno annullate e <i>potrebbero</i> causare problemi."
 
 #: lib/installer.php:2183
 msgid "Please select the type of installation"
@@ -15575,11 +15575,11 @@ msgstr "Protezione whitelist di convalida input"
 
 #: lib/installer.php:2534
 msgid "Cacti Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Cacti poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
-msgstr "I metodi di inserimento dati cactus che richiamano uno script possono essere sfruttati in modo tale che un non amministratore possa danneggiare i file di proprietà dell'account poller e, nei casi in cui qualcuno esegue il polling cactus come root, può compromettere il sistema operativo consentendo agli aggressori di sfruttare la tua infrastruttura."
+msgstr "I metodi di immissione dati di Cacti che richiamano uno script possono essere sfruttati in modo che un utente non amministratore possa danneggiare i file di proprietà dell'account del poller e, nei casi in cui il poller di Cacti venga eseguito come root, compromettere il sistema operativo consentendo agli aggressori di violare l'infrastruttura."
 
 #: lib/installer.php:2535
 msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Cacti more thoroughly, it does increase the amount of work required by the Cacti administrator to import and manage Templates and Packages."
-msgstr "Pertanto, diverse versioni fa, Cacti è stato migliorato per fornire funzionalità di whitelist su questi tipi di metodi di immissione dei dati. Sebbene ciò protegga i cactus in modo più approfondito, aumenta la quantità di lavoro richiesto dall'amministratore dei cactus per importare e gestire modelli e pacchetti."
+msgstr "Pertanto, diverse versioni fa, Cacti è stato potenziato per fornire funzionalità di whitelist per questi tipi di metodi di immissione dati. Sebbene ciò renda Cacti più sicuro, aumenta il lavoro richiesto all'amministratore di Cacti per importare e gestire modelli e pacchetti."
 
 #: lib/installer.php:2536
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
@@ -15982,7 +15982,7 @@ msgstr "Non sono stati trovati grafici basati su modelli per il dispositivo pred
 
 #: lib/installer.php:3507
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server."
-msgstr "ATTENZIONE: modello di dispositivo per il sistema operativo in uso non trovato. Dovrai importare Modelli dispositivo o Pacchetti cactus per monitorare il tuo server Cactus."
+msgstr "ATTENZIONE: modello di dispositivo per il sistema operativo in uso non trovato. Sarà necessario importare modelli di dispositivo o pacchetti Cacti per monitorare il server Cacti."
 
 #: lib/installer.php:3514
 msgid "Running first-time data query for local host"
@@ -16284,7 +16284,7 @@ msgstr "Plugins"
 #: lib/plugins.php:1217 lib/plugins.php:1223
 #, php-format
 msgid "Requires: Cacti >= %s"
-msgstr "Richiede: Cactus >== %s"
+msgstr "Richiede: Cacti >= %s"
 
 #: lib/plugins.php:1220
 msgid "Legacy Plugin"
@@ -16409,12 +16409,12 @@ msgstr "Il pdp_per_row di '%s' non è valido per RRA '%s' dovrebbe essere '%s'. 
 #: lib/rrd.php:3982
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
-msgstr "XFF per i cactus RRA id \"%s\" dovrebbe essere \"%s\"."
+msgstr "Il valore XFF per l'ID RRA di Cacti è '%s' ma dovrebbe essere '%s'"
 
 #: lib/rrd.php:3986
 #, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
-msgstr "Il numero di righe per l'ID RRA cactus '%s' non è corretto.  Il numero di righe è '%s' ma dovrebbe essere '%s'"
+msgstr "Il numero di righe per l'ID RRA di Cacti '%s' non è corretto. Il numero di righe è '%s' ma dovrebbe essere '%s'"
 
 #: lib/rrd.php:4003
 #, php-format
@@ -16476,7 +16476,7 @@ msgstr "CDP Sconosciuto Punti dati sconosciuti (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Nessun %s Trovato"
+msgstr "Errori rilevati"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16542,7 +16542,7 @@ msgstr "Cartella RRA"
 
 #: lib/rrd.php:4805
 msgid "Root"
-msgstr "根"
+msgstr "Root"
 
 #: lib/rrd.php:4914
 msgid "Unknown RRDtool Error"
@@ -16921,7 +16921,7 @@ msgstr "Grazie alle funzionalità di polling remoto, grandi quantità di dati sa
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Se utilizzi il Performance Booster di Cacti e scegli un motore di archiviazione in memoria, devi fare attenzione a svuotare il buffer del Performance Booster prima che il sistema esaurisca lo spazio per le tabelle in memoria. Questo si ottiene in due modi: innanzitutto riducendo la dimensione della colonna di output alla dimensione strettamente necessaria. Questa colonna si trova nelle tabelle poller_output e poller_output_boost. La seconda cosa che puoi fare è allocare più memoria alle tabelle in memoria. Abbiamo scelto arbitrariamente un valore consigliato pari al 10%% della memoria di sistema, ma se utilizzi unità disco SSD o disponi di un sistema più piccolo, puoi ignorare questo consiglio o scegliere un motore di archiviazione diverso. Puoi vedere il consumo previsto delle tabelle del Performance Booster in Console -> Utilità di sistema -> Visualizza stato Boost."
+msgstr "Se si utilizza il Performance Booster di Cacti e si sceglie un motore di archiviazione in memoria, è necessario prestare attenzione a svuotare il buffer del Performance Booster prima che il sistema esaurisca lo spazio delle tabelle in memoria. Ciò si ottiene in due modi: innanzitutto riducendo la dimensione della colonna di output al valore strettamente necessario. Questa colonna si trova nelle tabelle poller_output e poller_output_boost. La seconda cosa che è possibile fare è allocare più memoria alle tabelle in memoria. Abbiamo scelto arbitrariamente un valore consigliato del 10%% rispetto alla memoria di sistema, ma se si utilizzano unità disco SSD o si dispone di un sistema più piccolo, è possibile ignorare questo consiglio o scegliere un motore di archiviazione diverso. È possibile visualizzare il consumo previsto delle tabelle del Performance Booster in Console -> Utilità di sistema -> Visualizza stato Boost."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16947,7 +16947,7 @@ msgstr "Se le tue tabelle hanno indici molto grandi, devi operare con Barracuda 
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB manterrà in memoria di sistema quante più tabelle e indici possibile. Pertanto, dovresti impostare innodb_buffer_pool abbastanza grande da contenere in memoria la maggior parte delle tabelle e degli indici. Controllare la dimensione della directory /var/lib/mysql/cacti ti aiuterà a determinare questo valore. Consigliamo il 25%% della memoria totale del sistema, ma i requisiti varieranno in base alle dimensioni del sistema."
+msgstr "InnoDB manterrà nella memoria di sistema quante più tabelle e indici possibile. Pertanto, è necessario dimensionare innodb_buffer_pool in modo sufficientemente ampio da contenere la maggior parte delle tabelle e degli indici in memoria. Controllare la dimensione della directory /var/lib/mysql/cacti aiuterà a determinare questo valore. Consigliamo il 25%% rispetto alla memoria totale del sistema, ma i requisiti varieranno in base alle dimensioni del sistema."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17733,7 +17733,7 @@ msgstr "Tempo di esecuzione massimo di %d secondi superato per l'ID poller %d. U
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "AVVERTENZA: Ciclo di polling cactus superato Intervallo poller entro"
+msgstr "ATTENZIONE: il ciclo di polling di Cacti ha superato l'intervallo del poller di "
 
 #: poller.php:961
 #, php-format
@@ -17750,7 +17750,7 @@ msgstr "Utilità di sistema Cacti"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "NOTA: è stato aggiunto un secondo raccoglitore di dati di cactus. Pertanto, abilitando boost automaticamente!"
+msgstr "NOTA: è stato aggiunto un secondo data collector di Cacti. Pertanto, Boost viene abilitato automaticamente!"
 
 #: poller_automation.php:54
 #, php-format
@@ -17759,7 +17759,7 @@ msgstr "ATTENZIONE: Il database principale di Cacti %s è offline o in ripristin
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
-msgstr "Cactus Admin primario"
+msgstr "Amministratore principale di Cacti"
 
 #: poller_automation.php:1159
 msgid "Cacti Automation Report requires an html based Email client"
@@ -18283,7 +18283,7 @@ msgstr "NOTA: le impostazioni del percorso in questa scheda vengono salvate solo
 #: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
-msgstr "Impostazioni cactus (%s)%s"
+msgstr "Impostazioni di Cacti (%s)%s"
 
 #: settings.php:505
 msgid "Changing Permission Model Warning"
@@ -18723,7 +18723,7 @@ msgstr "Per modificare questo albero, è necessario prima bloccarlo premendo il 
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Questo albero è stato bloccato per la modifica su %1$s di %2$s."
+msgstr "Questo albero è stato bloccato per la modifica il %s da %s."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -18737,7 +18737,7 @@ msgstr "inherit"
 #: tree.php:528
 msgctxt "ordering of tree items"
 msgid "manual"
-msgstr "手册"
+msgstr "manuale"
 
 #: tree.php:531
 msgctxt "ordering of tree items"
@@ -20046,7 +20046,7 @@ msgstr "Log [Linee totali: %d - Tutti gli articoli mostrati]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
-msgstr "Cancella il registro dei cactus"
+msgstr "Cancella il log di Cacti"
 
 #: utilities.php:1674
 msgid "Cacti Log Cleared"
@@ -20687,8 +20687,7 @@ msgstr "Nessuna modifica dell'indice rilevata, cache del poller aggiornata"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "Sincronizzazione non riuscita. Consulta il registro per i dettagli."
+msgstr "Sincronizzazione non riuscita. Consultare il log per i dettagli."
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."

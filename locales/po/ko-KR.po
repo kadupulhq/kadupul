@@ -53,7 +53,7 @@ msgstr "그룹 멤버"
 
 #: about.php:71
 msgid "Members of the original Cacti Group that have since moved on in their careers.  We continue to wish them the best."
-msgstr "이후 경력을 쌓아온 오리지널 선인장 그룹의 구성원. 앞으로도 좋은 결과 있으시길 바랍니다."
+msgstr "이후 다른 경력으로 자리를 옮긴 초기 Cacti Group 구성원들입니다. 앞으로도 좋은 일만 가득하기를 기원합니다."
 
 #: about.php:84
 msgid "Thanks"
@@ -70,7 +70,7 @@ msgstr "Cacti의 사용자"
 
 #: about.php:91
 msgid "Especially anyone who has taken the time to create an issue report, or otherwise help fix a Cacti related problems. Also to anyone who has contributed to supporting Cacti."
-msgstr "특히 문제 보고서를 작성하는 데 시간을 투자 한 사람이나 그렇지 않으면 Cacti 관련 문제를 해결하는 데 도움이됩니다. 선인장 지원에 기여한 사람에게도."
+msgstr "특히 시간을 내어 문제 보고서를 작성하거나 Cacti 관련 문제를 해결하는 데 도움을 주신 모든 분들. 또한 Cacti 지원에 기여해 주신 모든 분들."
 
 #: about.php:96
 msgid "License"
@@ -387,7 +387,7 @@ msgstr "항목 세부 정보 표시"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "집계 미리보기 [ %s]"
+msgstr "집계 미리보기가 존재하지 않습니다"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -884,11 +884,11 @@ msgstr "비밀번호 변경"
 
 #: auth_changepassword.php:352
 msgid "Please enter your current password and your new<br>Cacti password."
-msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> 선인장 암호."
+msgstr "현재 암호와 새<br>Cacti 암호를 입력하십시오."
 
 #: auth_changepassword.php:354
 msgid "Please enter your new Cacti password."
-msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> 선인장 암호."
+msgstr "새 Cacti 암호를 입력하십시오."
 
 #: auth_changepassword.php:362 auth_login.php:341 auth_login.php:344
 #: include/global_settings.php:1826 lib/functions.php:5789
@@ -1134,12 +1134,12 @@ msgstr "장치 자동화 인터페이스를 통해 수동으로 추가되었습�
 #: automation_devices.php:130
 #, php-format
 msgid "Device %s Added to Cacti"
-msgstr "장치 %s 이 (가) 선인장에 추가됨"
+msgstr "장치 %s이(가) Cacti에 추가되었습니다"
 
 #: automation_devices.php:132
 #, php-format
 msgid "Device %s Not Added to Cacti"
-msgstr "장치 %s 이 (가) 선인장에 추가되지 않음"
+msgstr "장치 %s이(가) Cacti에 추가되지 않았습니다"
 
 #: automation_devices.php:142
 msgid "Devices Removed from Cacti Automation database"
@@ -2584,19 +2584,19 @@ msgstr "트리 규칙 없음"
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
-msgstr "선인장 시스템 경고"
+msgstr "Cacti 시스템 경고"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
-msgstr "경고: 선인장 데몬 PID["
+msgstr "경고: Cacti 데몬 PID["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
-msgstr "선인장 시스템 유틸리티"
+msgstr "Cacti 시스템 공지"
 
 #: cactid.php:132
 msgid "Notice: Cacti Daemon PID["
-msgstr "알림: 선인장 데몬 PID["
+msgstr "알림: Cacti 데몬 PID["
 
 #: cdef.php:271
 msgid "Click 'Continue' to delete the following CDEF."
@@ -3596,7 +3596,7 @@ msgstr "연관된 그래프 / 데이터 템플릿 [편집 :  %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "연관된 그래프 / 데이터 템플릿 [편집 :  %s]"
+msgstr "연결된 그래프/데이터 템플릿 [신규]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4379,7 +4379,7 @@ msgstr "이 필드를 비워두면 값이 장치에서 파생됩니다."
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "맞춤 데이터 [데이터 입력 :  %s]"
+msgstr "사용자 지정 데이터 경고 메시지"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -4575,7 +4575,7 @@ msgstr "이미지 캐시 디렉토리에 쓸 수 없습니다. 권한을 설정�
 
 #: graph_realtime.php:474 graph_realtime.php:487
 msgid "Cacti Real-time Graphing"
-msgstr "선인장 실시간 그래프"
+msgstr "Cacti 실시간 그래프"
 
 #: graph_realtime.php:505 utilities.php:2579
 msgid "Refresh Interval"
@@ -5146,7 +5146,7 @@ msgstr "선택된 그래프 템플릿"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "이 그래프에 적용 할 그래프 템플릿을 선택하십시오. 그래프 템플릿은 100 %% 호환 그래프 템플릿으로 만 변경할 수 있습니다. 즉, 동일한 데이터 소스를 포함합니다."
+msgstr "이 그래프에 적용할 그래프 템플릿을 선택하십시오. 동일한 데이터 소스를 포함하는 100%% 호환되는 그래프 템플릿으로만 변경할 수 있습니다."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5174,7 +5174,7 @@ msgstr "[모든 장치]의 새로운 그래프"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "사용자 그룹 관리 [편집 :  %s]"
+msgstr "그래프 관리 [ 비장치 기반 ]"
 
 #: graphs.php:2080
 #, php-format
@@ -5340,7 +5340,7 @@ msgstr "기본 설정"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "경고: 사용자에 대한 선인장 페이지: %s: %s 치명적인 오류 %d 생성됨!"
+msgstr "경고: Cacti 페이지:%s(사용자:%s)에서 치명적 오류 %d이(가) 발생했습니다!"
 
 #: help.php:99
 #, php-format
@@ -5358,7 +5358,7 @@ msgstr "티켓 열기: "
 #: help.php:113
 #, php-format
 msgid "The Help File %s was not located on the Cacti Documentation Website."
-msgstr "도움말 파일 %s 이 (가) 선인장 문서 웹 사이트에 없습니다."
+msgstr "도움말 파일 %s을(를) Cacti 문서 웹사이트에서 찾을 수 없습니다."
 
 #: help.php:127
 #, php-format
@@ -6629,7 +6629,7 @@ msgstr "매일"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "스레드 % d 개"
+msgstr "스레드 1개"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -6939,7 +6939,7 @@ msgstr "자동화 규칙 적용"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
-msgstr "선인장 보고서"
+msgstr "Cacti 관련"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
@@ -8031,7 +8031,7 @@ msgstr "SNMP 알림 수신자보기"
 
 #: include/global_arrays.php:2594
 msgid "Cacti Settings"
-msgstr "선인장 설정"
+msgstr "Cacti 설정"
 
 #: include/global_arrays.php:2600
 msgid "External Link"
@@ -8043,7 +8043,7 @@ msgstr "실행"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "선인장 홈"
+msgstr "Cacti 도움말"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8459,7 +8459,7 @@ msgstr "이 데이터 템플릿에 주어진 이름입니다."
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "이 데이터 소스의 이름을 선택하십시오. | host_description |과 같은 대체 변수를 포함 할 수 있습니다. 또는 | query_fieldName |. 지원되는 대체 태그의 전체 목록을 보려면 Cacti 설명서를 참조하십시오."
+msgstr "이 데이터 소스의 이름을 선택하십시오. |host_description| 또는 |query_fieldName|과(와) 같은 대체 변수를 포함할 수 있습니다. 지원되는 대체 태그의 전체 목록은 Cacti 설명서를 참조하십시오."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8556,7 +8556,7 @@ msgstr "제목 (- 제목)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "그래프에 인쇄 된 이름입니다. | host_description |과 같은 대체 변수를 포함 할 수 있습니다. 또는 | query_fieldName |. 지원되는 대체 태그의 전체 목록을 보려면 Cacti 설명서를 참조하십시오."
+msgstr "그래프에 출력되는 이름입니다. |host_description| 또는 |query_fieldName|과(와) 같은 대체 변수를 포함할 수 있습니다. 지원되는 대체 태그의 전체 목록은 Cacti 설명서를 참조하십시오."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9013,7 +9013,7 @@ msgstr "컬렉션 스레드 수"
 
 #: include/global_form.php:1242
 msgid "The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."
-msgstr "이 장치 폴링에 사용할 동시 스레드 수입니다. 이것은 척추 폴러에만 적용됩니다."
+msgstr "이 장치를 폴링하는 데 사용할 동시 스레드 수입니다. 이는 Spine 폴러에만 적용됩니다."
 
 #: include/global_form.php:1249
 msgid "Disable Device"
@@ -9669,7 +9669,7 @@ msgstr "로그 기록"
 
 #: include/global_settings.php:172
 msgid "Cacti Log Path"
-msgstr "선인장 로그 경로"
+msgstr "Cacti 로그 경로"
 
 #: include/global_settings.php:173
 msgid "The path to your Cacti log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9713,7 +9713,7 @@ msgstr "대체 폴러 경로"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "척추 이진 파일 위치"
+msgstr "Spine 바이너리 파일 위치"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
@@ -9981,7 +9981,7 @@ msgstr "도와주세요."
 
 #: include/global_settings.php:456
 msgid "By default Cacti page help is located at docs.cacti.net.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Cacti server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
-msgstr "기본적으로 선인장 페이지 도움말은 docs.cacti.net에 있습니다. 그러나 시스템에 인터넷에 액세스할 수 없는 경우 HTML 형식으로 문서를 로컬로 다운로드하여 Cacti 서버의 'docs' 위치에 호스팅할 수 있습니다. 페이지 도움말 문서에 로컬 위치만 활용하도록 선택한 경우 이 확인란을 선택합니다."
+msgstr "기본적으로 Cacti 페이지 도움말은 docs.cacti.net에 있습니다. 그러나 시스템에서 인터넷에 액세스할 수 없는 경우 문서를 HTML 형식으로 로컬에 다운로드하여 Cacti 서버의 'docs' 위치에 호스팅할 수 있습니다. 페이지 도움말 문서로 로컬 위치만 사용하려면 이 확인란을 선택하십시오."
 
 #: include/global_settings.php:461
 msgid "Deletion Verification"
@@ -10085,7 +10085,7 @@ msgstr "콘텐츠 보안 대체 소스"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "웹 서버 자체 외부에서 액세스가 허용되는 공백으로 구분된 도메인 이름. 이것은 CDN 또는 호스팅 사이트를 사용하기로 선택한 사용자에게 중요합니다. 소스에는 와일드카드(예: *.mydomain.com) 또는 프로토콜(예: https://*.example.com)이 포함될 수 있습니다. 이러한 대체 소스에는 이미지, CSS 및 JavaScript 유형만 포함됩니다."
+msgstr "웹 서버 자체 외부에서 액세스가 허용되는 공백으로 구분된 도메인 이름입니다. 이는 CDN 또는 호스팅 사이트를 사용하려는 사용자에게 중요합니다. 소스에는 *.mydomain.com 같은 와일드카드나 https://*.example.com. 같은 프로토콜이 포함될 수 있습니다. 이러한 대체 소스에는 이미지, CSS 및 JavaScript 유형만 포함됩니다."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10177,7 +10177,7 @@ msgstr "장치 스레드"
 
 #: include/global_settings.php:652
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "기본 장치 스레드 수입니다. 이것은 척추 데이터 수집기를 사용할 때만 적용됩니다."
+msgstr "기본 장치 스레드 수입니다. 이는 Spine 데이터 수집기를 사용할 때만 적용됩니다."
 
 #: include/global_settings.php:656
 #, php-format
@@ -10380,7 +10380,7 @@ msgstr "테마"
 
 #: include/global_settings.php:869 include/global_settings.php:2577
 msgid "Please select one of the available Themes to skin your Cacti with."
-msgstr "당신의 선인장을 피부로 가꿀 수있는 테마 중 하나를 선택하십시오."
+msgstr "Cacti에 적용할 사용 가능한 테마 중 하나를 선택하십시오."
 
 #: include/global_settings.php:875
 msgid "Table Settings"
@@ -10694,7 +10694,7 @@ msgstr "영업 시간이 종료되는 시간입니다. 형식: hh: mm"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "% d 주"
+msgstr "주말 숨기기"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -10881,9 +10881,8 @@ msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index wil
 msgstr "모든 장치를 몇 빈도로 재검색하시겠습니까? 이 재인덱스는 선택한 빈도로 자정에 발생합니다."
 
 #: include/global_settings.php:1363
-#, fuzzy
 msgid "Weekly on Sunday"
-msgstr "        // 매주 일요일마다"
+msgstr "매주 일요일"
 
 #: include/global_settings.php:1364
 msgid "Monthly on Sunady"
@@ -11093,7 +11092,7 @@ msgstr "기본 인증 맵 파일"
 
 #: include/global_settings.php:1563
 msgid "When using basic authentication, if there are issues mapping the username to a valid Cacti account, the message included here will be displayed to users.  It can include both text and HTML."
-msgstr "기본 인증을 사용할 때 유효한 선인장 계정에 사용자 이름을 매핑하는 데 문제가 있는 경우 여기에 포함된 메시지가 사용자에게 표시됩니다. 텍스트와 HTML을 모두 포함할 수 있습니다."
+msgstr "기본 인증을 사용할 때 사용자 이름을 유효한 Cacti 계정에 매핑하는 데 문제가 있는 경우 여기에 포함된 메시지가 사용자에게 표시됩니다. 텍스트와 HTML을 모두 포함할 수 있습니다."
 
 #: include/global_settings.php:1570
 msgid "Basic Auth Mapfile"
@@ -11478,7 +11477,7 @@ msgstr "이메일이 표시 될 실제 이름입니다."
 
 #: include/global_settings.php:1934
 msgid "Word Wrap"
-msgstr "(c) 2004-2023 Kate ìì±ì"
+msgstr "자동 줄 바꿈"
 
 #: include/global_settings.php:1935
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
@@ -11983,7 +11982,7 @@ msgstr "분산 비율"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "이 값은 샘플에서 특이 치를 제거한 후에 조정 된 샘플 평균보다 높은 백분율을 나타냅니다. 예를 들어, 조정 평균 50의 분산 백분율 100 %%는 그래프에서 100 개 이상의 모든 샘플을 제거합니다."
+msgstr "이 값은 샘플에서 이상값을 제거한 후 조정된 샘플 평균을 초과하는 백분율을 나타냅니다. 예를 들어, 조정된 평균 50에 분산 백분율 100%% 값을 적용하면 그래프에서 수량이 100을 초과하는 모든 샘플이 제거됩니다."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12088,11 +12087,11 @@ msgstr "MySQL - TimeZone 지원"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "Cacti가 날짜를 어떻게 제시하길 원하시나요? 이 설정은 선인장 그래프 날짜 표시 방식도 변경합니다."
+msgstr "Cacti에서 날짜를 어떤 형식으로 표시하시겠습니까? 이 설정은 Cacti 그래프 날짜의 표시 방식도 변경합니다."
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Server v  %s - 유지 관리"
+msgstr "Cacti 서버 시간대"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12851,7 +12850,7 @@ msgstr "비밀번호는 적어도 1 개의 특수 문자를 포함해야합니�
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "선인장 로그 지워짐"
+msgstr "Cacti 로그인 실패"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12922,7 +12921,7 @@ msgstr "파일"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "% d 개 라인"
+msgstr "상단 줄 수"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13551,7 +13550,7 @@ msgstr "%s 링크"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "메일러 오류 : <b>TO</b> 주소 세트가 없습니다! <br> <i>메일 테스트</i> 링크를 사용하는 경우 <b>경고 전자 메일</b> 설정을 지정하십시오."
+msgstr "메일러 오류: 수신자 주소가 설정되지 않았습니다!!<br><i>테스트 메일</i> 링크를 사용하는 경우 <b>경고 전자 메일</b> 설정을 지정하십시오."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13622,7 +13621,7 @@ msgstr "메시지를 보내는 중 ..."
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "선인장 테스트 메시지"
+msgstr "Cacti 테스트 메시지"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -13660,7 +13659,7 @@ msgstr "%s %s"
 #: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
-msgstr "경고: 키 선인장 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"
+msgstr "경고: 주요 Cacti 포함 파일 %s이(가) 누락되었습니다. 이 파일을 찾아 복원하십시오"
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
@@ -13857,7 +13856,7 @@ msgstr "도움말"
 
 #: lib/html.php:2878
 msgid "Cacti Home"
-msgstr "선인장 홈"
+msgstr "Cacti 홈"
 
 #: lib/html.php:2880
 msgid "Miscellaneous"
@@ -13873,7 +13872,7 @@ msgstr "차트"
 
 #: lib/html.php:2884
 msgid "Cacti Project Page"
-msgstr "선인장 프로젝트 페이지"
+msgstr "Cacti 프로젝트 페이지"
 
 #: lib/html.php:2888
 msgid "Spine"
@@ -13917,7 +13916,7 @@ msgstr "버그 보고하기"
 
 #: lib/html.php:2901
 msgid "Cacti"
-msgstr "선인장"
+msgstr "Cacti"
 
 #: lib/html.php:2903
 msgid "Click to Show/Hide Filter"
@@ -14158,7 +14157,7 @@ msgstr "올바른 디렉토리 경로를 입력하십시오."
 #: lib/html_form.php:1484
 #, php-format
 msgid "Cacti Color (%s)"
-msgstr "선인장 색 ( %s)"
+msgstr "Cacti 색상 (%s)"
 
 #: lib/html_form.php:1567
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14420,7 +14419,7 @@ msgstr "제목"
 
 #: lib/html_reports.php:172
 msgid "Cacti Report"
-msgstr "선인장 보고서"
+msgstr "Cacti 보고서"
 
 #: lib/html_reports.php:173
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14812,7 +14811,7 @@ msgstr "Cacti 정규 표현식은 보안상의 이유로 50자로 제한됩니�
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "선인장 정규식은 반색 문자를 포함할 수 없습니다."
+msgstr "Cacti 정규식에는 세미콜론(;) 문자를 포함할 수 없습니다."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -14921,7 +14920,7 @@ msgstr "Cacti는 패키지를 가져온 경우 다음과 같이 변경합니다.
 
 #: lib/import.php:3104
 msgid "Cacti has imported the following items for the Package:"
-msgstr "선인장은 패키지에 대해 다음 항목을 가져 왔습니다."
+msgstr "Cacti가 패키지에 대해 다음 항목을 가져왔습니다:"
 
 #: lib/import.php:3107
 msgid "Package Files"
@@ -15105,7 +15104,7 @@ msgstr "이 오류는 Cacti 데이터베이스 사용자에게 Cacti 데이터�
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
-msgstr "당신은 또한 MySQL의에 MySQL의 시간대 정보를 가져오고 선인장 사용자에게 mysql.time_zone_name 테이블에 대한 SELECT 액세스 권한을 <b>부여해야합니다</b>"
+msgstr "또한 MySQL에 MySQL 표준 시간대 정보를 가져오고 Cacti 사용자에게 mysql.time_zone_name 테이블에 대한 SELECT 액세스 권한을 <b>반드시</b> 부여해야 합니다"
 
 #: lib/installer.php:1701
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15113,7 +15112,7 @@ msgstr "Linux / UNIX에서는 쉘에서 &#39;root&#39;로 다음을 실행하십
 
 #: lib/installer.php:1704
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Cacti user access to the tables:"
-msgstr "Windows에서는 <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>표준 시간대 설명 테이블</a> 의 지침을 따라야 <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>합니다</a> . 완료되면 다음 명령을 실행하여 Cacti 사용자에게 테이블에 대한 액세스 권한을 부여 할 수 있습니다."
+msgstr "Windows에서는 <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>표준 시간대 설명 테이블</a>의 지침을 따라야 합니다. 완료되면 다음 명령을 실행하여 Cacti 사용자에게 테이블에 대한 액세스 권한을 부여할 수 있습니다:"
 
 #: lib/installer.php:1707
 msgid "Then run the following within MySQL as an administrator:"
@@ -15138,7 +15137,7 @@ msgstr "다운그레이드"
 
 #: lib/installer.php:1845 utilities.php:307
 msgid "Cacti Version"
-msgstr "선인장 버전"
+msgstr "Cacti 버전"
 
 #: lib/installer.php:1845
 msgid "License Agreement"
@@ -15156,7 +15155,7 @@ msgstr "네트워크에 완벽한 그래프 솔루션 인 Cacti를 다운로드�
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "계속하기 전에 Cacti 설치에 필요한 단계를 읽고 따라야합니다. <a href=\"%1$s\">Unix</a> 및 <a href=\"%2$s\">Win32</a> 기반 운영 체제에 대한 설치 정보를 찾을 수 있습니다."
+msgstr "계속하기 전에 Cacti 설치에 필요한 단계를 읽고 따랐는지 확인하십시오. 설치 정보는 <a href=\"%s\">Unix</a> 및 <a href=\"%s\">Win32</a> 기반 운영 체제에서 확인할 수 있습니다."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15350,7 +15349,7 @@ msgstr "<strong> %s의</strong> <strong> %s의</strong> 다운 그레이드"
 
 #: lib/installer.php:2178
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
-msgstr "이전 버전으로 다운 그레이드되는 것으로 보입니다. 최신 버전에 대한 데이터베이스 변경 사항은 취소되지 않고 문제 <i>가</i> 발생할 <i>수</i> 있습니다."
+msgstr "이전 버전으로 다운그레이드하려는 것으로 보입니다. 최신 버전에 적용된 데이터베이스 변경 사항은 되돌려지지 않으며 문제가 발생할 <i>수</i> 있습니다."
 
 #: lib/installer.php:2183
 msgid "Please select the type of installation"
@@ -16360,7 +16359,7 @@ msgstr "Cacti 정의에서 DS &#39; %s&#39;이 누락되었습니다."
 #: lib/rrd.php:3931 lib/rrd.php:3932
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "선인장 RRA &#39; %s&#39;의 CF / 스텝 수 ( %s,  %s)가 &#39; %s&#39;"
+msgstr "Cacti RRA '%s'의 CF/스텝(%s, %s)이 '%s'과(와) 동일합니다"
 
 #: lib/rrd.php:3945 lib/rrd.php:3946
 #, php-format
@@ -16375,7 +16374,7 @@ msgstr "'%s' 의 pdp_per_row가 유효하지 않습니다. RRA '%s' 은 (는) '%
 #: lib/rrd.php:3982
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
-msgstr "선인장에 대한 XFF RRA id &#39; %s&#39;은 (는) &#39; %s&#39;이어야합니다."
+msgstr "Cacti RRA ID의 XFF가 '%s'이지만 '%s'이어야 합니다"
 
 #: lib/rrd.php:3986
 #, php-format
@@ -16442,7 +16441,7 @@ msgstr "CDP 알 수없는 데이터 요소 (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr " %s을 찾을 수 없습니다."
+msgstr "오류가 발견되었습니다"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16887,7 +16886,7 @@ msgstr "원격 폴링 기능을 사용하면 많은 양의 데이터가 주 서�
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Cacti Performance Booster를 사용하고 메모리 스토리지 엔진을 선택하는 경우 시스템의 메모리 테이블 공간이 부족해지기 전에 Performance Booster 버퍼를 플러시해야합니다. 이것은 두 가지 방법으로 수행됩니다. 먼저 출력 열의 크기를 적절한 크기로 줄입니다. 이 열은 poller_output 및 poller_output_boost 테이블에 있습니다. 두 번째로 할 수있는 것은 메모리 테이블에 더 많은 메모리를 할당하는 것입니다. 우리는 임의로 시스템 메모리의 권장 값 10 %%를 선택했지만, SSD 디스크 드라이브를 사용하거나 시스템이 더 작은 경우이 권장 사항을 무시하거나 다른 스토리지 엔진을 선택할 수 있습니다. 콘솔 -&gt; 시스템 유틸리티 -&gt; 부스트 상태보기에서 성능 향상 표의 예상 소비량을 볼 수 있습니다."
+msgstr "Cacti Performance Booster를 사용하고 메모리 스토리지 엔진을 선택하는 경우 시스템의 메모리 테이블 공간이 부족해지기 전에 Performance Booster 버퍼를 플러시해야 합니다. 이는 두 가지 방법으로 수행됩니다. 첫째, 출력 열의 크기를 적절한 크기로 줄이는 것입니다. 이 열은 poller_output 및 poller_output_boost 테이블에 있습니다. 둘째, 메모리 테이블에 더 많은 메모리를 할당하는 것입니다. 시스템 메모리의 10%% 정도를 권장 값으로 임의로 선택했으나, SSD 디스크 드라이브를 사용하거나 시스템 규모가 작은 경우 이 권장 사항을 무시하거나 다른 스토리지 엔진을 선택할 수 있습니다. 콘솔 -> 시스템 유틸리티 -> Boost 상태 보기에서 Performance Booster 테이블의 예상 사용량을 확인할 수 있습니다."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16913,7 +16912,7 @@ msgstr "테이블에 인덱스가 매우 큰 경우 Barracuda innodb_file_format
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB는 가능한 많은 테이블과 인덱스를 시스템 메모리에 보유합니다. 그러므로, innodb_buffer_pool을 메모리에서 많은 테이블과 인덱스를 저장할만큼 충분히 크게 만들어야한다. / var / lib / mysql / cacti 디렉토리의 크기를 확인하면이 값을 결정하는 데 도움이됩니다. 시스템 총 메모리의 25 %%를 권장하지만 사용자의 요구 사항은 시스템 크기에 따라 다릅니다."
+msgstr "InnoDB는 가능한 한 많은 테이블과 인덱스를 시스템 메모리에 유지합니다. 따라서 가능한 한 많은 테이블과 인덱스를 메모리에 저장할 수 있도록 innodb_buffer_pool을 충분히 크게 설정해야 합니다. /var/lib/mysql/cacti 디렉터리의 크기를 확인하면 이 값을 결정하는 데 도움이 됩니다. 시스템 전체 메모리의 25%% 수준을 권장하지만, 요구 사항은 시스템 크기에 따라 달라집니다."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17178,7 +17177,7 @@ msgstr "웹 URL 위치"
 
 #: links.php:577
 msgid "The valid URL to use for this external link.  Must include the type, for example http://www.cacti.net.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr "이 외부 링크에 사용할 유효한 URL입니다. 유형을 포함해야합니다 (예 : http://www.cacti.net). 많은 웹 사이트에서 외부 사이트의 iframe에 삽입 할 수 없으므로 외부 링크가 작동하지 않을 수 있습니다."
+msgstr "이 외부 링크에 사용할 유효한 URL입니다. 예를 들어 http://www.cacti.net. 와 같이 유형을 포함해야 합니다. 많은 웹사이트에서는 외부 사이트의 iframe에 포함되는 것을 허용하지 않으므로 외부 링크가 작동하지 않을 수 있습니다."
 
 #: links.php:586
 msgid "If checked, the page will be available immediately to the admin user."
@@ -17215,7 +17214,7 @@ msgstr "Cacti에서 세션 시간 초과로 인해 로그 아웃되었습니다.
 
 #: logout.php:71
 msgid "Logout of Cacti"
-msgstr "선인장 로그 아웃"
+msgstr "Cacti 로그아웃"
 
 #: logout.php:78
 msgid "Automatic Logout"
@@ -17696,7 +17695,7 @@ msgstr "폴러 ID %d 의 최대 런타임 %d 초를 초과했습니다. 종료 �
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "경고: 선인장 폴링 주기가 폴러 간격을 초과했습니다."
+msgstr "경고: Cacti 폴링 주기가 폴러 간격을 초과한 시간: "
 
 #: poller.php:961
 #, php-format
@@ -17709,7 +17708,7 @@ msgstr "하트비트 모드의 폴러"
 
 #: poller.php:1263
 msgid "Cacti System Notification"
-msgstr "선인장 시스템 유틸리티"
+msgstr "Cacti 시스템 알림"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
@@ -17722,7 +17721,7 @@ msgstr "경고: 주 Cacti 데이터베이스 %s이(가) 오프라인이거나 �
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
-msgstr "선인장 기본 관리자"
+msgstr "Cacti 기본 관리자"
 
 #: poller_automation.php:1159
 msgid "Cacti Automation Report requires an html based Email client"
@@ -18237,7 +18236,7 @@ msgstr "참고 :이 탭의 경로 설정은 로컬에만 저장됩니다!"
 #: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
-msgstr "선인장 설정 (%s) %s"
+msgstr "Cacti 설정 (%s)%s"
 
 #: settings.php:505
 msgid "Changing Permission Model Warning"
@@ -18673,7 +18672,7 @@ msgstr "이 트리를 편집하려면 먼저 트리 편집 버튼을 눌러 트�
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "이 트리는 %2$s에서 %1$s 수정 중 잠겨 있습니다."
+msgstr "이 트리는 %s에 %s 사용자가 편집을 위해 잠금 설정했습니다."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -19684,7 +19683,7 @@ msgstr "일반 정보"
 
 #: utilities.php:312
 msgid "Cacti OS"
-msgstr "선인장 OS"
+msgstr "Cacti OS"
 
 #: utilities.php:322
 msgid "NET-SNMP Version"
@@ -19975,11 +19974,11 @@ msgstr "로그 [총선 : %d - 표시된 모든 항목]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
-msgstr "선인장 로그 지우기"
+msgstr "Cacti 로그 지우기"
 
 #: utilities.php:1674
 msgid "Cacti Log Cleared"
-msgstr "선인장 로그 지워짐"
+msgstr "Cacti 로그가 지워졌습니다"
 
 #: utilities.php:1676
 msgid "Error: Unable to clear log, no write permissions."
@@ -20039,7 +20038,7 @@ msgstr "회원:"
 
 #: utilities.php:2314
 msgid "Script:"
-msgstr "ìµìí ì´ë¦ê³¼ ëªë ¹ì ìë ¥íìì¼ í©ëë¤."
+msgstr "스크립트:"
 
 #: utilities.php:2316
 msgid "Script Server:"
@@ -20051,7 +20050,7 @@ msgstr "RRD :"
 
 #: utilities.php:2351
 msgid "Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues."
-msgstr "선인장 기술 지원 페이지. 개발자 및 기술 지원 담당자가 Cacti의 문제를 지원할 때 사용합니다. 일반적인 구성 문제에 대한 검사를 포함합니다."
+msgstr "Cacti 기술 지원 페이지입니다. 개발자 및 기술 지원 담당자가 Cacti의 문제를 지원하는 데 사용합니다. 일반적인 구성 문제에 대한 검사를 포함합니다."
 
 #: utilities.php:2355
 msgid "The Cacti Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
@@ -20159,7 +20158,7 @@ msgstr "관리자가 SNMP 알림 수신자를 유지 관리 할 수 있습니다
 
 #: utilities.php:2449
 msgid "Cacti System Utilities"
-msgstr "선인장 시스템 유틸리티"
+msgstr "Cacti 시스템 유틸리티"
 
 #: utilities.php:2672
 msgid "Overrun Warning"
@@ -20612,8 +20611,7 @@ msgstr "인덱스 변경 사항이 감지되지 않았으며, 폴러 캐시가 �
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "동기화에 실패했습니다. 자세한 내용은 로그를 참조하세요."
+msgstr "동기화에 실패했습니다. 자세한 내용은 로그를 확인하십시오."
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."

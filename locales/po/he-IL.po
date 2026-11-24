@@ -53,7 +53,7 @@ msgstr "חבר קבוצה"
 
 #: about.php:71
 msgid "Members of the original Cacti Group that have since moved on in their careers.  We continue to wish them the best."
-msgstr "חברים בקבוצת קקטוסים המקורית שהתקדמו מאז בקריירה שלהם.  אנחנו ממשיכים לאחל להם כל טוב."
+msgstr "חברים בקבוצת Cacti המקורית שהמשיכו מאז הלאה בקריירה שלהם. אנו ממשיכים לאחל להם כל טוב."
 
 #: about.php:84
 msgid "Thanks"
@@ -387,7 +387,7 @@ msgstr "הצג פרטי פריט"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "תצוגה מקדימה מצטברת [ %s]"
+msgstr "תצוגה מקדימה מצטברת אינה קיימת"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -875,7 +875,7 @@ msgstr "לא ניתן לעשות בו שימוש חוזר לשינויים ב-%d
 
 #: auth_changepassword.php:325
 msgid "There are problems with the Change Password page.  Contact your Cacti administrator right away."
-msgstr "יש בעיות בדף שינוי סיסמה.  צור קשר עם מנהל הקקטוסים שלך באופן מיידי."
+msgstr "קיימות בעיות בדף שינוי הסיסמה. צור קשר עם מנהל ה-Cacti שלך באופן מיידי."
 
 #: auth_changepassword.php:335 auth_changepassword.php:342
 #: include/global_form.php:1573 lib/functions.php:3855 lib/html.php:2869
@@ -1139,7 +1139,7 @@ msgstr "מכשיר %s נוסף ל - Cacti"
 #: automation_devices.php:132
 #, php-format
 msgid "Device %s Not Added to Cacti"
-msgstr "המכשיר %s לא נוסף לקקטוסים"
+msgstr "ההתקן %s לא נוסף ל-Cacti"
 
 #: automation_devices.php:142
 msgid "Devices Removed from Cacti Automation database"
@@ -1183,7 +1183,7 @@ msgstr "מחק מכשירים"
 #: tree.php:2460 user_admin.php:1192 user_admin.php:2929
 #: user_group_admin.php:1134 user_group_admin.php:2538 utilities.php:350
 msgid "Devices"
-msgstr "ניתן להתנתק מכל ההתקנים האחרים, כגון טלפון נייד או מחשב ציבורי, על ידי לחיצה על כפתור התנתקות מכל ההתקנים האחרים."
+msgstr "התקנים"
 
 #: automation_devices.php:290
 msgid "Device Name"
@@ -1622,7 +1622,7 @@ msgstr "אספן נתונים"
 
 #: automation_networks.php:469 include/global_form.php:1216
 msgid "Choose the Cacti Data Collector/Poller to be used to gather data from this Device."
-msgstr "בחר את קקטוס הנתונים אספן / פולר כדי לשמש כדי לאסוף נתונים ממכשיר זה."
+msgstr "בחר את אספן הנתונים/Poller של Cacti שישמש לאיסוף נתונים מהתקן זה."
 
 #: automation_networks.php:476
 msgid "Associated Site"
@@ -3314,7 +3314,7 @@ msgstr "תיקון שלבים [Run Fix from Command Line]"
 
 #: data_debug.php:925
 msgid "Command"
-msgstr "& פקודה@ info: whatsthis"
+msgstr "פקודה"
 
 #: data_debug.php:941
 msgid "Waiting on Data Source Check to Complete"
@@ -3331,7 +3331,7 @@ msgstr "פותר בעיות מקור הנתונים [ %s]"
 
 #: data_debug.php:1029
 msgid "No Device"
-msgstr "×× ×ª×× ××ª ×××§×× ×©× Epos ×ª×××¦×, ×××××ª ×××©×ª× × ×××¢×¨××ª PATH ××××××¨ ××¦××. ×¤×©×× ××× \"say\", ×××¨×ª ××× ××ª ×× ×ª×× ×××× ××ª×× ××ª ×××§×× ××ªÖ¾ ×××¨×¦× ×©× Epos."
+msgstr "אין התקן"
 
 #: data_debug.php:1068
 msgid "Delete All Checks"
@@ -3650,7 +3650,7 @@ msgstr "תבניות גרף / נתונים משויכות [עריכה: %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "תבניות גרף / נתונים משויכות [עריכה: %s]"
+msgstr "תבניות גרפים/נתונים משויכות [חדש]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4484,7 +4484,7 @@ msgstr "הערך ייגזר מהמכשיר אם שדה זה יישאר ריק."
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "נתונים מותאמים אישית [קלט נתונים: %s]"
+msgstr "הודעת אזהרה עבור נתונים מותאמים אישית"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -4680,7 +4680,7 @@ msgstr "מדריך המטמון של התמונה אינו ניתן לכתיבה
 
 #: graph_realtime.php:474 graph_realtime.php:487
 msgid "Cacti Real-time Graphing"
-msgstr "קקטוסים בזמן אמת גרפים"
+msgstr "הפקת גרפים בזמן אמת של Cacti"
 
 #: graph_realtime.php:505 utilities.php:2579
 msgid "Refresh Interval"
@@ -5251,7 +5251,7 @@ msgstr "תבנית גרף נבחרת"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "בחר תבנית גרף כדי להחיל על תרשים זה. לידיעתך, תוכל לשנות רק תבניות גרפים לתבנית גרף תואמת 100 %%, ופירוש הדבר שהיא כוללת מקורות נתונים זהים."
+msgstr "בחר תבנית גרף להחלה על גרף זה. לתשומת לבך, באפשרותך לשנות תבנית גרף רק לתבנית גרף תואמת ב-100%%, כלומר כזו הכוללת מקורות נתונים זהים."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5279,7 +5279,7 @@ msgstr "גרפים חדשים עבור [כל המכשירים]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "ניהול קבוצת משתמשים [עריכה: %s]"
+msgstr "ניהול גרפים [ שאינם מבוססי התקן ]"
 
 #: graphs.php:2080
 #, php-format
@@ -5445,7 +5445,7 @@ msgstr "קבע כברירת מחדל"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "אזהרה: דף קקטוסים:%s למשתמש:%s יצר שגיאה חמורה %d!"
+msgstr "אזהרה: דף Cacti:%s עבור משתמש:%s יצר שגיאה חמורה %d!"
 
 #: help.php:99
 #, php-format
@@ -5454,7 +5454,7 @@ msgstr "לא ניתן היה להגיע לדף התיעוד '%s'. אתר התי�
 
 #: help.php:113
 msgid "Cacti GitHub Site"
-msgstr "אתר גיטהאב קקטוסים"
+msgstr "אתר ה-GitHub של Cacti"
 
 #: help.php:113
 msgid "Open a ticket at "
@@ -5463,7 +5463,7 @@ msgstr "פתח פנייה בכתובת "
 #: help.php:113
 #, php-format
 msgid "The Help File %s was not located on the Cacti Documentation Website."
-msgstr "קובץ העזרה %s לא נמצא באתר התיעוד של קקטוסים."
+msgstr "קובץ העזרה %s לא נמצא באתר התיעוד של Cacti."
 
 #: help.php:127
 #, php-format
@@ -6734,7 +6734,7 @@ msgstr "כל יום"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "% d Thread"
+msgstr "תהליכון 1"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -6834,7 +6834,7 @@ msgstr "כותרת"
 #: include/global_arrays.php:1715 include/global_arrays.php:1884
 #: lib/html.php:2946
 msgid "Graph"
-msgstr "Symbol for file attachment annotations"
+msgstr "גרף"
 
 #: include/global_arrays.php:977 tree.php:2055
 msgid "Data Query Index"
@@ -8564,7 +8564,7 @@ msgstr "השם שניתן לתבנית נתונים זו."
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "בחר שם עבור מקור נתונים זה. הוא יכול לכלול משתנים חלופיים כגון | host_description או | שאילתה | לקבלת רשימה מלאה של תגי החלפה נתמכים, עיין בתיעוד של Cacti."
+msgstr "בחר שם עבור מקור נתונים זה. הוא יכול לכלול משתני החלפה כגון |host_description| או |query_fieldName|. לרשימה מלאה של תגי ההחלפה הנתמכים, עיין בתיעוד של Cacti."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8661,7 +8661,7 @@ msgstr "כותרת (- כותרת)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "השם המודפס על התרשים. הוא יכול לכלול משתנים חלופיים כגון | host_description או | שאילתה | לקבלת רשימה מלאה של תגי החלפה נתמכים, עיין בתיעוד של Cacti."
+msgstr "השם המודפס על הגרף. הוא יכול לכלול משתני החלפה כגון |host_description| או |query_fieldName|. לרשימה מלאה של תגי ההחלפה הנתמכים, עיין בתיעוד של Cacti."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9006,7 +9006,7 @@ msgstr "כל השורות הבאות של האגדה ימומשו כפי שמו�
 
 #: include/global_form.php:1055
 msgid "Text Format"
-msgstr "×¡×× ×¡××××"
+msgstr "תבנית טקסט"
 
 #: include/global_form.php:1060
 msgid "Text that will be displayed on the legend for this graph item."
@@ -9646,7 +9646,7 @@ msgstr "כ"
 
 #: include/global_settings.php:40
 msgid "Paths"
-msgstr "@ title: column"
+msgstr "נתיבים"
 
 #: include/global_settings.php:41
 msgid "Device Defaults"
@@ -9670,7 +9670,7 @@ msgstr "שיטת האימות לא חוקי"
 
 #: include/global_settings.php:46
 msgid "Performance"
-msgstr "عملکرد"
+msgstr "ביצועים"
 
 #: include/global_settings.php:47
 msgid "Spikes"
@@ -9982,7 +9982,7 @@ msgstr "תמיכה ב - TimeZone"
 
 #: include/global_settings.php:374
 msgid "How should Cacti support Client Dates based upon the Client browsers timezone."
-msgstr "כיצד קקטוסים צריכים לתמוך בתאריכי לקוח בהתבסס על אזור הזמן של דפדפני הלקוח."
+msgstr "כיצד על Cacti לתמוך בתאריכי לקוח בהתבסס על אזור הזמן של דפדפן הלקוח."
 
 #: include/global_settings.php:383 include/global_settings.php:2631
 msgid "Date Display Format"
@@ -10102,7 +10102,7 @@ msgstr "שיטת יצירת גרף / מקור נתונים"
 
 #: include/global_settings.php:468
 msgid "When enabled, Cacti will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Cacti will not allow the removal of Data Sources if they are used in other Graphs."
-msgstr "כאשר מופעל, קקטוסים יגדירו את כפתור הרדיו למחיקת מקורות נתונים קשורים לתרשים בעת הסרת גרפים. הערה: קקטוסים לא יאפשרו הסרת מקורות נתונים אם משתמשים בהם בתרשימים אחרים."
+msgstr "כאשר מופעל, Cacti יגדיר את לחצן הבחירה (Radio Button) למחיקת מקורות נתונים הקשורים לגרף בעת הסרת גרפים. הערה: Cacti לא יאפשר הסרה של מקורות נתונים אם הם נמצאים בשימוש בגרפים אחרים."
 
 #: include/global_settings.php:473
 msgid "Graphs Auto Unlock"
@@ -10110,7 +10110,7 @@ msgstr "כלל התאמה של גרף"
 
 #: include/global_settings.php:474
 msgid "When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
-msgstr "כאשר מופעל, קקטוסים לא נועלים גרפים. זה מאפשר שינוי ידני מהיר יותר של מקורות נתונים הקשורים לתרשים."
+msgstr "כאשר מופעל, Cacti לא ינעל גרפים. הדבר מאפשר שינוי ידני מהיר יותר של מקורות נתונים הקשורים לגרף."
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
@@ -10190,7 +10190,7 @@ msgstr "מקורות חלופיים של אבטחת תוכן"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "שמות דומיין מחוסלים בחלל שאפשר יהיה לגשת אליהם מחוץ לשרת האינטרנט עצמו. זה חשוב עבור משתמשים שבוחרים להשתמש ב- CDN או באתר אירוח. מקורות יכולים לכלול תווים כלליים למשל: *.mydomain.com, או פרוטוקול, למשל: https: //*.example.com. מקורות חלופיים אלה כוללים סוגי תמונה, CSS ו- JavaScript בלבד."
+msgstr "שמות דומיין מופרדים ברווחים שתותר אליהם גישה מחוץ לשרת האינטרנט עצמו. הגדרה זו חשובה למשתמשים הבוחרים להשתמש ב-CDN או באתר אירוח. מקורות יכולים לכלול תווים כלליים (wildcards), לדוגמה: *.mydomain.com, או פרוטוקול, לדוגמה: https://*.example.com. מקורות חלופיים אלה כוללים קובצי תמונה, CSS ו-JavaScript בלבד."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10597,7 +10597,7 @@ msgstr "ברירת מחדל כניסה זנב קווים"
 
 #: include/global_settings.php:978
 msgid "Default number of lines of the Cacti log file to tail."
-msgstr "מספר ברירת המחדל של השורות של קובץ יומן קקטוסים לזנב."
+msgstr "מספר השורות כברירת מחדל למעקב (tail) בקובץ היומן של Cacti."
 
 #: include/global_settings.php:984
 msgid "Maximum number of rows per page"
@@ -10677,7 +10677,7 @@ msgstr "צבעים"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "לשימוש בעת עיצוב | תאריך_שעה | על גרף"
+msgstr "לשימוש בעת עיצוב |date_time| על גבי גרף"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10799,7 +10799,7 @@ msgstr "השעה שבה שעות הפעילות שלך מסתיימות. פור�
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "% d שבועות"
+msgstr "הסתר סופי שבוע"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -10871,7 +10871,7 @@ msgstr "מרווח Cron"
 
 #: include/global_settings.php:1241
 msgid "The frequency that the Cacti data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Cacti data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
-msgstr "התדירות בה יופעל אספן הנתונים של קקטוסים. תוכל להשתמש ב- crontab, במשימה מתוזמנת (עבור חלונות) או בשירות systemd cactid כדי לשלוט בהשקת אספן הנתונים של קקטוסים. לקבלת הוראות לשימוש בדמון הקקטיים, עיין בקובץ README.md בספריית השירות."
+msgstr "התדירות שבה יופעל אספן הנתונים של Cacti. תוכל להשתמש ב-crontab, במשימה מתוזמנת (עבור Windows), או בשירות ה-systemd של cactid כדי לשלוט בהפעלת אספן הנתונים של Cacti. להוראות שימוש בשירות הרקע (daemon) של cactid, עיין בקובץ README.md בספריית השירות."
 
 #: include/global_settings.php:1247
 msgid "Balance Process Load"
@@ -10935,7 +10935,7 @@ msgstr "לבנות מחדש מטמון משאבים"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "כברירת מחדל, קקטוסים הנתונים הראשי של קקטוסים ישמור את כל אתר האינטרנט במטמון ותוספים למטמון משאבים. לאחר מכן, מעת לעת אספני הנתונים המרוחקים יתעדכנו בעצמם בעדכוני כל העדכונים של אספן הנתונים הראשי של הקקטוסים. מטמון משאבים זה מאפשר למעשה לאספני נתונים מרוחקים לשדרג עצמי. אם אינך מעוניין להשתמש באפשרות זו, תוכל להשבית אותה באמצעות הגדרה זו."
+msgstr "כברירת מחדל, אספן הנתונים הראשי של Cacti ישמור את כל אתר האינטרנט והתוספים במטמון משאבים (Resource Cache). לאחר מכן, אספני הנתונים המרוחקים יתעדכנו מעת לעת בכל עדכון מאספן הנתונים הראשי של Cacti. מטמון משאבים זה מאפשר למעשה לאספני נתונים מרוחקים לשדרג את עצמם. אם אינך מעוניין להשתמש באפשרות זו, תוכל להשבית אותה באמצעות הגדרה זו."
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
@@ -11334,7 +11334,7 @@ msgstr "Serveurs"
 
 #: include/global_settings.php:1707 user_domains.php:418
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Cacti will attempt to use the LDAP servers from left to right to authenticate a user."
-msgstr "רשימה מופרדת של שמות מארחי DNS או כתובת IP של שרתי LDAP חוקיים. קקטוסים ינסו להשתמש בשרתי LDAP משמאל לימין כדי לאמת משתמש."
+msgstr "רשימה מופרדת ברווחים של שמות מארחי DNS או כתובות IP עבור שרתי LDAP תקינים. Cacti ינסה להשתמש בשרתי ה-LDAP משמאל לימין כדי לאמת משתמש."
 
 #: include/global_settings.php:1713 user_domains.php:426
 msgid "Port Standard"
@@ -11382,7 +11382,7 @@ msgstr "מצב ניפוי באגים LDAP"
 
 #: include/global_settings.php:1753
 msgid "If Checked Cacti will log extra LDAP information to the Cacti log during Binding and Searching activities."
-msgstr "אם מסומן קקטוסים ירשמו מידע LDAP נוסף ליומן הקקטוסים במהלך פעילויות כריכה וחיפוש."
+msgstr "אם מסומן, Cacti יתעד מידע LDAP נוסף ביומן של Cacti במהלך פעילויות קישור (Binding) וחיפוש."
 
 #: include/global_settings.php:1758 user_domains.php:451
 msgid "Encryption"
@@ -11682,7 +11682,7 @@ msgstr "הגודל המרבי של הודעת הדואר האלקטרוני כו
 
 #: include/global_settings.php:2026
 msgid "Poller Logging Level for Cacti Reporting"
-msgstr "רמת רישום של פולרים לדיווח על קקטוסים"
+msgstr "רמת הרישום ביומן של ה-Poller עבור דיווחי Cacti"
 
 #: include/global_settings.php:2027
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -12087,7 +12087,7 @@ msgstr "אחוז באחוזים"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "ערך זה מייצג את האחוז מעל הממוצע המדגם המתואם לאחר הוצאת חריגים מהמדגם. לדוגמה, אחוז באחוזים של 100 %% בממוצע מותאם של 50 יסיר כל מדגם מעל לכמות 100 מהתרשים."
+msgstr "ערך זה מייצג את האחוז מעל ממוצע הדגימה המותאם לאחר הסרת ערכים חריגים מהמדגם. לדוגמה, אחוז שונות (Variance Percentage) של 100%% על ממוצע מותאם של 50 יסיר מהגרף כל דגימה שמעל לכמות 100."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12192,11 +12192,11 @@ msgstr "תמיכה ב - TimeZone"
 
 #: include/global_settings.php:2591
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."
-msgstr "איך תרצו שקקטוסים יציגו תאריכים? הגדרה זו תשנה גם את האופן שבו תאריכי גרפי קקטוסים מיוצגים."
+msgstr "כיצד ברצונך ש-Cacti יציג תאריכים? הגדרה זו תשנה גם את אופן הצגת התאריכים בגרפים של Cacti."
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "שרת Cacti - %s - תחזוקה"
+msgstr "אזור הזמן של שרת Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12401,7 +12401,7 @@ msgstr "היסטוריית סיסמאות"
 
 #: include/global_settings.php:2801
 msgid "If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "אם זה מופעל, קקטוסים יזכרו את היסטוריית העצים שלך בין כניסות וכשתחזור לדף הגרפים."
+msgstr "אם מופעל, Cacti יזכור את היסטוריית העצים שלך בין התחברויות ובעת חזרה לדף הגרפים."
 
 #: include/global_settings.php:2824
 msgid "Use Custom Fonts"
@@ -12903,7 +12903,7 @@ msgstr "ענף:"
 #: lib/auth.php:2738 lib/auth.php:2772 lib/html_tree.php:966
 #: lib/reports.php:1059
 msgid "Device:"
-msgstr "×× ×ª×× ××ª ×××§×× ×©× Epos ×ª×××¦×, ×××××ª ×××©×ª× × ×××¢×¨××ª PATH ××××××¨ ××¦××. ×¤×©×× ××× \"say\", ×××¨×ª ××× ××ª ×× ×ª×× ×××× ××ª×× ××ª ×××§×× ××ªÖ¾ ×××¨×¦× ×©× Epos."
+msgstr "התקן:"
 
 #: lib/auth.php:3607 lib/auth.php:3687
 msgid "Your account has been locked.  Please contact your Administrator."
@@ -12934,7 +12934,7 @@ msgstr "הגישה נדחתה! מזהה משתמש התבנית %s אינו קי
 
 #: lib/auth.php:4723
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "מנהל הקקטוסים שלך אילץ סיסמאות מורכבות להתחברות וסיסמת הקקטוסים הנוכחית שלך אינה תואמת את הדרישות החדשות. לכן עליכם לשנות את הסיסמא שלכם כעת."
+msgstr "מנהל ה-Cacti שלך אכף שימוש בסיסמאות מורכבות להתחברות, וסיסמת ה-Cacti הנוכחית שלך אינה תואמת את הדרישות החדשות. לפיכך, עליך לשנות את סיסמתך כעת."
 
 #: lib/auth.php:4754
 #, php-format
@@ -13026,7 +13026,7 @@ msgstr "קובץ"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "% d שורות"
+msgstr "שורות ראשונות"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13655,7 +13655,7 @@ msgstr "קשר %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "שגיאת מיילר: לא כתובת <b>TO</b> מוגדר! <br> אם אתה משתמש בקישור <i>Test Mail (דואר בדיקה)</i> , הגדר את הגדרת <b>הדואר האלקטרוני של ההתראה</b> ."
+msgstr "שגיאת דיוור: לא הוגדרה כתובת נמען!!<br>אם הנך משתמש בקישור <i>דואר בדיקה (Test Mail)</i>, אנא הגדר את ההגדרה <b>דוא\"ל להתראות (Alert e-mail)</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13726,7 +13726,7 @@ msgstr "לשלוח הודעה..."
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "הודעה מבחן קקטוסים"
+msgstr "הודעת בדיקה של Cacti"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -13764,7 +13764,7 @@ msgstr "%s %s"
 #: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
-msgstr "אזהרה:  מפתח קקטוסים כלול קובץ %s חסר.  צריך לאתר ולהחליף את הקובץ הזה"
+msgstr "אזהרה: קובץ ההכללה המרכזי של Cacti (%s) חסר. אנא אתר קובץ זה והחלף אותו"
 
 #: lib/graphs.php:51
 msgid "Aggregated Device"
@@ -14912,11 +14912,11 @@ msgstr "מונח החיפוש &quot; %s&quot; אינו חוקי. השגיאה ה
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "ביטויים רגילים של קקטוסים מוגבלים ל -50 תווים רק מטעמי אבטחה."
+msgstr "ביטויים רגולריים ב-Cacti מוגבלים ל-50 תווים בלבד מטעמי אבטחה."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "ביטויים רגילים של קקטוסים אינם יכולים לכלול את התו הצבעוני למחצה."
+msgstr "ביטויים רגולריים ב-Cacti אינם יכולים לכלול את התו נקודה-פסיק (;)."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -15205,11 +15205,11 @@ msgstr "יצרת מסד נתונים חדש, אך עדיין לא ייבאת א�
 
 #: lib/installer.php:1697
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
-msgstr "שגיאה זו עשויה להיווצר גם אם למשתמש מסד הנתונים של קקטוסים אין הרשאות נכונות במסד הנתונים של Cacti. אנא ודא כי המשתמש באתר Cacti יש את היכולת לבחור, להוסיף, למחוק, לעדכן, ליצור, ALTER, DROP, INDEX על מסד הנתונים של Cacti."
+msgstr "שגיאה זו עלולה להיווצר גם אם למשתמש מסד הנתונים של Cacti אין הרשאות מתאימות במסד הנתונים של Cacti. אנא ודא שלמשתמש מסד הנתונים של Cacti יש הרשאות SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX במסד הנתונים של Cacti."
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
-msgstr "כמו כן, <b>עליך</b> לייבא מידע MySQL אזור זמן לתוך MySQL ולהעניק למשתמש קקטוסים גישה SELECT לשולחן mysql.time_zone_name"
+msgstr "<b>חובה</b> עליך גם לייבא מידע אזור זמן של MySQL לתוך MySQL ולהעניק למשתמש של Cacti גישת SELECT לטבלה mysql.time_zone_name"
 
 #: lib/installer.php:1701
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15229,7 +15229,7 @@ msgstr "בדיקת חיבור"
 
 #: lib/installer.php:1736
 msgid "Begin"
-msgstr "התחלה@ action End of document"
+msgstr "התחלה"
 
 #: lib/installer.php:1742 lib/installer.php:2166 lib/installer.php:2176
 #: lib/installer.php:2818
@@ -15242,7 +15242,7 @@ msgstr "שנמוך"
 
 #: lib/installer.php:1845 utilities.php:307
 msgid "Cacti Version"
-msgstr "קקטוסים גירסה"
+msgstr "גרסת Cacti"
 
 #: lib/installer.php:1845
 msgid "License Agreement"
@@ -15260,7 +15260,7 @@ msgstr "תודה שהקדשת מזמנך להוריד ולהתקין את Cacti,
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "ודא שיש לך לקרוא בעקבות הצעדים הנדרשים כדי להתקין את Cacti לפני שתמשיך. ניתן למצוא מידע התקנה עבור מערכות הפעלה מבוססות <a href=\"%1$s\">Unix</a> ו- <a href=\"%2$s\">Win32</a> ."
+msgstr "ודא שקראת וביצעת את השלבים הנדרשים להתקנת Cacti לפני שתמשיך. מידע על התקנה ניתן למצוא עבור מערכות הפעלה מבוססות <a href=\"%s\">Unix</a> ו-<a href=\"%s\">Win32</a>."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15645,11 +15645,11 @@ msgstr "הגנה על רשימת אימות קלט"
 
 #: lib/installer.php:2534
 msgid "Cacti Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Cacti poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
-msgstr "ניתן לנצל שיטות קלט נתונים של קקטוסים שקוראים לסקריפט בדרכים שאינן מנהל יכולות לגרום נזק לשני הקבצים שבבעלות חשבון הסקר, ובמקרים שבהם מישהו מפעיל את הסוקר Cacti כשורש, יכול לפגוע במערכת ההפעלה המאפשרת לתוקפים ל לנצל את התשתית שלך."
+msgstr "שיטות קלט נתונים של Cacti הקוראות לסקריפט עלולות להיות מנוצלות לרעה באופן שמשתמש שאינו מנהל מערכת יוכל לגרום נזק לקבצים שבבעלות חשבון ה-Poller, ובמקרים שבהם ה-Poller של Cacti מופעל כ-root, הדבר עלול לסכן את מערכת ההפעלה ולאפשר לתוקפים לנצל את התשתית שלך."
 
 #: lib/installer.php:2535
 msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Cacti more thoroughly, it does increase the amount of work required by the Cacti administrator to import and manage Templates and Packages."
-msgstr "לפיכך, לפני מספר גרסאות, שופרו הקקטוסים בכדי לספק יכולות של רשימת לבן על סוגים אלה של שיטות הזנת נתונים. למרות שזה מאבטח קקטוסים בצורה יותר חדה, זה מגדיל את כמות העבודה הנדרשת על ידי מנהל הקקטוסים לייבוא וניהול של תבניות וחבילות."
+msgstr "לפיכך, לפני מספר גרסאות, Cacti שופר כדי לספק יכולות רשימת היתר (Whitelist) עבור סוגים אלה של שיטות קלט נתונים. אף שהדבר מאבטח את Cacti באופן יסודי יותר, הוא מגדיל את כמות העבודה הנדרשת ממנהל ה-Cacti לצורך ייבוא וניהול של תבניות וחבילות."
 
 #: lib/installer.php:2536
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
@@ -15673,7 +15673,7 @@ msgstr "אפשרות סקריפט זו תאפשר מחדש כל מקורות נ�
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "מומלץ בחום שתעדכן את ה- config.php שלך כדי לאפשר תכונה זו על ידי <b>ביטול הפרדה של</b> המשתנה <b>$input_whitelist</b> ואז הפעלת שלוש אפשרויות הסקריפט CLI שלמעלה לאחר השלמת ההתקנה מבוססת האינטרנט."
+msgstr "מומלץ מאוד לעדכן את הקובץ config.php כדי להפעיל תכונה זו על ידי הסרת סימון ההערה מהמשתנה <b>$input_whitelist</b> ולאחר מכן להריץ את שלוש אפשרויות סקריפט ה-CLI שלמעלה לאחר השלמת ההתקנה מבוססת האינטרנט."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -16052,7 +16052,7 @@ msgstr "לא נמצאו גרשי תבנית עבור התקן ברירת מחד�
 
 #: lib/installer.php:3507
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server."
-msgstr "אזהרה: תבנית מכשיר עבור מערכת ההפעלה שלך לא נמצאה. יהיה עליכם לייבא תבניות מכשירים או חבילות קקטוסים כדי לפקח על שרת הקקטוסים שלכם."
+msgstr "אזהרה: לא נמצאה תבנית התקן עבור מערכת ההפעלה שלך. יהיה עליך לייבא תבניות התקנים או חבילות Cacti כדי לנטר את שרת ה-Cacti שלך."
 
 #: lib/installer.php:3514
 msgid "Running first-time data query for local host"
@@ -16546,7 +16546,7 @@ msgstr "CDP לא ידוע נקודות נתונים (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "אין %s"
+msgstr "נמצאו שגיאות"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16991,7 +16991,7 @@ msgstr "עם יכולות הסריקה מרחוק, כמויות גדולות ש�
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "אם אתה משתמש Cacti Booster ביצועים ובחירת זיכרון אחסון מנוע, אתה צריך להיות זהיר כדי לשטוף את חיץ Booster ביצועים לפני המערכת אוזל שטח שולחן הזיכרון. זה נעשה בשתי דרכים, הראשון הפחתת גודל עמודת הפלט שלך בדיוק את הגודל הנכון. עמודה זו נמצאת בטבלאות poller_output ו- poller_output_boost. הדבר השני שאתה יכול לעשות הוא להקצות זיכרון נוסף לטבלאות זיכרון. בחרנו באופן שרירותי ערך מומלץ של 10 %% מזיכרון המערכת, אך אם אתה משתמש בכונני דיסק SSD, או אם יש לך מערכת קטנה יותר, תוכל להתעלם מהמלצה זו או לבחור מנוע אחסון אחר. ייתכן שתראה את הצריכה הצפויה של טבלאות הביצועים Booster תחת Console -&gt; System Utilities -&gt; View Boost Status."
+msgstr "אם הנך משתמש ב-Cacti Performance Booster ובוחר במנוע אחסון בזיכרון, עליך להקפיד לרוקן את חוצץ ה-Performance Booster לפני ששטח טבלאות הזיכרון במערכת ייגמר. ניתן לעשות זאת בשתי דרכים: הראשונה היא הקטנת גודל עמודת הפלט בדיוק לגודל הנדרש. עמודה זו נמצאת בטבלאות poller_output ו-poller_output_boost. הדבר השני שניתן לעשות הוא להקצות זיכרון נוסף לטבלאות הזיכרון. בחרנו באופן שרירותי ערך מומלץ של 10%% מזיכרון המערכת, אך אם הנך משתמש בכונני SSD או במערכת קטנה יותר, תוכל להתעלם מהמלצה זו או לבחור מנוע אחסון אחר. ניתן לצפות בצריכה הצפויה של טבלאות ה-Performance Booster תחת Console -> System Utilities -> View Boost Status."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -17017,7 +17017,7 @@ msgstr "אם לטבלאות שלכם יש אינדקסים גדולים מאוד
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB תקיים כמה טבלאות ואינדקסים בזיכרון המערכת ככל האפשר. לכן, אתה צריך לעשות את innodb_buffer_pool גדול מספיק כדי להחזיק כמה שיותר שולחנות ואינדקס בזיכרון. בדיקת גודל הספרייה / var / lib / mysql / cacti תסייע בקביעת ערך זה. אנו ממליצים על 25 %% מהמערכת הכוללת של הזיכרון, אך הדרישות שלך ישתנו בהתאם לגודל המערכות שלך."
+msgstr "InnoDB יחזיק בזיכרון המערכת כמה שיותר טבלאות ואינדקסים. לכן, עליך להגדיר את innodb_buffer_pool גדול מספיק כדי להכיל כמה שיותר מהטבלאות והאינדקסים בזיכרון. בדיקת גודל הספרייה /var/lib/mysql/cacti תסייע בקביעת ערך זה. אנו ממליצים על 25%% מסך זיכרון המערכת שלך, אך הדרישות ישתנו בהתאם לגודל המערכת."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17809,7 +17809,7 @@ msgstr "חריגה מזמן הריצה המרבי של %d שניות עבור מ
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "אזהרה: מחזור הסקרים של קקטוסים חרג ממרווח הסקרים עד"
+msgstr "אזהרה: מחזור התשאול (Polling) של Cacti חרג ממרווח ה-Poller ב-"
 
 #: poller.php:961
 #, php-format
@@ -17826,7 +17826,7 @@ msgstr "מערכת כלי עזר"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "הערה: נוסף אספן נתונים של קקטוסים. לפיכך, מאפשרים הגברה אוטומטית!"
+msgstr "הערה: נוסף אספן נתונים שני של Cacti. לפיכך, Boost מופעל באופן אוטומטי!"
 
 #: poller_automation.php:54
 #, php-format
@@ -17891,7 +17891,7 @@ msgstr "הגדרות אוסף"
 
 #: pollers.php:104
 msgid "Processes"
-msgstr "לא הצלחנו לעבד את התרומה  שלך, אנא נסה שוב."
+msgstr "תהליכים"
 
 #: pollers.php:105
 msgid "The number of Data Collector processes to use to spawn."
@@ -18352,7 +18352,7 @@ msgstr "RRDfiles"
 
 #: rrdcleaner.php:575
 msgid "Rescan"
-msgstr "×¢×§××£ ××ª ×¨×©×××ª ××§×××××× (×××××× \"hextile raw\")"
+msgstr "סריקה מחדש"
 
 #: rrdcleaner.php:580
 msgid "Delete All"
@@ -18377,7 +18377,7 @@ msgstr "הערה: הגדרות הנתיב בכרטיסייה זו נשמרות �
 #: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
-msgstr "הגדרות קקטוסים (%s)%s"
+msgstr "הגדרות Cacti (%s)%s"
 
 #: settings.php:505
 msgid "Changing Permission Model Warning"
@@ -18825,7 +18825,7 @@ msgstr "כדי לערוך עץ זה, עליך לנעול אותו תחילה ע�
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "עץ זה נעול עבור עריכה ב-%1$s ב-%2$s."
+msgstr "עץ זה ננעל לעריכה בתאריך %s על ידי %s."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -20083,7 +20083,7 @@ msgstr "ערך זיכרון מוצע זה מחושב על סמך מספר מקו
 
 #: utilities.php:832 utilities.php:849
 msgid "Variable Name"
-msgstr "××××£ 1st... ×Ö¾ stâ^1..."
+msgstr "שם משתנה"
 
 #: utilities.php:890
 msgid "MySQL Table Information - Sizes in KBytes"
@@ -20298,7 +20298,7 @@ msgstr "מטמון ה- Poller ייווצר מחדש אם תבחר באפשרות
 
 #: utilities.php:2378
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Cacti UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
-msgstr "הערה: במערכות גדולות, פקודה זו עשויה להימשך מספר דקות עד שעות ולכן אין להפעיל אותה מממשק המשתמש של קקטוסים.  ניתן פשוט להפעיל את 'php - q cli/rebuild_poller_cache.php -- help' בשורת הפקודה לקבלת מידע נוסף."
+msgstr "הערה: במערכות גדולות, פקודה זו עשויה להימשך מספר דקות עד שעות ולכן אין להריץ אותה מממשק המשתמש של Cacti. ניתן פשוט להריץ את 'php -q cli/rebuild_poller_cache.php --help' בשורת הפקודה לקבלת מידע נוסף."
 
 #: utilities.php:2382
 msgid "Rebuild Resource Cache"
@@ -20839,8 +20839,7 @@ msgstr "לא זוהו שינויי אינדקס, מטמון ה-Poller רוענן
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "הסנכרון נכשל. עיין ביומן לפרטים."
+msgstr "הסנכרון נכשל. עיין ביומן לפרטים נוספים."
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."

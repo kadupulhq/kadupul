@@ -1168,7 +1168,7 @@ msgstr "添加設備"
 
 #: automation_devices.php:229
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "單擊“繼續”以添加以下發現的設備。"
+msgstr "按一下「繼續」以刪除下列已探索的裝置。"
 
 #: automation_devices.php:234 host.php:550
 msgid "Delete Device(s)"
@@ -2588,7 +2588,7 @@ msgstr "Cacti 系統警告"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
-msgstr "警告：仙人掌守護進程PID["
+msgstr "警告：Cacti 常駐程式 PID["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
@@ -6939,7 +6939,7 @@ msgstr "應用自動化規則"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
-msgstr "仙人掌報告"
+msgstr "Cacti 相關"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
@@ -8043,7 +8043,7 @@ msgstr "(動作)"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "仙人掌之家"
+msgstr "Cacti 說明"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -10085,7 +10085,7 @@ msgstr "內容安全替代來源"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "將允許在 Web 服務器本身之外訪問的空格分隔的域名。這對於選擇使用 CDN 或託管站點的用戶來說很重要。來源可以包括通配符，例如：*.mydomain.com，或協議，例如：https://*.example.com。這些替代源僅包括圖像、CSS 和 JavaScript 類型。"
+msgstr "以空格分隔的網域名稱，允許從網頁伺服器本身以外的位置存取。這對於選擇使用 CDN 或託管網站的使用者非常重要。來源可包含萬用字元，例如：*.mydomain.com，或包含通訊協定，例如：https://*.example.com. 這些替代來源僅包含圖片、CSS 與 JavaScript 類型。"
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10830,7 +10830,7 @@ msgstr "停用資源快取複寫"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "默認情況下，主仙人掌數據收集器會將整個網站和插件緩存到資源緩存中。然後，遠程數據收集器會定期使用主仙人掌數據收集器的任何更新來更新主題。該資源緩存實質上允許遠程數據收集器進行自我升級。如果您不想使用此選項，則可以使用此設置禁用它。"
+msgstr "預設情況下，主 Cacti 資料收集器會將整個網站與外掛程式快取至資源快取中。接著，遠端資料收集器會定期使用主 Cacti 資料收集器的任何更新來自行更新。此資源快取實質上允許遠端資料收集器進行自我升級。如果您不想使用此選項，可以使用此設定將其停用。"
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
@@ -11982,7 +11982,7 @@ msgstr "變異數百分比"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "此值代表從取樣中移除離群值後，高於調整後取樣平均值的百分比。例如，若調整後平均值為 50 而變異數百分比為 100%%，則任何高於 100 的取樣都會從圖表中移除。"
+msgstr "此值代表從取樣中移除離群值後，高於調整後取樣平均值的百分比。例如，在調整後平均值為 50 的情況下，100%% 的變異數百分比會將任何高於 100 的取樣從圖表中移除。"
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -13747,7 +13747,7 @@ msgstr "刪除GPRINT預設"
 
 #: lib/html.php:1538
 msgid "Alpha %"
-msgstr "Α ％"
+msgstr "Alpha 透明度 %"
 
 #: lib/html.php:1595
 msgid "No Source"
@@ -13892,7 +13892,7 @@ msgstr "捷徑"
 
 #: lib/html.php:2892
 msgid "Contribute to the Cacti Project"
-msgstr "旋轉仙人掌日誌"
+msgstr "參與貢獻 Cacti 專案"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
@@ -15155,7 +15155,7 @@ msgstr "感謝您撥冗下載並安裝 Cacti，這是為您的網路打造的完
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "確保您已閱讀並遵循安裝Cacti所需的步驟，然後再繼續。可以在基於<a href=\"%1$s\">Unix</a>和<a href=\"%2$s\">Win32</a>的操作系統中找到安裝信息。"
+msgstr "在繼續之前，請確定您已閱讀並遵循安裝 Cacti 所需的步驟。您可參閱以 <a href=\"%s\">Unix</a> 與 <a href=\"%s\">Win32</a> 為基礎之作業系統的安裝資訊。"
 
 #: lib/installer.php:1855
 #, php-format
@@ -16441,7 +16441,7 @@ msgstr "CDP 未知資料點 (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "沒有 %s 找到"
+msgstr "發現錯誤"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16912,7 +16912,7 @@ msgstr "若您的資料表具有非常大的索引，您必須將 Barracuda inno
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB將盡可能多地保存系統內存中的表和索引。因此，你應該使innodb_buffer_pool足夠大，以便在內存中保存盡可能多的表和索引。檢查/ var / lib / mysql / cacti目錄的大小將有助於確定此值。我們建議您的系統總內存佔25 %%，但您的要求會因係統大小而異。"
+msgstr "InnoDB 會盡可能在系統記憶體中保留資料表與索引。因此，您應該將 innodb_buffer_pool 設定得足夠大，以便在記憶體中保留盡可能多的資料表與索引。檢查 /var/lib/mysql/cacti 目錄的大小有助於決定此值。我們建議設為 25%% 的系統總記憶體，但實際需求會因系統規模而異。"
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17177,7 +17177,7 @@ msgstr "網頁 URL 位置"
 
 #: links.php:577
 msgid "The valid URL to use for this external link.  Must include the type, for example http://www.cacti.net.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr "用於此外部連結的有效 URL。必須包含通訊協定類型，例如 http://www.cacti.net。請注意，許多網站不允許從外部站台嵌於 iframe 中，因此外部連結可能無法運作。"
+msgstr "用於此外部連結的有效 URL。必須包含通訊協定類型，例如 http://www.cacti.net. 請注意，許多網站不允許從外部站台嵌入 iframe 中，因此外部連結可能無法運作。"
 
 #: links.php:586
 msgid "If checked, the page will be available immediately to the admin user."
@@ -17695,7 +17695,7 @@ msgstr "已超過 %d 秒的最長執行時間（輪詢器 ID %d）。正在結�
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "警告：仙人掌輪詢週期超過輪詢間隔"
+msgstr "警告：Cacti 輪詢週期超過輪詢間隔 "
 
 #: poller.php:961
 #, php-format
@@ -17712,7 +17712,7 @@ msgstr "Cacti 系統通知"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "注意：已添加第二個仙人掌數據收集器。因此，自動啟用增強功能！"
+msgstr "注意：已新增第二個 Cacti 資料收集器，因此將自動啟用 Boost！"
 
 #: poller_automation.php:54
 #, php-format
@@ -18672,7 +18672,7 @@ msgstr "若要編輯此樹狀目錄，您必須先按下「編輯樹狀目錄」
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "此樹已被%2$s s鎖定在%1$s上編輯。"
+msgstr "此樹狀目錄已於 %s 由 %s 鎖定為編輯狀態。"
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -20595,8 +20595,7 @@ msgstr "未偵測到索引變更，輪詢器快取已重新整理"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "同步失敗。詳細資訊請參閱日誌。"
+msgstr "同步失敗。請參閱記錄檔以取得詳細資訊。"
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
