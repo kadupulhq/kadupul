@@ -1,0 +1,1 @@
+- Keep browser JS coverage enabled across page navigations in `collectThemeCoverage` so logout-navigation E2E specs retain measured `/include/layout.js` and theme coverage.
