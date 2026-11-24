@@ -238,7 +238,7 @@ msgstr "Вернуть"
 
 #: aggregate_graphs.php:397
 msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
-msgstr "Выбранные Агрегированные графики представляют собой элементы из более чем одного Aggregate Шаблона."
+msgstr "Выбранные агрегированные графики, по-видимому, не имеют соответствующих шаблонов агрегирования."
 
 #: aggregate_graphs.php:398
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
@@ -3614,7 +3614,7 @@ msgstr "Имя графика: %s"
 
 #: data_queries.php:685
 msgid "Remove Data Query Graph Template"
-msgstr "Преобразовать в Шаблон Графика"
+msgstr "Удалить шаблон графика запроса данных"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
@@ -3710,7 +3710,7 @@ msgstr "Не удалось найти XML-файл."
 #: data_queries.php:1364 host.php:837 host_templates.php:578
 #: include/global_arrays.php:2444
 msgid "Associated Graph Templates"
-msgstr "Нет ассоциированых шаблонов графиков"
+msgstr "Связанные шаблоны графиков"
 
 #: data_queries.php:1368 graph_templates.php:893 graphs_new.php:575
 #: host.php:841 lib/api_automation.php:672
@@ -3817,7 +3817,7 @@ msgstr "Профили источников данных, используемы
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
-msgstr "Не удалось дублировать профиль источника данных. Проверьте журнал Cacti на наличие ошибок."
+msgstr "Не удалось дублировать профиль источника данных.  Проверьте журнал Cacti на наличие ошибок."
 
 #: data_source_profiles.php:507
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
@@ -4444,7 +4444,7 @@ msgstr "Если оставить это поле пустым, то значе�
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Предупреждающее сообщение для пользовательских данных"
+msgstr "Пользовательское предупреждающее сообщение о данных"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -4517,7 +4517,7 @@ msgstr "Удалить предустановку (предустановки) G
 
 #: gprint_presets.php:257
 msgid "GPRINT Preset not found."
-msgstr "Пресет GPRINT не найден."
+msgstr "Предустановка GPRINT не найдена."
 
 #: gprint_presets.php:264
 #, php-format
@@ -4927,7 +4927,7 @@ msgstr "Название этого графика.  Обычно програм
 
 #: graph_view.php:805
 msgid "The device for this Graph."
-msgstr "Название этой группы."
+msgstr "Устройство для этого графика."
 
 #: graph_view.php:808 graphs.php:2352
 msgid "Source Type"
@@ -5206,7 +5206,7 @@ msgstr "График блокировки."
 
 #: graphs.php:1662
 msgid "Selected Graph Template"
-msgstr "Изменить размер выбранных шаблонов"
+msgstr "Выбранный шаблон графика"
 
 #: graphs.php:1663
 #, php-format
@@ -5231,7 +5231,7 @@ msgstr "Поля графических элементов"
 
 #: graphs.php:2073
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "[ Применяется пользовательский список графиков - фильтровать список FROM ]"
+msgstr "Управление графиками [ Применен пользовательский список графиков - очистите для сброса ]"
 
 #: graphs.php:2075
 msgid "Graph Management [ All Devices ]"
@@ -5239,7 +5239,7 @@ msgstr "Новые графики для [ Все устройства ]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Управление графиками [не привязанные к устройству]"
+msgstr "Управление графиками [ Без привязки к устройству ]"
 
 #: graphs.php:2080
 #, php-format
@@ -5260,7 +5260,7 @@ msgstr "Идентификатор внутренней базы данных д
 
 #: graphs.php:2393
 msgid "Empty Graph"
-msgstr "Только График"
+msgstr "Пустой график"
 
 #: graphs_items.php:362
 msgid "Data Sources [No Device]"
@@ -5444,7 +5444,7 @@ msgstr "Синхронизация с шаблоном устройства"
 
 #: host.php:49
 msgid "Place Device on Report"
-msgstr "Поместите устройство(ы) на дерево"
+msgstr "Поместить устройство в отчет"
 
 #: host.php:141
 msgid "Data Query Re-indexed."
@@ -5460,7 +5460,7 @@ msgstr "Отладка устройства включена для устрой
 
 #: host.php:181
 msgid "Device Debugging Disabled for Device."
-msgstr "Устройство отключено"
+msgstr "Отладка устройства отключена для устройства."
 
 #: host.php:191
 msgid "Poller Cache for Device Refreshed."
@@ -5468,7 +5468,7 @@ msgstr "Кэш опросчика для устройства обновлен."
 
 #: host.php:193
 msgid "ERROR: Invalid Device ID."
-msgstr "СКОРАЯ ПОМОЩЬ: Устройство ["
+msgstr "ОШИБКА: Недопустимый ID устройства."
 
 #: host.php:226
 msgid "A Re-Index of this Device is already running.  Try again after it finishes."
@@ -5522,7 +5522,7 @@ msgstr "Нажмите кнопку \"Продолжить\", чтобы очи�
 
 #: host.php:527
 msgid "Clear Statistics on Device(s)"
-msgstr "Четкая статистика по устройству(ам)"
+msgstr "Очистить статистику на устройстве(ах)"
 
 #: host.php:531
 msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
@@ -5600,7 +5600,7 @@ msgstr "Создание графиков для данного устройст
 
 #: host.php:799
 msgid "Re-Index Device"
-msgstr "Метод реиндексации данных"
+msgstr "Переиндексировать устройство"
 
 #: host.php:802
 msgid "Data Source List"
@@ -5620,11 +5620,11 @@ msgstr "Редактировать"
 
 #: host.php:900
 msgid "Is Being Graphed"
-msgstr "быть изнасилованным"
+msgstr "Строится график"
 
 #: host.php:900
 msgid "Not Being Graphed"
-msgstr "Не быть изнасилованным"
+msgstr "График не строится"
 
 #: host.php:903
 msgid "Delete Graph Template Association"
@@ -5740,7 +5740,7 @@ msgstr "SNMP getNext"
 
 #: host.php:1328
 msgid "Delete Item from Device"
-msgstr "Удалить шаблон(ы) устройства"
+msgstr "Удалить элемент из устройства"
 
 #: host.php:1547 host.php:1670 host.php:1856
 msgid "Undefined"
@@ -5784,7 +5784,7 @@ msgstr "Статус мониторинга Устройства по резул
 
 #: host.php:1614
 msgid "In State"
-msgstr "Область"
+msgstr "В состоянии"
 
 #: host.php:1617
 msgid "The amount of time that this Device has been in its current state."
@@ -5925,7 +5925,7 @@ msgstr "Добавить запрос данных в шаблон устрой�
 
 #: host_templates.php:749
 msgid "Delete Item from Device Template"
-msgstr "Удалить шаблон(ы) устройства"
+msgstr "Удалить элемент из шаблона устройства"
 
 #: host_templates.php:848 host_templates.php:945 host_templates.php:1109
 #: include/global_arrays.php:1255 include/global_arrays.php:2300
@@ -5934,7 +5934,7 @@ msgstr "Шаблон Устройства"
 
 #: host_templates.php:857 include/global_form.php:1356
 msgid "Class"
-msgstr "Классический"
+msgstr "Класс"
 
 #: host_templates.php:962
 msgid "Has Devices"
@@ -6037,7 +6037,7 @@ msgstr "Вернуться в Cacti: %s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "Последний раз этот Сборщик данных был полностью синхронизирован с основным сайтом Cacti."
+msgstr "Основной сборщик данных вернулся в состояние «В сети»"
 
 #: include/global.php:568
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
@@ -6125,11 +6125,11 @@ msgstr "Изменение имени пользователя не разреш
 
 #: include/global_arrays.php:213
 msgid "User delete not permitted for designated template or guest user."
-msgstr "Пользователь удаляет запрещенные шаблоны или гостевого пользователя."
+msgstr "Удаление пользователя запрещено для назначенного шаблонного или гостевого пользователя."
 
 #: include/global_arrays.php:216
 msgid "User delete not permitted for designated graph export user."
-msgstr "Пользователь удаляет не разрешенный для указанного пользователя экспорт графиков."
+msgstr "Удаление пользователя запрещено для назначенного пользователя экспорта графиков."
 
 #: include/global_arrays.php:219
 msgid "Data Template includes deleted Data Source Profile.  Please resave the Data Template with an existing Data Source Profile."
@@ -6213,7 +6213,7 @@ msgstr "Сохранить успех. Настройки копируются �
 
 #: include/global_arrays.php:279
 msgid "Save Failed.  Minimum Values must be less than Maximum Value."
-msgstr "Спасти неудачника.  Минимальные значения должны быть меньше Максимального значения."
+msgstr "Ошибка сохранения. Минимальные значения должны быть меньше максимального значения."
 
 #: include/global_arrays.php:282
 msgid "Unable to change password.  User account not found."
@@ -6525,7 +6525,7 @@ msgstr "MD5"
 
 #: include/global_arrays.php:661
 msgid "SHA"
-msgstr "SHA (комиссии банка плательщика и его корреспондента за счет плательщика)"
+msgstr "SHA"
 
 #: include/global_arrays.php:662
 msgid "SHA-224"
@@ -6549,7 +6549,7 @@ msgstr "DES"
 
 #: include/global_arrays.php:671
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php:672
 msgid "AES-128"
@@ -6925,7 +6925,7 @@ msgstr "Профили данных"
 #: include/global_arrays.php:1038 include/global_arrays.php:2552 vdef.php:729
 #: vdef.php:747 vdef.php:918
 msgid "VDEFs"
-msgstr "Десятилетние программы профессиональной подготовки"
+msgstr "Функции VDEF"
 
 #: include/global_arrays.php:1042 include/global_arrays.php:1086
 msgid "Import/Export"
@@ -6938,7 +6938,7 @@ msgstr "Импорт Шаблонов"
 
 #: include/global_arrays.php:1044 include/global_arrays.php:2684
 msgid "Import Packages"
-msgstr "Импорт Шаблонов"
+msgstr "Импорт пакетов"
 
 #: include/global_arrays.php:1045 include/global_arrays.php:1257
 #: include/global_arrays.php:2666 templates_export.php:159
@@ -7016,7 +7016,7 @@ msgstr "Объекты"
 
 #: include/global_arrays.php:1100
 msgid "Generic Device"
-msgstr "Общий логический уровень"
+msgstr "Универсальное устройство"
 
 #: include/global_arrays.php:1101
 msgid "HPC/Grid Computing"
@@ -7044,15 +7044,15 @@ msgstr "Выравнивание нагрузки"
 
 #: include/global_arrays.php:1107
 msgid "Network Switch"
-msgstr "Сетевые фильтры"
+msgstr "Сетевой коммутатор"
 
 #: include/global_arrays.php:1108
 msgid "Network Router"
-msgstr "Сетевые фильтры"
+msgstr "Сетевой маршрутизатор"
 
 #: include/global_arrays.php:1109
 msgid "NAS/SAN Related"
-msgstr "ИБП (UPS)"
+msgstr "Связанные с NAS/SAN"
 
 #: include/global_arrays.php:1110
 msgid "Network Firewalls"
@@ -7064,7 +7064,7 @@ msgstr "PDU/STS, связанные с питанием, и т. д."
 
 #: include/global_arrays.php:1112
 msgid "Printer Related"
-msgstr "Линукс"
+msgstr "Связанный с принтером"
 
 #: include/global_arrays.php:1113
 msgid "Storage Related"
@@ -7072,7 +7072,7 @@ msgstr "Хранилище"
 
 #: include/global_arrays.php:1114
 msgid "Telco Related"
-msgstr "Выбрать шаблон"
+msgstr "Связано с телекоммуникациями"
 
 #: include/global_arrays.php:1115
 msgid "Web Server Related"
@@ -7158,7 +7158,7 @@ msgstr "Показать ссылки на справку для пользов�
 
 #: include/global_arrays.php:1267
 msgid "Plugin Administration"
-msgstr "Администрирование журналов"
+msgstr "Администрирование плагинов"
 
 #: include/global_arrays.php:1271
 msgid "Normal User"
@@ -7211,7 +7211,7 @@ msgstr "Ввод шаблона графика Ввод шаблона"
 
 #: include/global_arrays.php:1383 lib/html.php:1537
 msgid "VDEF"
-msgstr "ДЕСЯТИЛЕТНЯЯ ПРОГРАММА ПРОФЕССИОНАЛЬНОЙ ПОДГОТОВКИ"
+msgstr "VDEF"
 
 #: include/global_arrays.php:1384
 msgid "VDEF Item"
@@ -7320,7 +7320,7 @@ msgstr "Имя месяца, день, год, год"
 
 #: include/global_arrays.php:1527
 msgid "Day, Month Number, Year"
-msgstr "День, месяц Номер телефона, год"
+msgstr "День, номер месяца, год"
 
 #: include/global_arrays.php:1528
 msgid "Day, Month Name, Year"
@@ -7677,7 +7677,7 @@ msgstr "Неизвестно"
 
 #: include/global_arrays.php:1783
 msgid "is not unknown"
-msgstr "Неизвестно"
+msgstr "не является неизвестным"
 
 #: include/global_arrays.php:1784
 msgid "is empty"
@@ -7800,7 +7800,7 @@ msgstr "Дек"
 
 #: include/global_arrays.php:1949
 msgid "Use the First Handler Found"
-msgstr "Используйте обработчик PHP GetText"
+msgstr "Использовать первый найденный обработчик"
 
 #: include/global_arrays.php:1953
 msgid "Use the PHP GetText Handler"
@@ -7973,7 +7973,7 @@ msgstr "ВНИМАНИЕ:"
 
 #: include/global_arrays.php:2021
 msgid "[Restart]"
-msgstr "Ограниченный"
+msgstr "[Перезапуск]"
 
 #: include/global_arrays.php:2022
 msgid "[Success]"
@@ -8023,7 +8023,7 @@ msgstr "(Редактировать)"
 
 #: include/global_arrays.php:2126 lib/api_aggregate.php:1764
 msgid "Graph Items"
-msgstr "Графики [новый]"
+msgstr "Элементы графика"
 
 #: include/global_arrays.php:2132
 msgid "Create New Graphs"
@@ -8112,7 +8112,7 @@ msgstr "Просмотр журнала уведомлений агента SNMP
 
 #: include/global_arrays.php:2576 vdef.php:610
 msgid "VDEF Items"
-msgstr "Пункты Десятилетней программы профессиональной подготовки и переподготовки"
+msgstr "Элементы VDEF"
 
 #: include/global_arrays.php:2582
 msgid "View SNMP Notification Receivers"
@@ -8226,7 +8226,7 @@ msgstr "Уровень безопасности SNMP v3, используемы�
 
 #: include/global_form.php:63
 msgid "SNMP Auth Protocol (v3)"
-msgstr "Автоматический протокол SNMP (v3)"
+msgstr "Протокол аутентификации SNMP (v3)"
 
 #: include/global_form.php:64
 msgid "Choose the SNMPv3 Authorization Protocol."
@@ -8609,7 +8609,7 @@ msgstr "Тип данных источника"
 
 #: include/global_form.php:650
 msgid "How data is represented in the RRA."
-msgstr "Как данные представлены в ОРДА."
+msgstr "Как данные представлены в RRA."
 
 #: include/global_form.php:658
 msgid "The maximum amount of time that can pass before data is entered as 'unknown'. (Usually 2x300=600)"
@@ -8890,7 +8890,7 @@ msgstr "Приведите в действие поколение легенд H
 
 #: include/global_form.php:941
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
-msgstr "Ширина вкладки (--ширина полосы пропускания &lt;пикселей&gt;)"
+msgstr "Ширина табуляции (--tabwidth &lt;pixels&gt;)"
 
 #: include/global_form.php:946
 msgid "By default the tab-width is 40 pixels, use this option to change it."
@@ -9042,7 +9042,7 @@ msgstr "Установите этот флажок, если на одно ус�
 
 #: include/global_form.php:1122
 msgid "Test Data Sources"
-msgstr "Имеет ли источник данных"
+msgstr "Проверить источники данных"
 
 #: include/global_form.php:1123
 msgid "Check this checkbox if you wish to test the Data Sources prior to their creation.  With Test Data Sources enabled, if the Data Source does not return valid data, the Graph will not be created.  This setting is important if you wish to have a more generic Device Template that can include more Graph Templates that can be selectively applied depending on the characteristics of the Device itself.  Note: If you have a long running script as a Data Source, the time to create Graphs will be increased."
@@ -9082,7 +9082,7 @@ msgstr "Физическое местоположение Устройства. 
 
 #: include/global_form.php:1215
 msgid "Poller Association"
-msgstr "Ассоциация полярников"
+msgstr "Привязка опросчика"
 
 #: include/global_form.php:1223
 msgid "Device Site Association"
@@ -9342,7 +9342,7 @@ msgstr "График Высота шаблона Высота шаблона"
 
 #: include/global_form.php:1736 package_import.php:933
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "Ширина графика по умолчанию, которая будет использоваться для всех новых шаблонов графика."
+msgstr "Высота, используемая при импорте или обновлении шаблонов графиков."
 
 #: include/global_form.php:1743 include/global_settings.php:612
 #: package_import.php:941
@@ -9401,7 +9401,7 @@ msgstr "Префикс для всех GPRINT-линий, чтобы разли�
 #: include/global_form.php:1846 include/global_form.php:1932
 #: include/global_form.php:2037
 msgid "Include Prefix Text"
-msgstr "Включить индекс"
+msgstr "Включить текст префикса"
 
 #: include/global_form.php:1847 include/global_form.php:1933
 #: include/global_form.php:2038
@@ -9459,7 +9459,7 @@ msgstr "Пожалуйста, назовите этот Обобщающий Г�
 
 #: include/global_form.php:1913
 msgid "Propagation Enabled"
-msgstr "Пропаганда разрешена"
+msgstr "Распространение включено"
 
 #: include/global_form.php:1914
 msgid "Is this to carry the template?"
@@ -9602,7 +9602,7 @@ msgstr "Распространяйте все опции этой формы (з
 
 #: include/global_form.php:2347
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "Строгий образец (регулярное выражение) для сравнения с.<br>Закрытие '/' должно быть обеспечено <strong>NOT</strong>!"
+msgstr "Строковый шаблон (регулярное выражение) для сопоставления.<br>Обрамляющие символы '/' указывать <strong>НЕ</strong> следует!"
 
 #: include/global_form.php:2354
 msgid "Replacement Pattern"
@@ -9714,7 +9714,7 @@ msgstr "Путь к вашему snmpget бинарному файлу."
 
 #: include/global_settings.php:132
 msgid "snmpbulkwalk Binary Path"
-msgstr "оптовая пешеходная тропа Двоичный Двоичный Путь"
+msgstr "Путь к исполняемому файлу snmpbulkwalk"
 
 #: include/global_settings.php:133
 msgid "The path to your snmpbulkwalk binary."
@@ -9992,7 +9992,7 @@ msgstr "Другие настройки"
 
 #: include/global_settings.php:402
 msgid "Show only site specific locations"
-msgstr "Здесь можно задать любые специальные параметры графика."
+msgstr "Показывать только расположения конкретного сайта"
 
 #: include/global_settings.php:403
 msgid "Show only locations that are available at a devices selected site."
@@ -10128,7 +10128,7 @@ msgstr "Когда этот флажок установлен, любые поп
 
 #: include/global_settings.php:502
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "Разрешить небезопасный HTTPS для удалённого коллектора данных"
+msgstr "Разрешить небезопасный HTTPS для удалённого сборщика данных"
 
 #: include/global_settings.php:503
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
@@ -10240,7 +10240,7 @@ msgstr "Формат изображения по умолчанию, котор�
 
 #: include/global_settings.php:605
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "Ширина графика по умолчанию, которая будет использоваться для всех новых шаблонов графика."
+msgstr "Высота графика по умолчанию, используемая для всех новых шаблонов графиков."
 
 #: include/global_settings.php:613
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -10294,7 +10294,7 @@ msgstr "Метод реиндексации по умолчанию, испол�
 
 #: include/global_settings.php:676
 msgid "Default Interface Speed"
-msgstr "Тип графика по умолчанию"
+msgstr "Скорость интерфейса по умолчанию"
 
 #: include/global_settings.php:677
 msgid "If Cacti can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
@@ -10515,7 +10515,7 @@ msgstr "Минимальная ширина дерева для контракт
 
 #: include/global_settings.php:917 include/global_settings.php:2814
 msgid "Maximum Tree Width"
-msgstr "Максимальная длина заголовка"
+msgstr "Максимальная ширина дерева"
 
 #: include/global_settings.php:918 include/global_settings.php:2815
 msgid "The Maximum width of the Tree to expand to, after which time, Tree branches will scroll on the page."
@@ -10785,7 +10785,7 @@ msgstr "Время окончания рабочего времени. Форм�
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "Скрывать выходные"
+msgstr "Скрыть выходные"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -10809,7 +10809,7 @@ msgstr "Цвет, который будет отображаться в рабо
 
 #: include/global_settings.php:1190
 msgid "Maximum number of days to show business hours"
-msgstr "Максимальное количество строк на страницу"
+msgstr "Максимальное количество дней для отображения рабочих часов"
 
 #: include/global_settings.php:1191
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
@@ -10833,7 +10833,7 @@ msgstr "Если эта опция отмечена, Cacti заполнит та
 
 #: include/global_settings.php:1219
 msgid "Poller Type"
-msgstr "Тип опылителя"
+msgstr "Тип опросчика"
 
 #: include/global_settings.php:1220
 msgid "The poller type to use.  This setting will take affect at next polling interval."
@@ -10893,7 +10893,7 @@ msgstr "Время в секундах, в течение которого це�
 
 #: include/global_settings.php:1279
 msgid "SNMP Bulkwalk Fetch Size"
-msgstr "SNMP объемная пешеходная дорожка Получить размер"
+msgstr "Размер выборки SNMP Bulkwalk"
 
 #: include/global_settings.php:1280
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -10917,7 +10917,7 @@ msgstr "Эта настройка предназначена только для
 
 #: include/global_settings.php:1313
 msgid "Disable Resource Cache Replication"
-msgstr "Восстановление кэша ресурсов"
+msgstr "Отключить репликацию кэша ресурсов"
 
 #: include/global_settings.php:1314
 msgid "By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
@@ -10925,7 +10925,7 @@ msgstr "По умолчанию основной Cacti Data Collector кэшир
 
 #: include/global_settings.php:1319
 msgid "Additional Data Collector Settings"
-msgstr "Состояние удаленного сбора данных:"
+msgstr "Дополнительные настройки сборщика данных"
 
 #: include/global_settings.php:1324
 msgid "Invalid Data Logging"
@@ -10933,7 +10933,7 @@ msgstr "Регистрация недействительных данных"
 
 #: include/global_settings.php:1325
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
-msgstr "Как бы вы хотели, чтобы ошибки на выходе позвоночника регистрировались?  Варианты таковы: Подробная\", которая похожа на регистрацию cmd.php; \"Сводная\", которая предоставляет количество выходных ошибок на одно устройство; и \"Нет\", которая не дает подсчета ошибок."
+msgstr "Как следует записывать ошибки вывода сборщика данных (Data Collector)?  Доступные варианты: 'Подробно' — записывает каждую ошибку, 'Сводка' — указывает количество ошибок вывода на устройство, и 'Нет' — не предоставляет подсчет ошибок."
 
 #: include/global_settings.php:1330 utilities.php:180
 msgid "Summary"
@@ -10949,7 +10949,7 @@ msgstr "Количество PHP-серверов скриптов PHP"
 
 #: include/global_settings.php:1336
 msgid "The number of concurrent script server processes to run per spine process.  Settings between 1 and 15 are accepted.  This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector."
-msgstr "Количество одновременных процессов на сервере сценариев, выполняемых для каждого процесса на позвоночнике.  Допускаются настройки от 1 до 10.  Этот параметр поможет, если вы используете несколько потоков и скриптов сервера сценариев."
+msgstr "Количество одновременных процессов сервера скриптов, запускаемых на один процесс spine.  Допустимы значения от 1 до 15.  Этот параметр полезен при использовании нескольких потоков и скриптов сервера скриптов и действует только для сборщика данных spine."
 
 #: include/global_settings.php:1343
 msgid "Script and Script Server Timeout Value"
@@ -10965,7 +10965,7 @@ msgstr "Периодическая повторная индексация вс�
 
 #: include/global_settings.php:1356
 msgid "Re-Index All Device Schedule"
-msgstr "Метод реиндексации данных"
+msgstr "Расписание переиндексации всех устройств"
 
 #: include/global_settings.php:1357
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
@@ -10981,7 +10981,7 @@ msgstr "Ежемесячно в день недели"
 
 #: include/global_settings.php:1368
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "Настройка легендарного шрифта"
+msgstr "Настройки времени ожидания в фоне и параллельных процессов"
 
 #: include/global_settings.php:1373
 msgid "Report Generation Timeout"
@@ -11008,11 +11008,11 @@ msgstr "Максимальный интервал времени, в течен�
 
 #: include/global_settings.php:1401
 msgid "RRDChecker Timeout"
-msgstr "Таймаут DNS"
+msgstr "Таймаут RRDChecker"
 
 #: include/global_settings.php:1402
 msgid "The maximum amount of time Cacti's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "Максимальный промежуток времени, в течение которого скрипт Cacti Spikekill может быть запущен без возникновения ошибки тайм-аута и уничтожения."
+msgstr "Максимальное время работы скрипта проверки RRDfile в Cacti без возникновения ошибки тайм-аута и принудительного завершения."
 
 #: include/global_settings.php:1408 include/global_settings.php:1409
 #: include/global_settings.php:1410 include/global_settings.php:1465
@@ -11336,7 +11336,7 @@ msgstr "Порт SSL"
 
 #: include/global_settings.php:1722
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "Порт TCP/UDP для не SSL соединений."
+msgstr "Порт TCP для LDAPS при обмене по SSL.  По умолчанию — 636."
 
 #: include/global_settings.php:1729 user_domains.php:444
 msgid "Protocol Version"
@@ -11352,7 +11352,7 @@ msgstr "Таймаут соединения"
 
 #: include/global_settings.php:1737
 msgid "The Network Connect Timeout in seconds."
-msgstr "Пожалуйста, введите время ожидания SMTP в секундах."
+msgstr "Тайм-аут сетевого подключения в секундах."
 
 #: include/global_settings.php:1744
 msgid "Bind Timeout"
@@ -11360,7 +11360,7 @@ msgstr "Пауза"
 
 #: include/global_settings.php:1745
 msgid "The Bind Timeout in seconds."
-msgstr "Пожалуйста, введите время ожидания SMTP в секундах."
+msgstr "Тайм-аут привязки (Bind) в секундах."
 
 #: include/global_settings.php:1752
 msgid "LDAP Debug Mode"
@@ -11480,7 +11480,7 @@ msgstr "Отличительное имя для привязки к катал�
 
 #: include/global_settings.php:1852 user_domains.php:536
 msgid "Search Password"
-msgstr "Восстановить пароль"
+msgstr "Пароль для поиска"
 
 #: include/global_settings.php:1853 user_domains.php:537
 msgid "Password for Specific Searching binding to the LDAP directory."
@@ -11668,7 +11668,7 @@ msgstr "Максимальный размер сообщения электро�
 
 #: include/global_settings.php:2026
 msgid "Poller Logging Level for Cacti Reporting"
-msgstr "Уровень журналирования опросчика (poller) для отчётов Cacti"
+msgstr "Уровень журналирования опросчика для отчетов Cacti"
 
 #: include/global_settings.php:2027
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -12025,7 +12025,7 @@ msgstr "Стандартное отклонение"
 
 #: include/global_settings.php:2422
 msgid "Variance Based w/Outliers Removed"
-msgstr "Клещи на основе отклонений w/Выбросы (Outliers) Удалены"
+msgstr "На основе дисперсии с удалением выбросов"
 
 #: include/global_settings.php:2426 lib/html.php:2668
 msgid "Replacement Method"
@@ -12776,7 +12776,7 @@ msgstr "Устройство отключено"
 
 #: lib/api_device.php:1535
 msgid "Device Availability Check Bypassed"
-msgstr "Проверка доступности устройства пройдена"
+msgstr "Проверка доступности устройства пропущена"
 
 #: lib/api_device.php:1542
 msgid "SNMP Information"
@@ -12955,7 +12955,7 @@ msgstr "%s Мбайт"
 #: lib/boost.php:153
 #, php-format
 msgid "%s KBytes"
-msgstr "%s Гбайт"
+msgstr "%s Кбайт"
 
 #: lib/boost.php:156
 #, php-format
@@ -13056,7 +13056,7 @@ msgstr "Устройства Использование"
 
 #: lib/clog_webapi.php:597
 msgid "Recaches"
-msgstr "совпадает"
+msgstr "Перекэширования"
 
 #: lib/clog_webapi.php:601
 msgid "Threshold"
@@ -13084,7 +13084,7 @@ msgstr "Пароли не совпадают"
 
 #: lib/clog_webapi.php:804
 msgid "System Device"
-msgstr "Синхронизация Устройств"
+msgstr "Системное устройство"
 
 #: lib/data_query.php:89 lib/data_query.php:275
 msgid "Automation Execution for Data Query complete"
@@ -13120,7 +13120,7 @@ msgstr "Обновить запрос данных Сортировка кэша
 #: lib/data_query.php:382
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr "Найдено%s таблиц для преобразования"
+msgstr "Найдено %s локальных ID данных для проверки"
 
 #: lib/data_query.php:458
 #, php-format
@@ -13150,7 +13150,7 @@ msgstr "Проверка %s локальных идентификаторов д
 
 #: lib/data_query.php:170 lib/data_query.php:177
 msgid "Done updating Data Source Title Cache"
-msgstr "Дублировать профиль источника данных"
+msgstr "Обновление кэша заголовков источников данных завершено"
 
 #: lib/data_query.php:173 lib/data_query.php:180
 msgid "Done updating Graph Title Cache"
@@ -13226,11 +13226,11 @@ msgstr "Должны содержать только поля \"Направле
 
 #: lib/data_query.php:753
 msgid "Data Query returned no indexes."
-msgstr "СКОРАЯ ПОМОЩЬ: Запрос данных не возвращает индексов."
+msgstr "Запрос данных не вернул индексов."
 
 #: lib/data_query.php:754
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "Arg_num_num_indexes&gt; отсутствует в XML файле, не поддерживается 'Index Countged'."
+msgstr "&lt;arg_num_indexes&gt; присутствует в XML-файле, но данные не возвращены, 'Index Count Changed' не поддерживается"
 
 #: lib/data_query.php:757
 #, php-format
@@ -13252,7 +13252,7 @@ msgstr "*lt;arg_num_indexes_gt; отсутствует в XML файле, \"Inde
 
 #: lib/data_query.php:777
 msgid "ERROR: Data Query returned no indexes."
-msgstr "СКОРАЯ ПОМОЩЬ: Запрос данных не возвращает индексов."
+msgstr "ОШИБКА: Запрос данных не вернул индексов."
 
 #: lib/data_query.php:781
 #, php-format
@@ -13391,7 +13391,7 @@ msgstr "Найдено правило перезаписи OID: 's/%s/%s/'."
 #: lib/data_query.php:1118
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
-msgstr "oid_rewrite at OID: '%s' new OID: '%s'."
+msgstr "oid_rewrite для OID: '%s', новый OID: '%s'"
 
 #: lib/data_query.php:1139
 #, php-format
@@ -13486,7 +13486,7 @@ msgstr "Не удалось разобрать карту перевода (rewr
 #: lib/data_query.php:1790
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
-msgstr "oid_rewrite at OID: '%s' new OID: '%s'."
+msgstr "перезапись значения: '%s' => '%s'"
 
 #: lib/data_query.php:1895
 msgid "Update graph data query cache complete"
@@ -13566,12 +13566,12 @@ msgstr "Выпуски не найдены"
 
 #: lib/dsdebug.php:315
 msgid "RRDfile not created yet"
-msgstr "RRD Файл не обновляется после опроса"
+msgstr "Файл RRD еще не создан"
 
 #: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Сохранение настроек в Сборщик данных %d Неудачно."
+msgstr "Сохранение настроек в сборщик данных %d пропущено из-за сигнала heartbeat."
 
 #: lib/functions.php:463 settings.php:286
 #, php-format
@@ -13766,7 +13766,7 @@ msgstr "Источник данных, график"
 
 #: lib/html.php:76
 msgid "Remote Server"
-msgstr "Удалить StdDev"
+msgstr "Удаленный сервер"
 
 #: lib/html.php:138
 msgid "Get Page Help"
@@ -13863,7 +13863,7 @@ msgstr "Стандартные отклонения"
 
 #: lib/html.php:2680
 msgid "Kills Per RRA"
-msgstr "Убивает одного человека за РРА."
+msgstr "Удалений на RRA"
 
 #: lib/html.php:2686
 msgid "Remove StdDev"
@@ -13927,11 +13927,11 @@ msgstr "Режим масштабирования"
 
 #: lib/html.php:2873
 msgid "Dark Color Mode"
-msgstr "Нет цветов найдено"
+msgstr "Темный цветовой режим"
 
 #: lib/html.php:2874
 msgid "Light Color Mode"
-msgstr "Режим списка"
+msgstr "Светлый цветовой режим"
 
 #: lib/html.php:2875
 msgid "Use System Color"
@@ -13939,7 +13939,7 @@ msgstr "Цвет элемента"
 
 #: lib/html.php:2876
 msgid "Ignore System Color"
-msgstr "Цвет элемента"
+msgstr "Игнорировать системный цвет"
 
 #: lib/html.php:2877
 msgid "Help"
@@ -14015,7 +14015,7 @@ msgstr "Нажмите, чтобы показать/скрыть фильтр"
 
 #: lib/html.php:2904
 msgid "Clear Current Filter"
-msgstr "Очистить фильтр тока"
+msgstr "Очистить текущий фильтр"
 
 #: lib/html.php:2905
 msgid "Clipboard"
@@ -14268,7 +14268,7 @@ msgstr "В этой форме есть несохранённые измене�
 
 #: lib/html_form_template.php:161
 msgid "Invalid Graph Template Input"
-msgstr "Недопустимые входные данные шаблона графика"
+msgstr "Недопустимый входной параметр шаблона графика"
 
 #: lib/html_form_template.php:162
 msgid "The graph template cannot be rendered"
@@ -14747,7 +14747,7 @@ msgstr "(Из устройства: %s)"
 
 #: lib/html_reports.php:1774
 msgid ", Graph Template: All Templates"
-msgstr "Добавить шаблон графика в шаблон устройства"
+msgstr ", Шаблон графика: Все шаблоны"
 
 #: lib/html_reports.php:1776
 #, php-format
@@ -14934,7 +14934,7 @@ msgstr "Фильтры RLIKE в Cacti не поддерживают альтер
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
-msgstr "Скачать"
+msgstr "Недоступен (Thold)"
 
 #: lib/html_utility.php:1467 lib/installer.php:2021 lib/installer.php:3902
 msgid "Error"
@@ -14971,7 +14971,7 @@ msgstr "не существует"
 
 #: lib/import.php:776
 msgid "not writable"
-msgstr "Записи"
+msgstr "недоступно для записи"
 
 #: lib/import.php:2024 lib/import.php:2041
 #, php-format
@@ -15410,7 +15410,7 @@ msgstr "Эти настройки настройки производитель�
 
 #: lib/installer.php:2132
 msgid "Recommended MySQL System Variable Settings"
-msgstr "Рекомендуемые системные параметры MySQL System Variable Settings"
+msgstr "Рекомендуемые настройки системных переменных MySQL"
 
 #: lib/installer.php:2161
 msgid "Installation Type"
@@ -15735,7 +15735,7 @@ msgstr "Настройка Шаблона"
 
 #: lib/installer.php:2669
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "Выберите тип шаблона, который вы хотите экспортировать из Кактусы."
+msgstr "Выберите шаблоны устройств, которые необходимо обновить при обновлении."
 
 #: lib/installer.php:2670
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
@@ -15852,7 +15852,7 @@ msgstr "ОБНАРУЖЕН УКЛОН"
 
 #: lib/installer.php:2832
 msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
-msgstr "ВЫ МОЖЕТЕ ТОЛЬКО ПОСЛЕДАТЬ КАКТИВНЫЕ ДАННЫЕ ДАННЫЕ ДАННЫМИЦАМИ, РЕВЕРТИРОВАННЫМ УЧАСТНИКАМИ ВСЕГДА, ТОГДА БИНОЙ МАДЕ.<br/> У ИНТАЛЛЕРА нет МЕТАЛЛЯ ПО ТЕБЯМАТИКАЛИ ДЛЯ ТЕБЯ"
+msgstr "ВЫ ДОЛЖНЫ ВРУЧНУЮ ИЗМЕНИТЬ БАЗУ ДАННЫХ CACTI, ЧТОБЫ ОТМЕНИТЬ ВСЕ ВНЕСЕННЫЕ ИЗМЕНЕНИЯ ОБНОВЛЕНИЯ.<br/>УСТАНОВЩИК НЕ ИМЕЕТ СПОСОБА СДЕЛАТЬ ЭТО АВТОМАТИЧЕСКИ"
 
 #: lib/installer.php:2833
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
@@ -15965,7 +15965,7 @@ msgstr "Не были выбраны шаблоны для импорта"
 
 #: lib/installer.php:3322
 msgid "Updating remote configuration file"
-msgstr "Ожидание конфигурации"
+msgstr "Обновление удаленного файла конфигурации"
 
 #: lib/installer.php:3354
 #, php-format
@@ -16030,7 +16030,7 @@ msgstr "Создание графиков для данного устройст
 
 #: lib/installer.php:3495
 msgid "Adding Device to Default Tree"
-msgstr "Настройки устройства по умолчанию"
+msgstr "Добавление устройства в дерево по умолчанию"
 
 #: lib/installer.php:3503
 msgid "No templated graphs for Default Device were found"
@@ -16281,7 +16281,7 @@ msgstr "UDP Ping Успех (%s мс)"
 #: lib/ping.php:561
 #, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
-msgstr "Успешный TCP Ping, соединение отклонено (%s мс)"
+msgstr "TCP Ping: успешно, соединение отклонено (%s мс)"
 
 #: lib/ping.php:564
 #, php-format
@@ -16378,7 +16378,7 @@ msgstr "Отчет \"%s\" успешно отправлен"
 
 #: lib/reports.php:1082 lib/reports.php:1414
 msgid "(No Graph Template)"
-msgstr "Шаблон Графика"
+msgstr "(Без шаблона графика)"
 
 #: lib/reports.php:1479
 msgid "(Non Query Based)"
@@ -16565,7 +16565,7 @@ msgstr "Сбой восстановления RRD; оригинал и XML-фа�
 #: lib/rrd.php:4362 lib/rrd.php:4429 lib/rrd.php:4497
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
-msgstr "СКОРАЯ ПОМОЩЬ: RRDfile %s не подлежит записи"
+msgstr "ОШИБКА: Файл RRD %s недоступен для записи"
 
 #: lib/rrd.php:4398 lib/rrd.php:4466
 msgid "Error while parsing the XML of RRDtool dump"
@@ -16588,7 +16588,7 @@ msgstr "Веб-сайт не имеет доступа на запись в %s, 
 
 #: lib/rrd.php:4796
 msgid "(Custom)"
-msgstr "(Özel)"
+msgstr "(Пользовательский)"
 
 #: lib/rrd.php:4802
 msgid "Failed to open data file, poller may not have run yet"
@@ -16621,7 +16621,7 @@ msgstr "Очередь poller_output должна использовать дв�
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "Не удалось подтвердить операцию. Проверьте историю изменений перед повторной попыткой."
+msgstr "недоступно"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
@@ -16763,7 +16763,7 @@ msgstr "Конец окна:    %s (%s)"
 
 #: lib/spikekill.php:396
 msgid "Window Range:  All"
-msgstr "Диапазон окна: Все"
+msgstr "Диапазон окна:  Все"
 
 #: lib/spikekill.php:411
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
@@ -16849,7 +16849,7 @@ msgstr "КРИТИЧЕСКАЯ ОШИБКА: Не удалось записат�
 
 #: lib/spikekill.php:908
 msgid "NOTE: No Spikes Found."
-msgstr "ПРИМЕЧАНИЕ: Выбросы не найдены."
+msgstr "ПРИМЕЧАНИЕ: пики не найдены."
 
 #: lib/spikekill.php:969
 #, php-format
@@ -16871,7 +16871,7 @@ msgstr "CF"
 
 #: lib/spikekill.php:1782
 msgid "DS"
-msgstr "DS"
+msgstr "Источник данных"
 
 #: lib/spikekill.php:1782
 msgid "NonNan"
@@ -16891,7 +16891,7 @@ msgstr "MaxValue"
 
 #: lib/spikekill.php:1783
 msgid "MinStdDev"
-msgstr "MinStdDev"
+msgstr "Мин. станд. отклонение"
 
 #: lib/spikekill.php:1783
 msgid "MinValue"
@@ -16915,7 +16915,7 @@ msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "Создать агрегированные данные из шаблона"
+msgstr "Попытка создания графика не из шаблона"
 
 #: lib/template.php:1530
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -17299,7 +17299,7 @@ msgstr "Вы вышли из Какти из-за таймаута сеанса.
 
 #: logout.php:61
 msgid "You have been logged out of Cacti due to an account suspension."
-msgstr "Вы вышли из Какти из-за таймаута сеанса."
+msgstr "Ваш сеанс в Cacti был завершен из-за приостановки действия учетной записи."
 
 #: logout.php:63
 msgid "You have been logged out of Cacti due to a Remote Data Collector state change"
@@ -17504,7 +17504,7 @@ msgstr "Не удалось загрузить или проверить пак�
 
 #: package_import.php:480
 msgid "Package XML File Damaged."
-msgstr "Файлы пакетов"
+msgstr "XML-файл пакета поврежден."
 
 #: package_import.php:480
 msgid "The XML files appears to be invalid.  Please contact the package author"
@@ -17540,7 +17540,7 @@ msgstr "Файлы пакетов"
 
 #: package_import.php:578
 msgid "Filename"
-msgstr "Переименовать"
+msgstr "Имя файла"
 
 #: package_import.php:629 package_import.php:729 templates_import.php:367
 msgid "Differences"
@@ -17560,7 +17560,7 @@ msgstr "Название шаблона"
 
 #: package_import.php:669 templates_import.php:283
 msgid "Changes/Diffferences"
-msgstr "Изменить устройство"
+msgstr "Изменения/различия"
 
 #: package_import.php:694 templates_import.php:304
 msgid "Updated"
@@ -17940,7 +17940,7 @@ msgstr "Удаленная база данных Пользователь"
 
 #: pollers.php:180
 msgid "The number of times to attempt to retry to connect to the remote database."
-msgstr "Имя пользователя для подключения к удаленной базе данных."
+msgstr "Количество повторных попыток подключения к удаленной базе данных."
 
 #: pollers.php:188
 msgid "Remote Database SSL"
@@ -17991,7 +17991,7 @@ msgstr "Вы уже использовали это имя хоста базы �
 
 #: pollers.php:541
 msgid "Data Collector Statistics cleared."
-msgstr "Источники данных Статистика"
+msgstr "Статистика сборщика данных очищена."
 
 #: pollers.php:576
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Cacti Data Collector."
@@ -18052,9 +18052,9 @@ msgstr[2] "Нажмите 'Продолжить', чтобы очистить с
 #: pollers.php:617
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "Статус этого сборщика данных."
-msgstr[1] "Статус этого сборщика данных."
-msgstr[2] "Статус этого сборщика данных."
+msgstr[0] "Очистить статистику сборщика данных"
+msgstr[1] "Очистить статистику сборщиков данных"
+msgstr[2] "Очистить статистику сборщиков данных"
 
 #: pollers.php:669
 msgid "The Main Data Collector can not be deleted or disabled."
@@ -18199,7 +18199,7 @@ msgstr "Проверка RRDfile"
 
 #: rrdcheck.php:147
 msgid "RRDcheck Problems"
-msgstr "Шаблоны устройств не найдены"
+msgstr "Проблемы RRDcheck"
 
 #: rrdcheck.php:157
 msgid "Host Description"
@@ -18225,7 +18225,7 @@ msgstr "Шаблоны устройств не найдены"
 # based on translation from "cairo-dock-plug-ins"
 #: rrdcheck.php:239
 msgid "Age"
-msgstr "Авг"
+msgstr "Возраст"
 
 #: rrdcheck.php:243 rrdcheck.php:244 rrdcheck.php:245
 #, php-format
@@ -18593,9 +18593,9 @@ msgstr[2] "Удалить площадки"
 #: sites.php:445
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "Нажмите 'Продолжить', чтобы дублировать следующую площадку."
-msgstr[1] "Нажмите 'Продолжить', чтобы дублировать все следующие площадки."
-msgstr[2] "Нажмите 'Продолжить', чтобы дублировать все следующие площадки."
+msgstr[0] "Нажмите «Продолжить», чтобы дублировать следующую площадку."
+msgstr[1] "Нажмите «Продолжить», чтобы дублировать все следующие площадки."
+msgstr[2] "Нажмите «Продолжить», чтобы дублировать все следующие площадки."
 
 #: sites.php:447
 msgid "Site Name:"
@@ -18712,7 +18712,7 @@ msgstr "Импорт шаблона выполнен успешно."
 
 #: templates_import.php:147
 msgid "Error in Template"
-msgstr "Экспорт Шаблонов"
+msgstr "Ошибка в шаблоне"
 
 #: templates_import.php:147
 #, php-format
@@ -18730,11 +18730,11 @@ msgstr "Импорт файлов [ Если файлы отсутствуют, 
 
 #: templates_import.php:235
 msgid "File Name"
-msgstr "Имя поля"
+msgstr "Имя файла"
 
 #: templates_import.php:250
 msgid "Not Readable"
-msgstr "Не для записи"
+msgstr "Недоступно для чтения"
 
 #: templates_import.php:267
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
@@ -18746,7 +18746,7 @@ msgstr "Включить Зависимость"
 
 #: templates_import.php:308
 msgid "Damaged"
-msgstr "Источник данных, график"
+msgstr "Повреждено"
 
 #: templates_import.php:335
 #, php-format
@@ -18787,7 +18787,7 @@ msgstr "Отменить публикацию"
 #: tree.php:35
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "Заблокировано"
+msgstr "Разблокировать"
 
 #: tree.php:233 tree.php:634
 #: graphs.php:652 graphs.php:1025
@@ -18919,7 +18919,7 @@ msgstr "Закончить редактирование дерева"
 
 #: tree.php:1013
 msgid "Tree Items"
-msgstr "Деревянные изделия"
+msgstr "Элементы дерева"
 
 #: tree.php:1021
 msgid "Available Sites"
@@ -19059,11 +19059,11 @@ msgstr "Пакетная копия"
 
 #: user_admin.php:285
 msgid "You are not allowed to delete the current login account"
-msgstr "Вам не разрешается менять пароль."
+msgstr "Вам не разрешается удалять текущую учетную запись входа"
 
 #: user_admin.php:297
 msgid "You are not allowed to disable the current login account"
-msgstr "Вам не разрешается менять пароль."
+msgstr "Вам не разрешается отключать текущую учетную запись входа"
 
 #: user_admin.php:377
 msgid "Click 'Continue' to delete the selected User(s)."
@@ -19143,11 +19143,11 @@ msgstr "<b>Примечание:</b> Политика системного гр�
 
 #: user_admin.php:817 user_group_admin.php:865
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>Примечание:</b> Политика системного графика является 'Ограничительной', что означает, что Пользователь должен иметь доступ либо к графику, либо к шаблону устройства и графика, чтобы получить доступ к графику."
+msgstr "<b>Примечание:</b> Системная политика графиков — 'Устройство', что означает, что пользователь должен иметь доступ к графику или устройству для получения доступа к графику"
 
 #: user_admin.php:819 user_group_admin.php:867
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>Примечание:</b> Политика системных графиков является 'Разрешающей', что означает, что для получения доступа к графику Пользователь должен иметь доступ по крайней мере к одному из графиков, устройств или шаблонов графиков."
+msgstr "<b>Примечание:</b> Системная политика графиков — 'Шаблон графика', что означает, что пользователь должен иметь доступ к графику или шаблону графика для получения доступа к графику"
 
 #: user_admin.php:823 user_group_admin.php:875
 msgid "Default Graph Policy"
@@ -19333,7 +19333,7 @@ msgstr "Условия шаблонов"
 
 #: user_admin.php:1896 user_group_admin.php:1836
 msgid "Tree Perms"
-msgstr "Деревянные завивки"
+msgstr "Права на деревья"
 
 #: user_admin.php:1916
 msgid "User not found."
@@ -19549,7 +19549,7 @@ msgstr "Шифрование, поддерживаемое сервером. TLS
 
 #: user_domains.php:466
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Режим, в котором кактусы будут пытаться аутентифицироваться на сервере LDAP.<blockquote><i>Нет поиска</i> - Не происходит поиск по различающимся именам (DN), просто попытайтесь связать с предоставленным форматом Distinguished Name (DN).<br><br><i>Анонимный поиск</i> - Попытки найти имя пользователя в директории LDAP путем анонимной привязки для определения местоположения пользователя Distinguished Name (DN).<br><br><i>Specific Searching</i> - попытки поиска имени пользователя в директории LDAP через Specific Distished Name (DN) и Specific Distished Name (DN)."
+msgstr "Режим, в котором Cacti будет пытаться выполнить аутентификацию на сервере LDAP.<blockquote><i>Без поиска</i> — поиск отличительного имени (DN) не выполняется, просто предпринимается попытка привязки с использованием указанного формата отличительного имени (DN).<br><br><i>Анонимный поиск</i> — попытка поиска имени пользователя в каталоге LDAP посредством анонимной привязки для определения отличительного имени (DN) пользователя.<br><br><i>Заданный поиск</i> — попытка поиска имени пользователя в каталоге LDAP с использованием заданного отличительного имени (DN) и заданного пароля для привязки, чтобы определить отличительное имени (DN) пользователя."
 
 #: user_domains.php:516
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."
@@ -19815,7 +19815,7 @@ msgstr "Перестроение кэша поллера уже выполняе
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
-msgstr "Источники данных Статистика"
+msgstr "Статистика источников данных удалена."
 
 #: utilities.php:181
 msgid "Database"
@@ -19858,7 +19858,7 @@ msgstr "ERRROR: установленная версия RRDtool не превы�
 #: utilities.php:285
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "СКОРАЯ ПОМОЩЬ: RRDtool 1.2.x+ не поддерживает формат изображений GIF, но графики %d\" и/или шаблоны имеют набор GIF в качестве формата изображения."
+msgstr "ОШИБКА: RRDtool 1.2.x+ не поддерживает формат изображений GIF, но у %d\" графика(ов) и/или шаблонов в качестве формата изображения выбран GIF."
 
 #: utilities.php:298
 msgid "General Information"
@@ -19938,7 +19938,7 @@ msgstr "Текущее: %s, необходимое минимум: %s"
 
 #: utilities.php:499
 msgid "Minimum Connections:"
-msgstr "Тест подключения"
+msgstr "Минимум подключений:"
 
 #: utilities.php:501
 msgid "Assumes 100 spare connections for Web page users and other various connections."
@@ -19985,7 +19985,7 @@ msgstr "Макс Поллер Память разрешена:"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Уменьшите память MySQL/MariaDB до менее 80% of системной памяти.  Сохраните дополнительную кэш-память для файлов RRD, если база данных находится в той же системе, что и файлы RRD.  См. Основные и Клиентские итоги ниже для объяснения метода расчета."
+msgstr "Уменьшите объем памяти MySQL/MariaDB до значения менее 80% от системной памяти.  Сохраните дополнительную кэш-память для файлов RRD, если база данных находится в той же системе, что и файлы RRD.  См. «Основные и клиентские итоги» ниже для объяснения метода расчета."
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"
@@ -20197,7 +20197,7 @@ msgstr "Индекс"
 
 #: utilities.php:2076
 msgid "Poller Cache Items"
-msgstr "Элементы кэша опылителя"
+msgstr "Элементы кэша опросчика"
 
 #: utilities.php:2151
 msgid "Script"
@@ -20293,7 +20293,7 @@ msgstr "Источники данных Статистика"
 
 #: utilities.php:2398
 msgid "Purge Data Source Statistics"
-msgstr "Источники данных Статистика"
+msgstr "Очистить статистику источников данных"
 
 #: utilities.php:2402
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
@@ -20377,7 +20377,7 @@ msgstr "Количество Конкурирующих процессов"
 
 #: utilities.php:2758
 msgid "Total Poller Items:"
-msgstr "Элементы кэша опылителя"
+msgstr "Всего элементов опросчика:"
 
 #: utilities.php:2764
 msgid "Total Data Sources:"
@@ -20446,7 +20446,7 @@ msgstr "Последнее время старта:"
 
 #: utilities.php:2853
 msgid "Last End Time:"
-msgstr "Последнее время старта:"
+msgstr "Последнее время завершения:"
 
 #: utilities.php:2853
 msgid "Never Run"
