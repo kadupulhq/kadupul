@@ -23,8 +23,9 @@ RUN composer install \
 # Browser dependencies are built once; Node is not shipped in the runtime.
 FROM ghcr.io/kadupulhq/kadupul-mirrors/node:26.10.0-bookworm-slim@sha256:3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3 AS assets
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json tsconfig.json ./
 COPY tools/dependencies ./tools/dependencies
+COPY frontend ./frontend
 COPY include/js/jquery.tablesorter.pager.source.js ./include/js/jquery.tablesorter.pager.source.js
 COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs

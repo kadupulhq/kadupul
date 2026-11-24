@@ -47,7 +47,7 @@ def verify_permission_denied(harness, check, prefix=''):
               'permission denied renders in place: ' + prefix + path)
         check(hrefs(body, 'Return') == [prefix + '/graph_view.php?action=tree&amp;node=3'], 'local Referer becomes the Return link: ' + prefix + path)
         check(hrefs(body, 'Login Again') == [prefix + '/logout.php'], 'Login Again keeps the installation path: ' + prefix + path)
-        check(re.search(re.escape(prefix) + r'/(?:public/assets/)?include/js/permission-denied', body) is not None and '<script>' not in body, 'Return behavior loads from an external script: ' + prefix + path)
+        check(re.search(re.escape(prefix) + r'/(?:public/assets/)?include/js/app/permission-denied', body) is not None and '<script>' not in body, 'Return behavior loads from an external script: ' + prefix + path)
         check('no-store' in headers.get('Cache-Control', '') and "'unsafe-inline'" not in headers.get('Content-Security-Policy', ''),
               'permission denied is private and under the strict policy: ' + prefix + path)
     if prefix:
