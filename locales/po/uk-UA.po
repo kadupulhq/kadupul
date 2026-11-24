@@ -936,7 +936,7 @@ msgstr "Паролі збігаються"
 
 #: auth_login.php:88
 msgid "Cacti no longer supports No Authentication mode. Please contact your System Administrator."
-msgstr "Доступ Заборонено, будь ласка зверніться до вашого Адміністратора Cacti."
+msgstr "Cacti більше не підтримує режим без автентифікації. Будь ласка, зверніться до системного адміністратора."
 
 #: auth_login.php:123
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
@@ -3589,9 +3589,9 @@ msgstr[2] "Видалити Запити Даних"
 #: data_queries.php:434
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "Клацніть 'Продовжити' для видалення наступного Запиту Даних."
-msgstr[1] "Клацніть 'Продовжити' для видалення наступних Запитів Даних."
-msgstr[2] "Клацніть 'Продовжити' для видалення наступних Запитів Даних."
+msgstr[0] "Натисніть 'Продовжити', щоб дублювати наступний запит даних."
+msgstr[1] "Натисніть 'Продовжити', щоб дублювати наступні запити даних."
+msgstr[2] "Натисніть 'Продовжити', щоб дублювати наступні запити даних."
 
 #: data_queries.php:436 lib/html_reports.php:591
 msgid "Name Format:"
@@ -3600,9 +3600,9 @@ msgstr "Формат назви:"
 #: data_queries.php:444
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "Видалити Запит Даних"
-msgstr[1] "Видалити Запити Даних"
-msgstr[2] "Видалити Запити Даних"
+msgstr[0] "Дублювати запит даних"
+msgstr[1] "Дублювати запити даних"
+msgstr[2] "Дублювати запити даних"
 
 #: data_queries.php:584
 msgid "The item does not belong to this Data Query."
@@ -4121,9 +4121,9 @@ msgstr[2] "Увімкнути Джерела Даних"
 #: data_sources.php:575
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
-msgstr[0] "Клацніть 'Продовжити', щоб видалити наступне Джерело Даних."
-msgstr[1] "Клацніть 'Продовжити', щоб видалити всі наступні Джерела Даних."
-msgstr[2] "Клацніть 'Продовжити', щоб видалити всі наступні Джерела Даних."
+msgstr[0] "Натисніть 'Продовжити', щоб вимкнути наступне джерело даних."
+msgstr[1] "Натисніть 'Продовжити', щоб вимкнути всі наступні джерела даних."
+msgstr[2] "Натисніть 'Продовжити', щоб вимкнути всі наступні джерела даних."
 
 #: data_sources.php:580
 msgid "Disable Data Source"
@@ -5449,7 +5449,7 @@ msgstr "Синхронізувати з Шаблоном Пристрою"
 
 #: host.php:49
 msgid "Place Device on Report"
-msgstr "Розмістити Пристрій(ї) в Дереві"
+msgstr "Розмістити пристрій у звіті"
 
 #: host.php:141
 msgid "Data Query Re-indexed."
@@ -5567,7 +5567,7 @@ msgstr "Запустити Автоматизацію на Пристроях"
 
 #: host.php:602
 msgid "Add Devices to Report"
-msgstr "Додати Графіки до Звіту"
+msgstr "Додати пристрої до звіту"
 
 #: host.php:604
 msgid "You currently have no Reports defined."
@@ -5745,7 +5745,7 @@ msgstr "SNMP GetNext"
 
 #: host.php:1328
 msgid "Delete Item from Device"
-msgstr "Видалити Пристрій"
+msgstr "Видалити елемент із пристрою"
 
 #: host.php:1547 host.php:1670 host.php:1856
 msgid "Undefined"
@@ -6943,7 +6943,7 @@ msgstr "Шаблони Імпорту"
 
 #: include/global_arrays.php:1044 include/global_arrays.php:2684
 msgid "Import Packages"
-msgstr "Шаблони Імпорту"
+msgstr "Імпорт пакетів"
 
 #: include/global_arrays.php:1045 include/global_arrays.php:1257
 #: include/global_arrays.php:2666 templates_export.php:159
@@ -7005,7 +7005,7 @@ msgstr "Точки доступу, контролери"
 
 #: include/global_arrays.php:1096
 msgid "Application Related"
-msgstr "Застосувати Правила Автоматизації"
+msgstr "Пов'язане із застосунком"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
@@ -7021,7 +7021,7 @@ msgstr "Пов'язано з інфраструктурою приміщень"
 
 #: include/global_arrays.php:1100
 msgid "Generic Device"
-msgstr "Синхронізація Пристроїв"
+msgstr "Загальний пристрій"
 
 #: include/global_arrays.php:1101
 msgid "HPC/Grid Computing"
@@ -7049,11 +7049,11 @@ msgstr "Балансувальник навантаження"
 
 #: include/global_arrays.php:1107
 msgid "Network Switch"
-msgstr "Фільтри Мережі"
+msgstr "Мережевий комутатор"
 
 #: include/global_arrays.php:1108
 msgid "Network Router"
-msgstr "Фільтри Мережі"
+msgstr "Мережевий маршрутизатор"
 
 #: include/global_arrays.php:1109
 msgid "NAS/SAN Related"
@@ -7061,7 +7061,7 @@ msgstr "Пов'язано з NAS/SAN"
 
 #: include/global_arrays.php:1110
 msgid "Network Firewalls"
-msgstr "Фільтри Мережі"
+msgstr "Мережеві брандмауери"
 
 #: include/global_arrays.php:1111
 msgid "Power Related PDUs/STS, etc."
@@ -7069,7 +7069,7 @@ msgstr "Пов'язано з живленням (PDU/STS тощо)"
 
 #: include/global_arrays.php:1112
 msgid "Printer Related"
-msgstr "Шаблон Даних"
+msgstr "Пов'язане з принтерами"
 
 #: include/global_arrays.php:1113
 msgid "Storage Related"
@@ -7077,7 +7077,7 @@ msgstr "Пов'язано зі сховищами"
 
 #: include/global_arrays.php:1114
 msgid "Telco Related"
-msgstr "Виберіть Шаблон"
+msgstr "Пов'язано з телекомунікаціями"
 
 #: include/global_arrays.php:1115
 msgid "Web Server Related"
@@ -8113,7 +8113,7 @@ msgstr "(Дія)"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "Розробники Cacti"
+msgstr "Довідка Cacti"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -9136,7 +9136,7 @@ msgstr "Зрозуміла назва для цього шаблону хост�
 
 #: include/global_form.php:1357
 msgid "A suitable Class for the Device Template."
-msgstr "Скопіювати Шаблони Пристроїв"
+msgstr "Відповідний клас для шаблону пристрою."
 
 #: include/global_form.php:1377
 msgid "A name for this data query."
@@ -9995,7 +9995,7 @@ msgstr "Установлена версія RRDtool."
 
 #: include/global_settings.php:421
 msgid "Enable Gradient Support"
-msgstr "Увімкнути Джерело Даних"
+msgstr "Увімкнути підтримку градієнтів"
 
 #: include/global_settings.php:422
 msgid "Enabled Gradient Support for AREA and STACK charts."
@@ -10219,7 +10219,7 @@ msgstr "Типовий формат зображення для всіх нов�
 
 #: include/global_settings.php:605
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "Чи це Профіль за замовчуванням для всіх нових Шаблонів Даних?"
+msgstr "Висота графіка за замовчуванням для всіх нових шаблонів графіків."
 
 #: include/global_settings.php:613
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -10630,7 +10630,7 @@ msgstr "Синтаксис RRDtool Графіка"
 
 #: include/global_settings.php:1050
 msgid "Custom Watermark"
-msgstr "Користувацькі Дані"
+msgstr "Власний водяний знак"
 
 #: include/global_settings.php:1051
 msgid "Text placed at the bottom center of every Graph."
@@ -10638,7 +10638,7 @@ msgstr "Текст, що розміщується внизу по центру �
 
 #: include/global_settings.php:1058
 msgid "Custom Date Format"
-msgstr "Користувацькі Дані"
+msgstr "Власний формат дати"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
@@ -10744,7 +10744,7 @@ msgstr "Шрифт для одиниць виміру графіка. Введі
 
 #: include/global_settings.php:1149
 msgid "Business Hours Settings"
-msgstr "Налаштування користувача"
+msgstr "Налаштування робочих годин"
 
 #: include/global_settings.php:1154
 msgid "Start of Business Day"
@@ -10944,7 +10944,7 @@ msgstr "Періодична переіндексація всіх пристр�
 
 #: include/global_settings.php:1356
 msgid "Re-Index All Device Schedule"
-msgstr "Переіндексувати Пристрій"
+msgstr "Розклад переіндексації всіх пристроїв"
 
 #: include/global_settings.php:1357
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
@@ -10956,7 +10956,7 @@ msgstr "Щотижня в неділю"
 
 #: include/global_settings.php:1364
 msgid "Monthly on Sunady"
-msgstr "Щомісяця вдень"
+msgstr "Щомісяця в неділю"
 
 #: include/global_settings.php:1368
 msgid "Background Timeout and Concurrent Process Settings"
@@ -10987,7 +10987,7 @@ msgstr "Максимальний час виконання скрипту ста
 
 #: include/global_settings.php:1401
 msgid "RRDChecker Timeout"
-msgstr "TimeStamp Першої Перевірки"
+msgstr "Тайм-аут RRDChecker"
 
 #: include/global_settings.php:1402
 msgid "The maximum amount of time Cacti's RRDfile check script can run without generating a timeout error and being killed."
@@ -11154,7 +11154,7 @@ msgstr "Ім'я користувача, якого Cacti використову�
 
 #: include/global_settings.php:1557
 msgid "Basic Authentication Settings"
-msgstr "Налаштування Сповіщень"
+msgstr "Налаштування базової автентифікації"
 
 #: include/global_settings.php:1562
 msgid "Basic Auth Login Failure Message"
@@ -11855,11 +11855,11 @@ msgstr "Максимальний обсяг пам'яті для опитува�
 
 #: include/global_settings.php:2259
 msgid "RRDfile Check"
-msgstr "Видалити Перевірку"
+msgstr "Перевірка RRDfile"
 
 #: include/global_settings.php:2264
 msgid "Enable RRDfile Check"
-msgstr "Увімкнути Відлагодження Пристрою"
+msgstr "Увімкнути перевірку RRDfile"
 
 #: include/global_settings.php:2265
 msgid "Should RRDfile check be enabled for this Cacti system?"
@@ -11919,7 +11919,7 @@ msgstr "Пристрій"
 
 #: include/global_settings.php:2336
 msgid "Device ID/Data Query ID"
-msgstr "Видалити Запит Даних"
+msgstr "ID пристрою/ID запиту даних"
 
 #: include/global_settings.php:2337
 msgid "Device Hash/Device ID"
@@ -12426,7 +12426,7 @@ msgstr "Нове вікно"
 
 #: include/global_settings.php:2912
 msgid "System Setting"
-msgstr "Налаштування користувача"
+msgstr "Системне налаштування"
 
 #: include/global_settings.php:2920
 msgid "1 Week"
@@ -12991,7 +12991,7 @@ msgstr "Файл"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "Всі Рядки"
+msgstr "Перші рядки"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13023,7 +13023,7 @@ msgstr "AutoM8"
 
 #: lib/clog_webapi.php:594
 msgid "Non Stats"
-msgstr "В стані"
+msgstr "Без статистики"
 
 #: lib/clog_webapi.php:595
 msgid "Boost"
@@ -13039,7 +13039,7 @@ msgstr "Повторні кешування"
 
 #: lib/clog_webapi.php:601
 msgid "Threshold"
-msgstr "Потоки"
+msgstr "Поріг"
 
 #: lib/clog_webapi.php:615 tree.php:1002
 msgid "Display"
@@ -13063,7 +13063,7 @@ msgstr "Паролі не збігаються"
 
 #: lib/clog_webapi.php:804
 msgid "System Device"
-msgstr "Синхронізація Пристроїв"
+msgstr "Системний пристрій"
 
 #: lib/data_query.php:89 lib/data_query.php:275
 msgid "Automation Execution for Data Query complete"
@@ -13745,7 +13745,7 @@ msgstr "Пошкоджений графік"
 
 #: lib/html.php:76
 msgid "Remote Server"
-msgstr "Видалити Запит"
+msgstr "Віддалений сервер"
 
 #: lib/html.php:138
 msgid "Get Page Help"
@@ -14247,11 +14247,11 @@ msgstr "У цій формі є незбережені зміни. Якщо на
 
 #: lib/html_form_template.php:161
 msgid "Invalid Graph Template Input"
-msgstr "Неприпустимий вхідний параметр шаблону графіка"
+msgstr "Неприпустимі вхідні дані шаблону графіка"
 
 #: lib/html_form_template.php:162
 msgid "The graph template cannot be rendered"
-msgstr "Неможливо візуалізувати шаблон графіка"
+msgstr "Неможливо відобразити шаблон графіка"
 
 #: lib/html_form_template.php:163
 msgid "A Graph Item Input contains an invalid Field Type."
@@ -14913,7 +14913,7 @@ msgstr "Фільтри Cacti RLIKE не підтримують альтерна�
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
-msgstr "Завантажити"
+msgstr "Недоступний (Thold)"
 
 #: lib/html_utility.php:1467 lib/installer.php:2021 lib/installer.php:3902
 msgid "Error"
@@ -16511,7 +16511,7 @@ msgstr "Невідомі точки даних CDP (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Кольорів Не Знайдено"
+msgstr "Знайдено помилки"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16598,7 +16598,7 @@ msgstr "Перед збором даних черга poller_output повинн
 
 #: lib/rrd_maintenance.php:286
 msgid "unavailable"
-msgstr "Операцію не вдалося підтвердити. Перегляньте історію змін перед повторною спробою."
+msgstr "недоступно"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
@@ -17455,7 +17455,7 @@ msgstr "Помилка імпорту пакета %s"
 
 #: package_import.php:303
 msgid "Error: Invalid file path."
-msgstr "Помилка: неприпустимий шлях до файлу."
+msgstr "Помилка: неправильний шлях до файлу."
 
 #: package_import.php:388 package_import.php:394 package_import.php:480
 #: package_import.php:483
@@ -17497,7 +17497,7 @@ msgstr "XML-файли для пакета не існують"
 
 #: package_import.php:527
 msgid "Packages Details"
-msgstr "Подробиці Правила."
+msgstr "Деталі пакетів"
 
 #: package_import.php:540
 msgid "Device class"
@@ -17537,7 +17537,7 @@ msgstr "Заголовок Шаблону"
 
 #: package_import.php:669 templates_import.php:283
 msgid "Changes/Diffferences"
-msgstr "Змінити Пристрій"
+msgstr "Зміни/Відмінності"
 
 #: package_import.php:694 templates_import.php:304
 msgid "Updated"
@@ -18196,7 +18196,7 @@ msgstr "Видалено"
 
 #: rrdcheck.php:203
 msgid "No RRDcheck Problems Found"
-msgstr "Не знайдено Профілів Джерел Даних"
+msgstr "Проблем RRDcheck не знайдено"
 
 #: rrdcheck.php:239
 msgid "Age"
@@ -18685,7 +18685,7 @@ msgstr "Імпорт шаблону виконано успішно."
 
 #: templates_import.php:147
 msgid "Error in Template"
-msgstr "Шаблони Експорту"
+msgstr "Помилка в шаблоні"
 
 #: templates_import.php:147
 #, php-format
@@ -20338,7 +20338,7 @@ msgstr "Запущені процеси:"
 
 #: utilities.php:2758
 msgid "Total Poller Items:"
-msgstr "Елемент Кольору"
+msgstr "Усього елементів опитувача:"
 
 #: utilities.php:2764
 msgid "Total Data Sources:"
@@ -20346,7 +20346,7 @@ msgstr "Усього джерел даних:"
 
 #: utilities.php:2768
 msgid "Remaining Data Sources:"
-msgstr "Має Джерела Даних"
+msgstr "Залишилося джерел даних:"
 
 #: utilities.php:2768
 msgid "TBD"
@@ -20450,7 +20450,7 @@ msgstr "Макс. допустима пам'ять опитувача:"
 
 #: utilities.php:2890
 msgid "Detailed Runtime Statistics"
-msgstr "Очистити Статистику"
+msgstr "Детальна статистика виконання"
 
 #: utilities.php:2907
 #, php-format
