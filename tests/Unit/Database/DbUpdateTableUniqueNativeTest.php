@@ -7,41 +7,62 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+require_once dirname(__DIR__, 2) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+// lib/functions.php declares functions that other unit tests stub, so each
+// rebuild runs in tests/Fixtures/db-update-table-unique-native.php, a process
+// of its own, and reports what it observed.
 final class DbUpdateTableUniqueNativeTest extends TestCase
 {
+    use PestCodeCoverageCompatibility;
+
     #[DataProvider('rebuilds')]
     public function testRebuildPreservesUniqueness(string $before, array $after, bool $success): void
     {
-        $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
-        if (!$dsn) {
+        if (!getenv('KADUPUL_TEST_MYSQL_DSN')) {
             self::markTestSkipped('Set KADUPUL_TEST_MYSQL_DSN to a disposable database.');
         }
         $root = dirname(__DIR__, 3);
-        require_once $root . '/lib/database.php';
-        require_once $root . '/lib/functions.php';
-        $GLOBALS['config'] = [];
-        $GLOBALS['database_total_queries'] = 0;
-        $db = new PDO($dsn, getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT]);
-        $table = 'unique_rebuild_' . bin2hex(random_bytes(8));
-        self::assertNotFalse($db->exec("CREATE TABLE `$table` (a varchar(20) NOT NULL, b int NOT NULL, UNIQUE KEY pair_key ($before)) ENGINE=InnoDB"));
+        $directory = sys_get_temp_dir() . '/unique-rebuild-' . bin2hex(random_bytes(8));
+        mkdir($directory, 0700);
+        $coverage = $this->getTestResultObject()->getCodeCoverage();
         try {
-            self::assertNotFalse($db->exec("INSERT INTO `$table` VALUES ('same',1),('same',2)"));
-            $definition = ['type' => 'InnoDB', 'columns' => [
-                ['name' => 'a', 'type' => 'varchar(20)', 'NULL' => false],
-                ['name' => 'b', 'type' => 'int', 'NULL' => false],
-            ], 'keys' => [['name' => 'pair_key', 'columns' => $after]]];
-            self::assertSame($success, db_update_table($table, $definition, false, false, $db));
-            $indexes = $db->query("SHOW INDEX FROM `$table`")->fetchAll(PDO::FETCH_ASSOC);
-            self::assertSame([0], array_values(array_unique(array_map(static fn(array $row): int => (int) $row['Non_unique'], $indexes))));
-            self::assertSame($success ? $after : ['a', 'b'], array_map(static fn(array $row): string => $row['Column_name'], $indexes));
-            self::assertFalse($db->exec("INSERT INTO `$table` VALUES ('same',1)"));
-            self::assertSame('23000', $db->errorCode());
-            self::assertSame(2, (int) $db->query("SELECT COUNT(*) FROM `$table`")->fetchColumn());
+            $command = [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'auto_append_file=', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~',
+                $root . '/tests/Fixtures/db-update-table-unique-native.php', $before, json_encode($after, JSON_THROW_ON_ERROR)];
+            if ($coverage !== null) {
+                $command[] = $directory;
+            }
+            $process = proc_open($command, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+            self::assertIsResource($process);
+            $output = stream_get_contents($pipes[1]);
+            $errors = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            self::assertSame(0, proc_close($process), $errors . $output);
+            $seen = json_decode((string) $output, true, 8, JSON_THROW_ON_ERROR);
+
+            self::assertTrue($seen['created']);
+            self::assertTrue($seen['seeded']);
+            self::assertSame($success, $seen['updated']);
+            self::assertSame([0], $seen['non_unique']);
+            self::assertSame($success ? $after : ['a', 'b'], $seen['columns']);
+            self::assertFalse($seen['duplicate']);
+            self::assertSame('23000', $seen['error']);
+            self::assertSame(2, $seen['rows']);
+            self::assertTrue($seen['dropped']);
+            if ($coverage !== null) {
+                $reports = glob($directory . '/*.coverage');
+                self::assertCount(1, $reports);
+                $coverage->merge(unserialize((string) file_get_contents($reports[0])));
+            }
         } finally {
-            self::assertNotFalse($db->exec("DROP TABLE `$table`"));
+            foreach (glob($directory . '/*') as $file) {
+                unlink($file);
+            }
+            rmdir($directory);
         }
     }
 
