@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Platform\Infrastructure\Symfony;
 
+use Kadupul\Platform\Application\Locale\KnownLocales;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -88,11 +89,19 @@ final class ConsoleTranslations
             return $language . '_' . $region;
         }
         // Like legacy repair_locale(), a bare language or another region of a
-        // language with one catalog uses that catalog. A bare pt or zh picks
-        // pt-PT or zh-CN, as the legacy locale list does; other regions of
-        // those languages are unsupported rather than guessed.
-        if (count($shipped) === 1 || $region === '' && $shipped !== []) {
-            $chosen = in_array($language . '-' . strtoupper($language), $shipped, true) ? $language . '-' . strtoupper($language) : $shipped[0];
+        // language with one catalog uses that catalog. A bare multi-region
+        // language (ar, es, pt, zh) picks the first shipped locale in
+        // KnownLocales::ALL order, as the legacy locale list does; other
+        // regions of those languages are unsupported rather than guessed.
+        if (count($shipped) === 1 || ($region === '' && $shipped !== [])) {
+            $chosen = null;
+            foreach (array_keys(KnownLocales::ALL) as $known) {
+                if (in_array($known, $shipped, true)) {
+                    $chosen = $known;
+                    break;
+                }
+            }
+            $chosen ??= in_array($language . '-' . strtoupper($language), $shipped, true) ? $language . '-' . strtoupper($language) : $shipped[0];
 
             return str_replace('-', '_', $chosen);
         }

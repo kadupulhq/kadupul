@@ -135,7 +135,7 @@
 "Post-installation checks": "इंस्टॉलेशन के बाद की जांचें"
 "Verified checks cover only the evidence shown. Unassessed checks still require operator verification.": "सत्यापित जांचें केवल दिखाए गए साक्ष्य को कवर करती हैं। अमूल्यांकित जांचों के लिए अभी भी ऑपरेटर सत्यापन आवश्यक है।"
 "Operational checks still require operator verification.": "परिचालन जांचों के लिए अभी भी ऑपरेटर सत्यापन आवश्यक है।"
-"Status": "ऑर्डर स्थिति"
+"Status": "स्थिति"
 "verified": "सत्यापित"
 "action_required": "कार्रवाई आवश्यक"
 "not_assessed": "मूल्यांकन नहीं किया गया"

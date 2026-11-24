@@ -69,7 +69,7 @@ final class GettextCatalogBridgeTest extends TestCase
         $files = array_map(static fn(string $path): string => basename($path, '.po'), glob(self::ROOT . '/locales/po/*.po') ?: []);
         sort($files);
         self::assertSame($locales, $files);
-        self::assertCount(43, $locales);
+        self::assertCount(49, $locales);
         $keys = [];
         foreach (glob(self::ROOT . '/config/translations/*.en.yaml') ?: [] as $source) {
             $keys = array_merge($keys, array_map('strval', array_keys(Yaml::parseFile($source))));
@@ -260,8 +260,8 @@ final class GettextCatalogBridgeTest extends TestCase
         }
         // First n where they disagree: he-IL has four gettext forms (0 is form 3)
         // and two in Symfony; hi-IN's header puts the plural in form 0; lv-LV treats 0, 10
-        // and 11-19 differently; tr-TR has one Symfony form and two gettext forms.
-        self::assertSame(['he-IL' => 0, 'hi-IN' => 0, 'lv-LV' => 10, 'tr-TR' => 0], $differing);
+        // and 11-19 differently; rw-RW and tr-TR have one Symfony form and two gettext forms.
+        self::assertSame(['he-IL' => 0, 'hi-IN' => 0, 'lv-LV' => 10, 'rw-RW' => 0, 'tr-TR' => 0], $differing);
     }
 
     public function testRussianAndArabicPluralFormsMatchGettextThroughSymfony(): void
@@ -309,6 +309,7 @@ final class GettextCatalogBridgeTest extends TestCase
         yield 'legacy French' => ['fr_FR', 'fr'];
         yield 'African French' => ['fr-SN', 'fr_SN'];
         yield 'Canadian French' => ['fr-CA', 'fr_CA'];
+        yield 'Moroccan French' => ['fr-MA', 'fr_MA'];
         yield 'French region' => ['fr-BE', 'fr'];
         yield 'Mexican Spanish' => ['es-MX', 'es_MX'];
         yield 'unshipped Spanish region' => ['es-AR', null];
@@ -326,6 +327,12 @@ final class GettextCatalogBridgeTest extends TestCase
         yield 'Japanese' => ['ja', 'ja_JP'];
         yield 'Russian' => ['ru-RU', 'ru_RU'];
         yield 'Arabic' => ['ar', 'ar_SA'];
+        yield 'Egyptian Arabic' => ['ar-EG', 'ar_EG'];
+        yield 'Moroccan Arabic' => ['ar-MA', 'ar_MA'];
+        yield 'unshipped Arabic region' => ['ar-AE', null];
+        yield 'Malagasy' => ['mg-MG', 'mg_MG'];
+        yield 'Kinyarwanda' => ['rw-RW', 'rw_RW'];
+        yield 'Somali' => ['so-SO', 'so_SO'];
         yield 'unshipped language' => ['fi-FI', null];
         yield 'legacy-listed unshipped language' => ['sr-RS', null];
         yield 'script subtag' => ['zh-Hant-TW', null];

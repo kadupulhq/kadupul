@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 08:58-0800\n"
+"POT-Creation-Date: 2026-11-24 14:53-0800\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -706,7 +706,7 @@ msgstr "Введіть ваше Ім'я користувача та пароль
 
 #: auth_login.php
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
-msgstr "Доступ Заборонено, будь ласка зверніться до вашого Адміністратора Kadupul."
+msgstr "Kadupul більше не підтримує режим без автентифікації. Будь ласка, зверніться до системного адміністратора."
 
 #: auth_login.php
 msgid "Keep me signed in"
@@ -2109,9 +2109,9 @@ msgstr "Клацніть 'Продовжити' для видалення нас
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "Клацніть 'Продовжити' для видалення наступного Запиту Даних."
-msgstr[1] "Клацніть 'Продовжити' для видалення наступних Запитів Даних."
-msgstr[2] "Клацніть 'Продовжити' для видалення наступних Запитів Даних."
+msgstr[0] "Натисніть 'Продовжити', щоб дублювати наступний запит даних."
+msgstr[1] "Натисніть 'Продовжити', щоб дублювати наступні запити даних."
+msgstr[2] "Натисніть 'Продовжити', щоб дублювати наступні запити даних."
 
 #: data_queries.php
 msgid "Could not locate XML file."
@@ -2157,9 +2157,9 @@ msgstr[2] "Видалити Запити Даних"
 #: data_queries.php
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "Видалити Запит Даних"
-msgstr[1] "Видалити Запити Даних"
-msgstr[2] "Видалити Запити Даних"
+msgstr[0] "Дублювати запит даних"
+msgstr[1] "Дублювати запити даних"
+msgstr[2] "Дублювати запити даних"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
@@ -2334,9 +2334,9 @@ msgstr[2] "Клацніть 'Продовжити', щоб видалити на
 #: data_sources.php
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
-msgstr[0] "Клацніть 'Продовжити', щоб видалити наступне Джерело Даних."
-msgstr[1] "Клацніть 'Продовжити', щоб видалити всі наступні Джерела Даних."
-msgstr[2] "Клацніть 'Продовжити', щоб видалити всі наступні Джерела Даних."
+msgstr[0] "Натисніть 'Продовжити', щоб вимкнути наступне джерело даних."
+msgstr[1] "Натисніть 'Продовжити', щоб вимкнути всі наступні джерела даних."
+msgstr[2] "Натисніть 'Продовжити', щоб вимкнути всі наступні джерела даних."
 
 #: data_sources.php
 msgid "Click 'Continue' to enable the following Data Source."
@@ -4071,7 +4071,7 @@ msgstr "Інший CDEF"
 
 #: include/global_arrays.php
 msgid "Application Related"
-msgstr "Застосувати Правила Автоматизації"
+msgstr "Пов'язане із застосунком"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -4594,7 +4594,7 @@ msgstr "Загальне адміністрування"
 
 #: include/global_arrays.php
 msgid "Generic Device"
-msgstr "Синхронізація Пристроїв"
+msgstr "Загальний пристрій"
 
 #: include/global_arrays.php
 msgid "German"
@@ -4722,7 +4722,7 @@ msgstr "Якщо ви примусово вимагаєте зміну паро�
 
 #: include/global_arrays.php
 msgid "Import Packages"
-msgstr "Шаблони Імпорту"
+msgstr "Імпорт пакетів"
 
 #: include/global_arrays.php
 msgid "Import Templates"
@@ -4813,7 +4813,7 @@ msgstr "За шириною"
 
 #: include/global_arrays.php
 msgid "Kadupul Help"
-msgstr "Розробники Kadupul"
+msgstr "Довідка Kadupul"
 
 #: include/global_arrays.php
 msgid "Kadupul Related"
@@ -5053,15 +5053,15 @@ msgstr "Природне впорядкування"
 
 #: include/global_arrays.php
 msgid "Network Firewalls"
-msgstr "Фільтри Мережі"
+msgstr "Мережеві брандмауери"
 
 #: include/global_arrays.php
 msgid "Network Router"
-msgstr "Фільтри Мережі"
+msgstr "Мережевий маршрутизатор"
 
 #: include/global_arrays.php
 msgid "Network Switch"
-msgstr "Фільтри Мережі"
+msgstr "Мережевий комутатор"
 
 #: include/global_arrays.php lib/html_form_template.php
 msgid "New Graphs"
@@ -5220,7 +5220,7 @@ msgstr "Друкувати лише підсумкові елементи лег
 
 #: include/global_arrays.php
 msgid "Printer Related"
-msgstr "Шаблон Даних"
+msgstr "Пов'язане з принтерами"
 
 #: include/global_arrays.php
 msgid "RRD Check"
@@ -5527,7 +5527,7 @@ msgstr "Технічна підтримка"
 
 #: include/global_arrays.php
 msgid "Telco Related"
-msgstr "Виберіть Шаблон"
+msgstr "Пов'язано з телекомунікаціями"
 
 #: include/global_arrays.php
 msgid "Template Editor"
@@ -6099,7 +6099,7 @@ msgstr "Друга вісь буде накреслена праворуч ві�
 
 #: include/global_form.php
 msgid "A suitable Class for the Device Template."
-msgstr "Скопіювати Шаблони Пристроїв"
+msgstr "Відповідний клас для шаблону пристрою."
 
 #: include/global_form.php
 msgid "A useful name for this CDEF."
@@ -7769,7 +7769,7 @@ msgstr "Файл відповідності Basic Auth"
 
 #: include/global_settings.php
 msgid "Basic Authentication Settings"
-msgstr "Налаштування Сповіщень"
+msgstr "Налаштування базової автентифікації"
 
 #: include/global_settings.php
 msgid "Batch Spike Kill Settings"
@@ -7793,7 +7793,7 @@ msgstr "Режим обробки Boost"
 
 #: include/global_settings.php
 msgid "Business Hours Settings"
-msgstr "Налаштування користувача"
+msgstr "Налаштування робочих годин"
 
 #: include/global_settings.php
 msgid "By Template/Data Query"
@@ -7877,11 +7877,11 @@ msgstr "Інтервал Cron/демона"
 
 #: include/global_settings.php
 msgid "Custom Date Format"
-msgstr "Користувацькі Дані"
+msgstr "Власний формат дати"
 
 #: include/global_settings.php
 msgid "Custom Watermark"
-msgstr "Користувацькі Дані"
+msgstr "Власний водяний знак"
 
 #: include/global_settings.php
 msgid "DNS Options"
@@ -8093,7 +8093,7 @@ msgstr "Пристрій"
 
 #: include/global_settings.php
 msgid "Device ID/Data Query ID"
-msgstr "Видалити Запит Даних"
+msgstr "ID пристрою/ID запиту даних"
 
 #: include/global_settings.php
 msgid "Device Threads"
@@ -8169,7 +8169,7 @@ msgstr "Увімкнути перетягування (Drag-N-Drop)"
 
 #: include/global_settings.php
 msgid "Enable Gradient Support"
-msgstr "Увімкнути Джерело Даних"
+msgstr "Увімкнути підтримку градієнтів"
 
 #: include/global_settings.php
 msgid "Enable Horizontal Scrolling"
@@ -8197,7 +8197,7 @@ msgstr "Увімкнути оновлення RRD за вимогою"
 
 #: include/global_settings.php
 msgid "Enable RRDfile Check"
-msgstr "Увімкнути Відлагодження Пристрою"
+msgstr "Увімкнути перевірку RRDfile"
 
 #: include/global_settings.php
 msgid "Enable Real-time Graphing"
@@ -8793,7 +8793,7 @@ msgstr "Режим, у якому Cacti намагатиметься автен�
 
 #: include/global_settings.php
 msgid "Monthly on Sunady"
-msgstr "Щомісяця вдень"
+msgstr "Щомісяця в неділю"
 
 #: include/global_settings.php
 msgid "My Browsers Timezone"
@@ -9013,7 +9013,7 @@ msgstr "Проксі-сервер"
 
 #: include/global_settings.php
 msgid "RRDChecker Timeout"
-msgstr "TimeStamp Першої Перевірки"
+msgstr "Тайм-аут RRDChecker"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean"
@@ -9029,7 +9029,7 @@ msgstr "Каталог резервних копій RRD-файлів"
 
 #: include/global_settings.php
 msgid "RRDfile Check"
-msgstr "Видалити Перевірку"
+msgstr "Перевірка RRDfile"
 
 #: include/global_settings.php
 msgid "RRDtool Binary Path"
@@ -9057,7 +9057,7 @@ msgstr "Відбиток RSA"
 
 #: include/global_settings.php
 msgid "Re-Index All Device Schedule"
-msgstr "Переіндексувати Пристрій"
+msgstr "Розклад переіндексації всіх пристроїв"
 
 #: include/global_settings.php
 msgid "Re-index Method for Data Queries"
@@ -9445,7 +9445,7 @@ msgstr "Системний оновлювач RRD"
 
 #: include/global_settings.php
 msgid "System Setting"
-msgstr "Налаштування користувача"
+msgstr "Системне налаштування"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
@@ -9577,7 +9577,7 @@ msgstr "Типовий шаблон пристрою, що використов�
 
 #: include/global_settings.php
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "Чи це Профіль за замовчуванням для всіх нових Шаблонів Даних?"
+msgstr "Висота графіка за замовчуванням для всіх нових шаблонів графіків."
 
 #: include/global_settings.php
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -10736,7 +10736,7 @@ msgstr "Файл"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "Всі Рядки"
+msgstr "Перші рядки"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -10762,7 +10762,7 @@ msgstr "Спочатку найновіші"
 
 #: lib/clog_webapi.php
 msgid "Non Stats"
-msgstr "В стані"
+msgstr "Без статистики"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Oldest First"
@@ -10786,7 +10786,7 @@ msgstr "Статистика"
 
 #: lib/clog_webapi.php
 msgid "System Device"
-msgstr "Синхронізація Пристроїв"
+msgstr "Системний пристрій"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Tail Lines"
@@ -10794,7 +10794,7 @@ msgstr "Останні рядки"
 
 #: lib/clog_webapi.php
 msgid "Threshold"
-msgstr "Потоки"
+msgstr "Поріг"
 
 #: lib/clog_webapi.php
 msgid "Warnings++"
@@ -11844,7 +11844,7 @@ msgstr "Причина:"
 
 #: lib/html.php
 msgid "Remote Server"
-msgstr "Видалити Запит"
+msgstr "Віддалений сервер"
 
 #: lib/html.php
 msgid "Remove StdDev"
@@ -12644,7 +12644,7 @@ msgstr "Помилка некоректного зміщення UTF-8!"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
-msgstr "Завантажити"
+msgstr "Недоступний (Thold)"
 
 #: lib/html_utility.php lib/installer.php
 msgid "Error"
@@ -14265,7 +14265,7 @@ msgstr "Помилка під час розбору XML із дампа rrdtool"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "Кольорів Не Знайдено"
+msgstr "Знайдено помилки"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14421,7 +14421,7 @@ msgstr "Перед збором даних черга poller_output повинн
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "Операцію не вдалося підтвердити. Перегляньте історію змін перед повторною спробою."
+msgstr "недоступно"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
@@ -15233,11 +15233,11 @@ msgstr "Потрібно вибрати принаймні один об'єкт 
 
 #: package_import.php
 msgid "Automatically Trust Signer"
-msgstr "Автоматично Додати до Kadupul"
+msgstr "Автоматично довіряти підписувачу"
 
 #: package_import.php templates_import.php
 msgid "Changes/Diffferences"
-msgstr "Змінити Пристрій"
+msgstr "Зміни/Відмінності"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
@@ -15317,7 +15317,7 @@ msgstr "XML-файл пакета пошкоджено."
 
 #: package_import.php
 msgid "Packages Details"
-msgstr "Подробиці Правила."
+msgstr "Деталі пакетів"
 
 #: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
@@ -16494,7 +16494,7 @@ msgstr "Помилка"
 
 #: templates_import.php
 msgid "Error in Template"
-msgstr "Шаблони Експорту"
+msgstr "Помилка в шаблоні"
 
 #: templates_import.php
 msgid "Failed to access temporary folder, import functionality is disabled"
@@ -17756,7 +17756,7 @@ msgstr "Видалено/Недійсний"
 
 #: utilities.php
 msgid "Detailed Runtime Statistics"
-msgstr "Очистити Статистику"
+msgstr "Детальна статистика виконання"
 
 #: utilities.php
 msgid "Different version of Kadupul and Spine!"
@@ -18151,7 +18151,7 @@ msgstr "Інтервал оновлення"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
-msgstr "Має Джерела Даних"
+msgstr "Залишилося джерел даних:"
 
 #: utilities.php
 msgid "Result"
@@ -18303,7 +18303,7 @@ msgstr "Усього джерел даних:"
 
 #: utilities.php
 msgid "Total Poller Items:"
-msgstr "Елемент Кольору"
+msgstr "Усього елементів опитувача:"
 
 #: utilities.php
 #, php-format

@@ -1,0 +1,1 @@
+- Repair corrupted, wrong-language, hallucinated, and inverted-action Hindi (`hi-IN`) translations across the gettext catalog (343 entries) and Symfony YAML domains (244 entries across 22 domains) and recompile `locales/LC_MESSAGES/hi-IN.mo` (#1499).
