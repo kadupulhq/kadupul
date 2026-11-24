@@ -57,7 +57,7 @@ final class SnmpOptionStoreTest extends TestCase
             }
         };
         $this->statements = $statements;
-        $this->database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true], (new Configuration())->setMiddlewares([new Middleware($statements)]));
+        $this->database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true, 'wrapperClass' => IdentityLessConnection::class], (new Configuration())->setMiddlewares([new Middleware($statements)]));
         foreach ([
             "CREATE TABLE automation_snmp (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL DEFAULT '')",
             "CREATE TABLE automation_snmp_items (id INTEGER PRIMARY KEY AUTOINCREMENT, snmp_id INT NOT NULL DEFAULT 0, sequence INT NOT NULL DEFAULT 0,
@@ -309,6 +309,39 @@ final class SnmpOptionStoreTest extends TestCase
         self::assertSame(AuditEvent::DENIED, $this->audit[array_key_last($this->audit)]->outcome);
     }
 
+    public function testUnconfirmedDeletionAndDuplicationRollBackAndAreAudited(): void
+    {
+        [$core, $edge] = $this->sets(['Core', 'Edge']);
+        $revisions = $this->revisions([$core, $edge]);
+        $items = (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items');
+
+        // A set row that survives its DELETE leaves the count short of the selection.
+        $this->database->executeStatement('CREATE TRIGGER keep_core BEFORE DELETE ON automation_snmp WHEN OLD.id = ' . $core . ' BEGIN SELECT RAISE(IGNORE); END');
+        try {
+            $this->store->deleteSets(7, [$core, $edge], $revisions);
+            self::fail('An unconfirmed deletion was reported as done.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('SNMP Option Set deletion was not confirmed.', $error->getMessage());
+        }
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp'));
+        self::assertSame($items, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items'));
+        self::assertSame(AuditEvent::FAILED, $this->audit[array_key_last($this->audit)]->outcome);
+
+        // MySQL answers 0 when an insert generated no ID; that is not a copy.
+        $this->database->executeStatement('DROP TRIGGER keep_core');
+        self::assertInstanceOf(IdentityLessConnection::class, $this->database);
+        $this->database->identityLess = true;
+        try {
+            $this->store->duplicateSets(7, [$core], [$core => $revisions[$core]], '<name> (1)');
+            self::fail('An unconfirmed duplication was reported as done.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('SNMP Option Set duplication was not confirmed.', $error->getMessage());
+        }
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp'));
+        self::assertSame($items, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items'));
+        self::assertSame(AuditEvent::FAILED, $this->audit[array_key_last($this->audit)]->outcome);
+    }
+
     public function testDuplicateCopiesEntriesWithStoredCredentialsInsideTheDatabase(): void
     {
         [$core, $empty] = $this->sets(['Core', 'Empty']);
@@ -455,5 +488,16 @@ final class SnmpOptionStoreTest extends TestCase
     private function sequences(int $set): array
     {
         return array_map(static fn(array $row): array => [(int) $row['id'], (int) $row['sequence']], $this->database->fetchAllAssociative('SELECT id, sequence FROM automation_snmp_items WHERE snmp_id = ? ORDER BY sequence, id', [$set]));
+    }
+}
+
+/** A connection whose last insert ID can be made to read 0, as MySQL reports an insert that generated none. */
+final class IdentityLessConnection extends Connection
+{
+    public bool $identityLess = false;
+
+    public function lastInsertId(): int|string
+    {
+        return $this->identityLess ? 0 : parent::lastInsertId();
     }
 }

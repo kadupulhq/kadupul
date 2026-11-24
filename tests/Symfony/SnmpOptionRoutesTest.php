@@ -40,6 +40,8 @@ final class SnmpOptionRoutesTest extends TestCase
     private Kernel $kernel;
     private ?Actor $actor;
     private bool $denied = false;
+    private bool $authorizationFails = false;
+    private bool $readFails = false;
     private int $reads = 0;
     /** @var list<array{string, list<mixed>}> */
     private array $writes = [];
@@ -54,7 +56,11 @@ final class SnmpOptionRoutesTest extends TestCase
         $console->method('consoleActor')->willReturnCallback(fn(): ?Actor => $this->actor);
         $container->set(ConsoleAccess::class, $console);
         $access = $this->createMock(AutomationTemplateAccess::class);
-        $access->method('authorize')->willReturnCallback(fn(): Actor => $this->denied ? throw new AutomationTemplateAccessDenied(false) : $this->actor);
+        $access->method('authorize')->willReturnCallback(fn(): Actor => match (true) {
+            $this->denied => throw new AutomationTemplateAccessDenied(false),
+            $this->authorizationFails => throw new \RuntimeException('authorization backend down'),
+            default => $this->actor,
+        });
         $container->set(AutomationTemplateAccess::class, $access);
 
         $sets = [3 => new SnmpOptionSet(3, 'Core <b>', self::REVISION), 4 => new SnmpOptionSet(4, 'Edge', self::REVISION)];
@@ -70,6 +76,9 @@ final class SnmpOptionRoutesTest extends TestCase
         });
         $store->method('findSets')->willReturnCallback(function (array $ids) use ($sets): array {
             $this->reads++;
+            if ($this->readFails) {
+                throw new \RuntimeException('database unavailable');
+            }
             return array_intersect_key($sets, array_flip($ids));
         });
         foreach (['deleteSets', 'duplicateSets'] as $method) {
@@ -78,6 +87,7 @@ final class SnmpOptionRoutesTest extends TestCase
                 match (true) {
                     in_array('stale', $revisions, true) => throw new \InvalidArgumentException('The SNMP Option Set changed since you opened this form. Reload before saving.'),
                     in_array('gone', $revisions, true) => throw new \InvalidArgumentException('One or more selected SNMP Option Sets no longer exist.'),
+                    in_array('revoked', $revisions, true) => throw new AutomationTemplateAccessDenied(false),
                     in_array('remote', $revisions, true) => throw new \RuntimeException('SNMP Option Sets must be changed on the primary collector.'),
                     ($arguments[3] ?? null) === '' => throw new \InvalidArgumentException('The name format must give every copy a name of 1 to 100 characters.'),
                     default => $this->writes[] = [$method, $arguments],
@@ -276,6 +286,16 @@ final class SnmpOptionRoutesTest extends TestCase
             self::assertStringNotContainsString('primary collector', (string) $refused->getContent());
         }
         self::assertStringContainsString('Delete outcome is uncertain.', (string) $this->post($delete, ['automation_snmp_option_action' => ['revisions' => json_encode(['3' => self::REVISION, '4' => 'remote'])] + $fields])->getContent());
+        // Access revoked while the write runs is a denial, not an uncertain outcome.
+        foreach (['delete' => $delete, 'duplicate' => '/automation/snmp-options/actions/duplicate?ids[]=3&ids[]=4'] as $operation => $uri) {
+            $revoked = $this->post($uri, ['automation_snmp_option_action' => ['revisions' => json_encode(['3' => self::REVISION, '4' => 'revoked'])] + ($operation === 'duplicate' ? ['name_format' => '<name> (1)'] : []) + $fields]);
+            self::assertSame(403, $revoked->getStatusCode(), $operation);
+            self::assertStringContainsString('Access denied.', (string) $revoked->getContent(), $operation);
+            self::assertStringNotContainsString('outcome is uncertain', (string) $revoked->getContent(), $operation);
+        }
+        $uncertain = $this->post('/automation/snmp-options/actions/duplicate?ids[]=3&ids[]=4', ['automation_snmp_option_action' => ['revisions' => json_encode(['3' => self::REVISION, '4' => 'remote']), 'name_format' => '<name> (1)'] + $fields]);
+        self::assertSame(502, $uncertain->getStatusCode());
+        self::assertStringContainsString('Duplicate outcome is uncertain.', (string) $uncertain->getContent());
         self::assertSame([], $this->writes);
 
         $deleted = $this->post($delete, ['automation_snmp_option_action' => $fields]);
@@ -337,6 +357,27 @@ final class SnmpOptionRoutesTest extends TestCase
             self::assertSame(400, $this->get($legacy . '?' . $query)->getStatusCode(), $query);
         }
         self::assertSame(0, $this->reads);
+        self::assertSame([], $this->writes);
+    }
+
+    public function testBackendFailuresBecomeBadGatewayWithoutReadingOrWriting(): void
+    {
+        $action = '/automation/snmp-options/actions/delete?ids[]=3';
+        $this->authorizationFails = true;
+        foreach (['/automation/snmp-options/legacy?action=edit&id=3', $action] as $uri) {
+            $response = $this->get($uri);
+            self::assertSame(502, $response->getStatusCode(), $uri);
+            self::assertStringContainsString('Unable to load SNMP Option Sets. Reload before retrying.', (string) $response->getContent(), $uri);
+        }
+        self::assertSame(502, $this->post($action, ['automation_snmp_option_action' => ['selection' => '[3]', 'revisions' => '{"3":"x"}', '_token' => 'csrf-token']])->getStatusCode());
+        self::assertSame(0, $this->reads);
+
+        $this->authorizationFails = false;
+        $this->readFails = true;
+        $response = $this->get($action);
+        self::assertSame(502, $response->getStatusCode());
+        self::assertStringContainsString('Unable to load SNMP Option Sets. Reload before retrying.', (string) $response->getContent());
+        self::assertSame(1, $this->reads);
         self::assertSame([], $this->writes);
     }
 

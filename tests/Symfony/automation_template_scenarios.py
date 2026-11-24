@@ -77,6 +77,11 @@ def verify_automation_templates(harness, session, user_id, check):
               'automation template anonymous legacy post refused')
         status, _, url = fetch('/automation_templates.php?header=false')
         check(status == 200 and urlsplit(url).path == BASE, 'legacy automation_templates.php GET forwards to the Symfony list')
+        # automation_snmp.php is the SNMP Option Set shim; this run is where its forwarding lines execute.
+        check(fetch('/automation_snmp.php', client=anonymous)[0] == 401, 'SNMP Option Set anonymous legacy refusal')
+        status, _, url = fetch('/automation_snmp.php?header=false')
+        check(status == 200 and urlsplit(url).path == '/app.php/automation/snmp-options',
+              'legacy automation_snmp.php GET forwards to the Symfony SNMP Option Set list')
 
         for name in (marker + ' <b>device</b>', marker + ' second'):
             created_device_templates.append(int(harness.sql(
