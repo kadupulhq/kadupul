@@ -11,7 +11,6 @@
 "CSV file": "የ CSV ፋይል"
 "CSV may contain at most 5000 colors.": "CSV ቢበዛ 5000 ቀለሞችን ሊይዝ ይችላል።"
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV ትክክለኛ UTF-8 መሆን አለበት እና ከ 1 MiB መብለጥ የለበትም።"
-"CSV requires exactly the name and hex header columns.": "CSV በትክክል የ name እና hex ራስጌ ዓምዶችን ይፈልጋል።"
 "Cancel": "ይቅር"
 "Clear": "አጽዳ"
 "Click Continue to delete the following Colors.": "የሚከተሉትን ቀለሞች ለመሰረዝ ቀጥል የሚለውን ጠቅ ያድርጉ።"

@@ -11,7 +11,6 @@
 "CSV file": "CSV файл"
 "CSV may contain at most 5000 colors.": "CSV може да съдържа най-много 5000 цвята."
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV трябва да бъде във валиден UTF-8 и с размер не по-голям от 1 MiB."
-"CSV requires exactly the name and hex header columns.": "CSV изисква точно заглавните колони name и hex."
 "Cancel": "Отказ"
 "Clear": "Изчисти"
 "Click Continue to delete the following Colors.": "Щракнете върху Продължи, за да изтриете следните цветове."

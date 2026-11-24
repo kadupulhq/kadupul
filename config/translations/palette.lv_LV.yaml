@@ -11,7 +11,6 @@
 "CSV file": "CSV fails"
 "CSV may contain at most 5000 colors.": "CSV drīkst saturēt ne vairāk kā 5000 krāsas."
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV jābūt derīgā UTF-8 kodējumā un ne lielākam par 1 MiB."
-"CSV requires exactly the name and hex header columns.": "CSV ir nepieciešamas tieši galvenes kolonnas name un hex."
 "Cancel": "Atcelt"
 "Clear": "Notīrīt"
 "Click Continue to delete the following Colors.": "Noklikšķiniet uz Turpināt, lai dzēstu šīs krāsas."

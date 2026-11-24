@@ -11,7 +11,6 @@
 "CSV file": "CSV dosyası"
 "CSV may contain at most 5000 colors.": "CSV en fazla 5000 renk içerebilir."
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV geçerli UTF-8 olmalı ve 1 MiB boyutunu aşmamalıdır."
-"CSV requires exactly the name and hex header columns.": "CSV yalnızca tam olarak name ve hex başlık sütunlarını gerektirir."
 "Cancel": "İptal"
 "Clear": "Temizle"
 "Click Continue to delete the following Colors.": "Aşağıdaki Renkleri silmek için Devam düğmesine tıklayın."

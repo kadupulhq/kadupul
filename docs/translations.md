@@ -279,6 +279,12 @@ only when its response must not depend on the viewer's language.
 `tests/Symfony/TranslationCatalogTest.php`, in the Symfony PHPUnit suite:
 
 - Every `*.en.yaml` domain has a `*.fr.yaml` file with the same keys.
+- `tests/Symfony/TranslationExtractionTest.php` runs Symfony's message extractor
+  over `src/` and `templates/` in the kernel and requires every key it finds to
+  exist in that domain's `<domain>.en.yaml`. A call with no domain, or a shared
+  template whose caller's domain lacks the key, fails it. Label tables and shared
+  templates pass keys through variables, which the extractor cannot see, so the
+  reverse (an unused English key) is not checked yet.
 - No message is blank, and no French message adds a placeholder the key does
   not have (a plural form may drop `%count%`).
 - No PHP file under `src/` calls a gettext function (`__`, `__esc`, `_n`,
@@ -319,7 +325,10 @@ cover the bridge, the resolver and the subscriber.
 1. Add the English text as a key to `<domain>.en.yaml` and its translation to
    `<domain>.fr.yaml`. Use `%name%` placeholders, not `%s`.
 2. Use it with `|trans({}, '<domain>')` in Twig or
-   `TranslatorInterface::trans()` in PHP. Do not call `__()` from `src/`.
+   `TranslatorInterface::trans()` in PHP, always naming the domain. Do not call
+   `__()` from `src/`. Run `bin/console translation:extract en --dump-messages`
+   to see the keys the code uses; it also lists existing English keys, so rely on
+   `TranslationExtractionTest` for the verdict.
 3. If a legacy page already uses the same English text, the other languages
    get its translation through the bridge. If the text is new, they show
    English until someone translates it.

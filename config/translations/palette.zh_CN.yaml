@@ -11,7 +11,6 @@
 "CSV file": "CSV 文件"
 "CSV may contain at most 5000 colors.": "CSV 最多可包含 5000 种颜色。"
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV 必须是有效的 UTF-8 编码且大小不超过 1 MiB。"
-"CSV requires exactly the name and hex header columns.": "CSV 必须恰好包含 name 和 hex 表头列。"
 "Cancel": "取消"
 "Clear": "清除"
 "Click Continue to delete the following Colors.": "点击“继续”以删除以下颜色。"
