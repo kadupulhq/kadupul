@@ -20763,8 +20763,7 @@ msgstr "Indeksa izmaiņas netika konstatētas, aptaujātāja kešatmiņa atsvaid
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "Sinhronizācija neizdevās. Sīkāku informāciju skatiet žurnālā."
+msgstr "Sinhronizācija neizdevās. Detalizētu informāciju skatiet žurnālā."
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."

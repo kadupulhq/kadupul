@@ -879,11 +879,11 @@ msgstr "パスワードの変更"
 
 #: auth_changepassword.php:352
 msgid "Please enter your current password and your new<br>Cacti password."
-msgstr "現在のパスワードと新しいパスワードを入力してください<br>サボテンのパスワード。"
+msgstr "現在のパスワードと新しい<br>Cactiパスワードを入力してください。"
 
 #: auth_changepassword.php:354
 msgid "Please enter your new Cacti password."
-msgstr "現在のパスワードと新しいパスワードを入力してください<br>サボテンのパスワード。"
+msgstr "新しいCactiパスワードを入力してください。"
 
 #: auth_changepassword.php:362 auth_login.php:341 auth_login.php:344
 #: include/global_settings.php:1826 lib/functions.php:5789
@@ -960,7 +960,7 @@ msgstr "アクセスが拒否されました！ユーザーアカウントがロ
 
 #: auth_login.php:314 lib/html_tree.php:164
 msgid "Login to Cacti"
-msgstr "サボテンにログイン"
+msgstr "Cactiにログイン"
 
 #: auth_login.php:321
 msgid "User Login"
@@ -1625,7 +1625,7 @@ msgstr "関連サイト"
 
 #: automation_networks.php:477
 msgid "Choose the Cacti Site that you wish to associate discovered Devices with."
-msgstr "あなたが発見したデバイスを関連付けるサボテンサイトを選択してください。"
+msgstr "検出されたデバイスを関連付けるCactiサイトを選択してください。"
 
 #: automation_networks.php:485
 msgid "Subnet Range"
@@ -1772,7 +1772,7 @@ msgstr "NetBIOSを使用して、稼働中のホストのホスト名を解決�
 
 #: automation_networks.php:569
 msgid "Automatically Add to Cacti"
-msgstr "自動的にサボテンに追加"
+msgstr "Cactiに自動追加"
 
 #: automation_networks.php:570
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Cacti."
@@ -2579,19 +2579,19 @@ msgstr "ツリールールが見つかりません"
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
-msgstr "サボテンシステム警告"
+msgstr "Cactiシステム警告"
 
 #: cactid.php:44
 msgid "WARNING: Cacti Daemon PID["
-msgstr "警告：サボテンデーモンPID ["
+msgstr "警告: Cactiデーモン PID["
 
 #: cactid.php:132
 msgid "Cacti System Notice"
-msgstr "サボテンシステムユーティリティ"
+msgstr "Cactiシステムお知らせ"
 
 #: cactid.php:132
 msgid "Notice: Cacti Daemon PID["
-msgstr "注意：サボテンデーモンPID ["
+msgstr "通知: Cactiデーモン PID["
 
 #: cdef.php:271
 msgid "Click 'Continue' to delete the following CDEF."
@@ -2785,7 +2785,7 @@ msgstr "<strong>name</strong> - カラーネーム"
 
 #: color.php:463
 msgid "<strong>hex</strong> - The Hex Value"
-msgstr "<strong>hex</strong> - <strong>16進値</strong>"
+msgstr "<strong>hex</strong> - 16進値"
 
 #: color.php:484
 #, php-format
@@ -4570,11 +4570,11 @@ msgstr "イメージキャッシュディレクトリは書き込み可能では
 
 #: graph_realtime.php:474 graph_realtime.php:487
 msgid "Cacti Real-time Graphing"
-msgstr "サボテンリアルタイムグラフ"
+msgstr "Cactiリアルタイムグラフ"
 
 #: graph_realtime.php:505 utilities.php:2579
 msgid "Refresh Interval"
-msgstr "ãªãã¬ãã·ã¥éé"
+msgstr "リフレッシュ間隔"
 
 #: graph_realtime.php:528 lib/html_graph.php:249 lib/html_reports.php:125
 #: lib/html_tree.php:1068
@@ -5141,7 +5141,7 @@ msgstr "選択済グラフテンプレート"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "このグラフに適用するグラフテンプレートを選択します。グラフテンプレートは、互換性のある100％のグラフテンプレートにしか変更できないため、同一のデータソースが含まれることになります。"
+msgstr "このグラフに適用するグラフテンプレートを選択してください。グラフテンプレートは、同一のデータソースを含む100%% 互換のグラフテンプレートにのみ変更できます。"
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5925,11 +5925,11 @@ msgstr "ログインはありません"
 
 #: include/auth.php:193
 msgid "You must be logged in to access this area of Cacti."
-msgstr "あなたはサボテンのこの地域にアクセスするためにログインしなければなりません。"
+msgstr "Cactiのこの領域にアクセスするにはログインする必要があります。"
 
 #: include/auth.php:198
 msgid "FATAL: You must be logged in to access this area of Cacti."
-msgstr "致命的：あなたはサボテンのこの地域にアクセスするにはログインしなければなりません。"
+msgstr "致命的エラー: Cactiのこの領域にアクセスするにはログインする必要があります。"
 
 #: include/auth.php:307 include/auth.php:309 lib/auth.php:5192
 #: permission_denied.php:31 permission_denied.php:33
@@ -5942,7 +5942,7 @@ msgstr "これがエラーだと感じたらCacti管理者に連絡してくだ�
 
 #: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "You are not permitted to access this section of Cacti."
-msgstr "あなたはサボテンのこのセクションにアクセスすることを許可されていません。"
+msgstr "Cactiのこのセクションにアクセスする権限がありません。"
 
 #: include/auth.php:318
 msgid "Installation In Progress"
@@ -6179,7 +6179,7 @@ msgstr "指定されたログファイルはCactiアーカイブファイルで�
 
 #: include/global_arrays.php:306
 msgid "Cacti log purged successfully"
-msgstr "サボテンログは正常に削除されました"
+msgstr "Cactiログを正常に削除しました"
 
 #: include/global_arrays.php:309
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6934,7 +6934,7 @@ msgstr "自動化ルールを適用する"
 
 #: include/global_arrays.php:1097
 msgid "Cacti Related"
-msgstr "サボテンレポート"
+msgstr "Cacti関連"
 
 #: include/global_arrays.php:1098
 msgid "Database Related"
@@ -8038,7 +8038,7 @@ msgstr "アクション"
 
 #: include/global_arrays.php:2660
 msgid "Cacti Help"
-msgstr "サボテンホーム"
+msgstr "Cactiヘルプ"
 
 #: include/global_arrays.php:2672
 msgid "Export Results"
@@ -8454,7 +8454,7 @@ msgstr "このデータテンプレートに名前を与えてください。"
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "このデータソースの名前を選択してください。 | host_description |などの置換変数を含めることができます。または| query_fieldName |。サポートされている代替タグの一覧については、Cactiのマニュアルを参照してください。"
+msgstr "このデータソースの名前を選択してください。|host_description|や|query_fieldName|などの置換変数を含めることができます。サポートされている置換タグの完全な一覧については、Cactiのドキュメントを参照してください。"
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8551,7 +8551,7 @@ msgstr "タイトル（ - タイトル）"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "グラフに印刷されている名前。 | host_description |などの置換変数を含めることができます。または| query_fieldName |。サポートされている代替タグの一覧については、Cactiのマニュアルを参照してください。"
+msgstr "グラフに表示される名前です。|host_description|や|query_fieldName|などの置換変数を含めることができます。サポートされている置換タグの完全な一覧については、Cactiのドキュメントを参照してください。"
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -8603,7 +8603,7 @@ msgstr "スロープモードを使用すると、画面の解像度が多少犠
 
 #: include/global_form.php:759
 msgid "Scaling Options"
-msgstr "ã¬ã¦ã·ã¢ã³:"
+msgstr "スケーリングオプション"
 
 #: include/global_form.php:764
 msgid "Auto Scale"
@@ -9664,7 +9664,7 @@ msgstr "ログイン"
 
 #: include/global_settings.php:172
 msgid "Cacti Log Path"
-msgstr "サボテンのログパス"
+msgstr "Cactiログパス"
 
 #: include/global_settings.php:173
 msgid "The path to your Cacti log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9680,11 +9680,11 @@ msgstr "Cactiのデータコレクタに問題がある場合は、このファ�
 
 #: include/global_settings.php:192
 msgid "Rotate the Cacti Log"
-msgstr "サボテンログを回転させる"
+msgstr "Cactiログをローテート"
 
 #: include/global_settings.php:193
 msgid "This option will rotate the Cacti Log periodically."
-msgstr "このオプションは定期的にサボテンログを交代させます。"
+msgstr "このオプションはCactiログを定期的にローテートします。"
 
 #: include/global_settings.php:198
 msgid "Rotation Frequency"
@@ -10004,7 +10004,7 @@ msgstr "有効にすると、Cactiはグラフをロックしません。これ�
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
-msgstr "サボテンダッシュボードを隠す"
+msgstr "Cactiダッシュボードを非表示"
 
 #: include/global_settings.php:480
 msgid "For use with Cacti's External Link Support.  Using this setting, you can hide the Cacti Dashboard, so you can display just your own page."
@@ -10080,7 +10080,7 @@ msgstr "コンテンツセキュリティの代替ソース"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Webサーバー自体の外部からのアクセスが許可されるスペースデミットされたドメイン名。これは、CDNまたはホスティングサイトの使用を選択するユーザーにとって重要です。ソースには、ワイルドカード（例：*。mydomain.com）またはプロトコル（例：https：//*.example.com）を含めることができます。これらの代替ソースには、画像、CSS、JavaScriptタイプのみが含まれます。"
+msgstr "Webサーバー自体以外からのアクセスを許可する、スペース区切りのドメイン名。これはCDNやホスティングサイトを使用する場合に重要です。ソースにはワイルドカード（例: *.mydomain.com）やプロトコル（たとえば https://*.example.com. など）を含めることができます。これらの代替ソースには、画像、CSS、JavaScriptタイプのみが含まれます。"
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10375,7 +10375,7 @@ msgstr "テーマ"
 
 #: include/global_settings.php:869 include/global_settings.php:2577
 msgid "Please select one of the available Themes to skin your Cacti with."
-msgstr "あなたのサボテンの皮をむくために利用可能なテーマの一つを選択してください。"
+msgstr "Cactiの外観に適用する利用可能なテーマを1つ選択してください。"
 
 #: include/global_settings.php:875
 msgid "Table Settings"
@@ -10535,7 +10535,7 @@ msgstr "この時間枠は、デフォルトのグラフで見たいものです
 
 #: include/global_settings.php:1030
 msgid "Minimum Refresh Interval"
-msgstr "ãªãã¬ãã·ã¥éé"
+msgstr "最小リフレッシュ間隔"
 
 #: include/global_settings.php:1031
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
@@ -10567,7 +10567,7 @@ msgstr "カスタム日付形式"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "| date_time |をフォーマットするときに使用しますグラフ上"
+msgstr "グラフ上の|date_time|をフォーマットする際に使用します"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10689,7 +10689,7 @@ msgstr "営業時間が終了する時間。フォーマット: hh: mm"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "%d 週間の"
+msgstr "週末を非表示"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -11572,7 +11572,7 @@ msgstr "すべての添付ファイルを含む電子メールメッセージの
 
 #: include/global_settings.php:2026
 msgid "Poller Logging Level for Cacti Reporting"
-msgstr "サボテンレポートのポーラーログレベル"
+msgstr "Cactiレポートのポーラーログレベル"
 
 #: include/global_settings.php:2027
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -11977,7 +11977,7 @@ msgstr "差異の割合"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "この値は、異常値がサンプルから削除された後の調整済みサンプルの平均を上回るパーセンテージを表します。たとえば、50の調整済み平均に対して100％のVariance Percentageを指定すると、グラフから100の数量を超えるサンプルが削除されます。"
+msgstr "この値は、サンプルから外れ値を除外した後の調整済みサンプル平均を上回るパーセンテージを表します。たとえば、調整済み平均50に対して分散率（Variance Percentage）を100%% に設定すると、100を超えるサンプルがグラフから除外されます。"
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12438,7 +12438,7 @@ msgstr "Cactiサーバーv %s -インストールウィザード"
 
 #: install/install.php:107
 msgid "Refresh current page"
-msgstr "ãªãã¬ãã·ã¥éé"
+msgstr "現在のページを更新"
 
 #: install/install.php:113
 msgid "Initializing"
@@ -12845,7 +12845,7 @@ msgstr "パスワードには少なくとも1つの特殊文字を含める必�
 
 #: lib/auth.php:5185
 msgid "Cacti Login Failure"
-msgstr "サボテンログをクリアしました"
+msgstr "Cactiログイン失敗"
 
 #: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -13545,7 +13545,7 @@ msgstr "リンク%s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "メーラーのエラー：いいえ設定したアドレス<b>に</b> !! <br> [ <i>テストメール]</i>リンクを使用している場合は、[ <b>警告メール]</b>設定を設定してください。"
+msgstr "メーラーエラー: 受信者アドレスが設定されていません。<br><i>テストメール</i>リンクを使用している場合は、<b>警告メール</b>設定を指定してください。"
 
 #: lib/functions.php:5730
 #, php-format
@@ -13616,7 +13616,7 @@ msgstr "メッセージを送信しています…"
 
 #: lib/functions.php:5824
 msgid "Cacti Test Message"
-msgstr "サボテンテストメッセージ"
+msgstr "Cactiテストメッセージ"
 
 #: lib/functions.php:5826
 msgid "Success!"
@@ -13851,7 +13851,7 @@ msgstr "ヘルプ"
 
 #: lib/html.php:2878
 msgid "Cacti Home"
-msgstr "サボテンホーム"
+msgstr "Cactiホーム"
 
 #: lib/html.php:2880
 msgid "Miscellaneous"
@@ -13867,11 +13867,11 @@ msgstr "チャート"
 
 #: lib/html.php:2884
 msgid "Cacti Project Page"
-msgstr "サボテンプロジェクトページ"
+msgstr "Cactiプロジェクトページ"
 
 #: lib/html.php:2888
 msgid "Spine"
-msgstr "脊椎"
+msgstr "Spine"
 
 #: lib/html.php:2889
 msgid "RRDProxy"
@@ -13887,7 +13887,7 @@ msgstr "ショートカット"
 
 #: lib/html.php:2892
 msgid "Contribute to the Cacti Project"
-msgstr "サボテンログを回転させる"
+msgstr "Cactiプロジェクトに貢献する"
 
 #: lib/html.php:2893
 msgid "Help in Developing"
@@ -13911,7 +13911,7 @@ msgstr "バグを報告"
 
 #: lib/html.php:2901
 msgid "Cacti"
-msgstr "サボテン"
+msgstr "Cacti"
 
 #: lib/html.php:2903
 msgid "Click to Show/Hide Filter"
@@ -13991,7 +13991,7 @@ msgstr "操作成功"
 
 #: lib/html.php:2925 pollers.php:878
 msgid "Connection Failed"
-msgstr "æ¥ç¶å¤±æ"
+msgstr "接続に失敗しました"
 
 #: lib/html.php:2926
 msgid "The response to the last action was unexpected."
@@ -14152,7 +14152,7 @@ msgstr "有効なディレクトリパスを入力してください"
 #: lib/html_form.php:1484
 #, php-format
 msgid "Cacti Color (%s)"
-msgstr "サボテンの色（%s）"
+msgstr "Cactiの色 (%s)"
 
 #: lib/html_form.php:1567
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14414,7 +14414,7 @@ msgstr "件名"
 
 #: lib/html_reports.php:172
 msgid "Cacti Report"
-msgstr "サボテンレポート"
+msgstr "Cactiレポート"
 
 #: lib/html_reports.php:173
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -15065,7 +15065,7 @@ msgstr "予期しないエラーのため、インストーラーは続行でき
 
 #: lib/installer.php:1676
 msgid "Please report this to the Cacti Group."
-msgstr "これをサボテングループに報告してください。"
+msgstr "これをCactiグループに報告してください。"
 
 #: lib/installer.php:1677
 #, php-format
@@ -15099,7 +15099,7 @@ msgstr "このエラーは、cactiデータベースユーザーがCactiデー�
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
-msgstr "また、MySQLのにMySQLのタイムゾーン情報をインポートし、サボテンのユーザーにmysql.time_zone_nameテーブルへのSELECTアクセス権限を付与<b>しなければなりません</b>"
+msgstr "また、MySQLのタイムゾーン情報をMySQLにインポートし、Cactiユーザーにmysql.time_zone_nameテーブルへのSELECTアクセス権限を付与する<b>必要があります</b>"
 
 #: lib/installer.php:1701
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15331,7 +15331,7 @@ msgstr "問題が発生した場合は、The Cacti Groupで問題が発生する
 
 #: lib/installer.php:2170
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
-msgstr "ごくまれに、コードの変更によりいくつかの小さな問題が発生したユーザーからの報告がありました。これらの問題は、ブラウザがアップグレード前のコードを保持していることが原因で発生します。その可能性を最小限に抑えるための措置を講じていますが、まだ発生する可能性があります。ブラウザのキャッシュをクリアする方法について説明が必要な場合は、 <a href='https://www.refreshyourcache.com' target='_blank'>https：//www.refreshyourcache.com/</a>から始めるのが良いでしょう。"
+msgstr "ごくまれに、コードの変更により軽微な問題が発生したというユーザーからの報告があります。これらの問題は、ブラウザがアップグレード前のコードを保持していることが原因で発生します。発生する可能性を最小限に抑えるための対策を講じていますが、依然として発生する場合があります。ブラウザのキャッシュをクリアする方法については、<a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> を参照してください。"
 
 #: lib/installer.php:2171
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
@@ -15344,7 +15344,7 @@ msgstr "<strong>%s</strong>から</strong>%s<strong>にダウングレード"
 
 #: lib/installer.php:2178
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
-msgstr "以前のバージョンにダウングレードしているようです。新しいバージョンに対して行われたデータベースの変更は元に戻されず、問題を引き起こす<i>可能</i>性<i>が</i>あります。"
+msgstr "以前のバージョンにダウングレードしようとしているようです。新しいバージョンに対して行われたデータベースの変更は元に戻されず、問題を引き起こす<i>可能性があり</i>ます。"
 
 #: lib/installer.php:2183
 msgid "Please select the type of installation"
@@ -15563,7 +15563,7 @@ msgstr "このスクリプトオプションは、無効なデータソースを
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "<b>$input_whitelist</b>変数のコメントを<b>外し</b> 、Webベースのインストールの完了後に上記の3つのCLIスクリプトオプションを実行することにより、config.phpを更新してこの機能を有効にすることを強くお勧めします。"
+msgstr "Webベースのインストールが完了した後、config.phpを更新して<b>$input_whitelist</b>変数のコメントを解除し、上記の3つのCLIスクリプトオプションを実行してこの機能を有効にすることを強くお勧めします。"
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -16244,7 +16244,7 @@ msgstr "プラグイン"
 #: lib/plugins.php:1217 lib/plugins.php:1223
 #, php-format
 msgid "Requires: Cacti >= %s"
-msgstr "必要条件：サボテン>= %s"
+msgstr "必要条件: Cacti >= %s"
 
 #: lib/plugins.php:1220
 msgid "Legacy Plugin"
@@ -16436,7 +16436,7 @@ msgstr "CDP不明データポイント（0）"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "%sが見つかりませんでした。"
+msgstr "エラーが見つかりました"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16881,7 +16881,7 @@ msgstr "リモートポーリング機能を使用すると、大量のデータ
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Cacti Performance Boosterを使用していてメモリストレージエンジンを選択している場合は、システムがメモリテーブルスペースを使い果たす前にPerformance Boosterバッファをフラッシュするように注意する必要があります。これは2つの方法で行われます。最初に、出力列のサイズを正しいサイズに縮小します。この列は、テーブルpoller_output、およびpoller_output_boostにあります。 2番目にできることは、メモリテーブルにより多くのメモリを割り当てることです。システムメモリの10 %%という推奨値を任意に選択しましたが、SSDディスクドライブを使用している場合、またはより小さなシステムを使用している場合は、この推奨を無視するか別のストレージエンジンを選択してください。パフォーマンスブースターテーブルの予想消費量は、[コンソール]  - &gt; [システムユーティリティ]  - &gt; [ブーストステータスの表示]で確認できます。"
+msgstr "Cacti Performance Boosterを使用してメモリストレージエンジンを選択している場合、システムのメモリテーブル領域が不足する前にPerformance Boosterバッファをフラッシュするよう注意する必要があります。これには2つの方法があります。1つ目は、出力列のサイズを適切なサイズに縮小することです。この列はpoller_outputおよびpoller_output_boostテーブルにあります。2つ目は、メモリテーブルにより多くのメモリを割り当てることです。推奨値としてシステムメモリの10%% を任意に設定していますが、SSDディスクドライブを使用している場合やシステムが小規模な場合は、この推奨値を無視するか、別のストレージエンジンを選択してください。Performance Boosterテーブルの予想消費量は、[コンソール] -> [システムユーティリティ] -> [ブーストステータスの表示] で確認できます。"
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16907,7 +16907,7 @@ msgstr "テーブルに非常に大きなインデックスがある場合、Bar
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDBはできるだけ多くのテーブルとインデックスをシステムメモリに保持します。そのため、innodb_buffer_poolを、メモリ内にできるだけ多くのテーブルとインデックスを保持できる大きさにする必要があります。 / var / lib / mysql / cactiディレクトリのサイズを確認すると、この値を決定するのに役立ちます。システム全体のメモリの25％を推奨していますが、要件はシステムのサイズによって異なります。"
+msgstr "InnoDBは、可能な限り多くのテーブルとインデックスをシステムメモリに保持します。したがって、メモリ内にできる限り多くのテーブルとインデックスを保持できるよう、innodb_buffer_poolを十分な大きさに設定する必要があります。/var/lib/mysql/cactiディレクトリのサイズを確認すると、この値を決定するのに役立ちます。システム合計メモリの25%% を推奨していますが、要件はシステムの規模によって異なります。"
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17172,7 +17172,7 @@ msgstr "Web URLの場所"
 
 #: links.php:577
 msgid "The valid URL to use for this external link.  Must include the type, for example http://www.cacti.net.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr "この外部リンクに使用する有効なURL。タイプを含める必要があります（例：http://www.cacti.net）。多くのWebサイトでは、外部サイトのiframeに埋め込むことが許可されていないため、外部リンクが機能しない場合があります。"
+msgstr "この外部リンクに使用する有効なURLです。たとえば http://www.cacti.net. のようにスキームを含める必要があります。多くのWebサイトでは外部サイトのiframeへの埋め込みが許可されていないため、外部リンクが機能しない場合があります。"
 
 #: links.php:586
 msgid "If checked, the page will be available immediately to the admin user."
@@ -17209,7 +17209,7 @@ msgstr "セッションタイムアウトによりCactiからログアウトし�
 
 #: logout.php:71
 msgid "Logout of Cacti"
-msgstr "サボテンのログアウト"
+msgstr "Cactiからログアウト"
 
 #: logout.php:78
 msgid "Automatic Logout"
@@ -17690,7 +17690,7 @@ msgstr "ポーラーID %dの最大実行時間%d秒を超えました。終了�
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "警告：サボテンのポーリングサイクルがポーラー間隔を超えました"
+msgstr "警告: Cactiポーリングサイクルがポーラー間隔を超過しました: "
 
 #: poller.php:961
 #, php-format
@@ -17703,7 +17703,7 @@ msgstr "ハートビートモードのポーラー"
 
 #: poller.php:1263
 msgid "Cacti System Notification"
-msgstr "サボテンシステムユーティリティ"
+msgstr "Cactiシステム通知"
 
 #: poller.php:1263
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
@@ -17716,7 +17716,7 @@ msgstr "警告: メイン Cacti データベース %s がオフラインまた�
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
-msgstr "サボテンの一次管理者"
+msgstr "Cactiプライマリ管理者"
 
 #: poller_automation.php:1159
 msgid "Cacti Automation Report requires an html based Email client"
@@ -18231,7 +18231,7 @@ msgstr "注：このタブのパス設定はローカルでのみ保存されま
 #: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
-msgstr "サボテンの設定（%s）%s"
+msgstr "Cacti設定 (%s)%s"
 
 #: settings.php:505
 msgid "Changing Permission Model Warning"
@@ -19678,7 +19678,7 @@ msgstr "一般情報"
 
 #: utilities.php:312
 msgid "Cacti OS"
-msgstr "サボテンOS"
+msgstr "Cacti OS"
 
 #: utilities.php:322
 msgid "NET-SNMP Version"
@@ -19703,7 +19703,7 @@ msgstr "ポーラー情報"
 
 #: utilities.php:383
 msgid "Different version of Cacti and Spine!"
-msgstr "サボテンと背骨の異なるバージョン！"
+msgstr "CactiとSpineのバージョンが異なります！"
 
 #: utilities.php:401
 #, php-format
@@ -19969,11 +19969,11 @@ msgstr "ログ[合計行数：%d -すべての項目が表示されます]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
-msgstr "サボテンログをクリア"
+msgstr "Cactiログをクリア"
 
 #: utilities.php:1674
 msgid "Cacti Log Cleared"
-msgstr "サボテンログをクリアしました"
+msgstr "Cactiログをクリアしました"
 
 #: utilities.php:1676
 msgid "Error: Unable to clear log, no write permissions."
@@ -20045,7 +20045,7 @@ msgstr "RRD："
 
 #: utilities.php:2351
 msgid "Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues."
-msgstr "サボテンテクニカルサポートページ。 Cactiの問題を解決するために開発者や技術サポート担当者によって使用されます。一般的な設定問題のチェックを含みます。"
+msgstr "Cactiテクニカルサポートページ。Cactiの問題解決を支援するため、開発者やテクニカルサポート担当者が使用します。一般的な設定問題のチェックが含まれます。"
 
 #: utilities.php:2355
 msgid "The Cacti Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
@@ -20153,7 +20153,7 @@ msgstr "管理者がSNMP通知受信者を管理できるようにします。"
 
 #: utilities.php:2449
 msgid "Cacti System Utilities"
-msgstr "サボテンシステムユーティリティ"
+msgstr "Cactiシステムユーティリティ"
 
 #: utilities.php:2672
 msgid "Overrun Warning"
@@ -20606,7 +20606,6 @@ msgstr "インデックス変更は検出されませんでした。ポーラー
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
 msgstr "同期に失敗しました。詳細はログを参照してください。"
 
 #: graph.php:512

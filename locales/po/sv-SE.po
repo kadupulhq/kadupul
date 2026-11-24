@@ -382,7 +382,7 @@ msgstr "Visa artikeluppgifter"
 
 #: aggregate_graphs.php:710
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Sammanfattning Förhandsgranskning [ %s]"
+msgstr "Aggregerad förhandsgranskning finns inte"
 
 #: aggregate_graphs.php:717
 #, php-format
@@ -3609,7 +3609,7 @@ msgstr "Associerade graf / datamallar [redigera: %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Associerade graf / datamallar [redigera: %s]"
+msgstr "Associerade graf-/datamallar [ny]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4409,7 +4409,7 @@ msgstr "Värdet kommer att härledas från enheten om det här fältet är tomt.
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Anpassade data [dataingång: %s]"
+msgstr "Varningsmeddelande för anpassade data"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -5176,7 +5176,7 @@ msgstr "Vald grafmall"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Välj en grafmall som ska tillämpas på den här grafen. Observera att du bara kan ändra grafmallar till en 100 %% kompatibel grafmall, vilket innebär att den innehåller identiska datakällor."
+msgstr "Välj en grafmall att tillämpa på den här grafen. Observera att du bara kan byta grafmall till en 100%% kompatibel grafmall, vilket innebär att den innehåller identiska datakällor."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5204,7 +5204,7 @@ msgstr "Nya grafer för [Alla enheter]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "User Group Management [redigera: %s]"
+msgstr "Grafhantering [ ej enhetsbaserad ]"
 
 #: graphs.php:2080
 #, php-format
@@ -6459,7 +6459,7 @@ msgstr "Bottom -&gt; Up"
 
 #: include/global_arrays.php:612 tree.php:1868
 msgid "Numeric"
-msgstr "﻿Numerisk"
+msgstr "Numerisk"
 
 #: include/global_arrays.php:613
 msgid "Timestamp"
@@ -6659,7 +6659,7 @@ msgstr "Varje dag"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "% d tråd"
+msgstr "1 tråd"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -7240,7 +7240,7 @@ msgstr "Dagskift"
 
 #: include/global_arrays.php:1458
 msgid "This Day"
-msgstr "%d dygn"
+msgstr "Denna dag"
 
 #: include/global_arrays.php:1459
 msgid "This Week"
@@ -8489,7 +8489,7 @@ msgstr "Namnet ges till den här datamallen."
 
 #: include/global_form.php:571
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Välj ett namn för denna datakälla. Det kan innehålla ersättningsvariabler som | host_description | eller | query_fieldName |. För en fullständig lista över stödda ersättningsetiketter, se dokumentationen för Cacti."
+msgstr "Välj ett namn för denna datakälla. Det kan innehålla ersättningsvariabler som |host_description| eller |query_fieldName|. För en fullständig lista över ersättningstaggar som stöds, se Cacti-dokumentationen."
 
 #: include/global_form.php:575
 msgid "Data Source Path"
@@ -8586,7 +8586,7 @@ msgstr "Titel (- titel)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
-msgstr "Namnet som skrivs ut på grafen. Det kan innehålla ersättningsvariabler som | host_description | eller | query_fieldName |. För en fullständig lista över stödda ersättningsetiketter, se dokumentationen för Cacti."
+msgstr "Namnet som skrivs ut på grafen. Det kan innehålla ersättningsvariabler som |host_description| eller |query_fieldName|. För en fullständig lista över ersättningstaggar som stöds, se Cacti-dokumentationen."
 
 #: include/global_form.php:713
 msgid "Vertical Label (--vertical-label)"
@@ -9743,7 +9743,7 @@ msgstr "Alternativ Poller Path"
 
 #: include/global_settings.php:218
 msgid "Spine Binary File Location"
-msgstr "Binär fil för ryggraden"
+msgstr "Sökväg till binärfil för Spine"
 
 #: include/global_settings.php:219
 msgid "The path to Spine binary."
@@ -9755,7 +9755,7 @@ msgstr "Spine Config filväg"
 
 #: include/global_settings.php:227
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "Vägen till Spine-konfigurationsfilen. Som standard, i cpd i ryggraden, eller / etc om det inte anges."
+msgstr "Sökvägen till konfigurationsfilen för Spine. Som standard i arbetskatalogen för Spine, eller /etc om inget anges."
 
 #: include/global_settings.php:239
 msgid "RRDfile Auto Clean"
@@ -10115,7 +10115,7 @@ msgstr "Alternativa källor för innehållssäkerhet"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Utrymme avgränsade domännamn som kommer att få åtkomst utanför själva webbservern. Detta är viktigt för användare som väljer att använda ett CDN eller en webbsajt. Källor kan innehålla jokertecken till exempel: *.mydomain.com eller ett protokoll, till exempel: https: //*.example.com. Dessa alternativa källor inkluderar endast bild-, CSS- och JavaScript -typer."
+msgstr "Blankstegsseparerade domännamn som tillåts nås utanför själva webbservern. Detta är viktigt för användare som väljer att använda ett CDN eller en extern värdplats. Källor kan innehålla jokertecken, till exempel *.mydomain.com, eller ett protokoll, till exempel https://*.example.com. Dessa alternativa källor omfattar endast typerna bild, CSS och JavaScript."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10602,7 +10602,7 @@ msgstr "Anpassat datumformat"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Används vid formatering | date_time | på en graf"
+msgstr "Används vid formatering av |date_time| i en graf"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10724,7 +10724,7 @@ msgstr "Den tid som dina öppettider slutar. Format: tt:mm"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "% d veckor"
+msgstr "Dölj helger"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -11053,7 +11053,7 @@ msgstr "Standard Data Collector Processer"
 
 #: include/global_settings.php:1493
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Cacti 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
-msgstr "Standardnumret för samtidiga processer som ska utföras per Data Collector. OBS! Med utgångspunkt från Cacti 1.2 behålls denna inställning i Data Collector. Förflyttning framåt är det här värdet endast en förinställning för datainsamlaren. Om du använder ett högre nummer när du använder cmd.php förbättras prestanda. Prestandaförbättringar i ryggrad löses bäst med trådparametern. Vid användning av Spine rekommenderar vi ett lägre antal och hävdar tråden istället. När du använder cmd.php, använd inte mer än 2 gånger antalet CPU-kärnor."
+msgstr "Standardantalet samtidiga processer som körs per datainsamlare (Data Collector). OBS: Från och med Cacti 1.2 hanteras denna inställning i datainsamlaren. Framöver är detta värde endast en förinställning för datainsamlaren. Ett högre antal förbättrar prestandan när cmd.php används. Prestandaförbättringar i Spine uppnås bäst med trådparametern. När Spine används rekommenderar vi ett lägre antal processer och att i stället använda trådar. När cmd.php används bör högst 2x antalet CPU-kärnor användas."
 
 #: include/global_settings.php:1500
 msgid "Threads per Process"
@@ -12012,7 +12012,7 @@ msgstr "Variansprocent"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Detta värde representerar procentsatsen över det justerade provmedlet när avvikare har tagits bort från provet. Exempelvis skulle en Variansprocentandel på 100 %% på ett justerat medelvärde av 50 ta bort något prov över kvantiteten 100 från grafen."
+msgstr "Detta värde anger procentandelen över det justerade stickprovsmedelvärdet när extremvärden har tagits bort från urvalet. Till exempel skulle en variansprocent på 100%% vid ett justerat medelvärde på 50 ta bort alla värden över 100 från grafen."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12121,7 +12121,7 @@ msgstr "Hur vill du att Cacti ska presentera datum?  Denna inställning kommer o
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Server v %s - Underhåll"
+msgstr "Cacti-serverns tidszon"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12390,7 +12390,7 @@ msgstr "Användarinställningar"
 
 #: include/global_settings.php:2920
 msgid "1 Week"
-msgstr "% d Vecka"
+msgstr "1 vecka"
 
 #: include/global_settings.php:2933
 msgid "Auto Log Out Time"
@@ -12951,7 +12951,7 @@ msgstr "Fil"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "% d linjer"
+msgstr "Inledande rader"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13580,7 +13580,7 @@ msgstr "Länk %s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Error: Nej <b>TO</b> adress set !! <br> Om du använder länken <i>Test Mail</i> , ange inställning för <b>Alert e-post</b> ."
+msgstr "E-postfel: Ingen mottagaradress angiven!<br>Om du använder länken <i>Testa e-post</i>, ange inställningen <b>Varnings-e-post</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -13906,7 +13906,7 @@ msgstr "Cacti Project Page"
 
 #: lib/html.php:2888
 msgid "Spine"
-msgstr "Ryggrad"
+msgstr "Spine"
 
 #: lib/html.php:2889
 msgid "RRDProxy"
@@ -15185,7 +15185,7 @@ msgstr "Tack för att du tog dig tid att ladda ner och installera Cacti, den ful
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Se till att du har läst och följt de nödvändiga stegen som behövs för att installera Cacti innan du fortsätter. Installationsinformation finns för <a href=\"%1$s\">Unix</a> och <a href=\"%2$s\">Win32-</a> baserade operativsystem."
+msgstr "Se till att du har läst och följt de nödvändiga stegen för att installera Cacti innan du fortsätter. Installationsinformation finns för <a href=\"%s\">Unix</a>- och <a href=\"%s\">Win32</a>-baserade operativsystem."
 
 #: lib/installer.php:1855
 #, php-format
@@ -15610,7 +15610,7 @@ msgstr "Jag har läst detta uttalande"
 
 #: lib/installer.php:2567 lib/installer.php:2573
 msgid "Default Profile"
-msgstr "Förvald profil@ info: tooltip"
+msgstr "Standardprofil"
 
 #: lib/installer.php:2568
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Cacti Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
@@ -16471,7 +16471,7 @@ msgstr "CDP Okända datapunkter (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Inga %s hittades"
+msgstr "Fel hittades"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16916,7 +16916,7 @@ msgstr "Med fjärrkontrollfunktioner synkroniseras stora mängder data från huv
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Om du använder Cacti Performance Booster och väljer en minneslagringsmotor måste du vara noga med att tömma Performance Booster-bufferten innan systemet får slut på utrymme i minnestabellen.  Detta görs på två sätt, först genom att minska storleken på din utdatakolumn till precis rätt storlek.  Den här kolumnen finns i tabellerna poller_output och poller_output_boost.  Det andra du kan göra är att allokera mer minne till minnestabellerna.  Vi har godtyckligt valt ett rekommenderat värde på 10%% av systemminnet, men om du använder SSD-diskar eller har ett mindre system kan du ignorera denna rekommendation eller välja en annan lagringsmotor.  Du kan se den förväntade förbrukningen av Performance Booster-tabellerna under Console -> System Utilities -> View Boost Status."
+msgstr "Om du använder Cacti Performance Booster och väljer en lagringsmotor i minnet måste du vara noga med att tömma Performance Booster-bufferten innan systemet får slut på utrymme för minnestabeller. Detta görs på två sätt: först genom att minska storleken på din utdatakolumn till precis rätt storlek. Den här kolumnen finns i tabellerna poller_output och poller_output_boost. Det andra du kan göra är att allokera mer minne till minnestabeller. Vi har valt ett rekommenderat värde på 10%% av systemminnet, men om du använder SSD-diskar eller har ett mindre system kan du bortse från den här rekommendationen eller välja en annan lagringsmotor. Du kan se den förväntade förbrukningen för Performance Booster-tabellerna under Konsol -> Systemverktyg -> Visa Boost-status."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16942,7 +16942,7 @@ msgstr "Om dina tabeller har mycket stora index måste du arbeta med Barracuda i
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB kommer att hålla så mycket tabeller och index i systemminnet som möjligt. Därför borde du göra innodb_buffer_pool stor nog att hålla så mycket av tabellerna och indexera i minnet. Att kontrollera storleken på katalogen / var / lib / mysql / cacti hjälper till att bestämma detta värde. Vi rekommenderar 25 %% av systemets totala minne, men dina krav varierar beroende på din systemstorlek."
+msgstr "InnoDB håller så mycket tabeller och index i systemminnet som möjligt. Därför bör du göra innodb_buffer_pool tillräckligt stor för att rymma så mycket av tabellerna och indexen i minnet. Att kontrollera storleken på katalogen /var/lib/mysql/cacti hjälper till att bestämma detta värde. Vi rekommenderar 25%% av systemets totala minne, men dina behov varierar beroende på systemets storlek."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -18718,7 +18718,7 @@ msgstr "För att redigera det här trädet måste du först låsa det genom att 
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Detta träd har blivit låst för redigering på%1$s av%2$s."
+msgstr "Detta träd har låsts för redigering den %s av %s."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -18984,7 +18984,7 @@ msgstr "Användarnamn:"
 
 #: user_admin.php:409
 msgid "Full Name:"
-msgstr "Ваше имя :"
+msgstr "Fullständigt namn:"
 
 #: user_admin.php:416
 msgid "Realm:"
@@ -20682,7 +20682,6 @@ msgstr "Inga indexändringar upptäcktes, pollercachen uppdaterades"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
 msgstr "Synkroniseringen misslyckades. Se loggen för mer information."
 
 #: graph.php:512

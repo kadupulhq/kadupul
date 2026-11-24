@@ -3614,7 +3614,7 @@ msgstr "Modelos de gráficos/dados associados [editar: %s]"
 
 #: data_queries.php:773
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Modelos de gráficos/dados associados [editar: %s]"
+msgstr "Modelos de Gráfico/Dados Associados [novo]"
 
 #: data_queries.php:808
 msgid "Associated Data Templates"
@@ -4414,7 +4414,7 @@ msgstr "O valor será derivado do dispositivo se este campo for deixado vazio."
 
 #: data_templates.php:1108
 msgid "Custom Data Warning Message"
-msgstr "Dados personalizados [entrada de dados: %s]"
+msgstr "Mensagem de Aviso de Dados Personalizados"
 
 #: data_templates.php:1109
 msgid "WARNING: Data Loss can Occur"
@@ -5181,7 +5181,7 @@ msgstr "Modelo de gráfico selecionado"
 #: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Escolha um Modelo de Gráfico para aplicar a este Gráfico. Observe que você só pode alterar os Modelos de Gráfico para um Modelo de Gráfico compatível com 100%%, o que significa que ele inclui Fontes de Dados idênticas."
+msgstr "Escolha um Modelo de Gráfico para aplicar a este Gráfico. Observe que você só pode alterar Modelos de Gráfico para um Modelo de Gráfico 100%% compatível, o que significa que ele inclui Fontes de Dados idênticas."
 
 #: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
@@ -5209,7 +5209,7 @@ msgstr "Novos Gráficos para [ Todos os Dispositivos]"
 
 #: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Gestão de Grupos de Utilizadores [editar: %s]"
+msgstr "Gerenciamento de Gráficos [ Não Baseado em Dispositivo ]"
 
 #: graphs.php:2080
 #, php-format
@@ -5375,7 +5375,7 @@ msgstr "Definir Padrão"
 #: help.php:71
 #, php-format
 msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "AVISO: Página de cactos:%s para o usuário:%s gerou um erro fatal %d!"
+msgstr "AVISO: Página do Cacti:%s para o Usuário:%s gerou um Erro Fatal %d!"
 
 #: help.php:99
 #, php-format
@@ -6664,7 +6664,7 @@ msgstr "Todos os Dias"
 
 #: include/global_arrays.php:837
 msgid "1 Thread"
-msgstr "%d Tópico"
+msgstr "1 Thread"
 
 #: include/global_arrays.php:881
 msgid "Builtin Authentication"
@@ -7209,7 +7209,7 @@ msgstr "Ontem"
 #: include/global_arrays.php:1447
 #, php-format
 msgid "Last %d Days"
-msgstr "過去 %d 日間"
+msgstr "Últimos %d Dias"
 
 #: include/global_arrays.php:1448
 msgid "Last Week"
@@ -10044,7 +10044,7 @@ msgstr "Quando ativado, o Cacti não bloqueia gráficos. Isso permite uma modifi
 
 #: include/global_settings.php:479
 msgid "Hide Cacti Dashboard"
-msgstr "Ocultar painel de instrumentos de Cactos"
+msgstr "Ocultar Painel do Cacti"
 
 #: include/global_settings.php:480
 msgid "For use with Cacti's External Link Support.  Using this setting, you can hide the Cacti Dashboard, so you can display just your own page."
@@ -10120,7 +10120,7 @@ msgstr "Fontes alternativas de segurança de conteúdo"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Espaçar nomes de domínio excluídos que terão permissão para serem acessados fora do próprio servidor da Web. Isso é importante para usuários que optam por usar um CDN ou site de hospedagem. As fontes podem incluir curingas, por exemplo: * .mydomain.com, ou um protocolo, por exemplo: https: //*.example.com. Essas fontes alternativas incluem apenas os tipos de imagem, CSS e JavaScript."
+msgstr "Nomes de domínio delimitados por espaço cujo acesso será permitido fora do próprio Servidor Web. Isso é importante para usuários que optam por usar uma CDN ou um site de hospedagem. As fontes podem incluir curingas, por exemplo: *.mydomain.com, ou um protocolo, por exemplo: https://*.example.com. Essas Fontes Alternativas incluem apenas os tipos Imagem, CSS e JavaScript."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -10607,7 +10607,7 @@ msgstr "Usar formato de data personalizado"
 
 #: include/global_settings.php:1059
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Para ser usado na formatação | date_time | em um gráfico"
+msgstr "Para ser usado ao formatar |date_time| em um gráfico"
 
 #: include/global_settings.php:1066
 msgid "Disable RRDtool Watermark"
@@ -10729,7 +10729,7 @@ msgstr "A hora em que seu horário comercial termina. Formato: hh:mm"
 
 #: include/global_settings.php:1170
 msgid "Hide Weekends"
-msgstr "%d Semanas"
+msgstr "Ocultar Finais de Semana"
 
 #: include/global_settings.php:1171
 msgid "Only show business hours during weekdays."
@@ -11074,7 +11074,7 @@ msgstr "Método de autenticação"
 
 #: include/global_settings.php:1516
 msgid "<blockquote><i>Built-in Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Cacti resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i>>Built-in Authentication</i> - Cacti trata da autenticação do usuário, que permite que você crie usuários e lhes dê direitos a diferentes áreas dentro do Cacti.<br><br><i>>Autenticação Básica da Web</i> - A autenticação é feita pelo servidor web. Os usuários podem ser adicionados ou criados automaticamente no primeiro login se o Usuário do modelo for definido, caso contrário as permissões de convidado definidas serão usadas.<br><br><br><i>>LDAP Authentication</i> - Permite autenticação contra um servidor LDAP. Os usuários serão criados automaticamente no primeiro login se o usuário do modelo for definido, caso contrário as permissões de convidado definidas serão usadas.  Se o módulo PHPs LDAP não estiver ativado, a Autenticação LDAP não aparecerá como uma opção selecionável.<br><br><br><i>Autenticação de Domínio Múltiplo LDAP/AD</i> - Permite que os administradores ofereçam suporte a vários grupos diferentes de diretórios LDAP/AD diferentes para acessar recursos Cacti.  Assim como a autenticação LDAP, o módulo PHP LDAP é necessário para utilizar este método.</blockquote>."
+msgstr "<blockquote><i>Autenticação Integrada</i> - O Cacti gerencia a autenticação de usuários, o que permite criar usuários e conceder a eles permissões para diferentes áreas dentro do Cacti.<br><br><i>Autenticação Básica Web</i> - A autenticação é gerenciada pelo servidor web. Os usuários podem ser adicionados ou criados automaticamente no primeiro login se o Usuário Modelo estiver definido; caso contrário, as permissões de convidado definidas serão usadas.<br><br><i>Autenticação LDAP</i> - Permite a autenticação em um servidor LDAP. Os usuários serão criados automaticamente no primeiro login se o Usuário Modelo estiver definido; caso contrário, as permissões de convidado definidas serão usadas. Se o módulo LDAP do PHP não estiver habilitado, a Autenticação LDAP não aparecerá como uma opção selecionável.<br><br><i>Autenticação de Múltiplos Domínios LDAP/AD</i> - Permite que os administradores deem suporte a vários grupos distintos de diferentes diretórios LDAP/AD para acessar os recursos do Cacti. Assim como na Autenticação LDAP, o módulo LDAP do PHP é necessário para utilizar este método.</blockquote>"
 
 #: include/global_settings.php:1522
 msgid "Support Authentication Cookies"
@@ -12017,7 +12017,7 @@ msgstr "Porcentagem de desvio"
 #: include/global_settings.php:2459
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Esse valor representa a porcentagem acima da média da amostra ajustada, uma vez que os valores aberrantes foram removidos da amostra.  Por exemplo, uma Porcentagem de desvio de 100%% em uma média ajustada de 50 removeria qualquer amostra acima da quantidade de 100 do gráfico."
+msgstr "Este valor representa a porcentagem acima da média ajustada da amostra após a remoção dos valores discrepantes da amostra. Por exemplo, uma Porcentagem de Variância de 100%% em uma média ajustada de 50 removeria do gráfico qualquer amostra acima da quantidade de 100."
 
 #: include/global_settings.php:2482
 msgid "Variance Number of Outliers"
@@ -12126,7 +12126,7 @@ msgstr "Como você gostaria que o Cacti apresentasse as datas?  Essa configuraç
 
 #: include/global_settings.php:2594
 msgid "Cacti Server Timezone"
-msgstr "Cacti Server v%s - Manutenção"
+msgstr "Fuso Horário do Servidor Cacti"
 
 #: include/global_settings.php:2595
 msgid "My Browsers Timezone"
@@ -12913,7 +12913,7 @@ msgstr "%s - WEBUI NOTE: Cacti Log Cleared from Web Management Interface."
 
 #: lib/clog_webapi.php:257
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Cacti and Syslog, the log information will remain in Syslog."
-msgstr "Clique em 'Continuar' para excluir o Log File.<br><br><br><br><br>Note: Se o registro estiver definido como Cacti e Syslog, as informações de registro permanecerão no Syslog."
+msgstr "Clique em 'Continuar' para limpar o Arquivo de Log.<br><br><br>Observação: se o registro estiver definido para Cacti e Syslog, as informações de log permanecerão no Syslog."
 
 #: lib/clog_webapi.php:263 utilities.php:1489
 msgid "Purge Log"
@@ -12956,7 +12956,7 @@ msgstr "Arquivo"
 
 #: lib/clog_webapi.php:551
 msgid "Head Lines"
-msgstr "%d Linhas"
+msgstr "Linhas Iniciais"
 
 #: lib/clog_webapi.php:551 utilities.php:1474
 msgid "Tail Lines"
@@ -13585,7 +13585,7 @@ msgstr "Link%s"
 
 #: lib/functions.php:5362
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Erro de Mailer: Não <b>TO</b> conjunto de endereços!!<br>Se estiver usando o link <i>Teste Mail</i>, defina a configuração <b>Alerta e-mail</b>."
+msgstr "Erro do Mailer: nenhum endereço de destinatário definido!!<br>Se estiver usando o link <i>E-mail de Teste</i>, defina a configuração <b>E-mail de alerta</b>."
 
 #: lib/functions.php:5730
 #, php-format
@@ -14192,7 +14192,7 @@ msgstr "Entrar um caminho de diretório válido"
 #: lib/html_form.php:1484
 #, php-format
 msgid "Cacti Color (%s)"
-msgstr "Cactos Cor (%s)"
+msgstr "Cor do Cacti (%s)"
 
 #: lib/html_form.php:1567
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14842,11 +14842,11 @@ msgstr "O termo de pesquisa \"%s\" não é válido. Erro é %s"
 
 #: lib/html_utility.php:1354
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
-msgstr "As expressões regulares de cactos são limitadas a 50 caracteres apenas por razões de segurança."
+msgstr "As expressões regulares do Cacti são limitadas a apenas 50 caracteres por motivos de segurança."
 
 #: lib/html_utility.php:1358
 msgid "Cacti regular expressions can not includes the semi-color character."
-msgstr "As expressões regulares de cactos não podem incluir o caractere semicolor."
+msgstr "As expressões regulares do Cacti não podem incluir o caractere de ponto e vírgula."
 
 #: lib/html_utility.php:1375
 msgid "Invalid regular expression."
@@ -15135,7 +15135,7 @@ msgstr "Você criou um novo banco de dados, mas ainda não importou o arquivo 'c
 
 #: lib/installer.php:1697
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
-msgstr "Este erro também pode ser gerado se o usuário do banco de dados cactos não tiver permissões corretas no banco de dados Cacti. Certifique-se de que o usuário do banco de dados Cacti tem a capacidade de SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX no banco de dados Cacti."
+msgstr "Este erro também pode ser gerado se o usuário do banco de dados do cacti não tiver as permissões corretas no banco de dados do Cacti. Certifique-se de que o usuário do banco de dados do Cacti tenha permissão para SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX no banco de dados do Cacti."
 
 #: lib/installer.php:1698
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
@@ -15190,7 +15190,7 @@ msgstr "Obrigado por dedicar tempo para baixar e instalar o Cacti, a solução g
 #: lib/installer.php:1852
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Certifique-se de que leu e seguiu os passos necessários para instalar o Cacti antes de continuar. As informações de instalação podem ser encontradas para <a href=\"%1$s\">Unix</a> e <a href=\"%2$s\">Win32</a> sistemas operacionais baseados."
+msgstr "Certifique-se de ter lido e seguido as etapas necessárias para instalar o Cacti antes de continuar. As informações de instalação podem ser encontradas para sistemas operacionais baseados em <a href=\"%s\">Unix</a> e <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php:1855
 #, php-format
@@ -16284,7 +16284,7 @@ msgstr "Plugins"
 #: lib/plugins.php:1217 lib/plugins.php:1223
 #, php-format
 msgid "Requires: Cacti >= %s"
-msgstr "Requer: Cactos >= %s"
+msgstr "Requer: Cacti >= %s"
 
 #: lib/plugins.php:1220
 msgid "Legacy Plugin"
@@ -16409,7 +16409,7 @@ msgstr "A pdp_per_row de '%s' é inválida para RRA '%s' deve ser '%s'.  Conside
 #: lib/rrd.php:3982
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
-msgstr "XFF para cactos RRA id \"%s\" deve ser \"%s\"."
+msgstr "O XFF para o ID de RRA do Cacti é '%s', mas deveria ser '%s'"
 
 #: lib/rrd.php:3986
 #, php-format
@@ -16476,7 +16476,7 @@ msgstr "CDP Desconhecido Pontos de dados (0)"
 
 #: lib/rrd.php:4192
 msgid "Errors Found"
-msgstr "Nenhum %s foi encontrado"
+msgstr "Erros Encontrados"
 
 #: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
@@ -16921,7 +16921,7 @@ msgstr "Com as capacidades de sondagem remota, grandes quantidades de dados ser�
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Ao usar o Cacti Performance Booster e escolher um mecanismo de armazenamento em memória, você deve ter cuidado para esvaziar o buffer do Performance Booster antes que o sistema fique sem espaço em tabelas de memória.  Isso é feito de duas maneiras: primeiro, reduzindo o tamanho da coluna output apenas para o tamanho necessário.  Essa coluna está nas tabelas poller_output e poller_output_boost.  A segunda coisa que você pode fazer é alocar mais memória para tabelas de memória.  Escolhemos arbitrariamente um valor recomendado de 10%% da memória do sistema, mas se você estiver usando unidades de disco SSD ou tiver um sistema menor, poderá ignorar esta recomendação ou escolher um mecanismo de armazenamento diferente.  Você pode ver o consumo esperado das tabelas do Performance Booster em Console -> Utilitários do Sistema -> Ver Status do Boost."
+msgstr "Se você estiver usando o Cacti Performance Booster e escolher um mecanismo de armazenamento em memória, tenha cuidado para esvaziar o buffer do Performance Booster antes que o sistema fique sem espaço para tabelas em memória. Isso é feito de duas maneiras: primeiro, reduzindo o tamanho da coluna output apenas para o tamanho exato necessário. Essa coluna está nas tabelas poller_output e poller_output_boost. A segunda coisa que você pode fazer é alocar mais memória para as tabelas em memória. Escolhemos arbitrariamente um valor recomendado de 10%% com base na memória do sistema, mas se você estiver usando unidades de disco SSD ou tiver um sistema menor, poderá ignorar esta recomendação ou escolher um mecanismo de armazenamento diferente. Você pode ver o consumo esperado das tabelas do Performance Booster em Console -> Utilitários do Sistema -> Ver Status do Boost."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16947,7 +16947,7 @@ msgstr "Se suas tabelas tiverem índices muito grandes, você deverá operar com
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "O InnoDB manterá o máximo possível de tabelas e índices na memória do sistema.  Portanto, você deve tornar o innodb_buffer_pool grande o suficiente para armazenar a maior parte das tabelas e índices na memória.  Verificar o tamanho do diretório /var/lib/mysql/cacti ajudará a determinar esse valor.  Recomendamos 25%% da memória total do sistema, mas seus requisitos variarão dependendo do tamanho do seu sistema."
+msgstr "O InnoDB manterá o máximo possível de tabelas e índices na memória do sistema. Portanto, você deve definir o innodb_buffer_pool grande o suficiente para armazenar o máximo de tabelas e índices na memória. Verificar o tamanho do diretório /var/lib/mysql/cacti ajudará a determinar esse valor. Recomendamos 25%% com base na memória total do seu sistema, mas os requisitos variarão dependendo do tamanho do seu sistema."
 
 #: lib/utility.php:1405
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
@@ -17733,7 +17733,7 @@ msgstr "Tempo de execução máximo de %d segundos excedido para o ID do poller 
 
 #: poller.php:934
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
-msgstr "AVISO: O ciclo de pesquisa dos cactos excedeu o intervalo do Poller em"
+msgstr "AVISO: O Ciclo de Coleta do Cacti Excedeu o Intervalo do Poller em "
 
 #: poller.php:961
 #, php-format
@@ -17759,7 +17759,7 @@ msgstr "AVISO: Banco de dados principal do Cacti %s offline ou em recuperação"
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
-msgstr "Cactos Admin Primário"
+msgstr "Administrador Principal do Cacti"
 
 #: poller_automation.php:1159
 msgid "Cacti Automation Report requires an html based Email client"
@@ -18109,7 +18109,7 @@ msgstr "Última Sincronia"
 
 #: pollers.php:1164
 msgid "The last time this Data Collector was full synced with main Cacti site."
-msgstr "A última vez que este Coletor de Dados foi totalmente sincronizado com o site principal de Cactos."
+msgstr "A última vez que este Coletor de Dados foi totalmente sincronizado com o site principal do Cacti."
 
 #: pollers.php:1218
 msgid "No Data Collectors Found"
@@ -18283,7 +18283,7 @@ msgstr "NOTA: As configurações de caminho nesta guia são salvas apenas localm
 #: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
-msgstr "Configurações de cactos (%s)%s"
+msgstr "Configurações do Cacti (%s)%s"
 
 #: settings.php:505
 msgid "Changing Permission Model Warning"
@@ -18723,7 +18723,7 @@ msgstr "Para Processar esta árvore, você deve primeiro bloqueá-la pressionand
 #: tree.php:252 tree.php:972
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Esta árvore foi bloqueada para Processamento em %1$s por %2$s."
+msgstr "Esta árvore foi bloqueada para Edição em %s por %s."
 
 #: tree.php:252 tree.php:977
 msgid "To edit the tree, you must first unlock it and then lock it as yourself"
@@ -20687,8 +20687,7 @@ msgstr "Nenhuma alteração de índice detectada, Cache do Poller atualizado"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-
-msgstr "Falha na sincronização. Consulte o log para obter detalhes."
+msgstr "A sincronização falhou. Consulte o log para obter detalhes."
 
 #: graph.php:512
 msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
