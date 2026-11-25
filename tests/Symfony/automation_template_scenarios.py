@@ -96,10 +96,15 @@ def verify_automation_templates(harness, session, user_id, check):
               'legacy Graph Rule bookmark keeps its list filters and drops the legacy-only ones')
         rules = scalar("SELECT COALESCE(GROUP_CONCAT(CONCAT_WS(':', id, name, enabled) ORDER BY id), '') FROM automation_graph_rules")
         rule = scalar('SELECT COALESCE(MIN(id), 1) FROM automation_graph_rules')
+        # csrf-magic tokens are per page; take one from the still-legacy rule editor, as a stale form would carry.
+        _, editor, _ = fetch('/automation_graph_rules.php?action=edit&id=' + rule)
+        parser = Inputs()
+        parser.feed(editor)
+        token = parser.fields.get('__csrf_magic') or next(iter(re.findall(r'csrfMagicToken\s*=\s*["\']([^"\']+)', editor)), session.token)
         status, _, _ = fetch('/automation_graph_rules.php', {'action': 'actions', 'drp_action': '3', 'chk_' + rule: 'on',
-                                                             'selected_items': 'a:1:{i:0;s:%d:"%s";}' % (len(rule), rule), '__csrf_magic': session.token})
+                                                             'selected_items': 'a:1:{i:0;s:%d:"%s";}' % (len(rule), rule), '__csrf_magic': token})
         check(status == 409 and scalar("SELECT COALESCE(GROUP_CONCAT(CONCAT_WS(':', id, name, enabled) ORDER BY id), '') FROM automation_graph_rules") == rules,
-              'legacy Graph Rule bulk post answers 409 and writes nothing')
+              'legacy Graph Rule bulk post answers 409 and writes nothing: status=%d' % status)
 
         for name in (marker + ' <b>device</b>', marker + ' second'):
             created_device_templates.append(int(harness.sql(
