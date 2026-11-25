@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Bengali Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 17:12-0800\n"
+"POT-Creation-Date: 2026-11-24 20:09-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Bengali\n"
@@ -112,10 +112,10 @@ msgstr "সারিবদ্ধতা (Align)"
 msgid "All Items"
 msgstr "সকল আইটেম"
 
-#: aggregate_graphs.php automation_devices.php automation_graph_rules.php
-#: automation_tree_rules.php data_debug.php data_sources.php
-#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
+#: data_debug.php data_sources.php graph_templates_items.php graphs.php
+#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "যেকোনো"
@@ -129,22 +129,21 @@ msgid "Associate with Aggregate"
 msgstr "অ্যাগ্রিগেটের সাথে সংযুক্ত করুন"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "বাতিল"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php user_domains.php
 msgid "Clear"
 msgstr "পরিষ্কার করুন"
 
@@ -190,11 +189,11 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "নিম্নলিখিত অ্যাগ্রিগেট গ্রাফ(সমূহ)-কে ট্রি ব্রাঞ্চের অধীনে রাখতে 'Continue'-তে ক্লিক করুন।"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Continue"
 msgstr "চালিয়ে যান"
 
@@ -211,23 +210,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "অ্যাগ্রিগেটগুলো থেকে নতুন অ্যাগ্রিগেট তৈরি করুন"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+#: managers.php plugins.php pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "ডিফল্ট"
 
-#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php include/global_settings.php
-#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_networks.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "মুছে ফেলুন"
 
@@ -252,13 +250,12 @@ msgid "Disassociate with Aggregate"
 msgstr "অ্যাগ্রিগেট থেকে বিচ্ছিন্ন করুন"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php
 msgid "Go"
 msgstr "যান"
 
@@ -282,10 +279,10 @@ msgstr "গ্রাফসমূহ"
 msgid "Hide Item Details"
 msgstr "আইটেমের বিবরণ লুকান"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php lib/api_automation.php
-#: pollers.php tree.php user_admin.php user_group_admin.php
+#: aggregate_graphs.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
+#: user_admin.php user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -403,14 +400,14 @@ msgid "Return"
 msgstr "ফিরে যান"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
-#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php rrdcleaner.php settings.php
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "অনুসন্ধান"
 
@@ -991,11 +988,11 @@ msgstr "SNMP নাম"
 msgid "Select Template"
 msgstr "টেমপ্লেট নির্বাচন করুন"
 
-#: automation_devices.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: lib/api_automation.php lib/html_reports.php lib/installer.php managers.php
-#: package_import.php plugins.php pollers.php templates_import.php
-#: user_admin.php user_group_admin.php utilities.php
+#: automation_devices.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: lib/html_reports.php lib/installer.php managers.php package_import.php
+#: plugins.php pollers.php templates_import.php user_admin.php
+#: user_group_admin.php utilities.php
 msgid "Status"
 msgstr "অবস্থা"
 
@@ -1012,10 +1009,6 @@ msgid "An attempt was made to perform a SQL injection in Graph automation"
 msgstr "গ্রাফ অটোমেশনে SQL ইনজেকশন চালানোর চেষ্টা করা হয়েছিল"
 
 #: automation_graph_rules.php automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "অনুরোধকৃত অ্যাকশন প্রয়োগ করুন"
-
-#: automation_graph_rules.php automation_tree_rules.php
 msgid "Are You Sure?"
 msgstr "আপনি কি নিশ্চিত?"
 
@@ -1023,18 +1016,6 @@ msgstr "আপনি কি নিশ্চিত?"
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
 msgstr "আপনি কি নিশ্চিত যে আপনি '%s' নিয়মটি মুছে ফেলতে চান?"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "নিম্নলিখিত নিয়ম(সমূহ) নিষ্ক্রিয় করতে 'Continue'-তে ক্লিক করুন।"
-
-#: automation_graph_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "নিম্নলিখিত নিয়ম(সমূহ) অনুলিপি করতে 'Continue'-তে ক্লিক করুন। আপনি ঐচ্ছিকভাবে নতুন গ্রাফ নিয়মগুলোর জন্য শিরোনামের ফরম্যাট পরিবর্তন করতে পারেন।"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "নিম্নলিখিত নিয়ম(সমূহ) সক্রিয় করতে 'Continue'-তে ক্লিক করুন।"
 
 #: automation_graph_rules.php graphs.php include/global_arrays.php
 #: include/global_form.php
@@ -1045,40 +1026,13 @@ msgstr "ডেটা কোয়েরি"
 msgid "Device Selection Criteria"
 msgstr "ডিভাইস নির্বাচনের মানদণ্ড"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php managers.php plugins.php
-#: pollers.php user_admin.php user_domains.php user_group_admin.php
-msgid "Disable"
-msgstr "নিষ্ক্রিয় করুন"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
-msgid "Disabled"
-msgstr "নিষ্ক্রিয়"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Don't Show"
 msgstr "দেখাবেন না"
 
-#: automation_graph_rules.php automation_tree_rules.php data_queries.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php
-msgid "Duplicate"
-msgstr "অনুলিপি করুন"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr "নিয়ম সেটিংস সম্পাদনা করুন"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php include/global_settings.php
-#: managers.php plugins.php pollers.php user_admin.php user_domains.php
-#: user_group_admin.php
-msgid "Enable"
-msgstr "সক্রিয় করুন"
 
 #: automation_graph_rules.php automation_tree_rules.php data_debug.php
 #: data_sources.php include/global_arrays.php include/global_form.php
@@ -1092,17 +1046,9 @@ msgstr "সক্রিয়"
 msgid "Graph Creation Criteria"
 msgstr "গ্রাফ তৈরির মানদণ্ড"
 
-#: automation_graph_rules.php include/global_arrays.php
-msgid "Graph Rules"
-msgstr "গ্রাফ রুলসমূহ"
-
 #: automation_graph_rules.php include/global_form.php
 msgid "Graph Type"
 msgstr "গ্রাফের ধরন"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "নিশ্চিত করুন যে ওই নিয়মগুলো সফলভাবে পরীক্ষা করা হয়েছে!"
 
 #: automation_graph_rules.php
 msgid "Matching Devices."
@@ -1113,20 +1059,8 @@ msgid "Matching Objects."
 msgstr "মিলে যাওয়া অবজেক্টসমূহ।"
 
 #: automation_graph_rules.php
-msgid "No Graph Rules Found"
-msgstr "কোনো গ্রাফ নিয়ম পাওয়া যায়নি"
-
-#: automation_graph_rules.php
-msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "নিচের গ্রাফ নিয়মগুলো মুছে ফেলতে 'Continue' চাপুন।"
-
-#: automation_graph_rules.php
 msgid "Rule Details."
 msgstr "নিয়মের বিস্তারিত।"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Rule Name"
-msgstr "নিয়মের নাম"
 
 #: automation_graph_rules.php
 #, php-format
@@ -1138,24 +1072,8 @@ msgid "Rule not found."
 msgstr "নিয়ম পাওয়া যায়নি।"
 
 #: automation_graph_rules.php
-msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
-msgstr "এই নিয়মের অভ্যন্তরীণ ডাটাবেস ID। ডিবাগিং এবং অটোমেশন করার ক্ষেত্রে উপকারী।"
-
-#: automation_graph_rules.php
-msgid "The name of this rule."
-msgstr "এই নিয়মের নাম।"
-
-#: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
 msgstr "এই গ্রাফ নিয়ম ফর্মটির মেয়াদ শেষ হয়ে গেছে। নিয়মটি আবার খুলুন এবং এর বর্তমান ফর্মটি ব্যবহার করুন।"
-
-#: automation_graph_rules.php automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "শিরোনামের ফরম্যাট"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "rule_name"
-msgstr "rule_name"
 
 #: automation_networks.php include/global_settings.php pollers.php
 #, php-format
@@ -1221,9 +1139,29 @@ msgstr "দৈনিক"
 msgid "Data Collector"
 msgstr "ডেটা কালেক্টর"
 
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
+msgid "Disable"
+msgstr "নিষ্ক্রিয় করুন"
+
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_sources.php data_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
+msgid "Disabled"
+msgstr "নিষ্ক্রিয়"
+
 #: automation_networks.php
 msgid "Discover Now"
 msgstr "এখনই ডিসকভার করুন"
+
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php include/global_settings.php managers.php
+#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+msgid "Enable"
+msgstr "সক্রিয় করুন"
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
@@ -1328,6 +1266,10 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "ট্রি অটোমেশনে SQL ইনজেকশন চালানোর চেষ্টা করা হয়েছিল"
 
 #: automation_tree_rules.php
+msgid "Apply requested action"
+msgstr "অনুরোধকৃত অ্যাকশন প্রয়োগ করুন"
+
+#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "আপনি কি নিশ্চিত যে আপনি '%s' নিয়মটি মুছে ফেলতে (DELETE) চান?"
@@ -1341,12 +1283,25 @@ msgid "Click 'Continue' to delete the following Rule(s)."
 msgstr "নিম্নলিখিত নিয়ম(সমূহ) মুছে ফেলতে 'Continue'-তে ক্লিক করুন।"
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to disable the following Rule(s)."
+msgstr "নিম্নলিখিত নিয়ম(সমূহ) নিষ্ক্রিয় করতে 'Continue'-তে ক্লিক করুন।"
+
+#: automation_tree_rules.php
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
 msgstr "নিম্নলিখিত নিয়ম(সমূহ) অনুলিপি করতে 'Continue'-তে ক্লিক করুন। আপনি ঐচ্ছিকভাবে নতুন নিয়মগুলোর জন্য শিরোনামের ফরম্যাট পরিবর্তন করতে পারেন।"
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to enable the following Rule(s)."
+msgstr "নিম্নলিখিত নিয়ম(সমূহ) সক্রিয় করতে 'Continue'-তে ক্লিক করুন।"
+
+#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "তৈরিকৃত ট্রিসমূহ"
+
+#: automation_tree_rules.php data_queries.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "অনুলিপি করুন"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1369,6 +1324,10 @@ msgid "Leaf Item Type"
 msgstr "লিফ আইটেমের ধরন"
 
 #: automation_tree_rules.php
+msgid "Make sure, that those rules have successfully been tested!"
+msgstr "নিশ্চিত করুন যে ওই নিয়মগুলো সফলভাবে পরীক্ষা করা হয়েছে!"
+
+#: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "কোনো ট্রি নিয়ম পাওয়া যায়নি"
 
@@ -1385,12 +1344,20 @@ msgid "ROOT"
 msgstr "রুট"
 
 #: automation_tree_rules.php
+msgid "Rule Name"
+msgstr "নিয়মের নাম"
+
+#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "এই ট্রি নিয়ম ফর্মটির মেয়াদ শেষ হয়ে গেছে। নিয়মটি আবার খুলুন এবং এর বর্তমান ফর্মটি ব্যবহার করুন।"
 
 #: automation_tree_rules.php
 msgid "This Type"
 msgstr "এই ধরন"
+
+#: automation_tree_rules.php graphs.php
+msgid "Title Format"
+msgstr "শিরোনামের ফরম্যাট"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1412,6 +1379,10 @@ msgstr "ট্রি রুলসমূহ"
 #: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "গ্রুপিং ব্যবহার করে"
+
+#: automation_tree_rules.php
+msgid "rule_name"
+msgstr "rule_name"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -4593,6 +4564,10 @@ msgstr "গ্রাফ ব্যবস্থাপনা"
 #: include/global_arrays.php
 msgid "Graph Rule Items"
 msgstr "গ্রাফ নিয়ম আইটেমসমূহ"
+
+#: include/global_arrays.php
+msgid "Graph Rules"
+msgstr "গ্রাফ রুলসমূহ"
 
 #: include/global_arrays.php
 msgid "Graph Template Input"

@@ -10,10 +10,12 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% block body %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony generates the fixed management_snmp_mibs route without supplied URL or parameters. #}
 {% if screen.value in ['snmp-objects', 'snmp-notifications'] %}<p><a href="{{ path('management_snmp_mibs') }}">{{ 'Registered SNMP MIBs'|trans({}, 'management') }}</a></p>{% endif %}
-{# Screens whose editor and bulk actions are Symfony routes. The others still open their PHP forms.
-   Their texts are in the automation domain, named literally so the translation checks can follow them. #}
+{# Screens whose bulk actions, and editor when it names one, are Symfony routes. The others still open their PHP forms.
+   A graph rule's name still opens its criteria on the PHP page. Each screen's texts are in its own domain,
+   named literally below so the translation checks can follow them. #}
 {% set native = {
-    'snmp-options': {create: 'automation_snmp_option_create', edit: 'automation_snmp_option_edit', action: 'automation_snmp_option_action', limit: constant('Kadupul\\Automation\\Application\\Port\\SnmpOptionStore::MAX_SELECTION')}
+    'snmp-options': {create: 'automation_snmp_option_create', edit: 'automation_snmp_option_edit', action: 'automation_snmp_option_action', limit: constant('Kadupul\\Automation\\Application\\Port\\SnmpOptionStore::MAX_SELECTION')},
+    'graph-rules': {create: 'automation_graph_rule_create', action: 'automation_graph_rule_action', limit: constant('Kadupul\\Automation\\Application\\Port\\GraphRuleStore::MAX_SELECTION')}
 }[screen.value] ?? null %}
 <h1>{{ screen.title|trans }}</h1>
 {% if not native %}<p>{{ 'Changes and advanced filters use the existing administration forms.'|trans }}</p>{% endif %}
@@ -72,20 +74,20 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {# The selection is a GET form: each button opens its confirmation page, which carries the CSRF token and writes. #}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route named in this template. #}
 <form method="get" action="{{ path(native.action, {operation: 'delete'}) }}" aria-describedby="administration-list-selection">
-<p id="administration-list-selection">{{ 'Select up to %count% rows at a time.'|trans({'%count%': native.limit}, 'automation') }}</p>
+<p id="administration-list-selection">{% if screen.value == 'graph-rules' %}{{ 'Select up to %count% rows at a time.'|trans({'%count%': native.limit}, 'graph_rule') }}{% else %}{{ 'Select up to %count% rows at a time.'|trans({'%count%': native.limit}, 'automation') }}{% endif %}</p>
 {% endif %}
 <table class="cactiTable" id="administration-list">
     <caption>{{ screen.title|trans }}</caption>
-    <thead><tr>{% if native %}<th scope="col">{{ 'Select'|trans({}, 'automation') }}</th>{% endif %}{% for column, label in screen.columns %}{{ lists.sort_header(route, filters|merge({page: 1}), column, label, 'administration') }}{% endfor %}</tr></thead>
+    <thead><tr>{% if screen.value == 'graph-rules' %}<th scope="col">{{ 'Select'|trans({}, 'graph_rule') }}</th>{% elseif native %}<th scope="col">{{ 'Select'|trans({}, 'automation') }}</th>{% endif %}{% for column, label in screen.columns %}{{ lists.sort_header(route, filters|merge({page: 1}), column, label, 'administration') }}{% endfor %}</tr></thead>
     <tbody>
     {% for record in records %}
         <tr class="{{ loop.index is odd ? 'odd' : 'even' }}">
-        {% if native %}{{ lists.selection_cell(record.id, record.name, 'automation') }}{% endif %}
+        {% if screen.value == 'graph-rules' %}{{ lists.selection_cell(record.id, record.name, 'graph_rule') }}{% elseif native %}{{ lists.selection_cell(record.id, record.name, 'automation') }}{% endif %}
         {% for column, label in screen.columns %}
             {% set value = record[column] %}
             <td>{% if column == 'name' and screen.editable %}
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Script/action are enum constants or a fixed route, ID is read from its numeric primary key, and the query is URL encoded. #}
-                <a class="linkEditMain" href="{{ native ? path(native.edit, {id: record.id}) : installation_path(screen.legacyScript) ~ '?' ~ screen.editQuery(record.id)|url_encode }}">{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}</a>
+                <a class="linkEditMain" href="{{ (native.edit ?? null) ? path(native.edit, {id: record.id}) : installation_path(screen.legacyScript) ~ '?' ~ screen.editQuery(record.id)|url_encode }}">{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}</a>
             {% if screen.value == 'graph-templates' %}
                     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child route and numeric template identity. #}
                     <a href="{{ path('management_graph_template_items', {id: record.id}) }}">{{ 'Graph Items'|trans({}, 'management') }}</a>
@@ -148,7 +150,16 @@ SPDX-License-Identifier: GPL-2.0-or-later
     {% else %}<tr><td colspan="{{ screen.columns|length + (native ? 1 : 0) }}">{{ 'No records found.'|trans }}</td></tr>{% endfor %}
     </tbody>
 </table>
-{% if native %}
+{% if screen.value == 'graph-rules' %}
+    <button type="submit">{{ 'Delete selected'|trans({}, 'graph_rule') }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route named in this template. #}
+    <button type="submit" formaction="{{ path(native.action, {operation: 'duplicate'}) }}">{{ 'Duplicate selected'|trans({}, 'graph_rule') }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route named in this template. #}
+    <button type="submit" formaction="{{ path(native.action, {operation: 'enable'}) }}">{{ 'Enable selected'|trans({}, 'graph_rule') }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route named in this template. #}
+    <button type="submit" formaction="{{ path(native.action, {operation: 'disable'}) }}">{{ 'Disable selected'|trans({}, 'graph_rule') }}</button>
+</form>
+{% elseif native %}
     <button type="submit">{{ 'Delete selected'|trans({}, 'automation') }}</button>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route named in this template. #}
     <button type="submit" formaction="{{ path(native.action, {operation: 'duplicate'}) }}">{{ 'Duplicate selected'|trans({}, 'automation') }}</button>

@@ -2679,9 +2679,10 @@ worker answers 503, and a schema mismatch keeps the installer redirect.
 The settings of a graph rule (`automation_graph_rules.php?action=edit`: name,
 Data Query, Graph Type and Enable Rule) use Symfony routes, Forms and Twig at
 `/automation/graph-rules/new` and `/automation/graph-rules/{id}/edit`. The
-rule list, its bulk actions, the Device Selection and Graph Creation Criteria
-items and the matching device and graph previews stay on the legacy page, which
-now shows the settings read-only and links to the new editor. Both routes
+Device Selection and Graph Creation Criteria items and the matching device and
+graph previews stay on the legacy page, which shows the settings read-only and
+links to the new editor. The rule list and its bulk actions are Symfony routes
+too; see below. Both routes
 require console access and the Automation realm (23) through the reviewed
 `AutomationTemplateAccess` check before anything is read. Saves recheck the
 account and both realms inside their transaction, need the primary collector,
@@ -2706,6 +2707,87 @@ Differences from legacy:
 - `automation_graph_rules.php?action=edit` without an ID redirects to the new
   editor, and an unknown ID returns to the list with "Rule not found." instead
   of rendering an empty form.
+
+#### Graph rule list and bulk actions
+
+The list is the shared administration list at `/automation/graph-rules`
+(`AdministrationListController`). For this screen it links Create to the
+Symfony editor, links each name to the criteria on
+`automation_graph_rules.php?action=edit&id=`, and carries a selection column
+inside a GET form. Its buttons open
+`/automation/graph-rules/actions/{delete,duplicate,enable,disable}` with
+`ids[]`. The confirmation page lists the selected names and posts a Symfony
+form with the selection, one revision per rule and a CSRF token; duplication
+adds the title format.
+
+`automation_graph_rules.php` without an action now redirects to the list,
+carrying bookmarked `filter`, `rows`, `page` and sort values, which the list
+validates. A post of the old bulk form (`action=actions`) answers 409 with
+`Cache-Control: private, no-store` and writes nothing, like an old settings
+form. The criteria editor, item moves, item removal and the single-rule
+`remove` action are unchanged.
+
+Authorization: console access and the Automation realm (23) are resolved
+before the selection is parsed or any rule is read. The writes run through
+`AuditedPrimaryWrite` (`automation.graph_rule.delete`, `.duplicate`,
+`.enable` and `.disable`), so the account and realm are rechecked inside the
+transaction, the primary collector is required and the audit event names only
+the rule IDs. Responses are `private, no-store`. The page had no plugin hooks.
+
+Compared with the legacy page (`automation_graph_rules_form_actions()` and
+`duplicate_automation_graph_rules()`):
+
+- Delete removes the rules, their Graph Creation Criteria
+  (`automation_graph_rule_items`) and their Device Selection Criteria
+  (`automation_match_rule_items` with `rule_type` 1), with a fixed number of
+  statements.
+- Duplicate copies the name through the title format, the Data Query and the
+  Graph Type, starts the copy disabled and copies both kinds of criteria with
+  one `INSERT ... SELECT` each, as legacy did. The default format is
+  `<rule_name> (1)`.
+- Enable and disable set `enabled` to `on` or empty for every selected rule in
+  one statement; a rule that already has the value is not an error.
+- Each action locks the selected rules, checks every revision and runs in one
+  transaction.
+
+Differences from legacy:
+
+- Legacy bulk delete removed `automation_match_rule_items` by rule ID without
+  `rule_type`, so a tree rule with the same ID lost its Object Selection
+  Criteria. The new action removes only `rule_type` 1 items. The single-rule
+  `remove` action already filtered on `rule_type`.
+- A selection holds 1 to 100 rules. No selection is a 400 with a message, not
+  a silent return to the list. IDs must be plain decimal integers within the
+  column range.
+- A rule changed or removed after the confirmation page was opened stops the
+  whole action with 409 or 404. The revision covers the rule's ID, name, Data
+  Query, Graph Type and enabled state, not its criteria.
+- The `<rule_name>` token is the same in every language. Legacy translated the
+  default format, and a translated token was then never replaced. Every new
+  name must be 1 to 255 characters and the format must be single-line text;
+  legacy let the database truncate or reject the result.
+- After a successful action the browser returns to the list without a notice.
+- The list has no Data Query or Status filter and keeps the other differences
+  of the shared administration lists: no saved filter preferences, no total
+  count, and an ID column. A bookmark with those filters opens the unfiltered
+  list.
+- On a remote collector the action route is not served, like the editor
+  routes; the list itself still is.
+
+`duplicate_automation_graph_rules()` stays in `lib/api_automation.php` for
+plugin callers. The `AUTOMATION_ACTION_GRAPH_*` constants are kept.
+
+Verification: `GraphRuleStoreTest` (each action against an SQLite schema with
+the real columns, tree rule items kept, statement counts at 2 and 50 rules,
+rollback on an unconfirmed delete or insert, refusals before any write, audit
+outcomes), `GraphRuleRoutesTest` (401, 403, 400, 404, 409, 422, 502,
+subdirectory base path, French, offline collector),
+`AdministrationListRoutesTest` (selection form and links) and the
+`automation_template_http.py` run (legacy forwarding and the 409 refusal on
+MariaDB).
+
+Rollback: reverting the change restores the legacy list and bulk form. The
+actions store nothing new, so no data needs restoring.
 
 ### Tree rule settings
 

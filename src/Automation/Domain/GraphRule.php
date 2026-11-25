@@ -13,8 +13,29 @@ namespace Kadupul\Automation\Domain;
 final readonly class GraphRule
 {
     public const array COLUMNS = ['id', 'name', 'snmp_query_id', 'graph_type_id', 'enabled'];
+    /** The Duplicate action's default name format; every <rule_name> stands for the original's name. */
+    public const string NAME_FORMAT = '<rule_name> (1)';
+    /** The legacy field accepted 255 characters; the name it produces is checked against the column. */
+    public const int NAME_FORMAT_LENGTH = 255;
 
     public function __construct(public int $id, public string $name, public int $snmpQueryId, public int $graphTypeId, public bool $enabled, public string $revision) {}
+
+    /**
+     * The name a copy of $name gets from $format. The token is the literal
+     * <rule_name> in every locale: the legacy default translated it, so a
+     * translated console offered a format its own replacement never matched.
+     */
+    public static function copyName(string $format, string $name): string
+    {
+        if (!mb_check_encoding($format, 'UTF-8') || mb_strlen($format, 'UTF-8') > self::NAME_FORMAT_LENGTH || preg_match('/[\x00-\x1f\x7f]/', $format) === 1) {
+            throw new \InvalidArgumentException('Enter a valid name format.');
+        }
+        $copy = str_replace('<rule_name>', $name, $format);
+        if ($copy === '' || mb_strlen($copy, 'UTF-8') > GraphRuleChange::NAME_LENGTH) {
+            throw new \InvalidArgumentException('The name format must give every copy a name of 1 to 255 characters.');
+        }
+        return $copy;
+    }
 
     /** @param array<string, mixed> $row */
     public static function revisionOf(array $row): string

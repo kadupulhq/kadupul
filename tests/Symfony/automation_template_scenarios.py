@@ -82,6 +82,35 @@ def verify_automation_templates(harness, session, user_id, check):
         status, _, url = fetch('/automation_snmp.php?header=false')
         check(status == 200 and urlsplit(url).path == '/app.php/automation/snmp-options',
               'legacy automation_snmp.php GET forwards to the Symfony SNMP Option Set list')
+        # automation_graph_rules.php forwards its list and refuses its old bulk form; the run executes both.
+        # The rule editor is still legacy, so include/auth.php answers anonymous requests with its login page.
+        status, body, url = fetch('/automation_graph_rules.php', client=anonymous)
+        check(status in (200, 401) and 'login_password' in body and 'administration-list' not in body
+              and urlsplit(url).path == '/automation_graph_rules.php', 'Graph Rule anonymous legacy refusal shows the login page')
+        status, body, url = fetch('/automation_graph_rules.php?header=false')
+        if 'cactiRedirect' in body:
+            # lib/auth.php answers the first legacy request after a permission change this way and
+            # the browser reloads; shared-session runs change this user's permissions earlier.
+            status, body, url = fetch('/automation_graph_rules.php?header=false')
+        page = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', body)).strip()[:300]
+        # Only the path: in a shared session the list restores filters an earlier scenario left behind.
+        check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules',
+              'legacy automation_graph_rules.php GET forwards to the Symfony Graph Rule list: status=%d url=%s page=%s' % (status, url, page))
+        status, _, url = fetch('/automation_graph_rules.php?filter=Traffic&rows=10&page=1&sort_column=name&sort_direction=DESC&rule_status=-1&snmp_query_id=-1')
+        check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules'
+              and urlsplit(url).query == 'filter=Traffic&rows=10&page=1&sort_column=name&sort_direction=DESC',
+              'legacy Graph Rule bookmark keeps its list filters and drops the legacy-only ones: status=%d url=%s' % (status, url))
+        rules = scalar("SELECT COALESCE(GROUP_CONCAT(CONCAT_WS(':', id, name, enabled) ORDER BY id), '') FROM automation_graph_rules")
+        rule = scalar('SELECT COALESCE(MIN(id), 1) FROM automation_graph_rules')
+        # csrf-magic tokens are per page; take one from the still-legacy rule editor, as a stale form would carry.
+        _, editor, _ = fetch('/automation_graph_rules.php?action=edit&id=' + rule)
+        parser = Inputs()
+        parser.feed(editor)
+        token = parser.fields.get('__csrf_magic') or next(iter(re.findall(r'csrfMagicToken\s*=\s*["\']([^"\']+)', editor)), session.token)
+        status, _, _ = fetch('/automation_graph_rules.php', {'action': 'actions', 'drp_action': '3', 'chk_' + rule: 'on',
+                                                             'selected_items': 'a:1:{i:0;s:%d:"%s";}' % (len(rule), rule), '__csrf_magic': token})
+        check(status == 409 and scalar("SELECT COALESCE(GROUP_CONCAT(CONCAT_WS(':', id, name, enabled) ORDER BY id), '') FROM automation_graph_rules") == rules,
+              'legacy Graph Rule bulk post answers 409 and writes nothing: status=%d' % status)
 
         for name in (marker + ' <b>device</b>', marker + ' second'):
             created_device_templates.append(int(harness.sql(

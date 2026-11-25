@@ -1,0 +1,21 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends '_action_confirm.html.twig' %}
+{% set domain = 'graph_rule' %}
+{% set heading = {
+    delete: t('Delete Graph Rules', {}, 'graph_rule'),
+    duplicate: t('Duplicate Graph Rules', {}, 'graph_rule'),
+    enable: t('Enable Graph Rules', {}, 'graph_rule'),
+    disable: t('Disable Graph Rules', {}, 'graph_rule')
+}[operation] %}
+{% set intro = {
+    delete: t('Click Continue to delete the following Graph Rules with their Device Selection and Graph Creation Criteria.', {}, 'graph_rule'),
+    duplicate: t('Click Continue to duplicate the following Graph Rules. You can optionally change the title format for the new Graph Rules, which start disabled.', {}, 'graph_rule'),
+    enable: t('Click Continue to enable the following Graph Rules. Make sure that they have been tested successfully.', {}, 'graph_rule'),
+    disable: t('Click Continue to disable the following Graph Rules.', {}, 'graph_rule')
+}[operation] %}
+{% set cancel_url = path('admin_graph_rules') %}
+{% block extra_fields %}{% if form.name_format is defined %}{{ form_row(form.name_format) }}{% endif %}{% endblock %}
+{% set item_names = rules|map(rule => rule.name) %}
