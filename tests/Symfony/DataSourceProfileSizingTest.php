@@ -56,13 +56,13 @@ final class DataSourceProfileSizingTest extends TestCase
     public static function sizes(): array
     {
         return [
-            'profile with stored functions' => ['profile', 3000, 4, '96 KBytes per Data Sources and 284 Bytes for the Header'],
-            'profile with checked functions' => ['profile', 3000, 2, '48 KBytes per Data Sources and 284 Bytes for the Header'],
-            'profile without archives' => ['profile', 0, 4, '0 KBytes per Data Sources and 284 Bytes for the Header'],
-            'large profile groups digits' => ['profile', 600000, 4, '19,200 KBytes per Data Sources and 284 Bytes for the Header'],
+            'profile with stored functions' => ['profile', 3000, 4, '96 KBytes per Data Source and 284 Bytes for the Header'],
+            'profile with checked functions' => ['profile', 3000, 2, '48 KBytes per Data Source and 284 Bytes for the Header'],
+            'profile without archives' => ['profile', 0, 4, '0 KBytes per Data Source and 284 Bytes for the Header'],
+            'large profile groups digits' => ['profile', 600000, 4, '19,200 KBytes per Data Source and 284 Bytes for the Header'],
             'archive rows' => ['rra', 600, 4, '19 KBytes per Data Source'],
-            'half a kilobyte rounds to even' => ['profile', 25, 1, '0 KBytes per Data Sources and 284 Bytes for the Header'],
-            'one and a half kilobytes rounds to even' => ['profile', 150, 1, '2 KBytes per Data Sources and 284 Bytes for the Header'],
+            'half a kilobyte rounds to even' => ['profile', 25, 1, '0 KBytes per Data Source and 284 Bytes for the Header'],
+            'one and a half kilobytes rounds to even' => ['profile', 150, 1, '2 KBytes per Data Source and 284 Bytes for the Header'],
             'archive without rows' => ['rra', 0, 4, 'Enter a valid number of Rows to obtain the RRA size.'],
             'archive with negative rows' => ['rra', -5, 4, 'Enter a valid number of Rows to obtain the RRA size.'],
         ];

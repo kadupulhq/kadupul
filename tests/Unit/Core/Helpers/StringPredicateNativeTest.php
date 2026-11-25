@@ -67,7 +67,7 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertSame(['0_string-predicates-native' => 'ORDER BY `description` DESC'], $result['sort_update']);
         $this->assertSame('ORDER BY `description` DESC', $result['sort_get']);
         $this->assertSame(['fallback.php', 'fallback.php', '/path', 'relative.php', 'fallback.php'], $result['redirects']);
-        $this->assertStringContainsString('semi-color', $result['regex']);
+        $this->assertStringContainsString('cannot include the semicolon character', $result['regex']);
         $this->assertSame([false, 'Internal error', null], $result['runtime_regex_probe']);
         $this->assertSame('There was an internal error!', $result['runtime_regex']);
         $this->assertSame('Backtrack limit was exhausted!', $result['bounded_regex']);
@@ -105,7 +105,7 @@ test('native predicates preserve rendering redirects and resource replication', 
         $this->assertSame('Authentication Failure', $result['native_ldap_errors'][1][3]);
         $this->assertSame('No username defined', $result['native_ldap_errors'][2][3]);
         $this->assertSame('PHP LDAP not enabled', $result['native_ldap_errors'][18][3]);
-        $this->assertSame('Unexpected error 100 (Ldap Error: 7) on Server (owned.test)', $result['native_ldap_errors'][19][3]);
+        $this->assertSame('Unexpected error 100 (LDAP Error: 7) on Server (owned.test)', $result['native_ldap_errors'][19][3]);
         foreach ($result['native_ldap_errors'] as $error) {
             $this->assertSame([7, ''], [$error[1], $error[2]]);
             $this->assertNotSame('', $error[3]);

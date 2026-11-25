@@ -83,7 +83,7 @@ test('the poller stops before recording anything when the collector binary is un
     $calls = json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR);
     expect(array_column($calls, 0))->toBe(['log', 'mail'])
         ->and($calls[0][1])->toContain($message)
-        ->and($calls[1][1])->toBe(sprintf('ERROR: The %s path: %s is invalid for poller id 3.  Poller can not continue!', $message === 'spine path' ? 'spine' : 'PHP binary', $directory . '/missing'));
+        ->and($calls[1][1])->toBe(sprintf('ERROR: The %s path: %s is invalid for poller id 3.  Poller cannot continue!', $message === 'spine path' ? 'spine' : 'PHP binary', $directory . '/missing'));
 })->with([
     'spine' => ['2', 'path_spine', 'spine path'],
     'cmd.php' => ['1', 'path_php_binary', 'PHP binary path'],

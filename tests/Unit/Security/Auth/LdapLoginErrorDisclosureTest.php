@@ -70,7 +70,7 @@ PHP;
 }
 
 dataset('ldap login failures', array(
-    'user not found' => array(array('search' => array('error_num' => 14, 'error_text' => 'Unable to find users DN', 'dn' => '')), 0),
+    'user not found' => array(array('search' => array('error_num' => 14, 'error_text' => 'Unable to find user\'s DN', 'dn' => '')), 0),
     'several users found' => array(array('search' => array('error_num' => 13, 'error_text' => 'More than one matching user found', 'dn' => '')), 0),
     'wrong password' => array(array('auth' => array('error_num' => 1, 'error_text' => 'Authentication Failure')), 1),
     'not in group' => array(array('auth' => array('error_num' => 8, 'error_text' => 'Insufficient Access to Server (ldap.example.com)')), 0),

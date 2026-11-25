@@ -4,7 +4,7 @@
       <div class="spacer formHeader collapsible" id="row_poller_header"><div class="formHeaderText">General<div class="formTooltip"></div><div class="formHeaderAnchor"><i class="fa fa-angle-double-up"></i></div></div></div>
       <div class="formRow odd" id="row_poller_enabled"><div class="formColumnLeft"><div class="formFieldName">Data Collection Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If you wish to stop the polling process completely, uncheck this box.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="Data Collection Enabled"><input aria-checked="true" checked="" class="formCheckbox" id="poller_enabled" name="poller_enabled" title="Data Collection Enabled" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="poller_enabled">Data Collection Enabled</label></span></div></div></div>
       <div class="formRow even" id="row_enable_snmp_agent"><div class="formColumnLeft"><div class="formFieldName">SNMP Agent Support Enabled<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">If this option is checked, Kadupul will populate SNMP Agent tables with Kadupul device and system information. It does not enable the SNMP Agent itself.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><span class="nowrap"><label class="checkboxSwitch" title="SNMP Agent Support Enabled"><input aria-checked="true" checked="" class="formCheckbox" id="enable_snmp_agent" name="enable_snmp_agent" title="SNMP Agent Support Enabled" type="checkbox"><span class="checkboxSlider checkboxRound"></span></label><label class="checkboxLabel" for="enable_snmp_agent">SNMP Agent Support Enabled</label></span></div></div></div>
-      <div class="formRow odd" id="row_poller_type"><div class="formColumnLeft"><div class="formFieldName">Poller Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The poller type to use. This setting will take affect at next polling interval.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <div class="formRow odd" id="row_poller_type"><div class="formColumnLeft"><div class="formFieldName">Poller Type<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The poller type to use. This setting will take effect at next polling interval.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="poller_type" name="poller_type">
           <option selected="" value="1">cmd.php</option>
           <option value="2">spine</option>
@@ -59,7 +59,7 @@
         </div>
         </div>
       </div>
-      <div class="formRow odd" id="row_snmp_bulk_walk_size"><div class="formColumnLeft"><div class="formFieldName">SNMP Bulkwalk Fetch Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How many OID's should be returned per snmpbulkwalk request? For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <div class="formRow odd" id="row_snmp_bulk_walk_size"><div class="formColumnLeft"><div class="formFieldName">SNMP Bulkwalk Fetch Size<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">How many OIDs should be returned per snmpbulkwalk request? For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="snmp_bulk_walk_size" name="snmp_bulk_walk_size">
           <option selected="" value="10">10</option>
           <option value="20">20</option>
@@ -99,7 +99,7 @@
           <option selected="" value="0">Disabled</option>
           <option value="1">Daily</option>
           <option value="2">Weekly on Sunday</option>
-          <option value="3">Monthly on Sunady</option>
+          <option value="3">Monthly on Sunday</option>
         </select>
         </div>
         </div>
@@ -151,7 +151,7 @@
         </div>
         </div>
       </div>
-      <div class="formRow even" id="row_commands_processes"><div class="formColumnLeft"><div class="formFieldName">Poller Command Concurrent Processes<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of concurrent Poller Command processes. The will be at most one concurrent command per host within the Poller Command pool.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <div class="formRow even" id="row_commands_processes"><div class="formColumnLeft"><div class="formFieldName">Poller Command Concurrent Processes<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The number of concurrent Poller Command processes. There will be at most one concurrent command per host within the Poller Command pool.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="commands_processes" name="commands_processes">
           <option selected="" value="1">1 Process</option>
           <option value="2">2 Processes</option>
@@ -177,7 +177,7 @@
         </div>
         </div>
       </div>
-      <div class="formRow odd" id="row_maintenance_timeout"><div class="formColumnLeft"><div class="formFieldName">Maintenance Background Generation Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <div class="formRow odd" id="row_maintenance_timeout"><div class="formColumnLeft"><div class="formFieldName">Maintenance Background Generation Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="maintenance_timeout" name="maintenance_timeout">
           <option value="60">1 Minute</option>
           <option value="120">2 Minutes</option>
@@ -189,7 +189,7 @@
         </div>
         </div>
       </div>
-      <div class="formRow even" id="row_spikekill_timeout"><div class="formColumnLeft"><div class="formFieldName">Spikekill Background Generation Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <div class="formRow even" id="row_spikekill_timeout"><div class="formColumnLeft"><div class="formFieldName">Spikekill Background Generation Timeout<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="spikekill_timeout" name="spikekill_timeout">
           <option value="60">1 Minute</option>
           <option value="120">2 Minutes</option>

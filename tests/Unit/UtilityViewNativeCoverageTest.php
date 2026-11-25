@@ -256,7 +256,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         self::assertStringContainsString('Process: 2', $text);
         self::assertStringContainsString('Status: Idle, PrevRuntime: 0', $text);
         if ($empty) {
-            self::assertStringContainsString('Directory Does NOT Exist!!', $text);
+            self::assertStringContainsString('Directory Does NOT Exist!', $text);
             self::assertSame('Disabled', trim($xpath->query('//tr[td[1][text()="Image Caching Status:"]]/td[2]')->item(0)->textContent));
         } else {
             self::assertSame('2 Files', trim($xpath->query('//tr[td[1][text()="Cached Files:"]]/td[2]')->item(0)->textContent));

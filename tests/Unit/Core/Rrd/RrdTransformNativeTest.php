@@ -107,7 +107,7 @@ SOURCE;
         $expected = array(
             'success' => array(true, array($logged), array()),
             'debug' => array(true, array(), array()),
-            'readonly' => array(array('err_msg' => 'ERROR: RRDfile <DIR>/live.rrd not writeable'), array(), array()),
+            'readonly' => array(array('err_msg' => 'ERROR: RRDfile <DIR>/live.rrd not writable'), array(), array()),
             'restore-failed' => array(array('err_msg' => 'RRD restore failed; original and recovery XML preserved. See application log.'), array('ERROR: RRD restore failed; original preserved and recovery XML retained at <DIR>/live.rrd.xml'), array()),
             'bad-dump' => array(array('err_msg' => 'Error while parsing the XML of ' . ($added ? 'rrdtool' : 'RRDtool') . ' dump'), array(), array()),
             'save-failed' => array(array('err_msg' => 'ERROR while writing XML file: <DIR>/live.rrd.xml'), array(), array('2: DOMDocument::save(<DIR>/live.rrd.xml): Failed to open stream: Is a directory')),
