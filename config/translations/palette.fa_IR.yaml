@@ -11,7 +11,6 @@
 "CSV file": "فایل CSV"
 "CSV may contain at most 5000 colors.": "فایل CSV می‌تواند حداکثر شامل 5000 رنگ باشد."
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "فایل CSV باید UTF-8 معتبر باشد و حجم آن بیش از 1 MiB نباشد."
-"CSV requires exactly the name and hex header columns.": "فایل CSV دقیقاً به ستون‌های سرآیند name و hex نیاز دارد."
 "Cancel": "انصراف"
 "Clear": "پاک کردن"
 "Click Continue to delete the following Colors.": "برای حذف رنگ‌های زیر، روی «ادامه» کلیک کنید."
