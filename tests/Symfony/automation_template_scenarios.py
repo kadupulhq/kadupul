@@ -88,6 +88,10 @@ def verify_automation_templates(harness, session, user_id, check):
         check(status in (200, 401) and 'login_password' in body and 'administration-list' not in body
               and urlsplit(url).path == '/automation_graph_rules.php', 'Graph Rule anonymous legacy refusal shows the login page')
         status, body, url = fetch('/automation_graph_rules.php?header=false')
+        if 'cactiRedirect' in body:
+            # lib/auth.php answers the first legacy request after a permission change this way and
+            # the browser reloads; shared-session runs change this user's permissions earlier.
+            status, body, url = fetch('/automation_graph_rules.php?header=false')
         page = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', body)).strip()[:300]
         # Only the path: in a shared session the list restores filters an earlier scenario left behind.
         check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules',
