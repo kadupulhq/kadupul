@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Igbo Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 17:12-0800\n"
+"POT-Creation-Date: 2026-11-24 20:09-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Igbo\n"
@@ -112,10 +112,10 @@ msgstr "Nhazi ahịrị"
 msgid "All Items"
 msgstr "Ihe Niile"
 
-#: aggregate_graphs.php automation_devices.php automation_graph_rules.php
-#: automation_tree_rules.php data_debug.php data_sources.php
-#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
+#: data_debug.php data_sources.php graph_templates_items.php graphs.php
+#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "Ọ bụla"
@@ -129,22 +129,21 @@ msgid "Associate with Aggregate"
 msgstr "Jikọọ na Nchịkọta"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "Kagbuo"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php user_domains.php
 msgid "Clear"
 msgstr "Kpochaa"
 
@@ -190,11 +189,11 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "Pịa 'Gaa n'ihu' iji tinye Eserese Nchịkọta ndị a n'okpuru Ngalaba Osisi ahụ."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Continue"
 msgstr "Gaa n'ihu"
 
@@ -211,23 +210,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "Mepụta Nchịkọta Ọhụrụ site na Nchịkọta"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+#: managers.php plugins.php pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "Ndabere"
 
-#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php include/global_settings.php
-#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_networks.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "Hichapụ"
 
@@ -252,13 +250,12 @@ msgid "Disassociate with Aggregate"
 msgstr "Wepụ njikọ na Nchịkọta"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php
 msgid "Go"
 msgstr "Gaa"
 
@@ -282,10 +279,10 @@ msgstr "Eserese"
 msgid "Hide Item Details"
 msgstr "Zoo Nkọwa Ihe"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php lib/api_automation.php
-#: pollers.php tree.php user_admin.php user_group_admin.php
+#: aggregate_graphs.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
+#: user_admin.php user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -403,14 +400,14 @@ msgid "Return"
 msgstr "Laghachi"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
-#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php rrdcleaner.php settings.php
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "Chọọ"
 
@@ -991,11 +988,11 @@ msgstr "Aha SNMP"
 msgid "Select Template"
 msgstr "Họrọ Atụmatụ"
 
-#: automation_devices.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: lib/api_automation.php lib/html_reports.php lib/installer.php managers.php
-#: package_import.php plugins.php pollers.php templates_import.php
-#: user_admin.php user_group_admin.php utilities.php
+#: automation_devices.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: lib/html_reports.php lib/installer.php managers.php package_import.php
+#: plugins.php pollers.php templates_import.php user_admin.php
+#: user_group_admin.php utilities.php
 msgid "Status"
 msgstr "Ọnọdụ"
 
@@ -1012,10 +1009,6 @@ msgid "An attempt was made to perform a SQL injection in Graph automation"
 msgstr "E mere mgbalị ime SQL injection na nhazi akpaaka Eserese"
 
 #: automation_graph_rules.php automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "Tinye omume a rịọrọ"
-
-#: automation_graph_rules.php automation_tree_rules.php
 msgid "Are You Sure?"
 msgstr "Ị Dị Njikere?"
 
@@ -1023,18 +1016,6 @@ msgstr "Ị Dị Njikere?"
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
 msgstr "Ị ji n'aka na ịchọrọ ihichapụ Iwu '%s'?"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Pịa 'Gaa n'ihu' iji gbanyụọ Iwu ndị a."
-
-#: automation_graph_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "Pịa 'Gaa n'ihu' iji mepụta oyiri Iwu ndị a. Ị nwere ike ịgbanwe usoro isiokwu maka Iwu Eserese ọhụrụ ma ọ bụrụ na ịchọrọ."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Pịa 'Gaa n'ihu' iji gbanye Iwu ndị a."
 
 #: automation_graph_rules.php graphs.php include/global_arrays.php
 #: include/global_form.php
@@ -1045,40 +1026,13 @@ msgstr "Ajụjụ Data"
 msgid "Device Selection Criteria"
 msgstr "Njirimara Nhọrọ Ngwaọrụ"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php managers.php plugins.php
-#: pollers.php user_admin.php user_domains.php user_group_admin.php
-msgid "Disable"
-msgstr "Gbanyụọ"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
-msgid "Disabled"
-msgstr "Agbanyụrụ"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Don't Show"
 msgstr "Egosila"
 
-#: automation_graph_rules.php automation_tree_rules.php data_queries.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php
-msgid "Duplicate"
-msgstr "Mepụta oyiri"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr "Dezie Ntọala Iwu"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php include/global_settings.php
-#: managers.php plugins.php pollers.php user_admin.php user_domains.php
-#: user_group_admin.php
-msgid "Enable"
-msgstr "Gbanye"
 
 #: automation_graph_rules.php automation_tree_rules.php data_debug.php
 #: data_sources.php include/global_arrays.php include/global_form.php
@@ -1092,17 +1046,9 @@ msgstr "Agbanyere"
 msgid "Graph Creation Criteria"
 msgstr "Ụkpụrụ Mmepụta Eserese"
 
-#: automation_graph_rules.php include/global_arrays.php
-msgid "Graph Rules"
-msgstr "Iwu Eserese"
-
 #: automation_graph_rules.php include/global_form.php
 msgid "Graph Type"
 msgstr "Ụdị Eserese"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "Jide n'aka na anwalela iwu ndị ahụ nke ọma!"
 
 #: automation_graph_rules.php
 msgid "Matching Devices."
@@ -1113,20 +1059,8 @@ msgid "Matching Objects."
 msgstr "Ihe Ndị Kwekọrọ."
 
 #: automation_graph_rules.php
-msgid "No Graph Rules Found"
-msgstr "Ahụghị Iwu Eserese"
-
-#: automation_graph_rules.php
-msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "Pịa 'Gaa n'ihu' iji hichapụ Iwu Eserese ndị a."
-
-#: automation_graph_rules.php
 msgid "Rule Details."
 msgstr "Nkọwa Iwu."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Rule Name"
-msgstr "Aha Iwu"
 
 #: automation_graph_rules.php
 #, php-format
@@ -1138,24 +1072,8 @@ msgid "Rule not found."
 msgstr "Ahụghị iwu."
 
 #: automation_graph_rules.php
-msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
-msgstr "ID database dị n'ime maka iwu a. Bara uru n'ime debugging na akpaaka."
-
-#: automation_graph_rules.php
-msgid "The name of this rule."
-msgstr "Aha nke iwu a."
-
-#: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
 msgstr "Fọm Iwu Eserese a ekubiela. Meghee iwu ahụ ọzọ ma jiri fọm ya dị ugbu a."
-
-#: automation_graph_rules.php automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "Ụdị Aha"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "rule_name"
-msgstr "aha iwu"
 
 #: automation_networks.php include/global_settings.php pollers.php
 #, php-format
@@ -1221,9 +1139,29 @@ msgstr "Kwa Ụbọchị"
 msgid "Data Collector"
 msgstr "Ngwa Nchịkọta Data"
 
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
+msgid "Disable"
+msgstr "Gbanyụọ"
+
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_sources.php data_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
+msgid "Disabled"
+msgstr "Agbanyụrụ"
+
 #: automation_networks.php
 msgid "Discover Now"
 msgstr "Chọpụta Ugbu a"
+
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php include/global_settings.php managers.php
+#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+msgid "Enable"
+msgstr "Gbanye"
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
@@ -1328,6 +1266,10 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "E mere mgbalị ime SQL injection na nhazi akpaaka Osisi"
 
 #: automation_tree_rules.php
+msgid "Apply requested action"
+msgstr "Tinye omume a rịọrọ"
+
+#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Ị ji n'aka na ịchọrọ IHICHAPỤ Iwu '%s'?"
@@ -1341,12 +1283,25 @@ msgid "Click 'Continue' to delete the following Rule(s)."
 msgstr "Pịa 'Gaa n'ihu' iji hichapụ Iwu ndị a."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to disable the following Rule(s)."
+msgstr "Pịa 'Gaa n'ihu' iji gbanyụọ Iwu ndị a."
+
+#: automation_tree_rules.php
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
 msgstr "Pịa 'Gaa n'ihu' iji mepụta oyiri Iwu ndị a. Ị nwere ike ịgbanwe usoro isiokwu maka Iwu ọhụrụ ma ọ bụrụ na ịchọrọ."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to enable the following Rule(s)."
+msgstr "Pịa 'Gaa n'ihu' iji gbanye Iwu ndị a."
+
+#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "Osisi Emepụtara"
+
+#: automation_tree_rules.php data_queries.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "Mepụta oyiri"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1369,6 +1324,10 @@ msgid "Leaf Item Type"
 msgstr "Ụdị Ihe Akwụkwọ"
 
 #: automation_tree_rules.php
+msgid "Make sure, that those rules have successfully been tested!"
+msgstr "Jide n'aka na anwalela iwu ndị ahụ nke ọma!"
+
+#: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Ahụghị Iwu Osisi"
 
@@ -1385,12 +1344,20 @@ msgid "ROOT"
 msgstr "ROOT"
 
 #: automation_tree_rules.php
+msgid "Rule Name"
+msgstr "Aha Iwu"
+
+#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "Fọm Iwu Osisi a ekubiela. Meghee iwu ahụ ọzọ ma jiri fọm ya dị ugbu a."
 
 #: automation_tree_rules.php
 msgid "This Type"
 msgstr "Ụdị A"
+
+#: automation_tree_rules.php graphs.php
+msgid "Title Format"
+msgstr "Ụdị Aha"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1412,6 +1379,10 @@ msgstr "Iwu Osisi"
 #: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Iji Nchịkọta"
+
+#: automation_tree_rules.php
+msgid "rule_name"
+msgstr "aha iwu"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -4572,6 +4543,10 @@ msgstr "Nlekọta Eserese"
 #: include/global_arrays.php
 msgid "Graph Rule Items"
 msgstr "Ihe Iwu Eserese"
+
+#: include/global_arrays.php
+msgid "Graph Rules"
+msgstr "Iwu Eserese"
 
 #: include/global_arrays.php
 msgid "Graph Template Input"

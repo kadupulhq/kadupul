@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Indonesian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 17:12-0800\n"
+"POT-Creation-Date: 2026-11-24 20:09-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Indonesian\n"
@@ -112,10 +112,10 @@ msgstr "Ratakan"
 msgid "All Items"
 msgstr "Semua Item"
 
-#: aggregate_graphs.php automation_devices.php automation_graph_rules.php
-#: automation_tree_rules.php data_debug.php data_sources.php
-#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
+#: data_debug.php data_sources.php graph_templates_items.php graphs.php
+#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "Apa pun"
@@ -129,22 +129,21 @@ msgid "Associate with Aggregate"
 msgstr "Kaitkan dengan Agregat"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "Batal"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php user_domains.php
 msgid "Clear"
 msgstr "Bersihkan"
 
@@ -190,11 +189,11 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "Klik 'Continue' untuk menempatkan Grafik Agregat berikut di bawah Cabang Pohon."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Continue"
 msgstr "Lanjutkan"
 
@@ -211,23 +210,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "Buat Agregat Baru dari Agregat"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+#: managers.php plugins.php pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "Bawaan"
 
-#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php include/global_settings.php
-#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_networks.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "Hapus"
 
@@ -252,13 +250,12 @@ msgid "Disassociate with Aggregate"
 msgstr "Lepaskan kaitan dari Agregat"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php
 msgid "Go"
 msgstr "Jalankan"
 
@@ -282,10 +279,10 @@ msgstr "Grafik"
 msgid "Hide Item Details"
 msgstr "Sembunyikan Detail Item"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php lib/api_automation.php
-#: pollers.php tree.php user_admin.php user_group_admin.php
+#: aggregate_graphs.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
+#: user_admin.php user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -403,14 +400,14 @@ msgid "Return"
 msgstr "Kembali"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
-#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php rrdcleaner.php settings.php
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "Cari"
 
@@ -991,11 +988,11 @@ msgstr "Nama SNMP"
 msgid "Select Template"
 msgstr "Pilih Templat"
 
-#: automation_devices.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: lib/api_automation.php lib/html_reports.php lib/installer.php managers.php
-#: package_import.php plugins.php pollers.php templates_import.php
-#: user_admin.php user_group_admin.php utilities.php
+#: automation_devices.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: lib/html_reports.php lib/installer.php managers.php package_import.php
+#: plugins.php pollers.php templates_import.php user_admin.php
+#: user_group_admin.php utilities.php
 msgid "Status"
 msgstr "Status"
 
@@ -1012,10 +1009,6 @@ msgid "An attempt was made to perform a SQL injection in Graph automation"
 msgstr "Terjadi upaya untuk melakukan injeksi SQL dalam otomatisasi Grafik"
 
 #: automation_graph_rules.php automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "Terapkan tindakan yang diminta"
-
-#: automation_graph_rules.php automation_tree_rules.php
 msgid "Are You Sure?"
 msgstr "Apakah Anda Yakin?"
 
@@ -1023,18 +1016,6 @@ msgstr "Apakah Anda Yakin?"
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
 msgstr "Are you sure you want to delete the Rule '%s'?"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Klik 'Continue' untuk menonaktifkan Aturan berikut."
-
-#: automation_graph_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "Klik 'Continue' untuk menduplikasi Aturan berikut. Anda dapat secara opsional mengubah format judul untuk Aturan Grafik baru."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Klik 'Continue' untuk mengaktifkan Aturan berikut."
 
 #: automation_graph_rules.php graphs.php include/global_arrays.php
 #: include/global_form.php
@@ -1045,40 +1026,13 @@ msgstr "Kueri Data"
 msgid "Device Selection Criteria"
 msgstr "Kriteria Pemilihan Perangkat"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php managers.php plugins.php
-#: pollers.php user_admin.php user_domains.php user_group_admin.php
-msgid "Disable"
-msgstr "Nonaktifkan"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
-msgid "Disabled"
-msgstr "Dinonaktifkan"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Don't Show"
 msgstr "Jangan Tampilkan"
 
-#: automation_graph_rules.php automation_tree_rules.php data_queries.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php
-msgid "Duplicate"
-msgstr "Duplikat"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr "Edit Pengaturan Aturan"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php include/global_settings.php
-#: managers.php plugins.php pollers.php user_admin.php user_domains.php
-#: user_group_admin.php
-msgid "Enable"
-msgstr "Aktifkan"
 
 #: automation_graph_rules.php automation_tree_rules.php data_debug.php
 #: data_sources.php include/global_arrays.php include/global_form.php
@@ -1092,17 +1046,9 @@ msgstr "Diaktifkan"
 msgid "Graph Creation Criteria"
 msgstr "Kriteria Pembuatan Grafik"
 
-#: automation_graph_rules.php include/global_arrays.php
-msgid "Graph Rules"
-msgstr "Aturan Grafik"
-
 #: automation_graph_rules.php include/global_form.php
 msgid "Graph Type"
 msgstr "Tipe Grafik"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "Pastikan bahwa aturan tersebut telah berhasil diuji!"
 
 #: automation_graph_rules.php
 msgid "Matching Devices."
@@ -1113,20 +1059,8 @@ msgid "Matching Objects."
 msgstr "Objek yang Cocok."
 
 #: automation_graph_rules.php
-msgid "No Graph Rules Found"
-msgstr "Tidak Ada Aturan Grafik Ditemukan"
-
-#: automation_graph_rules.php
-msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "Tekan 'Lanjutkan' untuk menghapus Aturan Grafik berikut."
-
-#: automation_graph_rules.php
 msgid "Rule Details."
 msgstr "Detail Aturan."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Rule Name"
-msgstr "Nama Aturan"
 
 #: automation_graph_rules.php
 #, php-format
@@ -1138,24 +1072,8 @@ msgid "Rule not found."
 msgstr "Aturan tidak ditemukan."
 
 #: automation_graph_rules.php
-msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
-msgstr "ID basis data internal untuk aturan ini.  Berguna dalam melakukan debugging dan otomatisasi."
-
-#: automation_graph_rules.php
-msgid "The name of this rule."
-msgstr "Nama aturan ini."
-
-#: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
 msgstr "Formulir Aturan Grafik ini telah kedaluwarsa. Buka kembali aturan dan gunakan formulirnya yang terbaru."
-
-#: automation_graph_rules.php automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "Format Judul"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "rule_name"
-msgstr "rule_name"
 
 #: automation_networks.php include/global_settings.php pollers.php
 #, php-format
@@ -1221,9 +1139,29 @@ msgstr "Harian"
 msgid "Data Collector"
 msgstr "Kolektor Data"
 
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
+msgid "Disable"
+msgstr "Nonaktifkan"
+
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_sources.php data_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
+msgid "Disabled"
+msgstr "Dinonaktifkan"
+
 #: automation_networks.php
 msgid "Discover Now"
 msgstr "Temukan Sekarang"
+
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php include/global_settings.php managers.php
+#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+msgid "Enable"
+msgstr "Aktifkan"
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
@@ -1328,6 +1266,10 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "Terjadi upaya untuk melakukan injeksi SQL dalam otomatisasi Pohon"
 
 #: automation_tree_rules.php
+msgid "Apply requested action"
+msgstr "Terapkan tindakan yang diminta"
+
+#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Are you sure you want to DELETE the Rule '%s'?"
@@ -1341,12 +1283,25 @@ msgid "Click 'Continue' to delete the following Rule(s)."
 msgstr "Klik 'Continue' untuk menghapus Aturan berikut."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to disable the following Rule(s)."
+msgstr "Klik 'Continue' untuk menonaktifkan Aturan berikut."
+
+#: automation_tree_rules.php
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
 msgstr "Klik 'Continue' untuk menduplikasi Aturan berikut. Anda dapat secara opsional mengubah format judul untuk Aturan baru."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to enable the following Rule(s)."
+msgstr "Klik 'Continue' untuk mengaktifkan Aturan berikut."
+
+#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "Pohon yang Dibuat"
+
+#: automation_tree_rules.php data_queries.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "Duplikat"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1369,6 +1324,10 @@ msgid "Leaf Item Type"
 msgstr "Tipe Item Daun"
 
 #: automation_tree_rules.php
+msgid "Make sure, that those rules have successfully been tested!"
+msgstr "Pastikan bahwa aturan tersebut telah berhasil diuji!"
+
+#: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Tidak Ada Aturan Pohon Ditemukan"
 
@@ -1385,12 +1344,20 @@ msgid "ROOT"
 msgstr "ROOT"
 
 #: automation_tree_rules.php
+msgid "Rule Name"
+msgstr "Nama Aturan"
+
+#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "Formulir Aturan Pohon ini telah kedaluwarsa. Buka kembali aturan dan gunakan formulirnya yang terbaru."
 
 #: automation_tree_rules.php
 msgid "This Type"
 msgstr "Tipe Ini"
+
+#: automation_tree_rules.php graphs.php
+msgid "Title Format"
+msgstr "Format Judul"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1412,6 +1379,10 @@ msgstr "Aturan Pohon"
 #: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Menggunakan Pengelompokan"
+
+#: automation_tree_rules.php
+msgid "rule_name"
+msgstr "rule_name"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -4572,6 +4543,10 @@ msgstr "Manajemen Grafik"
 #: include/global_arrays.php
 msgid "Graph Rule Items"
 msgstr "Item Aturan Grafik"
+
+#: include/global_arrays.php
+msgid "Graph Rules"
+msgstr "Aturan Grafik"
 
 #: include/global_arrays.php
 msgid "Graph Template Input"

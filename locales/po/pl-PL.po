@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 17:12-0800\n"
+"POT-Creation-Date: 2026-11-24 20:09-0800\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -113,10 +113,10 @@ msgstr "Wyrównanie"
 msgid "All Items"
 msgstr "Wszystkie pozycje"
 
-#: aggregate_graphs.php automation_devices.php automation_graph_rules.php
-#: automation_tree_rules.php data_debug.php data_sources.php
-#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
+#: data_debug.php data_sources.php graph_templates_items.php graphs.php
+#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "Dowolny"
@@ -130,22 +130,21 @@ msgid "Associate with Aggregate"
 msgstr "Powiąż z Aggregate"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "Anuluj"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php user_domains.php
 msgid "Clear"
 msgstr "Wyczyść"
 
@@ -191,11 +190,11 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "Kliknij 'Kontynuuj', aby umieścić poniższą wykres(y) zagregowany(e) pod Oddziałem na drzewie."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Continue"
 msgstr "Kontynuuj"
 
@@ -212,23 +211,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "Utwórz nowy wykres zbiorczy z wykresów zbiorczych"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+#: managers.php plugins.php pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "Domyślny"
 
-#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php include/global_settings.php
-#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_networks.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "Usuń"
 
@@ -253,13 +251,12 @@ msgid "Disassociate with Aggregate"
 msgstr "Odwiąż z Aggregate"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php
 msgid "Go"
 msgstr "Idź"
 
@@ -283,10 +280,10 @@ msgstr "Wykresy"
 msgid "Hide Item Details"
 msgstr "Ukryj szczegóły pozycji"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php lib/api_automation.php
-#: pollers.php tree.php user_admin.php user_group_admin.php
+#: aggregate_graphs.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
+#: user_admin.php user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -404,14 +401,14 @@ msgid "Return"
 msgstr "Powróć"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
-#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php rrdcleaner.php settings.php
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "Szukaj"
 
@@ -992,11 +989,11 @@ msgstr "Nazwa SNMP"
 msgid "Select Template"
 msgstr "Wybierz szablon"
 
-#: automation_devices.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: lib/api_automation.php lib/html_reports.php lib/installer.php managers.php
-#: package_import.php plugins.php pollers.php templates_import.php
-#: user_admin.php user_group_admin.php utilities.php
+#: automation_devices.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: lib/html_reports.php lib/installer.php managers.php package_import.php
+#: plugins.php pollers.php templates_import.php user_admin.php
+#: user_group_admin.php utilities.php
 msgid "Status"
 msgstr "Status"
 
@@ -1013,10 +1010,6 @@ msgid "An attempt was made to perform a SQL injection in Graph automation"
 msgstr "Podjęto próbę ataku SQL injection w automatyzacji wykresów"
 
 #: automation_graph_rules.php automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "Zastosuj żądane działanie"
-
-#: automation_graph_rules.php automation_tree_rules.php
 msgid "Are You Sure?"
 msgstr "Czy jesteś pewien?"
 
@@ -1024,18 +1017,6 @@ msgstr "Czy jesteś pewien?"
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
 msgstr "Czy na pewno chcesz usunąć regułę \"%s\"?"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Kliknij \"Continue\" (Kontynuuj), aby wyłączyć następującą(-e) regułę(-y)."
-
-#: automation_graph_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "Kliknąć \"Kontynuuj\", aby powtórzyć następującą(-e) regułę(-y). Możesz opcjonalnie zmienić format tytułu dla nowych reguł wykresu."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Kliknąć \"Kontynuuj\", aby włączyć następującą(-e) regułę(-y)."
 
 #: automation_graph_rules.php graphs.php include/global_arrays.php
 #: include/global_form.php
@@ -1046,40 +1027,13 @@ msgstr "Zapytanie o dane"
 msgid "Device Selection Criteria"
 msgstr "Kryteria wyboru urządzeń"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php managers.php plugins.php
-#: pollers.php user_admin.php user_domains.php user_group_admin.php
-msgid "Disable"
-msgstr "Wyłącz"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
-msgid "Disabled"
-msgstr "Wyłączone"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Don't Show"
 msgstr "Nie pokazuj"
 
-#: automation_graph_rules.php automation_tree_rules.php data_queries.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php
-msgid "Duplicate"
-msgstr "Duplikuj"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr "Edytuj ustawienia reguły"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php include/global_settings.php
-#: managers.php plugins.php pollers.php user_admin.php user_domains.php
-#: user_group_admin.php
-msgid "Enable"
-msgstr "Włącz"
 
 #: automation_graph_rules.php automation_tree_rules.php data_debug.php
 #: data_sources.php include/global_arrays.php include/global_form.php
@@ -1093,17 +1047,9 @@ msgstr "Włączone"
 msgid "Graph Creation Criteria"
 msgstr "Kryteria tworzenia wykresu"
 
-#: automation_graph_rules.php include/global_arrays.php
-msgid "Graph Rules"
-msgstr "Reguły wykresów"
-
 #: automation_graph_rules.php include/global_form.php
 msgid "Graph Type"
 msgstr "Rodzaj wykresu"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "Upewnij się, że zasady te zostały pomyślnie przetestowane!"
 
 #: automation_graph_rules.php
 msgid "Matching Devices."
@@ -1114,20 +1060,8 @@ msgid "Matching Objects."
 msgstr "Dopasowywanie obiektów."
 
 #: automation_graph_rules.php
-msgid "No Graph Rules Found"
-msgstr "Nie znaleziono reguł wykresów"
-
-#: automation_graph_rules.php
-msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "Naciśnij 'Dalej', aby usunąć następujące Reguły wykresu."
-
-#: automation_graph_rules.php
 msgid "Rule Details."
 msgstr "Szczegóły zasady."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Rule Name"
-msgstr "Nazwa reguły"
 
 #: automation_graph_rules.php
 #, php-format
@@ -1139,24 +1073,8 @@ msgid "Rule not found."
 msgstr "Nie znaleziono reguły."
 
 #: automation_graph_rules.php
-msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
-msgstr "Wewnętrzny identyfikator bazy danych dla tej reguły.  Przydatne w debugowaniu i automatyzacji."
-
-#: automation_graph_rules.php
-msgid "The name of this rule."
-msgstr "Nazwa tej reguły."
-
-#: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
 msgstr "Ten formularz reguły wykresu wygasł. Otwórz regułę ponownie i użyj bieżącego formularza."
-
-#: automation_graph_rules.php automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "Format tytułu"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "rule_name"
-msgstr "Nazwa reguły"
 
 #: automation_networks.php include/global_settings.php pollers.php
 #, php-format
@@ -1222,9 +1140,29 @@ msgstr "Dziennie"
 msgid "Data Collector"
 msgstr "Kolektor danych"
 
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
+msgid "Disable"
+msgstr "Wyłącz"
+
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_sources.php data_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
+msgid "Disabled"
+msgstr "Wyłączone"
+
 #: automation_networks.php
 msgid "Discover Now"
 msgstr "Odkryj teraz"
+
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php include/global_settings.php managers.php
+#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+msgid "Enable"
+msgstr "Włącz"
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
@@ -1329,6 +1267,10 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "Podjęto próbę ataku SQL injection w automatyzacji drzew"
 
 #: automation_tree_rules.php
+msgid "Apply requested action"
+msgstr "Zastosuj żądane działanie"
+
+#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Czy na pewno chcesz usunąć regułę \"%s\"?"
@@ -1342,12 +1284,25 @@ msgid "Click 'Continue' to delete the following Rule(s)."
 msgstr "Kliknąć \"Kontynuuj\", aby usunąć następującą(-e) regułę(-y)."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to disable the following Rule(s)."
+msgstr "Kliknij \"Continue\" (Kontynuuj), aby wyłączyć następującą(-e) regułę(-y)."
+
+#: automation_tree_rules.php
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
 msgstr "Kliknąć \"Kontynuuj\", aby powtórzyć następującą(-e) regułę(-y). Możesz opcjonalnie zmienić format tytułu dla nowych Reguł."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to enable the following Rule(s)."
+msgstr "Kliknąć \"Kontynuuj\", aby włączyć następującą(-e) regułę(-y)."
+
+#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "Utworzone drzewa"
+
+#: automation_tree_rules.php data_queries.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "Duplikuj"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1370,6 +1325,10 @@ msgid "Leaf Item Type"
 msgstr "Typ elementu na kartce"
 
 #: automation_tree_rules.php
+msgid "Make sure, that those rules have successfully been tested!"
+msgstr "Upewnij się, że zasady te zostały pomyślnie przetestowane!"
+
+#: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Nie znaleziono zasad dotyczących drzew"
 
@@ -1386,12 +1345,20 @@ msgid "ROOT"
 msgstr "GŁÓWNY"
 
 #: automation_tree_rules.php
+msgid "Rule Name"
+msgstr "Nazwa reguły"
+
+#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "Ten formularz reguły drzewa wygasł. Otwórz regułę ponownie i użyj bieżącego formularza."
 
 #: automation_tree_rules.php
 msgid "This Type"
 msgstr "Ten typ"
+
+#: automation_tree_rules.php graphs.php
+msgid "Title Format"
+msgstr "Format tytułu"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1413,6 +1380,10 @@ msgstr "Przepisy dotyczące drzew"
 #: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Używanie grupowania"
+
+#: automation_tree_rules.php
+msgid "rule_name"
+msgstr "Nazwa reguły"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -4615,6 +4586,10 @@ msgstr "Zarządzanie wykresami"
 #: include/global_arrays.php
 msgid "Graph Rule Items"
 msgstr "Elementy reguły wykresu"
+
+#: include/global_arrays.php
+msgid "Graph Rules"
+msgstr "Reguły wykresów"
 
 #: include/global_arrays.php
 msgid "Graph Template Input"

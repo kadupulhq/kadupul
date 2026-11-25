@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 17:12-0800\n"
+"POT-Creation-Date: 2026-11-24 20:09-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -113,10 +113,10 @@ msgstr "對齊"
 msgid "All Items"
 msgstr "所有項目"
 
-#: aggregate_graphs.php automation_devices.php automation_graph_rules.php
-#: automation_tree_rules.php data_debug.php data_sources.php
-#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
+#: data_debug.php data_sources.php graph_templates_items.php graphs.php
+#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "任意"
@@ -130,22 +130,21 @@ msgid "Associate with Aggregate"
 msgstr "關聯至彙總"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "取消"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php user_domains.php
 msgid "Clear"
 msgstr "清除"
 
@@ -191,11 +190,11 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "單擊“繼續”將以下聚合圖放在樹枝下。"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Continue"
 msgstr "繼續"
 
@@ -212,23 +211,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "從彙總建立新彙總"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+#: managers.php plugins.php pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "預設"
 
-#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php include/global_settings.php
-#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_networks.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "刪除"
 
@@ -253,13 +251,12 @@ msgid "Disassociate with Aggregate"
 msgstr "解除與彙總的關聯"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php
 msgid "Go"
 msgstr "前往"
 
@@ -283,10 +280,10 @@ msgstr "圖表"
 msgid "Hide Item Details"
 msgstr "隱藏項目詳細資訊"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php lib/api_automation.php
-#: pollers.php tree.php user_admin.php user_group_admin.php
+#: aggregate_graphs.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
+#: user_admin.php user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -404,14 +401,14 @@ msgid "Return"
 msgstr "返回"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
-#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php rrdcleaner.php settings.php
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "搜尋"
 
@@ -992,11 +989,11 @@ msgstr "SNMP 名稱"
 msgid "Select Template"
 msgstr "選取範本"
 
-#: automation_devices.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: lib/api_automation.php lib/html_reports.php lib/installer.php managers.php
-#: package_import.php plugins.php pollers.php templates_import.php
-#: user_admin.php user_group_admin.php utilities.php
+#: automation_devices.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: lib/html_reports.php lib/installer.php managers.php package_import.php
+#: plugins.php pollers.php templates_import.php user_admin.php
+#: user_group_admin.php utilities.php
 msgid "Status"
 msgstr "狀態"
 
@@ -1013,10 +1010,6 @@ msgid "An attempt was made to perform a SQL injection in Graph automation"
 msgstr "有人嘗試在圖表自動化中執行 SQL 注入"
 
 #: automation_graph_rules.php automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "應用請求的操作"
-
-#: automation_graph_rules.php automation_tree_rules.php
 msgid "Are You Sure?"
 msgstr "確定嗎？"
 
@@ -1024,18 +1017,6 @@ msgstr "確定嗎？"
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
 msgstr "確定要刪除規則 '%s' 嗎？"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "單擊“繼續”以禁用以下規則。"
-
-#: automation_graph_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "單擊“繼續”以復制以下規則。您可以選擇更改新圖表規則的標題格式。"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "單擊“繼續”以啟用以下規則。"
 
 #: automation_graph_rules.php graphs.php include/global_arrays.php
 #: include/global_form.php
@@ -1046,40 +1027,13 @@ msgstr "資料查詢"
 msgid "Device Selection Criteria"
 msgstr "裝置選取準則"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php managers.php plugins.php
-#: pollers.php user_admin.php user_domains.php user_group_admin.php
-msgid "Disable"
-msgstr "停用"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
-msgid "Disabled"
-msgstr "已停用"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Don't Show"
 msgstr "不顯示"
 
-#: automation_graph_rules.php automation_tree_rules.php data_queries.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php
-msgid "Duplicate"
-msgstr "複製"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr "編輯規則設定"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php include/global_settings.php
-#: managers.php plugins.php pollers.php user_admin.php user_domains.php
-#: user_group_admin.php
-msgid "Enable"
-msgstr "啟用"
 
 #: automation_graph_rules.php automation_tree_rules.php data_debug.php
 #: data_sources.php include/global_arrays.php include/global_form.php
@@ -1093,17 +1047,9 @@ msgstr "已啟用"
 msgid "Graph Creation Criteria"
 msgstr "圖表建立準則"
 
-#: automation_graph_rules.php include/global_arrays.php
-msgid "Graph Rules"
-msgstr "圖表規則"
-
 #: automation_graph_rules.php include/global_form.php
 msgid "Graph Type"
 msgstr "圖表類型"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "確保這些規則已成功通過測試！"
 
 #: automation_graph_rules.php
 msgid "Matching Devices."
@@ -1114,20 +1060,8 @@ msgid "Matching Objects."
 msgstr "匹配對象。"
 
 #: automation_graph_rules.php
-msgid "No Graph Rules Found"
-msgstr "找不到圖表規則"
-
-#: automation_graph_rules.php
-msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "按“繼續”以刪除以下圖表規則。"
-
-#: automation_graph_rules.php
 msgid "Rule Details."
 msgstr "規則細節。"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Rule Name"
-msgstr "規則名稱"
 
 #: automation_graph_rules.php
 #, php-format
@@ -1139,24 +1073,8 @@ msgid "Rule not found."
 msgstr "找不到規則。"
 
 #: automation_graph_rules.php
-msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
-msgstr "此規則的內部資料庫 ID。執行偵錯與自動化時很有用。"
-
-#: automation_graph_rules.php
-msgid "The name of this rule."
-msgstr "此規則的名稱。"
-
-#: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
 msgstr "此圖表規則表單已過期。請重新開啟規則並使用其目前的表單。"
-
-#: automation_graph_rules.php automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "標題格式"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "rule_name"
-msgstr "規則名稱"
 
 #: automation_networks.php include/global_settings.php pollers.php
 #, php-format
@@ -1222,9 +1140,29 @@ msgstr "每日"
 msgid "Data Collector"
 msgstr "資料收集器"
 
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
+msgid "Disable"
+msgstr "停用"
+
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_sources.php data_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
+msgid "Disabled"
+msgstr "已停用"
+
 #: automation_networks.php
 msgid "Discover Now"
 msgstr "立即探索"
+
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php include/global_settings.php managers.php
+#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+msgid "Enable"
+msgstr "啟用"
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
@@ -1329,6 +1267,10 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "有人嘗試在樹狀目錄自動化中執行 SQL 注入"
 
 #: automation_tree_rules.php
+msgid "Apply requested action"
+msgstr "應用請求的操作"
+
+#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "確定要刪除規則 '%s' 嗎？"
@@ -1342,12 +1284,25 @@ msgid "Click 'Continue' to delete the following Rule(s)."
 msgstr "單擊“繼續”以刪除以下規則。"
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to disable the following Rule(s)."
+msgstr "單擊“繼續”以禁用以下規則。"
+
+#: automation_tree_rules.php
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
 msgstr "單擊“繼續”以復制以下規則。您可以選擇更改新規則的標題格式。"
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to enable the following Rule(s)."
+msgstr "單擊“繼續”以啟用以下規則。"
+
+#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "已建立樹狀目錄"
+
+#: automation_tree_rules.php data_queries.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "複製"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1370,6 +1325,10 @@ msgid "Leaf Item Type"
 msgstr "葉節點項目類型"
 
 #: automation_tree_rules.php
+msgid "Make sure, that those rules have successfully been tested!"
+msgstr "確保這些規則已成功通過測試！"
+
+#: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "找不到樹狀規則"
 
@@ -1386,12 +1345,20 @@ msgid "ROOT"
 msgstr "根目錄"
 
 #: automation_tree_rules.php
+msgid "Rule Name"
+msgstr "規則名稱"
+
+#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "此樹狀目錄規則表單已過期。請重新開啟規則並使用其目前的表單。"
 
 #: automation_tree_rules.php
 msgid "This Type"
 msgstr "此類型"
+
+#: automation_tree_rules.php graphs.php
+msgid "Title Format"
+msgstr "標題格式"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1413,6 +1380,10 @@ msgstr "樹狀目錄規則"
 #: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "使用分組"
+
+#: automation_tree_rules.php
+msgid "rule_name"
+msgstr "規則名稱"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -4573,6 +4544,10 @@ msgstr "圖表管理"
 #: include/global_arrays.php
 msgid "Graph Rule Items"
 msgstr "圖表規則項目"
+
+#: include/global_arrays.php
+msgid "Graph Rules"
+msgstr "圖表規則"
 
 #: include/global_arrays.php
 msgid "Graph Template Input"

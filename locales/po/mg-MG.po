@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Malagasy Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 17:12-0800\n"
+"POT-Creation-Date: 2026-11-24 20:09-0800\n"
 "PO-Revision-Date: 2026-11-24 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Malagasy\n"
@@ -112,10 +112,10 @@ msgstr "Fampifanitsiana"
 msgid "All Items"
 msgstr "Singa Rehetra"
 
-#: aggregate_graphs.php automation_devices.php automation_graph_rules.php
-#: automation_tree_rules.php data_debug.php data_sources.php
-#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
+#: data_debug.php data_sources.php graph_templates_items.php graphs.php
+#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "Na inona na inona"
@@ -129,22 +129,21 @@ msgid "Associate with Aggregate"
 msgstr "Ampifandraiso amin'ny Kisary mitambatra"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "Aoka ihany"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php user_domains.php
 msgid "Clear"
 msgstr "Diovy"
 
@@ -190,11 +189,11 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "Tsindrio ny 'Tohizo' raha hametraka ireto Kisary mitambatra manaraka ireto ao ambanin'ny Sampan-kazo."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Continue"
 msgstr "Tohizo"
 
@@ -211,23 +210,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "Mamoròna Kisary mitambatra vaovao avy amin'ireo Kisary mitambatra"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+#: managers.php plugins.php pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "Voafaritra mialoha"
 
-#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php include/global_settings.php
-#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_networks.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "Fafao"
 
@@ -252,13 +250,12 @@ msgid "Disassociate with Aggregate"
 msgstr "Esory ny fifandraisana amin'ny Kisary mitambatra"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php
 msgid "Go"
 msgstr "Alefaso"
 
@@ -282,10 +279,10 @@ msgstr "Kisary"
 msgid "Hide Item Details"
 msgstr "Afeno ny Antsipirian'ny Singa"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php lib/api_automation.php
-#: pollers.php tree.php user_admin.php user_group_admin.php
+#: aggregate_graphs.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
+#: user_admin.php user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -403,14 +400,14 @@ msgid "Return"
 msgstr "Miverena"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
-#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
-#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
-#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php graphs_new.php host_templates.php
+#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
+#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
+#: plugins.php pollers.php rrdcleaner.php settings.php
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "Fikarohana"
 
@@ -991,11 +988,11 @@ msgstr "Anarana SNMP"
 msgid "Select Template"
 msgstr "Misafidiana môdely"
 
-#: automation_devices.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: lib/api_automation.php lib/html_reports.php lib/installer.php managers.php
-#: package_import.php plugins.php pollers.php templates_import.php
-#: user_admin.php user_group_admin.php utilities.php
+#: automation_devices.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: lib/html_reports.php lib/installer.php managers.php package_import.php
+#: plugins.php pollers.php templates_import.php user_admin.php
+#: user_group_admin.php utilities.php
 msgid "Status"
 msgstr "Toe-javatra"
 
@@ -1012,10 +1009,6 @@ msgid "An attempt was made to perform a SQL injection in Graph automation"
 msgstr "Nisy fiezahana hanao fanindronana SQL tao amin'ny fandeha ho azy ho an'ny kisary"
 
 #: automation_graph_rules.php automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "Ampiharo ny hetsika nangatahina"
-
-#: automation_graph_rules.php automation_tree_rules.php
 msgid "Are You Sure?"
 msgstr "Azonao antoka ve?"
 
@@ -1023,18 +1016,6 @@ msgstr "Azonao antoka ve?"
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
 msgstr "Azonao antoka ve fa te hamafa ny Fitsipika '%s' ianao?"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Tsindrio ny 'Tohizo' mba hanatsaharana ireto Fitsipika ireto."
-
-#: automation_graph_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "Tsindrio ny 'Tohizo' mba handikana ireto Fitsipika ireto. Azonao ovaina raha tianao ny endriky ny lohateny ho an'ireo Fitsipika Kisary vaovao."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Tsindrio ny 'Tohizo' mba hampandehanana ireto Fitsipika ireto."
 
 #: automation_graph_rules.php graphs.php include/global_arrays.php
 #: include/global_form.php
@@ -1045,40 +1026,13 @@ msgstr "Fangatahana angon-drakitra"
 msgid "Device Selection Criteria"
 msgstr "Fepetra fifantenana Fitaovana"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php managers.php plugins.php
-#: pollers.php user_admin.php user_domains.php user_group_admin.php
-msgid "Disable"
-msgstr "Atsaharo"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
-msgid "Disabled"
-msgstr "Tsy mandeha"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Don't Show"
 msgstr "Aza aseho"
 
-#: automation_graph_rules.php automation_tree_rules.php data_queries.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php
-msgid "Duplicate"
-msgstr "Ataovy dika mitovy"
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr "Hanova ny fikirana fitsipika"
-
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_sources.php include/global_arrays.php include/global_settings.php
-#: managers.php plugins.php pollers.php user_admin.php user_domains.php
-#: user_group_admin.php
-msgid "Enable"
-msgstr "Alefaso"
 
 #: automation_graph_rules.php automation_tree_rules.php data_debug.php
 #: data_sources.php include/global_arrays.php include/global_form.php
@@ -1092,17 +1046,9 @@ msgstr "Mandeha"
 msgid "Graph Creation Criteria"
 msgstr "Fepetra famoronana Kisary"
 
-#: automation_graph_rules.php include/global_arrays.php
-msgid "Graph Rules"
-msgstr "Fitsipika Kisary"
-
 #: automation_graph_rules.php include/global_form.php
 msgid "Graph Type"
 msgstr "Karazana Kisary"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "Hamarino tsara fa voazaha toetra soa aman-tsara ireo fitsipika ireo!"
 
 #: automation_graph_rules.php
 msgid "Matching Devices."
@@ -1113,20 +1059,8 @@ msgid "Matching Objects."
 msgstr "Singa mifanaraka."
 
 #: automation_graph_rules.php
-msgid "No Graph Rules Found"
-msgstr "Tsy nahitana Fitsipika Kisary"
-
-#: automation_graph_rules.php
-msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "Tsindrio ny 'Tohizo' mba hamafana ireto fitsipika kisary ireto."
-
-#: automation_graph_rules.php
 msgid "Rule Details."
 msgstr "Antsipirian'ny fitsipika."
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "Rule Name"
-msgstr "Anaran'ny fitsipika"
 
 #: automation_graph_rules.php
 #, php-format
@@ -1138,24 +1072,8 @@ msgid "Rule not found."
 msgstr "Tsy hita ny fitsipika."
 
 #: automation_graph_rules.php
-msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
-msgstr "Ny ID anatiny ao amin'ny tahirin-drakitra ho an'ity fitsipika ity. Ilaina amin'ny fitiliana olana sy ny fanodinana ho azy."
-
-#: automation_graph_rules.php
-msgid "The name of this rule."
-msgstr "Ny anaran'ity fitsipika ity."
-
-#: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
 msgstr "Lany daty ity taratasy Fitsipika kisary ity. Sokafy indray ny fitsipika ary ampiasao ny taratasy ankehitriny."
-
-#: automation_graph_rules.php automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "Endriky ny lohateny"
-
-#: automation_graph_rules.php automation_tree_rules.php
-msgid "rule_name"
-msgstr "anarana_fitsipika"
 
 #: automation_networks.php include/global_settings.php pollers.php
 #, php-format
@@ -1221,9 +1139,29 @@ msgstr "Isan'andro"
 msgid "Data Collector"
 msgstr "Mpanangona rakitra"
 
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
+msgid "Disable"
+msgstr "Atsaharo"
+
+#: automation_networks.php automation_tree_rules.php data_debug.php
+#: data_sources.php data_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php utilities.php
+msgid "Disabled"
+msgstr "Tsy mandeha"
+
 #: automation_networks.php
 msgid "Discover Now"
 msgstr "Tadiavo izao"
+
+#: automation_networks.php automation_tree_rules.php data_sources.php
+#: include/global_arrays.php include/global_settings.php managers.php
+#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+msgid "Enable"
+msgstr "Alefaso"
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
@@ -1328,6 +1266,10 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "Nisy fikasana hanao tsindrona SQL tao amin'ny fandeha ho azy an'ny hazo"
 
 #: automation_tree_rules.php
+msgid "Apply requested action"
+msgstr "Ampiharo ny hetsika nangatahina"
+
+#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Azonao antoka ve fa te HAMAFA ny fitsipika '%s' ianao?"
@@ -1341,12 +1283,25 @@ msgid "Click 'Continue' to delete the following Rule(s)."
 msgstr "Tsindrio ny 'Tohizo' mba hamafana ireto fitsipika manaraka ireto."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to disable the following Rule(s)."
+msgstr "Tsindrio ny 'Tohizo' mba hanatsaharana ireto Fitsipika ireto."
+
+#: automation_tree_rules.php
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
 msgstr "Tsindrio ny 'Tohizo' mba handikana ireto fitsipika manaraka ireto. Azonao ovaina raha tianao ny endriky ny lohateny ho an'ireo fitsipika vaovao."
 
 #: automation_tree_rules.php
+msgid "Click 'Continue' to enable the following Rule(s)."
+msgstr "Tsindrio ny 'Tohizo' mba hampandehanana ireto Fitsipika ireto."
+
+#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "Hazo noforonina"
+
+#: automation_tree_rules.php data_queries.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "Ataovy dika mitovy"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1369,6 +1324,10 @@ msgid "Leaf Item Type"
 msgstr "Karazana singa ravina"
 
 #: automation_tree_rules.php
+msgid "Make sure, that those rules have successfully been tested!"
+msgstr "Hamarino tsara fa voazaha toetra soa aman-tsara ireo fitsipika ireo!"
+
+#: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Tsy nahitana fitsipiky ny hazo"
 
@@ -1385,12 +1344,20 @@ msgid "ROOT"
 msgstr "FOTOTRA"
 
 #: automation_tree_rules.php
+msgid "Rule Name"
+msgstr "Anaran'ny fitsipika"
+
+#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "Lany daty ity taratasy Fitsipika hazo ity. Sokafy indray ny fitsipika ary ampiasao ny taratasy ankehitriny."
 
 #: automation_tree_rules.php
 msgid "This Type"
 msgstr "Ity karazana ity"
+
+#: automation_tree_rules.php graphs.php
+msgid "Title Format"
+msgstr "Endriky ny lohateny"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1412,6 +1379,10 @@ msgstr "Fitsipiky ny hazo"
 #: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Mampiasa fanakambanana"
+
+#: automation_tree_rules.php
+msgid "rule_name"
+msgstr "anarana_fitsipika"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -4593,6 +4564,10 @@ msgstr "Fitantanana kisary"
 #: include/global_arrays.php
 msgid "Graph Rule Items"
 msgstr "Singam-pitsipiky ny kisary"
+
+#: include/global_arrays.php
+msgid "Graph Rules"
+msgstr "Fitsipika Kisary"
 
 #: include/global_arrays.php
 msgid "Graph Template Input"
