@@ -83,7 +83,10 @@ def verify_automation_templates(harness, session, user_id, check):
         check(status == 200 and urlsplit(url).path == '/app.php/automation/snmp-options',
               'legacy automation_snmp.php GET forwards to the Symfony SNMP Option Set list')
         # automation_graph_rules.php forwards its list and refuses its old bulk form; the run executes both.
-        check(fetch('/automation_graph_rules.php', client=anonymous)[0] == 401, 'Graph Rule anonymous legacy refusal')
+        # The rule editor is still legacy, so include/auth.php answers anonymous requests with its login page.
+        status, body, url = fetch('/automation_graph_rules.php', client=anonymous)
+        check(status in (200, 401) and 'login_password' in body and 'administration-list' not in body
+              and urlsplit(url).path == '/automation_graph_rules.php', 'Graph Rule anonymous legacy refusal shows the login page')
         status, _, url = fetch('/automation_graph_rules.php?header=false')
         check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules' and not urlsplit(url).query,
               'legacy automation_graph_rules.php GET forwards to the Symfony Graph Rule list')
