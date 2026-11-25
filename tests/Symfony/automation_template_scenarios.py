@@ -87,10 +87,11 @@ def verify_automation_templates(harness, session, user_id, check):
         status, body, url = fetch('/automation_graph_rules.php', client=anonymous)
         check(status in (200, 401) and 'login_password' in body and 'administration-list' not in body
               and urlsplit(url).path == '/automation_graph_rules.php', 'Graph Rule anonymous legacy refusal shows the login page')
-        status, _, url = fetch('/automation_graph_rules.php?header=false')
+        status, body, url = fetch('/automation_graph_rules.php?header=false')
+        page = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', body)).strip()[:300]
         # Only the path: in a shared session the list restores filters an earlier scenario left behind.
         check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules',
-              'legacy automation_graph_rules.php GET forwards to the Symfony Graph Rule list: status=%d url=%s' % (status, url))
+              'legacy automation_graph_rules.php GET forwards to the Symfony Graph Rule list: status=%d url=%s page=%s' % (status, url, page))
         status, _, url = fetch('/automation_graph_rules.php?filter=Traffic&rows=10&page=1&sort_column=name&sort_direction=DESC&rule_status=-1&snmp_query_id=-1')
         check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules'
               and urlsplit(url).query == 'filter=Traffic&rows=10&page=1&sort_column=name&sort_direction=DESC',
