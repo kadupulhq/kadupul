@@ -1,0 +1,21 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends '_action_confirm.html.twig' %}
+{% set domain = 'tree_rule' %}
+{% set heading = {
+    delete: t('Delete Tree Rules', {}, 'tree_rule'),
+    duplicate: t('Duplicate Tree Rules', {}, 'tree_rule'),
+    enable: t('Enable Tree Rules', {}, 'tree_rule'),
+    disable: t('Disable Tree Rules', {}, 'tree_rule')
+}[operation] %}
+{% set intro = {
+    delete: t('Click Continue to delete the following Tree Rules with their Object Selection and Tree Creation Criteria.', {}, 'tree_rule'),
+    duplicate: t('Click Continue to duplicate the following Tree Rules. You can optionally change the title format for the new Tree Rules, which start disabled.', {}, 'tree_rule'),
+    enable: t('Click Continue to enable the following Tree Rules. Make sure that they have been tested successfully.', {}, 'tree_rule'),
+    disable: t('Click Continue to disable the following Tree Rules.', {}, 'tree_rule')
+}[operation] %}
+{% set cancel_url = path('admin_tree_rules') %}
+{% block extra_fields %}{% if form.name_format is defined %}{{ form_row(form.name_format) }}{% endif %}{% endblock %}
+{% set item_names = rules|map(rule => rule.name) %}

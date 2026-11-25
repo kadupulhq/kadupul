@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\Automation\Infrastructure\Persistence;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Kadupul\Automation\Application\Port\AutomationTemplateAccess;
 use Kadupul\Automation\Application\Port\TreeRuleStore;
@@ -25,6 +27,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 /**
  * automation_tree_rules. lib/api_automation.php reads enabled rules when it
  * adds devices or graphs to trees, placing them under tree_item_id of tree_id.
+ * A rule's Tree Creation Criteria are its automation_tree_rule_items, and its
+ * Object Selection Criteria are the automation_match_rule_items of rule_type 3;
+ * graph rules keep theirs in the same table under rule_type 1. A bulk action
+ * locks its rules in ID order.
  */
 #[AsAlias(TreeRuleStore::class)]
 final readonly class DbalTreeRuleStore implements TreeRuleStore
@@ -37,6 +43,13 @@ final readonly class DbalTreeRuleStore implements TreeRuleStore
     private const array WRITE_TABLES = ['automation_tree_rules', 'automation_tree_rule_items', 'automation_match_rule_items', 'graph_tree', 'graph_tree_items',
         'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'];
     private const string STALE = 'The tree rule changed since you opened this form. Reload before saving.';
+    private const string SELECTION_INVALID = 'Invalid Tree Rule selection.';
+    private const string SELECTION_MISSING = 'One or more selected Tree Rules no longer exist.';
+    /** automation_tree_rules.id is an unsigned mediumint column. */
+    private const int MAX_ID = 16777215;
+    // Every criteria column except the item's own ID and its rule.
+    private const array RULE_ITEM_COLUMNS = ['sequence', 'field', 'sort_type', 'propagate_changes', 'search_pattern', 'replace_pattern'];
+    private const array MATCH_ITEM_COLUMNS = ['rule_type', 'sequence', 'operation', 'field', 'operator', 'pattern'];
 
     private AuditedPrimaryWrite $writes;
 
@@ -97,16 +110,19 @@ final readonly class DbalTreeRuleStore implements TreeRuleStore
         if ($row === false) {
             return null;
         }
-        return new TreeRule(
-            self::int($row['id']),
-            self::text($row['name']),
-            self::int($row['tree_id']),
-            self::int($row['tree_item_id']),
-            self::int($row['leaf_type']),
-            self::int($row['host_grouping_type']),
-            self::text($row['enabled']) === 'on',
-            TreeRule::revisionOf($row)
-        );
+        return self::rule($row);
+    }
+
+    public function findRules(array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+        $rules = [];
+        foreach ($this->database->fetchAllAssociative('SELECT ' . implode(', ', TreeRule::COLUMNS) . ' FROM automation_tree_rules WHERE id IN (?) ORDER BY id', [$ids], [ArrayParameterType::INTEGER]) as $row) {
+            $rules[self::int($row['id'])] = self::rule($row);
+        }
+        return $rules;
     }
 
     public function save(int $actorId, ?int $id, TreeRuleChange $change, ?string $revision): int
@@ -134,6 +150,129 @@ final readonly class DbalTreeRuleStore implements TreeRuleStore
             $this->database->update('automation_tree_rules', $change->columns(), ['id' => $id]);
             return $id;
         });
+    }
+
+    public function deleteRules(int $actorId, array $ids, array $revisions): void
+    {
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, self::MAX_ID, self::SELECTION_INVALID, self::STALE);
+        $this->writes->run($actorId, 'delete', 'automation_tree_rule', function () use ($ids, $revisions): void {
+            $this->lockRules($ids, $revisions);
+            // The legacy bulk delete removed every match item with these rule IDs, a graph
+            // rule's too (#1533); only this rule type's items belong to a tree rule.
+            $this->database->executeStatement(
+                'DELETE FROM automation_match_rule_items WHERE rule_id IN (?) AND rule_type = ?',
+                [$ids, self::TREE_MATCH],
+                [ArrayParameterType::INTEGER, ParameterType::INTEGER],
+            );
+            $this->database->executeStatement('DELETE FROM automation_tree_rule_items WHERE rule_id IN (?)', [$ids], [ArrayParameterType::INTEGER]);
+            if ($this->database->executeStatement('DELETE FROM automation_tree_rules WHERE id IN (?)', [$ids], [ArrayParameterType::INTEGER]) !== count($ids)) {
+                throw new \RuntimeException('Tree Rule deletion was not confirmed.');
+            }
+        });
+    }
+
+    public function duplicateRules(int $actorId, array $ids, array $revisions, string $nameFormat): void
+    {
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, self::MAX_ID, self::SELECTION_INVALID, self::STALE);
+        // Refuse a malformed format before the transaction; the names it produces are checked under the lock.
+        TreeRule::copyName($nameFormat, 'x');
+        $this->writes->run($actorId, 'duplicate', 'automation_tree_rule', function () use ($ids, $revisions, $nameFormat): void {
+            $copies = [];
+            foreach ($this->lockRules($ids, $revisions) as $id => $row) {
+                $copies[$id] = [
+                    'name' => TreeRule::copyName($nameFormat, self::text($row['name'])),
+                    'tree_id' => self::int($row['tree_id']),
+                    'tree_item_id' => self::int($row['tree_item_id']),
+                    'leaf_type' => self::int($row['leaf_type']),
+                    'host_grouping_type' => self::int($row['host_grouping_type']),
+                    // As on the legacy page, no copy takes action before it is reviewed.
+                    'enabled' => '',
+                ];
+            }
+            $pairs = [];
+            foreach ($copies as $id => $columns) {
+                // One insert per copy: the new ID is only reliable for a single-row insert.
+                $this->database->insert('automation_tree_rules', $columns);
+                $copy = (int) $this->database->lastInsertId();
+                if ($copy < 1) {
+                    throw new \RuntimeException('Tree Rule duplication was not confirmed.');
+                }
+                array_push($pairs, $id, $copy);
+            }
+            // Each kind of criteria is copied for every selected rule by one statement.
+            $map = implode(' UNION ALL ', array_fill(0, count($copies), 'SELECT ? AS source, ? AS copy'));
+            $types = array_fill(0, count($pairs), ParameterType::INTEGER);
+            $this->database->executeStatement(
+                'INSERT INTO automation_match_rule_items (rule_id, ' . implode(', ', self::MATCH_ITEM_COLUMNS) . ')
+                SELECT copies.copy, items.' . implode(', items.', self::MATCH_ITEM_COLUMNS) . "
+                FROM automation_match_rule_items items INNER JOIN ($map) copies ON copies.source = items.rule_id
+                WHERE items.rule_type = ?
+                ORDER BY items.rule_id, items.sequence, items.id",
+                [...$pairs, self::TREE_MATCH],
+                [...$types, ParameterType::INTEGER],
+            );
+            $this->database->executeStatement(
+                'INSERT INTO automation_tree_rule_items (rule_id, ' . implode(', ', self::RULE_ITEM_COLUMNS) . ')
+                SELECT copies.copy, items.' . implode(', items.', self::RULE_ITEM_COLUMNS) . "
+                FROM automation_tree_rule_items items INNER JOIN ($map) copies ON copies.source = items.rule_id
+                ORDER BY items.rule_id, items.sequence, items.id",
+                $pairs,
+                $types,
+            );
+        });
+    }
+
+    public function setEnabled(int $actorId, array $ids, array $revisions, bool $enabled): void
+    {
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, self::MAX_ID, self::SELECTION_INVALID, self::STALE);
+        $this->writes->run($actorId, $enabled ? 'enable' : 'disable', 'automation_tree_rule', function () use ($ids, $revisions, $enabled): void {
+            $this->lockRules($ids, $revisions);
+            // The legacy values: 'on' and the empty string. Every row is locked and
+            // present, so a rule that already had the value is not an error.
+            $this->database->executeStatement(
+                'UPDATE automation_tree_rules SET enabled = ? WHERE id IN (?)',
+                [$enabled ? 'on' : '', $ids],
+                [ParameterType::STRING, ArrayParameterType::INTEGER],
+            );
+        });
+    }
+
+    /**
+     * Lock the selected rules in ID order and compare each with the revision the form showed.
+     *
+     * @param non-empty-list<int> $ids
+     * @param array<int, string> $revisions
+     * @return array<int, array<string, mixed>> ID => stored row
+     */
+    private function lockRules(array $ids, array $revisions): array
+    {
+        $rows = [];
+        foreach ($this->database->fetchAllAssociative('SELECT ' . implode(', ', TreeRule::COLUMNS) . ' FROM automation_tree_rules WHERE id IN (?) ORDER BY id' . $this->lock(' FOR UPDATE'), [$ids], [ArrayParameterType::INTEGER]) as $row) {
+            $id = self::int($row['id']);
+            if (!hash_equals(TreeRule::revisionOf($row), $revisions[$id] ?? '')) {
+                throw new \InvalidArgumentException(self::STALE);
+            }
+            $rows[$id] = $row;
+        }
+        if (count($rows) !== count($ids)) {
+            throw new \InvalidArgumentException(self::SELECTION_MISSING);
+        }
+        return $rows;
+    }
+
+    /** @param array<string, mixed> $row */
+    private static function rule(array $row): TreeRule
+    {
+        return new TreeRule(
+            self::int($row['id']),
+            self::text($row['name']),
+            self::int($row['tree_id']),
+            self::int($row['tree_item_id']),
+            self::int($row['leaf_type']),
+            self::int($row['host_grouping_type']),
+            self::text($row['enabled']) === 'on',
+            TreeRule::revisionOf($row)
+        );
     }
 
     /**

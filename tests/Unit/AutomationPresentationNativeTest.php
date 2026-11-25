@@ -113,10 +113,6 @@ test('automation controllers render real SQL records and preserve declared mutat
             'automation_tree_rule_items' => [['id' => 71, 'rule_id' => 7], ['id' => 81, 'rule_id' => 8]],
             'automation_match_rule_items' => [['id' => 72, 'rule_id' => 7, 'rule_type' => \AUTOMATION_RULE_TYPE_TREE_MATCH], ['id' => 73, 'rule_id' => 7, 'rule_type' => \AUTOMATION_RULE_TYPE_GRAPH_MATCH]]],
         'deleted' => ['automation_tree_rules' => [['id' => 7]], 'automation_tree_rule_items' => [['id' => 71]], 'automation_match_rule_items' => [['id' => 72]]]]],
-    'tree delete confirmation' => [['page' => 'automation_tree_rules.php', 'post' => ['action' => 'actions', 'drp_action' => (string) \AUTOMATION_ACTION_TREE_DELETE, 'chk_7' => 'on'], 'heading' => 'Selected tree rule', 'maxQueries' => 15,
-        'rows' => ['automation_tree_rules' => [['id' => 7, 'name' => 'Selected tree rule']]]]],
-    'tree duplicate confirmation' => [['page' => 'automation_tree_rules.php', 'post' => ['action' => 'actions', 'drp_action' => (string) \AUTOMATION_ACTION_TREE_DUPLICATE, 'chk_7' => 'on'], 'heading' => 'Selected tree rule', 'maxQueries' => 15,
-        'rows' => ['automation_tree_rules' => [['id' => 7, 'name' => 'Selected tree rule']]]]],
     'graph item save reads real supported field and updates owned row' => [['page' => 'automation_graph_rules.php', 'post' => ['action' => 'save', 'id' => '7', 'item_id' => '77', 'sequence' => '1', 'operation' => '0', 'field' => 'ifName', 'operator' => '0', 'pattern' => 'eth0', 'save_component_automation_graph_rule_item' => '1'],
         'writes' => ['automation_graph_rule_items'], 'maxQueries' => 12,
         'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Selected graph rule']], 'automation_graph_rule_items' => [['id' => 77, 'rule_id' => 7, 'sequence' => 1]], 'host_snmp_cache' => [['host_id' => 7, 'snmp_query_id' => 3, 'snmp_index' => '1', 'field_name' => 'ifName', 'field_value' => 'eth0', 'oid' => '.1.3.6.1.2.1.31.1.1.1.1.1']]],
@@ -124,7 +120,6 @@ test('automation controllers render real SQL records and preserve declared mutat
     'discovered device filter preserves supported network and status selection' => [['page' => 'automation_devices.php', 'request' => ['filter' => 'Edge', 'network' => '3', 'status' => 'Up', 'snmp' => 'Up'], 'heading' => 'Device Name', 'labels' => ['Edge gateway', 'Discovery network'], 'ids' => [7], 'rowCount' => 1,
         'rows' => ['automation_networks' => [['id' => 3, 'name' => 'Discovery network']], 'automation_devices' => [['id' => 7, 'network_id' => 3, 'hostname' => 'Edge gateway', 'ip' => '10.0.0.7', 'sysName' => 'edge-seven', 'sysLocation' => 'Building seven', 'sysContact' => 'Operations', 'sysDescr' => 'Network appliance', 'os' => 'Network OS', 'up' => 1, 'snmp' => 1, 'sysUptime' => 123456, 'time' => 1700000000]]]]],
     'empty discovered devices' => [['page' => 'automation_devices.php', 'heading' => 'No Devices Found']],
-    'empty tree rules' => [['page' => 'automation_tree_rules.php', 'heading' => 'No Tree Rules Found']],
     'persisted discovered device' => [['page' => 'automation_devices.php', 'heading' => 'Device Name', 'labels' => ['Edge gateway', 'edge-seven', 'Building seven'], 'ids' => [7], 'rowCount' => 1,
         'rows' => ['automation_devices' => [['id' => 7, 'hostname' => 'Edge gateway', 'ip' => '10.0.0.7', 'sysName' => 'edge-seven', 'sysLocation' => 'Building seven', 'sysContact' => 'Operations', 'sysDescr' => 'Network appliance', 'os' => 'Network OS', 'up' => 1, 'snmp' => 1, 'sysUptime' => 123456, 'time' => 1700000000]]]]],
     'graph rule editor with persisted children' => [['page' => 'automation_graph_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Graph Creation Criteria',
@@ -135,7 +130,4 @@ test('automation controllers render real SQL records and preserve declared mutat
         // The settings are edited through Symfony; the legacy page shows them read-only.
         'form' => false, 'labels' => ['Edit Rule Settings'],
         'rows' => ['automation_tree_rules' => [['id' => 7, 'name' => 'Edge trees', 'leaf_type' => 3]]]]],
-    'persisted tree and subtree joins' => [['page' => 'automation_tree_rules.php', 'heading' => 'Rule Name', 'labels' => ['Edge trees', 'Network tree', 'Routing branch'], 'ids' => [7], 'rowCount' => 1,
-        'rows' => ['graph_tree' => [['id' => 2, 'name' => 'Network tree']], 'graph_tree_items' => [['id' => 9, 'graph_tree_id' => 2, 'title' => 'Routing branch']],
-            'automation_tree_rules' => [['id' => 7, 'name' => 'Edge trees', 'tree_id' => 2, 'tree_item_id' => 9, 'leaf_type' => 3, 'host_grouping_type' => 1, 'enabled' => 'on']]]]],
 ]);

@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "A useful name for this Rule.": "اسم مفيد لهذه القاعدة."
+"Cancel": "إلغاء"
 "Check this box to enable this rule.": "حدد هذه الخانة لتفعيل هذه القاعدة."
 "Choose a Tree for the new Tree Items.": "اختر شجرة لعناصر الشجرة الجديدة."
+"Continue": "متابعة"
 "Data Query Index": "فهرس استعلام المعطيات"
 "Device": "جهاز"
 "Enable Rule": "تفعيل القاعدة"
@@ -15,5 +17,6 @@
 "Optional: Sub-Tree Item": "اختياري: عنصر شجرة فرعية"
 "Save": "حفظ"
 "The Item Type that shall be dynamically added to the tree.": "نوع العنصر الذي ستتم إضافته ديناميكياً إلى الشجرة."
+"Title Format": "تنسيق العنوان"
 "Tree": "شجرة"
 "Tree Rule Selection [edit: %name%]": "تحديد قاعدة الشجرة [تعديل: %name%]"

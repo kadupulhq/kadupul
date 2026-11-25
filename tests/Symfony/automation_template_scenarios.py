@@ -111,6 +111,35 @@ def verify_automation_templates(harness, session, user_id, check):
                                                              'selected_items': 'a:1:{i:0;s:%d:"%s";}' % (len(rule), rule), '__csrf_magic': token})
         check(status == 409 and scalar("SELECT COALESCE(GROUP_CONCAT(CONCAT_WS(':', id, name, enabled) ORDER BY id), '') FROM automation_graph_rules") == rules,
               'legacy Graph Rule bulk post answers 409 and writes nothing: status=%d' % status)
+        # automation_tree_rules.php does the same for the Tree Rule list and its old bulk form.
+        status, body, url = fetch('/automation_tree_rules.php', client=anonymous)
+        check(status in (200, 401) and 'login_password' in body and 'administration-list' not in body
+              and urlsplit(url).path == '/automation_tree_rules.php',
+              'Tree Rule anonymous legacy refusal shows the login page: status=%d url=%s' % (status, url))
+        status, body, url = fetch('/automation_tree_rules.php?header=false')
+        if 'cactiRedirect' in body:
+            # As above: the first legacy request after a permission change asks the browser to reload.
+            status, body, url = fetch('/automation_tree_rules.php?header=false')
+        page = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', body)).strip()[:300]
+        check(status == 200 and urlsplit(url).path == '/app.php/automation/tree-rules',
+              'legacy automation_tree_rules.php GET forwards to the Symfony Tree Rule list: status=%d url=%s page=%s' % (status, url, page))
+        status, _, url = fetch('/automation_tree_rules.php?filter=Device&rows=10&page=1&sort_column=name&sort_direction=DESC&status=-2')
+        check(status == 200 and urlsplit(url).path == '/app.php/automation/tree-rules'
+              and urlsplit(url).query == 'filter=Device&rows=10&page=1&sort_column=name&sort_direction=DESC',
+              'legacy Tree Rule bookmark keeps its list filters and drops the legacy-only one: status=%d url=%s' % (status, url))
+        tree_state = ("SELECT CONCAT((SELECT COALESCE(GROUP_CONCAT(CONCAT_WS(':', id, name, enabled) ORDER BY id), '') FROM automation_tree_rules), '|', "
+                      "(SELECT COUNT(*) FROM automation_tree_rule_items), '|', (SELECT COUNT(*) FROM automation_match_rule_items))")
+        trees = scalar(tree_state)
+        tree_rule = scalar('SELECT COALESCE(MIN(id), 1) FROM automation_tree_rules')
+        # A token from the still-legacy rule editor, as a stale form would carry.
+        _, editor, _ = fetch('/automation_tree_rules.php?action=edit&id=' + tree_rule)
+        parser = Inputs()
+        parser.feed(editor)
+        token = parser.fields.get('__csrf_magic') or next(iter(re.findall(r'csrfMagicToken\s*=\s*["\']([^"\']+)', editor)), session.token)
+        status, _, _ = fetch('/automation_tree_rules.php', {'action': 'actions', 'drp_action': '99', 'chk_' + tree_rule: 'on',
+                                                            'selected_items': 'a:1:{i:0;s:%d:"%s";}' % (len(tree_rule), tree_rule), '__csrf_magic': token})
+        check(status == 409 and scalar(tree_state) == trees,
+              'legacy Tree Rule bulk delete post answers 409 and writes nothing: status=%d' % status)
 
         for name in (marker + ' <b>device</b>', marker + ' second'):
             created_device_templates.append(int(harness.sql(
