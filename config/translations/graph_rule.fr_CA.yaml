@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Choose a Data Query to apply to this rule.": "Choisissez une requête de données à appliquer à cette règle."
+"Data Query": "Interrogation avancée"
+"Graph Type": "Type de Graphique"
+"Rule Selection [edit: %name%]": "Sélection de règle [edit : %name%]"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Igbo Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Igbo\n"
@@ -13922,7 +13922,7 @@ msgstr "Akọwapụtaghị aha njirimara"
 
 #: lib/ldap.php
 msgid "PHP LDAP not enabled"
-msgstr "Agbanyụghị PHP LDAP"
+msgstr "Agbanyeghị PHP LDAP"
 
 #: lib/ldap.php
 #, php-format

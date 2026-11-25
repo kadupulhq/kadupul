@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Zulu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Zulu\n"
@@ -15570,7 +15570,7 @@ msgstr "ISEXWAYISO: Umjikelezo Wokuqoqa Idatha we-Kadupul Weqe Isikhawu Se-Polle
 #: poller.php
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
-msgstr "ISEXWAYISO: Ithebula Lokuphumayo Le-Poller alinalutho ku-poller id %d.  Izinkinga: %d, %s."
+msgstr "ISEXWAYISO: Ithebula Lokuphumayo Le-Poller alilona elingenalutho ku-poller id %d.  Izinkinga: %d, %s."
 
 #: poller.php
 #, php-format

@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% ชั่วโมง"
-"%count% Hours": "%count% ชั่วโมง"
-"%count% Minute": "%count% นาที"
-"%count% Minutes": "%count% นาที"
-"%count% Thread": "%count% เธรด"
-"%count% Threads": "%count% เธรด"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "รายการเซิร์ฟเวอร์ DNS สำรองที่คั่นด้วยช่องว่างเพื่อใช้ในการแปลงชื่อ DNS หากเว้นว่างไว้ จะใช้ OS ของ Poller ในการแปลงชื่อ DNS"
 "Access denied.": "ปฏิเสธการเข้าถึง"
 "Add Discovery Network": "เพิ่มเครือข่ายสำหรับการค้นหา"

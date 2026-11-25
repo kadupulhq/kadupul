@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A description for this data query.": "Famaritana ho an'ity fangatahana angon-drakitra ity."
+"A name for this data query.": "Anarana ho an'ity fangatahana angon-drakitra ity."
+"Add Data Query": "Manampia fangatahan-drakitra"
+"Associated Graph Templates": "Lasitra Kisary mifandray"
+"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "Safidio ny fomba fampidirana ho an'ity Fangatahana angon-drakitra ity. Ity fomba fampidirana ity no mamaritra ny fomba fanangonana ny angon-drakitra ho an'ny Fitaovana tsirairay mifandray amin'ny Fangatahana angon-drakitra."
+"Could not locate XML file.": "Tsy nahita ny rakitra XML."
+"Data Input Method": "Fomba fampidirana angon-drakitra"
+"Data Queries [edit: %name%]": "Fanontaniana angon-drakitra [fanovana: %name%]"
+"Description": "Famaritana"
+"Name": "Anarana"
+"Save": "Tahirizo"
+"Successfully located XML file": "Hita soa aman-tsara ny rakitra XML"
+"The full path to the XML file containing definitions for this data query.": "Ny lalana feno mankany amin'ny rakitra XML mirakitra ny famaritana ho an'ity fangatahana angon-drakitra ity."
+"XML Path": "Lalan'ny XML"

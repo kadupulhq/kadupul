@@ -11,7 +11,6 @@
 "CSV file": "CSV கோப்பு"
 "CSV may contain at most 5000 colors.": "CSV-இல் அதிகபட்சம் 5000 நிறங்கள் மட்டுமே இருக்கலாம்."
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV சரியான UTF-8 ஆகவும் 1 MiB-க்கு மிகாமலும் இருக்க வேண்டும்."
-"CSV requires exactly the name and hex header columns.": "CSV-க்கு name மற்றும் hex தலைப்பு நெடுவரிசைகள் மட்டுமே தேவை."
 "Cancel": "ரத்துசெய்"
 "Clear": "அழி"
 "Click Continue to delete the following Colors.": "பின்வரும் நிறங்களை நீக்க தொடர் என்பதைக் கிளிக் செய்யவும்."

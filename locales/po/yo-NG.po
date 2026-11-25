@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Yoruba Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Yoruba\n"
@@ -8394,7 +8394,7 @@ msgstr "Ó máa ń fi Àwọn Ẹ̀rọ àti Àwọn Àtẹ àwòrán tí a pa k
 
 #: include/global_settings.php
 msgid "Historically, Kadupul administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Kadupul Graphs.  In earlier versions of Kadupul, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Kadupul, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Kadupul restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Kadupul continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
-msgstr "Látijọ́, àwọn olùṣàkóso Kadupul ṣẹ̀dá àwọn Ọ̀nà Àbáwọlé Dátà rírọrùn tí ó ní àwọn àṣẹ bíi \"ps -ef | grep something | wc -l\" láti ṣojú fún ìníyelórí nọ́ńbà fún lílo nínú Àwọn Àtẹ àwòrán Kadupul. Nínú àwọn ẹ̀yà Kadupul àtijọ́, èyí wà láàyè. Síbẹ̀síbẹ̀, èyí jẹ́ ìṣe tí kò léwu nítorí pé ó jẹ́ ẹnu-ọ̀nà fún àwọn olùmúlò ẹnikẹta láti tẹ Àwọn Àdàkọ Dátà tí kò léwu jáde. Nínú Kadupul òde òní, irú àwọn ìṣe wọ̀nyí yẹ kí a yẹra fún. Síbẹ̀síbẹ̀, a pèsè àṣàyàn yìí tí o bá ní àwọn Ọ̀nà Àbáwọlé Dátà àtijọ́ tí ó ní àwọn Meta Characters tí kò léwu wọ̀nyí tí o kò sì tíì yí wọn padà sí àwọn scripts abẹ́lé nínú fódà 'scripts'. Nígbà tí a kò bá ṣàmì sí àṣàyàn yìí, Kadupul máa ń dín àwọn metacharacters irú ti shell kù bíi àmì ìtọ́ka ọ̀rọ̀, àmì àkámọ́ onígun, àwọn ọ̀pá inaro, backslashes, àti backticks. Kadupul ń bá a lọ láti gba àwọn àmì tí ó ju àti tí ó dín kù láyè fún àwọn nǹkan bíi <path_cacti> àti fún àwọn àbáwọlé pàrámítà, ṣùgbọ́n tí a kò bá ṣàmì sí àṣàyàn yìí, ìyẹn ni ààlà lílo wọn tí a gbà láyè."
+msgstr "Látijọ́, àwọn olùṣàkóso Kadupul ṣẹ̀dá àwọn Ọ̀nà Àbáwọlé Dátà rírọrùn tí ó ní àwọn àṣẹ bíi \"ps -ef | grep something | wc -l\" láti ṣojú fún ìníyelórí nọ́ńbà fún lílo nínú Àwọn Àtẹ Àwòrán Kadupul. Nínú àwọn ẹ̀yà Kadupul àtijọ́, èyí wà láàyè. Síbẹ̀síbẹ̀, èyí jẹ́ ìṣe tí ó léwu nítorí pé ó jẹ́ ẹnu-ọ̀nà fún àwọn olùmúlò ẹnikẹta láti tẹ Àwọn Àdàkọ Dátà tí kò ní ààbò jáde. Nínú Kadupul òde òní, irú àwọn ìṣe wọ̀nyí yẹ kí a yẹra fún. Síbẹ̀síbẹ̀, a pèsè àṣàyàn yìí tí o bá ní àwọn Ọ̀nà Àbáwọlé Dátà àtijọ́ tí ó ní àwọn Meta Characters tí ó léwu wọ̀nyí tí o kò sì tíì yí wọn padà sí àwọn scripts abẹ́lé nínú fódà 'scripts'. Nígbà tí a kò bá ṣàmì sí àṣàyàn yìí, Kadupul máa ń fi ààlà sí àwọn metacharacters irú ti shell bíi àmì ìtọ́ka ọ̀rọ̀, àmì àkámọ́ onígun, àwọn ọ̀pá inaro, backslashes, àti backticks. Kadupul ń bá a lọ láti gba àwọn àmì tí ó ju àti tí ó dín kù láyè fún àwọn nǹkan bíi <path_cacti> àti fún àwọn àbáwọlé pàrámítà, ṣùgbọ́n tí a kò bá ṣàmì sí àṣàyàn yìí, ìyẹn ni ààlà lílo wọn tí a gbà láyè."
 
 #: include/global_settings.php
 msgid "Hourly Average Window"
@@ -16341,7 +16341,7 @@ msgstr "<strong>ÀKÍYÈSÍ:</strong> O ti wọlé sí Olùkó Dátà Jíjìn ka
 
 #: templates/platform/console_home_body.html.twig
 msgid "Number of Offline Records:"
-msgstr "Iye Àwọn Àkọsílẹ̀ Lóde Ayélujára:"
+msgstr "Iye Àwọn Àkọsílẹ̀ Tí Kò Sí Lórí Ayélujára:"
 
 #: templates/platform/console_home_body.html.twig
 msgid "Recovery"

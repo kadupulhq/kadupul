@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% గంట"
-"%count% Hours": "%count% గంటలు"
-"%count% Minute": "%count% నిమిషం"
-"%count% Minutes": "%count% నిమిషాలు"
-"%count% Thread": "%count% థ్రెడ్"
-"%count% Threads": "%count% థ్రెడ్‌లు"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "DNS రిజల్యూషన్ కోసం ఉపయోగించాల్సిన ప్రత్యామ్నాయ DNS సర్వర్‌ల ఖాళీ-వేరు చేయబడిన జాబితా. ఖాళీగా ఉంటే, DNS పేర్లను పరిష్కరించడానికి పోలర్ OS ఉపయోగించబడుతుంది."
 "Access denied.": "యాక్సెస్ నిరాకరించబడింది."
 "Add Discovery Network": "డిస్కవరీ నెట్‌వర్క్‌ను జోడించు"

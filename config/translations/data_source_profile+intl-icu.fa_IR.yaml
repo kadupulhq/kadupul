@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {هر {number} روز} other {هر {number} روز}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {{number} روز} other {{number} روز}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} ساعت} other {{number} ساعت}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number} دقیقه} other {{number} دقیقه}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {{number} ماه} other {{number} ماه}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} ثانیه} other {{number} ثانیه}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {{number} هفته} other {{number} هفته}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} سال} other {{number} سال}}"

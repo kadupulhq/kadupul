@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number}시간} other {{number}시간}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number}분} other {{number}분}}"
+"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, =1 {{number}개 스레드} other {{number}개 스레드}}"

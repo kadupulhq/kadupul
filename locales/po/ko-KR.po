@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -45,7 +45,7 @@ msgstr "이 프로그램은 유용 할 것이라는 희망으로 배포되었지
 
 #: aggregate_graphs.php
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "[사용자 정의 그래프 목록 적용 - 필터 FROM 목록]"
+msgstr " [ 사용자 정의 그래프 목록 적용됨 - 재설정하려면 지우기 ]"
 
 #: aggregate_graphs.php graphs.php
 msgid "Add Graphs to Report"
@@ -62,7 +62,7 @@ msgstr "액세스한 집계 그래프가 존재하지 않습니다"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
-msgstr "그래프 설정 집계"
+msgstr "집계 그래프가 존재하지 않습니다"
 
 #: aggregate_graphs.php include/global_arrays.php
 msgid "Aggregate Graphs"
@@ -123,7 +123,7 @@ msgstr "일부"
 
 #: aggregate_graphs.php
 msgid "Associate Graph(s)"
-msgstr "부교수 그래프"
+msgstr "그래프 연결"
 
 #: aggregate_graphs.php
 msgid "Associate with Aggregate"
@@ -176,7 +176,7 @@ msgstr "다음 집계 그래프를 하나의 집계 그래프로 결합하려면
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "다음 집계 그래프를 하나의 집계 그래프로 결합하려면 &#39;계속&#39;을 클릭하십시오."
+msgstr "다음 집계 그래프를 일반 그래프로 변환하려면 '계속'을 클릭하십시오."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -246,7 +246,7 @@ msgstr "상세정보"
 
 #: aggregate_graphs.php
 msgid "Dis-Associate Graph(s)"
-msgstr "Dis-Associate Graph (s)"
+msgstr "그래프 연결 해제"
 
 #: aggregate_graphs.php
 msgid "Disassociate with Aggregate"
@@ -301,7 +301,7 @@ msgstr "아래의 집계 그래프를 템플릿 기반 집계로 마이그레이
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "아래의 집계 그래프를 템플릿 기반 집계로 마이그레이션하려면 하나의 그래프 템플릿 만 사용해야합니다. &#39;Return&#39;키를 누른 다음 동일한 그래프 템플릿을 사용하는 집계 그래프 만 선택하십시오."
+msgstr "아래의 집계 그래프를 집계 템플릿을 사용하도록 마이그레이션하려면 집계 템플릿이 이미 존재해야 합니다. 'Return'을 누른 다음 먼저 집계 템플릿을 생성한 후 다시 시도하십시오."
 
 #: aggregate_graphs.php
 msgid "Included in Aggregate"
@@ -454,7 +454,7 @@ msgstr "이 객체의 내부 데이터베이스 식별자"
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
-msgstr "선택한 집계 그래프는 둘 이상의 그래프 템플리트의 요소를 나타냅니다."
+msgstr "선택한 집계 그래프에 일치하는 집계 템플릿이 없는 것 같습니다."
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
@@ -690,7 +690,7 @@ msgstr "액세스가 거부되었습니다! 게스트 사용자 ID %s 이 (가) 
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
-msgstr "액세스가 거부되었으며 사용자 계정이 비활성화되었습니다."
+msgstr "액세스가 거부되었습니다! 로그인에 실패했습니다."
 
 #: auth_login.php
 msgid "Access Denied!  User account disabled."
@@ -706,7 +706,7 @@ msgstr "아래에 사용자 이름과 암호를 입력하십시오"
 
 #: auth_login.php
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
-msgstr "액세스가 거부되었습니다. Kadupul 관리자에게 연락하십시오."
+msgstr "Kadupul은 더 이상 인증 없음 모드를 지원하지 않습니다. 시스템 관리자에게 문의하십시오."
 
 #: auth_login.php
 msgid "Keep me signed in"
@@ -865,7 +865,7 @@ msgstr "가용성 방법"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "&#39;계속&#39;을 클릭하여 다음과 같은 검색된 기기를 추가하십시오."
+msgstr "다음 검색된 장치를 삭제하려면 '계속'을 클릭하십시오."
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -1383,7 +1383,7 @@ msgstr "선택 사항 : 하위 트리 항목"
 
 #: automation_tree_rules.php
 msgid "ROOT"
-msgstr "ROOTConstellation name (optional)"
+msgstr "루트"
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
@@ -1439,7 +1439,7 @@ msgstr "데이터 수집기 %d에 설정이 저장되지 않았습니다."
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "데이터 수집기 %d에 설정이 저장되지 않았습니다."
+msgstr "하트비트로 인해 데이터 수집기 %d에 대한 설정 저장을 건너뛰었습니다."
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -1473,7 +1473,7 @@ msgstr "색상 [신품]"
 
 #: color.php
 msgid "Colors in use cannot be Deleted.  In use is defined as being referenced either by a Graph or a Graph Template."
-msgstr "사용중인 색상은 삭제할 수 없습니다. In은 Graph 또는 Graph Template에 의해 참조되는 것으로 정의됩니다."
+msgstr "사용 중인 색상은 삭제할 수 없습니다. 사용 중이란 그래프 또는 그래프 템플릿에서 참조되는 상태를 의미합니다."
 
 #: color.php
 msgid "Delete Color"
@@ -1634,7 +1634,7 @@ msgstr "데이터 소스 디버그"
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
-msgstr "데이터 소스가 폴링되지 않았습니다."
+msgstr "데이터 소스가 RRD 파일과 일치합니까?"
 
 #: data_debug.php
 msgid "Data Source repair received an invalid Data Source ID."
@@ -1704,7 +1704,7 @@ msgstr "First Check TimeStamp"
 #: data_debug.php
 #, php-format
 msgid "For attribute '%s', issue found '%s'"
-msgstr "attrbitute ' %s'에 대해 ' %s'문제가 발견되었습니다."
+msgstr "'%s' 속성에서 '%s' 문제가 발견되었습니다"
 
 #: data_debug.php
 msgid "Is RRA Folder writeable by poller?"
@@ -1736,7 +1736,7 @@ msgstr "수표 없음"
 
 #: data_debug.php
 msgid "No Device"
-msgstr "장치:"
+msgstr "장치 없음"
 
 #: data_debug.php
 msgid "No Initial found!  Waiting on RRDfile update"
@@ -1748,11 +1748,11 @@ msgstr "적용 할 수 없ㅇ"
 
 #: data_debug.php
 msgid "Not Checked Yet"
-msgstr "수표 없음"
+msgstr "아직 확인되지 않음"
 
 #: data_debug.php
 msgid "Not Debugging"
-msgstr "디버깅"
+msgstr "디버깅 안 함"
 
 #: data_debug.php lib/api_automation.php lib/graphs.php templates_import.php
 msgid "Not Found"
@@ -1873,7 +1873,7 @@ msgstr "완료하기 위해 데이터 소스 검사 대기"
 
 #: data_debug.php
 msgid "Waiting on analysis and RRDfile update"
-msgstr "RRD 파일이 업데이트 되었습니까?"
+msgstr "분석 및 RRDfile 업데이트 대기 중"
 
 #: data_debug.php lib/installer.php
 msgid "Warning"
@@ -1919,7 +1919,7 @@ msgstr "데이터 입력 방법 [편집 :  %s]"
 
 #: data_input.php
 msgid "Data Input Method [new]"
-msgstr "데이터 입력 방법 [new]"
+msgstr "데이터 입력 방법 [신규]"
 
 #: data_input.php
 msgid "Data Input Name"
@@ -2099,7 +2099,7 @@ msgstr "다음 데이터 쿼리 그래프 연관을 삭제하려면 &#39;계속&
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "다음 데이터 쿼리를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
+msgstr[0] "다음 데이터 쿼리를 복제하려면 '계속'을 클릭하십시오."
 
 #: data_queries.php
 msgid "Could not locate XML file."
@@ -2120,7 +2120,7 @@ msgstr "데이터 쿼리 [편집 :  %s]"
 
 #: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
-msgstr "사용중인 데이터 쿼리는 삭제할 수 없습니다. In은 Graph 또는 Graph Template에 의해 참조되는 것으로 정의됩니다."
+msgstr "사용 중인 데이터 쿼리는 삭제할 수 없습니다. 사용 중이란 그래프 또는 그래프 템플릿에서 참조되는 상태를 의미합니다."
 
 #: data_queries.php utilities.php
 msgid "Data Query Name"
@@ -2143,7 +2143,7 @@ msgstr[0] "데이터 쿼리 삭제"
 #: data_queries.php
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "데이터 쿼리 삭제"
+msgstr[0] "데이터 쿼리 복제"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
@@ -2217,7 +2217,7 @@ msgstr "주문"
 
 #: data_queries.php
 msgid "Remove Data Query Graph Template"
-msgstr "그래프 템플릿으로 변환"
+msgstr "데이터 쿼리 그래프 템플릿 제거"
 
 #: data_queries.php
 msgid "Successfully located XML file"
@@ -2367,7 +2367,7 @@ msgstr "데이터 소스 [ %s]"
 
 #: data_sources.php
 msgid "Data Sources [ All Devices ]"
-msgstr "데이터 소스 [기기 없음]"
+msgstr "데이터 소스 [ 모든 장치 ]"
 
 #: data_sources.php
 msgid "Data Sources [ Non Device Based ]"
@@ -2457,7 +2457,7 @@ msgstr "새 기기"
 
 #: data_sources.php
 msgid "No Aggregates"
-msgstr "집합"
+msgstr "집계 없음"
 
 #: data_sources.php
 msgid "No Data Sources Found"
@@ -2465,7 +2465,7 @@ msgstr "데이터 소스 없음"
 
 #: data_sources.php
 msgid "No Graphs"
-msgstr "그래프 "
+msgstr "그래프 없음"
 
 #: data_sources.php data_templates.php
 msgid "No Input Fields for the Selected Data Input Source"
@@ -2540,7 +2540,7 @@ msgstr "이 데이터 소스의 이름입니다. 일반적으로 데이터 템�
 
 #: data_sources.php
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
-msgstr "이 데이터 쿼리를 사용하는 그래프 템플릿 수입니다."
+msgstr "이 데이터 소스를 사용하는 그래프 및 집계 그래프 수입니다."
 
 #: data_sources.php
 msgid "Turn Off Data Source Debug Mode."
@@ -2958,7 +2958,7 @@ msgstr "평균 :"
 
 #: graph_templates_items.php graphs_items.php
 msgid "Cur:"
-msgstr "똥개:"
+msgstr "현재:"
 
 #: graph_templates_items.php
 msgid "Data Template Filter"
@@ -3017,7 +3017,7 @@ msgstr "확인"
 
 #: graph_view.php include/global_arrays.php include/global_settings.php
 msgid "Preview Mode"
-msgstr "RTL Mode"
+msgstr "미리 보기 모드"
 
 #: graph_view.php
 msgid "Report"
@@ -3045,7 +3045,7 @@ msgstr "이 그래프의 제목. 일반적으로 그래프 템플릿 정의 또�
 
 #: graph_view.php
 msgid "The device for this Graph."
-msgstr "이 그룹의 이름."
+msgstr "이 그래프의 장치입니다."
 
 #: graph_view.php graphs.php
 msgid "The size of this Graph when not in Preview mode."
@@ -3077,7 +3077,7 @@ msgstr "트리 뷰 (TREE VIEW)에 대한 권한이 없습니다."
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filter FROM List ]"
-msgstr "[사용자 정의 그래프 목록 적용 - 필터 FROM 목록]"
+msgstr "[ 사용자 정의 그래프 목록 적용 - 목록에서 필터링 ]"
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filtering from List ]"
@@ -3594,7 +3594,7 @@ msgstr "장치 템플릿 삭제"
 
 #: host_templates.php
 msgid "Delete Item from Device Template"
-msgstr "장치 템플릿 삭제"
+msgstr "장치 템플릿에서 항목 삭제"
 
 #: host_templates.php
 msgid "Device Class"
@@ -3731,7 +3731,7 @@ msgstr "메인 데이터 수집기가 오프라인 또는 복구 중 상태로 �
 
 #: include/global.php
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "이 데이터 수집기가 Kadupul 주요 사이트와 완전히 동기화 된 마지막 시간입니다."
+msgstr "주 데이터 수집기가 온라인 상태로 돌아왔습니다"
 
 #: include/global_arrays.php
 #, php-format
@@ -3920,7 +3920,7 @@ msgstr "6시간"
 
 #: include/global_arrays.php
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php
 msgid "AES-128"
@@ -3965,7 +3965,7 @@ msgstr "부스트 후"
 
 #: include/global_arrays.php
 msgid "Aggregate"
-msgstr "Legacy)"
+msgstr "집계"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
@@ -4029,7 +4029,7 @@ msgstr "다른 CDEF"
 
 #: include/global_arrays.php
 msgid "Application Related"
-msgstr "자동화 규칙 적용"
+msgstr "애플리케이션 관련"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -4680,7 +4680,7 @@ msgstr "암호를 강제로 변경하는 경우 사용자가 암호를 변경하
 
 #: include/global_arrays.php
 msgid "Import Packages"
-msgstr "템플릿 가져오기"
+msgstr "패키지 가져오기"
 
 #: include/global_arrays.php
 msgid "Import Templates"
@@ -5011,15 +5011,15 @@ msgstr "자연 주문"
 
 #: include/global_arrays.php
 msgid "Network Firewalls"
-msgstr "네트워크 필터"
+msgstr "네트워크 방화벽"
 
 #: include/global_arrays.php
 msgid "Network Router"
-msgstr "네트워크 필터"
+msgstr "네트워크 라우터"
 
 #: include/global_arrays.php
 msgid "Network Switch"
-msgstr "네트워크 필터"
+msgstr "네트워크 스위치"
 
 #: include/global_arrays.php lib/html_form_template.php
 msgid "New Graphs"
@@ -5125,7 +5125,7 @@ msgstr "Ping 또는 SNMP 가동 시간"
 
 #: include/global_arrays.php
 msgid "Plugin Administration"
-msgstr "로그 관리"
+msgstr "플러그인 관리"
 
 #: include/global_arrays.php
 msgid "Polish"
@@ -5178,7 +5178,7 @@ msgstr "총계 범례 항목 만 인쇄"
 
 #: include/global_arrays.php
 msgid "Printer Related"
-msgstr "데이터베이스"
+msgstr "프린터 관련"
 
 #: include/global_arrays.php
 msgid "RRD Check"
@@ -5302,7 +5302,7 @@ msgstr "SNMP getNext"
 
 #: include/global_arrays.php
 msgid "SNMPv3 Auth Passphrases must be 8 characters or greater."
-msgstr "SNMPv3 Auth Passphrases는 8 자 이상이어야합니다."
+msgstr "SNMPv3 인증 암호 문구는 8자 이상이어야 합니다."
 
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
@@ -5485,7 +5485,7 @@ msgstr "기술 지원"
 
 #: include/global_arrays.php
 msgid "Telco Related"
-msgstr "템플릿 선택"
+msgstr "통신 관련"
 
 #: include/global_arrays.php
 msgid "Template Editor"
@@ -5647,7 +5647,7 @@ msgstr "프로필 업데이트"
 
 #: include/global_arrays.php
 msgid "Use the First Handler Found"
-msgstr "PHP GetText 처리기 사용"
+msgstr "발견된 첫 번째 처리기 사용"
 
 #: include/global_arrays.php
 msgid "Use the MonoTranslator GetText Handler"
@@ -5869,7 +5869,7 @@ msgstr "[없음]"
 
 #: include/global_arrays.php
 msgid "[Restart]"
-msgstr "제한됨"
+msgstr "[다시 시작]"
 
 #: include/global_arrays.php
 msgid "[Skipped]"
@@ -5957,7 +5957,7 @@ msgstr "같지 않음"
 
 #: include/global_arrays.php
 msgid "is not unknown"
-msgstr "알 수 없음"
+msgstr "알 수 없음이 아님"
 
 #: include/global_arrays.php
 msgid "is unknown"
@@ -5993,7 +5993,7 @@ msgstr "초"
 
 #: include/global_arrays.php
 msgid "secs"
-msgstr "초second"
+msgstr "초"
 
 #: include/global_form.php
 #, php-format
@@ -6057,7 +6057,7 @@ msgstr "두 번째 축은 그래프 오른쪽에 그려집니다. 축척 및 이
 
 #: include/global_form.php
 msgid "A suitable Class for the Device Template."
-msgstr "이 템플릿의 유용한 이름입니다."
+msgstr "장치 템플릿에 적합한 클래스입니다."
 
 #: include/global_form.php
 msgid "A useful name for this CDEF."
@@ -6639,7 +6639,7 @@ msgstr "이 템플릿을 가지고 있습니까?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "왼쪽 축 포매터 (- 축 축 형식 지정자 &lt;형식 이름&gt;)"
+msgstr "왼쪽 축 포매터 (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
@@ -7059,7 +7059,7 @@ msgstr "이 집계 템플리트가 기초로하는 그래프 템플리트."
 
 #: include/global_form.php package_import.php
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "모든 새 그래프 템플릿에 사용할 기본 그래프 너비입니다."
+msgstr "그래프 템플릿을 가져오거나 업데이트할 때 사용할 높이입니다."
 
 #: include/global_form.php package_import.php
 msgid "The Image Format to be used when importing or updating Graph Templates."
@@ -7247,7 +7247,7 @@ msgstr "그래프 내의 그래프 영역의 폭 (픽셀 단위)입니다. 이 �
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "제목 (- 제목)"
+msgstr "제목 (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7547,7 +7547,7 @@ msgstr "계정 잠금"
 
 #: include/global_settings.php
 msgid "Additional Data Collector Settings"
-msgstr "원격 데이터 수집기 상태 :"
+msgstr "추가 데이터 수집기 설정"
 
 #: include/global_settings.php lib/html.php
 msgid "Advanced"
@@ -7611,7 +7611,7 @@ msgstr "이 정규 표현식과 일치하는 문자열은 사용자 디스플레
 
 #: include/global_settings.php
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
-msgstr "평균보다 많은 표준 편차 인 값은 제외됩니다. 좋은 숫자는 조작 할 데이터 유형에 따라 달라집니다. 5 표준 편차보다 낮은 숫자를 권장합니다."
+msgstr "평균보다 이 표준 편차 수만큼 높은 값은 모두 제외됩니다. 적절한 수치는 처리할 데이터 유형에 따라 달라집니다. 5 표준 편차 이상의 값을 권장합니다."
 
 #: include/global_settings.php
 msgid "Archive"
@@ -7703,7 +7703,7 @@ msgstr "축 글꼴 크기"
 
 #: include/global_settings.php
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "범례 글꼴 설정"
+msgstr "백그라운드 시간 초과 및 동시 프로세스 설정"
 
 #: include/global_settings.php
 msgid "Backup Retention"
@@ -7719,7 +7719,7 @@ msgstr "기본 시간"
 
 #: include/global_settings.php
 msgid "Basic Auth Login Failure Message"
-msgstr "기본 인증 맵 파일"
+msgstr "기본 인증 로그인 실패 메시지"
 
 #: include/global_settings.php
 msgid "Basic Auth Mapfile"
@@ -7751,7 +7751,7 @@ msgstr "Boost 처리 모드"
 
 #: include/global_settings.php
 msgid "Business Hours Settings"
-msgstr "사용자 설정"
+msgstr "업무 시간 설정"
 
 #: include/global_settings.php
 msgid "By Template/Data Query"
@@ -7923,7 +7923,7 @@ msgstr "기본 그래프 유형"
 
 #: include/global_settings.php
 msgid "Default Interface Speed"
-msgstr "기본 그래프 유형"
+msgstr "기본 인터페이스 속도"
 
 #: include/global_settings.php
 msgid "Default Log Tail Lines"
@@ -8051,7 +8051,7 @@ msgstr "장치"
 
 #: include/global_settings.php
 msgid "Device ID/Data Query ID"
-msgstr "데이터 쿼리 삭제"
+msgstr "장치 ID/데이터 쿼리 ID"
 
 #: include/global_settings.php
 msgid "Device Threads"
@@ -8067,7 +8067,7 @@ msgstr "RRDtool 그래프 워터 마크"
 
 #: include/global_settings.php
 msgid "Disable Resource Cache Replication"
-msgstr "리소스 캐시 다시 작성"
+msgstr "리소스 캐시 복제 비활성화"
 
 #: include/global_settings.php
 msgid "Disable increasing OID Check"
@@ -8379,7 +8379,7 @@ msgstr "그래프 / 데이터 소스 체크 됨"
 
 #: include/global_settings.php
 msgid "Hide Disabled"
-msgstr "숨기기 비활성화"
+msgstr "비활성화 항목 숨기기"
 
 #: include/global_settings.php
 msgid "Hide Kadupul Dashboard"
@@ -8427,7 +8427,7 @@ msgstr "Daily Stats를 얼마나 자주 업데이트해야합니까?"
 
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
-msgstr "Daily Stats를 얼마나 자주 업데이트해야합니까?"
+msgstr "RRD를 얼마나 자주 확인해야 합니까?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
@@ -8495,7 +8495,7 @@ msgstr "부스트 출력 테이블이이 크기를 초과하면 레코드에서 
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "부스트 폴러가이 런타임을 실행하면 선인장 로그에 경고가 표시되고,"
+msgstr "Boost 폴러가 이 런타임을 초과하면 Cacti 로그에 경고가 기록되며,"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8587,7 +8587,7 @@ msgstr "언어"
 
 #: include/global_settings.php
 msgid "Language Support"
-msgstr "C/ C++ 언어 지원Name"
+msgstr "언어 지원"
 
 #: include/global_settings.php lib/html.php
 msgid "Last Known Good"
@@ -8611,7 +8611,7 @@ msgstr "로컬 계정 복잡성 요구 사항"
 
 #: include/global_settings.php
 msgid "Local Page Help Only"
-msgstr "도와주세요."
+msgstr "로컬 페이지 도움말만 사용"
 
 #: include/global_settings.php
 msgid "Location for Image Files"
@@ -8679,7 +8679,7 @@ msgstr "최대 장치 해시 디렉토리"
 
 #: include/global_settings.php
 msgid "Max Kills Per RRA"
-msgstr "RRA 당 최대 사망자 수"
+msgstr "RRA당 최대 제거 수"
 
 #: include/global_settings.php
 msgid "Maximum Argument Length"
@@ -8707,11 +8707,11 @@ msgstr "최대 제목 길이"
 
 #: include/global_settings.php
 msgid "Maximum Tree Width"
-msgstr "최대 제목 길이"
+msgstr "최대 트리 너비"
 
 #: include/global_settings.php
 msgid "Maximum number of days to show business hours"
-msgstr "페이지 당 최대 행 수"
+msgstr "영업 시간을 표시할 최대 일수"
 
 #: include/global_settings.php
 msgid "Maximum number of rows per page"
@@ -8739,7 +8739,7 @@ msgstr "새로 고침 간격"
 
 #: include/global_settings.php
 msgid "Minimum Tree Width"
-msgstr "최소 길이"
+msgstr "최소 트리 너비"
 
 #: include/global_settings.php user_domains.php
 msgid "Mode"
@@ -8751,7 +8751,7 @@ msgstr "Kadupul가 LDAP 서버에 대해 인증을 시도하는 모드. <blockqu
 
 #: include/global_settings.php
 msgid "Monthly on Sunady"
-msgstr "매월 매일"
+msgstr "매월 일요일"
 
 #: include/global_settings.php
 msgid "My Browsers Timezone"
@@ -8771,7 +8771,7 @@ msgstr "새 창"
 
 #: include/global_settings.php user_domains.php
 msgid "No User"
-msgstr "회원:"
+msgstr "사용자 없음"
 
 #: include/global_settings.php
 msgid "Nonce Mode - Reporting Only"
@@ -8787,7 +8787,7 @@ msgstr "부스트 프로세스 수"
 
 #: include/global_settings.php
 msgid "Number of DSStats Processes"
-msgstr "부스트 프로세스 수"
+msgstr "DSStats 프로세스 수"
 
 #: include/global_settings.php
 msgid "Number of PHP Script Servers"
@@ -8795,7 +8795,7 @@ msgstr "PHP 스크립트 서버 수"
 
 #: include/global_settings.php
 msgid "Number of RRDfile Check Processes"
-msgstr "부스트 프로세스 수"
+msgstr "RRDfile 검사 프로세스 수"
 
 #: include/global_settings.php
 msgid "Number of Standard Deviations"
@@ -8939,7 +8939,7 @@ msgstr "기본 DNS IP 주소"
 
 #: include/global_settings.php
 msgid "Privacy Passphrase (v3)"
-msgstr "Privacy Passphrase (v3)."
+msgstr "개인 정보 보호 암호 문구 (v3)"
 
 #: include/global_settings.php
 msgid "Privacy Protocol (v3)"
@@ -8971,7 +8971,7 @@ msgstr "프록시 서버"
 
 #: include/global_settings.php
 msgid "RRDChecker Timeout"
-msgstr "DNS 시간 초과"
+msgstr "RRDChecker 시간 초과"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean"
@@ -9039,7 +9039,7 @@ msgstr "복구 횟수"
 
 #: include/global_settings.php user_domains.php
 msgid "Referrals"
-msgstr "수입내역"
+msgstr "참조"
 
 #: include/global_settings.php
 msgid "Refresh Poller Table Per Cycle"
@@ -9235,7 +9235,7 @@ msgstr "선택적 플러그인 디버그"
 
 #: include/global_settings.php lib/functions.php
 msgid "Sendmail"
-msgstr "@ option"
+msgstr "Sendmail"
 
 #: include/global_settings.php
 msgid "Sendmail Options"
@@ -9267,7 +9267,7 @@ msgstr "클라이언트가 수신한 LDAP TLS 인증서를 검증할지 여부�
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
-msgstr "이 Kadupul 시스템에 대해 데이터 소스 통계를 수집해야합니까?"
+msgstr "이 Kadupul 시스템에서 RRDfile 검사를 활성화하시겠습니까?"
 
 #: include/global_settings.php
 msgid "Should image caching be enabled?"
@@ -9303,7 +9303,7 @@ msgstr "선택한 사이트에서 사용할 수 있는 위치만 표시합니다
 
 #: include/global_settings.php
 msgid "Show only site specific locations"
-msgstr "그래프 특정 옵션을 여기에 설정하십시오."
+msgstr "사이트별 위치만 표시"
 
 #: include/global_settings.php
 msgid "Simple"
@@ -9407,7 +9407,7 @@ msgstr "사용자 설정"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "비 SSL 통신용 TCP / UDP 포트."
+msgstr "SSL 통신용 LDAPS TCP 포트입니다. 기본값은 636입니다."
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
@@ -9451,7 +9451,7 @@ msgstr "스파이크 제거의 기본 시간. 예를 들어, &#39;12 : 00am &#39
 
 #: include/global_settings.php
 msgid "The Bind Timeout in seconds."
-msgstr "SMTP 시간 초과를 초 단위로 입력하십시오."
+msgstr "바인드 시간 초과(초)입니다."
 
 #: include/global_settings.php
 msgid "The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode."
@@ -9487,7 +9487,7 @@ msgstr "계약 할 Tree의 최소 너비입니다."
 
 #: include/global_settings.php
 msgid "The Network Connect Timeout in seconds."
-msgstr "SMTP 시간 초과를 초 단위로 입력하십시오."
+msgstr "초 단위의 네트워크 연결 시간 초과입니다."
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
@@ -9723,7 +9723,7 @@ msgstr "트리 모드에서 축소판 그림을 표시 할 때 사용할 열의 
 
 #: include/global_settings.php
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
-msgstr "부스트 테이블의 모든 RRD를 처리하는 데 사용할 동시 부스트 프로세스 수입니다."
+msgstr "모든 데이터 소스를 처리하는 데 사용할 동시 DSStats 프로세스 수입니다."
 
 #: include/global_settings.php
 msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
@@ -9731,7 +9731,7 @@ msgstr "동시 Poller 명령 프로세스의 수입니다. 는 Poller 명령 풀
 
 #: include/global_settings.php
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
-msgstr "부스트 테이블의 모든 RRD를 처리하는 데 사용할 동시 부스트 프로세스 수입니다."
+msgstr "모든 RRD 파일을 처리하는 데 사용할 동시 RRDfile 검사 프로세스 수입니다."
 
 #: include/global_settings.php
 msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
@@ -9751,7 +9751,7 @@ msgstr "미리보기 모드에서 한 페이지에 표시 할 그래프 수입�
 
 #: include/global_settings.php
 msgid "The number of polling intervals a Device must be down before logging an error and reporting Device as down."
-msgstr "폴링 간격 수 a 오류를 기록하고 Device를 down으로보고하기 전에 Device가 중단되어야합니다."
+msgstr "오류를 기록하고 장치를 다운 상태로 보고하기 전에 장치가 다운 상태여야 하는 폴링 간격 수입니다."
 
 #: include/global_settings.php
 msgid "The number of polling intervals a Device must remain up before returning Device to an up status and issuing a notice."
@@ -10020,7 +10020,7 @@ msgstr "성능을 최적화하려면 부스트 RRD 업데이터는 한 번에 �
 
 #: include/global_settings.php
 msgid "Tree History"
-msgstr "비밀번호 기록"
+msgstr "트리 기록"
 
 #: include/global_settings.php
 msgid "Tree Settings"
@@ -10261,7 +10261,7 @@ msgstr "이이템 색상"
 
 #: lib/api_aggregate.php lib/html.php
 msgid "No Items"
-msgstr "항목"
+msgstr "항목 없음"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"
@@ -10379,7 +10379,7 @@ msgstr "트리 생성 기준 없음"
 
 #: lib/api_automation.php
 msgid "Not Up"
-msgstr "위로"
+msgstr "작동 중이 아님"
 
 #: lib/api_automation.php
 msgid "Objects"
@@ -10623,12 +10623,12 @@ msgstr "액세스가 거부되었습니다. Kadupul 관리자에게 연락하십
 #: lib/boost.php
 #, php-format
 msgid "%s Bytes"
-msgstr "%s GBytes"
+msgstr "%s 바이트"
 
 #: lib/boost.php
 #, php-format
 msgid "%s KBytes"
-msgstr "%s GBytes"
+msgstr "%s K바이트"
 
 #: lib/boost.php utilities.php
 #, php-format
@@ -10637,7 +10637,7 @@ msgstr "%s MBytes"
 
 #: lib/clog_webapi.php
 msgid " - Admin Filter active"
-msgstr "- Admin Filter active"
+msgstr " - 관리자 필터 활성"
 
 #: lib/clog_webapi.php
 msgid " - Admin Unfiltered"
@@ -10720,7 +10720,7 @@ msgstr "최근 순"
 
 #: lib/clog_webapi.php
 msgid "Non Stats"
-msgstr "명시되지 않은"
+msgstr "통계 없음"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Oldest First"
@@ -10760,7 +10760,7 @@ msgstr "경고"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt; XML 파일에 &#39;Index Count Changed&#39;가 없습니다."
+msgstr "&lt;arg_num_indexes&gt;가 XML 파일에 존재하지만 반환된 데이터가 없습니다. 'Index Count Changed'는 지원되지 않습니다"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
@@ -10789,12 +10789,12 @@ msgstr "데이터 쿼리 완료를위한 자동화 실행"
 #: lib/data_query.php
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
-msgstr "BOGUS REWRITE_VALUE 항목 발견, INDEX = '%s'"
+msgstr "잘못된 rewrite_value 항목이 발견되었습니다. 인덱스='%s'"
 
 #: lib/data_query.php
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
-msgstr "Bulk Walk Size는 %d에서 고정됩니다."
+msgstr "일괄 워크 크기는 %d로 고정됩니다."
 
 #: lib/data_query.php
 #, php-format
@@ -10834,7 +10834,7 @@ msgstr "감지 된 새 정렬 필드 : &#39; %s&#39;이전 정렬 필드 &#39; %
 
 #: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
-msgstr "중복 데이터 소스 프로필"
+msgstr "데이터 소스 제목 캐시 업데이트 완료"
 
 #: lib/data_query.php
 msgid "Done updating Graph Title Cache"
@@ -10890,7 +10890,7 @@ msgstr "인덱스 &#39; %s&#39;목록에 대한 스크립트 실행, 인덱스 �
 #: lib/data_query.php
 #, php-format
 msgid "Executing script for num of indexes '%s'"
-msgstr "num &#39;개의 인덱스&#39; %s &#39;에 대한 스크립트 실행 중"
+msgstr "인덱스 수 '%s'에 대한 스크립트 실행 중"
 
 #: lib/data_query.php
 #, php-format
@@ -10929,7 +10929,7 @@ msgstr "&#39;rewrite_index&#39;또는 &#39;oid_suffix&#39;가 정의되었으므
 #: lib/data_query.php
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr "변환 할 %s 테이블을 찾았습니다."
+msgstr "확인할 로컬 데이터 ID %s개를 찾았습니다"
 
 #: lib/data_query.php
 #, php-format
@@ -11042,7 +11042,7 @@ msgstr "위치한 입력 필드 &#39; %s&#39;[walk]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "&lt;방향&gt; 입력 &lt;/ 방향&gt; 또는 &lt;방향&gt; 입출력 &lt;/ 방향&gt; 필드 만 포함해야합니다."
+msgstr "&lt;direction&gt;input&lt;/direction&gt; 또는 &lt;direction&gt;input-output&lt;/direction&gt; 필드만 포함해야 합니다"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field be updated."
@@ -11173,7 +11173,7 @@ msgstr "OID에서 oid_rewrite : &#39; %s&#39;새로운 OID : &#39; %s&#39;"
 #: lib/data_query.php
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
-msgstr "OID에서 oid_rewrite : &#39; %s&#39;새로운 OID : &#39; %s&#39;"
+msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
 msgid "Failed to alter password field length, can not continue as may corrupt password"
@@ -11298,7 +11298,7 @@ msgstr "%s 링크"
 
 #: lib/functions.php
 msgid "Logged in a Guest"
-msgstr "다음 계정으로 로그인"
+msgstr "게스트로 로그인됨"
 
 #: lib/functions.php
 msgid "Logged in as"
@@ -11426,7 +11426,7 @@ msgstr "제거에 실패했습니다. 영구 트랜잭션 정리가 별도로 �
 
 #: lib/graph_item_choices.php
 msgid "No Device - "
-msgstr "장치"
+msgstr "장치 없음 - "
 
 #: lib/graph_item_editor.php
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
@@ -11442,7 +11442,7 @@ msgstr "집계 된 장치"
 
 #: lib/graphs.php
 msgid "Damaged Graph"
-msgstr "데이터 소스, 그래프"
+msgstr "손상된 그래프"
 
 #: lib/html.php
 msgid "#"
@@ -11528,7 +11528,7 @@ msgstr "현재 필터 지우기"
 
 #: lib/html.php
 msgid "Click again to take this Graph out of Realtime"
-msgstr "이 그래프를 실시간으로 가져 오려면 다시 클릭하십시오."
+msgstr "이 그래프의 실시간 모드를 해제하려면 다시 클릭하십시오"
 
 #: lib/html.php
 msgid "Click to Show/Hide Filter"
@@ -11572,7 +11572,7 @@ msgstr "작업 성공"
 
 #: lib/html.php
 msgid "Contribute to the Kadupul Project"
-msgstr "Kadupul 로그 회전"
+msgstr "Kadupul 프로젝트에 기여하기"
 
 #: lib/html.php
 msgid "Copy graph"
@@ -11681,7 +11681,7 @@ msgstr "번역에 도움"
 
 #: lib/html.php
 msgid "Ignore System Color"
-msgstr "이이템 색상"
+msgstr "시스템 색상 무시"
 
 #: lib/html.php
 msgid "Kadupul"
@@ -11709,7 +11709,7 @@ msgstr "RRA 당 Kills"
 
 #: lib/html.php
 msgid "Light Color Mode"
-msgstr "목록 모드"
+msgstr "라이트 색상 모드"
 
 #: lib/html.php managers.php
 msgid "Logs"
@@ -11802,7 +11802,7 @@ msgstr "이유:"
 
 #: lib/html.php
 msgid "Remote Server"
-msgstr "StdDev 제거"
+msgstr "원격 서버"
 
 #: lib/html.php
 msgid "Remove StdDev"
@@ -11874,7 +11874,7 @@ msgstr "타임스탬프"
 
 #: lib/html.php
 msgid "Use System Color"
-msgstr "이이템 색상"
+msgstr "시스템 색상 사용"
 
 #: lib/html.php
 msgid "Zoom In"
@@ -12103,7 +12103,7 @@ msgstr "그래프 [템플릿 :  %s]"
 
 #: lib/html_reports.php
 msgid ", Graph Template: All Templates"
-msgstr "장치 템플릿에 그래프 템플릿 추가"
+msgstr ", 그래프 템플릿: 모든 템플릿"
 
 #: lib/html_reports.php
 #, php-format
@@ -12417,7 +12417,7 @@ msgstr "장치 유형의 경우 그래프를 필터링하거나 선택하는 데
 
 #: lib/html_reports.php
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "장치를 선택하여 그래프 지정"
+msgstr "장치 및 그래프를 필터링할 사이트를 선택하십시오."
 
 #: lib/html_reports.php
 msgid "Select a Tree Branch to use for Graphs and Devices.  Devices will be considered as Branches."
@@ -12429,7 +12429,7 @@ msgstr "사용할 트리를 선택하십시오."
 
 #: lib/html_reports.php
 msgid "Select one of the given Types for the Image Attachments"
-msgstr "Image Attachments에 대해 지정된 유형 중 하나를 선택하십시오."
+msgstr "이미지 첨부 파일에 대해 지정된 유형 중 하나를 선택하십시오."
 
 #: lib/html_reports.php
 msgid "Send Report"
@@ -12602,7 +12602,7 @@ msgstr "잘못된 UTF-8 오프셋 오류!"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
-msgstr "다운로드"
+msgstr "다운 (Thold)"
 
 #: lib/html_utility.php lib/installer.php
 msgid "Error"
@@ -12644,7 +12644,7 @@ msgstr "값  %s의 변수  %s에 대한 유효성 검사 오류입니다. 자세
 
 #: lib/import.php
 msgid "Damaged"
-msgstr "데이터 소스, 그래프"
+msgstr "손상됨"
 
 #: lib/import.php
 msgid "Found Dependency:"
@@ -12702,7 +12702,7 @@ msgstr "알 수 없는 필드"
 
 #: lib/import.php
 msgid "Unmet Dependency:"
-msgstr "Unmet Dependency :"
+msgstr "충족되지 않은 종속성:"
 
 #: lib/import.php
 msgid "Updated"
@@ -12746,7 +12746,7 @@ msgstr "존재하지 않는다."
 
 #: lib/import.php
 msgid "not writable"
-msgstr "쓰기 가능 "
+msgstr "쓰기 불가"
 
 #: lib/import.php
 msgid "not written"
@@ -12782,7 +12782,7 @@ msgstr "GPL 라이센스 계약서 수락"
 
 #: lib/installer.php
 msgid "Adding Device to Default Tree"
-msgstr "장치 기본값"
+msgstr "기본 트리에 장치 추가 중"
 
 #: lib/installer.php
 msgid "Adding extra snmp settings for automation"
@@ -12926,7 +12926,7 @@ msgstr "데이터 소스:"
 
 #: lib/installer.php
 msgid "DOWNGRADE DETECTED"
-msgstr "저 무적 감지"
+msgstr "다운그레이드 감지됨"
 
 #: lib/installer.php
 msgid "Database Collation"
@@ -13051,7 +13051,7 @@ msgstr "지정한 프로필  %s! =  %s을 적용하지 못했습니다."
 
 #: lib/installer.php
 msgid "Failed to find any automation option set"
-msgstr "복사 할 데이터를 찾지 못했습니다!"
+msgstr "자동화 옵션 세트를 찾지 못했습니다"
 
 #: lib/installer.php
 msgid "Failed to find automation network, no changes were made"
@@ -13126,7 +13126,7 @@ msgstr "서버에서 SELinux를 활성화 한 경우 영구적으로 비활성�
 
 #: lib/installer.php
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
-msgstr "캐시를 지우고 브라우저를 다시 시작한 후에도 문제가 계속 발생하면 Google에 문제를 제기하십시오. 문제의 원인을 파악하려고 노력할 것입니다."
+msgstr "캐시를 지우고 브라우저를 다시 시작한 후에도 문제가 계속 발생하면 저희에게 문제를 보고해 주시면 원인을 파악해 보겠습니다."
 
 #: lib/installer.php
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
@@ -13310,7 +13310,7 @@ msgstr "가져올 템플릿을 선택하지 않았습니다"
 
 #: lib/installer.php package_import.php
 msgid "Not Writable"
-msgstr "쓰기 가능 "
+msgstr "쓰기 불가"
 
 #: lib/installer.php
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -13399,7 +13399,7 @@ msgstr "Kadupul Group에보고 해주십시오."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "Kadupul에서 내보낼 템플릿 유형을 선택하십시오."
+msgstr "업그레이드 중에 업데이트할 장치 템플릿을 선택하십시오."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
@@ -13765,7 +13765,7 @@ msgstr "자동화 네트워크 (%s) 업데이트, 모드 \"%s\"=> \"%s\", 서브
 
 #: lib/installer.php
 msgid "Updating remote configuration file"
-msgstr "구성 대기 중"
+msgstr "원격 구성 파일 업데이트 중"
 
 #: lib/installer.php
 msgid "Upgrade"
@@ -13803,7 +13803,7 @@ msgstr "또한 MySQL TimeZone 정보를 MySQL로 가져오고 Kadupul 사용자�
 
 #: lib/installer.php
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
-msgstr "그런 다음 새 데이터베이스를 가리 키도록 &quot;/ config.php에 포함&quot;을 <b>업데이트해야합니다.</b>"
+msgstr "그런 다음 새 데이터베이스를 가리키도록 \"include/config.php\"를 <b>반드시</b> 업데이트해야 합니다."
 
 #: lib/installer.php
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
@@ -14179,7 +14179,7 @@ msgstr "CDP 알 수없는 데이터 요소 (0)"
 
 #: lib/rrd.php
 msgid "Cur Row"
-msgstr "커 로우"
+msgstr "현재 행"
 
 #: lib/rrd.php
 #, php-format
@@ -14262,7 +14262,7 @@ msgstr "최소 하트 비트"
 
 #: lib/rrd.php
 msgid "Optional Tuning Recommendations"
-msgstr "데이터 소스 필드"
+msgstr "선택적 튜닝 권장 사항"
 
 #: lib/rrd.php
 msgid "PDP per Row"
@@ -14302,7 +14302,7 @@ msgstr "RRD 복원에 실패했습니다. 원본 및 복구용 XML이 보존되�
 
 #: lib/rrd.php
 msgid "Root"
-msgstr "워드프레스 루트 디렉토리를 확인할 수 없습니다"
+msgstr "루트"
 
 #: lib/rrd.php
 msgid "Round Robin Archive"
@@ -14379,7 +14379,7 @@ msgstr "수집 전에 poller_output 큐는 반드시 InnoDB를 사용해야 합�
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "작업을 확인할 수 없습니다. 다시 시도하기 전에 변경 이력을 점검하세요."
+msgstr "사용할 수 없음"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
@@ -14667,7 +14667,7 @@ msgstr "창 시작:  %s (%s)"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "템플릿에서 집계 만들기"
+msgstr "템플릿이 아닌 항목에서 그래프 생성 시도 중"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -14737,7 +14737,7 @@ msgstr "현재 가치"
 #: lib/utility.php
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
-msgstr "로그인 수 및 척추 데이터 수집기 사용에 따라  %s에 많은 연결이 필요합니다. 척추에 대한 계산은 total_connections = total_processes * (total_threads + script_servers + 1)이므로 사용자 연결을위한 헤드 룸을 남겨 두어야합니다. 이는 동시 로그인 계정의 수에 따라 변경됩니다."
+msgstr "로그인 수와 Spine 데이터 수집기 사용 여부에 따라 %s에 많은 연결이 필요합니다. Spine의 계산식은 total_connections = total_processes * (total_threads + script_servers + 1)이며, 이후 동시 로그인 계정 수에 따라 달라지는 사용자 연결을 위한 여유 공간을 확보해야 합니다."
 
 #: lib/utility.php
 #, php-format
@@ -15052,7 +15052,7 @@ msgstr "버전 %s"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
-msgstr "Kadupul에서 세션 시간 초과로 인해 로그 아웃되었습니다."
+msgstr "원격 데이터 수집기 상태 변경으로 인해 Kadupul에서 로그아웃되었습니다"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a session timeout."
@@ -15060,7 +15060,7 @@ msgstr "Kadupul에서 세션 시간 초과로 인해 로그 아웃되었습니�
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to an account suspension."
-msgstr "Kadupul에서 세션 시간 초과로 인해 로그 아웃되었습니다."
+msgstr "계정 정지로 인해 Kadupul에서 로그아웃되었습니다."
 
 #: managers.php
 #, php-format
@@ -15100,7 +15100,7 @@ msgstr "ID"
 
 #: managers.php
 msgid "Kind"
-msgstr "형식All other platforms"
+msgstr "종류"
 
 #: managers.php utilities.php
 msgid "MIB"
@@ -15153,7 +15153,7 @@ msgstr "SNMP 알림 수신자 [편집 :  %s]"
 
 #: managers.php
 msgid "SNMP Notification Receiver [new]"
-msgstr "SNMP 알림 수신기 [new]"
+msgstr "SNMP 알림 수신기 [신규]"
 
 #: managers.php utilities.php
 msgid "SNMP Notification Receivers"
@@ -15185,11 +15185,11 @@ msgstr "하나 이상의 알림 개체를 선택해야합니다."
 
 #: package_import.php
 msgid "Automatically Trust Signer"
-msgstr "Kadupul에 자동으로 추가"
+msgstr "서명자 자동 신뢰"
 
 #: package_import.php templates_import.php
 msgid "Changes/Diffferences"
-msgstr "기기 변경"
+msgstr "변경 사항/차이점"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
@@ -15197,7 +15197,7 @@ msgstr "패키지 저장소 파일에서 있어야 할 파일이 있는지 확�
 
 #: package_import.php
 msgid "Copyright"
-msgstr "오른쪽"
+msgstr "저작권"
 
 #: package_import.php
 msgid "Device class"
@@ -15221,7 +15221,7 @@ msgstr "다음에 대한 파일 차이점:"
 
 #: package_import.php
 msgid "Filename"
-msgstr "이름 변경"
+msgstr "파일 이름"
 
 #: package_import.php
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
@@ -15229,11 +15229,11 @@ msgstr "이 옵션을 선택하면 Kadupul는 서명자와 해당 작성자의 �
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
-msgstr "패키지 파일 이름 가져오기 [None selected imports all, Check to import selectively]"
+msgstr "패키지 파일 이름 가져오기 [ 선택하지 않으면 모두 가져오기, 선택적으로 가져오려면 체크 ]"
 
 #: package_import.php
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
-msgstr "패키지 템플릿 가져오기 [None selected imports all, Check to import selectively]"
+msgstr "패키지 템플릿 가져오기 [ 선택하지 않으면 모두 가져오기, 선택적으로 가져오려면 체크 ]"
 
 #: package_import.php
 msgid "In order to use this Plugin, you must first run the <b><i class=\"deviceUp\">genkey.php</i></b> script in the plugin directory.  Once that is complete, you will have a public and private key used to sign your packages."
@@ -15265,7 +15265,7 @@ msgstr "패키지 키 정보를 찾을 수 없음"
 
 #: package_import.php
 msgid "Package XML File Damaged."
-msgstr "패키지 파일"
+msgstr "패키지 XML 파일이 손상되었습니다."
 
 #: package_import.php
 msgid "Packages Details"
@@ -15516,7 +15516,7 @@ msgstr "오류: PHP 바이너리 경로 %s이(가) 잘못되었습니다(폴러 
 #: poller.php
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
-msgstr "오류: 척추 경로: %s 이 (가) 폴러 ID %d 에 유효하지 않습니다. 투표자는 계속할 수 없습니다!"
+msgstr "오류: Spine 경로: %s이(가) 폴러 ID %d에 유효하지 않습니다. 폴러를 계속할 수 없습니다!"
 
 #: poller.php
 msgid "Kadupul System Notification"
@@ -15525,7 +15525,7 @@ msgstr "Kadupul 시스템 통지"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "폴러 ID %d 의 최대 런타임 %d 초를 초과했습니다. 종료 중."
+msgstr "폴러 ID %2$d의 최대 런타임 %1$d초를 초과했습니다. 종료합니다."
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -15587,12 +15587,12 @@ msgstr "통계 지우기"
 #: pollers.php
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "이 데이터 수집기의 상태."
+msgstr[0] "데이터 수집기 통계 지우기"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "&#39;계속&#39;을 클릭하여 다음 데이터 수집기를 활성화하십시오."
+msgstr[0] "해당 데이터 수집기의 통계를 지우려면 '계속'을 클릭하십시오."
 
 #: pollers.php
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
@@ -15636,7 +15636,7 @@ msgstr "데이터 수집기 정보"
 
 #: pollers.php
 msgid "Data Collector Statistics cleared."
-msgstr "데이터 출처 통계"
+msgstr "데이터 수집기 통계가 지워졌습니다."
 
 #: pollers.php
 msgid "Delete Data Collector"
@@ -15723,7 +15723,7 @@ msgstr "원격 데이터베이스 포트"
 
 #: pollers.php
 msgid "Remote Database Retries"
-msgstr "원격 데이터베이스 사용자"
+msgstr "원격 데이터베이스 재시도 횟수"
 
 #: pollers.php
 msgid "Remote Database SSL"
@@ -15868,7 +15868,7 @@ msgstr "이 Data Collector와 연관된 스크립트 서버 호출 수입니다.
 
 #: pollers.php
 msgid "The number of times to attempt to retry to connect to the remote database."
-msgstr "원격 데이터베이스에 연결할 때 사용할 사용자 이름입니다."
+msgstr "원격 데이터베이스에 연결을 다시 시도할 횟수입니다."
 
 #: pollers.php
 msgid "The polling sync interval in use.  This setting will affect how often this poller is checked and updated."
@@ -15892,7 +15892,7 @@ msgstr "원격 데이터베이스에 연결하는 데 사용할 사용자 암호
 
 #: pollers.php
 msgid "TimeZone"
-msgstr "시간ㄷ"
+msgstr "시간대"
 
 #: pollers.php
 #, php-format
@@ -16110,7 +16110,7 @@ msgstr[0] "다음 사이트를 삭제하려면 &#39;계속&#39;을 클릭하십�
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "다음 트리를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
+msgstr[0] "다음 사이트를 복제하려면 '계속'을 클릭하십시오."
 
 #: sites.php
 msgid "Country"
@@ -16208,7 +16208,7 @@ msgstr "이 사이트와 관련된 국가."
 
 #: sites.php
 msgid "The Latitude for this Site."
-msgstr "이 사이트의 위치 찾기."
+msgstr "이 사이트의 위도입니다."
 
 #: sites.php
 msgid "The Longitude for this Site."
@@ -16420,7 +16420,7 @@ msgstr "오류"
 
 #: templates_import.php
 msgid "Error in Template"
-msgstr "템플릿 내보내기"
+msgstr "템플릿 오류"
 
 #: templates_import.php
 msgid "Failed to access temporary folder, import functionality is disabled"
@@ -16428,7 +16428,7 @@ msgstr "임시 폴더에 액세스하지 못했습니다. 가져 오기 기능�
 
 #: templates_import.php
 msgid "File Name"
-msgstr "Field Name"
+msgstr "파일 이름"
 
 #: templates_import.php
 msgid "Import Files [ If Files are missing, locate and install before using ]"
@@ -16440,7 +16440,7 @@ msgstr "템플릿 가져오기"
 
 #: templates_import.php
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
-msgstr "템플릿 가져오기 [None selected imports all, Check to import selectively]"
+msgstr "템플릿 가져오기 [ 선택하지 않으면 모두 가져오기, 선택적으로 가져오려면 체크 ]"
 
 #: templates_import.php
 #, php-format
@@ -16449,7 +16449,7 @@ msgstr "충족됨: %d"
 
 #: templates_import.php
 msgid "Not Readable"
-msgstr "쓰기 가능 "
+msgstr "읽기 불가"
 
 #: templates_import.php
 #, php-format
@@ -16682,7 +16682,7 @@ msgstr "나무 [신제품]"
 #: tree.php
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "잠김"
+msgstr "잠금 해제"
 
 #: tree.php
 msgctxt "dropdown action"
@@ -16692,7 +16692,7 @@ msgstr "게시 취소"
 #: tree.php
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "나무 게시 취소"
+msgstr[0] "트리 잠금 해제"
 
 #: tree.php
 msgid "Un-publish Tree"
@@ -16742,11 +16742,11 @@ msgstr "< 1주 전"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>참고 :</b> 시스템 그래프 정책은 &#39;제한적&#39;입니다. 이는 사용자가 그래프 또는 장치 및 그래프 템플릿에 액세스하여 그래프에 액세스 할 수 있어야 함을 의미합니다."
+msgstr "<b>참고:</b> 시스템 그래프 정책이 '장치'이므로 사용자가 그래프에 액세스하려면 그래프 또는 장치에 대한 액세스 권한이 있어야 합니다"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>참고 :</b> 시스템 그래프 정책은 사용자가 그래프, 장치 또는 그래프 템플릿 중 하나 이상에 액세스 할 수 있어야 그래프에 액세스 할 수 있음을 의미하는 &#39;허용&#39;입니다."
+msgstr "<b>참고:</b> 시스템 그래프 정책이 '그래프 템플릿'이므로 사용자가 그래프에 액세스하려면 그래프 또는 그래프 템플릿에 대한 액세스 권한이 있어야 합니다"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
@@ -17101,11 +17101,11 @@ msgstr "사용자 이름:"
 
 #: user_admin.php
 msgid "You are not allowed to delete the current login account"
-msgstr "암호를 변경할 수 없습니다."
+msgstr "현재 로그인 계정은 삭제할 수 없습니다"
 
 #: user_admin.php
 msgid "You are not allowed to disable the current login account"
-msgstr "암호를 변경할 수 없습니다."
+msgstr "현재 로그인 계정은 비활성화할 수 없습니다"
 
 #: user_admin.php
 msgid "You are not allowed to disable the primary administrator account"
@@ -17173,7 +17173,7 @@ msgstr "도메인 유형"
 
 #: user_domains.php
 msgid "Domains"
-msgstr "WooCommerce 다국어는 쿠키를 사용하여 도메인의 언어를 사용할 때 바구니 정보를 이해하고 도메인 간에 데이터를 전송합니다."
+msgstr "도메인"
 
 #: user_domains.php
 msgid "Domains Type"
@@ -17360,7 +17360,7 @@ msgstr "그룹 접두사 :"
 
 #: user_group_admin.php
 msgid "Login Name"
-msgstr "로그인 이름 또는 이메일로 사용자 검색"
+msgstr "로그인 이름"
 
 #: user_group_admin.php
 msgid "Members"
@@ -17744,7 +17744,7 @@ msgstr "Kadupul 기술 지원 페이지입니다. 개발자와 기술 지원 담
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "마지막 시작 시간 :"
+msgstr "마지막 종료 시간:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -17796,7 +17796,7 @@ msgstr "최대 연결 메모리 가능"
 
 #: utilities.php
 msgid "Max Core Memory Possible"
-msgstr "허용되는 최대 폴러 메모리 :"
+msgstr "사용 가능한 최대 코어 메모리"
 
 #: utilities.php
 msgid "Max OID"
@@ -17816,7 +17816,7 @@ msgstr "최대 스레드"
 
 #: utilities.php
 msgid "Max Total Memory Possible"
-msgstr "허용되는 최대 폴러 메모리 :"
+msgstr "사용 가능한 최대 총 메모리"
 
 #: utilities.php
 msgid "Maximum Allowed Runtime:"
@@ -17828,7 +17828,7 @@ msgstr "최대 기록 :"
 
 #: utilities.php
 msgid "Minimum Connections:"
-msgstr "연결 테스트"
+msgstr "최소 연결 수:"
 
 #: utilities.php
 msgid "MySQL Table Information - Sizes in KBytes"
@@ -17840,7 +17840,7 @@ msgstr "MySQL/MariaDB 메모리 통계 (출처: MySQL 튜너)"
 
 #: utilities.php
 msgid "NET-SNMP Not Installed or its paths are not set.  Please install if you wish to monitor SNMP enabled devices."
-msgstr "NET-SNMP Not Installed 또는 해당 경로가 설정되지 않았습니다. SNMP 지원 장치를 모니터링하려면 설치하십시오."
+msgstr "NET-SNMP가 설치되지 않았거나 경로가 설정되지 않았습니다. SNMP 지원 장치를 모니터링하려면 설치하십시오."
 
 #: utilities.php
 msgid "NET-SNMP Version"
@@ -17958,7 +17958,7 @@ msgstr "숙청"
 
 #: utilities.php
 msgid "Purge Data Source Statistics"
-msgstr "데이터 출처 통계"
+msgstr "데이터 소스 통계 삭제"
 
 #: utilities.php
 msgid "Purge User Log"
@@ -18035,7 +18035,7 @@ msgstr "새로 고침 간격"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
-msgstr "데이터 소스 디버깅"
+msgstr "남은 데이터 소스:"
 
 #: utilities.php
 msgid "Result"
@@ -18098,11 +18098,11 @@ msgstr "상태: <span class=\"deviceRecovering\"><b>유휴</b></span>, PrevRunti
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "상태: <span class=\"deviceUp\"><b>실행 중</b></span>, 남은 시간: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
+msgstr "상태: <span class=\"deviceUp\"><b>실행 중</b></span>, 남은 수: %s (데이터 소스), 현재 실행 시간: %s (초), 이전 실행 시간: %s (초), 이전 처리량: %10s (데이터 소스 행)"
 
 #: utilities.php
 msgid "Success - Password"
-msgstr "성공 - Pswd"
+msgstr "성공 - 비밀번호"
 
 #: utilities.php
 msgid "Success - Password Change"

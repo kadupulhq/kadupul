@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A description for this data query.": "وصف لاستعلام المعطيات هذا."
+"A name for this data query.": "اسم لاستعلام المعطيات هذا."
+"Add Data Query": "إضافة استعلام معطيات"
+"Associated Graph Templates": "قوالب المبيانات المرتبطة"
+"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "اختر طريقة الإدخال لاستعلام المعطيات هذا. تحدد طريقة الإدخال هذه كيفية جمع المعطيات لكل جهاز مرتبط باستعلام المعطيات."
+"Could not locate XML file.": "لا يمكن تحديد موقع ملف XML."
+"Data Input Method": "طريقة إدخال المعطيات"
+"Data Queries [edit: %name%]": "استعلامات المعطيات [تعديل: %name%]"
+"Description": "الوصف"
+"Name": "الاسم"
+"Save": "حفظ"
+"Successfully located XML file": "تم العثور على ملف XML بنجاح"
+"The full path to the XML file containing definitions for this data query.": "المسار الكامل لملف XML الذي يحتوي على تعريفات لاستعلام المعطيات هذا."
+"XML Path": "مسار XML"

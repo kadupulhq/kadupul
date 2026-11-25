@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Каждый {number} день} other {Каждые {number} дн.}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {{number} день} other {{number} дн.}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} час} other {{number} ч.}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number} минута} other {{number} мин.}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {{number} месяц} other {{number} мес.}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} секунда} other {{number} сек.}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {{number} неделя} other {{number} нед.}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} год} other {{number} лет}}"

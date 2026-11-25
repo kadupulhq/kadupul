@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% ώρα"
-"%count% Hours": "%count% ώρες"
-"%count% Minute": "%count% λεπτό"
-"%count% Minutes": "%count% λεπτά"
-"%count% Thread": "%count% νήμα"
-"%count% Threads": "%count% νήματα"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Λίστα εναλλακτικών διακομιστών DNS διαχωρισμένη με κενά για την επίλυση ονομάτων DNS. Αν παραμείνει κενή, θα χρησιμοποιηθεί το λειτουργικό σύστημα του poller για την επίλυση ονομάτων DNS."
 "Access denied.": "Άρνηση πρόσβασης."
 "Add Discovery Network": "Προσθήκη δικτύου εντοπισμού"
@@ -87,7 +81,7 @@
 "October": "Οκτώβριος"
 "Ping Method": "Μέθοδος Ping"
 "Ping Port": "Ping Port"
-"Ping Retry Count": "Ping Count Count"
+"Ping Retry Count": "Αριθμός επαναλήψεων Ping"
 "Ping Timeout Value": "Τιμή χρονικού ορίου Ping"
 "Reachability Settings": "Ρυθμίσεις προσβασιμότητας"
 "Rerun Data Queries": "Επανεκτέλεση ερωτημάτων δεδομένων"

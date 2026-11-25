@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"General Settings": "Réglages généraux"
+"Monthly on Day": "Mensuel"
+"Ping Method": "Méthode de Ping"
+"Ping Port": "Port du Ping"
+"Ping Retry Count": "Nombre de tentatives de Ping"
+"Ping Timeout Value": "Délai maxi"
+"TCP Ping Closed": "TCP Ping fermé"
+"TCP or UDP port to attempt connection.": "Port TCP ou UDP utilisé pour tester la connexion."
+"The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings.": "Valeur de délai à utiliser pour les pings ICMP et UDP de l'hôte. Cette valeur de délai d'expiration SNMP de l'hôte s'applique aux pings SNMP."

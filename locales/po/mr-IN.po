@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Marathi Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Marathi\n"
@@ -11048,7 +11048,7 @@ msgstr "अवैध host_id: %s"
 #: lib/data_query.php
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
-msgstr "'%s' येथे मूल्याद्वारे फिल्टर केलेल्या निर्देशांकांची सूची Index Count: %s"
+msgstr "'%s' येथे मूल्याद्वारे फिल्टर केलेल्या निर्देशांकांची सूची निर्देशांक संख्या: %s"
 
 #: lib/data_query.php
 #, php-format
@@ -14399,7 +14399,7 @@ msgstr "संकलनापूर्वी poller_output रांग InnoDB �
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "क्रियेची पुष्टी होऊ शकली नाही. पुन्हा प्रयत्न करण्यापूर्वी बदल इतिहासाचे निरीक्षण करा."
+msgstr "अनुपलब्ध"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."

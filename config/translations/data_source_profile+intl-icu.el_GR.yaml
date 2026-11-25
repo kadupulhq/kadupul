@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Κάθε {number} ημέρα} other {Κάθε {number} ημέρες}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} ημέρα} other {{number} ημέρες}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} ώρα} other {{number} ώρες}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} λεπτό} other {{number} λεπτά}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} μήνας} other {{number} μήνες}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} δευτερόλεπτο} other {{number} δευτερόλεπτα}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} εβδομάδα} other {{number} εβδομάδες}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} έτος} other {{number} έτη}}"

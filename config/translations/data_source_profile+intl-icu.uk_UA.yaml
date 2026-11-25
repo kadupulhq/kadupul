@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Кожного {number} дня} other {Кожні {number} днів}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {{number} день} other {{number} днів}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} година} other {{number} годин}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number} хвилина} other {{number} хвилин}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {{number} місяць} other {{number} місяців}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} секунда} other {{number} секунд}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {{number} тиждень} other {{number} тижнів}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} рік} other {{number} років}}"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul French (Canada) Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2026-11-23 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: French (Canada)\n"
@@ -175,7 +175,7 @@ msgstr "Cliquez sur 'Continuer' pour combiner le(s) graphique(s) agrégé(s) sui
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Cliquez sur 'Continuer' pour combiner le(s) graphique(s) agrégé(s) suivant(s) en un unique graphique agrégé."
+msgstr "Cliquez sur « Continuer » pour convertir le(s) graphique(s) agrégé(s) suivant(s) en un graphique normal."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -594,7 +594,7 @@ msgstr "Mot de passe actuel"
 
 #: auth_changepassword.php
 msgid "Forced password change"
-msgstr "Annuler le changement de mot de passe forcé"
+msgstr "Changement de mot de passe forcé"
 
 #: auth_changepassword.php
 #, php-format
@@ -864,7 +864,7 @@ msgstr "Méthode de disponibilité"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "Cliquez sur 'Continuer' pour ajouter le(s) dispositif(s) découvert(s) suivant(s)."
+msgstr "Cliquez sur « Continuer » pour supprimer le(s) appareil(s) découvert(s) suivant(s)."
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -1131,7 +1131,7 @@ msgstr "Nom de la règle"
 #: automation_graph_rules.php
 #, php-format
 msgid "Rule Selection [edit: %s]"
-msgstr "Sélection de règle [edit : %s]"
+msgstr "Sélection de règle [modifier : %s]"
 
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Rule not found."
@@ -1382,7 +1382,7 @@ msgstr "Facultatif : article sous-arbre"
 
 #: automation_tree_rules.php
 msgid "ROOT"
-msgstr "Racines de végétal"
+msgstr "RACINE"
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
@@ -1733,11 +1733,11 @@ msgstr "Problèmes trouvés !  En attente de la mise à jour de RRDfile"
 
 #: data_debug.php
 msgid "No Checks"
-msgstr "On n’accepte pas les chèques"
+msgstr "Aucune vérification"
 
 #: data_debug.php
 msgid "No Device"
-msgstr "Numéro de symbole"
+msgstr "Aucun appareil"
 
 #: data_debug.php
 msgid "No Initial found!  Waiting on RRDfile update"
@@ -2687,7 +2687,7 @@ msgstr "Nouveau profil de source de données"
 
 #: data_templates.php
 msgid "No Data Templates Found"
-msgstr "Mes modèles"
+msgstr "Aucun modèle de données trouvé"
 
 #: data_templates.php
 msgid "Profile Name"
@@ -3177,7 +3177,7 @@ msgstr "Modifier le modèle de graphique"
 
 #: graphs.php
 msgid "Change Graph(s) Associated Device"
-msgstr "Changer le(s) graphique(s) Graphique(s) associé(s) Appareil associé"
+msgstr "Modifier l'appareil associé au(x) graphique(s)"
 
 #: graphs.php
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
@@ -3771,7 +3771,7 @@ msgstr "%d jours"
 #: include/global_arrays.php
 #, php-format
 msgid "%d GByte"
-msgstr "GBytes %d"
+msgstr "%d Go"
 
 #: include/global_arrays.php
 #, php-format
@@ -3796,7 +3796,7 @@ msgstr "%d lignes"
 #: include/global_arrays.php
 #, php-format
 msgid "%d MBytes"
-msgstr "d Mo octets %d"
+msgstr "%d Mo"
 
 #: include/global_arrays.php
 #, php-format
@@ -5274,7 +5274,7 @@ msgstr "SHA"
 
 #: include/global_arrays.php
 msgid "SHA-224"
-msgstr "SHA-224name of the hash algorithm"
+msgstr "SHA-224"
 
 #: include/global_arrays.php
 msgid "SHA-256"
@@ -5286,7 +5286,7 @@ msgstr "SHA-384"
 
 #: include/global_arrays.php
 msgid "SHA-512"
-msgstr "SHA-512name of the hash algorithm"
+msgstr "SHA-512"
 
 #: include/global_arrays.php
 msgid "SNMP Desc"
@@ -6545,7 +6545,7 @@ msgstr "Battement de cœur"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "'height' =&gt; 'Hauteur',"
+msgstr "Hauteur (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -7462,7 +7462,7 @@ msgstr "%d règles"
 #: include/global_settings.php
 #, php-format
 msgid "%d Spikes"
-msgstr "d Pointes %d"
+msgstr "%d pointes"
 
 #: include/global_settings.php
 #, php-format
@@ -7499,7 +7499,7 @@ msgstr "1 tentative"
 
 #: include/global_settings.php
 msgid "1 Change"
-msgstr "1. Change"
+msgstr "1 modification"
 
 #: include/global_settings.php
 msgid "1 Column"
@@ -8515,7 +8515,7 @@ msgstr "Si la table de sortie Boost dépasse cette taille, en nombre d'enregistr
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "Si le boost poller dépasse cette durée d'exécution, un avertissement sera placé dans le journal des cactus,"
+msgstr "Si le collecteur Boost dépasse cette durée d'exécution, un avertissement sera inscrit dans le journal de Cacti,"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9107,11 +9107,11 @@ msgstr "Requérir l'appartenance à un groupe"
 
 #: include/global_settings.php
 msgid "Require Mix Case"
-msgstr "Nécessite une mallette de mélange"
+msgstr "Exiger une casse mixte"
 
 #: include/global_settings.php
 msgid "Require Number"
-msgstr "Exiger un N° de TVA"
+msgstr "Exiger un chiffre"
 
 #: include/global_settings.php
 msgid "Require Special Character"
@@ -9343,7 +9343,7 @@ msgstr "Certaines interfaces de Kadupul prennent en charge le glisser-déposer. 
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Les noms de domaine délimités par l'espace qui seront autorisés à être accessibles en dehors du serveur Web lui-même. Ceci est important pour les utilisateurs qui choisissent d'utiliser un CDN ou un site d'hébergement. Les sources peuvent inclure des caractères génériques par exemple : *.mydomain.com, ou un protocole, par exemple : https://*.example.com. Ces sources alternatives incluent uniquement les types Image, CSS et JavaScript."
+msgstr "Noms de domaine séparés par des espaces qui seront autorisés à être consultés en dehors du serveur Web lui-même. Ceci est important pour les utilisateurs qui choisissent d'utiliser un CDN ou un site d'hébergement. Les sources peuvent inclure des caractères génériques, par exemple : *.mydomain.com, ou un protocole, par exemple : https://*.example.com. Ces sources alternatives incluent uniquement les types Image, CSS et JavaScript."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9367,11 +9367,11 @@ msgstr "Pointes"
 
 #: include/global_settings.php
 msgid "Spine Binary File Location"
-msgstr "Emplacement du fichier binaire de la colonne vertébrale"
+msgstr "Emplacement du fichier binaire Spine"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
-msgstr "Chemin du fichier de configuration de la colonne verté"
+msgstr "Chemin du fichier de configuration de Spine"
 
 #: include/global_settings.php
 msgid "Standard Deviation"
@@ -9427,7 +9427,7 @@ msgstr "Paramètre système"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "Port TCP/UDP pour les communications non SSL."
+msgstr "Port TCP de LDAPS pour les communications SSL. La valeur par défaut est 636."
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
@@ -9599,7 +9599,7 @@ msgstr "Le nombre maximal par défaut d'OID SNMP Get à émettre par requête sn
 
 #: include/global_settings.php
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Le nombre par défaut de threads de périphérique.  Ceci s'applique uniquement lors de l'utilisation du collecteur de données de la colonne vertébrale."
+msgstr "Le nombre par défaut de threads de périphérique. Cela s'applique uniquement lors de l'utilisation du collecteur de données Spine."
 
 #: include/global_settings.php
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
@@ -10433,7 +10433,7 @@ msgstr "Élément de règle [modifier l'élément de règle pour %s : %s]"
 #: lib/api_automation.php
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
-msgstr "Élément de règle [new rule item for %s : %s]"
+msgstr "Élément de règle [nouvel élément de règle pour %s : %s]"
 
 #: lib/api_automation.php
 msgid "Search Pattern"
@@ -10648,7 +10648,7 @@ msgstr "%s Octets"
 #: lib/boost.php
 #, php-format
 msgid "%s KBytes"
-msgstr "GBytes %s"
+msgstr "%s Ko"
 
 #: lib/boost.php utilities.php
 #, php-format
@@ -10740,7 +10740,7 @@ msgstr "Plus récents en premier"
 
 #: lib/clog_webapi.php
 msgid "Non Stats"
-msgstr "Statistiques"
+msgstr "Sans statistiques"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Oldest First"
@@ -10989,12 +10989,12 @@ msgstr "Article trouvé [%s='%s'] index : %s [from %s]"
 #: lib/data_query.php
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
-msgstr "Article trouvé [%s='%s'] index : %s [from regexp oid parse]"
+msgstr "Élément trouvé [%s='%s'] index : %s [depuis l'analyse OID par expression régulière]"
 
 #: lib/data_query.php
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
-msgstr "Article trouvé [%s='%s'] index : %s [from regexp oid value parse]"
+msgstr "Élément trouvé [%s='%s'] index : %s [depuis l'analyse de valeur OID par expression régulière]"
 
 #: lib/data_query.php
 #, php-format
@@ -11009,7 +11009,7 @@ msgstr "Résultat trouvé pour les données @ '%s' [value='%s']"
 #: lib/data_query.php
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
-msgstr "Got SNMP get result for data @ '%s' [value='%s'] (index : %s)"
+msgstr "Résultat SNMP get obtenu pour les données à '%s' [valeur='%s'] (index : %s)"
 
 #: lib/data_query.php
 msgid "Index Association with Local Data complete"
@@ -11062,7 +11062,7 @@ msgstr "Champ de saisie situé '%s' [marche]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Doit contenir uniquement des champs d'entrée< direction> </direction> ou d'entrée-sortie< direction> </direction>"
+msgstr "Doit contenir uniquement des champs &lt;direction&gt;input&lt;/direction&gt; ou &lt;direction&gt;input-output&lt;/direction&gt;"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field be updated."
@@ -11296,7 +11296,7 @@ msgstr "L'erreur %s n'est pas lisible"
 #: lib/functions.php
 #, php-format
 msgid "HELO failed: %s"
-msgstr "Échec de l'HÉLICOPTÈRE : %s"
+msgstr "Échec de HELO : %s"
 
 #: lib/functions.php
 msgid "Kadupul Test Message"
@@ -11693,7 +11693,7 @@ msgstr "Aide"
 
 #: lib/html.php
 msgid "Help in Developing"
-msgstr "<g id=\"1\">tionnels</g><g id=\"2\">\t</g><g id=\"3\">• Aide élaboration de</g>"
+msgstr "Aide au développement"
 
 #: lib/html.php
 msgid "Help in Translating"
@@ -11926,7 +11926,7 @@ msgstr "Remettre le filtre aux valeurs par défaut"
 
 #: lib/html_form.php
 msgid "Directory Found"
-msgstr "Aucune annonce n'à été trouvé"
+msgstr "Répertoire trouvé"
 
 #: lib/html_form.php
 msgid "Directory is Not found"
@@ -12784,12 +12784,12 @@ msgstr "%d sources de données ont un chemin RRDfile à l'extérieur du réperto
 #: lib/installer.php
 #, php-format
 msgid "%s - N/A"
-msgstr "%s Jours"
+msgstr "%s - N/D"
 
 #: lib/installer.php
 #, php-format
 msgid "%s - No"
-msgstr "%s Numéro"
+msgstr "%s - Non"
 
 #: lib/installer.php
 #, php-format
@@ -13599,7 +13599,7 @@ msgstr "Tableaux"
 
 #: lib/installer.php
 msgid "Template Setup"
-msgstr "Quitter le paramétrage du modèle"
+msgstr "Configuration du modèle"
 
 #: lib/installer.php pollers.php
 msgid "Test Connection"
@@ -13704,7 +13704,7 @@ msgstr "Cette erreur peut également survenir si l'utilisateur de base de donné
 
 #: lib/installer.php
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
-msgstr "Cela peut se produire si vous avez une base de données vierge et que vous n'avez pas encore importé le fichier cactus.sql"
+msgstr "Cela peut se produire si vous avez une base de données vierge et que vous n'avez pas encore importé le fichier cacti.sql"
 
 #: lib/installer.php
 #, php-format
@@ -13738,7 +13738,7 @@ msgstr "Cette version de Kadupul (%s) ne semble pas avoir de code de version val
 
 #: lib/installer.php
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Pour pouvoir continuer, vous <b>DEVEZ</b> créer une nouvelle base de données, y importer «&nbsp;cactus.sql&nbsp;»&nbsp;:"
+msgstr "Pour pouvoir continuer, vous <b>DEVEZ</b> créer une nouvelle base de données et y importer « cacti.sql » :"
 
 #: lib/installer.php
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
@@ -13836,7 +13836,7 @@ msgstr "Vous tentez d'installer Kadupul %s sur une base de données 0.6.x. Malhe
 
 #: lib/installer.php
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
-msgstr "Vous avez créé une nouvelle base de données, mais vous n'avez pas encore importé le fichier 'cactus.sql'. Sur la ligne de commande, exécutez ce qui suit pour continuer :"
+msgstr "Vous avez créé une nouvelle base de données, mais vous n'avez pas encore importé le fichier 'cacti.sql'. En ligne de commande, exécutez ce qui suit pour continuer :"
 
 #: lib/installer.php
 #, php-format
@@ -14757,7 +14757,7 @@ msgstr "Valeur actuelle"
 #: lib/utility.php
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
-msgstr "En fonction du nombre de connexions et de l'utilisation du collecteur de données de la colonne vertébrale, %s aura besoin de nombreuses connexions.  Le calcul pour la colonne vertébrale est : total_connections = total_processes * (total_threads + script_servers + 1), alors vous devez laisser de la marge pour les connexions des utilisateurs, qui changeront en fonction du nombre de comptes de connexion simultanés."
+msgstr "Selon le nombre de connexions et l'utilisation du collecteur de données Spine, %s aura besoin de nombreuses connexions. Le calcul pour Spine est : total_connections = total_processes * (total_threads + script_servers + 1), puis vous devez prévoir une marge pour les connexions utilisateurs, qui variera selon le nombre de comptes connectés simultanément."
 
 #: lib/utility.php
 #, php-format
@@ -15002,7 +15002,7 @@ msgstr "Réinitialiser"
 
 #: links.php
 msgid "Sort for Ordering"
-msgstr "Pour commander"
+msgstr "Trier pour le classement"
 
 #: links.php
 msgid "Style"
@@ -15172,7 +15172,7 @@ msgstr "Nom des receveurs"
 #: managers.php
 #, php-format
 msgid "SNMP Notification Receiver [edit: %s]"
-msgstr "Récepteur de notification SNMP [edit : %s]"
+msgstr "Récepteur de notifications SNMP [modifier : %s]"
 
 #: managers.php
 msgid "SNMP Notification Receiver [new]"
@@ -15300,11 +15300,11 @@ msgstr "Remplacer les enregistrements de valeurs suggérées des sources de donn
 
 #: package_import.php
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
-msgstr "Voir le cactus.log pour plus d'informations.  Il se peut que vous ayez eu une erreur de clé API ou que le package ait été modifié, ou que l'emplacement ne soit pas disponible"
+msgstr "Consultez le fichier cacti.log pour plus d'informations. Il se peut qu'une erreur de clé API se soit produite, que le paquet ait été altéré ou que l'emplacement ne soit pas disponible"
 
 #: package_import.php
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
-msgstr "Voir le cactus.log pour plus d'informations.  Il se peut que vous ayez une erreur de clé API, que le package ait été modifié ou que l'emplacement ne soit pas disponible."
+msgstr "Consultez le fichier cacti.log pour plus d'informations. Il se peut qu'une erreur de clé API se soit produite, que le paquet ait été altéré ou que l'emplacement ne soit pas disponible."
 
 #: package_import.php templates_import.php
 msgid "Template Type"
@@ -15498,7 +15498,7 @@ msgstr "L'état de ce plugin."
 
 #: plugins.php
 msgid "The version of this Plugin."
-msgstr "Une version premium de ce plugin est disponible à ce lien."
+msgstr "La version de ce plugiciel."
 
 #: plugins.php
 msgid "This Plugin requires the following Plugins be installed first."
@@ -16055,7 +16055,7 @@ msgstr "La modification du modèle d'autorisation modifiera les autorisations gr
 
 #: settings.php
 msgid "Files Selected"
-msgstr "Supprimez tous les éléments sélectionnés"
+msgstr "Fichiers sélectionnés"
 
 #: settings.php
 #, php-format
@@ -16490,7 +16490,7 @@ msgstr "Pas lisible ?"
 #: templates_import.php
 #, php-format
 msgid "See the cacti.log for more information, and review the XML file for proper syntax.  The error details are shown below.<br><br><b>Errors:</b><br>%s"
-msgstr "Consultez le cactus.log pour plus d'informations et examinez le fichier XML pour la syntaxe appropriée.  Les détails de l'erreur sont indiqués ci-dessous.<br><br><b>Erreurs&nbsp;:</b><br>%s"
+msgstr "Consultez le fichier cacti.log pour plus d'informations et vérifiez la syntaxe du fichier XML. Les détails des erreurs sont affichés ci-dessous.<br><br><b>Erreurs :</b><br>%s"
 
 #: templates_import.php
 msgid "Some CDEF Items will not import due to an export error! Contact Template provider for an updated export."
@@ -17405,7 +17405,7 @@ msgstr "Description du groupe"
 
 #: user_group_admin.php
 msgid "Group Member"
-msgstr "Membro do Grupo"
+msgstr "Membre du groupe"
 
 #: user_group_admin.php
 msgid "Group Name"
@@ -17437,7 +17437,7 @@ msgstr "Aucun membre correspondant trouvé"
 
 #: user_group_admin.php
 msgid "No User Groups Found"
-msgstr "Keine Benutzergruppe gefunden"
+msgstr "Aucun groupe d'utilisateurs trouvé"
 
 #: user_group_admin.php
 msgid "Remove from Group"
@@ -17625,7 +17625,7 @@ msgstr "Effacer le journal Kadupul"
 
 #: utilities.php
 msgid "Column Data"
-msgstr "Mapper le champ"
+msgstr "Données de colonne"
 
 #: utilities.php
 msgid "Comment"
@@ -17869,7 +17869,7 @@ msgstr "Longueur maximale d'enregistrement :"
 
 #: utilities.php
 msgid "Max Threads"
-msgstr "Max OSM Threads"
+msgstr "Nombre maximal de fils d'exécution"
 
 #: utilities.php
 msgid "Max Total Memory Possible"
@@ -18104,7 +18104,7 @@ msgstr "Configuration du temps d'exécution"
 
 #: utilities.php
 msgid "Running Processes:"
-msgstr "Citation :"
+msgstr "Processus en cours :"
 
 #: utilities.php
 msgid "SNMP Agent Cache"
@@ -18184,7 +18184,7 @@ msgstr "Support Technique[%s]"
 
 #: utilities.php
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
-msgstr "Le cache de requête de données stocke les informations recueillies à partir des types d'entrée de requête de données. Les valeurs de ces champs peuvent être utilisées dans la zone de texte de Graphs for Legends, Vertical Labels et GPRINTS ainsi que dans les CDEF."
+msgstr "Le cache de requête de données stocke les informations recueillies à partir des types d'entrée de requête de données. Les valeurs de ces champs peuvent être utilisées dans la zone de texte des graphiques pour les légendes, les étiquettes verticales et les GPRINT, ainsi que dans les CDEF."
 
 #: utilities.php
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."

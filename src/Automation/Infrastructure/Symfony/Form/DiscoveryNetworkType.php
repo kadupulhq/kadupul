@@ -27,6 +27,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class DiscoveryNetworkType extends AbstractType
 {
+    /**
+     * Plural messages, held in discovery_network+intl-icu.<locale>.yaml. `count` selects the
+     * form and `number` is the digits as the form always showed them.
+     */
+    private const string THREADS = '{count, plural, one {{number} Thread} other {{number} Threads}}';
+    private const string MINUTES = '{count, plural, one {{number} Minute} other {{number} Minutes}}';
+    private const string HOURS = '{count, plural, one {{number} Hour} other {{number} Hours}}';
     private const array WEEKDAYS = [1 => 'Sunday', 2 => 'Monday', 3 => 'Tuesday', 4 => 'Wednesday', 5 => 'Thursday', 6 => 'Friday', 7 => 'Saturday'];
     private const array MONTHS = [1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
         9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'];
@@ -51,15 +58,15 @@ final class DiscoveryNetworkType extends AbstractType
                 'Discovery Threads',
                 'Define the number of threads to use for discovering this Network Range.',
                 DiscoveryNetworkChange::CHOICES['threads'],
-                static fn(int $threads): array => [$threads === 1 ? '%count% Thread' : '%count% Threads', $threads]
+                static fn(int $threads): array => [self::THREADS, $threads]
             ))
             ->add('run_limit', ChoiceType::class, self::counted(
                 'Run Limit',
                 'After the selected Run Limit, the discovery process will be terminated.',
                 DiscoveryNetworkChange::CHOICES['run_limit'],
                 static fn(int $seconds): array => $seconds < 3600
-                    ? [$seconds === 60 ? '%count% Minute' : '%count% Minutes', intdiv($seconds, 60)]
-                    : [$seconds === 3600 ? '%count% Hour' : '%count% Hours', intdiv($seconds, 3600)]
+                    ? [self::MINUTES, intdiv($seconds, 60)]
+                    : [self::HOURS, intdiv($seconds, 3600)]
             ))
             ->add('enabled', CheckboxType::class, self::flag('Enabled', 'Enable this Network Range.'))
             ->add('enable_netbios', CheckboxType::class, self::flag('Enable NetBIOS', 'Use NetBIOS to attempt to resolve the hostname of up hosts.'))
@@ -172,13 +179,13 @@ final class DiscoveryNetworkType extends AbstractType
 
     /**
      * @param list<int> $values
-     * @param callable(int): array{string, int} $describe the message and its %count%
+     * @param callable(int): array{string, int} $describe the plural message and its count
      * @return array<string, mixed>
      */
     private static function counted(string $label, string $help, array $values, callable $describe): array
     {
         return ['label' => $label, 'help' => $help, 'choices' => $values, 'choice_label' => static fn(int $value): string => $describe($value)[0],
-            'choice_translation_parameters' => static fn(int $value): array => ['%count%' => $describe($value)[1]], 'choice_translation_domain' => 'discovery_network'];
+            'choice_translation_parameters' => static fn(int $value): array => ['count' => $describe($value)[1], 'number' => (string) $describe($value)[1]], 'choice_translation_domain' => 'discovery_network'];
     }
 
     /**

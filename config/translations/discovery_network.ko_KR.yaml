@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count%시간"
-"%count% Hours": "%count%시간"
-"%count% Minute": "%count%분"
-"%count% Minutes": "%count%분"
-"%count% Thread": "%count%개 스레드"
-"%count% Threads": "%count%개 스레드"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "DNS 이름 확인에 사용할 대체 DNS 서버 목록을 공백으로 구분하여 입력합니다. 비워 두면 폴러 OS를 사용하여 DNS 이름을 확인합니다."
 "Access denied.": "액세스가 거부되었습니다."
 "Add Discovery Network": "검색 네트워크 추가"

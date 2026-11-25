@@ -11,7 +11,6 @@
 "CSV file": "CSV-fil"
 "CSV may contain at most 5000 colors.": "CSV får innehålla högst 5000 färger."
 "CSV must be valid UTF-8 and no larger than 1 MiB.": "CSV måste vara giltig UTF-8 och högst 1 MiB stor."
-"CSV requires exactly the name and hex header columns.": "CSV kräver exakt rubrikkolumnerna name och hex."
 "Cancel": "Avbryt"
 "Clear": "Rensa"
 "Click Continue to delete the following Colors.": "Klicka på Fortsätt för att ta bort följande färger."

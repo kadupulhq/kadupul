@@ -103,10 +103,16 @@ final class TranslationCatalogTest extends TestCase
                 self::assertNotSame('', trim($message), $domain . ' ' . $locale . ': ' . $id);
                 // A plural form may drop %count% ("Every %count% Day" becomes "Chaque jour") but must not invent one.
                 self::assertSame([], array_diff(self::placeholders($message), self::placeholders($id)), $domain . ' ' . $locale . ': ' . $id);
+                if (self::isIcuDomain($domain)) {
+                    self::assertSame([], self::icuProblems($locale, $id, $message), $domain . ' ' . $locale . ': ' . $id);
+                }
             }
         }
         foreach ($english as $id => $message) {
             self::assertNotSame('', trim($message), $domain . ' en: ' . $id);
+            if (self::isIcuDomain($domain)) {
+                self::assertSame([], self::icuProblems('en', $id, $message), $domain . ' en: ' . $id);
+            }
         }
     }
 
@@ -114,11 +120,11 @@ final class TranslationCatalogTest extends TestCase
     {
         $catalogs = json_decode((string) file_get_contents(self::ROOT . '/locales/catalogs.json'), true, flags: JSON_THROW_ON_ERROR);
         self::assertIsArray($catalogs['translated_locales'] ?? null);
-        // The same names ConsoleTranslations gives the gettext fallback: fr-FR is fr, others use an underscore.
+        // Symfony locale names: fr-FR is fr, others use an underscore.
         $shipped = array_map(static fn(string $locale): string => str_replace('-', '_', $locale), array_diff($catalogs['translated_locales'], ['fr-FR']));
         $count = 0;
         foreach (glob(self::ROOT . '/config/translations/*.*.yaml') ?: [] as $file) {
-            if (preg_match('/\A([a-z_]+)\.([A-Za-z_]+)\.yaml\z/D', basename($file), $match) !== 1) {
+            if (preg_match('/\A([a-z_]+(?:\+intl-icu)?)\.([A-Za-z_]+)\.yaml\z/D', basename($file), $match) !== 1) {
                 self::fail('Unexpected translation file name: ' . basename($file));
             }
             [, $domain, $locale] = $match;
@@ -134,6 +140,9 @@ final class TranslationCatalogTest extends TestCase
                 $id = (string) $id;
                 self::assertNotSame('', trim($message), basename($file) . ': ' . $id);
                 self::assertSame([], array_diff(self::placeholders($message), self::placeholders($id)), basename($file) . ': ' . $id);
+                if (self::isIcuDomain($domain)) {
+                    self::assertSame([], self::icuProblems($locale, $id, $message), basename($file) . ': ' . $id);
+                }
                 self::assertSame(1, preg_match('/\A[^\p{Cc}]*\z/u', $message), basename($file) . ' has a control character: ' . $id);
             }
         }
@@ -146,6 +155,64 @@ final class TranslationCatalogTest extends TestCase
         preg_match_all('/%\w+%/', $message, $matches);
 
         return $matches[0];
+    }
+
+    /** `<domain>+intl-icu` holds ICU MessageFormat messages, which name their arguments in braces. */
+    private static function isIcuDomain(string $domain): bool
+    {
+        return str_ends_with($domain, '+intl-icu');
+    }
+
+    /** @return list<string> the argument names of an ICU message, such as count and number */
+    private static function icuArguments(string $message): array
+    {
+        preg_match_all('/\{\s*(\w+)\s*[,}]/', $message, $matches);
+
+        return array_values(array_unique($matches[1]));
+    }
+
+    /**
+     * Reasons an ICU message cannot be used for the key: it must parse for the
+     * locale, add no argument the key lacks, keep the plural on `count`, and
+     * format without error for counts in every plural category.
+     *
+     * @return list<string>
+     */
+    private static function icuProblems(string $locale, string $id, string $message): array
+    {
+        $problems = [];
+        $arguments = array_diff(self::icuArguments($message), self::icuArguments($id));
+        if ($arguments !== []) {
+            $problems[] = 'adds the argument ' . implode(', ', $arguments) . ' the key lacks';
+        }
+        if (preg_match('/\{\s*count\s*,\s*plural\s*,/', $message) !== 1) {
+            $problems[] = 'does not select its form with {count, plural, ...}';
+        }
+        $formatter = @\MessageFormatter::create($locale, $message);
+        if ($formatter === null) {
+            return [...$problems, 'is not a valid ICU message for ' . $locale . ': ' . intl_get_error_message()];
+        }
+        foreach ([0, 1, 2, 3, 5, 11, 21, 22, 25, 100, 101, 1.5] as $count) {
+            $text = $formatter->format(['count' => $count, 'number' => (string) $count]);
+            if ($text === false || trim($text) === '') {
+                $problems[] = 'cannot be formatted for count ' . $count . ': ' . $formatter->getErrorMessage();
+            }
+        }
+
+        return $problems;
+    }
+
+    public function testIcuProblemsAreDetected(): void
+    {
+        $key = '{count, plural, one {{number} Day} other {{number} Days}}';
+
+        self::assertSame([], self::icuProblems('pl_PL', $key, '{count, plural, =1 {{number} dzień} few {{number} dni} other {{number} dni}}'));
+        self::assertSame([], self::icuProblems('fr', $key, "{count, plural, =1 {{number} jour} other {l''intervalle de {number} jours}}"));
+        self::assertNotSame([], self::icuProblems('fr', $key, '{count, plural, =1 {{number} jour}}'), 'a message with no other branch');
+        self::assertNotSame([], self::icuProblems('fr', $key, '{count, plural, =1 {{number} jour} other {l\'{number} jours}}'), 'an apostrophe before a brace quotes it');
+        self::assertNotSame([], self::icuProblems('fr', $key, '{count, plural, =1 {{total} jour} other {{total} jours}}'), 'an argument the key lacks');
+        self::assertNotSame([], self::icuProblems('fr', $key, '{number} jours'), 'no plural selection');
+        self::assertNotSame([], self::icuProblems('fr', $key, '{count, plural, =1 {} other {}}'), 'blank output');
     }
 
     /**

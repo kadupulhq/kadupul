@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"External Links": "ויקיפדיה:קישורים חיצוניים"
+"External Links": "קישורים חיצוניים"
 "Add link": "הוסף קישור"
 "Edit link": "ערוך קישור"
 "Back to links": "חזרה לקישורים"
@@ -51,7 +51,7 @@
 "Bottom of Console Page": "תחתון של מסוף הדף"
 "Top of Console Page": "Top of Console Page"
 "Console Menu Section": "מסוף תפריט סעיף"
-"New Console Section": "ניו מסוף סעיף"
+"New Console Section": "סעיף מסוף חדש"
 "New Name Below": "שם חדש מתחת"
 "Content File/URL": "קובץ תוכן / כתובת אתר"
 "Web URL Below": "כתובת אתר אינטרנט להלן"

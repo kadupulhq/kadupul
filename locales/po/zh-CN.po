@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -45,7 +45,7 @@ msgstr "本程序是基于帮助别人的想法而发布的,但它没有任何�
 
 #: aggregate_graphs.php
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr " [自定义图形列表应用 - 过滤器从列表]"
+msgstr " [ 已应用自定义图形列表 - 清除以重置 ]"
 
 #: aggregate_graphs.php graphs.php
 msgid "Add Graphs to Report"
@@ -62,7 +62,7 @@ msgstr "访问的聚合图形不存在"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
-msgstr "聚合图形设置"
+msgstr "聚合图形不存在"
 
 #: aggregate_graphs.php include/global_arrays.php
 msgid "Aggregate Graphs"
@@ -176,7 +176,7 @@ msgstr "点击 '继续',将下面的聚合图形组合成一个聚合图形."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "点击 '继续',将下面的聚合图形组合成一个聚合图形."
+msgstr "点击 '继续' 将以下聚合图形转换为普通图形。"
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -301,7 +301,7 @@ msgstr "为了将下面的聚合图迁移到基于模板的聚合,它们只能�
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "为了将下面的聚合图迁移到基于模板的聚合,它们只能使用一个图形模板. 请按 '返回',然后选择仅使用相同图形模板的聚合图形."
+msgstr "为了将下面的聚合图形迁移为使用聚合模板，必须先存在一个聚合模板。请按'返回'，先创建您的聚合模板，然后再重试。"
 
 #: aggregate_graphs.php
 msgid "Included in Aggregate"
@@ -454,7 +454,7 @@ msgstr "此对象的内部数据库标识符"
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
-msgstr "选定的聚合图形是来自多个图形模板的元素."
+msgstr "所选聚合图形似乎没有任何匹配的聚合模板。"
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
@@ -706,7 +706,7 @@ msgstr "在下面输入您的用户名和密码"
 
 #: auth_login.php
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
-msgstr "访问被拒绝,请联系Kadupul 管理员."
+msgstr "Kadupul 不再支持无认证模式。请联系您的系统管理员。"
 
 #: auth_login.php
 msgid "Keep me signed in"
@@ -865,7 +865,7 @@ msgstr "可用性方法"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "点击 '继续' 添加以下已发现的设备."
+msgstr "点击 '继续' 以删除以下已发现的设备。"
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -881,7 +881,7 @@ msgstr "删除设备"
 
 #: automation_devices.php
 msgid "Delete Device(s)"
-msgstr "删除图形(s)"
+msgstr "删除设备"
 
 #: automation_devices.php data_queries.php include/global_form.php
 #: lib/api_automation.php lib/installer.php managers.php user_admin.php
@@ -1439,7 +1439,7 @@ msgstr "设置保存到数据采集器 %d 失败."
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "设置保存到数据采集器 %d 失败."
+msgstr "由于心跳检测，已跳过将设置保存到数据采集器 %d。"
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -1602,7 +1602,7 @@ msgstr "数据源"
 
 #: data_debug.php
 msgid "Data Source Repair Recommendations"
-msgstr "数据源字段"
+msgstr "数据源修复建议"
 
 #: data_debug.php
 #, php-format
@@ -1634,7 +1634,7 @@ msgstr "数据源调试."
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
-msgstr "未对数据源进行采集?"
+msgstr "数据源与 RRD 文件匹配吗？"
 
 #: data_debug.php
 msgid "Data Source repair received an invalid Data Source ID."
@@ -1704,7 +1704,7 @@ msgstr "首次检查时间戳"
 #: data_debug.php
 #, php-format
 msgid "For attribute '%s', issue found '%s'"
-msgstr "对于attrbitute'%s'，问题发现'%s'"
+msgstr "对于属性 '%s'，发现问题 '%s'"
 
 #: data_debug.php
 msgid "Is RRA Folder writeable by poller?"
@@ -1752,7 +1752,7 @@ msgstr "不检查"
 
 #: data_debug.php
 msgid "Not Debugging"
-msgstr "调试"
+msgstr "未调试"
 
 #: data_debug.php lib/api_automation.php lib/graphs.php templates_import.php
 msgid "Not Found"
@@ -2099,7 +2099,7 @@ msgstr "点击 '继续' 删除以下数据查询图形关联."
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "点击 '继续' 删除以下数据查询."
+msgstr[0] "点击“继续”以复制以下数据查询。"
 
 #: data_queries.php
 msgid "Could not locate XML file."
@@ -2143,7 +2143,7 @@ msgstr[0] "删除数据查询"
 #: data_queries.php
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "删除数据查询"
+msgstr[0] "复制数据查询"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
@@ -2217,7 +2217,7 @@ msgstr "命令"
 
 #: data_queries.php
 msgid "Remove Data Query Graph Template"
-msgstr "转换为图形模板"
+msgstr "移除数据查询图形模板"
 
 #: data_queries.php
 msgid "Successfully located XML file"
@@ -2291,7 +2291,7 @@ msgstr "聚合"
 
 #: data_sources.php
 msgid "Bad Indexes"
-msgstr "索引"
+msgstr "错误索引"
 
 #: data_sources.php graphs.php
 msgid "Change Device"
@@ -2367,7 +2367,7 @@ msgstr "数据源 [%s]"
 
 #: data_sources.php
 msgid "Data Sources [ All Devices ]"
-msgstr "数据源 [无设备]"
+msgstr "数据源 [ 所有设备 ]"
 
 #: data_sources.php
 msgid "Data Sources [ Non Device Based ]"
@@ -2457,7 +2457,7 @@ msgstr "新设备:"
 
 #: data_sources.php
 msgid "No Aggregates"
-msgstr "聚合"
+msgstr "无聚合"
 
 #: data_sources.php
 msgid "No Data Sources Found"
@@ -2465,7 +2465,7 @@ msgstr "无数据源"
 
 #: data_sources.php
 msgid "No Graphs"
-msgstr "图形"
+msgstr "无图形"
 
 #: data_sources.php data_templates.php
 msgid "No Input Fields for the Selected Data Input Source"
@@ -2540,7 +2540,7 @@ msgstr "此数据源的名称. 通常通过数据模板定义以编程方式生�
 
 #: data_sources.php
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
-msgstr "使用此数据查询的图形模板的数量."
+msgstr "正在使用此数据源的图形和聚合图形的数量。"
 
 #: data_sources.php
 msgid "Turn Off Data Source Debug Mode."
@@ -3045,7 +3045,7 @@ msgstr "这个图形的标题. 通常以图形模板定义或建议的命名规�
 
 #: graph_view.php
 msgid "The device for this Graph."
-msgstr "这个用户组的名称."
+msgstr "此图形对应的设备。"
 
 #: graph_view.php graphs.php
 msgid "The size of this Graph when not in Preview mode."
@@ -3105,7 +3105,7 @@ msgstr "主机ID"
 
 #: graph_xport.php
 msgid "Nth Percentile"
-msgstr "百分之百"
+msgstr "第 N 百分位数"
 
 #: graph_xport.php
 msgid "Start Date"
@@ -3194,7 +3194,7 @@ msgstr "点击 '继续' 删除以下图形. 请注意,如果您选择删除数�
 
 #: graphs.php
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
-msgstr "确定要删除以下图形?点击 '继续' 复制下面的图形. 您可以选择更改新图形的标题格式."
+msgstr "点击 '继续' 复制以下图形。您可以选择更改新图形的标题格式。"
 
 #: graphs.php
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
@@ -3248,7 +3248,7 @@ msgstr "编辑图形模板."
 
 #: graphs.php
 msgid "Empty Graph"
-msgstr "复制图形"
+msgstr "空白图形"
 
 #: graphs.php
 msgid "Graph Fields"
@@ -3533,7 +3533,7 @@ msgstr "无法在本地访问文档页面 '%s'。"
 #: help.php
 #, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "警告：Kadupul Page：%s for User：%s 生成了致命错误%d！"
+msgstr "警告：Kadupul 页面：%s（用户：%s）生成了致命错误 %d！"
 
 #: host_templates.php
 msgid "Add Data Query"
@@ -3594,7 +3594,7 @@ msgstr "删除设备模板"
 
 #: host_templates.php
 msgid "Delete Item from Device Template"
-msgstr "删除设备模板"
+msgstr "从设备模板中删除项目"
 
 #: host_templates.php
 msgid "Device Class"
@@ -3731,7 +3731,7 @@ msgstr "主数据收集器已进入离线或恢复状态"
 
 #: include/global.php
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "此数据采集器最后一次与主Kadupul 站点完全同步"
+msgstr "主数据采集器已恢复在线状态"
 
 #: include/global_arrays.php
 #, php-format
@@ -3786,7 +3786,7 @@ msgstr "%d Megabyte"
 #: include/global_arrays.php
 #, php-format
 msgid "%d Min"
-msgstr "%d 最小"
+msgstr "%d 分钟"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -3872,7 +3872,7 @@ msgstr "1 个线程"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
-msgstr "15,000个数据源项目"
+msgstr "10,000 个数据源项目"
 
 #: include/global_arrays.php
 msgid "100,000 Data Source Items"
@@ -3912,7 +3912,7 @@ msgstr "5,000个数据源项目"
 
 #: include/global_arrays.php
 msgid "50,000 Data Source Items (Default)"
-msgstr "50,0002,000个数据源项目(默认)"
+msgstr "50,000 个数据源项目 (默认)"
 
 #: include/global_arrays.php
 msgid "6 Hours"
@@ -4029,7 +4029,7 @@ msgstr "其他 CDEF"
 
 #: include/global_arrays.php
 msgid "Application Related"
-msgstr "应用自动化规则"
+msgstr "应用程序相关"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -4071,7 +4071,7 @@ msgstr "自动化"
 
 #: include/global_arrays.php
 msgid "Base Graph Order"
-msgstr "有图"
+msgstr "基础图形顺序"
 
 #: include/global_arrays.php utilities.php
 msgid "Boost Status"
@@ -4099,7 +4099,7 @@ msgstr "CDEF 项目"
 
 #: include/global_arrays.php
 msgid "CDEF Items"
-msgstr "CDEF 項目"
+msgstr "CDEF 项目"
 
 #: include/global_arrays.php
 msgid "CDEFs"
@@ -4168,7 +4168,7 @@ msgstr "控制台访问"
 
 #: include/global_arrays.php
 msgid "Console Page"
-msgstr "前端用户提交编辑页"
+msgstr "控制台页面"
 
 #: include/global_arrays.php
 msgid "Convert to AREA/STACK Graph"
@@ -4552,7 +4552,7 @@ msgstr "基本管理"
 
 #: include/global_arrays.php
 msgid "Generic Device"
-msgstr "基本日志级别"
+msgstr "通用设备"
 
 #: include/global_arrays.php
 msgid "German"
@@ -5178,7 +5178,7 @@ msgstr "仅打印总计图例项目"
 
 #: include/global_arrays.php
 msgid "Printer Related"
-msgstr "数据库状态"
+msgstr "打印机相关"
 
 #: include/global_arrays.php
 msgid "RRD Check"
@@ -5230,7 +5230,7 @@ msgstr "报告"
 
 #: include/global_arrays.php
 msgid "Reports Administration"
-msgstr "日志管理"
+msgstr "报告管理"
 
 #: include/global_arrays.php
 msgid "Reports Creation"
@@ -5376,7 +5376,7 @@ msgstr "设置/工具"
 
 #: include/global_arrays.php
 msgid "Show Graph Action Icons"
-msgstr "显示图形标题"
+msgstr "显示图形操作图标"
 
 #: include/global_arrays.php
 msgid "Show User Help Links"
@@ -5485,7 +5485,7 @@ msgstr "技术支持"
 
 #: include/global_arrays.php
 msgid "Telco Related"
-msgstr "选择模板"
+msgstr "电信相关"
 
 #: include/global_arrays.php
 msgid "Template Editor"
@@ -5505,7 +5505,7 @@ msgstr "SNMPv3 认证密码不匹配"
 
 #: include/global_arrays.php
 msgid "The SNMP v3 Privacy Passphrases do not match"
-msgstr "选择SNMPv3 私有密码"
+msgstr "SNMP v3 隐私密码不匹配"
 
 #: include/global_arrays.php
 msgid "The directory highlighted does not exist.  Please enter a valid directory."
@@ -5647,7 +5647,7 @@ msgstr "更新配置文件"
 
 #: include/global_arrays.php
 msgid "Use the First Handler Found"
-msgstr "使用 PHP GetText 处理程序"
+msgstr "使用找到的第一个处理程序"
 
 #: include/global_arrays.php
 msgid "Use the MonoTranslator GetText Handler"
@@ -5869,7 +5869,7 @@ msgstr "[None]"
 
 #: include/global_arrays.php
 msgid "[Restart]"
-msgstr "受限的"
+msgstr "[重启]"
 
 #: include/global_arrays.php
 msgid "[Skipped]"
@@ -6607,7 +6607,7 @@ msgstr "为了避免消除锯齿模糊效果RRDtool 将点指向设备分辨率�
 
 #: include/global_form.php
 msgid "Include Prefix Text"
-msgstr "包含索引"
+msgstr "包含前缀文本"
 
 #: include/global_form.php
 msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
@@ -7027,7 +7027,7 @@ msgstr "Special Type Code"
 
 #: include/global_form.php
 msgid "TCP or UDP port to attempt connection."
-msgstr "尝试连接的TCP or UDP端口."
+msgstr "用于尝试连接的 TCP 或 UDP 端口。"
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
@@ -7059,7 +7059,7 @@ msgstr "该聚合模板所基于的图形模板."
 
 #: include/global_form.php package_import.php
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "用于所有新图形模板的默认图形宽度."
+msgstr "导入或更新图形模板时使用的高度。"
 
 #: include/global_form.php package_import.php
 msgid "The Image Format to be used when importing or updating Graph Templates."
@@ -7547,7 +7547,7 @@ msgstr "帐户锁定"
 
 #: include/global_settings.php
 msgid "Additional Data Collector Settings"
-msgstr "远程数据采集器状态"
+msgstr "附加数据采集器设置"
 
 #: include/global_settings.php lib/html.php
 msgid "Advanced"
@@ -7751,7 +7751,7 @@ msgstr "Boost 处理模式"
 
 #: include/global_settings.php
 msgid "Business Hours Settings"
-msgstr "用户设置"
+msgstr "工作时间设置"
 
 #: include/global_settings.php
 msgid "By Template/Data Query"
@@ -7875,7 +7875,7 @@ msgstr "数据源字段长度"
 
 #: include/global_settings.php
 msgid "Data Source Preservation Preset"
-msgstr "图形/数据源创建方法"
+msgstr "数据源保留预设"
 
 #: include/global_settings.php
 msgid "Data Source Statistics Timeout"
@@ -7923,7 +7923,7 @@ msgstr "默认图形类型"
 
 #: include/global_settings.php
 msgid "Default Interface Speed"
-msgstr "默认图形类型"
+msgstr "默认接口速率"
 
 #: include/global_settings.php
 msgid "Default Log Tail Lines"
@@ -8051,7 +8051,7 @@ msgstr "设备"
 
 #: include/global_settings.php
 msgid "Device ID/Data Query ID"
-msgstr "删除数据查询"
+msgstr "设备 ID/数据查询 ID"
 
 #: include/global_settings.php
 msgid "Device Threads"
@@ -8059,15 +8059,15 @@ msgstr "设备线程"
 
 #: include/global_settings.php
 msgid "Directory Pattern"
-msgstr "找到目录"
+msgstr "目录模式"
 
 #: include/global_settings.php
 msgid "Disable RRDtool Watermark"
-msgstr "RRDtool 图像水印"
+msgstr "禁用 RRDtool 水印"
 
 #: include/global_settings.php
 msgid "Disable Resource Cache Replication"
-msgstr "重建资源缓存"
+msgstr "禁用资源缓存复制"
 
 #: include/global_settings.php
 msgid "Disable increasing OID Check"
@@ -8351,7 +8351,7 @@ msgstr "图形/数据源/数据查询设置"
 
 #: include/global_settings.php
 msgid "Graphs Auto Unlock"
-msgstr "图匹配规则"
+msgstr "图形自动解锁"
 
 #: include/global_settings.php
 msgid "Graphs Per Page"
@@ -8427,7 +8427,7 @@ msgstr "每天统计应该多频繁一次更新?"
 
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
-msgstr "每天统计应该多频繁一次更新?"
+msgstr "应该多久检查一次 RRD？"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
@@ -8459,7 +8459,7 @@ msgstr "您希望 Kadupul 如何显示日期？此设置还将更改 Kadupul 图
 
 #: include/global_settings.php
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
-msgstr "想如何记录Spine 的输出错误?  选项有: '详细', 类似于cmd.php 日志记录;  '概要' 提供了每个设备输出错误的数量;  和'无'. 它不提供错误计数."
+msgstr "您希望如何记录数据采集器输出错误？选项包括：'详细'，记录每条错误的详细信息；'摘要'，提供每个设备的输出错误数量；以及'无'，不提供错误计数。"
 
 #: include/global_settings.php
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
@@ -8495,7 +8495,7 @@ msgstr "如果Boost 输出表超出此大小,则记录中将进行更新."
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "如果boost poller删除了此运行时间,则会在Kadupul 日志中发出警告,"
+msgstr "如果 boost 轮询器超过此运行时间，将在 cacti 日志中记录一条警告，"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8787,7 +8787,7 @@ msgstr "Boost 进程数"
 
 #: include/global_settings.php
 msgid "Number of DSStats Processes"
-msgstr "Boost 进程数"
+msgstr "DSStats 进程数"
 
 #: include/global_settings.php
 msgid "Number of PHP Script Servers"
@@ -8795,7 +8795,7 @@ msgstr "Number of PHP Script Servers"
 
 #: include/global_settings.php
 msgid "Number of RRDfile Check Processes"
-msgstr "Boost 进程数"
+msgstr "RRDfile 检查进程数"
 
 #: include/global_settings.php
 msgid "Number of Standard Deviations"
@@ -8971,7 +8971,7 @@ msgstr "代理服务器"
 
 #: include/global_settings.php
 msgid "RRDChecker Timeout"
-msgstr "DNS 超时"
+msgstr "RRDChecker 超时"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean"
@@ -9015,7 +9015,7 @@ msgstr "RSA指纹"
 
 #: include/global_settings.php
 msgid "Re-Index All Device Schedule"
-msgstr "索引重建方法"
+msgstr "所有设备重新索引计划"
 
 #: include/global_settings.php
 msgid "Re-index Method for Data Queries"
@@ -9075,7 +9075,7 @@ msgstr "替换方法"
 
 #: include/global_settings.php
 msgid "Report Generation Timeout"
-msgstr "远程Agent 超时"
+msgstr "报告生成超时"
 
 #: include/global_settings.php
 msgid "Reporting Presets"
@@ -9267,7 +9267,7 @@ msgstr "客户端在收到 LDAP TLS 证书时是否应进行验证。Demand 和 
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
-msgstr "应该收集这个Kadupul 系统的数据源统计数据吗?"
+msgstr "是否应为此 Kadupul 系统启用 RRDfile 检查？"
 
 #: include/global_settings.php
 msgid "Should image caching be enabled?"
@@ -9303,7 +9303,7 @@ msgstr "仅显示所选设备站点上可用的位置。"
 
 #: include/global_settings.php
 msgid "Show only site specific locations"
-msgstr "在这里设置任何图形特定选项"
+msgstr "仅显示站点特定位置"
 
 #: include/global_settings.php
 msgid "Simple"
@@ -9407,7 +9407,7 @@ msgstr "系统设置"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "TCP/UDP port for Non SSL communications."
+msgstr "用于 SSL 通信的 LDAPS TCP 端口。默认为 636。"
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
@@ -9451,7 +9451,7 @@ msgstr "Spike 删除的基准时间发生. 例如,如果您使用'12:00am'并且
 
 #: include/global_settings.php
 msgid "The Bind Timeout in seconds."
-msgstr "请输入SMTP 在几秒钟内超时."
+msgstr "绑定超时时间（秒）。"
 
 #: include/global_settings.php
 msgid "The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode."
@@ -9487,7 +9487,7 @@ msgstr "要收缩的树的最小宽度。"
 
 #: include/global_settings.php
 msgid "The Network Connect Timeout in seconds."
-msgstr "请输入SMTP 在几秒钟内超时."
+msgstr "网络连接超时时间（秒）。"
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
@@ -9535,7 +9535,7 @@ msgstr "所有新设备上使用的默认设备模板."
 
 #: include/global_settings.php
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "用于所有新图形模板的默认图形宽度."
+msgstr "用于所有新图形模板的默认图形高度。"
 
 #: include/global_settings.php
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -9723,7 +9723,7 @@ msgstr "以树形模式显示缩略图时使用的列数."
 
 #: include/global_settings.php
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
-msgstr "用于处理boost 表中所有RRD 的并发boost 进程数."
+msgstr "用于处理所有数据源的并发 DSStats 进程数。"
 
 #: include/global_settings.php
 msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
@@ -9731,7 +9731,7 @@ msgstr "并发轮询器命令进程数。 轮询器命令池中每个主机最�
 
 #: include/global_settings.php
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
-msgstr "用于处理boost 表中所有RRD 的并发boost 进程数."
+msgstr "用于处理所有 RRD 文件的并发 RRDfile 检查进程数。"
 
 #: include/global_settings.php
 msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
@@ -10020,7 +10020,7 @@ msgstr "为了优化性能,boost RRD 更新程序需要知道,在一次传递中
 
 #: include/global_settings.php
 msgid "Tree History"
-msgstr "历史密码"
+msgstr "树历史记录"
 
 #: include/global_settings.php
 msgid "Tree Settings"
@@ -10593,7 +10593,7 @@ msgstr "图形:(%s%s)"
 
 #: lib/auth.php
 msgid "Kadupul Login Failure"
-msgstr "Kadupul 日志已清除"
+msgstr "Kadupul 登录失败"
 
 #: lib/auth.php
 msgid "Restricted"
@@ -10628,7 +10628,7 @@ msgstr "%s Bytes"
 #: lib/boost.php
 #, php-format
 msgid "%s KBytes"
-msgstr "%s GBytes"
+msgstr "%s KBytes"
 
 #: lib/boost.php utilities.php
 #, php-format
@@ -10658,7 +10658,7 @@ msgstr "自动"
 
 #: lib/clog_webapi.php
 msgid "Boost"
-msgstr "载具加速"
+msgstr "Boost 加速"
 
 #: lib/clog_webapi.php
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog."
@@ -10670,7 +10670,7 @@ msgstr "Debug"
 
 #: lib/clog_webapi.php
 msgid "Device Up/Down"
-msgstr "设备使用"
+msgstr "设备在线/离线"
 
 #: lib/clog_webapi.php tree.php
 msgid "Display"
@@ -10678,7 +10678,7 @@ msgstr "显示"
 
 #: lib/clog_webapi.php
 msgid "Does Not Match"
-msgstr "密码不匹配"
+msgstr "不匹配"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Entries"
@@ -10703,7 +10703,7 @@ msgstr "日志过滤器"
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "日志[总行:%d %s - Filter active]"
+msgstr "日志 [总行数: %d %s - 筛选已启用]"
 
 #: lib/clog_webapi.php
 #, php-format
@@ -10732,7 +10732,7 @@ msgstr "清空日志"
 
 #: lib/clog_webapi.php
 msgid "Recaches"
-msgstr "匹配"
+msgstr "重新缓存"
 
 #: lib/clog_webapi.php utilities.php
 msgid "SQL Calls"
@@ -10760,7 +10760,7 @@ msgstr "警告"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt; 在XML 文件中丢失, 不支持 '索引计数'"
+msgstr "&lt;arg_num_indexes&gt; 存在于 XML 文件中，但未返回任何数据，不支持 '索引计数已更改'"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
@@ -10834,7 +10834,7 @@ msgstr "检测到新的排序字段:'%s' 旧排序字段 '%s'"
 
 #: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
-msgstr "重复的数据源配置文件"
+msgstr "已完成更新数据源标题缓存"
 
 #: lib/data_query.php
 msgid "Done updating Graph Title Cache"
@@ -10929,7 +10929,7 @@ msgstr "为了 '%s' 而修复错误的 '方法' 字段, 因为定义了 'rewrite
 #: lib/data_query.php
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr "找到要转换的%s表"
+msgstr "找到 %s 个要验证的本地数据 ID"
 
 #: lib/data_query.php
 #, php-format
@@ -11168,12 +11168,12 @@ msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板
 #: lib/data_query.php
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
-msgstr "oid_重写 at OID: '%s' 新 OID: '%s'"
+msgstr "oid_rewrite 位于 OID: '%s'，新 OID: '%s'"
 
 #: lib/data_query.php
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
-msgstr "oid_rewrite at OID: '%s' new OID: '%s'"
+msgstr "重写值 (rewrite_value): '%s' => '%s'"
 
 #: lib/database.php
 msgid "Failed to alter password field length, can not continue as may corrupt password"
@@ -11215,7 +11215,7 @@ msgstr "未发现问题"
 #: lib/dsdebug.php
 #, php-format
 msgid "RRDfile Folder (rra) is not writable by Poller.  Folder owner: %s.  Poller runs as: %s"
-msgstr "Poller 无法写入RRD文件夹. RRD 所有者: %s.  Poller runs as: %s"
+msgstr "轮询器无法写入 RRDfile 文件夹 (rra)。文件夹所有者: %s。轮询器运行身份: %s"
 
 #: lib/dsdebug.php
 msgid "RRDfile does not match Data Source"
@@ -11224,7 +11224,7 @@ msgstr "RRD 文件与数据配置文件不匹配"
 #: lib/dsdebug.php
 #, php-format
 msgid "RRDfile is not writable by Poller.  RRDfile owner: %s.  Poller runs as %s"
-msgstr "Poller 无法写入RRD 文件. RRD所有者: %s.  Poller runs as %s"
+msgstr "轮询器无法写入 RRDfile。RRDfile 所有者: %s。轮询器运行身份为 %s"
 
 #: lib/dsdebug.php
 msgid "RRDfile not created yet"
@@ -11442,7 +11442,7 @@ msgstr "已聚合的设备"
 
 #: lib/graphs.php
 msgid "Damaged Graph"
-msgstr "数据源,图"
+msgstr "已损坏的图形"
 
 #: lib/html.php
 msgid "#"
@@ -11572,7 +11572,7 @@ msgstr "操作成功"
 
 #: lib/html.php
 msgid "Contribute to the Kadupul Project"
-msgstr "轮转Kadupul 日志"
+msgstr "为 Kadupul 项目做贡献"
 
 #: lib/html.php
 msgid "Copy graph"
@@ -11593,7 +11593,7 @@ msgstr "当前值: %s"
 
 #: lib/html.php
 msgid "Dark Color Mode"
-msgstr "未找到颜色"
+msgstr "深色模式"
 
 #: lib/html.php
 msgid "Dashboards"
@@ -11657,7 +11657,7 @@ msgstr "浮动范围"
 
 #: lib/html.php
 msgid "GPrint"
-msgstr "删除GPRINT 预设"
+msgstr "GPrint"
 
 #: lib/html.php
 msgid "Gap Fill Range"
@@ -11681,7 +11681,7 @@ msgstr "帮助翻译"
 
 #: lib/html.php
 msgid "Ignore System Color"
-msgstr "项目颜色"
+msgstr "忽略系统颜色"
 
 #: lib/html.php
 msgid "Kadupul"
@@ -11802,11 +11802,11 @@ msgstr "原因:"
 
 #: lib/html.php
 msgid "Remote Server"
-msgstr "删除标准设置"
+msgstr "远程服务器"
 
 #: lib/html.php
 msgid "Remove StdDev"
-msgstr "删除标准设置"
+msgstr "移除标准差"
 
 #: lib/html.php
 msgid "Report a bug"
@@ -11842,7 +11842,7 @@ msgstr "SpikeKill 结果"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "Spine 二进制文件位置"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -12103,7 +12103,7 @@ msgstr "图形 [模板: %s]"
 
 #: lib/html_reports.php
 msgid ", Graph Template: All Templates"
-msgstr "将图形模板添加到设备模板"
+msgstr ", 图形模板: 所有模板"
 
 #: lib/html_reports.php
 #, php-format
@@ -12378,7 +12378,7 @@ msgstr "报告项目[新报告: %s]"
 #: lib/html_reports.php
 #, php-format
 msgid "Report Items %s"
-msgstr "没有报告项目%s"
+msgstr "报告项目 %s"
 
 #: lib/html_reports.php
 #, php-format
@@ -12417,7 +12417,7 @@ msgstr "为要用于过滤的设备选择图表模板，或在设备类型的情
 
 #: lib/html_reports.php
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "选择一个设备来指定一个图."
+msgstr "选择一个站点以筛选设备和图形。"
 
 #: lib/html_reports.php
 msgid "Select a Tree Branch to use for Graphs and Devices.  Devices will be considered as Branches."
@@ -12602,7 +12602,7 @@ msgstr "UTF-8 偏移错误!"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
-msgstr "下载"
+msgstr "宕机 (Thold)"
 
 #: lib/html_utility.php lib/installer.php
 msgid "Error"
@@ -12644,7 +12644,7 @@ msgstr "变量 %s 的验证错误值为 %s. 有关更多详细信息,请参考�
 
 #: lib/import.php
 msgid "Damaged"
-msgstr "数据源,图"
+msgstr "已损坏"
 
 #: lib/import.php
 msgid "Found Dependency:"
@@ -12702,7 +12702,7 @@ msgstr "未知字段"
 
 #: lib/import.php
 msgid "Unmet Dependency:"
-msgstr "取消设置依赖项:"
+msgstr "未满足的依赖项："
 
 #: lib/import.php
 msgid "Updated"
@@ -12782,7 +12782,7 @@ msgstr "接受GPL 许可协议"
 
 #: lib/installer.php
 msgid "Adding Device to Default Tree"
-msgstr "设备默认值"
+msgstr "正在将设备添加到默认树"
 
 #: lib/installer.php
 msgid "Adding extra snmp settings for automation"
@@ -12860,7 +12860,7 @@ msgstr "为主站点选择此项."
 
 #: lib/installer.php
 msgid "Cli"
-msgstr "如果您选择此选项，则将重新生成轮询缓存。如果在崩溃后遇到问题并且已经运行数据库修复工具，则只有在发生数据库崩溃的情况下才使用此选项;或者，如果您遇到问题 使用特定的设备，只需重新保存该设备以重建其轮询缓存即可。还有一个与此命令等效的命令行界面，建议用于大型系统。<i class = “deviceDown ”>注意：在大型系统 ，这个命令可能需要几分钟到几个小时才能完成，因此不应该从Kadupul UI运行。您可以在命令行运行'php -q cli / rebuild_poller_cache.php --help'以获取更多信息。</ i>"
+msgstr "CLI"
 
 #: lib/installer.php utilities.php
 msgid "Collation"
@@ -13051,7 +13051,7 @@ msgstr "未能应用指定的配置文件%s != %s"
 
 #: lib/installer.php
 msgid "Failed to find any automation option set"
-msgstr "无法找到要复制的数据"
+msgstr "未能找到任何自动化选项集"
 
 #: lib/installer.php
 msgid "Failed to find automation network, no changes were made"
@@ -13399,7 +13399,7 @@ msgstr "请向Kadupul Group 报告."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "选择您希望从Kadupul 导出的模板类型."
+msgstr "请选择您在升级期间希望更新的设备模板。"
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
@@ -13557,7 +13557,7 @@ msgstr "产生后台进程：%s %s"
 #: lib/installer.php
 #, php-format
 msgid "Starting %s Process for v%s"
-msgstr "为v%s启动%s流程"
+msgstr "正在启动 %s 进程 (v%s)"
 
 #: lib/installer.php
 #, php-format
@@ -13765,7 +13765,7 @@ msgstr "更新自动化网络(%s)，模式\"%s =>'%s'，子网'%s' =>%s\""
 
 #: lib/installer.php
 msgid "Updating remote configuration file"
-msgstr "等待配置"
+msgstr "正在更新远程配置文件"
 
 #: lib/installer.php
 msgid "Upgrade"
@@ -13795,7 +13795,7 @@ msgstr "网页"
 
 #: lib/installer.php
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
-msgstr "您必须手动修改Kadupul 数据库以满足升级要求. <br/>安装程序无法为您自动做这件事"
+msgstr "您必须手动更改 Kadupul 数据库，以还原已进行的任何升级更改。<br/>安装程序无法为您自动执行此操作"
 
 #: lib/installer.php
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
@@ -14104,7 +14104,7 @@ msgstr "(无图形模板)"
 
 #: lib/reports.php
 msgid "(Non Query Based)"
-msgstr "Non Query Based"
+msgstr "(非基于查询)"
 
 #: lib/reports.php
 msgid "Add to Report"
@@ -14179,7 +14179,7 @@ msgstr "CDP 未知数据点(0)"
 
 #: lib/rrd.php
 msgid "Cur Row"
-msgstr "Cur 行"
+msgstr "当前行"
 
 #: lib/rrd.php
 #, php-format
@@ -14262,7 +14262,7 @@ msgstr "最小心跳"
 
 #: lib/rrd.php
 msgid "Optional Tuning Recommendations"
-msgstr "数据源字段"
+msgstr "可选调优建议"
 
 #: lib/rrd.php
 msgid "PDP per Row"
@@ -14379,7 +14379,7 @@ msgstr "在收集之前，poller_output 队列必须使用 InnoDB。请停止所
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "无法确认操作。重试前请检查更改历史。"
+msgstr "不可用"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
@@ -14840,7 +14840,7 @@ msgstr "当Kadupul 用于非英语的其它语言环境时,数据库使用utf8mb
 
 #: lib/utility.php
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
-msgstr "当Kadupul 用于非英语的其它语言环境时, 数据库使用utf8mb4_general_ci 排序规则非常重要,因为某些字符的值不止一个字节."
+msgstr "在非英语语言环境下使用 Kadupul 时，使用 utf8mb4_unicode_ci 排序规则非常重要，因为某些字符占用不止一个字节。"
 
 #: lib/utility.php
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
@@ -15060,7 +15060,7 @@ msgstr "由于会话超时,您已被自动注销了Kadupul."
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to an account suspension."
-msgstr "由于会话超时,您已被自动注销了Kadupul."
+msgstr "由于账户被暂停使用，您已退出登录 Kadupul。"
 
 #: managers.php
 #, php-format
@@ -15185,11 +15185,11 @@ msgstr "您必须至少选择一个通知对象."
 
 #: package_import.php
 msgid "Automatically Trust Signer"
-msgstr "自动添加到Kadupul"
+msgstr "自动信任签名者"
 
 #: package_import.php templates_import.php
 msgid "Changes/Diffferences"
-msgstr "更改设备"
+msgstr "更改/差异"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
@@ -15197,7 +15197,7 @@ msgstr "检查包存储库文件中是否有应该存在的文件，并找到缺
 
 #: package_import.php
 msgid "Copyright"
-msgstr "右"
+msgstr "版权"
 
 #: package_import.php
 msgid "Device class"
@@ -15221,7 +15221,7 @@ msgstr "文件差异: "
 
 #: package_import.php
 msgid "Filename"
-msgstr "重命名"
+msgstr "文件名"
 
 #: package_import.php
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
@@ -15525,7 +15525,7 @@ msgstr "Kadupul 系统工具"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "轮询程序id%d超过了%d秒的最大运行时间。正在退出。"
+msgstr "已超过最大运行时间 %d 秒（轮询器 ID：%d）。正在退出。"
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -15592,7 +15592,7 @@ msgstr[0] "清除数据收集统计信息"
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "点击 '继续' 以启用下面的数据采集器."
+msgstr[0] "点击“继续”以清除数据采集器的统计信息。"
 
 #: pollers.php
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
@@ -15723,7 +15723,7 @@ msgstr "远程数据库端口"
 
 #: pollers.php
 msgid "Remote Database Retries"
-msgstr "远程数据库用户"
+msgstr "远程数据库重试次数"
 
 #: pollers.php
 msgid "Remote Database SSL"
@@ -15868,7 +15868,7 @@ msgstr "与此数据采集器关联的脚本服务器调用的数量."
 
 #: pollers.php
 msgid "The number of times to attempt to retry to connect to the remote database."
-msgstr "用于连接到远程数据库的用户名."
+msgstr "尝试重新连接到远程数据库的次数。"
 
 #: pollers.php
 msgid "The polling sync interval in use.  This setting will affect how often this poller is checked and updated."
@@ -16110,7 +16110,7 @@ msgstr[0] "点击'继续'删除以下站点. 请注意,所有设备将从本站�
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "点击 '继续' 删除下面的树."
+msgstr[0] "点击“继续”以复制以下站点。"
 
 #: sites.php
 msgid "Country"
@@ -16420,7 +16420,7 @@ msgstr "ERROR"
 
 #: templates_import.php
 msgid "Error in Template"
-msgstr "导出模板"
+msgstr "模板错误"
 
 #: templates_import.php
 msgid "Failed to access temporary folder, import functionality is disabled"
@@ -16428,7 +16428,7 @@ msgstr "无法访问临时文件夹,导入功能被禁用"
 
 #: templates_import.php
 msgid "File Name"
-msgstr "字段名称"
+msgstr "文件名"
 
 #: templates_import.php
 msgid "Import Files [ If Files are missing, locate and install before using ]"
@@ -16449,7 +16449,7 @@ msgstr "遇见： %d"
 
 #: templates_import.php
 msgid "Not Readable"
-msgstr "不可写入"
+msgstr "不可读"
 
 #: templates_import.php
 #, php-format
@@ -16523,7 +16523,7 @@ msgstr[0] "点击 '继续' 发布以下树."
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
 msgid_plural "Click 'Continue' to un-lock following Trees."
-msgstr[0] "点击 '继续' 以取消发布以下树."
+msgstr[0] "点击“继续”以解锁以下树。"
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
@@ -16682,7 +16682,7 @@ msgstr "树[新建]"
 #: tree.php
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "锁定"
+msgstr "解锁"
 
 #: tree.php
 msgctxt "dropdown action"
@@ -16692,7 +16692,7 @@ msgstr "未发布"
 #: tree.php
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "取消发布树"
+msgstr[0] "解锁树"
 
 #: tree.php
 msgid "Un-publish Tree"
@@ -16742,11 +16742,11 @@ msgstr "< 1 周前"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>注意:</b>系统图策略是 '限制性', 意味着用户必须能够访问图形或设备和图形模板才能访问图形"
+msgstr "<b>注意:</b> 系统图形策略为 '设备'，这意味着用户必须有权访问该图形或设备才能访问该图形"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>注意:</b>系统图策略是 '允许',即用户必须有权访问图形,设备或图形模版中的至少一个才能访问图"
+msgstr "<b>注意:</b> 系统图形策略为 '图形模板'，这意味着用户必须有权访问该图形或图形模板才能访问该图形"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
@@ -17744,7 +17744,7 @@ msgstr "Kadupul 技术支持页面. 由开发人员和技术支持人员用来�
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "上次开始时间:"
+msgstr "上次结束时间:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -17796,7 +17796,7 @@ msgstr "最大连接内存"
 
 #: utilities.php
 msgid "Max Core Memory Possible"
-msgstr "poller 允许使用的的最大内存"
+msgstr "可能的最大核心内存"
 
 #: utilities.php
 msgid "Max OID"
@@ -17816,7 +17816,7 @@ msgstr "最大线程"
 
 #: utilities.php
 msgid "Max Total Memory Possible"
-msgstr "poller 允许使用的的最大内存"
+msgstr "可能的最大总内存"
 
 #: utilities.php
 msgid "Maximum Allowed Runtime:"
@@ -17958,7 +17958,7 @@ msgstr "清空"
 
 #: utilities.php
 msgid "Purge Data Source Statistics"
-msgstr "数据来源统计"
+msgstr "清除数据源统计信息"
 
 #: utilities.php
 msgid "Purge User Log"
@@ -18019,7 +18019,7 @@ msgstr "记录：%s（ds 行）、时间：%s（秒）、GetRows：%s（秒）�
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "将 MySQL/MariaDB 内存减少到小于 80% of 系统内存。 如果数据库与 RRDfiles 位于同一系统上，请为 RRDfiles 保留额外的缓存内存。 有关计算方法的说明，请参阅下面的核心和客户端总计。"
+msgstr "将 MySQL/MariaDB 内存减少到低于系统内存的 80% o。如果数据库与 RRDfiles 位于同一系统上，请为 RRDfiles 保留额外的缓存内存。有关计算方法的说明，请参阅下方的核心和客户端总计。"
 
 #: utilities.php
 msgid "Reduce Total Client Memory"
@@ -18035,7 +18035,7 @@ msgstr "刷新频率"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
-msgstr "删除数据源:"
+msgstr "剩余数据源:"
 
 #: utilities.php
 msgid "Result"
@@ -18102,7 +18102,7 @@ msgstr "状态： <span class=\"deviceUp\"><b>正在运行</b></span>，剩余�
 
 #: utilities.php
 msgid "Success - Password"
-msgstr "成功 - Pswd"
+msgstr "成功 - 密码"
 
 #: utilities.php
 msgid "Success - Password Change"

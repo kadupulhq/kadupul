@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Njalo NgoSuku olungu-{number}} other {Njalo Ngezinsuku ezingu-{number}}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {Usuku olungu-{number}} other {Izinsuku ezingu-{number}}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {Ihora elingu-{number}} other {Amahora angu-{number}}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {Iminithi elingu-{number}} other {Amaminithi angu-{number}}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {Inyanga engu-{number}} other {Izinyanga ezingu-{number}}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {Isekhondi elingu-{number}} other {Amasekhondi angu-{number}}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {Isonto elingu-{number}} other {Amasonto angu-{number}}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {Unyaka ongu-{number}} other {Iminyaka engu-{number}}}"

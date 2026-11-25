@@ -26,7 +26,7 @@
 "GPRINT Type": "Τύπος GPRINT"
 "Graph Item Input not found.": "Graph Item Input not found."
 "Graph Item Input: %name%": "Graph Item Input: %name%"
-"Graph Item Inputs [edit graph: %name%]": "Στοιχείο γραφήματος Είσοδοι [edit graph: %name%]"
+"Graph Item Inputs [edit graph: %name%]": "Είσοδοι στοιχείου γραφήματος [επεξεργασία γραφήματος: %name%]"
 "Graph Item Inputs are unavailable. Reload before retrying.": "Graph Item Inputs are unavailable. Reload before retrying."
 "Graph Item Type": "Τύπος στοιχείου γραφήματος"
 "Graph Template not found.": "Graph Template not found."

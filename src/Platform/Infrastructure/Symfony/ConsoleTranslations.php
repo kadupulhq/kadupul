@@ -23,9 +23,10 @@ final class ConsoleTranslations
         $container->addResource(new FileResource($projectDir . '/locales/catalogs.json'));
         $locales = self::locales($projectDir);
         // Added resources must not reuse a catalogue cached before this domain
-        // or the module gettext fallback existed.
+        // existed, or while module YAML domains still took missing keys from the
+        // .po catalogs (module_fallback 1); changing this value retires those.
         $options = $translator->getArgument(4);
-        $options['cache_vary']['console_gettext'] = ['locales' => $locales, 'module_fallback' => 1];
+        $options['cache_vary']['console_gettext'] = ['locales' => $locales, 'module_catalogues' => 'yaml'];
         if (is_array($options)) {
             $resourceFiles = is_array($options['resource_files'] ?? null) ? $options['resource_files'] : [];
             foreach ($locales as $locale) {
@@ -41,32 +42,6 @@ final class ConsoleTranslations
             $translator->addMethodCall('addResource', ['mo', $file, str_replace('-', '_', $locale), 'console']);
             if ($locale === 'fr-FR') {
                 $translator->addMethodCall('addResource', ['mo', $file, 'fr', 'console']);
-            }
-        }
-        self::registerGettextFallback($container, $projectDir, $locales);
-    }
-
-    /**
-     * Module YAML domains fall back to the shipped .po catalog of the same
-     * language. Paths come from the shipped locale list only, never a request.
-     *
-     * @param list<string> $locales
-     */
-    private static function registerGettextFallback(ContainerBuilder $container, string $projectDir, array $locales): void
-    {
-        $translator = $container->findDefinition('translator.default');
-        $sources = glob($projectDir . '/config/translations/*.en.yaml');
-        if ($sources === false) {
-            throw new \RuntimeException('Translation domains are unavailable.');
-        }
-        foreach ($locales as $locale) {
-            $catalog = $projectDir . '/locales/po/' . $locale . '.po';
-            $container->addResource(new FileResource($catalog));
-            $symfonyLocale = $locale === 'fr-FR' ? 'fr' : str_replace('-', '_', $locale);
-            foreach ($sources as $source) {
-                $domain = basename($source, '.en.yaml');
-                $resource = ['source' => $source, 'catalog' => $catalog, 'domain' => dirname($source) . '/' . $domain . '.' . $symfonyLocale . '.yaml'];
-                $translator->addMethodCall('addResource', [GettextCatalogLoader::FORMAT, $resource, $symfonyLocale, $domain]);
             }
         }
     }

@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% godzina"
-"%count% Hours": "%count% godzin"
-"%count% Minute": "%count% minuta"
-"%count% Minutes": "%count% minut"
-"%count% Thread": "%count% wątek"
-"%count% Threads": "%count% wątków"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Rozdzielana spacjami lista alternatywnych serwerów DNS używanych do rozpoznawania nazw DNS. Jeśli pozostanie pusta, do rozpoznawania nazw DNS zostanie użyty system operacyjny pollera."
 "Access denied.": "Odmowa dostępu."
 "Add Discovery Network": "Dodaj sieć wykrywania"
@@ -87,7 +81,7 @@
 "October": "Październik"
 "Ping Method": "Metoda Pingowa"
 "Ping Port": "Port pinga"
-"Ping Retry Count": "Licznik liczników Ping Retry"
+"Ping Retry Count": "Liczba ponownych prób Ping"
 "Ping Timeout Value": "Wartość czasu oczekiwania"
 "Reachability Settings": "Ustawienia osiągalności"
 "Rerun Data Queries": "Uruchom ponownie zapytania o dane"

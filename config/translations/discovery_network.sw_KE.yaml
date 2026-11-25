@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "Saa %count%"
-"%count% Hours": "Saa %count%"
-"%count% Minute": "Dakika %count%"
-"%count% Minutes": "Dakika %count%"
-"%count% Thread": "Uzi %count%"
-"%count% Threads": "Nyuzi %count%"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Orodha iliyotenganishwa kwa nafasi ya Seva mbadala za DNS za kutumia kwa utatuzi wa DNS. Ikiwa tupu, mfumo wa uendeshaji wa Poller utatumika kutatua majina ya DNS."
 "Access denied.": "Ufikiaji umekataliwa."
 "Add Discovery Network": "Ongeza Mtandao wa Ugunduzi"

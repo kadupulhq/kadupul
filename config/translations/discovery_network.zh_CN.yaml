@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% 小时"
-"%count% Hours": "%count% 小时"
-"%count% Minute": "%count% 分钟"
-"%count% Minutes": "%count% 分钟"
-"%count% Thread": "%count% 个线程"
-"%count% Threads": "%count% 个线程"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "用于 DNS 解析的备用 DNS 服务器列表（以空格分隔）。若留空，将使用轮询器操作系统解析 DNS 名称。"
 "Access denied.": "拒绝访问。"
 "Add Discovery Network": "添加发现网络"
@@ -108,7 +102,7 @@
 "Sunday": "周日"
 "TCP Ping Closed": "TCP Ping 已关闭"
 "TCP Ping": "TCP Ping"
-"TCP or UDP port to attempt connection.": "尝试连接的TCP or UDP端口."
+"TCP or UDP port to attempt connection.": "用于尝试连接的 TCP 或 UDP 端口。"
 "The Email Address to be used as the senders Email for the Notification Email.  If left blank, the default Automation Notification Email Address is used.": "用作通知电子邮件发件人邮箱的电子邮件地址。如果留空，将使用默认的自动化通知电子邮件地址。"
 "The Email account name to be used as the senders name for the Notification Email.  If left blank, the default Automation Notification Name is used.": "用作通知电子邮件发件人名称的电子邮件账户名称。如果留空，将使用默认的自动化通知名称。"
 "The Email account to be used to send the Notification Email to.": "用于接收通知电子邮件的电子邮件账户。"

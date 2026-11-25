@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% Jam"
-"%count% Hours": "%count% Jam"
-"%count% Minute": "%count% Menit"
-"%count% Minutes": "%count% Menit"
-"%count% Thread": "%count% Thread"
-"%count% Threads": "%count% Thread"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Daftar server DNS alternatif yang dipisahkan spasi untuk resolusi DNS. Jika kosong, OS poller akan digunakan untuk me-resolve nama DNS."
 "Access denied.": "Akses ditolak."
 "Add Discovery Network": "Tambah Jaringan Penemuan"

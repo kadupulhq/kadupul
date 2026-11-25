@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% stunda"
-"%count% Hours": "%count% stundas"
-"%count% Minute": "%count% minūte"
-"%count% Minutes": "%count% minūtes"
-"%count% Thread": "%count% pavediens"
-"%count% Threads": "%count% pavedieni"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Ar atstarpi atdalīts alternatīvo DNS serveru saraksts DNS izšķiršanai. Ja atstāts tukšs, DNS nosaukumu izšķiršanai tiks izmantota aptaujātāja OS."
 "Access denied.": "Piekļuve liegta."
 "Add Discovery Network": "Pievienot atklāšanas tīklu"

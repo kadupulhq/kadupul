@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% گھنٹہ"
-"%count% Hours": "%count% گھنٹے"
-"%count% Minute": "%count% منٹ"
-"%count% Minutes": "%count% منٹ"
-"%count% Thread": "%count% تھریڈ"
-"%count% Threads": "%count% تھریڈز"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "DNS ریزولوشن کے لیے استعمال ہونے والے متبادل DNS سرورز کی اسپیس سے جدا کردہ فہرست۔ اگر خالی چھوڑ دیا جائے تو DNS نام حل کرنے کے لیے پولر OS استعمال کیا جائے گا۔"
 "Access denied.": "رسائی مسترد کر دی گئی۔"
 "Add Discovery Network": "ڈسکوری نیٹ ورک شامل کریں"

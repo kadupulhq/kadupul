@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A useful name for this Rule.": "Un nombre útil para esta regla."
+"Check this box to enable this rule.": "Activa esta casilla para habilitar esta regla."
+"Choose a Data Query to apply to this rule.": "Elija una consulta de datos para aplicar a esta regla."
+"Data Query": "Consulta de datos"
+"Enable Rule": "Habilitar regla"
+"Graph Type": "Tipo de gráficos"
+"Name": "Nombre"
+"Rule Selection [edit: %name%]": "Selección de regla [edit: %name%]"
+"Save": "Guardar"

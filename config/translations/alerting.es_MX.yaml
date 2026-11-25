@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Actions": "Acciones"
+"Alert Incidents": "Incidentes de alerta"
+"Alert Rules": "Reglas de alerta"
+"Attempts": "Intentos"
+"Cancel": "Cancelar"
+"Continue": "Continuar"
+"Edit": "Editar"
+"Failed": "Fallido"
+"Kind": "Tipo"
+"Next": "Siguiente"
+"None": "Ninguno"
+"Notification": "Notificación"
+"Notifications": "Notificaciones"
+"Orphaned": "Huérfanos"
+"Previous": "Anterior"
+"Save": "Guardar"
+"Show": "Mostrar"
+"Status": "Estado"
+"Threshold": "Límite"
+"Unknown": "Desconocido"

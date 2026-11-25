@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Description": "Ibisobanuro"
+"General": "Rusange"
+"Hostname": "Izina ry'igikoresho ku rusobe"
+"Logs": "Inyandiko z'amateka"
+"Notes": "Inyandiko"
+"Notifications": "Imenyesha"
+"SNMP Auth Protocol (v3)": "Porotokole yo kwemeza ya SNMP (v3)"
+"SNMP Engine ID (v3)": "ID ya moteri ya SNMP (v3)"
+"SNMP Notification Receiver [edit: %name%]": "Uwakira imenyesha rya SNMP [hindura: %name%]"
+"SNMP Notification Receiver [new]": "Uwakira imenyesha rya SNMP [mushya]"
+"SNMP Port": "Umuyoboro wa SNMP"
+"SNMP Privacy Passphrase (v3)": "Interuro y'ibanga ya SNMP (v3)"
+"SNMP Privacy Protocol (v3)": "Porotokole y'ibanga ya SNMP (v3)"
+"SNMP Username (v3)": "Izina ry'umukoresha rya SNMP (v3)"
+"SNMP Version": "Verisiyo ya SNMP"
+"Save": "Bika"

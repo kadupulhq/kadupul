@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A useful name for this CDEF.": "Un nom explicite pour ce CDEF."
+"All Data Sources (Do not Include Duplicates)": "Toutes les sources de données (ne pas inclure les doublons)"
+"All Data Sources (Include Duplicates)": "Toutes les sources de données (doublons inclus)"
+"All Similar Data Sources (Do not Include Duplicates)": "Toutes les sources de données similaires (ne pas inclure les doublons)"
+"All Similar Data Sources (Do not Include Duplicates) Polling Interval": "Intervalle d'interrogation de toutes les sources de données similaires (ne pas inclure les doublons)"
+"All Similar Data Sources (Include Duplicates)": "Toutes les sources de données similaires (y compris les doublons)"
+"Count of All Data Sources (Do not Include Duplicates)": "Nombre de toutes les sources de données (ne pas inclure les doublons)"
+"Count of All Data Sources (Include Duplicates)": "Nombre de toutes les sources de données (y compris les doublons)"
+"Count of All Similar Data Sources (Do not Include Duplicates)": "Nombre de toutes les sources de données similaires (ne pas inclure les doublons)"
+"Count of All Similar Data Sources (Include Duplicates)": "Nombre de toutes les sources de données similaires (y compris les doublons)"
+"Current Data Source Item: Maximum Value": "Élément de source de données actuel : Valeur maximale"
+"Current Data Source Item: Minimum Value": "Élément de source de données actuel : Valeur minimale"
+"Current Graph Item Data Source": "Source de données de l'élément de graphique actuel"
+"Current Graph Item Polling Interval": "Intervalle d'interrogation de l'élément de graphique actuel"
+"Graph: Lower Limit": "Graphique : Limite inférieure"
+"Graph: Upper Limit": "Graphique : Limite supérieure"
+"Graphs Using": "Graphiques utilisant ce modèle"
+"Move Down": "Déplacer vers le bas"
+"Move Up": "Déplacer vers le haut"
+"Templates Using": "Modèles l'utilisant"

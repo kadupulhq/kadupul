@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {दर {number} दिवशी} other {दर {number} दिवसांनी}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} दिवस} other {{number} दिवस}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} तास} other {{number} तास}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} मिनिट} other {{number} मिनिटे}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} महिना} other {{number} महिने}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} सेकंद} other {{number} सेकंद}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} आठवडा} other {{number} आठवडे}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} वर्ष} other {{number} वर्षे}}"

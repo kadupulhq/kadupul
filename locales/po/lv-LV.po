@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 14:53-0800\n"
+"POT-Creation-Date: 2026-11-24 17:12-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1383,7 +1383,7 @@ msgstr "Pēc izvēles: Apakškoka elements"
 
 #: automation_tree_rules.php
 msgid "ROOT"
-msgstr "ROOT - uz objektu orientēta bibliotēku kopa mērogojamu datu analīzei"
+msgstr "ROOT"
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
@@ -3063,7 +3063,7 @@ msgstr "Priekšskatījuma režīms"
 
 #: graph_view.php
 msgid "Report"
-msgstr "Paziņot par pārkāpumu"
+msgstr "Atskaite"
 
 #: graph_view.php
 msgid "Select the Report to add the selected Graphs to."
@@ -3199,7 +3199,7 @@ msgstr "Mainīt diagrammas veidni"
 
 #: graphs.php
 msgid "Change Graph(s) Associated Device"
-msgstr "Mainīt Graph(-es) saistīto ierīci"
+msgstr "Mainīt ar grafiku(-iem) saistīto ierīci"
 
 #: graphs.php
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
@@ -3345,7 +3345,7 @@ msgstr "Piekļuve grafikam liegta"
 
 #: graphs.php
 msgid "Leave the Data Source(s) untouched."
-msgstr "Neatstājiet datu avotu(-s) neskartus."
+msgstr "Atstājiet datu avotu(-s) neskartu(-s)."
 
 #: graphs.php
 msgid "Lock Graph."
@@ -3962,7 +3962,7 @@ msgstr "6 stundas"
 
 #: include/global_arrays.php
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php
 msgid "AES-128"
@@ -5220,7 +5220,7 @@ msgstr "Drukājiet tikai summējošos apzīmējumus"
 
 #: include/global_arrays.php
 msgid "Printer Related"
-msgstr "Linux saistīta"
+msgstr "Saistīts ar printeri"
 
 #: include/global_arrays.php
 msgid "RRD Check"
@@ -5911,7 +5911,7 @@ msgstr "[Nav]"
 
 #: include/global_arrays.php
 msgid "[Restart]"
-msgstr "Ierobežots"
+msgstr "[Restartēt]"
 
 #: include/global_arrays.php
 msgid "[Skipped]"
@@ -6705,7 +6705,7 @@ msgstr "Bloķēts"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Logaritmiskā mērogošana (-logaritmiska)"
+msgstr "Logaritmiskā mērogošana (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6845,7 +6845,7 @@ msgstr "Aptaujas intervāls"
 
 #: include/global_form.php
 msgid "Prefix"
-msgstr "Präfix"
+msgstr "Prefikss"
 
 #: include/global_form.php
 msgid "Prefix for GPRINT Totals"
@@ -7101,7 +7101,7 @@ msgstr "Grafika veidne, uz kuras ir balstīta šī apkopotā veidne."
 
 #: include/global_form.php package_import.php
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "Noklusējuma diagrammas platums, kas tiks izmantots visām jaunajām diagrammu veidnēm."
+msgstr "Augstums, kas tiks izmantots, importējot vai atjauninot grafiku veidnes."
 
 #: include/global_form.php package_import.php
 msgid "The Image Format to be used when importing or updating Graph Templates."
@@ -7117,7 +7117,7 @@ msgstr "Modelis, kas jāsaskaņo."
 
 #: include/global_form.php
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "Aizstāšanas virknes modelis izmantošanai kā koka galveni.<br> Par pirmo spēli skatiet spēli, piemēram, <strong>\\${1}</strong> !"
+msgstr "Aizstāšanas virknes paraugs izmantošanai par koka galveni.<br>Atsaucieties uz atbilstību, piemēram, <strong>\\${1}</strong> pirmajai atbilstībai!"
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
@@ -7401,11 +7401,11 @@ msgstr "Skatot grafiku, kura pamatā ir attiecīgā RRA, šim grafikam tiek rād
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Iestatot kreisās ass marķējumu, piemērojiet kārtulu datu formātam. Atbalstītie formāti ietver \"ciparu\", kur dati tiek apstrādāti kā skaitļi, \"laikspiedols\", kur vērtības tiek interpretētas kā UNIX laikspiedoli (sekunžu skaits kopš 1970. gada janvāra) un izteiktas, izmantojot strftime formātu (noklusējums ir \"%Y-%m-%d %H\". :%JAUNKUNDZE\"). Skatīt arī --units-long. Visbeidzot \"ilgums\", kur vērtības tiek interpretētas kā ilgums milisekundēs. Formatēšana notiek saskaņā ar valstrfduration qualified PRINT/GPRINT noteikumiem."
+msgstr "Iestatot kreisās ass marķējumu, piemērojiet kārtulu datu formātam.  Atbalstītie formāti ietver \"numeric\", kur dati tiek apstrādāti kā skaitliski, \"timestamp\", kur vērtības tiek interpretētas kā UNIX laikspiedoli (sekunžu skaits kopš 1970. gada janvāra) un attēlotas, izmantojot strftime formātu (noklusējums ir \"%Y-%m-%d %H:%M:%S\").  Skatiet arī --units-length.  Visbeidzot \"duration\", kur vērtības tiek interpretētas kā ilgums milisekundēs.  Formatēšana atbilst ar valstrfduration kvalificētajiem PRINT/GPRINT noteikumiem."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Iestatot labās ass marķējumu, piemērojiet kārtulu datu formātam. Atbalstītie formāti ietver \"ciparu\", kur dati tiek apstrādāti kā skaitļi, \"laikspiedols\", kur vērtības tiek interpretētas kā UNIX laikspiedoli (sekunžu skaits kopš 1970. gada janvāra) un izteiktas, izmantojot strftime formātu (noklusējums ir \"%Y-%m-%d %H\". :%JAUNKUNDZE\"). Skatiet arī --units-length un --right-axis-format. Visbeidzot \"ilgums\", kur vērtības tiek interpretētas kā ilgums milisekundēs. Formatēšana notiek saskaņā ar valstrfduration qualified PRINT/GPRINT noteikumiem."
+msgstr "Iestatot labās ass marķējumu, piemērojiet kārtulu datu formātam.  Atbalstītie formāti ietver \"numeric\", kur dati tiek apstrādāti kā skaitliski, \"timestamp\", kur vērtības tiek interpretētas kā UNIX laikspiedoli (sekunžu skaits kopš 1970. gada janvāra) un attēlotas, izmantojot strftime formātu (noklusējums ir \"%Y-%m-%d %H:%M:%S\").  Skatiet arī --units-length un --right-axis-format.  Visbeidzot \"duration\", kur vērtības tiek interpretētas kā ilgums milisekundēs.  Formatēšana atbilst ar valstrfduration kvalificētajiem PRINT/GPRINT noteikumiem."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7737,7 +7737,7 @@ msgstr "Vidēji"
 
 #: include/global_settings.php
 msgid "Axis Font Setting"
-msgstr "Axis fonta iestatījums"
+msgstr "Ass fonta iestatījums"
 
 #: include/global_settings.php
 msgid "Axis Font Size"
@@ -8537,7 +8537,7 @@ msgstr "Ja pastiprināšanas izvades tabula pārsniedz šo izmēru, ierakstos ti
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "Ja pastiprināšanas pollers pārsniedz šo izpildlaiku, kaktusu žurnālā tiks ievietots brīdinājums,"
+msgstr "Ja boost aptaujātājs pārsniedz šo izpildlaiku, cacti žurnālā tiks ievietots brīdinājums,"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8553,7 +8553,7 @@ msgstr "Ja šī opcija ir atzīmēta, Kadupul aizpildīs SNMP aģenta tabulas ar
 
 #: include/global_settings.php
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
-msgstr "Ja jums ir problēmas ar Kadupul's Data Collectors, iestatiet šo faila ceļu, un Data Collectors standarta kļūda tiks novirzīta uz šo failu."
+msgstr "Ja jums ir problēmas ar Kadupul datu vācējiem, iestatiet šo faila ceļu, un datu vācēju standarta kļūdu izvade tiks novirzīta uz šo failu"
 
 #: include/global_settings.php
 msgid "If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process."
@@ -8597,7 +8597,7 @@ msgstr "Kadupul žurnāla ceļš"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Kadupul Server v%s — apkope"
+msgstr "Kadupul servera laika josla"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8721,7 +8721,7 @@ msgstr "Maksimālais ierīces jaucējdirektoriju skaits"
 
 #: include/global_settings.php
 msgid "Max Kills Per RRA"
-msgstr "Max Kills uz RRA"
+msgstr "Maksimālās likvidēšanas reizes uz RRA"
 
 #: include/global_settings.php
 msgid "Maximum Argument Length"
@@ -8789,7 +8789,7 @@ msgstr "Režīms"
 
 #: include/global_settings.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Režīms, kurus kaktusi mēģinās autentificēt pret LDAP serveri.<blockquote> <i>Bez meklēšanas</i> — tiek meklēts bez atšķirīgā vārda (DN), vienkārši mēģiniet izveidot saiti ar norādīto atšķirīgā vārda (DN) formātu.<br><br> <i>Anonīmā meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot anonīmu saistīšanu, lai atrastu lietotāja atšķirto vārdu (DN).<br><br> <i>Konkrēta meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot īpašu atšķirīgo nosaukumu (DN) un īpašu paroli, lai noteiktu lietotāja atšķirto vārdu (DN)."
+msgstr "Režīms, kādā cacti mēģinās autentificēties LDAP serverī.<blockquote><i>Bez meklēšanas</i> — atšķirīgā nosaukuma (DN) meklēšana nenotiek, tiek veikts mēģinājums piesaistīties, izmantojot norādīto atšķirīgā nosaukuma (DN) formātu.<br><br><i>Anonīmā meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot anonīmu piesaisti, lai atrastu lietotāja atšķirīgo nosaukumu (DN).<br><br><i>Konkrēta meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot konkrētu atšķirīgo nosaukumu (DN) un konkrētu paroli piesaistei, lai atrastu lietotāja atšķirīgo nosaukumu (DN)."
 
 #: include/global_settings.php
 msgid "Monthly on Sunady"
@@ -9013,7 +9013,7 @@ msgstr "Starpniekserveris"
 
 #: include/global_settings.php
 msgid "RRDChecker Timeout"
-msgstr "DNS noildze"
+msgstr "RRDChecker noildze"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean"
@@ -9057,7 +9057,7 @@ msgstr "RSA pirkstu nospiedums"
 
 #: include/global_settings.php
 msgid "Re-Index All Device Schedule"
-msgstr "Pārindeksēt ierīci"
+msgstr "Visu ierīču pārindeksēšanas grafiks"
 
 #: include/global_settings.php
 msgid "Re-index Method for Data Queries"
@@ -9129,7 +9129,7 @@ msgstr "Nepieciešama dalība grupā"
 
 #: include/global_settings.php
 msgid "Require Mix Case"
-msgstr "Nepieciešams Mix Case"
+msgstr "Nepieciešams jaukts burtu reģistrs"
 
 #: include/global_settings.php
 msgid "Require Number"
@@ -9729,7 +9729,7 @@ msgstr "Maksimālais e-pasta ziņojuma lielums, ieskaitot visus pielikumus."
 
 #: include/global_settings.php
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
-msgstr "Maksimālais laiks, ko mugurkauls gaidīs, līdz skripts tiks pabeigts. Šī noildzes vērtība ir norādīta sekundēs un ir derīga tikai mugurkaula Data Collector."
+msgstr "Maksimālais laiks, ko Spine gaidīs, līdz skripts tiks izpildīts. Šī noildzes vērtība ir norādīta sekundēs un ir derīga tikai Spine datu savācējam."
 
 #: include/global_settings.php
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
@@ -9793,7 +9793,7 @@ msgstr "Grafiku skaits, kas jāparāda vienā lapā priekšskatījuma režīmā.
 
 #: include/global_settings.php
 msgid "The number of polling intervals a Device must be down before logging an error and reporting Device as down."
-msgstr "Ierīces aptaujas intervālu skaitam ir jābūt samazinātam, pirms reģistrēt kļūdu un ziņot par ierīci kā neveiksmīgu."
+msgstr "Aptaujas intervālu skaits, kuru laikā ierīcei jābūt nepieejamai, pirms tiek reģistrēta kļūda un par ierīci tiek ziņots kā par nepieejamu."
 
 #: include/global_settings.php
 msgid "The number of polling intervals a Device must remain up before returning Device to an up status and issuing a notice."
@@ -10118,7 +10118,7 @@ msgstr "Lietotāja definēts rindu skaits aizsprostojumam līdz beigām, atlasot
 
 #: include/global_settings.php
 msgid "Variance Based w/Outliers Removed"
-msgstr "Variance Based W/Outliers noņemts"
+msgstr "Balstīts uz dispersiju, noņemot izlecošās vērtības"
 
 #: include/global_settings.php
 msgid "Variance Number of Outliers"
@@ -10736,7 +10736,7 @@ msgstr "Fails"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "%d rindas"
+msgstr "Sākuma rindas"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -10786,7 +10786,7 @@ msgstr "Statistika"
 
 #: lib/clog_webapi.php
 msgid "System Device"
-msgstr "Sinhronizēt ierīces"
+msgstr "Sistēmas ierīce"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Tail Lines"
@@ -10902,17 +10902,17 @@ msgstr "Notiek SNMP get izpilde %s oīdiem (%s)"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Tiek izpildīts SNMP get for data @ '%s' [value='$value']"
+msgstr "Tiek izpildīts SNMP get datiem @ '%s' [value='$value']"
 
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
-msgstr "Tiek izpildīts SNMP get for data @ '%s' [value='%s']"
+msgstr "Tiek izpildīts SNMP get datiem @ '%s' [value='%s']"
 
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
-msgstr "Izpilda SNMP get par indeksu skaitu @ '%s' Index Count: %s"
+msgstr "Izpilda SNMP get indeksu skaitam @ '%s' Indeksu skaits: %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11084,7 +11084,7 @@ msgstr "Atrodas ievades lauks “%s” [staigāt]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Jāiekļauj &lt;direction&gt;input&lt;/direction&gt; vai &lt;virziens&gt;ievade-izeja&lt;/direction&gt; tikai lauki"
+msgstr "Jāsatur tikai &lt;direction&gt;input&lt;/direction&gt; vai &lt;direction&gt;input-output&lt;/direction&gt; lauki"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field be updated."
@@ -11215,7 +11215,7 @@ msgstr "oid_rewrite pie OID: '%s' jauns OID: '%s'"
 #: lib/data_query.php
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
-msgstr "oid_rewrite pie OID: '%s' jauns OID: '%s'"
+msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
 msgid "Failed to alter password field length, can not continue as may corrupt password"
@@ -11270,7 +11270,7 @@ msgstr "Aptaujātajs nevar ierakstīt RRD failā.  RRD faila īpašnieks: %s.  A
 
 #: lib/dsdebug.php
 msgid "RRDfile not created yet"
-msgstr "RRD fails pēc aptaujas netika atjaunināts"
+msgstr "RRD fails vēl nav izveidots"
 
 #: lib/dsdebug.php
 msgid "RRDfile not updated after polling"
@@ -11747,7 +11747,7 @@ msgstr "Nogalināt tapas grafikos"
 
 #: lib/html.php
 msgid "Kills Per RRA"
-msgstr "Nogalina Per RRA"
+msgstr "Likvidēšanas reizes uz RRA"
 
 #: lib/html.php
 msgid "Light Color Mode"
@@ -11844,7 +11844,7 @@ msgstr "Iemesls:"
 
 #: lib/html.php
 msgid "Remote Server"
-msgstr "Noņemiet StdDev"
+msgstr "Attālinātais serveris"
 
 #: lib/html.php
 msgid "Remove StdDev"
@@ -11884,7 +11884,7 @@ msgstr "SpikeKill rezultāti"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "Mugurkauls"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -12644,7 +12644,7 @@ msgstr "Nepareiza UTF-8 nobīdes kļūda!"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
-msgstr "Lejupielādēt"
+msgstr "Nedarbojas (Thold)"
 
 #: lib/html_utility.php lib/installer.php
 msgid "Error"
@@ -13833,7 +13833,7 @@ msgstr "BRĪDINĀJUMS: Jūsu operētājsistēmas ierīces veidne nav atrasta. La
 
 #: lib/installer.php
 msgid "Web"
-msgstr "Заголовок сайта"
+msgstr "Tīmeklis"
 
 #: lib/installer.php
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
@@ -14265,7 +14265,7 @@ msgstr "Kļūda, parsējot rrdtool dump XML"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "%s nav atrasts"
+msgstr "Atrastas kļūdas"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14344,7 +14344,7 @@ msgstr "RRD atjaunošana neizdevās; sākotnējais un atkopšanas XML ir saglab�
 
 #: lib/rrd.php
 msgid "Root"
-msgstr "ROOT - uz objektu orientēta bibliotēku kopa mērogojamu datu analīzei"
+msgstr "Sakne"
 
 #: lib/rrd.php
 msgid "Round Robin Archive"
@@ -14742,12 +14742,12 @@ msgstr "%s Noskaņošana"
 #: lib/utility.php
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
-msgstr "%s sadalīs innodb_buffer_pool atmiņas reģionos, lai uzlabotu veiktspēju MariaDB versijām, kas jaunākas par 10.5. Maksimālā vērtība ir 64. Ja jūsu innodb_buffer_pool ir mazāks par 1 GB, izmantojiet kopas lielumu, kas dalīts ar 128 MB. Turpiniet izmantot šo vienādojumu līdz maksimumam 64."
+msgstr "%s sadalīs innodb_buffer_pool atmiņas reģionos, lai uzlabotu veiktspēju MariaDB versijām, kas vecākas par 10.5. Maksimālā vērtība ir 64, taču tā nedrīkst pārsniegt CPU kodolu/pavedienu skaitu. Ja jūsu innodb_buffer_pool ir mazāks par 1 GB, izmantojiet kopas lielumu, kas dalīts ar 128 MB. Turpiniet izmantot šo vienādojumu līdz maksimālajai vērtībai — CPU kodolu skaitam vai 64."
 
 #: lib/utility.php
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
-msgstr "%s sadalīs innodb_buffer_pool atmiņas reģionos, lai uzlabotu veiktspēju MariaDB versijām, kas jaunākas par 10.5. Maksimālā vērtība ir 64. Ja jūsu innodb_buffer_pool ir mazāks par 1 GB, izmantojiet kopas lielumu, kas dalīts ar 128 MB. Turpiniet izmantot šo vienādojumu līdz maksimumam 64."
+msgstr "%s sadalīs innodb_buffer_pool atmiņas reģionos, lai uzlabotu veiktspēju MySQL versijām līdz MySQL 8.0 ieskaitot. Maksimālā vērtība ir 64, taču tā nedrīkst pārsniegt CPU kodolu/pavedienu skaitu. Ja jūsu innodb_buffer_pool ir mazāks par 1 GB, izmantojiet kopas lielumu, kas dalīts ar 128 MB. Turpiniet izmantot šo vienādojumu līdz maksimālajai vērtībai — CPU kodolu skaitam vai 64."
 
 #: lib/utility.php
 #, php-format
@@ -14810,12 +14810,12 @@ msgstr "InnoDB sistēmas atmiņā glabās pēc iespējas vairāk tabulu un indek
 #: lib/utility.php
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
-msgstr "Ir stingri ieteicams iespējot InnoDB jebkurā %s versijā, kas ir vecāka par 5.5.3."
+msgstr "Ir ĻOTI ieteicams iespējot InnoDB jebkurā %s versijā, kas ir jaunāka par 5.5.3."
 
 #: lib/utility.php
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
-msgstr "Ieteicams iespējot InnoDB jebkurā %s versijā, kas ir vecāka par 5.1."
+msgstr "Ieteicams iespējot InnoDB jebkurā %s versijā, kas ir jaunāka par 5.1."
 
 #: lib/utility.php
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
@@ -15094,7 +15094,7 @@ msgstr "Versija %s"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
-msgstr "Jūs esat atteicies no Kadupul sesijas noildzes dēļ."
+msgstr "Jūs tikāt atteikts no Kadupul attālā datu savācēja stāvokļa izmaiņas dēļ"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a session timeout."
@@ -15233,7 +15233,7 @@ msgstr "Jums ir jāatlasa vismaz viens paziņojumu objekts."
 
 #: package_import.php
 msgid "Automatically Trust Signer"
-msgstr "Automātiski pievienot kaktusiem"
+msgstr "Automātiski uzticēties parakstītājam"
 
 #: package_import.php templates_import.php
 msgid "Changes/Diffferences"
@@ -15420,7 +15420,7 @@ msgstr "Instalējiet spraudni"
 
 #: plugins.php
 msgid "Load Order"
-msgstr "Atvērt"
+msgstr "Ielādes secība"
 
 #: plugins.php
 msgid "Main / Remote Status"
@@ -16282,7 +16282,7 @@ msgstr "Ar šo vietni saistītā valsts."
 
 #: sites.php
 msgid "The Latitude for this Site."
-msgstr "Šīs vietnes Latitude."
+msgstr "Šīs vietnes ģeogrāfiskais platums."
 
 #: sites.php
 msgid "The Longitude for this Site."
@@ -16494,7 +16494,7 @@ msgstr "Kļūda"
 
 #: templates_import.php
 msgid "Error in Template"
-msgstr "Eksportēt veidnes"
+msgstr "Kļūda veidnē"
 
 #: templates_import.php
 msgid "Failed to access temporary folder, import functionality is disabled"
@@ -16502,7 +16502,7 @@ msgstr "Neizdevās piekļūt pagaidu mapei, ievietošanas funkcija ir atspējota
 
 #: templates_import.php
 msgid "File Name"
-msgstr "Lauka nosaukums"
+msgstr "Faila nosaukums"
 
 #: templates_import.php
 msgid "Import Files [ If Files are missing, locate and install before using ]"
@@ -16523,7 +16523,7 @@ msgstr "Izpildīti: %d"
 
 #: templates_import.php
 msgid "Not Readable"
-msgstr "Nav Rakstāms"
+msgstr "Nav lasāms"
 
 #: templates_import.php
 #, php-format
@@ -17310,7 +17310,7 @@ msgstr "Padarīt atlasīto domēnu par noklusējumu"
 
 #: user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Režīms, kurus kaktusi mēģinās autentificēt pret LDAP serveri.<blockquote> <i>Bez meklēšanas</i> — tiek meklēts bez atšķirīgā vārda (DN), vienkārši mēģiniet izveidot saiti ar norādīto atšķirīgā vārda (DN) formātu.<br><br> <i>Anonīmā meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot anonīmu saistīšanu, lai atrastu lietotāju atšķirto vārdu (DN).<br><br> <i>Specifiska meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot īpašu atšķirīgo nosaukumu (DN) un īpašu paroli, lai noteiktu lietotāju atšķirto vārdu (DN)."
+msgstr "Režīms, kādā cacti mēģinās autentificēties LDAP serverī.<blockquote><i>Bez meklēšanas</i> — atšķirīgā nosaukuma (DN) meklēšana nenotiek, tiek veikts mēģinājums piesaistīties, izmantojot norādīto atšķirīgā nosaukuma (DN) formātu.<br><br><i>Anonīmā meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot anonīmu piesaisti, lai atrastu lietotāja atšķirīgo nosaukumu (DN).<br><br><i>Konkrēta meklēšana</i> — mēģina meklēt lietotājvārdu LDAP direktorijā, izmantojot konkrētu atšķirīgo nosaukumu (DN) un konkrētu paroli piesaistei, lai atrastu lietotāja atšķirīgo nosaukumu (DN)."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17860,7 +17860,7 @@ msgstr "Kadupul tehniskā atbalsta lapa. To izmanto izstrādātāji un tehniskā
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "Pēdējais sākuma laiks:"
+msgstr "Pēdējais beigu laiks:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -18135,7 +18135,7 @@ msgstr "Ieraksti: %s (ds rindas), laiks: %s (sekundes), GetRows: %s (sekundes), 
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Samaziniet MySQL/MariaDB atmiņu līdz mazāk nekā 80% of sistēmas atmiņai.  Saglabājiet papildu kešatmiņu RRD failiem, ja datu bāze atrodas tajā pašā sistēmā kā RRD faili. Tālāk skatiet pamatinformāciju un klientu kopsummas, lai iegūtu skaidrojumu par aprēķina metodi."
+msgstr "Samaziniet MySQL/MariaDB atmiņu līdz mazāk nekā 80% operatīvās atmiņas.  Saglabājiet papildu kešatmiņu RRD failiem, ja datubāze atrodas tajā pašā sistēmā kā RRD faili.  Aprēķina metodes skaidrojumu skatiet tālāk sadaļā Kodola un klientu kopsummas."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"
@@ -18214,7 +18214,7 @@ msgstr "Statuss: <span class=\"deviceRecovering\"><b>Dīkstāvē</b></span>, Iep
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statuss: <span class=\"deviceUp\"><b>darbojas</b></span>, atlikušais: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
+msgstr "Statuss: <span class=\"deviceUp\"><b>Darbojas</b></span>, Atlikuši: %s (datu avoti), Pašreizējais izpildes laiks: %s (sek.), Iepriekšējais izpildes laiks: %s (sek.), Iepriekš apstrādāts: %10s (datu avotu rindas)"
 
 #: utilities.php
 msgid "Success - Password"
@@ -18243,7 +18243,7 @@ msgstr "Tehniskais atbalsts [%s]"
 
 #: utilities.php
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
-msgstr "Datu vaicājuma kešatmiņā tiek saglabāta informācija, kas iegūta no datu vaicājuma ievades veidiem. Vērtības no šiem laukiem var izmantot teksta apgabalā Graphs for Legends, Vertical Labels un GPRINTS, kā arī CDEF."
+msgstr "Datu vaicājuma kešatmiņā tiek saglabāta informācija, kas iegūta no datu vaicājuma ievades veidiem. Vērtības no šiem laukiem var izmantot grafiku teksta apgabalā leģendām, vertikālajām etiķetēm un GPRINTS, kā arī CDEF."
 
 #: utilities.php
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."

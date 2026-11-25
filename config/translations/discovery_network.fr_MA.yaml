@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Monthly on Day": "Mensuel (jour du mois)"
+"Ping Retry Count": "Nombre de tentatives de ping"
+"Ping Timeout Value": "Délai d'expiration du ping"
+"TCP or UDP port to attempt connection.": "Port TCP ou UDP utilisé pour tester la connexion."
+"The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings.": "Valeur du délai d'expiration à utiliser pour les pings ICMP et UDP de l'hôte. Le délai d'expiration SNMP de l'hôte s'applique aux pings SNMP."

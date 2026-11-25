@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Setiap {number} Hari} other {Setiap {number} Hari}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {{number} Hari} other {{number} Hari}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} Jam} other {{number} Jam}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number} Menit} other {{number} Menit}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {{number} Bulan} other {{number} Bulan}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} Detik} other {{number} Detik}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {{number} Minggu} other {{number} Minggu}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} Tahun} other {{number} Tahun}}"
