@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "A useful name for this Rule.": "Izina ry'ingirakamaro ry'iri tegeko."
+"Cancel": "Hagarika"
 "Check this box to enable this rule.": "Hitamo aka gasanduku kugira ngo ukoreshe iri tegeko."
 "Choose a Tree for the new Tree Items.": "Hitamo igiti kizashyirwamo ibigize igiti bishya."
+"Continue": "Komeza"
 "Data Query Index": "Urutonde rw'ishakisha ry'amakuru"
 "Device": "Igikoresho"
 "Enable Rule": "Koresha itegeko"
@@ -15,5 +17,6 @@
 "Optional: Sub-Tree Item": "Bitari itegeko: Ikintu cyo mu ishami ry'igiti"
 "Save": "Bika"
 "The Item Type that shall be dynamically added to the tree.": "Ubwoko bw'ikintu kizajya cyongerwa mu giti mu buryo bwikora."
+"Title Format": "Imiterere y'umutwe"
 "Tree": "Igiti"
 "Tree Rule Selection [edit: %name%]": "Guhitamo Itegeko ry'Igiti [hindura: %name%]"

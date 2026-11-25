@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-/** The settings of an automation_tree_rules.php rule; its criteria, previews, list and bulk actions remain legacy. */
+/** The settings of an automation_tree_rules.php rule; its criteria and previews remain legacy. */
 final class TreeRuleEditController
 {
     private const array HEADERS = ['Cache-Control' => 'private, no-store'];
@@ -143,7 +143,7 @@ final class TreeRuleEditController
      * @param FormInterface<T> $form
      * @return array<string, mixed>
      */
-    private static function data(FormInterface $form): array
+    public static function data(FormInterface $form): array
     {
         $data = $form->getData();
         if (!is_array($data)) {
