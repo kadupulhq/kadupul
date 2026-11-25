@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -81,6 +82,21 @@ final class DataSourceProfileSizingTest extends TestCase
         self::assertSame("19\u{202F}200 Ko par source de données et 284 octets pour l'en-tête", $text->profileSize(600000, 4));
     }
 
+    public function testATranslatorCanAddPluralCategoriesTheShippedMessagesDoNot(): void
+    {
+        $translator = new Translator('ru');
+        $translator->addLoader('array', new ArrayLoader());
+        $translator->addResource('array', [
+            '{count, plural, one {{number} Day} other {{number} Days}}' => '{count, plural, one {{number} день} few {{number} дня} many {{number} дней} other {{number} дня}}',
+        ], 'ru', 'data_source_profile+intl-icu');
+        $text = new DataSourceProfileText($translator, new RequestStack());
+
+        self::assertSame(
+            ['1 день', '2 дня', '5 дней', '21 день', '22 дня', '25 дней', '100 дней'],
+            array_map($text->heartbeat(...), [86400, 172800, 432000, 1814400, 1900800, 2160000, 8640000]),
+        );
+    }
+
     /** @return array<string, array{string, int, string}> */
     public static function labels(): array
     {
@@ -125,6 +141,7 @@ final class DataSourceProfileSizingTest extends TestCase
         $translator = new Translator($locale);
         $translator->addLoader('yaml', new YamlFileLoader());
         $translator->addResource('yaml', dirname(__DIR__, 2) . '/config/translations/data_source_profile.' . $locale . '.yaml', $locale, 'data_source_profile');
+        $translator->addResource('yaml', dirname(__DIR__, 2) . '/config/translations/data_source_profile+intl-icu.' . $locale . '.yaml', $locale, 'data_source_profile+intl-icu');
         $requests = new RequestStack();
         $request = new Request();
         $request->setLocale($locale);

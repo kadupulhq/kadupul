@@ -1,8 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% heure"
-"%count% Threads": "%count% Threads"
 "General Settings": "Réglages généraux"
 "Monthly on Day": "Mensuel"
 "Ping Method": "Méthode de Ping"

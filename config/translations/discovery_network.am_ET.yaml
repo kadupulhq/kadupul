@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% ሰዓት"
-"%count% Hours": "%count% ሰዓታት"
-"%count% Minute": "%count% ደቂቃ"
-"%count% Minutes": "%count% ደቂቃዎች"
-"%count% Thread": "%count% ትሬድ"
-"%count% Threads": "%count% ትሬዶች"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "ለ DNS መፍታት የሚያገለግሉ በክፍተት የተለዩ አማራጭ DNS አገልጋዮች ዝርዝር። ባዶ ከሆነ፣ የ DNS ስሞችን ለመፍታት የፖለር ስርዓተ ክወና ጥቅም ላይ ይውላል።"
 "Access denied.": "መዳረሻ ተከልክሏል።"
 "Add Discovery Network": "የግኝት አውታረ መረብ አክል"

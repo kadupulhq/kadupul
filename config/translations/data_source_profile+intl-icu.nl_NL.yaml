@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Elke {number} dag} other {Elke {number} dagen}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} dag} other {{number} dagen}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} uur} other {{number} uur}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minuut} other {{number} minuten}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} maand} other {{number} maanden}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} seconde} other {{number} seconden}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} week} other {{number} weken}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} jaar} other {{number} jaar}}"

@@ -1,19 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Day": "يوم %count%"
-"%count% Days": "%count% أيام"
-"%count% Hour": "%count% ساعة"
-"%count% Hours": "%count% ساعات"
-"%count% Minute": "%count% دقيقة"
-"%count% Minutes": "%count% دقيقة"
-"%count% Month": "%count% شهر"
-"%count% Months": "%count% أشهر"
-"%count% Seconds": "%count% ثوانٍ"
-"%count% Week": "%count% أسبوع"
-"%count% Weeks": "%count% أسابيع"
-"%count% Year": "%count% سنة"
-"%count% Years": "%count% سنوات"
 "A useful name for this Data Storage and Polling Profile.": "اسم وصفي لملف تعريف تخزين البيانات والاستطلاع (Polling Profile) هذا."
 "Actions": "إجراءات"
 "Aggregation Level": "مستوى التجميع"
@@ -26,7 +13,6 @@
 "Default": "الافتراضي"
 "Default Timespan": "النطاق الزمني الافتراضي"
 "Deletable": "قابل للحذف"
-"Every %count% Day": "كل %count% يوم"
 "Every %count% Hours": "كل %count% ساعة"
 "Every %count% Minutes": "كل %count% دقيقة"
 "Every %count% Seconds": "كل %count% ثانية"

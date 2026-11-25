@@ -1,19 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Day": "%count% dia"
-"%count% Days": "%count% Días"
-"%count% Hour": "%count% Hora"
-"%count% Hours": "%count% horas"
-"%count% Minute": "%count% minuto"
-"%count% Minutes": "%count% minutos"
-"%count% Month": "%count% Mes"
-"%count% Months": "%count% Meses"
-"%count% Seconds": "%count% Segundos"
-"%count% Week": "%count% semana"
-"%count% Weeks": "%count% semanas"
-"%count% Year": "%count% Año"
-"%count% Years": "%count% años"
 "A useful name for this Data Storage and Polling Profile.": "Un nombre útil para este perfil de almacenamiento de datos y sondeo."
 "Actions": "Acciones"
 "Aggregation Level": "Nivel de Agregación"
@@ -26,7 +13,6 @@
 "Default": "Predeterminado"
 "Default Timespan": "Intervalo de tiempo por defecto"
 "Deletable": "Eliminable"
-"Every %count% Day": "Cada %count% día"
 "Every %count% Hours": "Cada %count% horas"
 "Every %count% Minutes": "Cada %count% minutos"
 "Every %count% Seconds": "Cada %count% segundos"

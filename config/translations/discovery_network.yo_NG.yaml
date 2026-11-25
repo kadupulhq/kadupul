@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "Wákàtí %count%"
-"%count% Hours": "Wákàtí %count%"
-"%count% Minute": "Ìṣẹ́jú %count%"
-"%count% Minutes": "Ìṣẹ́jú %count%"
-"%count% Thread": "Okùn ìṣiṣẹ́ %count%"
-"%count% Threads": "Àwọn okùn ìṣiṣẹ́ %count%"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Àtòjọ àwọn Olùpèsè DNS àfidípò tí a fi àlàfo pín láti lò fún ìtúmọ̀ DNS. Tí ó bá ṣófo, OS olùṣàyẹ̀wò ni a óò lò láti túmọ̀ àwọn orúkọ DNS."
 "Access denied.": "A kọ̀ ìráyè."
 "Add Discovery Network": "Fi Nẹ́ẹ̀tìwọ́ọ̀kì Ìwárí kún"

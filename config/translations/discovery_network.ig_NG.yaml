@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "Elekere %count%"
-"%count% Hours": "Elekere %count%"
-"%count% Minute": "Nkeji %count%"
-"%count% Minutes": "Nkeji %count%"
-"%count% Thread": "Thread %count%"
-"%count% Threads": "Thread %count%"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "Ndepụta Sava DNS ọzọ e ji oghere kewaa iji mee mkpebi DNS. Ọ bụrụ na ọ bụ oghere, a ga-eji OS poller dozie aha DNS."
 "Access denied.": "Ajụrụ ohere."
 "Add Discovery Network": "Tinye Netwọkụ Nchọpụta"

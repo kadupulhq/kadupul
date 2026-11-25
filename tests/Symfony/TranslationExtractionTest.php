@@ -78,7 +78,12 @@ final class TranslationExtractionTest extends TestCase
         return self::$extracted = $found;
     }
 
-    /** @return array<string, string>|null null when the domain has no English YAML catalog */
+    /**
+     * The domain's English messages, its ICU plural file included: Symfony
+     * serves both files as one domain, and the code names it without the suffix.
+     *
+     * @return array<string, string>|null null when the domain has no English YAML catalog
+     */
     private static function yaml(string $domain): ?array
     {
         $file = self::ROOT . '/config/translations/' . $domain . '.en.yaml';
@@ -86,9 +91,15 @@ final class TranslationExtractionTest extends TestCase
             return null;
         }
         if (!isset(self::$yaml[$domain])) {
-            $messages = Yaml::parseFile($file);
-            self::assertIsArray($messages, $file);
-            self::$yaml[$domain] = array_combine(array_map('strval', array_keys($messages)), array_map('strval', $messages));
+            self::$yaml[$domain] = [];
+            foreach ([$file, self::ROOT . '/config/translations/' . $domain . '+intl-icu.en.yaml'] as $source) {
+                if (!is_file($source)) {
+                    continue;
+                }
+                $messages = Yaml::parseFile($source);
+                self::assertIsArray($messages, $source);
+                self::$yaml[$domain] += array_combine(array_map('strval', array_keys($messages)), array_map('strval', $messages));
+            }
         }
 
         return self::$yaml[$domain];
@@ -101,7 +112,9 @@ final class TranslationExtractionTest extends TestCase
         self::assertNotSame([], $files, 'No translation catalogs were discovered.');
         foreach ($files as $file) {
             $domain = basename($file, '.en.yaml');
-            yield $domain => [$domain];
+            if (!str_ends_with($domain, '+intl-icu')) {
+                yield $domain => [$domain];
+            }
         }
     }
 

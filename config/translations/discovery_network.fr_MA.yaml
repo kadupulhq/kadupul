@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% heure"
 "Monthly on Day": "Mensuel (jour du mois)"
 "Ping Retry Count": "Nombre de tentatives de ping"
 "Ping Timeout Value": "Délai d'expiration du ping"

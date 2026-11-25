@@ -1,19 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Day": "%count% Andro"
-"%count% Days": "%count% Andro"
-"%count% Hour": "%count% Ora"
-"%count% Hours": "Ora %count%"
-"%count% Minute": "%count% Minitra"
-"%count% Minutes": "Minitra %count%"
-"%count% Month": "%count% Volana"
-"%count% Months": "%count% Volana"
-"%count% Seconds": "%count% segondra"
-"%count% Week": "%count% Herinandro"
-"%count% Weeks": "%count% Herinandro"
-"%count% Year": "%count% taona"
-"%count% Years": "%count% Taona"
 "A useful name for this Data Storage and Polling Profile.": "Anarana mahasoa ho an'ity mombamomba ny fitahirizana angon-drakitra sy fanangonana (Polling) ity."
 "Actions": "Hetsika"
 "Aggregation Level": "Haavon'ny fanambarana"
@@ -26,7 +13,6 @@
 "Default": "Voafaritra mialoha"
 "Default Timespan": "Elanelam-potoana tsotra"
 "Deletable": "Azo Fafana"
-"Every %count% Day": "Isaky ny %count% andro"
 "Every %count% Hours": "Isaky ny %count% ora"
 "Every %count% Minutes": "Isaky ny %count% minitra"
 "Every %count% Seconds": "Isaky ny %count% segondra"

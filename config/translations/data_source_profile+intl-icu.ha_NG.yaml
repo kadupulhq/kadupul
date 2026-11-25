@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Kowace Rana {number}} other {Kowace Kwanaki {number}}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {Rana {number}} other {Kwanaki {number}}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {Sa''a {number}} other {Sa''o''i {number}}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {Minti {number}} other {Mintuna {number}}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {Wata {number}} other {Watanni {number}}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {Daƙiƙa {number}} other {Daƙiƙa {number}}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {Mako {number}} other {Makonni {number}}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {Shekara {number}} other {Shekaru {number}}}"

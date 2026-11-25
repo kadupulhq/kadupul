@@ -63,14 +63,15 @@ final class ConsoleTranslationsTest extends TestCase
         yield 'Russian YAML translates Page with placeholder' => ['ru_RU', 'inventory', 'Page %page%', ['%page%' => 3], 'Страница 3'];
         yield 'German YAML count placeholder' => ['de_DE', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Alle 6 Stunden'];
         yield 'German YAML named placeholder' => ['de_DE', 'graph_definition', 'VDEFs [edit: %name%]', ['%name%' => '<x>'], 'VDEFs [Bearbeiten: <x>]'];
-        yield 'Hebrew YAML count placeholder' => ['he_IL', 'data_source_profile', '%count% Day', ['%count%' => 1], '1 יום'];
+        yield 'Hebrew ICU plural message' => ['he_IL', 'data_source_profile', '{count, plural, one {{number} Day} other {{number} Days}}', ['count' => 1, 'number' => '1'], '1 יום'];
         yield 'German YAML palette action' => ['de_DE', 'palette', 'Delete Colors', [], 'Farben löschen'];
         yield 'Japanese YAML palette action' => ['ja_JP', 'palette', 'Delete Colors', [], '色を削除'];
         yield 'Brazilian Portuguese YAML palette action' => ['pt_BR', 'palette', 'Delete Colors', [], 'Excluir cores'];
         yield 'Hindi YAML palette action' => ['hi_IN', 'palette', 'Delete Colors', [], 'रंग हटाएं'];
         yield 'Russian YAML palette action' => ['ru_RU', 'palette', 'Delete Colors', [], 'Удалить цвета'];
         yield 'Arabic YAML palette action' => ['ar_SA', 'palette', 'Delete Colors', [], 'حذف الألوان'];
-        yield 'Russian YAML count message' => ['ru_RU', 'data_source_profile', '%count% Days', ['%count%' => 5], '5 дн.'];
+        yield 'Russian ICU plural message' => ['ru_RU', 'data_source_profile', '{count, plural, one {{number} Day} other {{number} Days}}', ['count' => 5, 'number' => '5'], '5 дн.'];
+        yield 'Russian ICU plural message keeps today\'s form for 21' => ['ru_RU', 'data_source_profile', '{count, plural, one {{number} Day} other {{number} Days}}', ['count' => 21, 'number' => '21'], '21 дн.'];
         yield 'Canadian French keeps its own wording, not French' => ['fr_CA', 'inventory', 'Devices', [], 'Équipements'];
         yield 'Canadian French falls back to French' => ['fr_CA', 'inventory', 'Cancel', [], 'Annuler'];
         yield 'Canadian French placeholder' => ['fr_CA', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Toutes les 6 heures'];

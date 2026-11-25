@@ -1,19 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Day": "%count% Maalin"
-"%count% Days": "%count% Maalmood"
-"%count% Hour": "%count% Saac"
-"%count% Hours": "%count% Saacadood"
-"%count% Minute": "%count% Daqiiqo"
-"%count% Minutes": "%count% Daqiiqo"
-"%count% Month": "%count% Bil"
-"%count% Months": "%count% Bilood"
-"%count% Seconds": "%count% Ilbiriqsi"
-"%count% Week": "%count% Toddobaad"
-"%count% Weeks": "%count% Toddobaad"
-"%count% Year": "%count% Sano"
-"%count% Years": "%count% Sano"
 "A useful name for this Data Storage and Polling Profile.": "Magac waxtar leh oo loogu talagalay Kaydinta Xogtan iyo Astaanta Ururinta (Polling Profile)."
 "Actions": "Ficillo"
 "Aggregation Level": "Heerka Isku-darka"
@@ -26,7 +13,6 @@
 "Default": "Caadi ah"
 "Default Timespan": "Muddada Waqtiga ee Caadiga ah"
 "Deletable": "La tirtiri karo"
-"Every %count% Day": "Kolkii %count% Maalinba"
 "Every %count% Hours": "Kolkii %count% Saacadoodba"
 "Every %count% Minutes": "%count% Daqiiqo kasta"
 "Every %count% Seconds": "%count% Ilbiriqsi kasta"

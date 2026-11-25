@@ -1,12 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"%count% Hour": "%count% 時間"
-"%count% Hours": "%count% 時間"
-"%count% Minute": "%count% 分"
-"%count% Minutes": "%count% 分"
-"%count% Thread": "%count% スレッド"
-"%count% Threads": "%count% スレッド"
 "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.": "DNS 名前解決に使用する代替 DNS サーバーをスペース区切りで指定します。空白の場合は、ポーラー OS を使用して DNS 名を解決します。"
 "Access denied.": "アクセスが拒否されました。"
 "Add Discovery Network": "ディスカバリネットワークを追加"

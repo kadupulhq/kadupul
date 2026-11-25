@@ -208,15 +208,17 @@ only when its response must not depend on the viewer's language.
 
 `tests/Symfony/TranslationCatalogTest.php`, in the Symfony PHPUnit suite:
 
-- Every `*.en.yaml` domain has a `*.fr.yaml` file with the same keys.
+- Every `*.en.yaml` domain, including each `+intl-icu` domain, has a `*.fr.yaml`
+  file with the same keys.
 - `tests/Symfony/TranslationExtractionTest.php` runs Symfony's message extractor
   over `src/` and `templates/` in the kernel and requires every key it finds to
-  exist in that domain's `<domain>.en.yaml`. A call with no domain, or a shared
-  template whose caller's domain lacks the key, fails it. Label tables and shared
-  templates pass keys through variables, which the extractor cannot see, so the
-  reverse (an unused English key) is not checked yet.
+  exist in that domain's `<domain>.en.yaml` or `<domain>+intl-icu.en.yaml`. A call
+  with no domain, or a shared template whose caller's domain lacks the key, fails
+  it. Label tables and shared templates pass keys through variables, which the
+  extractor cannot see, so the reverse (an unused English key) is not checked yet.
 - No message is blank, and no French message adds a placeholder the key does
-  not have (a plural form may drop `%count%`).
+  not have (a plural form may drop `%count%`). ICU messages get the checks in
+  [Plural messages](#plural-messages).
 - No PHP file under `src/` calls a gettext function (`__`, `__esc`, `_n`,
   `__x`, `_x`, `gettext`, `_`), including fully qualified calls such as
   `\__()`. Three legacy-page helpers are allowed a fixed number of calls; a
@@ -249,6 +251,55 @@ and an unwritable cache directory. `LegacyTranslationsTest` covers the
 catalogue cache. `ConsoleTranslationsTest`,
 `LocaleResolverTest`, `LegacyLocaleResolutionTest` and `TranslationTest`
 cover the locale names, the resolver, the subscriber and the YAML lookup.
+
+## Plural messages
+
+A message whose wording depends on a count is an ICU MessageFormat message in
+the domain's `+intl-icu` catalog, `<domain>+intl-icu.<locale>.yaml`, next to
+`<domain>.<locale>.yaml`. Symfony formats a key found there with `MessageFormatter`
+for the request locale, so each language chooses its own plural forms. The
+catalog files follow the same rules as any domain: `<domain>+intl-icu.en.yaml`,
+a complete file for each locale in `TRANSLATED_LOCALES` and partial files for
+the others. Code asks for the domain without the suffix.
+
+The key is the English message, and the English file repeats it as the value:
+
+```yaml
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} Day} other {{number} Days}}"
+```
+
+- `count` selects the form. Pass a number.
+- `number` is the text to show. Pass the digits the page always showed (an
+  ungrouped, ASCII string), so the translation does not change them.
+- Do not write `#`: it formats the count with the locale's grouping and digits.
+- The English text and the translation of a form that needs no number may
+  leave `{number}` out; a translation must not add an argument.
+- In a translation, write a literal apostrophe as `''` and a literal `{`, `}` or
+  `#` as `'{'`, `'}'` or `'#'`.
+
+Shipped translations select the singular with `=1` or `one`, whichever
+chooses the same form as the code did for every count: `=1` where the CLDR `one`
+category also covers other numbers (French treats 0 and 1.5 as `one`, Russian
+treats 21 as `one`). A translator who wants more forms replaces the selector and
+adds the categories of the language, for example in Russian:
+
+```yaml
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} день} few {{number} дня} many {{number} дней} other {{number} дня}}"
+```
+
+`TranslationCatalogTest` checks that every message parses for its locale, keeps
+the `{count, plural, ...}` selection, adds no argument and formats without error.
+
+To add a plural message:
+
+1. Add the English message to `<domain>+intl-icu.en.yaml` and a message for
+   every complete locale file. Start from the singular and plural text the
+   language needs.
+2. Call it from a class constant, so that `translation:extract` does not look for it in
+   `<domain>.en.yaml`: `$translator->trans(self::DAYS, ['count' => $days, 'number' => (string) $days], 'domain')`.
+3. Add a partial `+intl-icu` file entry only when that locale's text should
+   differ from its fallback. The message replaces the fallback's whole message.
+4. Clear the cache after changing YAML files and run `TranslationCatalogTest`.
 
 ## Adding a string
 
