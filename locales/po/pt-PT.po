@@ -6367,7 +6367,7 @@ msgstr "Desenhar marcadores de linha como uma linha."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "Etiquetas Dinâmicas (-- etiquetas dinâmicas)"
+msgstr "Etiquetas Dinâmicas (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6521,7 +6521,7 @@ msgstr "Batida de coração"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Altura (--altura)"
+msgstr "Altura (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6659,7 +6659,7 @@ msgstr "Bloqueado"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Escala Logarítmica (--logarítmica)"
+msgstr "Escala Logarítmica (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6671,7 +6671,7 @@ msgstr "Opções de Login"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Limite inferior (--limite inferior)"
+msgstr "Limite inferior (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6863,7 +6863,7 @@ msgstr "Padrão de substituição"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Eixo direito (--eixo direito &lt;scale:shift&gt;)"
+msgstr "Eixo direito (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
@@ -6871,7 +6871,7 @@ msgstr "Formato do eixo direito (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formato do eixo direito (--right-axis-formato &lt;formatname&gt;)"
+msgstr "Formato do eixo direito (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
@@ -6879,7 +6879,7 @@ msgstr "Etiqueta do eixo direito (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Modo Rígido de Limites (--rigido)"
+msgstr "Modo Rígido de Limites (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
@@ -7243,7 +7243,7 @@ msgstr "A largura (em pixels) da área do gráfico dentro do gráfico. Esta áre
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Título (--titulo)"
+msgstr "Título (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7255,7 +7255,7 @@ msgstr "Totalização"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Valor exponencial unitário (--unidades exponentes)"
+msgstr "Valor exponencial unitário (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
@@ -7263,7 +7263,7 @@ msgstr "Valor da grelha unitária (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Unidade Comprimento (--unidades-comprimento &lt;comprimento&gt;)"
+msgstr "Unidade Comprimento (--units-length &lt;length&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7271,7 +7271,7 @@ msgstr "Atualizar arquivo RRD"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Limite superior (-limite superior)"
+msgstr "Limite superior (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7327,7 +7327,7 @@ msgstr "Função VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Etiqueta vertical (etiqueta --vertical)"
+msgstr "Etiqueta vertical (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7379,7 +7379,7 @@ msgstr "Verificação da lista branca"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Largura (--largura)"
+msgstr "Largura (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"

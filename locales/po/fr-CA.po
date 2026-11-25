@@ -6634,11 +6634,11 @@ msgstr "Est-ce pour transporter le modèle ?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Formatteur de l'axe gauche (--left-axis-formatter <formatname>)"
+msgstr "Formatteur de l'axe gauche (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Direction de la légende (--legend-direction =<direction>)"
+msgstr "Direction de la légende (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6646,7 +6646,7 @@ msgstr "Options de légende"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Position de la légende (--legend-position =<position>)"
+msgstr "Position de la légende (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6658,7 +6658,7 @@ msgstr "Verrouillé"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Mise à l'échelle logarithmique (--logarithmique)"
+msgstr "Mise à l'échelle logarithmique (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6670,7 +6670,7 @@ msgstr "Options d'authentification"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Limite inférieure (--limite inférieure)"
+msgstr "Limite inférieure (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6862,27 +6862,27 @@ msgstr "Modèle de remplacement"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Axe droit (-- right-axis <scale :shift>)"
+msgstr "Axe droit (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Format de l'axe droit (-- format de l'axe droit <format>)"
+msgstr "Format de l'axe droit (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formatage de l'axe droit (-- formatage de l'axe droit < formatname >)"
+msgstr "Formatage de l'axe droit (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Étiquette de l'axe droit (--right-axis-label <string>)"
+msgstr "Étiquette de l'axe droit (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Mode limites rigides (--rigide)"
+msgstr "Mode limites rigides (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Unités SI pour la mise à l'échelle logarithmique (--units =si)"
+msgstr "Unités SI pour la mise à l'échelle logarithmique (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7242,7 +7242,7 @@ msgstr "La largeur (en pixels) de la zone du graphique dans le graphique. Cette 
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Titre II"
+msgstr "Titre (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7262,7 +7262,7 @@ msgstr "Valeur de la grille d'unités (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Longueur de l'unité (--units-length <length>)"
+msgstr "Longueur de l'unité (--units-length &lt;length&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7270,7 +7270,7 @@ msgstr "Mise à jour du fichier RRD"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Limite supérieure (--uppper-limit)"
+msgstr "Limite supérieure (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7378,7 +7378,7 @@ msgstr "Vérification de la liste blanche"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "width : 'Largeur',"
+msgstr "Largeur (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -10514,7 +10514,7 @@ msgstr "Impossible de supprimer l'appareil %s parce que ses enregistrements en b
 
 #: lib/api_device.php
 msgid "Uptime:"
-msgstr "Temps d&apos;activation & #160;:"
+msgstr "Temps d&apos;activation &#160;:"
 
 #: lib/api_tree.php
 msgid "New Branch"
@@ -10755,19 +10755,19 @@ msgstr "Avertissement"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "<arg_num_indexes> existe dans le fichier XML mais aucune donnée n'a été renvoyée., 'Nombre d'index modifiés' non pris en charge"
+msgstr "&lt;arg_num_indexes&gt; existe dans le fichier XML mais aucune donnée n'a été renvoyée., 'Nombre d'index modifiés' non pris en charge"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
-msgstr "<arg_num_indexes> manquant dans le fichier XML, 'Index Count Changed' émulé en comptant les entrées arg_index"
+msgstr "&lt;arg_num_indexes&gt; manquant dans le fichier XML, 'Index Count Changed' émulé en comptant les entrées arg_index"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
-msgstr "<arg_num_indexes> manquant dans le fichier XML, 'Index Count Changed' non pris en charge"
+msgstr "&lt;arg_num_indexes&gt; manquant dans le fichier XML, 'Index Count Changed' non pris en charge"
 
 #: lib/data_query.php
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
-msgstr "<oid_num_indexes> manquant dans le fichier XML, 'Index Count Changed' émulé en comptant les entrées oid_index"
+msgstr "&lt;oid_num_indexes&gt; manquant dans le fichier XML, 'Index Count Changed' émulé en comptant les entrées oid_index"
 
 #: lib/data_query.php
 msgid "Auto Bulk Walk Size Selected."
@@ -11013,7 +11013,7 @@ msgstr "Insertion de données d'index pour le champ '%s' [value='%s']"
 #: lib/data_query.php
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
-msgstr "Champ non valide <index_order>%s</index_order>"
+msgstr "Champ non valide &lt;index_order&gt;%s&lt;/index_order&gt;"
 
 #: lib/data_query.php
 #, php-format

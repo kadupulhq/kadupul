@@ -6201,7 +6201,7 @@ msgstr "اسمح بإدخال فارغ"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "شبكة Y البديل (- -al-y-grid)"
+msgstr "شبكة Y البديل (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6245,7 +6245,7 @@ msgstr "خيارات المحور"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "القيمة الأساسية (- الباس)"
+msgstr "القيمة الأساسية (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6451,7 +6451,7 @@ msgstr "ارسم علامات الخط كخط."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "التسميات الديناميكية (- التسميات الديناميكية)"
+msgstr "التسميات الديناميكية (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6529,7 +6529,7 @@ msgstr "بالنسبة لأجهزة SNMPv2 و SNMPv3 ، فإن الحد الأق
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "فرض قواعد القواعد (- force-rules-legend)"
+msgstr "فرض قواعد القواعد (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6605,7 +6605,7 @@ msgstr "نبضة قلب"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "ارتفاع ارتفاع)"
+msgstr "ارتفاع (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6719,11 +6719,11 @@ msgstr "هل هذا لتحمل القالب؟"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "يسار محاور المنسق (- منسوب محور - تنسيق &lt;formatname&gt;)"
+msgstr "يسار محاور المنسق (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "اتجاه الأسطورة (- -legend-direction = &lt;direction&gt;)"
+msgstr "اتجاه الأسطورة (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6731,7 +6731,7 @@ msgstr "خيارات أسطورة"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "موقف الأسطورة (--legend-position = &lt;position&gt;)"
+msgstr "موقف الأسطورة (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6743,7 +6743,7 @@ msgstr "مغلق"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "التحجيم اللوغاريتمي (- logarithmic)"
+msgstr "التحجيم اللوغاريتمي (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6755,7 +6755,7 @@ msgstr "خيارات تسجيل الدخول"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "الحد الأدنى (- الحد الأدنى)"
+msgstr "الحد الأدنى (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6795,7 +6795,7 @@ msgstr "ملف تعريف جديد RRA"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "لا Gridfit (- لا - gridfit)"
+msgstr "لا Gridfit (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6967,7 +6967,7 @@ msgstr "وضع الحدود الثابتة (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "وحدات SI للتحجيم اللوغاريتمي (--units = si)"
+msgstr "وحدات SI للتحجيم اللوغاريتمي (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7091,7 +7091,7 @@ msgstr "عرض الصفحة التي أشار المستخدم إلى المتص
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "وضع الميل (- وضع -slope)"
+msgstr "وضع الميل (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7327,7 +7327,7 @@ msgstr "العرض (بالبكسل) لمنطقة الرسم البياني دا�
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "العنوان (- العنوان)"
+msgstr "العنوان (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7339,11 +7339,11 @@ msgstr "بلغ مجموعها"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "قيمة الأس الوحدة (--units-exp)"
+msgstr "قيمة الأس الوحدة (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "قيمة شبكة الوحدة (- - / - y-grid)"
+msgstr "قيمة شبكة الوحدة (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7355,7 +7355,7 @@ msgstr "تحديث RRDfile"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "الحد الأعلى (الحد الأعلى)"
+msgstr "الحد الأعلى (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7411,7 +7411,7 @@ msgstr "وظيفة VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "العلامة العمودية (العلامة التجارية -)"
+msgstr "العلامة العمودية (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7463,7 +7463,7 @@ msgstr "التحقق من القائمة البيضاء"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "العرض (- عرض)"
+msgstr "العرض (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -18481,7 +18481,7 @@ msgstr "تسجيلات المستخدم"
 
 #: utilities.php
 msgid "User:"
-msgstr "المستخدم.:"
+msgstr "المستخدم:"
 
 #: utilities.php
 msgid "Variable Name"

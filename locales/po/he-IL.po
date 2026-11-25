@@ -6159,7 +6159,7 @@ msgstr "אפשר קלט ריקה"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "אלטרנטיבי Y Grid (- alt-y-grid)"
+msgstr "אלטרנטיבי Y Grid (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6203,7 +6203,7 @@ msgstr "אפשרויות ציר"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "ערך בסיס (- בסיס)"
+msgstr "ערך בסיס (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6409,7 +6409,7 @@ msgstr "צייר סמני קו כשורה."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "תוויות דינמיות (תוויות דינמיות)"
+msgstr "תוויות דינמיות (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6487,7 +6487,7 @@ msgstr "עבור התקני SNMPv2 ו- SNMPv3, גודל החזרות המקסי�
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "חוקי כללים מקרא (- Force-rules-legend)"
+msgstr "חוקי כללים מקרא (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6563,7 +6563,7 @@ msgstr "דופק"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "גובה (- גובה)"
+msgstr "גובה (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6689,7 +6689,7 @@ msgstr "אפשרויות מקרא"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "מקרא מיקום (--legend-position = &lt;position&gt;)"
+msgstr "מקרא מיקום (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6753,7 +6753,7 @@ msgstr "פרופיל חדש RRA"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "לא Gridfit (- לא gridfit)"
+msgstr "לא Gridfit (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6905,19 +6905,19 @@ msgstr "דפוס החלפה"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "ציר ימני (- ציר ימני &lt;scale: shift&gt;)"
+msgstr "ציר ימני (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "פורמט ימין של ציר (- פורמט ימני - פורמט&gt;&gt;)"
+msgstr "פורמט ימין של ציר (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "תבנית ציר ימין (- תבנית ציר ימין &lt;פורמט&gt;&gt;)"
+msgstr "תבנית ציר ימין (--right-axis-formatter &lt;פורמט&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "ימינה ציר תווית (- ימני ציר תווית &lt;string&gt;)"
+msgstr "ימינה ציר תווית (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
@@ -6925,7 +6925,7 @@ msgstr "מצב קשיח גבולות (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "יחידות SI עבור דרוג לוגריתמי (- יחידות = si)"
+msgstr "יחידות SI עבור דרוג לוגריתמי (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7049,7 +7049,7 @@ msgstr "הצג את הדף שהמשתמש הצביע על הדפדפן שלו."
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "מצב המדרון (- slop-mode)"
+msgstr "מצב המדרון (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7285,7 +7285,7 @@ msgstr "הרוחב (בפיקסלים) של אזור התרשים שבתרשים.
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "כותרת (- כותרת)"
+msgstr "כותרת (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7297,7 +7297,7 @@ msgstr "סך הכל"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "ערך יחידת הערך (יחידות - מעריך)"
+msgstr "ערך יחידת הערך (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
@@ -7305,7 +7305,7 @@ msgstr "ערך יחידת רשת (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "אורך יחידה (- אורך יחידה &lt;אורך&gt;&gt;)"
+msgstr "אורך יחידה (--units-length &lt;אורך&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7313,7 +7313,7 @@ msgstr "עדכון RRDfile"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "גבול עליון (גבול עליון)"
+msgstr "גבול עליון (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7369,7 +7369,7 @@ msgstr "פונקציה VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "תווית אנכית (- תווית)"
+msgstr "תווית אנכית (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7421,7 +7421,7 @@ msgstr "בדיקת רשימה לבנה"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "רוחב (- רוחב)"
+msgstr "רוחב (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"

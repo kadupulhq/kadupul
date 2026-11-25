@@ -6096,7 +6096,7 @@ msgstr "允许输入为空"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "备用Y坐标"
+msgstr "备用Y坐标(--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -7234,7 +7234,7 @@ msgstr "总计"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "单位指数值( - 单位指数)"
+msgstr "单位指数值(--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
@@ -14154,7 +14154,7 @@ msgstr "CDP 未知数据点(0)"
 
 #: lib/rrd.php
 msgid "Cur Row"
-msgstr "当前行"
+msgstr "Cur 行"
 
 #: lib/rrd.php
 #, php-format

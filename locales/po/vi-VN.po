@@ -6500,7 +6500,7 @@ msgstr "Nhịp tim"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Chiều cao (- cao)"
+msgstr "Chiều cao (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6618,7 +6618,7 @@ msgstr "Trình định dạng trục trái (--left-axis-formatter &lt;formatname
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Hướng huyền thoại (--legend-direction = &lt;direction&gt;)"
+msgstr "Hướng huyền thoại (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6650,7 +6650,7 @@ msgstr "Tùy chọn đăng nhập"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Giới hạn dưới (giới hạn thấp hơn)"
+msgstr "Giới hạn dưới (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6690,7 +6690,7 @@ msgstr "Hồ sơ mới RRA"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "Không có Gridfit (--no-Gridfit)"
+msgstr "Không có Gridfit (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6862,7 +6862,7 @@ msgstr "Chế độ ranh giới cứng nhắc (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Đơn vị SI cho Thang đo logarit (--units = si)"
+msgstr "Đơn vị SI cho Thang đo logarit (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -6986,7 +6986,7 @@ msgstr "Hiển thị trang mà người dùng đã chỉ trình duyệt của h�
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "Chế độ dốc (- chế độ dốc)"
+msgstr "Chế độ dốc (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7250,7 +7250,7 @@ msgstr "Cập nhật RRDfile"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Giới hạn trên (giới hạn -)"
+msgstr "Giới hạn trên (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7306,7 +7306,7 @@ msgstr "Hàm VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Nhãn dọc (--vertical-nhãn)"
+msgstr "Nhãn dọc (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -9846,7 +9846,7 @@ msgstr "Có ba phương pháp thay thế. Phương pháp đầu tiên thay thế
 
 #: include/global_settings.php
 msgid "There are two removal methods.  The first, Standard Deviation, will remove any sample that is X number of standard deviations away from the average of samples.  The second method, Variance, will remove any sample that is X% more than the Variance average.  The Variance method takes into account a certain number of 'outliers'.  Those are exceptional samples, like the spike, that need to be excluded from the Variance Average calculation."
-msgstr "Có hai phương pháp loại bỏ. Đầu tiên, Độ lệch chuẩn, sẽ xóa bất kỳ mẫu nào có số X độ lệch chuẩn so với mức trung bình của các mẫu. Phương pháp thứ hai, phương sai, sẽ loại bỏ bất kỳ mẫu nào nhiều hơn X %so với trung bình phương sai. Phương pháp phương sai tính đến một số lượng &#39;ngoại lệ&#39; nhất định. Đó là những mẫu đặc biệt, như mũi nhọn, cần được loại trừ khỏi phép tính Trung bình phương sai."
+msgstr "Có hai phương pháp loại bỏ. Đầu tiên, Độ lệch chuẩn, sẽ xóa bất kỳ mẫu nào có số X độ lệch chuẩn so với mức trung bình của các mẫu. Phương pháp thứ hai, phương sai, sẽ loại bỏ bất kỳ mẫu nào nhiều hơn X% so với trung bình phương sai. Phương pháp phương sai tính đến một số lượng &#39;ngoại lệ&#39; nhất định. Đó là những mẫu đặc biệt, như mũi nhọn, cần được loại trừ khỏi phép tính Trung bình phương sai."
 
 #: include/global_settings.php
 msgid "These settings are maintained at the Data Collector level.  The values here are only defaults used when first creating a Data Collector."

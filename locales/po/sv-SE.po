@@ -6114,7 +6114,7 @@ msgstr "Tillåt tom inmatning"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Alternativt Y-nät (--alt-y-nät)"
+msgstr "Alternativt Y-nät (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6364,7 +6364,7 @@ msgstr "Rita linjemarkörer som en linje."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "Dynamiska etiketter (--dynamiska-etiketter)"
+msgstr "Dynamiska etiketter (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6518,7 +6518,7 @@ msgstr "Hjärtslag"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Höjd (--höjd)"
+msgstr "Höjd (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6656,7 +6656,7 @@ msgstr "Låst"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Logaritmisk skalning (--logaritmisk)"
+msgstr "Logaritmisk skalning (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6860,7 +6860,7 @@ msgstr "Ersättningsmönster"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Höger axel (--höger axel &lt;scale:shift&gt;)"
+msgstr "Höger axel (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
@@ -6868,7 +6868,7 @@ msgstr "Format för höger axel (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formaterare för höger axel (--formaterare för höger axel &lt;formatnamn&gt;)"
+msgstr "Formaterare för höger axel (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
@@ -7240,7 +7240,7 @@ msgstr "Bredden (i pixlar) på grafområdet inom grafen. Detta område inkludera
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Titel (--titel)"
+msgstr "Titel (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7268,7 +7268,7 @@ msgstr "Uppdatera RRD-fil"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Övre gräns (--övre-gräns)"
+msgstr "Övre gräns (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7376,7 +7376,7 @@ msgstr "Kontroll av vit lista"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Bredd (--bredd)"
+msgstr "Bredd (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -11035,7 +11035,7 @@ msgstr "Lokaliserat inmatningsfält '%s' [gå]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Får endast innehålla fälten &lt;direction&gt;input&lt;/direction&gt; eller &lt;direction&gt;input-output&lt;/direction&gt"
+msgstr "Får endast innehålla fälten &lt;direction&gt;input&lt;/direction&gt; eller &lt;direction&gt;input-output&lt;/direction&gt;"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field be updated."

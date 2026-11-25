@@ -6096,7 +6096,7 @@ msgstr "빈 입력 허용"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "대체 Y 그리드 (-alt-y- 그리드)"
+msgstr "대체 Y 그리드 (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6346,7 +6346,7 @@ msgstr "선 표식을 선으로 그립니다."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "동적 라벨 (- 동적 라벨)"
+msgstr "동적 라벨 (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6500,7 +6500,7 @@ msgstr "하트비트"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "높이 (- 높이)"
+msgstr "높이 (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6618,7 +6618,7 @@ msgstr "왼쪽 축 포매터 (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "범례 방향 (--legend-direction = &lt;direction&gt;)"
+msgstr "범례 방향 (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6626,7 +6626,7 @@ msgstr "범례 옵션"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "범례 위치 (--legend-position = &lt;position&gt;)"
+msgstr "범례 위치 (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6638,7 +6638,7 @@ msgstr "잠김"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "로그 스케일링 (- 로그)"
+msgstr "로그 스케일링 (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6650,7 +6650,7 @@ msgstr "로그인 옵션"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "하한선 (- 하한선)"
+msgstr "하한선 (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6842,7 +6842,7 @@ msgstr "대체 패턴"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "오른쪽 축 (- 오른쪽 축 &lt;scale : shift&gt;)"
+msgstr "오른쪽 축 (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
@@ -6858,11 +6858,11 @@ msgstr "오른쪽 축 레이블 (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "경직된 경계 모드 (-rigid)"
+msgstr "경직된 경계 모드 (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "대수 스케일링을위한 SI 단위 (--units = si)"
+msgstr "대수 스케일링을위한 SI 단위 (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -6986,7 +6986,7 @@ msgstr "사용자가 브라우저를 가리키고있는 페이지를 표시하�
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "슬로프 모드 (- 슬로프 - 모드)"
+msgstr "슬로프 모드 (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7238,7 +7238,7 @@ msgstr "단위 지수 값 (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "단위 그리드 값 (--unit / - y-grid)"
+msgstr "단위 그리드 값 (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7250,7 +7250,7 @@ msgstr "RRDfile 업데이트"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "상한 (- 상한)"
+msgstr "상한 (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7306,7 +7306,7 @@ msgstr "VDEF 기능"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "세로 레이블 (- 수직 레이블)"
+msgstr "세로 레이블 (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7334,11 +7334,11 @@ msgstr "해당 RRA를 기반으로 그래프를 볼 때 해당 그래프에 표�
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "왼쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;% Y- % m- %d % H : % M :  %s &quot;). --units-length도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
+msgstr "왼쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;%Y-%m-%d %H:%M:%S&quot;). --units-length도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "오른쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;% Y- % m- %d % H : % M :  %s &quot;). --units-length 및 --right-axis-format도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
+msgstr "오른쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;%Y-%m-%d %H:%M:%S&quot;). --units-length 및 --right-axis-format도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7358,7 +7358,7 @@ msgstr "화이트리스트 체크"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "너비 (- 폭)"
+msgstr "너비 (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"

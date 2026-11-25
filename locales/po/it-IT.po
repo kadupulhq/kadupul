@@ -6367,7 +6367,7 @@ msgstr "Disegnare gli indicatori di linea come una linea."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "Etichette dinamiche (---etichette dinamiche)"
+msgstr "Etichette dinamiche (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6445,7 +6445,7 @@ msgstr "Per i dispositivi SNMPv2 e SNMPv3, la dimensione massima delle ripetizio
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Leggenda delle regole della forza (--force-rules-legenda)"
+msgstr "Leggenda delle regole della forza (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6587,7 +6587,7 @@ msgstr "Se si desidera richiedere che una certa espressione regolare sia abbinat
 
 #: include/global_form.php
 msgid "Image Format (--imgformat)"
-msgstr "Formato immagine (--imgformato)"
+msgstr "Formato immagine (--imgformat)"
 
 #: include/global_form.php
 msgid "Import Template from Local File"
@@ -6659,7 +6659,7 @@ msgstr "Bloccato"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Scalatura logaritmica (--logaritmica)"
+msgstr "Scalatura logaritmica (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6671,7 +6671,7 @@ msgstr "Opzioni di accesso"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Limite inferiore (---Limite inferiore)"
+msgstr "Limite inferiore (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6863,27 +6863,27 @@ msgstr "Modello di sostituzione"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Asse destro (--asse destro-asse &lt;scala:shift&gt;)"
+msgstr "Asse destro (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Formato asse destro (---formato asse destro-asse-formato &lt;format&gt;)"
+msgstr "Formato asse destro (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formattatore asse destro (---formatore asse destro-asse-formatter &lt;formatname&gt;)"
+msgstr "Formattatore asse destro (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Etichetta dell'asse destro (---etichetta dell'asse destro &lt;string&gt;)"
+msgstr "Etichetta dell'asse destro (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Modalità Confini rigidi (--rigido)"
+msgstr "Modalità Confini rigidi (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Unità SI per la scala logaritmica (--unità=si)"
+msgstr "Unità SI per la scala logaritmica (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7243,7 +7243,7 @@ msgstr "La larghezza (in pixel) dell'area del grafico all'interno del grafico. Q
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Titolo (--titolo)"
+msgstr "Titolo (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7327,7 +7327,7 @@ msgstr "Funzione VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Etichetta verticale (--etichetta verticale)"
+msgstr "Etichetta verticale (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7379,7 +7379,7 @@ msgstr "Controllo Lista Bianca"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Larghezza (--larghezza)"
+msgstr "Larghezza (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"

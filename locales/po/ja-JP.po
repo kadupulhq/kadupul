@@ -6137,7 +6137,7 @@ msgstr "軸オプション"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "ベース値（ - ベース）"
+msgstr "ベース値（--base）"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6615,7 +6615,7 @@ msgstr "左軸フォーマッタ（--left-axis-formatter &lt;フォーマット�
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "凡例の方向（--legend-direction = &lt;方向&gt;）"
+msgstr "凡例の方向（--legend-direction=&lt;方向&gt;）"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6623,7 +6623,7 @@ msgstr "凡例のオプション"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "凡例の位置（--legend-position = &lt;position&gt;）"
+msgstr "凡例の位置（--legend-position=&lt;position&gt;）"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6839,7 +6839,7 @@ msgstr "交換パターン"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "右軸（ - 右軸&lt;スケール：シフト&gt;）"
+msgstr "右軸（--right-axis &lt;スケール：シフト&gt;）"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
@@ -6859,7 +6859,7 @@ msgstr "剛体境界モード（--rigid）"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "対数スケーリングのSI単位（--units = si）"
+msgstr "対数スケーリングのSI単位（--units=si）"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7219,7 +7219,7 @@ msgstr "グラフ内のグラフ領域の幅（ピクセル単位）。この領
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "タイトル（ - タイトル）"
+msgstr "タイトル（--title）"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7235,7 +7235,7 @@ msgstr "単位指数値（--units-exponent）"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "単位グリッド値（--unit /  -   -  y-grid）"
+msgstr "単位グリッド値（--unit/--y-grid）"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7331,11 +7331,11 @@ msgstr "問題のRRAに基づいてグラフを表示するときに、そのグ
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "左軸のラベルを設定するときは、データフォーマットに規則を適用します。サポートされている形式には、データが数値として扱われる「数値」、値がUNIXタイムスタンプ（1970年1月からの秒数）として解釈されるstrftime形式（デフォルトは「％Y-％m-％d％H」）が含まれます。 ：％ミズ&quot;）。 --units-lengthも参照してください。最後に、値がミリ秒単位の期間として解釈される「期間」。フォーマットはvalstrfduration修飾PRINT / GPRINTの規則に従います。"
+msgstr "左軸のラベルを設定するときは、データフォーマットに規則を適用します。サポートされている形式には、データが数値として扱われる「数値」、値がUNIXタイムスタンプ（1970年1月からの秒数）として解釈されるstrftime形式（デフォルトは「%Y-%m-%d %H:%M:%S」）が含まれます。 --units-lengthも参照してください。最後に、値がミリ秒単位の期間として解釈される「期間」。フォーマットはvalstrfduration修飾PRINT / GPRINTの規則に従います。"
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "右軸のラベルを設定するときは、データフォーマットにルールを適用してください。サポートされている形式には、データが数値として扱われる「数値」、値がUNIXタイムスタンプ（1970年1月からの秒数）として解釈されるstrftime形式（デフォルトは「％Y-％m-％d％H」）が含まれます。 ：％ミズ&quot;）。 --units-lengthおよび--right-axis-formatも参照してください。最後に、値がミリ秒単位の期間として解釈される「期間」。フォーマットはvalstrfduration修飾PRINT / GPRINTの規則に従います。"
+msgstr "右軸のラベルを設定するときは、データフォーマットにルールを適用してください。サポートされている形式には、データが数値として扱われる「数値」、値がUNIXタイムスタンプ（1970年1月からの秒数）として解釈されるstrftime形式（デフォルトは「%Y-%m-%d %H:%M:%S」）が含まれます。 --units-lengthおよび--right-axis-formatも参照してください。最後に、値がミリ秒単位の期間として解釈される「期間」。フォーマットはvalstrfduration修飾PRINT / GPRINTの規則に従います。"
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7355,7 +7355,7 @@ msgstr "ホワイトリストチェック"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "幅（ - 幅）"
+msgstr "幅（--width）"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"

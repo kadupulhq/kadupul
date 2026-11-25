@@ -6117,7 +6117,7 @@ msgstr "Επιτρέψτε την άδεια εισαγωγής"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Εναλλακτικό πλέγμα Υ (- άλλος-γ-πλέγμα)"
+msgstr "Εναλλακτικό πλέγμα Υ (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6161,7 +6161,7 @@ msgstr "Επιλογές άξονα"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "Βασική τιμή (- βάση)"
+msgstr "Βασική τιμή (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6445,7 +6445,7 @@ msgstr "Για συσκευές SNMPv2 και SNMPv3, το μέγιστο μέγ
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Υποχρεωτικά Κανόνες Δύναμης (- force-rules-legend)"
+msgstr "Υποχρεωτικά Κανόνες Δύναμης (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6521,7 +6521,7 @@ msgstr "Heartbeat"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Ύψος (- ύψος)"
+msgstr "Ύψος (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6635,11 +6635,11 @@ msgstr "Είναι αυτό να φέρει το πρότυπο;"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Διαμορφωτής αριστερού άξονα (μορφοποιητής άξονα-άξονα &lt;formatname&gt;)"
+msgstr "Διαμορφωτής αριστερού άξονα (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Κατεύθυνση λεκτικού (- κατεύθυνση πρόσδεσης = &lt;κατεύθυνση&gt;)"
+msgstr "Κατεύθυνση λεκτικού (--legend-direction=&lt;κατεύθυνση&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6647,7 +6647,7 @@ msgstr "Επιλογές λεζάντων"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Θέση θρυλικού (--legend-position = &lt;θέση&gt;)"
+msgstr "Θέση θρυλικού (--legend-position=&lt;θέση&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6659,7 +6659,7 @@ msgstr "Κλειδωμένο"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Λογαριθμική κλίμακα (- logarithmic)"
+msgstr "Λογαριθμική κλίμακα (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6671,7 +6671,7 @@ msgstr "Επιλογές σύνδεσης"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Κάτω όριο (χαμηλότερο όριο)"
+msgstr "Κάτω όριο (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6863,15 +6863,15 @@ msgstr "Αντικατάσταση μοτίβου"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Δεξικός άξονας (- άξονας συμμετρίας &lt;κλίμακα: μετατόπιση&gt;)"
+msgstr "Δεξικός άξονας (--right-axis &lt;κλίμακα: μετατόπιση&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Μορφή ορθών αξόνων (μορφοποίηση - άξονας-άξονα &lt;format&gt;)"
+msgstr "Μορφή ορθών αξόνων (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Διαμορφωτής σωστών αξόνων (μορφοποιητής - άξονας-άξονα &lt;formatname&gt;)"
+msgstr "Διαμορφωτής σωστών αξόνων (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
@@ -6883,7 +6883,7 @@ msgstr "Λειτουργία άκαμπτων ορίων (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Μονάδες SI για λογαριθμική κλίμακα (-units = si)"
+msgstr "Μονάδες SI για λογαριθμική κλίμακα (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7007,7 +7007,7 @@ msgstr "Εμφάνιση της σελίδας που ο χρήστης επισ
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "Λειτουργία κλίσης (- λειτουργία με κλίση)"
+msgstr "Λειτουργία κλίσης (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7243,7 +7243,7 @@ msgstr "Το πλάτος (σε εικονοστοιχεία) της περιο�
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Τίτλος (- τίτλος)"
+msgstr "Τίτλος (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7255,11 +7255,11 @@ msgstr "Σύνολο"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Τιμή μονάδας εκθέτη (- μονάδες-εκθέτης)"
+msgstr "Τιμή μονάδας εκθέτη (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "Τιμή πλέγματος μονάδας (--unit / - y-grid)"
+msgstr "Τιμή πλέγματος μονάδας (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7271,7 +7271,7 @@ msgstr "Ενημέρωση του αρχείου RRD"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Ανώτερο όριο (ανώτατο όριο)"
+msgstr "Ανώτερο όριο (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7327,7 +7327,7 @@ msgstr "Λειτουργία VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Κατακόρυφη ετικέτα (- vertical-label)"
+msgstr "Κατακόρυφη ετικέτα (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7379,7 +7379,7 @@ msgstr "Έλεγχος λευκού καταλόγου"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Πλάτος (- εύρος)"
+msgstr "Πλάτος (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"

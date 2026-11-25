@@ -6518,7 +6518,7 @@ msgstr "Battement de cœur"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Hauteur (--hauteur)"
+msgstr "Hauteur (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6632,7 +6632,7 @@ msgstr "Est-ce pour porter le gabarit ?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Formatter de l'axe gauche (--formatter de l'axe gauche &lt;formatname&gt ;)"
+msgstr "Formatter de l'axe gauche (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
@@ -6644,7 +6644,7 @@ msgstr "Options de légende"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Légende Position (--legend-position=&lt;position&gt ;)"
+msgstr "Légende Position (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6656,7 +6656,7 @@ msgstr "Verrouillé"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Échelle logarithmique (--logarithmique)"
+msgstr "Échelle logarithmique (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6668,7 +6668,7 @@ msgstr "Options d'authentification"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Limite inférieure (--limite inférieure)"
+msgstr "Limite inférieure (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6860,19 +6860,19 @@ msgstr "Modèle de remplacement"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Axe droit (--axe droit &lt;scale:shift&gt ;)"
+msgstr "Axe droit (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Format de l'axe droit (format de l'axe droit &lt;format&gt ;)"
+msgstr "Format de l'axe droit (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formatter de l'axe droit (---formatter du format de l'axe droit &lt;formatname&gt ;)"
+msgstr "Formatter de l'axe droit (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Étiquette de l'axe droit (--étiquette de l'axe droit &lt;string&gt ;)"
+msgstr "Étiquette de l'axe droit (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
@@ -7024,7 +7024,7 @@ msgstr "Port TCP ou UDP utilisé pour tester la connexion."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
-msgstr "Largeur de l'onglet (--tabwidth &lt;pixels&gt ;)"
+msgstr "Largeur de l'onglet (--tabwidth &lt;pixels&gt;)"
 
 #: include/global_form.php
 msgid "Test Data Sources"
@@ -7240,7 +7240,7 @@ msgstr "La largeur (en pixels) de la zone du graphique à l'intérieur du graphi
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Titre (--titre)"
+msgstr "Titre (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7268,7 +7268,7 @@ msgstr "Mise à jour du fichier RRD"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Limite supérieure (--limite supérieure)"
+msgstr "Limite supérieure (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7376,7 +7376,7 @@ msgstr "Vérification de la liste blanche"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Largeur (--largeur)"
+msgstr "Largeur (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -9196,7 +9196,7 @@ msgstr "Base de recherche pour rechercher dans l'annuaire LDAP, telle que <i>'dc
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>'(&amp ;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> ou pour OpenLDAP : <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  &lt;username&gt' est remplacé par le nom d'utilisateur qui a été fourni à l'invite de connexion."
+msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> ou pour OpenLDAP : <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  &lt;username&gt' est remplacé par le nom d'utilisateur qui a été fourni à l'invite de connexion."
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -10512,7 +10512,7 @@ msgstr "Impossible de supprimer le périphérique %s car ses enregistrements en 
 
 #: lib/api_device.php
 msgid "Uptime:"
-msgstr "Temps d&apos;activation & #160;:"
+msgstr "Temps d&apos;activation &#160;:"
 
 #: lib/api_tree.php
 msgid "New Branch"
@@ -10757,15 +10757,15 @@ msgstr "&lt;arg_num_indexes&gt; existe dans le fichier XML mais aucune donnée n
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
-msgstr "&lt;arg_num_indexes&gt ; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées arg_indexes"
+msgstr "&lt;arg_num_indexes&gt; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées arg_indexes"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt ; manquant dans le fichier XML,'Index Count Changed' non supporté"
+msgstr "&lt;arg_num_indexes&gt; manquant dans le fichier XML,'Index Count Changed' non supporté"
 
 #: lib/data_query.php
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
-msgstr "&lt;oid_num_indexes&gt ; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées oid_indexes"
+msgstr "&lt;oid_num_indexes&gt; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées oid_indexes"
 
 #: lib/data_query.php
 msgid "Auto Bulk Walk Size Selected."
@@ -11011,7 +11011,7 @@ msgstr "Insertion des données d'index pour le champ'%s'[value='%s']]."
 #: lib/data_query.php
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
-msgstr "Champ non valide &lt;index_order&gt;%s&lt;/index_order&gt ;"
+msgstr "Champ non valide &lt;index_order&gt;%s&lt;/index_order&gt;"
 
 #: lib/data_query.php
 #, php-format
@@ -17252,7 +17252,7 @@ msgstr "Base de recherche pour rechercher dans l'annuaire LDAP, telle que <i>\"d
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>\"(&amp ;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> ou pour OpenLDAP : <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" est remplacé par le nom d'utilisateur fourni à l'invite de connexion."
+msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> ou pour OpenLDAP : <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" est remplacé par le nom d'utilisateur fourni à l'invite de connexion."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."

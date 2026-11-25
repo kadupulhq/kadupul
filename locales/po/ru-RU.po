@@ -5454,7 +5454,7 @@ msgstr "Специфический поиск"
 
 #: include/global_arrays.php
 msgid "Spike Handling"
-msgstr "Настройки убийства Спайк Килл"
+msgstr "Обработка выбросов"
 
 #: include/global_arrays.php
 msgid "Storage Related"
@@ -6159,7 +6159,7 @@ msgstr "Разрешить пустой вход"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Альтернативная Y-сеть (-alt-y-grid)"
+msgstr "Альтернативная Y-сеть (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6203,7 +6203,7 @@ msgstr "Осевые опции"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "Базовое значение (-базовое)"
+msgstr "Базовое значение (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6409,7 +6409,7 @@ msgstr "Нарисуйте маркеры линий как линию."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "Динамические этикетки (-динамические этикетки)"
+msgstr "Динамические этикетки (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6487,7 +6487,7 @@ msgstr "Для устройств SNMPv2 и SNMPv3 максимальный ра
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Легенда о принудительных правилах (-правилах и легендах)"
+msgstr "Легенда о принудительных правилах (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6563,7 +6563,7 @@ msgstr "Пульс RRD данных"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Высота (--высота)"
+msgstr "Высота (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6677,11 +6677,11 @@ msgstr "Это для того, чтобы носить шаблон?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Левый осевой форматер (--левый осевой форматер; &lt;formatname&gt;;)"
+msgstr "Левый осевой форматер (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Направление легенды (--направление на генерацию=&lt;направление;;;; направление;)"
+msgstr "Направление легенды (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6689,7 +6689,7 @@ msgstr "Опции легенды"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Положение легенды (--генное положение=&lt;положение=&lt;положение&gt;;)"
+msgstr "Положение легенды (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6701,7 +6701,7 @@ msgstr "Заблокировано"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Логарифмическое масштабирование (--логарифмическое)"
+msgstr "Логарифмическое масштабирование (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6713,7 +6713,7 @@ msgstr "Опции авторизации"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Нижний предел (-- нижний предел)"
+msgstr "Нижний предел (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6753,7 +6753,7 @@ msgstr "Новый профиль RRA"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "Нет электрической сети (-не электрической сети)"
+msgstr "Нет электрической сети (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6905,27 +6905,27 @@ msgstr "Схема замены"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Правая ось (-- правая ось; масштаб:сдвиг&gt;;)"
+msgstr "Правая ось (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Правый осевой формат (-- правый ось-формат; &lt;format&gt;;)"
+msgstr "Правый осевой формат (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Правый осевой форматер (--правый осевой форматер; &lt;formatname&gt;;)"
+msgstr "Правый осевой форматер (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Правая осевая метка (--правая ось-метка; строка&lt;string&gt;)"
+msgstr "Правая осевая метка (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Жесткий пограничный режим (--жесткий)"
+msgstr "Жесткий пограничный режим (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Единицы СИ для логарифмического масштабирования (-единицы=si)"
+msgstr "Единицы СИ для логарифмического масштабирования (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7049,7 +7049,7 @@ msgstr "Покажите страницу, на которую пользова�
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "Режим наклона (-режим наклона)"
+msgstr "Режим наклона (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7285,7 +7285,7 @@ msgstr "Ширина (в пикселях) области графика вну�
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Название (-- название)"
+msgstr "Название (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7297,15 +7297,15 @@ msgstr "Всего"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Единица экспонентного значения (-- единицы экспонентного значения)"
+msgstr "Единица экспонентного значения (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "Единица измерения стоимости сети (-единица/-единица измерения)"
+msgstr "Единица измерения стоимости сети (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Единичная длина (-- единица длина; &lt;длина&gt;;)"
+msgstr "Единичная длина (--units-length &lt;длина&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7313,7 +7313,7 @@ msgstr "Обновить RRD файл"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Верхний предел (-- верхний предел)"
+msgstr "Верхний предел (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7369,7 +7369,7 @@ msgstr "Функция VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Вертикальная этикетка (-- вертикальная этикетка)"
+msgstr "Вертикальная этикетка (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7421,7 +7421,7 @@ msgstr "Белый список"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Ширина (-ширина)"
+msgstr "Ширина (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -7771,7 +7771,7 @@ msgstr "Базовая аутентификация через Интернет"
 
 #: include/global_settings.php
 msgid "Batch Spike Kill Settings"
-msgstr "Настройки останова(kill) в пакетном режиме"
+msgstr "Настройки пакетного удаления выбросов"
 
 #: include/global_settings.php
 msgid "Before RRD On-demand Update Can be Cleared, a poller run must always pass"
@@ -8719,7 +8719,7 @@ msgstr "Максимальное количество хэш-каталогов 
 
 #: include/global_settings.php
 msgid "Max Kills Per RRA"
-msgstr "Макс. убийств за RRA"
+msgstr "Макс. удалений на RRA"
 
 #: include/global_settings.php
 msgid "Maximum Argument Length"
@@ -9375,7 +9375,7 @@ msgstr "Укажите место, куда Boost должен поместит�
 
 #: include/global_settings.php
 msgid "Spike Kill Settings"
-msgstr "Настройки прерывания(kill) Spike"
+msgstr "Настройки удаления выбросов"
 
 #: include/global_settings.php
 msgid "Spikekill Background Generation Timeout"
@@ -10804,7 +10804,7 @@ msgstr "&lt;arg_num_indexes&gt; присутствует в XML-файле, но
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
-msgstr "*lt;arg_num_indexes_gt; отсутствует в XML файле, \"Index Countged\" эмулируется подсчётом записей arg_indexes&gt"
+msgstr "&lt;arg_num_indexes&gt; отсутствует в XML файле, \"Index Countged\" эмулируется подсчётом записей arg_index"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
@@ -10812,7 +10812,7 @@ msgstr "Arg_num_num_indexes&gt; отсутствует в XML файле, не �
 
 #: lib/data_query.php
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
-msgstr "*lt;oid_num_indexes&gt; отсутствует в XML-файле, эмулируется 'Index Countged' путем подсчета записей oid_indexes&gt"
+msgstr "&lt;oid_num_indexes&gt; отсутствует в XML-файле, эмулируется 'Index Countged' путем подсчета записей oid_index"
 
 #: lib/data_query.php
 msgid "Auto Bulk Walk Size Selected."
@@ -11082,7 +11082,7 @@ msgstr "Расположенное поле ввода '%s' [пешеходна�
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Должны содержать только поля \"Направление ввода-вывода\" или \"Направление вывода-вывода\"; или \"Направление ввода-вывода\"; \"Направление вывода\"; \"Направление\"."
+msgstr "Должно содержать только поля &lt;direction&gt;input&lt;/direction&gt; или &lt;direction&gt;input-output&lt;/direction&gt;"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field be updated."
@@ -11741,7 +11741,7 @@ msgstr "Клавиатура"
 
 #: lib/html.php
 msgid "Kill Spikes in Graphs"
-msgstr "Убить шипы в графиках."
+msgstr "Удалить выбросы на графиках"
 
 #: lib/html.php
 msgid "Kills Per RRA"
@@ -16356,12 +16356,12 @@ msgstr "пример 38.889488"
 
 #: spikekill.php
 msgid "FATAL: Spike Kill Not Allowed"
-msgstr "Spike Kill не разрешается"
+msgstr "КРИТИЧЕСКАЯ ОШИБКА: Удаление выбросов не разрешено"
 
 #: spikekill.php
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
-msgstr "ФАТАЛЬНО: Spike метод завершения '%s'\" недействителен."
+msgstr "КРИТИЧЕСКАЯ ОШИБКА: Метод удаления выбросов '%s' недействителен."
 
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."

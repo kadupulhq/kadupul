@@ -6457,7 +6457,7 @@ msgstr "Für SNMPv2- und SNMPv3-Geräte die maximale Größe der SNMP Bulk Walk-
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Legende der Kraftregeln (--force-reules-legend)"
+msgstr "Legende der Kraftregeln (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6875,23 +6875,23 @@ msgstr "Ersatzmuster"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Rechte Achse (-rechte Achse &lt;scale:shift&gt;)"
+msgstr "Rechte Achse (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Format der rechten Achse (--rechts-Format der rechten Achse &lt;format&gt;)"
+msgstr "Format der rechten Achse (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formatierer für die rechte Achse (--rechts-Achsen-Formatierer &lt;Formatname&gt;)"
+msgstr "Formatierer für die rechte Achse (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Beschriftung der rechten Achse (--rechts-Achsenbeschriftung &lt;string&gt;)"
+msgstr "Beschriftung der rechten Achse (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Starrer Grenzmodus (--starr)"
+msgstr "Starrer Grenzmodus (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
@@ -7255,7 +7255,7 @@ msgstr "Die Breite (in Pixeln) des Diagrammbereichs innerhalb des Diagramms. Die
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Titel (--Titel)"
+msgstr "Titel (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7275,7 +7275,7 @@ msgstr "Einheitsnetzwert (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Einheitenlänge (-- Einheitenlänge &lt;Länge&gt;)"
+msgstr "Einheitenlänge (--units-length &lt;Länge&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7283,7 +7283,7 @@ msgstr "RRDatei aktualisieren"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Oberer Grenzwert (--oberer Grenzwert)"
+msgstr "Oberer Grenzwert (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7339,7 +7339,7 @@ msgstr "VDEF Funktion"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Vertikales Etikett (--vertikales Etikett)"
+msgstr "Vertikales Etikett (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7391,7 +7391,7 @@ msgstr "Überprüfung der Whitelist"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Breite (--Breite)"
+msgstr "Breite (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"

@@ -6138,7 +6138,7 @@ msgstr "Pozwól na puste wejście"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Alternatywna siatka Y (--alt-grid)"
+msgstr "Alternatywna siatka Y (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6182,7 +6182,7 @@ msgstr "Opcje osi"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "Wartość bazowa (-bazowa)"
+msgstr "Wartość bazowa (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6388,7 +6388,7 @@ msgstr "Narysuj znaczniki linii jako linię."
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "Etykiety dynamiczne (--dynamiczne)"
+msgstr "Etykiety dynamiczne (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6884,7 +6884,7 @@ msgstr "Wzór zastępczy"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Oś prawa (-- oś prawa &lt;skala:shift&gt;)"
+msgstr "Oś prawa (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
@@ -6892,19 +6892,19 @@ msgstr "Format prawej osi (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formator osi prawej (--formator osi prawej &lt;nazwa formatu&gt;)"
+msgstr "Formator osi prawej (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Etykieta osi prawej (--zaznakowanie osi prawej &lt;string&gt;)"
+msgstr "Etykieta osi prawej (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Tryb sztywnych granic (--sztywne)"
+msgstr "Tryb sztywnych granic (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Jednostki SI dla skalowania logarytmicznego (--jednostki=si)"
+msgstr "Jednostki SI dla skalowania logarytmicznego (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7028,7 +7028,7 @@ msgstr "Pokaż stronę, na którą użytkownik wskazał swoją przeglądarkę."
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "Tryb nachylenia (- tryb nachylenia)"
+msgstr "Tryb nachylenia (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7264,7 +7264,7 @@ msgstr "Szerokość (w pikselach) obszaru wykresu w obrębie wykresu. Obszar ten
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Tytuł (-tytuł)"
+msgstr "Tytuł (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7276,15 +7276,15 @@ msgstr "Łączenie końcowe"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Wartość wykładnika jednostki (--jednostki-składnik)"
+msgstr "Wartość wykładnika jednostki (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "Jednostkowa wartość siatki (--jednostka/---grid)"
+msgstr "Jednostkowa wartość siatki (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Jednostka Długość (-- jednostki długości &lt;długości&gt;)"
+msgstr "Jednostka Długość (--units-length &lt;długości&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7292,7 +7292,7 @@ msgstr "Aktualizacja pliku RRD"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Górna granica (- górna granica)"
+msgstr "Górna granica (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7400,7 +7400,7 @@ msgstr "Sprawdzenie białej listy"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Szerokość (-szerokość)"
+msgstr "Szerokość (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -8764,7 +8764,7 @@ msgstr "Tryb"
 
 #: include/global_settings.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Tryb, w którym Kadupul będą próbowały uwierzytelnić się w stosunku do serwera LDAP.<blockquote><i><i>Brak wyszukiwania</i> - Nie występuje wyszukiwanie Distinguished Name (DN), po prostu spróbuj powiązać z podanym formatem Distinguished Name (DN).<br><br><br><i>Wyszukiwanie anonimowe</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą wiązania anonimowego w celu zlokalizowania nazwy użytkownika (DN).<br><br><i>Specyficzne wyszukiwanie</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą Określonej Nazwy Rozróżniającej (DN) i Określonego Hasła do wiązania w celu zlokalizowania nazwy odróżniającej użytkownika (DN)."
+msgstr "Tryb, w którym Kadupul będą próbowały uwierzytelnić się w stosunku do serwera LDAP.<blockquote><i>Brak wyszukiwania</i> - Nie występuje wyszukiwanie Distinguished Name (DN), po prostu spróbuj powiązać z podanym formatem Distinguished Name (DN).<br><br><br><i>Wyszukiwanie anonimowe</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą wiązania anonimowego w celu zlokalizowania nazwy użytkownika (DN).<br><br><i>Specyficzne wyszukiwanie</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą Określonej Nazwy Rozróżniającej (DN) i Określonego Hasła do wiązania w celu zlokalizowania nazwy odróżniającej użytkownika (DN)."
 
 #: include/global_settings.php
 msgid "Monthly on Sunady"
@@ -17285,7 +17285,7 @@ msgstr "Dodaj wybraną domenę domyślną"
 
 #: user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Tryb, w którym Kadupul będą próbowały uwierzytelnić się w stosunku do serwera LDAP.<blockquote><i><i>Brak wyszukiwania</i> - Nie występuje wyszukiwanie Distinguished Name (DN), po prostu spróbuj powiązać z podanym formatem Distinguished Name (DN).<br><br><br><i>Wyszukiwanie anonimowe</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą wiązania anonimowego w celu zlokalizowania użytkowników Distinguished Name (DN).<br><br><i>Specyficzne wyszukiwanie</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą Specyficznej Nazwy Distinguished Name (DN) i Specyficznego hasła do wiązania w celu zlokalizowania użytkowników Distinguished Name (DN)."
+msgstr "Tryb, w którym Kadupul będą próbowały uwierzytelnić się w stosunku do serwera LDAP.<blockquote><i>Brak wyszukiwania</i> - Nie występuje wyszukiwanie Distinguished Name (DN), po prostu spróbuj powiązać z podanym formatem Distinguished Name (DN).<br><br><br><i>Wyszukiwanie anonimowe</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą wiązania anonimowego w celu zlokalizowania użytkowników Distinguished Name (DN).<br><br><i>Specyficzne wyszukiwanie</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą Specyficznej Nazwy Distinguished Name (DN) i Specyficznego hasła do wiązania w celu zlokalizowania użytkowników Distinguished Name (DN)."
 
 #: user_domains.php
 msgid "No User Domains Found"

@@ -6521,7 +6521,7 @@ msgstr "Kalp atışı"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Yükseklik yüksekliği)"
+msgstr "Yükseklik (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6639,7 +6639,7 @@ msgstr "Sol Eksen Biçimlendirici (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Gösterge Yönü (--legend-direction = &lt;direction&gt;)"
+msgstr "Gösterge Yönü (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6647,7 +6647,7 @@ msgstr "Legend Seçenekleri"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Legend Konumu (--legend-position = &lt;position&gt;)"
+msgstr "Legend Konumu (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6671,7 +6671,7 @@ msgstr "Giriş Seçenekleri"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Alt Limit (- daha düşük limit)"
+msgstr "Alt Limit (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6711,7 +6711,7 @@ msgstr "Yeni Profil RRA"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "Gridfit yok (- ızgarasız)"
+msgstr "Gridfit yok (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6863,11 +6863,11 @@ msgstr "Yedek desen"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Sağ Eksen (- doğru eksen &lt;ölçek: shift&gt;)"
+msgstr "Sağ Eksen (--right-axis &lt;ölçek: shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Sağ Eksen Formatı (--right-axis-formatı &lt;format&gt;)"
+msgstr "Sağ Eksen Formatı (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
@@ -6883,7 +6883,7 @@ msgstr "Sert Sınırlar Modu (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Logaritmik Ölçeklendirme için SI Birimleri (- birimler = si)"
+msgstr "Logaritmik Ölçeklendirme için SI Birimleri (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7007,7 +7007,7 @@ msgstr "Kullanıcının tarayıcısını gösterdiği sayfayı gösterin."
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "Eğim Modu (- döngü modu)"
+msgstr "Eğim Modu (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7259,11 +7259,11 @@ msgstr "Birim Üssü Değeri (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "Birim Izgara Değeri (- birim / - y-ızgara)"
+msgstr "Birim Izgara Değeri (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Birim Uzunluğu (- birim uzunluk &lt;uzunluk&gt;)"
+msgstr "Birim Uzunluğu (--units-length &lt;length&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7271,7 +7271,7 @@ msgstr "RRD dosyasını güncelle"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Üst Sınır (- üst sınır)"
+msgstr "Üst Sınır (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7327,7 +7327,7 @@ msgstr "VDEF İşlevi"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Dikey Etiket (- dikey etiket)"
+msgstr "Dikey Etiket (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7379,7 +7379,7 @@ msgstr "Beyaz Liste Kontrolü"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Genişlik (- genişlik)"
+msgstr "Genişlik (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -9723,7 +9723,7 @@ msgstr "Takviye tablosundaki tüm RRD&#39;leri işlemek için kullanılacak eşz
 
 #: include/global_settings.php
 msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
-msgstr "Eşzamanlı Yoklayıcı Komutu işlemlerinin sayısı., Yoklayıcı Komutu havuzunda ana bilgisayar başına en fazla bir eşzamanlı komut olacaktır."
+msgstr "Eşzamanlı Yoklayıcı Komutu işlemlerinin sayısı. Yoklayıcı Komutu havuzunda ana bilgisayar başına en fazla bir eşzamanlı komut olacaktır."
 
 #: include/global_settings.php
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."

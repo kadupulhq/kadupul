@@ -6117,7 +6117,7 @@ msgstr "Sta lege invoer toe"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Alternatief Y-raster (-alt-y-raster)"
+msgstr "Alternatief Y-raster (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6587,7 +6587,7 @@ msgstr "Als u wilt dat een bepaalde reguliere expressie moet worden gematcht met
 
 #: include/global_form.php
 msgid "Image Format (--imgformat)"
-msgstr "Beeldformaat (-imgformaat)"
+msgstr "Beeldformaat (--imgformat)"
 
 #: include/global_form.php
 msgid "Import Template from Local File"
@@ -6639,7 +6639,7 @@ msgstr "Opmaak voor linkeras (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Legenda richting (—legend-direction=&lt;direction&gt;)"
+msgstr "Legenda richting (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6659,7 +6659,7 @@ msgstr "Geblokkeerd"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Logaritmische schaalvergroting (--logaritmisch)"
+msgstr "Logaritmische schaalvergroting (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6871,7 +6871,7 @@ msgstr "Formaat rechter as (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Rechterasformatter (--rechts-asformatter &lt;formatname&gt;)"
+msgstr "Rechterasformatter (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
@@ -6879,11 +6879,11 @@ msgstr "Label rechter as (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Stijve grenzen modus (--stijve)"
+msgstr "Stijve grenzen modus (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "SI-eenheden voor logaritmische schaalvergroting (-eenheden=si)"
+msgstr "SI-eenheden voor logaritmische schaalvergroting (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7007,7 +7007,7 @@ msgstr "Toon de pagina die de gebruiker in de browser heeft opgegeven."
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "Helling modus (--helling modus)"
+msgstr "Helling modus (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7255,15 +7255,15 @@ msgstr "In totaal"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Eenheid Exponentwaarde (-eenheden-exponent)"
+msgstr "Eenheid Exponentwaarde (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "Eenheid Rasterwaarde (-eenheid/--y-grid)"
+msgstr "Eenheid Rasterwaarde (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Eenheidslengte (-eenheden-lengte &lt;lengte&gt;)"
+msgstr "Eenheidslengte (--units-length &lt;length&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7327,7 +7327,7 @@ msgstr "VDEF functie"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Verticaal label (—vertical-label)"
+msgstr "Verticaal label (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7935,7 +7935,7 @@ msgstr "Standaard Ping Timeout waarde in milli-seconden voor alle nieuwe apparat
 
 #: include/global_settings.php
 msgid "Default Ping type for all new Devices.</i>"
-msgstr "De standaard ping methode voor alle nieuwe apparaten.</li>"
+msgstr "De standaard ping methode voor alle nieuwe apparaten.</i>"
 
 #: include/global_settings.php
 msgid "Default SNMP read community for all new Devices."

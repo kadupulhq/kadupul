@@ -6158,7 +6158,7 @@ msgstr "Опции за ос"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "Базова стойност (--база)"
+msgstr "Базова стойност (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6364,7 +6364,7 @@ msgstr "Начертайте маркери на линия като линия.
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "Динамични етикети (- динамични етикети)"
+msgstr "Динамични етикети (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6518,7 +6518,7 @@ msgstr "Heartbeat"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Височина (- височина)"
+msgstr "Височина (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6584,7 +6584,7 @@ msgstr "Ако искате да изисквате определен редо�
 
 #: include/global_form.php
 msgid "Image Format (--imgformat)"
-msgstr "Формат на изображението (- imgformat)"
+msgstr "Формат на изображението (--imgformat)"
 
 #: include/global_form.php
 msgid "Import Template from Local File"
@@ -6632,11 +6632,11 @@ msgstr "Това ли трябва да носи шаблона?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Форматиране на лявата ос (-left-axis-formatter &lt;formatname&gt;)"
+msgstr "Форматиране на лявата ос (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Посока на легендата (-legend-direction = &lt;direction&gt;)"
+msgstr "Посока на легендата (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6644,7 +6644,7 @@ msgstr "Опции на легендата"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Позиция на легендата (--legend-position = &lt;position&gt;)"
+msgstr "Позиция на легендата (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6668,7 +6668,7 @@ msgstr "Опции за вход"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Долна граница (- по-ниска граница)"
+msgstr "Долна граница (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6708,7 +6708,7 @@ msgstr "Нов профил RRA"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "Няма Gridfit (- без мрежа)"
+msgstr "Няма Gridfit (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6860,27 +6860,27 @@ msgstr "Модел за заместване"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Дясна ос (- дясна ос &lt;мащаб: смяна&gt;)"
+msgstr "Дясна ос (--right-axis &lt;мащаб: смяна&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Формат на дясната ос (- формат с права ос &lt;format&gt;)"
+msgstr "Формат на дясната ос (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Форматиране на дясна ос (- дясно-осево-форматиращо име)"
+msgstr "Форматиране на дясна ос (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Етикет на дясната ос (- етикет с права ос-&lt;string&gt;)"
+msgstr "Етикет на дясната ос (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Режим на твърди граници (- твърд)"
+msgstr "Режим на твърди граници (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "SI единици за логаритмично мащабиране (- единици = si)"
+msgstr "SI единици за логаритмично мащабиране (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7240,7 +7240,7 @@ msgstr "Ширината (в пиксели) на графичната обла�
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Заглавие (- заглавие)"
+msgstr "Заглавие (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7252,15 +7252,15 @@ msgstr "От общо"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Единична стойност на елемента (- единични експоненти)"
+msgstr "Единична стойност на елемента (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "Стойност на мрежата на мрежата (- единица / - у-мрежа)"
+msgstr "Стойност на мрежата на мрежата (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Дължина на елемента (- дължини на единиците &lt;дължина&gt;)"
+msgstr "Дължина на елемента (--units-length &lt;дължина&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7268,7 +7268,7 @@ msgstr "Актуализирайте RRDfile"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Горна граница (- пределна граница)"
+msgstr "Горна граница (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7324,7 +7324,7 @@ msgstr "Функция VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Вертикален етикет (- вертикален етикет)"
+msgstr "Вертикален етикет (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7376,7 +7376,7 @@ msgstr "Проверка на белия списък"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Ширина (- ширина)"
+msgstr "Ширина (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -14066,7 +14066,7 @@ msgstr "Плъгини"
 #: lib/plugins.php
 #, php-format
 msgid "Requires: Kadupul >= %s"
-msgstr "Изисква: Kadupul&gt; = %s"
+msgstr "Изисква: Kadupul >= %s"
 
 #: lib/plugins.php
 #, php-format

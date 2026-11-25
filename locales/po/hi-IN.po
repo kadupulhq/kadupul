@@ -6117,7 +6117,7 @@ msgstr "खाली इनपुट की अनुमति दें"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "वैकल्पिक वाई ग्रिड (--alt-y- ग्रिड)"
+msgstr "वैकल्पिक वाई ग्रिड (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6161,7 +6161,7 @@ msgstr "एक्सिस विकल्प"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "आधार मान (--बेस)"
+msgstr "आधार मान (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6367,7 +6367,7 @@ msgstr "लाइन मार्कर को रेखा के रूप म
 
 #: include/global_form.php
 msgid "Dynamic Labels (--dynamic-labels)"
-msgstr "डायनामिक लेबल (-डायनामिक-लेबल)"
+msgstr "डायनामिक लेबल (--dynamic-labels)"
 
 #: include/global_form.php
 msgid "Enable Rule"
@@ -6711,7 +6711,7 @@ msgstr "नई प्रोफ़ाइल आरआरए"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "कोई ग्रिडफ़िट (-नो-ग्रिडफ़िट)"
+msgstr "कोई ग्रिडफ़िट (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6883,7 +6883,7 @@ msgstr "कठोर सीमा मोड (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "लघुगणकीय स्केलिंग के लिए SI इकाइयाँ (--units = si)"
+msgstr "लघुगणकीय स्केलिंग के लिए SI इकाइयाँ (--units=si)"
 
 #: include/global_form.php
 msgid "SNMP Auth Protocol (v3)"
@@ -7007,7 +7007,7 @@ msgstr "उस पृष्ठ को दिखाएं जिसे उपय�
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "ढलान मोड (-slope-mode)"
+msgstr "ढलान मोड (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7027,7 +7027,7 @@ msgstr "कनेक्शन का प्रयास करने के ल�
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
-msgstr "टैब चौड़ाई (-tabwidth &lt;पिक्सल&gt;)"
+msgstr "टैब चौड़ाई (--tabwidth &lt;पिक्सल&gt;)"
 
 #: include/global_form.php
 msgid "Test Data Sources"
@@ -7243,7 +7243,7 @@ msgstr "ग्राफ़ के भीतर ग्राफ़ क्षे�
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "शीर्षक (शीर्षक)"
+msgstr "शीर्षक (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7255,11 +7255,11 @@ msgstr "योग"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "यूनिट एक्सपोनेंट वैल्यू (- यूनिट्स-एक्सपोनेंट)"
+msgstr "यूनिट एक्सपोनेंट वैल्यू (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "यूनिट ग्रिड मान (- यूनीट / - वाई-ग्रिड)"
+msgstr "यूनिट ग्रिड मान (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7327,7 +7327,7 @@ msgstr "VDEF फ़ंक्शन"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "वर्टिकल लेबल (-वर्टिकल-लेबल)"
+msgstr "वर्टिकल लेबल (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."

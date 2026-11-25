@@ -6444,7 +6444,7 @@ msgstr "Pour les périphériques SNMPv2 et SNMPv3, la taille maximale des répé
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Légende des règles de force (--force-règles-legend)"
+msgstr "Légende des règles de force (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6520,7 +6520,7 @@ msgstr "Battement de cœur"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Hauteur (--hauteur)"
+msgstr "Hauteur (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6634,7 +6634,7 @@ msgstr "Est-ce pour porter le gabarit ?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Formatter de l'axe gauche (--formatter de l'axe gauche &lt;formatname&gt ;)"
+msgstr "Formatter de l'axe gauche (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
@@ -6646,7 +6646,7 @@ msgstr "Options de légende"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Légende Position (--legend-position=&lt;position&gt ;)"
+msgstr "Légende Position (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6658,7 +6658,7 @@ msgstr "Verrouillé"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Échelle logarithmique (--logarithmique)"
+msgstr "Échelle logarithmique (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6670,7 +6670,7 @@ msgstr "Options d'authentification"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Limite inférieure (--limite inférieure)"
+msgstr "Limite inférieure (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -7026,7 +7026,7 @@ msgstr "Port TCP ou UDP utilisé pour tester la connexion."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
-msgstr "Largeur de l'onglet (--tabwidth &lt;pixels&gt ;)"
+msgstr "Largeur de l'onglet (--tabwidth &lt;pixels&gt;)"
 
 #: include/global_form.php
 msgid "Test Data Sources"
@@ -7242,7 +7242,7 @@ msgstr "La largeur (en pixels) de la zone du graphique à l'intérieur du graphi
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "Titre (--titre)"
+msgstr "Titre (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7254,11 +7254,11 @@ msgstr "Totaliser"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Unité Valeur de l'exposant (--unités-exposant)"
+msgstr "Unité Valeur de l'exposant (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "Unit Grid Value (--unit/----y-grid)"
+msgstr "Unit Grid Value (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7270,7 +7270,7 @@ msgstr "Mise à jour du fichier RRD"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Limite supérieure (--limite supérieure)"
+msgstr "Limite supérieure (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7326,7 +7326,7 @@ msgstr "Fonction VDEF"
 
 #: include/global_form.php
 msgid "Vertical Label (--vertical-label)"
-msgstr "Étiquette verticale (--étiquette verticale)"
+msgstr "Étiquette verticale (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with."
@@ -7378,7 +7378,7 @@ msgstr "Vérification de la liste blanche"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Largeur (--largeur)"
+msgstr "Largeur (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -7522,7 +7522,7 @@ msgstr "Ethernet 56 Gbps"
 
 #: include/global_settings.php
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i>Built-in Authentication</i> - Kadupul gère l'authentification utilisateur, qui vous permet de créer des utilisateurs et de leur donner des droits sur différentes zones dans Kadupul.<br><br>br><i>Web Basic Authentication</i> - L'authentification est traitée par le serveur web. Les utilisateurs peuvent être ajoutés ou créés automatiquement lors de la première connexion si l'utilisateur modèle est défini, sinon les permissions invités définies seront utilisées. <br><br><br><i>LDAP Authentication</i> - Permet l'authentification sur un serveur LDAP. Les utilisateurs seront créés automatiquement lors de la première connexion si l'utilisateur de modèle est défini, sinon les permissions d'invité définies seront utilisées.  Si le module LDAP de PHPs n'est pas activé, l'authentification LDAP n'apparaîtra pas comme une option sélectionnable.<br><br><br><i>Multiple LDAP/AD Domain Authentication</i> - Permet aux administrateurs de supporter plusieurs groupes disparates de différents annuaires LDAP/AD pour accéder aux ressources Kadupul.  Tout comme pour l'authentification LDAP, le module PHP LDAP est nécessaire pour utiliser cette méthode. </blockquote>."
+msgstr "<blockquote><i>Built-in Authentication</i> - Kadupul gère l'authentification utilisateur, qui vous permet de créer des utilisateurs et de leur donner des droits sur différentes zones dans Kadupul.<br><br><i>Web Basic Authentication</i> - L'authentification est traitée par le serveur web. Les utilisateurs peuvent être ajoutés ou créés automatiquement lors de la première connexion si l'utilisateur modèle est défini, sinon les permissions invités définies seront utilisées. <br><br><br><i>LDAP Authentication</i> - Permet l'authentification sur un serveur LDAP. Les utilisateurs seront créés automatiquement lors de la première connexion si l'utilisateur de modèle est défini, sinon les permissions d'invité définies seront utilisées.  Si le module LDAP de PHPs n'est pas activé, l'authentification LDAP n'apparaîtra pas comme une option sélectionnable.<br><br><br><i>Multiple LDAP/AD Domain Authentication</i> - Permet aux administrateurs de supporter plusieurs groupes disparates de différents annuaires LDAP/AD pour accéder aux ressources Kadupul.  Tout comme pour l'authentification LDAP, le module PHP LDAP est nécessaire pour utiliser cette méthode. </blockquote>."
 
 #: include/global_settings.php
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
@@ -7902,7 +7902,7 @@ msgstr "Largeur de sortie de débogage"
 
 #: include/global_settings.php
 msgid "Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "Disponibilité/Réachabilité par défaut pour tous les nouveaux appareils.  La méthode que Kadupul utilisera pour déterminer si un dispositif est disponible pour l'interrogation.  <br><i>NOTE : Il est recommandé qu'au minimum, SNMP soit toujours sélectionné."
+msgstr "Disponibilité/Réachabilité par défaut pour tous les nouveaux appareils.  La méthode que Kadupul utilisera pour déterminer si un dispositif est disponible pour l'interrogation.  <br><i>NOTE : Il est recommandé qu'au minimum, SNMP soit toujours sélectionné.</i>"
 
 #: include/global_settings.php
 msgid "Default Font"
@@ -9198,7 +9198,7 @@ msgstr "Base de recherche pour rechercher dans l'annuaire LDAP, telle que <i>'dc
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>'(&amp ;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> ou pour OpenLDAP : <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  &lt;username&gt' est remplacé par le nom d'utilisateur qui a été fourni à l'invite de connexion."
+msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> ou pour OpenLDAP : <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  &lt;username&gt' est remplacé par le nom d'utilisateur qui a été fourni à l'invite de connexion."
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -10514,7 +10514,7 @@ msgstr "Impossible de supprimer le périphérique %s car ses enregistrements en 
 
 #: lib/api_device.php
 msgid "Uptime:"
-msgstr "Temps d&apos;activation & #160;:"
+msgstr "Temps d&apos;activation &#160;:"
 
 #: lib/api_tree.php
 msgid "New Branch"
@@ -10759,15 +10759,15 @@ msgstr "&lt;arg_num_indexes&gt; existe dans le fichier XML mais aucune donnée n
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
-msgstr "&lt;arg_num_indexes&gt ; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées arg_indexes"
+msgstr "&lt;arg_num_indexes&gt; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées arg_indexes"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt ; manquant dans le fichier XML,'Index Count Changed' non supporté"
+msgstr "&lt;arg_num_indexes&gt; manquant dans le fichier XML,'Index Count Changed' non supporté"
 
 #: lib/data_query.php
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
-msgstr "&lt;oid_num_indexes&gt ; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées oid_indexes"
+msgstr "&lt;oid_num_indexes&gt; manquant dans le fichier XML,'Index Count Changed' émulé en comptant les entrées oid_indexes"
 
 #: lib/data_query.php
 msgid "Auto Bulk Walk Size Selected."
@@ -11013,7 +11013,7 @@ msgstr "Insertion des données d'index pour le champ'%s'[value='%s']]."
 #: lib/data_query.php
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
-msgstr "Champ non valide &lt;index_order&gt;%s&lt;/index_order&gt ;"
+msgstr "Champ non valide &lt;index_order&gt;%s&lt;/index_order&gt;"
 
 #: lib/data_query.php
 #, php-format
@@ -16769,11 +16769,11 @@ msgstr "<b>Note :</b> La politique de graphique système est 'Modèle de graphiq
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Permissive' ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, dispositif ou modèle graphique pour accéder au graphique."
+msgstr "<b>Note:</b> La politique graphique du système est'Permissive' ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, dispositif ou modèle graphique pour accéder au graphique."
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Restrictive', ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de dispositif et de graphique pour accéder au graphique."
+msgstr "<b>Note:</b> La politique graphique du système est'Restrictive', ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de dispositif et de graphique pour accéder au graphique."
 
 #: user_admin.php
 msgid "> 1 Month Ago"
@@ -17254,7 +17254,7 @@ msgstr "Base de recherche pour rechercher dans l'annuaire LDAP, telle que <i>\"d
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>\"(&amp ;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> ou pour OpenLDAP : <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" est remplacé par le nom d'utilisateur fourni à l'invite de connexion."
+msgstr "Filtre de recherche à utiliser pour localiser l'utilisateur dans le répertoire LDAP, par exemple pour Windows : <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> ou pour OpenLDAP : <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" est remplacé par le nom d'utilisateur fourni à l'invite de connexion."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."

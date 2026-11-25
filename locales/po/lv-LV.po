@@ -6182,7 +6182,7 @@ msgstr "Ass opcijas"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "Bāzes vērtība (--bāze)"
+msgstr "Bāzes vērtība (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6542,7 +6542,7 @@ msgstr "RRD datu pulss"
 
 #: include/global_form.php
 msgid "Height (--height)"
-msgstr "Augstums (--augstums)"
+msgstr "Augstums (--height)"
 
 #: include/global_form.php
 msgid "Hex Value"
@@ -6692,7 +6692,7 @@ msgstr "Pieteikšanās opcijas"
 
 #: include/global_form.php
 msgid "Lower Limit (--lower-limit)"
-msgstr "Apakšējais ierobežojums (--zemākais ierobežojums)"
+msgstr "Apakšējais ierobežojums (--lower-limit)"
 
 #: include/global_form.php
 msgid "Maintain Custom Graph and User Settings"
@@ -6884,23 +6884,23 @@ msgstr "Aizstāšanas modelis"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Labā ass (--labā ass &lt;scale:shift&gt;)"
+msgstr "Labā ass (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Labās ass formāts (--labās ass-formāts &lt;format&gt;)"
+msgstr "Labās ass formāts (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Labās ass formatētājs (--labās ass-formatētājs &lt;formāta nosaukums&gt;)"
+msgstr "Labās ass formatētājs (--right-axis-formatter &lt;formāta nosaukums&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Labās ass etiķete (--labās ass apzīmējums &lt;string&gt;)"
+msgstr "Labās ass etiķete (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "Stingru robežu režīms (--stingrs)"
+msgstr "Stingru robežu režīms (--rigid)"
 
 #: include/global_form.php
 msgid "SI Units for Logarithmic Scaling (--units=si)"
@@ -7028,7 +7028,7 @@ msgstr "Parādiet lapu, uz kuru lietotājs norādīja savu pārlūkprogrammu."
 
 #: include/global_form.php
 msgid "Slope Mode (--slope-mode)"
-msgstr "Slīpuma režīms (--slīpuma režīms)"
+msgstr "Slīpuma režīms (--slope-mode)"
 
 #: include/global_form.php lib/api_automation.php tree.php
 msgid "Sorting Type"
@@ -7276,7 +7276,7 @@ msgstr "Summēšana"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Vienības eksponenta vērtība (--vienības-eksponents)"
+msgstr "Vienības eksponenta vērtība (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
@@ -7292,7 +7292,7 @@ msgstr "Atjauniniet RRD failu"
 
 #: include/global_form.php
 msgid "Upper Limit (--upper-limit)"
-msgstr "Augšējais ierobežojums (--augšējais ierobežojums)"
+msgstr "Augšējais ierobežojums (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
@@ -7400,7 +7400,7 @@ msgstr "Baltā saraksta pārbaude"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "Platums (--platums)"
+msgstr "Platums (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
