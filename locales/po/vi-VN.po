@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 20:09-0800\n"
+"POT-Creation-Date: 2026-11-25 14:53-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -113,10 +113,9 @@ msgstr "Căn chỉnh"
 msgid "All Items"
 msgstr "Tất cả Item"
 
-#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
-#: data_debug.php data_sources.php graph_templates_items.php graphs.php
-#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php data_debug.php data_sources.php
+#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "Bất kỳ"
@@ -130,21 +129,21 @@ msgid "Associate with Aggregate"
 msgstr "Liên kết với cốt liệu"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graph_view.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php host_templates.php
+#: lib/clog_webapi.php lib/html.php lib/html_form.php lib/html_reports.php
+#: managers.php plugins.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "Hủy"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php user_domains.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php user_domains.php
 msgid "Clear"
 msgstr "Xóa"
 
@@ -190,11 +189,10 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để đặt (các) Biểu đồ Tổng hợp sau dưới nhánh Cây."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php lib/clog_webapi.php
+#: lib/html.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Continue"
 msgstr "Tiếp tục"
 
@@ -211,22 +209,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "Tạo tập hợp mới từ tập hợp"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: include/global_form.php lib/api_automation.php lib/html_reports.php
-#: managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php include/global_form.php
+#: lib/api_automation.php lib/html_reports.php managers.php plugins.php
+#: pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "Mặc định"
 
 #: aggregate_graphs.php aggregate_templates.php automation_networks.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php include/global_settings.php lib/api_automation.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "Xóa"
 
@@ -251,12 +249,12 @@ msgid "Disassociate with Aggregate"
 msgstr "Không liên kết với Uẩn"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php
 msgid "Go"
 msgstr "Đi"
 
@@ -280,10 +278,10 @@ msgstr "Đồ thị"
 msgid "Hide Item Details"
 msgstr "Ẩn chi tiết mục"
 
-#: aggregate_graphs.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
-#: user_admin.php user_group_admin.php
+#: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: lib/api_automation.php pollers.php tree.php user_admin.php
+#: user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -401,14 +399,13 @@ msgid "Return"
 msgstr "Trở về trang cài đặt bắt buộc Plugins"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php rrdcleaner.php settings.php
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
+#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "Tìm kiếm"
 
@@ -989,8 +986,8 @@ msgstr "Tên SNMP"
 msgid "Select Template"
 msgstr "Chọn mẫu"
 
-#: automation_devices.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: data_sources.php data_templates.php lib/api_automation.php
 #: lib/html_reports.php lib/installer.php managers.php package_import.php
 #: plugins.php pollers.php templates_import.php user_admin.php
 #: user_group_admin.php utilities.php
@@ -1140,17 +1137,17 @@ msgstr "Hàng ngày"
 msgid "Data Collector"
 msgstr "Thu thập dữ liệu"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php managers.php plugins.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: managers.php plugins.php pollers.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Disable"
 msgstr "Vô hiệu hóa"
 
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_sources.php data_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_reports.php lib/html_utility.php managers.php
+#: pollers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Disabled"
 msgstr "Vô hiệu hóa"
 
@@ -1158,9 +1155,9 @@ msgstr "Vô hiệu hóa"
 msgid "Discover Now"
 msgstr "Khám phá ngay"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php include/global_settings.php managers.php
-#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: include/global_settings.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Enable"
 msgstr "Bật"
 
@@ -1267,42 +1264,13 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "Đã phát hiện nỗ lực thực hiện SQL injection trong tự động hóa Cây"
 
 #: automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "Áp dụng hành động được yêu cầu"
-
-#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Bạn có chắc chắn muốn XÓA quy tắc &#39; %s&#39; không?"
 
 #: automation_tree_rules.php
-msgid "At Subtree"
-msgstr "Tại Subtree"
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to delete the following Rule(s)."
-msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Quy tắc sau."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Nhấp vào &#39;Tiếp tục&#39; để tắt (các) Quy tắc sau."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
-msgstr "Nhấp vào &#39;Tiếp tục&#39; để nhân đôi (các) Quy tắc sau. Bạn có thể tùy ý thay đổi định dạng tiêu đề cho Quy tắc mới."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Nhấp vào &#39;Tiếp tục&#39; để bật (các) Quy tắc sau."
-
-#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "Tạo cây"
-
-#: automation_tree_rules.php data_queries.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
-msgid "Duplicate"
-msgstr "Bản sao"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1313,24 +1281,12 @@ msgid "Graph Grouping Style"
 msgstr "Biểu đồ nhóm"
 
 #: automation_tree_rules.php
-msgid "Hook into Tree"
-msgstr "Móc vào cây"
-
-#: automation_tree_rules.php
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Tên trường không hợp lệ được chỉ định cho Mục quy tắc cây."
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Leaf Item Type"
 msgstr "Loại vật phẩm lá"
-
-#: automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "Hãy chắc chắn rằng những quy tắc đó đã được thử nghiệm thành công!"
-
-#: automation_tree_rules.php
-msgid "No Tree Rules Found"
-msgstr "Không tìm thấy quy tắc cây"
 
 #: automation_tree_rules.php
 msgid "Object Selection Criteria"
@@ -1341,24 +1297,8 @@ msgid "Optional: Sub-Tree Item"
 msgstr "Tùy chọn: Mục cây"
 
 #: automation_tree_rules.php
-msgid "ROOT"
-msgstr "Root"
-
-#: automation_tree_rules.php
-msgid "Rule Name"
-msgstr "Tên quy tắc"
-
-#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "Biểu mẫu Quy tắc cây này đã hết hạn. Hãy mở lại quy tắc và sử dụng biểu mẫu hiện tại của nó."
-
-#: automation_tree_rules.php
-msgid "This Type"
-msgstr "Loại này"
-
-#: automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "Định dạng tiêu đề:"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1372,18 +1312,6 @@ msgstr "Tiêu chí tạo cây"
 #, php-format
 msgid "Tree Rule Selection [edit: %s]"
 msgstr "Lựa chọn quy tắc cây [chỉnh sửa: %s]"
-
-#: automation_tree_rules.php include/global_arrays.php
-msgid "Tree Rules"
-msgstr "Quy tắc cây"
-
-#: automation_tree_rules.php
-msgid "Using Grouping"
-msgstr "Sử dụng nhóm"
-
-#: automation_tree_rules.php
-msgid "rule_name"
-msgstr "Tên quy tắc"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -2110,6 +2038,11 @@ msgstr "Xóa đồ thị liên kết"
 msgid "Delete Data Query"
 msgid_plural "Delete Data Queries"
 msgstr[0] "Xóa truy vấn dữ liệu"
+
+#: data_queries.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "Bản sao"
 
 #: data_queries.php
 msgid "Duplicate Data Query"
@@ -3339,6 +3272,10 @@ msgstr "Cây đã chọn không khả dụng."
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Hiện tại không có Mẫu tổng hợp nào được xác định cho Mẫu biểu đồ này. Trước tiên, vui lòng tạo Mẫu tổng hợp cho Mẫu biểu đồ đồ thị đã chọn và thử lại hoặc chỉ đơn giản là tạo một biểu đồ tổng hợp chưa được tạo mẫu."
+
+#: graphs.php
+msgid "Title Format"
+msgstr "Định dạng tiêu đề:"
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -5538,6 +5475,10 @@ msgstr "Chế độ cây"
 #: include/global_arrays.php
 msgid "Tree Rule Items"
 msgstr "Mục quy tắc cây"
+
+#: include/global_arrays.php
+msgid "Tree Rules"
+msgstr "Quy tắc cây"
 
 #: include/global_arrays.php tree.php user_admin.php user_group_admin.php
 msgid "Trees"

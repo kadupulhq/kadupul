@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Telugu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 20:09-0800\n"
+"POT-Creation-Date: 2026-11-25 14:53-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Telugu\n"
@@ -112,10 +112,9 @@ msgstr "అమరిక"
 msgid "All Items"
 msgstr "అన్ని అంశాలు"
 
-#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
-#: data_debug.php data_sources.php graph_templates_items.php graphs.php
-#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php data_debug.php data_sources.php
+#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "ఏదైనా"
@@ -129,21 +128,21 @@ msgid "Associate with Aggregate"
 msgstr "అగ్రిగేట్‌తో అనుబంధించు"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graph_view.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php host_templates.php
+#: lib/clog_webapi.php lib/html.php lib/html_form.php lib/html_reports.php
+#: managers.php plugins.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "రద్దు చేయి"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php user_domains.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php user_domains.php
 msgid "Clear"
 msgstr "తుడిచివేయి"
 
@@ -189,11 +188,10 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "ట్రీ బ్రాంచ్ కింద కింది అగ్రిగేట్ గ్రాఫ్(ల) ను ఉంచడానికి 'Continue' పై క్లిక్ చేయండి."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php lib/clog_webapi.php
+#: lib/html.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Continue"
 msgstr "కొనసాగించు"
 
@@ -210,22 +208,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "అగ్రిగేట్‌ల నుండి కొత్త అగ్రిగేట్‌ను సృష్టించు"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: include/global_form.php lib/api_automation.php lib/html_reports.php
-#: managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php include/global_form.php
+#: lib/api_automation.php lib/html_reports.php managers.php plugins.php
+#: pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "డిఫాల్ట్"
 
 #: aggregate_graphs.php aggregate_templates.php automation_networks.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php include/global_settings.php lib/api_automation.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "తొలగించు"
 
@@ -250,12 +248,12 @@ msgid "Disassociate with Aggregate"
 msgstr "అగ్రిగేట్ నుండి వేరు చేయి"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php
 msgid "Go"
 msgstr "వెళ్ళు"
 
@@ -279,10 +277,10 @@ msgstr "గ్రాఫ్‌లు"
 msgid "Hide Item Details"
 msgstr "అంశం వివరాలను దాచు"
 
-#: aggregate_graphs.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
-#: user_admin.php user_group_admin.php
+#: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: lib/api_automation.php pollers.php tree.php user_admin.php
+#: user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -400,14 +398,13 @@ msgid "Return"
 msgstr "తిరిగి వెళ్లు"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php rrdcleaner.php settings.php
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
+#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "శోధించు"
 
@@ -988,8 +985,8 @@ msgstr "SNMP పేరు"
 msgid "Select Template"
 msgstr "టెంప్లేట్‌ను ఎంచుకో"
 
-#: automation_devices.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: data_sources.php data_templates.php lib/api_automation.php
 #: lib/html_reports.php lib/installer.php managers.php package_import.php
 #: plugins.php pollers.php templates_import.php user_admin.php
 #: user_group_admin.php utilities.php
@@ -1139,17 +1136,17 @@ msgstr "రోజువారీ"
 msgid "Data Collector"
 msgstr "డేటా కలెక్టర్"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php managers.php plugins.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: managers.php plugins.php pollers.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Disable"
 msgstr "నిలిపివేయి"
 
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_sources.php data_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_reports.php lib/html_utility.php managers.php
+#: pollers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Disabled"
 msgstr "నిలిపివేయబడింది"
 
@@ -1157,9 +1154,9 @@ msgstr "నిలిపివేయబడింది"
 msgid "Discover Now"
 msgstr "ఇప్పుడే కనుగొను"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php include/global_settings.php managers.php
-#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: include/global_settings.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Enable"
 msgstr "ప్రారంభించు"
 
@@ -1266,42 +1263,13 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "ట్రీ ఆటోమేషన్‌లో SQL ఇంజెక్షన్ చేయడానికి ప్రయత్నం జరిగింది"
 
 #: automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "అభ్యర్థించిన చర్యను వర్తింపజేయి"
-
-#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "మీరు ఖచ్చితంగా '%s' నియమాన్ని తొలగించాలనుకుంటున్నారా?"
 
 #: automation_tree_rules.php
-msgid "At Subtree"
-msgstr "సబ్‌ట్రీ వద్ద"
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to delete the following Rule(s)."
-msgstr "కింది నియమం(ల) ను తొలగించడానికి 'Continue' పై క్లిక్ చేయండి."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "కింది నియమం(ల) ను నిలిపివేయడానికి 'Continue' పై క్లిక్ చేయండి."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
-msgstr "కింది నియమం(ల) ను నకిలీ చేయడానికి 'Continue' పై క్లిక్ చేయండి. మీరు కొత్త నియమాల కోసం శీర్షిక ఫార్మాట్‌ను ఐచ్ఛికంగా మార్చవచ్చు."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "కింది నియమం(ల) ను ప్రారంభించడానికి 'Continue' పై క్లిక్ చేయండి."
-
-#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "సృష్టించబడిన ట్రీలు"
-
-#: automation_tree_rules.php data_queries.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
-msgid "Duplicate"
-msgstr "నకిలీ చేయి"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1312,24 +1280,12 @@ msgid "Graph Grouping Style"
 msgstr "గ్రాఫ్ సమూహ శైలి"
 
 #: automation_tree_rules.php
-msgid "Hook into Tree"
-msgstr "ట్రీలోకి హుక్ చేయి"
-
-#: automation_tree_rules.php
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "ట్రీ నియమం అంశం కోసం చెల్లని ఫీల్డ్ పేరు పేర్కొనబడింది."
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Leaf Item Type"
 msgstr "లీఫ్ అంశం రకం"
-
-#: automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "ఆ నియమాలు విజయవంతంగా పరీక్షించబడ్డాయని నిర్ధారించుకోండి!"
-
-#: automation_tree_rules.php
-msgid "No Tree Rules Found"
-msgstr "ట్రీ నియమాలు కనుగొనబడలేదు"
 
 #: automation_tree_rules.php
 msgid "Object Selection Criteria"
@@ -1340,24 +1296,8 @@ msgid "Optional: Sub-Tree Item"
 msgstr "ఐచ్ఛికం: ఉప-ట్రీ అంశం"
 
 #: automation_tree_rules.php
-msgid "ROOT"
-msgstr "ROOT"
-
-#: automation_tree_rules.php
-msgid "Rule Name"
-msgstr "నియమం పేరు"
-
-#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "ఈ ట్రీ నియమం ఫారమ్ గడువు ముగిసింది. నియమాన్ని మళ్లీ తెరిచి దాని ప్రస్తుత ఫారమ్‌ను ఉపయోగించండి."
-
-#: automation_tree_rules.php
-msgid "This Type"
-msgstr "ఈ రకం"
-
-#: automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "శీర్షిక ఫార్మాట్"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1371,18 +1311,6 @@ msgstr "ట్రీ సృష్టి ప్రమాణాలు"
 #, php-format
 msgid "Tree Rule Selection [edit: %s]"
 msgstr "ట్రీ నియమం ఎంపిక [సవరణ: %s]"
-
-#: automation_tree_rules.php include/global_arrays.php
-msgid "Tree Rules"
-msgstr "ట్రీ నియమాలు"
-
-#: automation_tree_rules.php
-msgid "Using Grouping"
-msgstr "సమూహాన్ని ఉపయోగించి"
-
-#: automation_tree_rules.php
-msgid "rule_name"
-msgstr "rule_name"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -2116,6 +2044,11 @@ msgid "Delete Data Query"
 msgid_plural "Delete Data Queries"
 msgstr[0] "డేటా క్వెరీని తొలగించు"
 msgstr[1] "డేటా క్వెరీలను తొలగించు"
+
+#: data_queries.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "నకిలీ చేయి"
 
 #: data_queries.php
 msgid "Duplicate Data Query"
@@ -3359,6 +3292,10 @@ msgstr "ఎంచుకున్న ట్రీ అందుబాటులో 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "ఈ గ్రాఫ్ టెంప్లేట్ కోసం ప్రస్తుతం ఎటువంటి అగ్రిగేట్ టెంప్లేట్‌లు నిర్వచించబడలేదు. దయచేసి ముందుగా ఎంచుకున్న గ్రాఫ్‌ల గ్రాఫ్ టెంప్లేట్ కోసం అగ్రిగేట్ టెంప్లేట్‌ను సృష్టించి మళ్లీ ప్రయత్నించండి, లేదా టెంప్లేట్ లేని అగ్రిగేట్ గ్రాఫ్‌ను సృష్టించండి."
+
+#: graphs.php
+msgid "Title Format"
+msgstr "శీర్షిక ఫార్మాట్"
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -5558,6 +5495,10 @@ msgstr "ట్రీ మోడ్"
 #: include/global_arrays.php
 msgid "Tree Rule Items"
 msgstr "ట్రీ నియమం అంశాలు"
+
+#: include/global_arrays.php
+msgid "Tree Rules"
+msgstr "ట్రీ నియమాలు"
 
 #: include/global_arrays.php tree.php user_admin.php user_group_admin.php
 msgid "Trees"

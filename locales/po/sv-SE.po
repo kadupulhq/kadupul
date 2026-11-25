@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 20:09-0800\n"
+"POT-Creation-Date: 2026-11-25 14:53-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -110,10 +110,9 @@ msgstr "Justera"
 msgid "All Items"
 msgstr "Alla objekt"
 
-#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
-#: data_debug.php data_sources.php graph_templates_items.php graphs.php
-#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php data_debug.php data_sources.php
+#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "Alla"
@@ -127,21 +126,21 @@ msgid "Associate with Aggregate"
 msgstr "Associera med Aggregat"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graph_view.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php host_templates.php
+#: lib/clog_webapi.php lib/html.php lib/html_form.php lib/html_reports.php
+#: managers.php plugins.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "Avbryt"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php user_domains.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php user_domains.php
 msgid "Clear"
 msgstr "Rensa"
 
@@ -187,11 +186,10 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "Klicka på 'Fortsätt' för att placera följande aggregatgraf(er) under trädgrenen."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php lib/clog_webapi.php
+#: lib/html.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Continue"
 msgstr "Fortsätt"
 
@@ -208,22 +206,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "Skapa nytt aggregat från aggregat"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: include/global_form.php lib/api_automation.php lib/html_reports.php
-#: managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php include/global_form.php
+#: lib/api_automation.php lib/html_reports.php managers.php plugins.php
+#: pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "Standard"
 
 #: aggregate_graphs.php aggregate_templates.php automation_networks.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php include/global_settings.php lib/api_automation.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -248,12 +246,12 @@ msgid "Disassociate with Aggregate"
 msgstr "Koppla bort från aggregat"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php
 msgid "Go"
 msgstr "Start"
 
@@ -277,10 +275,10 @@ msgstr "Diagram"
 msgid "Hide Item Details"
 msgstr "Dölj artikeldetaljer"
 
-#: aggregate_graphs.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
-#: user_admin.php user_group_admin.php
+#: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: lib/api_automation.php pollers.php tree.php user_admin.php
+#: user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -398,14 +396,13 @@ msgid "Return"
 msgstr "Tillbaka"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php rrdcleaner.php settings.php
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
+#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "Sök"
 
@@ -986,8 +983,8 @@ msgstr "SNMP namn"
 msgid "Select Template"
 msgstr "Välj mall"
 
-#: automation_devices.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: data_sources.php data_templates.php lib/api_automation.php
 #: lib/html_reports.php lib/installer.php managers.php package_import.php
 #: plugins.php pollers.php templates_import.php user_admin.php
 #: user_group_admin.php utilities.php
@@ -1137,17 +1134,17 @@ msgstr "Dagligen"
 msgid "Data Collector"
 msgstr "Datainsamlare"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php managers.php plugins.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: managers.php plugins.php pollers.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Disable"
 msgstr "Inaktivera"
 
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_sources.php data_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_reports.php lib/html_utility.php managers.php
+#: pollers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Disabled"
 msgstr "Inaktiverad"
 
@@ -1155,9 +1152,9 @@ msgstr "Inaktiverad"
 msgid "Discover Now"
 msgstr "Upptäck nu"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php include/global_settings.php managers.php
-#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: include/global_settings.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Enable"
 msgstr "Aktivera"
 
@@ -1264,42 +1261,13 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "Ett försök gjordes att utföra en SQL-injektion i Tree Automation"
 
 #: automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "Ansök önskad åtgärd"
-
-#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Är du säker på att du vill TA BORT regeln '%s'?"
 
 #: automation_tree_rules.php
-msgid "At Subtree"
-msgstr "På Subtree"
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to delete the following Rule(s)."
-msgstr "Klicka på \"Fortsätt\" för att radera följande regler."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Klicka på \"Fortsätt\" för att inaktivera följande regel (er)."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
-msgstr "Klicka på \"Fortsätt\" för att duplicera följande regel (er). Du kan valfritt ändra titelformat för de nya reglerna."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Klicka på \"Fortsätt\" för att aktivera följande regel (er)."
-
-#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "Skapade träd"
-
-#: automation_tree_rules.php data_queries.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
-msgid "Duplicate"
-msgstr "Duplicera"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1310,24 +1278,12 @@ msgid "Graph Grouping Style"
 msgstr "Stil för gruppering av grafer"
 
 #: automation_tree_rules.php
-msgid "Hook into Tree"
-msgstr "Krok i träd"
-
-#: automation_tree_rules.php
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Ogiltigt fältnamn angivet för trädregelobjekt."
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Leaf Item Type"
 msgstr "Blad Artikeltyp"
-
-#: automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "Se till att de reglerna har testats!"
-
-#: automation_tree_rules.php
-msgid "No Tree Rules Found"
-msgstr "Inga trädregler hittades"
 
 #: automation_tree_rules.php
 msgid "Object Selection Criteria"
@@ -1338,24 +1294,8 @@ msgid "Optional: Sub-Tree Item"
 msgstr "Valfritt: Underträdspost"
 
 #: automation_tree_rules.php
-msgid "ROOT"
-msgstr "ROT"
-
-#: automation_tree_rules.php
-msgid "Rule Name"
-msgstr "Regelnamn"
-
-#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "Detta trädregelformulär har upphört att gälla. Öppna regeln igen och använd dess aktuella formulär."
-
-#: automation_tree_rules.php
-msgid "This Type"
-msgstr "Denna typ"
-
-#: automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "Rubrikformat"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1369,18 +1309,6 @@ msgstr "Kriterier för skapande av träd"
 #, php-format
 msgid "Tree Rule Selection [edit: %s]"
 msgstr "Val av trädregel [edit: %s]"
-
-#: automation_tree_rules.php include/global_arrays.php
-msgid "Tree Rules"
-msgstr "Regler för träd"
-
-#: automation_tree_rules.php
-msgid "Using Grouping"
-msgstr "Använda gruppering"
-
-#: automation_tree_rules.php
-msgid "rule_name"
-msgstr "regel_namn"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -2114,6 +2042,11 @@ msgid "Delete Data Query"
 msgid_plural "Delete Data Queries"
 msgstr[0] "Ta bort datafråga"
 msgstr[1] "Ta bort datafrågor"
+
+#: data_queries.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "Duplicera"
 
 #: data_queries.php
 msgid "Duplicate Data Query"
@@ -3357,6 +3290,10 @@ msgstr "Det valda trädet är inte tillgängligt."
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Det finns för närvarande inga aggregerade mallar definierade för denna grafmall. Skapa först en aggregerad mall för de valda grafernas grafmall och försök igen, eller skapa helt enkelt en aggregerad graf utan mall."
+
+#: graphs.php
+msgid "Title Format"
+msgstr "Rubrikformat"
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -5556,6 +5493,10 @@ msgstr "Trädläge"
 #: include/global_arrays.php
 msgid "Tree Rule Items"
 msgstr "Trädregelobjekt"
+
+#: include/global_arrays.php
+msgid "Tree Rules"
+msgstr "Regler för träd"
 
 #: include/global_arrays.php tree.php user_admin.php user_group_admin.php
 msgid "Trees"
