@@ -293,7 +293,7 @@ function template_item_remove_gt_confirm()
     ?>
 	<tr>
 		<td class='topBoxAlt'>
-			<p><?php print __('Click \'Continue\' to delete the following Graph Template will be disassociated from the Device Template.');?></p>
+			<p><?php print __('Click \'Continue\' and the following Graph Template will be disassociated from the Device Template.');?></p>
 			<p><?php print __('Graph Template Name: %s', html_escape($template['name']));?>'<br>
 		</td>
 	</tr>
@@ -366,7 +366,7 @@ function template_item_remove_dq_confirm()
     ?>
 	<tr>
 		<td class='topBoxAlt'>
-			<p><?php print __('Click \'Continue\' to delete the following Data Queries will be disassociated from the Device Template.');?></p>
+			<p><?php print __('Click \'Continue\' and the following Data Queries will be disassociated from the Device Template.');?></p>
 			<p><?php print __('Data Query Name: %s', html_escape($query['name']));?>'<br>
 		</td>
 	</tr>
@@ -943,7 +943,7 @@ function template()
             'display' => __('Device Class'),
             'align' => 'left',
             'sort' => 'ASC',
-            'tip' => __('The Class of this Device Template.  The Class Name should be representative of it\'s function.')
+            'tip' => __('The Class of this Device Template.  The Class Name should be representative of its function.')
         ),
         'ht.id' => array(
             'display' => __('ID'),

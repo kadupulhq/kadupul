@@ -99,7 +99,7 @@ final readonly class DiscoveryNetworkChange
             $schedule = match ($settings['sched_type']) {
                 3 => [['day_of_week'], 'You must specify the day of the week.'],
                 4 => [['month', 'day_of_month'], 'You must specify both the Months and Days of Month.'],
-                5 => [['month', 'monthly_week', 'monthly_day'], 'You must specify the Months, Weeks of Months, and Days of Week.'],
+                5 => [['month', 'monthly_week', 'monthly_day'], 'You must specify the Months, Weeks of Month, and Days of Week.'],
                 default => [[], ''],
             };
             foreach ($schedule[0] as $required) {

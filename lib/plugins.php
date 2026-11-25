@@ -694,7 +694,7 @@ function api_plugin_install($plugin)
         raise_message('directory_error', __esc('The Plugin directory \'%s\' needs to be renamed to remove \'plugin_\' from the name before it can be installed.', $plugin), MESSAGE_LEVEL_ERROR);
         return false;
     } else {
-        raise_message('version_error', __esc('The Plugin in the directory \'%s\' does not include an version function \'%s()\'.  This function must exist for the plugin to be installed.', $plugin, $function), MESSAGE_LEVEL_ERROR);
+        raise_message('version_error', __esc('The Plugin in the directory \'%s\' does not include a version function \'%s()\'.  This function must exist for the plugin to be installed.', $plugin, $function), MESSAGE_LEVEL_ERROR);
         return false;
     }
 

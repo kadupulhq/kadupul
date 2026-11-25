@@ -292,11 +292,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "Mba hamindrana ireto Kisary mitambatra eto ambany ireto ho Kisary mitambatra mifototra amin'ny Modely dia mamoròna aloha Modely kisary mitambatra ho an'ny Modely kisary '%s'."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "Mba hamindrana ireto Kisary mitambatra eto ambany ireto ho Kisary mitambatra mifototra amin'ny Modely dia tsy maintsy Modely kisary iray ihany no ampiasainy. Tsindrio azafady ny 'Miverena' ary fidio ihany ireo Kisary mitambatra mampiasa Modely kisary mitovy."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "Mba hamindrana ireto Kisary mitambatra eto ambany ireto hampiasa Modely kisary mitambatra dia tsy maintsy efa misy iray aloha. Tsindrio azafady ny 'Miverena' ary mamoròna Modely kisary mitambatra aloha vao manandrana indray."
 
 #: aggregate_graphs.php
@@ -441,7 +441,7 @@ msgid "Template"
 msgstr "Lasitra"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "Ny Lasitra Fitambarana iorenan'ity Kisary Mitambatra ity"
 
 #: aggregate_graphs.php
@@ -449,7 +449,7 @@ msgid "The internal database identifier for this object"
 msgstr "Ny famantarana anatiny ao amin'ny tahirin-kevitra ho an'ity singa ity"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "Toa tsy manana Modely kisary mitambatra mifanaraka aminy ireo Kisary mitambatra voafidy."
 
 #: aggregate_graphs.php
@@ -520,7 +520,7 @@ msgid "Aggregate Templates"
 msgstr "Lasitra Fitambarana"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Tsy azo Fafana ny Lasitra Fitambarana ampiasaina.  Ny hoe ampiasaina dia midika fa tondroin'ny Fitambarana iray."
 
 #: aggregate_templates.php
@@ -757,7 +757,7 @@ msgid "All your login sessions have been cleared."
 msgstr "Voafafa avokoa ny fotoam-pidiranao rehetra."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "Adiresy mailaka ahafahana mifandray aminao."
 
 #: auth_profile.php
@@ -1111,7 +1111,7 @@ msgid "Clear Filtered"
 msgstr "Diovy ny voasivana"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "Tsindrio ny 'Tohizo' mba hanafoanana ireo Fikarohana Tambajotra mandeha."
 
 #: automation_networks.php
@@ -1238,7 +1238,7 @@ msgid "Schedule"
 msgstr "Fandaharam-potoana"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "Ny sata ankehitriny amin'ity fikarohana tambajotra ity"
 
 #: automation_networks.php
@@ -1679,11 +1679,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "Ho an'ny toetra '%s', olana hita '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "Azon'ny poller soratana ve ny lahatahiry RRA?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "Azon'ny poller soratana ve ny rakitra RRD?"
 
 #: data_debug.php
@@ -2063,7 +2063,7 @@ msgstr "Vakiana ihany ny fampifandraisana mandra-pahitana ny rakitra XML"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "Tsindrio ny 'Tohizo' mba hamafana ity Fanontaniana angon-drakitra manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' mba hamafana ireto Fanontaniana angon-drakitra manaraka ireto."
 
@@ -2073,7 +2073,7 @@ msgstr "Tsindrio ny 'Tohizo' mba hamafana ity Fampifandraisana Kisary amin'ny Fa
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "Tsindrio ny 'Tohizo' mba handikana ity Fanontaniana angon-drakitra manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' mba handikana ireto Fanontaniana angon-drakitra manaraka ireto."
 
@@ -2235,7 +2235,7 @@ msgid "The name of this Data Query."
 msgstr "Ny anaran'ity Fanontaniana angon-drakitra ity."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "Ny isan'ny Lasitra kisary mampiasa ity Fangatahan-drakitra ity."
 
 #: data_queries.php
@@ -2287,7 +2287,7 @@ msgstr "Fidio ny fitaovana tompon'ity loharanon-drakitra ity."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "Tsindrio ny 'Tohizo' hamafana ity Loharanon-drakitra manaraka ity"
 msgstr[1] "Tsindrio ny 'Tohizo' hamafana ireto Loharanon-drakitra manaraka ireto"
 
@@ -2427,7 +2427,7 @@ msgid "External"
 msgstr "Ivelany"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "Raha tsy ampiasain'ny kisary intsony ity loharanon-drakitra ity dia azo fafana."
 
 #: data_sources.php
@@ -2554,7 +2554,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "Na hangonina na tsia ny angona ho an'ity loharanon-drakitra ity. Fehezina eo amin'ny ambaratongan'ny lasitry ny loharanon-drakitra."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "Rehefa esorinao ny marika amin'ity boaty fanamarinana ity ary avy eo tahirizinao ny lasitry ny loharanon-drakitra, dia ho very ny angona manokana ao amin'ireo loharanon-drakitra efa misy mifototra amin'ity lasitry ny loharanon-drakitra ity. Mety hiteraka fahatapahana amin'ny fanangonana angona sy ny kisary izany"
 
 #: data_templates.php
@@ -2616,7 +2616,7 @@ msgid "Data Templates [new]"
 msgstr "Lasitry ny loharanon-drakitra [vaovao]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "Tsy azo ovaina ny lasitry ny loharanon-drakitra izay mbola ampiasaina"
 
 #: data_templates.php
@@ -2693,7 +2693,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "Tsy mandeha ity sanda ity satria avy amin'ny fitaovana izy ary vakiana ihany."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "Tsy mandeha ity sanda ity satria na avy amin'ny fitaovana izy na avy amin'ny zavatra manokana Fangatahana angona izay manara-maso ny fifandraisana manan-danja amin'ny Fangatahana angona."
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2819,7 +2819,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "Tsindrio ny 'Tohizo' handikana ireto Modely kisary ireto. Azonao atao ny manova ny endriky ny lohateny ho an'ireo Modely kisary vaovao raha tianao."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "Tsindrio ny 'Tohizo' hanaovana Fampifanarahana tanteraka eo amin'ny Kisary sy ireo Modely kisary voafantina. Raha toa ka tsy mifanaraka amin'ny Modely kisary fotsiny ny Singan'ny Kisary, andramo aloha ny safidy Ampifanaraho haingana ny Kisary satria mandany fotoana kely kokoa izany. Ilaina ity fiasa ity raha manana Kisary avy amin'ny endrika samihafa amin'ny Modely kisary iray ianao ka tianao hitovy endrika daholo izy rehetra."
 
 #: graph_templates.php
@@ -3151,7 +3151,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "Fanovana ny fitaovana mifandray amin'ny kisary"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Misafidiana Lasitra kisary ary tsindrio ny 'Tohizo' hanovana ny Lasitra kisary ho an'ireto Kisary ireto. Mariho fa ny Lasitra kisary mifanaraka ihany no haseho. Fantatra fa mifanaraka izy ireo rehefa mitovy ny Loharanon-drakitra ao aminy."
 
 #: graphs.php
@@ -3357,7 +3357,7 @@ msgid "The selected Tree is not available."
 msgstr "Tsy misy ny Hazo voafidy."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "Tsy mbola misy môdely mitambatra voafaritra ho an'ity môdelin-kisary ity amin'izao fotoana izao. Mamoròna aloha môdely mitambatra ho an'ny môdelin-kisarin'ireo kisary voafidy ary andramo indray, na mamoròna tsotra fotsiny kisary mitambatra tsy misy môdely."
 
 #: graphs.php
@@ -3551,20 +3551,20 @@ msgid "Class"
 msgstr "Sokajy"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "Tsindrio ny 'Tohizo' hamafana ireto Fanontaniana angon-drakitra manaraka ireto mba tsy hifandray amin'ny Lasitra Fitaovana intsony."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "Tsindrio ny 'Tohizo' hamafana ity Lasitra Kisary manaraka ity mba tsy hifandray amin'ny Lasitra Fitaovana intsony."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "Tsindrio ny 'Tohizo' hampifanarahana ny Fitaovana mifandray amin'ny Lasitra Fitaovana voafidy. Mariho fa mety haharitra ela ity hetsika ity arakaraka ny isan'ny Fitaovana mifamatotra amin'ny Lasitra Fitaovana."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "Tsindrio ny 'Tohizo' hamafana ireto Fanontaniana angon-drakitra manaraka ireto mba tsy hifandray amin'ny Lasitra Fitaovana intsony."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "Tsindrio ny 'Tohizo' hamafana ireto Lasitra Fitaovana manaraka ireto."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "Tsindrio ny 'Tohizo' hamafana ity Lasitra Kisary manaraka ity mba tsy hifandray amin'ny Lasitra Fitaovana intsony."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3654,7 +3654,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Hampifanaraka Fitaovana amin'ny Lasitra Fitaovana"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "Ny Sokajin'ity Lasitra Fitaovana ity. Ny Anaran'ny Sokajy dia tokony haneho ny asany."
 
 #: host_templates.php
@@ -3679,7 +3679,7 @@ msgstr "HADISOANA LEHIBE: Tsy maintsy tafiditra ianao vao afaka miditra amin'ity
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "Raha heverinao fa hadisoana izany, mifandraisa azafady amin'ny mpitantana Kadupul anao."
 
 #: include/auth.php
@@ -3695,7 +3695,7 @@ msgid "Not Logged In"
 msgstr "Tsy tafiditra"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "Ny mpitantana Kadupul manana zo Hametraka/Hanavao ihany no afaka miditra amin'izao fotoana izao"
 
 #: include/auth.php
@@ -5079,7 +5079,7 @@ msgid "Operator"
 msgstr "Marika kajy"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "Tsy voafaritra ny pejy. Noho izany, tsy azo aseho izy io."
 
 #: include/global_arrays.php
@@ -5645,8 +5645,8 @@ msgid "Use the First Handler Found"
 msgstr "Ampiasao ny mpitantana voalohany hita"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "Ampiasao ny mpitantana MonoTranslator GetText"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "Ampiasao ny mpitantana MoTranslator GetText"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5791,7 +5791,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Rehefa miova ny isan'ny tondron'ny Fanontaniana Angona, dia hisy fanavaozana tondro hatao."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Rehefa mihemotra ny fotoana fiasan'ny SNMP an'ny Fitaovana, dia hisy fanavaozana tondro hatao."
 
 #: include/global_arrays.php
@@ -5835,7 +5835,7 @@ msgid "You are not allowed to change your password."
 msgstr "Tsy mahazo alalana hanova ny tenimiafinao ianao."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "Tsy maintsy velominao ny fanamarinana mpampiasa anatiny mba hampiasana ity endri-javatra ity."
 
 #: include/global_arrays.php
@@ -5997,17 +5997,17 @@ msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repetitions"
+msgid "%d Repetition"
 msgstr "%d famerenana"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repitition"
+msgid "%d Repetitions"
 msgstr "%d famerenana"
 
 #: include/global_form.php
@@ -6216,7 +6216,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "Misafidiana Fangatahan-drakitra hampiharina amin'ity fitsipika ity."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "Misafidiana singan'ny zana-kazo hampifandraisina.<br>Ataovy azo antoka fa mbola ao izany rehefa tanterahina ity fitsipika ity!"
 
 #: include/global_form.php
@@ -6226,6 +6226,10 @@ msgstr "Misafidiana hazo ho an'ireo singan'ny hazo vaovao."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "Misafidiana anarana ho an'ity loharanon-drakitra ity. Afaka ahitana marika fanoloana toy ny |host_description| na |query_fieldName| izany. Raha hijery ny lisitra feno amin'ny marika fanoloana tohanana dia jereo ny antontan-taratasin'ny Kadupul."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "Fidio anarana tokana hisolo tena ity ampahan'angon-drakitra ity ao anatin'ny RRDfile."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6285,10 +6289,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "Fidio ny fomba tianao hampiasaina hanangonana angon-drakitra ho an'ity fomba fampidirana angon-drakitra ity."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "Fidio anarana tokana hisolo tena ity ampahan'angon-drakitra ity ao anatin'ny RRDfile."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "Safidy mahazatra"
 
@@ -6341,7 +6341,7 @@ msgid "Determines if the user account is locked."
 msgstr "Mamaritra raha voahidy ny kaontin'ny mpampiasa."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "Mamaritra raha afaka miditra ny mpampiasa."
 
 #: include/global_form.php
@@ -6402,7 +6402,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "Ampidiro ny konteksty SNMP ampiasaina ho an'ity fitaovana ity."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Ampidiro ny ID-n'ny maotera SNMP v3 ampiasaina ho an'ity fitaovana ity. Avelao ho foana ity saha ity raha hampiasa ny ID-n'ny maotera SNMP voafaritra isaky ny mpandray fampandrenesana SNMPv3."
 
 #: include/global_form.php
@@ -6605,7 +6605,7 @@ msgid "Include Prefix Text"
 msgstr "Ampidiro ny lahatsoratry ny tovona"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "Ampidiro miaraka amin'ny Kisary mitambatra ny lahatsoratry ny lohateny GPRINT avy amin'ny kisary loharano."
 
 #: include/global_form.php
@@ -7113,7 +7113,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "Ny angon-drakitra alefa any amin'ny script, izay ahitana ny lalana feno mankany amin'ny script sy ny loharano fampidirana ao anatin'ny fonosana &lt;&gt;."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "Ny matetika hanangonana ny angon-drakitra avy amin'ny loharanon-drakitra?"
 
 #: include/global_form.php
@@ -7217,7 +7217,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "Ny toerana ara-batana misy ny Fitaovana. Ity lahatsoratra malalaka ity dia mety ho efitrano, toerana ao amin'ny fitoerana fitaovana (rack), sns."
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "Ny vokatry ny fanamarinana elanelana fotsy ho an'ilay fomba fampidirana manokana. Raha miova ny lahatsoratra fampidirana, ary tsy nohavaozina ny rakitra lisitra fotsy, dia tsy ho azo atao ny mamorona kisary."
 
 #: include/global_form.php
@@ -7233,7 +7233,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Ny karazana kisary vokarina; PNG, GIF na SVG. Miankina tanteraka amin'ny RRDtool ny fisafidianana ny karazana sarin'ny kisary."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Ny karazana fonosan-drakitra ping halefa.  <br><i>FANAMARIHANA: Ny ICMP amin'ny Linux/UNIX dia mitaky alalana root.</i>  <br><i>FANAMARIHANA: TCP Ping Closed - Na dia tsy nahomby aza ny ping tcp, dia azo heverina ho mandeha (UP) ny fitaovana.</i>"
 
 #: include/global_form.php
@@ -7329,7 +7329,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "Marika mitsangana (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "Amin'ny Toerana inona no ifandraisan'ity Fitaovana ity."
 
 #: include/global_form.php
@@ -7353,11 +7353,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "Rehefa mijery kisary mifototra amin'ilay RRA resahina, ny elanelam-potoana tsotra haseho ho an'io kisary io."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Rehefa manamboatra ny mariky ny teza havia ianao dia ampiasao ny fitsipika amin'ny endriky ny angona. Ny endrika tohanana dia ahitana ny \"numeric\" izay andraisana ny angona ho isa, ny \"timestamp\" izay andikana ny sanda ho fotoana UNIX (isan'ny segondra nanomboka ny Janoary 1970) ary aseho amin'ny fampiasana endrika strftime (ny tsotsotra dia \"%Y-%m-%d %H:%M:%S\"). Jereo koa ny --units-length. Farany ny \"duration\" izay andikana ny sanda ho faharetana amin'ny milisegondra. Ny fandrindrana endrika dia manaraka ny fitsipiky ny PRINT/GPRINT manana valstrfduration."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Rehefa manamboatra ny mariky ny teza havanana ianao dia ampiasao ny fitsipika amin'ny endriky ny angona. Ny endrika tohanana dia ahitana ny \"numeric\" izay andraisana ny angona ho isa, ny \"timestamp\" izay andikana ny sanda ho fotoana UNIX (isan'ny segondra nanomboka ny Janoary 1970) ary aseho amin'ny fampiasana endrika strftime (ny tsotsotra dia \"%Y-%m-%d %H:%M:%S\"). Jereo koa ny --units-length sy ny --right-axis-format. Farany ny \"duration\" izay andikana ny sanda ho faharetana amin'ny milisegondra. Ny fandrindrana endrika dia manaraka ny fitsipiky ny PRINT/GPRINT manana valstrfduration."
 
 #: include/global_form.php
@@ -7521,11 +7521,11 @@ msgid "56 Gbps Ethernet"
 msgstr "Ethernet 56 Gbps"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote><i>Fanamarinana Fidirana Tafiditra Anaty (Built-in Authentication)</i> - i Kadupul no mitantana ny fanamarinana ny mpampiasa, izay mamela anao hamorona mpampiasa sy hanome azy ireo zo amin'ny faritra samihafa ao anatin'i Kadupul.<br><br><i>Fanamarinana Fidirana Tsotra Web (Web Basic Authentication)</i> - Ny lohamilina web no mitantana ny fanamarinana. Ny mpampiasa dia azo ampiana na foronina ho azy amin'ny fidirana voalohany raha voafaritra ny Mpampiasa Lasitra, raha tsy izany dia ny fahazoan-dalan'ny vahiny voafaritra no hampiasaina.<br><br><i>Fanamarinana Fidirana LDAP (LDAP Authentication)</i> - Mamela ny fanamarinana amin'ny alalan'ny lohamilina LDAP. Ny mpampiasa dia hoforonina ho azy amin'ny fidirana voalohany raha voafaritra ny Mpampiasa Lasitra, raha tsy izany dia ny fahazoan-dalan'ny vahiny voafaritra no hampiasaina.  Raha tsy mandeha ny maodely LDAP an'ny PHP, tsy hiseho ho safidy azo fidina ny Fanamarinana Fidirana LDAP.<br><br><i>Fanamarinana Fidirana Sehatra LDAP/AD Maromaro (Multiple LDAP/AD Domain Authentication)</i> - Mamela ny mpitantana hanohana vondrona samihafa maromaro avy amin'ny lahatahiry LDAP/AD samihafa hiditra amin'ny loharanon'i Kadupul.  Toy ny Fanamarinana Fidirana LDAP ihany, ilaina ny maodely PHP LDAP mba hampiasana ity fomba ity.</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "Lisitry ny mari-panondro (ID) an'ny Fitaovana sarahin'ny faingo izay tianao ho ao amin'ny fomba Debug mandritra ny fanangonana angon-drakitra.  Ity ambaratonga Debug ity dia mandeha mandritra ny dingana fanangonana (polling) an'i Kadupul ihany."
 
 #: include/global_settings.php
@@ -7533,7 +7533,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "Safidy natokana ho an'ny mpamorona ihany mba hanarahana ny famoronana Loharanon-drakitra, indrindra eo amin'ny fanamarinana ny tsy fitoviana"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "Lisitry ny anaran'ny mpampiantrano DNS na adiresy IP sarahan'ny elanelana ho an'ny lohamilina LDAP manan-kery.  Hanandrana hampiasa ny lohamilina LDAP manomboka miankavia miankavanana i Kadupul mba hanamarinana ny mpampiasa."
 
 #: include/global_settings.php
@@ -7753,7 +7753,7 @@ msgid "By Template/Data Query"
 msgstr "Araka ny Modely/Fanontaniana rakitra"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Araka ny mahazatra, ny fanampiana amin'ny pejin'i Kadupul dia ao amin'ny kadupul.org.  Na izany aza, raha tsy manana fidirana amin'ny Internet ny rafitrao, dia azonao alaina eo an-toerana amin'ny endrika HTML ny antontan-taratasy fanampiana ary apetraka ao amin'ny lahatahiry 'docs' ao amin'ny lohamilina Kadupul-nao.  Raha ny toerana eo an-toerana ihany no safidinao hampiasaina ho an'ny antontan-taratasy fanampiana, mariho ity boaty fifantenana ity."
 
 #: include/global_settings.php
@@ -7777,7 +7777,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "Tsindrio ity boaty fanamarinana ity raha te hitsapa ny Loharanon-drakitra alohan'ny hamoronana azy ho an'ny Modely Kisary vaovao sy vao nampidirina ianao. Rehefa alefa ny Fitsapana Loharanon-drakitra, raha tsy mamerina angona manan-kery ny Loharanon-drakitra dia tsy ho voaforona ny Kisary. Zava-dehibe ity fikirana ity raha te hanana Modely Fitaovana ankapobeny kokoa ianao izay afaka ahitana Modely Kisary maromaro azo ampiharina manokana arakaraka ny toetran'ilay Fitaovana tenany. Fanamarihana: Raha manana script maharitra ela ianao ho Loharanon-drakitra dia hitombo ny fotoana hamoronana Kisary."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "Safidio ny 'enabled' mba hahafahana mandika ny fitenin'i Kadupul. Ny fomba henjana (strict mode) dia mitaky ny hanohanan'ny tovana rehetra tafapetraka ao amin'ny rafitrao ny fiteny nangatahina ihany koa. Raha tsy izany no izy dia haseho amin'ny teny Anglisy ny zava-drehetra."
 
 #: include/global_settings.php
@@ -7957,7 +7957,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Mpampiasa fanamarinana alalana SNMP v3 mahazatra ho an'ny Fitaovana vaovao rehetra."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Engine Id SNMP v3 mahazatra ho an'ny Fitaovana vaovao rehetra. Avelao ho foana ity saha ity raha hampiasa ny SNMP Engine ID voafaritra isaky ny mpandray Fampandrenesana SNMPv3."
 
 #: include/global_settings.php
@@ -8173,11 +8173,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "Alefaso na atsaharo ny fanondroana LDAP (referrals). Raha atsahatra izany dia mety hampitombo ny hafainganam-pandehan'ny fikarohana."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "Nampandehanina ny fanohanana Gradient ho an'ny tabilao AREA sy STACK."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "Mamelona ny fampidirana mivantana ny tahirin-drakitra ao amin'ny poller_output_boost izay mampihena 25% ny fotoana isaky ny tsingerin'ny fanangonana."
 
 #: include/global_settings.php user_domains.php
@@ -8269,7 +8269,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "Hampiasaina miaraka amin'ny Fanohanana Rohy Ivelany an'i Kadupul.  Amin'ny fampiasana ity fikirana ity dia azonao afenina ny Tabilao fanaraha-mason'i Kadupul, mba hahafahanao mampiseho ny pejinao manokana fotsiny."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "Ho an'ireo mpampiasa manana fahazoan-dalana amin'ny Konsoly ihany, hafiriana no hahafahan'ity mpampiasa ity mijanona tafiditra alohan'ny hivoahany ho azy. Mariho fa raha tsy niasa nandritra ny mihoatra ny adiny iray ianao dia mety ho voatery hanavao ny mpitety tranonkalanao. Mariho ihany koa fa tsy misy fiantraikany ity fikirana ity rehefa alefa ny Cookies fanamarinana."
 
 #: include/global_settings.php
@@ -8417,11 +8417,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "Ahoana no tianao hijerena ny kisary amin'ny fotoana tena izy?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "Impiry no tokony havaozina ny antontan'isa isan'andro?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "Impiry no tokony hamarinina ny RRD?"
 
 #: include/global_settings.php
@@ -8429,7 +8429,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "Ny faharetan'ny fotoana ahafahan'ny fanombanana iray manomboka andiam-pitsipika vaovao. Manaraka ny fanombanana miaraka amin'ny fotoana sisa tavela ny fandefasana ny fampahafantarana miandry, ary afaka mandefa andiany iray na dia efa lany aza ny teti-potoana. Ireo fitsipika tsy tratra dia tombanana voalohany amin'ny fihodinana manaraka."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "Firy ny OID tokony haverina isaky ny fangatahana snmpbulkwalk? Ho an'ny Fitaovana manana hazo SNMP lehibe, ny fampitomboana io habe io dia hampitombo ny fahombiazan'ny famerenana fanondroana (re-index) amin'ny WAN."
 
 #: include/global_settings.php
@@ -8437,15 +8437,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "Firy ny rakitra diary tianao hotehirizina? Ampiasao ny 0 raha tsy hanaisotra diary mihitsy. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "Matetika toy ny ahoana no tianao hanavaozana ny fampisehoana ny rakitra firaketan'i Kadupul."
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Ny fomba tokony hanohanan'i Kadupul ny Daty amin'ny Mpanjifa araka ny faritra ora (timezone) an'ny mpitety tranonkalan'ny Mpanjifa."
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Ny fomba hitantanan'i Kadupul ny firaketana ny zava-mitranga."
 
 #: include/global_settings.php
@@ -8461,7 +8461,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "Raha voamarika, i Kadupul dia hirakitra fampahalalana LDAP fanampiny ao amin'ny rakitra firaketan'i Kadupul mandritra ny hetsika Fampifandraisana (Binding) sy Fikarohana (Searching)."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Raha tsy afaka mamaritra ny hafainganam-pandehan'ny fifandraisana (interface) i Kadupul noho ny ifSpeed na ifHighSpeed tsy voafaritra na mitovy amin'ny aotra, inona no sanda fara tampony tianao apetraka amin'ireo rakitra RRD vokarina."
 
 #: include/global_settings.php
@@ -8489,7 +8489,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "Raha mihoatra izany habe izany, amin'ny isan'ny tahirin-drakitra, ny tabilao fivoahan'ny Boost dia hisy fanavaozana hatao."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "Raha mihoatra io faharetan'ny fihazakazahana io ny mpanangona Boost dia hisy fampitandremana hapetraka ao amin'ny diary Cacti,"
 
 #: include/global_settings.php
@@ -8497,7 +8497,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "Raha tsy foana ity lahatahiry ity, dia hotehirizina ho dika mitovy ao amin'ity toerana ity ny rakitra RRD voalohany anananao."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "Raha tsy foana ity saha ity dia hitahiry ny vokatry ny RRDUpdate avy amin'ny fizotry ny mpanangona Boost ny Boost."
 
 #: include/global_settings.php
@@ -8505,7 +8505,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "Raha voamarika ity safidy ity, i Kadupul dia hameno ny tabilaon'ny SNMP Agent amin'ny fampahalalana momba ny fitaovana sy ny rafitra Kadupul.  Tsy mampandeha ny SNMP Agent tenany izany."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "Raha manana olana amin'ny Mpanangon-drakitra an'i Kadupul ianao, amboary ity lalan-drakitra ity dia hatodika mankany amin'ity rakitra ity ny fivoahan'ny hadisoana mahazatra (standard error) an'ny Mpanangon-drakitra"
 
 #: include/global_settings.php
@@ -8685,7 +8685,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "Singa Loharanon-drakitra fara fahabetsany isaky ny fandehanana"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "Haben'ny Mailaka Farany Ambony"
 
 #: include/global_settings.php
@@ -8740,20 +8740,20 @@ msgstr "Sakan'ny hazo farany ambany"
 msgid "Mode"
 msgstr "Maody"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Ny maody hanandraman'ny Cacti hanamarina amin'ny mpizara LDAP.<blockquote><i>Tsy misy fikarohana</i> - Tsy misy fikarohana Anarana Manavaka (DN) atao, fa manandrana mamatotra (bind) fotsiny amin'ny endrika Anarana Manavaka (DN) nomena.<br><br><i>Fikarohana tsy mitonona anarana</i> - Manandrana mikaroka ny anaran'ny mpampiasa ao amin'ny lahatahiry LDAP amin'ny alalan'ny famatorana tsy mitonona anarana mba hahitana ny Anarana Manavaka (DN) an'ny mpampiasa.<br><br><i>Fikarohana voafaritra</i> - Manandrana mikaroka ny anaran'ny mpampiasa ao amin'ny lahatahiry LDAP amin'ny alalan'ny Anarana Manavaka (DN) voafaritra sy Tenimiafina voafaritra mba hanaovana famatorana hahitana ny Anarana Manavaka (DN) an'ny mpampiasa."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "Isam-bolana isaky ny Alahady"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "Faritra oran'ny Mpitety Tranonkalako"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "Sanda NaN"
 
 #: include/global_settings.php
@@ -9249,7 +9249,7 @@ msgid "Server(s)"
 msgstr "Mpizara"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Tokony hampandeha ny fanavaozana RRD araka izay ilaina ao amin'i Kadupul ve ny Boost?  Raha atsahatrao dia tsy hanan-kery ity fiovana ity raha tsy aorian'ny tsingerin'ny fanangonana (polling) manaraka.  Rehefa manana Mpanangon-drakitra Lavitra ianao dia tsy maintsy alefa ity fikirana ity."
 
 #: include/global_settings.php
@@ -9269,7 +9269,7 @@ msgid "Should image caching be enabled?"
 msgstr "Tokony halefa ve ny fitahirizana sary vonjimaika?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "Raha tokony ho voamarika ho azy ny Manana Kisary sy ny Manana Loharanon-drakitra."
 
 #: include/global_settings.php
@@ -9293,7 +9293,7 @@ msgid "Show business hours"
 msgstr "Asehoy ny ora fiasana"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "Aseho ihany ireo toerana misy ao amin'ny site voafidin'ny fitaovana iray."
 
 #: include/global_settings.php
@@ -9313,11 +9313,11 @@ msgid "Site Security"
 msgstr "Fiarovana ny tranonkala"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "Misy amin'ny fifandraisan'i Kadupul no manohana ny Drag-N-Drop (fitarihana sy fametrahana).  Raha voamarika dia halefa ity safidy ity.  Fanamarihana: Ho an'ny mpampiasa manana fahasembanana ara-pahitana dia azo esorina ity safidy ity."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "Anaran-tsehatra (domain) sarahin'ny elanelana izay mahazo alalana idirana ivelan'ny lohamilina web tenany. Zava-dehibe izany ho an'ny mpampiasa misafidy ny hampiasa CDN na tranonkala mpampiantrano. Mety ahitana marika solon-tena (wildcard) ny loharano ohatra: *.mydomain.com, na protokoly, ohatra: https://*.example.com. Ireo Loharano hafa ireo dia tsy mahafaoka afa-tsy ny karazana Sary, CSS ary JavaScript ihany."
 
 #: include/global_settings.php
@@ -9461,15 +9461,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "Ny Threads mahazatra avela isaky ny dingana.  FANAMARIHANA: Manomboka amin'ny Kadupul 1.2+, ity fikirana ity dia tazonina ao amin'ny Mpanangon-drakitra, ary fametrahana mialoha (Preset) fotsiny izany.  Ny fampiasana isa ambony kokoa rehefa mampiasa Spine dia hanatsara ny fahaiza-miasa.  Na izany aza, ataovy izay hahazoana antoka fa manana fifandraisana MySQL/MariaDB ampy ianao hanohanana ity kajy manaraka ity: fifandraisana = mpanangon-drakitra * dingana * (threads + lohamilina script).  Tsy maintsy ataonao azo antoka ihany koa fa manana fifandraisana ambiny ampy ho an'ny fifandraisana fidiran'ny mpampiasa ianao."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "Ny Adiresy Mailaka handefasana ny Mailaka Fampahafantarana Fampandehanana ho azy raha tsy voafaritra eo amin'ny ambaratongan'ny Tambajotra Fampandehanana ho azy.  Raha avela ho banga ity saha ity na ny sandan'ny Tambajotra Fampandehanana ho azy, dia hampiasa ny kaonty Mailakan'ny Mpitantana Voalohany an'i Kadupul i Kadupul."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "Ny Adiresy Mailaka hampiasaina ho an'ny Mailaka Fampahafantarana Fampandehanana ho azy raha tsy voafaritra eo amin'ny ambaratongan'ny Tambajotra Fampandehanana ho azy.  Raha avela ho banga ity saha ity na ny sandan'ny Tambajotra Fampandehanana ho azy, dia hampiasa ny Adiresy Mailakan'ny Mpandefa mahazatra an'ny rafitra i Kadupul."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "Ny Anarana Mailaka hampiasaina ho an'ny Mailaka Fampahafantarana Fampandehanana ho azy raha tsy voafaritra eo amin'ny ambaratongan'ny Tambajotra Fampandehanana ho azy.  Raha avela ho banga ity saha ity na ny sandan'ny Tambajotra Fampandehanana ho azy, dia hampiasa ny Anaran'ny Mpandefa mahazatra an'ny rafitra i Kadupul."
 
 #: include/global_settings.php
@@ -9581,7 +9581,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "Ny isa mahazatra an'ny dingana miaraka mandeha isaky ny Mpanangon-drakitra.  FANAMARIHANA: Manomboka amin'ny Kadupul 1.2, ity fikirana ity dia tazonina ao amin'ny Mpanangon-drakitra.  Amin'ny ho avy, ity sanda ity dia fametrahana mialoha (preset) ho an'ny Mpanangon-drakitra ihany.  Ny fampiasana isa ambony kokoa rehefa mampiasa cmd.php dia hanatsara ny fahaiza-miasa.  Ny fanatsarana ny fahaiza-miasa ao amin'ny Spine dia voavaha tsara kokoa amin'ny alalan'ny masontsivana threads.  Rehefa mampiasa Spine dia manoro hevitra izahay mba hampiasa isa ambany kokoa sy hampiasa threads fa tsy izany.  Rehefa mampiasa cmd.php, aza mampiasa mihoatra ny 2x ny isan'ny CPU cores."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "Ny isan'ny andalana aseho amin'ny tabilao raha tsy misy fanovana."
 
 #: include/global_settings.php
@@ -9597,7 +9597,7 @@ msgid "The encryption method to use for the Email."
 msgstr "Ny fomba fanafenana soratra (encryption) hampiasaina amin'ny mailaka."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "Ny diantanan'ny fanalahidy RSA ho an'ny daholobe ampiasain'ny mpanelanelana fiandry amin'izao fotoana izao. Ilaina izany mba hametrahana fifandraisana azo itokisana."
 
 #: include/global_settings.php
@@ -9657,6 +9657,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Ny faharetan'ny fotoana fara tampony ahafahan'ny script Antontan'isan'ny Loharanon-drakitra an'i Kadupul mandeha tsy miteraka hadisoana fahataperan'ny fotoana (timeout) sy tsy vonoina."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "Ny faharetan'ny fotoana fara tampony ahafahan'ny script Fikojakojana an'i Kadupul mandeha tsy miteraka hadisoana fahataperan'ny fotoana (timeout) sy tsy vonoina."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Ny faharetan'ny fotoana fara tampony ahafahan'ny script fanamarinana rakitra RRD an'i Kadupul mandeha tsy miteraka hadisoana fahataperan'ny fotoana (timeout) sy tsy vonoina."
 
@@ -9665,19 +9669,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Ny faharetan'ny fotoana fara tampony ahafahan'ny script Famoronana Tatitra an'i Kadupul mandeha tsy miteraka hadisoana fahataperan'ny fotoana (timeout) sy tsy vonoina."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Ny faharetan'ny fotoana fara tampony ahafahan'ny script Fikojakojana an'i Kadupul mandeha tsy miteraka hadisoana fahataperan'ny fotoana (timeout) sy tsy vonoina."
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Ny faharetan'ny fotoana fara tampony ahafahan'ny script Spikekill an'i Kadupul mandeha tsy miteraka hadisoana fahataperan'ny fotoana (timeout) sy tsy vonoina."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "Ny isan'ny Lahatahirin'ny Fitaovana fara fahabetsany hoforonina mifototra amin'ny ID-n'ny Fitaovana natao hash."
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "Ny haben'ny hafatra mailaka farany ambony tafiditra ao ny rakitra ampiarahina rehetra."
 
 #: include/global_settings.php
@@ -9717,19 +9717,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "Ny isan'ny tsanganana hampiasaina rehefa mampiseho kisary madinika amin'ny fomba fijery Hazo."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "Ny isan'ny fizotry ny DSStats miaraka ampiasaina hikarakarana ireo Loharanon-drakitra rehetra."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "Ny isan'ny fizotry ny Baikon'ny Poller miaraka mandeha. Hisy baiko miaraka iray fara-fahabetsany isaky ny mpampiantrano ao anatin'ny vondron'ny Baikon'ny Poller."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "Ny isan'ny fizotry ny fanamarinana rakitra RRD miaraka ampiasaina hikarakarana ireo rakitra RRD rehetra."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "Ny isan'ny fizotry ny Boost miaraka ampiasaina hikarakarana ireo RRD rehetra ao amin'ny tabilao Boost."
 
 #: include/global_settings.php
@@ -9805,7 +9805,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "Ny lalana mankany amin'ny programa snmpwalk."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "Ny karazana poller ampiasaina. Hanomboka hisy fiantraikany amin'ny elanelam-potoana fanangonana manaraka ity fikirana ity."
 
 #: include/global_settings.php
@@ -9841,6 +9841,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "Ny ora fanombohan'ny ora fiasanao. Endrika: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "Ity elanelam-potoana ity no tianao hojerena amin'ny kisary mahazatra."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "Ny anaran'ny mpampiasa hanamarinana ny maha-izy azy rehefa mandefa amin'ny alalan'ny SMTP. (Avelao ho banga raha tsy mila fanamarinana ianao.)"
 
@@ -9873,28 +9877,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "Tazonina eo amin'ny ambaratongan'ny Mpanangona angona (Data Collector) ireto fikirana ireto. Sanda mahazatra ampiasaina amin'ny famoronana voalohany Mpanangona angona ihany ny sanda eto."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "Ity dia kaonty mailaka ampiasaina handefasana hafatra fanandramana mba hahazoana antoka fa mandeha tsara ny zava-drehetra."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "Ity ny toeran'ny lohamilina izay hampiasaina amin'ny rohy mankany amin'ny tranonkala Kadupul. Tokony ho tafiditra ao anatiny ny lahatahiry ambany (subdirectory) raha tsy mandeha avy ao amin'ny lahatahiry fototra i Kadupul."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "Ity no isan'ny tarehintsoratra azo ekena alohan'ny hampidinana ho azy ny andalana ao amin'ny mailaka. (0 = Tsy alefa)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "Ity no isan'ny andro farany ambony alohan'ny hahataperan'ny tenimiafina."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "Ity no isan'ny andro farany ambony alohan'ny hanakatonana ny kaonty tsy miasa. Tsy tafiditra ao anatin'ity fitsipika ity ny kaonty Admin."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "Ity no halava farany ambany ho an'ny tenimiafina azo ekena."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9917,12 +9905,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "Ity no toerana ao amin'ny mpizara tranonkala hitahirizana vonjimaika ny RRDfiles sy ny rakitra PNG.  Ny mpangony (poller) no hitantana io tahiry vonjimaika io.  Hamarino fa manana alalana hamaky sy hanoratra marina amin'io lahatahiry io ianao"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "Ity no isan'ny andro farany ambony alohan'ny hahataperan'ny tenimiafina."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "Ity no isan'ny andro farany ambony alohan'ny hanakatonana ny kaonty tsy miasa. Tsy tafiditra ao anatin'ity fitsipika ity ny kaonty Admin."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "Ity no halava farany ambany ho an'ny tenimiafina azo ekena."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "Ity no fotoana farany fohy tohanana eo anelanelan'ny fanavaozana Kisary.  Ampiasaina ihany koa ity sanda ity hametrahana toetra sasantsasany amin'ny RRDfile.  Raha manana Fitaovana mitahiry angona ao amin'ny cache ianao ka tsy manome fanavaozana amin'ny fotoana tena izy, dia mety mila ampitomboinao ny Elanelam-panavaozana farany fohy mba hisorohana ny Kisary misy banga."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "Ity no lalana mankany amin'ny sendmail ao amin'ny mpizara anao. (Tsy ampiasaina raha tsy Sendmail no voafidy ho Tolotra Mailaka)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "Ity ny toeran'ny lohamilina izay hampiasaina amin'ny rohy mankany amin'ny tranonkala Kadupul. Tokony ho tafiditra ao anatiny ny lahatahiry ambany (subdirectory) raha tsy mandeha avy ao amin'ny lahatahiry fototra i Kadupul."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9937,15 +9941,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "Ho an'ny rafitra manana poller tokana ihany ity fikirana ity mba hananganana indray ny tabilao vokatry ny poller isaky ny tsingerina fanangonana mba hisorohana ny tabilao fitadidiana tsy hampiasa swap amin'ny rafitra lehibe dia lehibe manana angon-drakitra lehibe mety hampiasa swap."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "Ity elanelam-potoana ity no tianao hojerena amin'ny kisary mahazatra."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "Ity sanda ity dia maneho ny isa farafahabetsan'ny fiakarana tampoka hesorina amin'ny RRA-n'ny Kisary iray."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "Ity sanda ity dia maneho ny isan'ny salanisan'ny santionany ambony sy ambany hesorina amin'ny andian-tsantionany alohan'ny hikajiana ny Salanisan'ny Variance. Raha misafidy sanda maningana 5 ianao, dia samy hesorina avokoa ny salanisa 5 ambony indrindra sy 5 ambany indrindra."
 
 #: include/global_settings.php
@@ -9966,7 +9966,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "Mitaky ny hisian'ny marika manokana iray farafahakeliny ao amin'ny tenimiafina vaovao ity."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "Mitaky ny hisian'ny litera kely sy lehibe ao amin'ny tenimiafina vaovao ity."
 
 #: include/global_settings.php
@@ -10054,7 +10054,7 @@ msgid "Use Custom Fonts"
 msgstr "Ampiasao ny endritsoratra manokana"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "Mampiasà zana-lahatahiry misaraka ho an'ny rakitra RRD-n'ny mpampiantrano tsirairay. Ny fanononana ireo rakitra RRD dia ho iray amin'ireto manaraka ireto:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>Azonao atao ity fanovana ity aorian'ny fametrahana amin'ny alalan'ny fandefasana ny baiko CLI <b>structure_rra_paths.php</b> rehefa avy manao ny fanovana ianao. FANAMARIHANA: Raha ovanao ny sandan'ny Lahatahiry fara fahabetsany mba hampihenana ny isan'ny lahatahiry, na raha ovanao ny Endriky ny lahatahiry, dia tsy hofafana ireo lahatahiry foana rehefa mandefa indray ny baiko <b>structure_rra_paths.php</b> ianao."
 
 #: include/global_settings.php
@@ -10094,11 +10094,11 @@ msgid "Weekly on Sunday"
 msgstr "Isan-kerinandro isaky ny Alahady"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Ny haavon'ny antsipiriany tianao halefa any amin'ny rakitra diarin-tatitra. FAMPITANDREMANA: Ny famelana azy amin'ny sata hafa ankoatra ny NONE na LOW dia mety hahafeno haingana ny habaky ny kapila mafy."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Inona ny haavon'ny antsipiriany tianao halefa any amin'ny rakitra firaketana (log). FAMPITANDREMANA: Ny famelana azy amin'ny sata hafa ankoatra ny NONE na LOW dia mety hahafeno haingana ny kapila mangirana."
 
 #: include/global_settings.php
@@ -10114,11 +10114,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "Rehefa voamarika ity safidy ity, ny mpampiasa dia afaka mametraka an'i Kadupul amin'ny fomba Fotoana tena izy (Real-time)."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "Rehefa mandefa baiko fanavaozana any amin'ny RRDtool ny Boost dia tsy mahazo mihoatra ny halavan'ny mari-pamantarana fara fahabetsan'ny rafitra fiasa izy. Miovaova arakaraka ny rafitra fiasa sy ny ambaratongan'ny kernel izany. Ohatra: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ tsy voafetra"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "Rehefa voamarika dia haseho mivantana eo an-toerana ny Fanampiana amin'ny Taratasy sy Fikirana. Raha tsy izany dia haseho rehefa mandalo eo ambonin'ny bokotra fanampiana ny totozy."
 
 #: include/global_settings.php
@@ -10126,7 +10126,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "Rehefa voamarika, ny fiezahana rehetra hiditra ao amin'i Kadupul dia hatodika mankany amin'ny HTTPS mba hiantohana fiarovana avo lenta."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "Rehefa mamorona tatitra vaovao, inona no karazana sary tokony hampiasaina ho an'ireo kisary ao anatiny."
 
 #: include/global_settings.php
@@ -10146,7 +10146,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "Rehefa mampiseho Kisary, avelao ny Datin'ny Kisary hitarina 'hatrany amin'ny hoavy'"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "Rehefa alefa, tsy hanidy ny Kisary i Kadupul.  Izany dia mamela hanova haingana kokoa amin'ny tanana ny Loharanon-drakitra mifandraika amin'ny Kisary."
 
 #: include/global_settings.php
@@ -10174,7 +10174,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "Rehefa mampiasa fanamarinana tsotra (basic authentication), raha misy olana amin'ny fampifandraisana ny anaran'ny mpampiasa amin'ny kaonty Kadupul manan-kery, dia haseho amin'ny mpampiasa ny hafatra ampidirina eto.  Afaka ahitana lahatsoratra sy HTML izany."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "Rehefa mijery ny lisitra fisafidianana anaran'ny Fitaovana, ny fanamarihana ity safidy ity dia hanala ny anaran-tsehatra (domain) amin'ny anaran'ny mpampiantrano (hostname)."
 
 #: include/global_settings.php
@@ -10182,11 +10182,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "Rehefa alefanao ny Boost dia tsy havaozina ireo rakitra RRD-nao raha tsy angatahin'ny mpampiasa, na rehefa tapitra io fe-potoana io."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "Iza amin'ny Endriky ny lahatahiry no tianao hampiasaina ho an'ny Lalana RRD voarafitra. 'ID-n'ny Fitaovana' no tsotra. Ny fikirana 'ID-n'ny Fitaovana/ID-n'ny Fangatahana Rakitra' dia tokony hampiasaina rehefa manana Fitaovana ahitana Kisary an'arivony ianao. Rehefa avy manova ny Endriky ny lahatahiry ianao dia tsy maintsy mandefa indray ny baiko CLI ho an'ny Lalana voarafitra mba hanovana ny lalan'ny rakitra RRD ho amin'ilay Endrika vaovao."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "Iza amin'ireo fomba fijery Kisary no tianao haseho voafaritra mialoha rehefa mitsidika voalohany ny pejin'ny Kisary ianao?"
 
 #: include/global_settings.php
@@ -10754,7 +10754,7 @@ msgid "Warnings++"
 msgstr "Fampitandremana++"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "Misy &lt;arg_num_indexes&gt; ao amin'ny rakitra XML saingy tsy nisy angon-drakitra niverina., tsy tohana ny 'Fiovan'ny isan'ny tondro'"
 
 #: lib/data_query.php
@@ -10923,7 +10923,7 @@ msgstr "Manitsy ny saha 'method' diso ho an'ny '%s' satria voafaritra ny 'rewrit
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "Nahitana ID rakitra eo an-toerana %s tokony hohamarinina"
 
 #: lib/data_query.php
@@ -11040,7 +11040,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "Tsy maintsy ahitana saha &lt;direction&gt;input&lt;/direction&gt; na &lt;direction&gt;input-output&lt;/direction&gt; ihany"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "Voamarina ny saha fanasokajiana vaovao.  Havaozina ny saha fanasokajiana."
 
 #: lib/data_query.php
@@ -11140,7 +11140,7 @@ msgstr "Vita ny fanavaozana ny cache-n'ny fangatahana angon-kisary"
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "Vita ny fanamarinana ireo ID rakitra eo an-toerana %s"
 
 #: lib/data_query.php
@@ -11157,7 +11157,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "Tsy maintsy misafidy tsanganana fivoahana XML ho an'ny Loharanon-drakitra '%s' ianao ary manamarika ny boaty fanamarinana eo an-kavanany"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "Tsy mampiasa Modely angona ny Modely kisarinao. Azafady, ahitsio ny Modely kisarinao"
 
 #: lib/data_query.php
@@ -11171,11 +11171,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "Tsy nahomby ny fanovana ny halavan'ny sahan'ny tenimiafina, tsy afaka manohy satria mety hanimba ny tenimiafina"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "Tsy nahomby ny famaritana ny halavan'ny sahan'ny tenimiafina, tsy afaka manohy satria mety hanimba ny tenimiafina"
 
 #: lib/dsdebug.php
@@ -11292,10 +11292,6 @@ msgid "Link %s"
 msgstr "Rohy %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "Tafiditra amin'ny maha Vahiny"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "Tafiditra amin'ny anaran'ny"
 
@@ -11303,6 +11299,10 @@ msgstr "Tafiditra amin'ny anaran'ny"
 #, php-format
 msgid "Logged in as %s"
 msgstr "Tafiditra amin'ny anaran'ny %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "Tafiditra amin'ny maha Vahiny"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11313,7 +11313,7 @@ msgid "Logout"
 msgstr "Fivoahana"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Hadisoan'ny Mailer: Tsy misy adiresy mpandray voapetraka!!<br>Raha mampiasa ny rohy <i>Mailaka andrana</i> ianao, azafady apetraho ny fikirana <b>Mailaka fanairana</b>."
 
 #: lib/functions.php
@@ -11392,7 +11392,7 @@ msgstr "FAMPITANDREMANA:  Tsy hita ny rakitra fototra fampidirana Kadupul %s.  T
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "FAMPITANDREMANA: Ny PollerID:%s dia manana anaran'ny mpampiantrano tsy manan-kery:%s.  Tsy azo tratrarina amin'ny alalan'ny DNS izany!"
 
 #: lib/functions.php
@@ -11482,7 +11482,7 @@ msgid "All %d %s"
 msgstr "Ny %d %s rehetra"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "Avelao na ferana ny tsanganan'ny tabilao hihoatra ny fetran'ny varavarankely ankehitriny."
 
 #: lib/html.php
@@ -12138,7 +12138,7 @@ msgid "Cascade to Branches"
 msgstr "Misesy mankany amin'ny Sampana"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "Mariho ity boaty ity raha te hampiasa html sy CSS manokana ho an'ny tatitra ianao."
 
 #: lib/html_reports.php
@@ -12146,7 +12146,7 @@ msgid "Check this box to enable this Report."
 msgstr "Mariho ity boaty ity raha handefa ity Tatitra ity."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "Fidio ny rakitra html fonony sy CSS manokana hampiasaina. Ity rakitra ity dia ahitana html sy CSS handravahana manodidina ny tatitrao. Raha ahitana zavatra mihoatra ny CSS tsotra fotsiny izy, dia mila mametraka marika manokana <REPORT> ao anatin'ilay rakitra ianao. Hosoloina ny votoatin'ny tatitra io marika fandrafetana io. Ao amin'ny lahatahiry 'formats' no misy ireo rakitra ireo."
 
 #: lib/html_reports.php
@@ -12403,7 +12403,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "Misafidiana Modely Fitaovana hampiasaina hanivanana ny Fitaovana na Kisary."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "Misafidiana Fitaovana hampiasaina hanivanana na hisafidianana Kisary raha karazana Fitaovana."
 
 #: lib/html_reports.php
@@ -12475,11 +12475,11 @@ msgid "The number of Graph columns."
 msgstr "Ny isan'ny tsanganana Kisary."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "Ity Adiresy ity no hampiasaina ho adiresin'ny mpandefa mailaka"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "Ity Anarana ity no hampiasaina ho Mpandefa mailaka mahazatra"
 
 #: lib/html_reports.php
@@ -12497,22 +12497,22 @@ msgstr "Hazo: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "Tsy afaka mandefa ny Tatitra '%s'. Mba farito ny Anaran'ny mpandefa mailaka"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "Tsy afaka mandefa ny Tatitra '%s'.  Mametraha adiresy mailaka mpandefa azafady"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "Tsy afaka mandefa ny Tatitra '%s'. Mba farito ny lohahevitry ny mailaka"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "Tsy afaka mandefa ny Tatitra '%s'. Mba farito ny adiresy mailaka handefasana"
 
 #: lib/html_reports.php
@@ -12608,7 +12608,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Voafetra ho litera 50 ihany ny fomba fiteny mahazatra (RegEx) Kadupul noho ny antony ara-piarovana."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Tsy mahazo ahitana teboka sy faingo (;) ny fomba fiteny mahazatra (RegEx) Kadupul."
 
 #: lib/html_utility.php
@@ -13064,12 +13064,12 @@ msgstr "Tsy nahomby ny fametrahana ny safidy PHP %s, ankehitriny %s (tokony ho %
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "Tsy nahomby ny fametrahana ny kinova %sRRDTool voafaritra: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "Tsy nahomby ny fametrahana ny kinova %sRRDtool voafaritra: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "Tsy nahomby ny fanavaozana ny andian-tsafidy fanaovana ho azy %s"
 
 #: lib/installer.php
@@ -13142,7 +13142,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Nahomby ny fanafarana ny fonosana #%s '%s' eo ambanin'ny mombamomba '%s'"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Raha misy olana mitranga, dia soso-kevitra mafy ny hanadiovanao ny cache-n'ny mpitety tranonkalanao, ny fanakatonana sy fanokafana indray ilay mpitety tranonkala (fa tsy ilay vakizoro misy ny Kadupul ihany), ary ny fanandramana indray, alohan'ny hitaterana olana amin'ny Kadupul"
 
 #: lib/installer.php
@@ -13320,7 +13320,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "Amin'ny tranga mahalana dia nahazo tatitra avy amin'ny mpampiasa izahay fa sendra olana madinika noho ny fiovana tao amin'ny kaody. Ireo olana ireo dia vokatry ny fihazonan'ny mpitety tranonkala ny kaody talohan'ny fanavaozana, ary na dia efa nandray fepetra hampihenana ny mety hitrangan'izany aza izahay dia mbola mety hiseho izany. Raha mila toromarika momba ny fomba fanadiovana ny cache-n'ny mpitety tranonkala ianao dia toerana tsara hanombohana ny <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a>."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "Rehefa vita ny fametrahana dia tokony hapetraka ho famakiana ihany ny lalana CSRF."
 
 #: lib/installer.php
@@ -13397,7 +13397,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "Safidio azafady ireo Modely Fitaovana tianao havaozina mandritra ny Fanavaozana miakatra."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Azafady safidio ireo Lasitry ny Fitaovana tianao hampiasaina aorian'ny Fametrahana. Raha Windows ny Rafitra Fiasananao, dia ataovy azo antoka fa misafidy ny Lasitra 'Windows Device' ianao. Raha Linux/UNIX ny Rafitra Fiasananao, ataovy azo antoka fa misafidy ny Lasitry ny Fitaovana 'Local Linux Machine' ianao."
 
 #: lib/installer.php
@@ -13654,7 +13654,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Ireo fari-tsanda tsy maintsy apetraka ao amin'ny rakitra config.php dia ahitana ireto manaraka ireto:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Ny fomba fiasan'ny Lisitra fotsy dia rehefa manafatra Fomba Fampidirana Angon-drakitra sambany ianao, na manafatra indray Fomba Fampidirana Angon-drakitra, ka miova na amin'ny fomba ahoana na amin'ny fomba ahoana ny script sy/na ny mason-tsivana, dia hajanona avy hatrany ilay Fomba Fampidirana Angon-drakitra sy ny Loharanon-drakitra rehetra mifanaraka aminy mandra-panamarinan'ny mpitantana fa manan-kery ilay Fomba Fampidirana Angon-drakitra."
 
 #: lib/installer.php
@@ -13662,7 +13662,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "Avy eo dia tanteraho ireto manaraka ireto ao anatin'ny MySQL amin'ny maha-mpitantana:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Noho izany, kinova maromaro lasa izay, dia nohatsaraina ny Kadupul mba hanomezana fahafahana mampiasa Lisitra ekena ho an'ireo karazana Fomba Fampidirana Rakitra ireo. Na dia miaro tsara kokoa ny Kadupul aza izany, dia mampitombo ny asa takina amin'ny mpitantana Kadupul amin'ny fanafarana sy fitantanana Lasitra sy Fonosana."
 
 #: lib/installer.php
@@ -13695,10 +13695,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "Ity rindrankajy ity dia rindrankajy malalaka; azonao zaraina sy/na ovaina araka ny fepetran'ny GNU General Public License navoakan'ny Free Software Foundation; na ny dikan-teny faharoa (version 2) amin'ny Lisansa, na (araka ny safidinao) izay dikan-teny vaovao kokoa."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Ity safidin'ny script ity dia manala ny fandrarana ireo Fomba Fampidirana Angon-drakitra voarara amin'izao fotoana izao."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Ity safidin'ny script ity dia hamerina hampandeha izay Loharanon-drakitra najanona."
 
@@ -13707,16 +13703,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "Ity safidin'ny script ity dia hikaroka izay Fomba Fampidirana Angon-drakitra voarara amin'izao fotoana izao ary hanome ny antsipiriany momba ny antony."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "Ity safidin'ny script ity dia manala ny fandrarana ireo Fomba Fampidirana Angon-drakitra voarara amin'izao fotoana izao."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Ity kinovan'ny Kadupul ity (%s) dia toa tsy manana kaody kinova manan-kery, mifandraisa azafady amin'ny Ekipa Mpamorona Kadupul mba hahazoana antoka fa voahitsy izany.  Raha mahita ity hadisoana ity ao amin'ny famoahana ianao dia manaova tatitra avy hatrany ao amin'ny GitHub"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Mba hahafahana manohy, dia <b>TSY MAINTSY</b> mamorona tahiry angona vaovao ianao ary manafatra ny \"cacti.sql\" ao anatiny:"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Mba hanamorana ny famantarana ireo Fomba Fampidirana Rakitra ao anatin'izany toe-javatra izany, dia nanome script fanamarinana izahay ao amin'ny lahatahiry CLI-n'ny Kadupul izay azo alefa miaraka amin'ireto safidy manaraka ireto:"
 
 #: lib/installer.php
@@ -13750,7 +13750,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "Manavao ny andian-tsafidy fanaovana ho azy %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "Tsy soso-kevitra ny fanavaozana ireo Modely efa nasianao fanovana.  TSY hanala ny fanovana natao tamin'ny Modely Kisary sy Angon-drakitra ny Fanavaozana ny Modely, ary mety hitarika fihetsika tsy ampoizina.  Na izany aza, raha mbola tsy nanova Kisary, Fangatahana Angon-drakitra, na Modely Angon-drakitra ianao, dia tsy tokony hisy fiantraikany ny fanafarana indray ny Fonosana.  Amin'izay tranga izay, dia tsy maintsy manao 'Ampifanaraho ny kisary' avy amin'ireo Modely ianao aorian'ny fanavaozana."
 
 #: lib/installer.php
@@ -13806,7 +13806,7 @@ msgstr "Toa mampidina mankany amin'ny kinova teo aloha ianao. Tsy haverina amin'
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "Manandrana mametraka Kadupul %s amin'ny tahiry angona 0.6.x ianao. Indrisy anefa fa tsy azo tanterahina izany."
 
 #: lib/installer.php
@@ -13837,7 +13837,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "Ny Lohamilina Kadupul v%s anao dia voapetraka/voavao. Afaka manomboka mampiasa ny rindrankajy ianao izao."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "Manana ny lalana mifandraika marina (url_path) ao amin'ny config.php ny fikirana Kadupul anao."
 
 #: lib/installer.php
@@ -13865,7 +13865,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Toa manaraka ny fenitra UTF8 ny fandaharana soratra mahazatra an'ny tahiry angon-drakitrao"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Toa TSY manaraka tanteraka ny fenitra UTF8 ny fandaharana soratra mahazatra an'ny tahiry angon-drakitrao. "
 
 #: lib/installer.php
@@ -13964,12 +13964,12 @@ msgid "Unable to find user from DN"
 msgstr "Tsy hita ny mpampiasa avy amin'ny DN"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "Tsy hita ny DN an'ny mpampiasa"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
 msgstr "Hadisoana tsy nampoizina %s (Hadisoana LDAP: %s) amin'ny Mpizara (%s)"
 
 #: lib/ping.php
@@ -14077,13 +14077,13 @@ msgstr "Mila ovaina anarana ny lahatahiry Plugin '%s' mba hanesorana ny 'plugin_
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Ny Plugin ao amin'ny lahatahiry '%s' dia tsy misy fiasa fametrahana '%s()'. Tsy maintsy misy io fiasa io vao azo apetraka ny plugin."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Ny Plugin ao amin'ny lahatahiry '%s' dia tsy misy fiasa famantarana kinova '%s()'. Tsy maintsy misy io fiasa io vao azo apetraka ny plugin."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Ny Plugin ao amin'ny lahatahiry '%s' dia tsy misy fiasa famantarana kinova '%s()'. Tsy maintsy misy io fiasa io vao azo apetraka ny plugin."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Ny Plugin ao amin'ny lahatahiry '%s' dia tsy misy fiasa fametrahana '%s()'. Tsy maintsy misy io fiasa io vao azo apetraka ny plugin."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14143,7 +14143,7 @@ msgstr "Fe-potoan'ny Kisary:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "Nisy olana tamin'ny fandefasana ny Tatitra '%s' Olana amin'ny rafitra mailaka Ny hadisoana dia '%s'"
 
 #: lib/reports.php
@@ -14197,7 +14197,7 @@ msgstr "HADISOANA: Tsy misy ny rakitra RRD: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "HADISOANA: Tsy azo soratana ny RRDfile %s"
 
 #: lib/rrd.php
@@ -14319,7 +14319,7 @@ msgstr "Ny XFF ho an'ny RRA id Kadupul dia '%s' saingy tokony ho '%s'"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Tsy marina ny isan'ny andalana ho an'ny RRA id '%s' an'ny Kadupul. Ny isan'ny andalana dia '%s' saingy tokony ho '%s'"
 
 #: lib/rrd.php
@@ -14479,7 +14479,7 @@ msgstr "HADISOANA MATOTRA: Ny mari-pametra outlier-start sy outlier-end dia tsy 
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "HADISOANA MATOTRA: Tsy afaka manao tahiry ny '%s'"
 
 #: lib/spikekill.php
@@ -14694,12 +14694,12 @@ msgstr "Fanatsarana ny %s"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "Ny %s dia hizara ny innodb_buffer_pool ho faritra fitadidiana mba hanatsarana ny fahombiazana ho an'ny kinova MariaDB latsaky ny 10.5. Ny sanda ambony indrindra dia 64, saingy tsy tokony hihoatra ny isan'ny fototra/kofehy CPU. Rehefa latsaky ny 1GB ny innodb_buffer_pool-nao dia tokony hampiasa ny haben'ny tahiry zaraina 128MB ianao. Tohizo ny fampiasana ity raikipohy ity hatramin'ny isan'ny fototra CPU ambony indrindra na 64."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "Ny %s dia hizara ny innodb_buffer_pool ho faritra fitadidiana mba hanatsarana ny fahombiazana ho an'ny kinova MySQL hatramin'ny MySQL 8.0. Ny sanda ambony indrindra dia 64, saingy tsy tokony hihoatra ny isan'ny fototra/kofehy CPU. Rehefa latsaky ny 1GB ny innodb_buffer_pool-nao dia tokony hampiasa ny haben'ny tahiry zaraina 128MB ianao. Tohizo ny fampiasana ity raikipohy ity hatramin'ny isan'ny fototra CPU ambony indrindra na 64."
 
 #: lib/utility.php
@@ -14718,7 +14718,7 @@ msgstr "Faritra ora manan-kery mifanaraka amin'ny MySQL sy ny rafitra"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Manomboka amin'ny %s %s dia azonao fehezina ny matetika fanadiovan'ny %s ny fifanakalozana mankany amin'ny kapila. 1 segondra no mahazatra, fa amin'ny rafitra manana I/O avo dia ny fametrahana sanda mihoatra ny 1 dia afaka mamela ny I/O kapila hilahatra tsara kokoa"
 
 #: lib/utility.php
@@ -14752,12 +14752,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "Raha manana kapila SSD ianao dia ampiasao ity soso-kevitra ity. Raha tsy izany, aza apetraka ity fikirana ity."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "Raha manana fanondro tena lehibe ny tabilaonao dia tsy maintsy miasa miaraka amin'ny innodb_file_format Barracuda sy ny innodb_large_prefix mitovy amin'ny 1 ianao. Raha tsy manao izany dia mety hiteraka plugin tsy afaka mamorona tabilao araka ny tokony ho izy."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "Ny InnoDB dia hitazona tabilao sy fanondro betsaka araka izay azo atao ao anaty fitadidian'ny rafitra. Noho izany, tokony hataonao lehibe ampy ny innodb_buffer_pool mba hitazonana ny ankamaroan'ny tabilao sy ny fanondro ao anaty fitadidiana. Ny fanamarinana ny haben'ny lahatahiry /var/lib/mysql/cacti dia hanampy amin'ny famaritana ity sanda ity. Manolotra 25%% amin'ny fitambaran'ny fitadidian'ny rafitrao izahay, saingy hiovaova arakaraka ny haben'ny rafitrao ny zavatra ilainao."
 
 #: lib/utility.php
@@ -14771,7 +14771,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "Amporisihina ny hampandehananao ny InnoDB amin'ny kinova %s rehetra mihoatra ny 5.1."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "Ny fihazonana ny tahiry vonjimaikan'ny tabilao ho lehibe kokoa dia midika ho vitsy kokoa ny fanokafana/fanakatonana rakitra rehefa mampiasa innodb_file_per_table."
 
 #: lib/utility.php
@@ -14796,7 +14796,7 @@ msgid "Recommended Value"
 msgstr "Sanda atolotra"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Ny fangatahana manimba dia tsy tokony hanery ny angona ho tapaka ho an'ny hafa. Atsaharo ireo fangatahana ireo alohan'ny hanapotehany ny rafitrao."
 
 #: lib/utility.php
@@ -14809,7 +14809,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "Eto no itahirizana ny metadata. Raha manana tabilao maro ianao dia ilaina ny mampitombo ity."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Tokony hijanona ho ON ity fikirana ity raha tsy hoe mandeha amin'ny ZFS na FusionI/O ny rafitra Kadupul anao izay samy manana fitahirizam-panovana anatiny hiatrehana ny fahatapahan'ny rafitra tampoka. Na izany aza, raha manana famatsian-kery tsara dia tsara ianao, ary mahalana vao maty ny rafitrao sady manana tahiry fiarovana ianao, dia mety hitondra fiakarana hatramin'ny 50% amin'ny fahombiazan'ny angon-drakitra ny fametrahana ity fikirana ity ho OFF."
 
 #: lib/utility.php
@@ -14817,11 +14817,11 @@ msgid "Variable"
 msgstr "Miovaova"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "Rehefa manatanteraka fangatahana anatiny dia manampy amin'ny fitazonana ireo tabilao vonjimaika ireo ao anaty fitadidiana ny fananana habe lehibe kokoa ho an'ny tabilao vonjimaika."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "Rehefa manao fampifandraisana tabilao, raha latsaky ity habe ity izy ireo dia ho tazonina ao anaty fitadidiana ary tsy hosoratana ao amin'ny rakitra vonjimaika mihitsy. Satria fitsinjarana fitadidiana isaky ny fifandraisana izany, dia tsy maintsy mitandrina mba tsy hampiakatra azy ho ambony loatra. Ny fitambaran'ny join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + fitadidiana fototra MySQL/MariaDB dia tokony ho latsaky ny 80%. Raha miiba ny soso-kevitra dia tsy maintsy ahenanao ity na/ary ny sort_buffer_size mandra-pahatongan'ny soso-kevitra ho antonona ao anatin'ny fitadidiana azo ampiasaina."
 
 #: lib/utility.php
@@ -15064,7 +15064,7 @@ msgstr "%s Mpandray fampahafantarana"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "Tsindrio ny 'Tohizo' hamafana ity Mpandray fampahafantarana manaraka ity"
 msgstr[1] "Tsindrio ny 'Tohizo' hamafana ireto Mpandray fampahafantarana manaraka ireto"
 
@@ -15074,13 +15074,13 @@ msgstr "Tsindrio ny 'Tohizo' hanajanonana ny fandefasana ireto Zavatra fampahafa
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "Tsindrio ny 'Tohizo' hanajanonana ity Mpandray fampahafantarana manaraka ity"
 msgstr[1] "Tsindrio ny 'Tohizo' hanajanonana ireto Mpandray fampahafantarana manaraka ireto"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "Tsindrio ny 'Tohizo' handefasana ity Mpandray fampahafantarana manaraka ity"
 msgstr[1] "Tsindrio ny 'Tohizo' handefasana ireto Mpandray fampahafantarana manaraka ireto"
 
@@ -15186,7 +15186,7 @@ msgid "Automatically Trust Signer"
 msgstr "Atokisy ho azy ny Mpanao sonia"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "Fiovana/Fahasamihafana"
 
 #: package_import.php
@@ -15254,6 +15254,10 @@ msgid "Package"
 msgstr "Fonosana"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "Antsipirian'ny fonosana"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "Fanafarana fonosana"
 
@@ -15266,19 +15270,15 @@ msgid "Package XML File Damaged."
 msgstr "Simba ny rakitra XML an'ny fonosana."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "Antsipirian'ny fonosana"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Soloy ny firaketana sanda naroso ho an'ny loharanon-drakitra sy ny endriky ny kisary. Haka anarana vaovao ny kisary sy ny loharanon-drakitra aorian'ny fanavaozana ny fanondroan'ny fangatahana angona (Data Query Reindex) na amin'ny fampiasana ny dingana fanoloana sanda naroso an-tery."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "Jereo ny cacti.log raha mila fanazavana fanampiny. Mety ho nisy hadisoana tamin'ny API Key na nokitihina ny fonosana, na tsy hita ny toerana misy azy"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "Jereo ny cacti.log raha mila fanazavana fanampiny. Mety ho nisy hadisoana tamin'ny Fanalahidy API na nokitihina ny fonosana, na tsy azo idirana ny toerana."
 
 #: package_import.php templates_import.php
@@ -15300,11 +15300,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "Tafiditra soa aman-tsara ny fonosana %s"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "Toa tsy manan-kery ny rakitra XML. Mifandraisa amin'ny mpanoratra ny fonosana azafady"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "Tsy misy ny rakitra XML ho an'ny fonosana"
 
 #: package_import.php
@@ -15325,7 +15325,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "Tsy mbola natokisanao ity Mpanoratra Fonosana ity. Raha te hanafatra ianao, mariho ny boaty fisafidianana Atokisy ho azy ny Mpanoratra"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "Famaritana nomen'ny mpanoratra ny Plugin."
 
 #: plugins.php
@@ -15418,7 +15418,7 @@ msgid "Plugin Name"
 msgstr "Anaran'ny Plugin"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "Tsy mahazo misy elanelana ny lahatahirin'ny Plugin"
 
 #: plugins.php
@@ -15508,12 +15508,12 @@ msgstr "Ny fanesorana ity Plugin ity dia hamafa ny angona sy ny fikirana rehetra
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "HADISOANA: Ny lalan'ny binary PHP: %s dia tsy manan-kery ho an'ny poller id %d. Tsy afaka mitohy ny poller!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "HADISOANA: Tsy manan-kery ny lalan'ny spine: %s ho an'ny poller id %d. Tsy afaka mitohy ny Poller!"
 
 #: poller.php
@@ -15535,7 +15535,7 @@ msgstr "Poller ao amin'ny fomba Heartbeat"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "FAMPITANDREMANA: %s dia tsy mifanaraka amin'ny elanelam-potoanan'ny Poller ho an'ny poller id %d! Ny elanelam-potoanan'ny Poller dia %d segondra, miaraka amin'ny farafahabetsany %d segondra, saingy efa %d segondra no lasa hatramin'ny fanangonana farany!"
 
 #: poller.php
@@ -15590,7 +15590,7 @@ msgstr[1] "Fafao ny antontan'isan'ireo mpanangona angona"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "Tsindrio ny 'Tohizo' hamafana ny antontan'isan'ny mpanangona angona ho an'ny mpanangona angona."
 msgstr[1] "Tsindrio ny 'Tohizo' hamafana ny antontan'isan'ny mpanangona angona ho an'ireo mpanangona angona."
 
@@ -15693,7 +15693,7 @@ msgid "No Data Collectors Found"
 msgstr "Tsy misy Mpanangona rakitra hita"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "Fanamarihana ho an'ny angon-drakitran'ity mpanangona angona ity."
 
 #: pollers.php
@@ -15822,12 +15822,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "Ny rakitra misy ny lakile SSL hampiasaina hifandraisana amin'ny angon-drakitra lavitra."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "Ny anarana mpampiantrano ho an'ny mpanangona angona. Mety mila anarana sehatra feno izy io mba hahafahan'ny Poller lavitra mifandray aminy amin'ny asa toy ny fanavaozana fanondroana, fanaovana kisary amin'ny fotoana tena izy, sns."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "Ny anarana mpampiantrano ho an'ny lohamilina angon-drakitra lavitra."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "Ny anarana mpampiantrano ho an'ny mpanangona angona. Mety mila anarana sehatra feno izy io mba hahafahan'ny Poller lavitra mifandray aminy amin'ny asa toy ny fanavaozana fanondroana, fanaovana kisary amin'ny fotoana tena izy, sns."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15842,7 +15842,7 @@ msgid "The last time this Data Collector completed."
 msgstr "Ny fotoana nahavitan'ity Mpanangona rakitra ity farany."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "Ny fotoana farany nampifanarahana feno ity Mpanangona Angona ity tamin'ny tranonkala fototry ny Kadupul."
 
 #: pollers.php
@@ -16025,7 +16025,7 @@ msgid "Changing Permission Model Warning"
 msgstr "Fampitandremana amin'ny fanovana môdely alalana"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "Ny fanovana ny môdely alalana dia hanova ny alalana tena izy ananan'ny mpampiasa amin'ny kisary."
 
 #: settings.php
@@ -16348,7 +16348,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>FANAMARIHANA:</strong> Hatramin'izao, tsy mbola nisy tamin'ireo Fanitarana Fototry ny Kadupul no novolavolaina indray mba hiasa miaraka amin'ny Mpanangona Angona Lavitra. Noho izany, ireo Fanitarana toa ny MacTrack sy HMIB, izay mitaky fidirana mivantana amin'ny fitaovana, dia tsy hiasa amin'ny Mpanangona Angona Lavitra amin'izao fotoana izao. Na izany aza, ny fanitarana toa ny Thold dia hiasa raha mbola ao amin'ny fomba <b>'online'</b> ny Mpanangona Angona Lavitra."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>FANAMARIHANA:</strong> Tafiditra ao amin'ny Mpanangona Angona Lavitra ianao. Rehefa <b>'online'</b> izy, dia ho afaka hijery sy hifehy ny ankamaroan'ny Tranonkala Fototry ny Kadupul ianao toy ny hoe tafiditra mivantana ao ianao. Tsara ihany koa ny manamarika fa takiana amin'ny Mpanangona Angona Lavitra ny fampiasana ny endri-javatra <b>'On Demand Updating'</b> an'ny Sampan-draharaha Fanatsarana Fahaizan'ny Kadupul, ary amporisihinay hatrany ny fampiasana ny Spine. Rehefa <b>'offline'</b> ny Mpanangona Angona Lavitra, dia ho vitsy lavitra ny fampahalalana ao amin'ny Tranonkalan'ny Mpanangona Angona Lavitra. Na izany aza, hitahiry vonjimaika ny fanavaozana rehetra izy mandra-pahatongan'ny Tahiry Angona Fototry ny Kadupul sy ny Mpizara Tranonkala ho azo idirana. Avy eo dia haveriny ao amin'ny Tahiry Angona Fototry ny Kadupul ny vokatry ny tabilao Boost mba havaozina."
 
 #: templates/platform/console_home_body.html.twig
@@ -16523,25 +16523,25 @@ msgstr "Sampana"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "Tsindrio ny 'Tohizo' mba hamafana ity Hazo manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' mba hamafana ireto Hazo manaraka ireto."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "Tsindrio ny 'Tohizo' mba hamoahana ity Hazo manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' mba hamoahana ireto Hazo manaraka ireto."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "Tsindrio ny 'Tohizo' mba hamahana ny hidin'ity Hazo manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' mba hamahana ny hidin'ireto Hazo manaraka ireto."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "Tsindrio ny 'Tohizo' mba hanesorana ny famoahana ity Hazo manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' mba hanesorana ny famoahana ireto Hazo manaraka ireto."
 
@@ -16639,7 +16639,7 @@ msgid "The last user to have modified this Tree."
 msgstr "Ny mpampiasa farany nanova ity Hazo ity."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "Ny anarana iantsoana ity Hazo ity."
 
 #: tree.php
@@ -16832,7 +16832,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Tsindrio ny 'Tohizo' mba hampandehanana ireo Mpampiasa voafantina."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Tsindrio ny 'Tohizo' mba hanoloana ny fikirana sy ny alalan'ny Mpampiasa amin'ny fikirana sy ny alalan'ny Mpampiasa modely voafantina.  Ny Anarana feno, Tenimiafina, Sehatra ary ny satan'ny fampandehanana tany am-boalohany an'ny mpampiasa dia ho voatazona, fa ny saha hafa rehetra dia hosoloina avy amin'ny Mpampiasa modely."
 
 #: user_admin.php
@@ -17152,13 +17152,13 @@ msgstr "Fidio ny karazan'ity sehatra ity."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "Tsindrio ny 'Tohizo' hamafana ity Domenan'ny Mpampiasa manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' hamafana ireto Domenan'ny Mpampiasa manaraka ireto."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "Tsindrio ny 'Tohizo' hanatsaharana ity Sehatry ny mpampiasa manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' hanatsaharana ireto Sehatry ny mpampiasa manaraka ireto."
 
@@ -17167,7 +17167,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "Tsindrio ny 'Tohizo' hampandehanana ity Sehatry ny mpampiasa manaraka ity."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "Tsindrio ny 'Tohizo' hanendrena ity Sehatry ny mpampiasa manaraka ity ho fototra."
 
 #: user_domains.php
@@ -17199,15 +17199,11 @@ msgid "Domains"
 msgstr "Sehatra"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "Karazan-tsehatra"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "Mpampiasa miasa"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "Sehatry ny mpampiasa mandeha"
 msgstr[1] "Ampandehano ny sehatry ny mpampiasa"
@@ -17225,16 +17221,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "Saha hanolo ny mailaka nalaina avy amin'ny LDAP. (ao amin'ny Windows: mail) "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "Raha voamarika ity boaty ity dia afaka miditra amin'ny alalan'ity sehatra ity ny mpampiasa."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "Ataovy fototra ny sehatra voafidy"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Fomba hanamarinana ny maha-izy azy hataon'ny Cacti amin'ny mpizara LDAP.<blockquote><i>Tsy misy fikarohana</i> - Tsy misy fikarohana Anarana Manavaka (DN) atao, fa manandrana mifamatotra mivantana amin'ny endrika Anarana Manavaka (DN) nomena.<br><br><i>Fikarohana tsy mitonona anarana</i> - Manandrana mikaroka ny anaran'ny mpampiasa ao amin'ny lahatahiry LDAP amin'ny alalan'ny fifamatorana tsy mitonona anarana mba hahitana ny Anarana Manavaka (DN) an'ny mpampiasa.<br><br><i>Fikarohana manokana</i> - Manandrana mikaroka ny anaran'ny mpampiasa ao amin'ny lahatahiry LDAP amin'ny alalan'ny Anarana Manavaka (DN) manokana sy Tenimiafina manokana ho an'ny fifamatorana mba hahitana ny Anarana Manavaka (DN) an'ny mpampiasa."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17300,25 +17292,25 @@ msgstr "Diovy"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "Tsindrio ny 'Tohizo' handikana ity Vondron'ny mpampiasa manaraka ity ho vondron'ny mpampiasa vaovao."
 msgstr[1] "Tsindrio ny 'Tohizo' handikana ireto Vondron'ny mpampiasa manaraka ireto ho vondron'ny mpampiasa vaovao."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "Tsindrio ny 'Tohizo' hamafana ity Vondron'ny mpampiasa manaraka ity"
 msgstr[1] "Tsindrio ny 'Tohizo' hamafana ireto Vondron'ny mpampiasa manaraka ireto"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "Tsindrio ny 'Tohizo' hanatsaharana ity Vondron'ny mpampiasa manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' hanatsaharana ireto Vondron'ny mpampiasa manaraka ireto."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "Tsindrio ny 'Tohizo' hampandehanana ity Vondron'ny mpampiasa manaraka ity."
 msgstr[1] "Tsindrio ny 'Tohizo' hampandehanana ireto Vondron'ny mpampiasa manaraka ireto."
 
@@ -17341,7 +17333,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "Politika fototry ny hazo ho an'ity vondron'ny mpampiasa ity"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "Ampiasao ny fikirana an'ny mpampiasa"
 
 #: user_group_admin.php
@@ -17675,11 +17667,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "Antontan'isa amin'ny antsipiriany momba ny fampandehanana"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Tsy mitovy ny kinovan'ny Kadupul sy ny Spine!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "TSY MISY ny lahatahiry!!"
 
 #: utilities.php
@@ -17693,11 +17685,11 @@ msgstr "HADISOANA: Ny dikan-tenin'ny RRDtool tafapetraka dia tsy mihoatra ny dik
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "HADISOANA: Tsy manohana ny endrika sary GIF ny RRDtool 1.2.x+, kanefa misy kisary sy/na lasitra %d mampiasa ny GIF ho endriky ny sary."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "Ny tabilao (tab) tsirairay amin'ny mpitety web dia mety hampiasa fifandraisana hatramin'ny 10 arakaraka ny mpitety web."
 
 #: utilities.php
@@ -17755,7 +17747,7 @@ msgstr "Tafapetraka. <span class=\"deviceDown\">Fanamarihana: Raha mikasa ny ham
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "Amporisihina mafy ianao hanova ny memory_limit ao amin'ny php.ini ho %s na ambony kokoa."
 
 #: utilities.php
@@ -18158,11 +18150,11 @@ msgid "Technical Support [%s]"
 msgstr "Fanohanana ara-teknika [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "Mitahiry ny fampahalalana voaangona avy amin'ireo karazana fampidirana fangatahana angona ny tahiry vonjimaikan'ny fangatahana angona. Azo ampiasaina ao amin'ny faritra soratry ny Kisary ho an'ny fanazavana, marika mitsangana, ary GPRINT sy ao amin'ny CDEF ireo sanda avy amin'ireo saha ireo."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Ny Tati-nitrangan'ny Kadupul dia mitahiry antontan'isa, fahadisoana ary hafatra hafa arakaraka ny fikirana rafitra. Azo ampiasaina izany fampahalalana izany mba hamantarana ny olana amin'ny mpanangona sy ny fampiharana."
 
 #: utilities.php
@@ -18198,7 +18190,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Mampiseho ireo singa rehetra karakarain'ny mpandraharaha SNMP izany."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "Ity sandan'ny fitadidiana atolotra ity dia kajina araka ny isan'ny loharanon-drakitra misy ary natao ho soso-kevitra ihany; mety hiovaova arakaraka ny rafitra sy ny filana ny tena sanda ilaina."
 
 #: utilities.php
@@ -18235,7 +18227,7 @@ msgid "Update Frequency:"
 msgstr "Fatran'ny fanavaozana:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "Ampiasao ity fitaovana ity hanehoana ireo olana momba ny rakitra RRD tsy hita na sanda tsy hita ao amin'ny rakitra RRD. Mila mampiasa ny rrdcheck ao amin'ny Fanamboarana->Fikirana->Angona ianao"
 
 #: utilities.php

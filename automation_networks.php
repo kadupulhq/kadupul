@@ -249,7 +249,7 @@ function form_actions() {
 	} elseif (get_nfilter_request_var('drp_action') == '5') { /* cancel discovery now */
 		print "<tr>
 			<td class='textArea'>
-				<p>" . __('Click \'Continue\' to cancel on going Network Discovery(s).') . "</p>
+				<p>" . __('Click \'Continue\' to cancel ongoing Network Discovery(s).') . "</p>
 				<div class='itemlist'><ul>$networks_list</ul></div>
 			</td>
 		</tr>";
@@ -387,7 +387,7 @@ function networks() {
 		'data_collector' => array('display' => __('Data Collector'), 'align' => 'left', 'sort' => 'DESC'),
 		'sched_type'     => array('display' => __('Schedule'), 'align' => 'left', 'sort' => 'DESC'),
 		'total_ips'      => array('display' => __('Total IPs'), 'align' => 'right', 'sort' => 'DESC'),
-		'nosort1'        => array('display' => __('Status'), 'align' => 'right', 'sort' => 'DESC', 'tip' => __('The Current Status of this Networks Discovery')),
+		'nosort1'        => array('display' => __('Status'), 'align' => 'right', 'sort' => 'DESC', 'tip' => __('The Current Status of this Network\'s Discovery')),
 		'nosort2'        => array('display' => __('Progress'), 'align' => 'right', 'sort' => 'DESC', 'tip' => __('Pending/Running/Done')),
 		'nosort3'        => array('display' => __('Up/SNMP Hosts'), 'align' => 'right', 'sort' => 'DESC'),
 		'threads'        => array('display' => __('Threads'), 'align' => 'right', 'sort' => 'DESC'),

@@ -293,11 +293,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "為了將下方的彙總圖表遷移至以範本為基礎的彙總，請先為圖表範本 '%s' 建立一個彙總範本。"
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "為了將下面的聚合圖遷移到基於模板的聚合，它們只能使用一個圖模板。請按“返回”，然後僅選擇使用相同圖表模板的聚合圖。"
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "若要將下列彙總圖表遷移為使用彙總範本，必須先存在一個彙總範本。請按「返回」，然後先建立您的彙總範本再重試。"
 
 #: aggregate_graphs.php
@@ -442,7 +442,7 @@ msgid "Template"
 msgstr "範本"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "此彙總圖表所依據的彙總範本"
 
 #: aggregate_graphs.php
@@ -450,7 +450,7 @@ msgid "The internal database identifier for this object"
 msgstr "此物件的內部資料庫識別碼"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "所選的彙總圖表似乎沒有任何相符的彙總範本。"
 
 #: aggregate_graphs.php
@@ -521,7 +521,7 @@ msgid "Aggregate Templates"
 msgstr "彙總範本"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "使用中的彙總範本無法刪除。「使用中」的定義為正被某個彙總引用。"
 
 #: aggregate_templates.php
@@ -758,7 +758,7 @@ msgid "All your login sessions have been cleared."
 msgstr "您所有的登入工作階段皆已清除。"
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "可聯絡到您的電子郵件地址。"
 
 #: auth_profile.php
@@ -1112,7 +1112,7 @@ msgid "Clear Filtered"
 msgstr "清除已篩選項目"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "按一下「繼續」以取消進行中的網路探索。"
 
 #: automation_networks.php
@@ -1239,7 +1239,7 @@ msgid "Schedule"
 msgstr "排程"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "此網路探索的目前狀態"
 
 #: automation_networks.php
@@ -1678,11 +1678,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "屬性 '%s' 發現問題 '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "輪詢器是否可寫入 RRA 資料夾？"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "輪詢器是否可寫入 RRDfile？"
 
 #: data_debug.php
@@ -2060,7 +2060,7 @@ msgstr "在找到 XML 檔案前，此關聯為唯讀"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "單擊“繼續”以刪除以下數據查詢。"
 
 #: data_queries.php
@@ -2069,7 +2069,7 @@ msgstr "按一下「繼續」以刪除下列資料查詢圖表關聯。"
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "點擊「繼續」以複製以下資料查詢。"
 
 #: data_queries.php
@@ -2228,7 +2228,7 @@ msgid "The name of this Data Query."
 msgstr "此資料查詢的名稱。"
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "使用此資料查詢的圖表範本數量。"
 
 #: data_queries.php
@@ -2279,7 +2279,7 @@ msgstr "選擇此資料來源所屬的裝置。"
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "單擊“繼續”以刪除以下數據源"
 
 #: data_sources.php
@@ -2410,7 +2410,7 @@ msgid "External"
 msgstr "外部"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "若此資料來源已不再被圖表使用，則可予以刪除。"
 
 #: data_sources.php
@@ -2534,7 +2534,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "是否要為此資料來源收集資料。於資料範本層級控制。"
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "取消選中此復選框然後保存數據模板後，任何基於此數據模板的現有數據源都將丟失其自定義數據。這可能會導致數據收集和圖表損壞"
 
 #: data_templates.php
@@ -2596,7 +2596,7 @@ msgid "Data Templates [new]"
 msgstr "資料範本 [新增]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "使用中的資料範本無法修改"
 
 #: data_templates.php
@@ -2673,7 +2673,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "此值被禁用，因為它是從設備派生的並且是只讀的。"
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "此值被禁用，因為它的值是從設備或特殊數據查詢對象派生的，該對象跟踪關鍵數據數據查詢關聯。"
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2799,7 +2799,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "單擊“繼續”以復制以下圖表模板。您可以選擇更改新圖形模板的標題格式。"
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "點擊“繼續”以使您的圖表與以下圖表模板同步。如果您的圖形與圖形模板的多個版本一起存在並希望使它們在外觀上都很常見，則此功能非常重要。"
 
 #: graph_templates.php
@@ -3131,7 +3131,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "更改圖表關聯設備"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "選擇一個圖表模板，然後單擊“繼續”以更改以下圖表的圖表模板。請注意，僅顯示兼容的圖表模板。兼容性由具有相同數據源的人識別。"
 
 #: graphs.php
@@ -3337,7 +3337,7 @@ msgid "The selected Tree is not available."
 msgstr "所選的樹狀目錄無法使用。"
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "目前沒有為此圖表模板定義聚合模板。請首先為選定的圖形圖模板創建聚合模板，然後重試，或者簡單地折疊未模板化的聚合圖。"
 
 #: graphs.php
@@ -3531,20 +3531,20 @@ msgid "Class"
 msgstr "類別"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "按一下「繼續」以將下列資料查詢從裝置範本解除關聯。"
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "按一下「繼續」以將下列圖表範本從裝置範本解除關聯。"
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "單擊“繼續”以同步與所選設備模板關聯的設備。請注意，此操作可能需要一些時間，具體取決於映射到設備模板的設備數量。"
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "按一下「繼續」以將下列資料查詢從裝置範本解除關聯。"
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "單擊“繼續”以刪除以下設備模板。"
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "按一下「繼續」以將下列圖表範本從裝置範本解除關聯。"
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3634,7 +3634,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "將設備同步到設備模板"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "此裝置範本的類別。類別名稱應能代表其功能。"
 
 #: host_templates.php
@@ -3659,7 +3659,7 @@ msgstr "嚴重錯誤：您必須登入才能存取 Kadupul 的此區域。"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "若您認為這是錯誤，請聯絡您的 Kadupul 管理員。"
 
 #: include/auth.php
@@ -3675,7 +3675,7 @@ msgid "Not Logged In"
 msgstr "未登入"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "目前僅具有安裝/升級權限的 Kadupul 管理員可以登入"
 
 #: include/auth.php
@@ -5059,7 +5059,7 @@ msgid "Operator"
 msgstr "運算子"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "頁面未定義。因此無法顯示。"
 
 #: include/global_arrays.php
@@ -5625,8 +5625,8 @@ msgid "Use the First Handler Found"
 msgstr "使用找到的第一個處理常式"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "使用 MonoTranslator GetText 處理程序"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "使用 MoTranslator GetText 處理程序"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5771,7 +5771,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "當資料查詢索引計數變更時，將執行重新建立索引。"
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "當裝置的 SNMP 運行時間倒退時，將執行重新建立索引。"
 
 #: include/global_arrays.php
@@ -5815,7 +5815,7 @@ msgid "You are not allowed to change your password."
 msgstr "您不被允許變更您的密碼。"
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "您必須開啟內建的使用者驗證功能才能使用此功能。"
 
 #: include/global_arrays.php
@@ -5977,17 +5977,17 @@ msgstr "%d 個 OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "%d 個 OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repetitions"
+msgid "%d Repetition"
 msgstr "%d 次重複"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repitition"
+msgid "%d Repetitions"
 msgstr "%d 次重複"
 
 #: include/global_form.php
@@ -6196,7 +6196,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "選擇要套用至此規則的資料查詢。"
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "選擇要掛入的子樹狀項目。<br>請確保執行此規則時該項目仍然存在！"
 
 #: include/global_form.php
@@ -6206,6 +6206,10 @@ msgstr "選擇新樹狀目錄項目的目標樹狀目錄。"
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "為此資料來源選擇名稱。它可包含取代變數，例如 |host_description| 或 |query_fieldName|。如需支援的取代標籤完整清單，請參閱 Kadupul 文件。"
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "選擇唯一的名稱，以代表 RRDfile 中的這筆資料。"
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6265,10 +6269,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "選擇您希望用於此資料輸入方式收集資料的方法。"
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "選擇唯一的名稱，以代表 RRDfile 中的這筆資料。"
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "常用選項"
 
@@ -6321,7 +6321,7 @@ msgid "Determines if the user account is locked."
 msgstr "決定使用者帳號是否已鎖定。"
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "決定使用者是否能夠登入。"
 
 #: include/global_form.php
@@ -6382,7 +6382,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "輸入要用於此裝置的 SNMP 內容 (Context)。"
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "輸入要用於此裝置的 SNMP v3 引擎 ID。將此欄位留空，以使用針對各個 SNMPv3 通知接收端所定義的 SNMP 引擎 ID。"
 
 #: include/global_form.php
@@ -6585,7 +6585,7 @@ msgid "Include Prefix Text"
 msgstr "包含前綴文字"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "將來源圖表的 GPRINT 標題文字包含在彙總圖表中。"
 
 #: include/global_form.php
@@ -7093,7 +7093,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "傳送至指令碼的資料，包含指令碼的完整路徑以及置於 &lt;&gt; 括號中的輸入來源。"
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "從資料來源收集資料的頻率？"
 
 #: include/global_form.php
@@ -7197,7 +7197,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "裝置的實體位置。此自由格式文字可為機房、機櫃位置等。"
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "特定輸入方法的空白字元驗證檢查結果。若輸入字串變更且未更新白名單檔案，將不允許建立圖表。"
 
 #: include/global_form.php
@@ -7213,7 +7213,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "產生的圖表類型；PNG、GIF 或 SVG。圖表圖片類型的選擇高度取決於 RRDtool。"
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "要傳送的 Ping 封包類型。<br><i>注意：Linux/UNIX 上的 ICMP 需要 root 權限。</i><br><i>注意：TCP Ping Closed - 即使 TCP Ping 未成功，裝置仍可視為上線 (UP)。</i>"
 
 #: include/global_form.php
@@ -7309,7 +7309,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "垂直標籤 (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "此裝置關聯的站台。"
 
 #: include/global_form.php
@@ -7333,11 +7333,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "檢視基於該 RRA 的圖表時，該圖表預設顯示的時間跨度。"
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "設定左側座標軸標籤時，將規則套用至資料格式。支援的格式包含：「numeric」將資料視為數值；「timestamp」將數值解譯為 UNIX 時間戳記（自 1970 年 1 月起的秒數），並使用 strftime 格式表示（預設為「%Y-%m-%d %H:%M:%S」），另請參閱 --units-length；最後「duration」將數值解譯為毫秒持續時間，格式化遵循 valstrfduration 限定的 PRINT/GPRINT 規則。"
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "設定右側座標軸標籤時，將規則套用至資料格式。支援的格式包含：「numeric」將資料視為數值；「timestamp」將數值解譯為 UNIX 時間戳記（自 1970 年 1 月起的秒數），並使用 strftime 格式表示（預設為「%Y-%m-%d %H:%M:%S」），另請參閱 --units-length 與 --right-axis-format；最後「duration」將數值解譯為毫秒持續時間，格式化遵循 valstrfduration 限定的 PRINT/GPRINT 規則。"
 
 #: include/global_form.php
@@ -7501,11 +7501,11 @@ msgid "56 Gbps Ethernet"
 msgstr "56 Gbps 乙太網路"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote><i>內建驗證</i> - 由 Kadupul 處理使用者驗證，讓您可以建立使用者並授予他們 Kadupul 內不同區域的權限。<br><br><i>Web 基本驗證</i> - 驗證由網頁伺服器處理。若已定義範本使用者，系統會在首次登入時自動新增或建立使用者，否則將使用已定義的訪客權限。<br><br><i>LDAP 驗證</i> - 允許針對 LDAP 伺服器進行驗證。若已定義範本使用者，系統會在首次登入時自動建立使用者，否則將使用已定義的訪客權限。若未啟用 PHP 的 LDAP 模組，LDAP 驗證將不會顯示為可選項目。<br><br><i>多重 LDAP/AD 網域驗證</i> - 允許管理員支援來自不同 LDAP/AD 目錄的多個不同群組存取 Kadupul 資源。如同 LDAP 驗證，使用此方式需要 PHP LDAP 模組。</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "以逗號分隔的裝置 ID 清單，代表您希望在資料收集期間處於偵錯模式的裝置。此偵錯層級僅在 Kadupul 輪詢程序期間有效。"
 
 #: include/global_settings.php
@@ -7513,7 +7513,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "僅供開發人員使用的選項，用於追蹤資料來源的建立，主要用於唯一性檢查"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "有效 LDAP 服務器的 DNS 主機名或 IP 地址的空格分隔列表。 Kadupul 將嘗試從左到右使用 LDAP 服務器來驗證用戶。"
 
 #: include/global_settings.php
@@ -7733,7 +7733,7 @@ msgid "By Template/Data Query"
 msgstr "依範本/資料查詢"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "預設情況下，Kadupul 頁面說明位於 kadupul.org。不過，若您的系統無法連線至網際網路，您可下載 HTML 格式的本機文件，並託管在 Kadupul 伺服器的 'docs' 位置。若您選擇僅使用本機位置的頁面說明文件，請勾選此核取方塊。"
 
 #: include/global_settings.php
@@ -7757,7 +7757,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "如果您希望在創建新的和新導入的圖形模板之前測試數據源，請選中此復選框。啟用測試數據源後，如果數據源未返回有效數據，則不會創建圖表。如果您希望擁有一個更通用的設備模板，該模板可以包含更多可以根據設備本身的特性有選擇地應用的圖形模板，則此設置很重要。注意：如果你有一個長時間運行的腳本作為數據源，創建圖表的時間將會增加。"
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "選擇 'enabled' 以允許 Kadupul 的在地化。嚴格模式要求系統上安裝的所有外掛程式也必須支援所請求的語言。若未符合該條件，所有內容將以英文顯示。"
 
 #: include/global_settings.php
@@ -7937,7 +7937,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "所有新裝置的預設 SNMP v3 驗證使用者。"
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "所有新裝置的預設 SNMP v3 引擎 ID。將此欄位留空，以使用針對各個 SNMPv3 通知接收端所定義的 SNMP 引擎 ID。"
 
 #: include/global_settings.php
@@ -8153,11 +8153,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "啟用或停用 LDAP 轉介。若停用，可能會提升搜尋速度。"
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "已為 AREA 與 STACK 圖表啟用漸層支援。"
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "允許將記錄直接插入到輪詢器輸出增強中，結果是每個輪詢週期減少25％的時間。"
 
 #: include/global_settings.php user_domains.php
@@ -8249,7 +8249,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "搭配 Kadupul 的外部連結支援使用。使用此設定可隱藏 Kadupul 儀表板，讓您僅顯示自己的頁面。"
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "對於僅具有控制台訪問權限的用戶，此用戶在自動註銷之前可以保持登錄狀態的時間。請注意，如果您已經超過一個小時沒有活動，則可能需要刷新瀏覽器。另請注意，此設置在啟用身份驗證 Cookie 時沒有影響。"
 
 #: include/global_settings.php
@@ -8397,11 +8397,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "您希望如何檢視即時圖表？"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "每日統計資料應多久更新一次？"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "應該多久檢查一次 RRD？"
 
 #: include/global_settings.php
@@ -8409,7 +8409,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "單次評估執行可啟動新規則批次的時間上限。評估結束後會利用剩餘時間傳送佇列中的通知，即使時間預算已用盡仍可傳送一個批次。未及評估的規則將在下次執行時優先評估。"
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "每個 snmpbulkwalk 請求應傳回多少個 OID？對於具有大型 SNMP 樹狀結構的裝置，增加此數值可提升經由 WAN 重新建立索引的效能。"
 
 #: include/global_settings.php
@@ -8417,15 +8417,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "您希望保留多少個日誌檔？使用 0 表示永不移除任何日誌。(0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "您希望 Kadupul 日誌顯示多久更新一次。"
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Kadupul 應如何依據用戶端瀏覽器的時區來支援用戶端日期。"
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Kadupul 將如何處理事件記錄。"
 
 #: include/global_settings.php
@@ -8441,7 +8441,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "如果選中 Kadupul 將在綁定和搜索活動期間將額外的 LDAP 信息記錄到 Kadupul 日誌中。"
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "若 Kadupul 因 ifSpeed 或 ifHighSpeed 未設定或為零而無法判斷介面速度，您希望在產生的 RRDfile 上設定的最大值為何。"
 
 #: include/global_settings.php
@@ -8469,7 +8469,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "若 Boost 輸出資料表超過此筆數上限，系統將會進行更新。"
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "如果 boost poller 超過此執行時間，將在 Cacti 日誌中記錄警告，"
 
 #: include/global_settings.php
@@ -8477,7 +8477,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "若此目錄不是空的，您原本的 RRDfile 將會備份至此位置。"
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "如果此字段為非空白，則Boost將記錄來自boost poller進程的RRDupdate輸出。"
 
 #: include/global_settings.php
@@ -8485,7 +8485,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "若勾選此選項，Kadupul 將以 Kadupul 裝置與系統資訊填入 SNMP 代理程式資料表。這不會啟用 SNMP 代理程式本身。"
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "若您在使用 Kadupul 的資料收集器時遇到問題，請設定此檔案路徑，資料收集器的標準錯誤輸出將會重新導向至此檔案"
 
 #: include/global_settings.php
@@ -8665,7 +8665,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "每次處理的最大資料來源項目數"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "電子郵件大小上限"
 
 #: include/global_settings.php
@@ -8720,20 +8720,20 @@ msgstr "樹狀目錄寬度下限"
 msgid "Mode"
 msgstr "模式"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Kadupul將嘗試針對LDAP服務器進行身份驗證的模式。 <blockquote> <i>沒有搜索</i> - 沒有可分辨名稱（DN）搜索，只是嘗試使用提供的專有名稱（DN）格式進行綁定。 <br><br> <i>匿名搜索</i> - 嘗試通過匿名綁定搜索LDAP目錄的用戶名，以找到用戶的專有名稱（DN）。 <br><br> <i>特定搜索</i> - 嘗試通過特定可分辨名稱（DN）和特定密碼搜索LDAP目錄，以進行綁定以找到用戶的可分辨名稱（DN）。"
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "每月一次"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "我的瀏覽器時區"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "NaN"
 
 #: include/global_settings.php
@@ -9229,7 +9229,7 @@ msgid "Server(s)"
 msgstr "伺服器"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Boost 是否應在 Kadupul 中啟用隨選 RRD 更新？若停用，此變更要到下一個輪詢週期後才會生效。當您有遠端資料收集器時，必須開啟此設定。"
 
 #: include/global_settings.php
@@ -9249,7 +9249,7 @@ msgid "Should image caching be enabled?"
 msgstr "是否應啟用圖片快取？"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "預設是否應勾選「有圖表」與「有資料來源」。"
 
 #: include/global_settings.php
@@ -9273,7 +9273,7 @@ msgid "Show business hours"
 msgstr "顯示營業時間"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "僅顯示裝置所選站台可用的位置。"
 
 #: include/global_settings.php
@@ -9293,11 +9293,11 @@ msgid "Site Security"
 msgstr "站台安全性"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "部分 Kadupul 介面支援拖放功能。若勾選此選項將會啟用。注意：對於視覺障礙使用者，可停用此選項。"
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "以空格分隔的網域名稱，允許從網頁伺服器本身外部進行存取。這對選擇使用 CDN 或代管站台的使用者十分重要。來源可包含萬用字元，例如 *.mydomain.com，或通訊協定，例如 https://*.example.com. 這些替代來源僅包含圖片、CSS 與 JavaScript 類型。"
 
 #: include/global_settings.php
@@ -9441,15 +9441,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "每個處理程序允許的預設執行緒數。注意：從 Kadupul 1.2+ 開始，此設定在資料收集器中維護，此處僅作為預設值。使用 Spine 時，增加此數值可提升效能。不過，請確保您有足夠的 MySQL/MariaDB 連線數以支援以下公式：連線數 = 資料收集器數 * 處理程序數 * (執行緒數 + 指令碼伺服器數)。您也必須確保為使用者登入保留足夠的備用連線。"
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "若未在自動化網路層級指定，則將自動化通知電子郵件傳送至此電子郵件地址。若此欄位與自動化網路值皆留空，Kadupul 將使用主要 Kadupul 管理員的電子郵件帳戶。"
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "若未在自動化網路層級指定，則作為自動化通知電子郵件寄件者的電子郵件地址。若此欄位與自動化網路值皆留空，Kadupul 將使用系統預設寄件者電子郵件地址。"
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "若未在自動化網路層級指定，則作為自動化通知電子郵件寄件者的名稱。若此欄位與自動化網路值皆留空，Kadupul 將使用系統預設寄件者名稱。"
 
 #: include/global_settings.php
@@ -9561,7 +9561,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "每個資料收集器要執行的預設並行處理程序數。注意：從 Kadupul 1.2 開始，此設定在資料收集器中維護。往後此值僅作為資料收集器的預設值。使用 cmd.php 時，增加此數值可提升效能。Spine 的效能提升最好透過執行緒參數解決。使用 Spine 時，建議使用較低的處理程序數並改用執行緒。使用 cmd.php 時，請勿超過 CPU 核心數的 2 倍。"
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "表格預設顯示的列數。"
 
 #: include/global_settings.php
@@ -9577,7 +9577,7 @@ msgid "The encryption method to use for the Email."
 msgstr "電子郵件要使用的加密方法。"
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "備援 Proxy 目前使用的公開 RSA 金鑰指紋。建立信任連線時需要此指紋。"
 
 #: include/global_settings.php
@@ -9637,6 +9637,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Kadupul 的資料來源統計指令碼在產生逾時錯誤並被終止前可執行的最長時間。"
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "Kadupul 的維護指令碼在產生逾時錯誤並被終止前可執行的最長時間。"
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Kadupul 的 RRDfile 檢查腳本在不產生逾時錯誤並被終止的情況下可執行的最長時間。"
 
@@ -9645,19 +9649,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Kadupul 的報表產生指令碼在產生逾時錯誤並被終止前可執行的最長時間。"
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Kadupul 的維護指令碼在產生逾時錯誤並被終止前可執行的最長時間。"
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Kadupul 的 Spikekill 指令碼在產生逾時錯誤並被終止前可執行的最長時間。"
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "根據雜湊後的裝置 ID 建立的裝置目錄數量上限。"
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "電子郵件消息的最大大小，包括所有附件。"
 
 #: include/global_settings.php
@@ -9697,19 +9697,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "在樹狀模式中顯示縮圖圖表時要使用的欄數。"
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "用於處理boost表中所有RRD的並發boost進程數。"
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "並行輪詢器命令處理程序數。輪詢器命令集區中每台主機最多會有一個並行命令。"
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "用於處理boost表中所有RRD的並發boost進程數。"
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "用於處理 boost 資料表中所有 RRD 的並行 boost 處理程序數。"
 
 #: include/global_settings.php
@@ -9785,7 +9785,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "snmpwalk 執行檔的路徑。"
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "要使用的輪詢器類型。此設定將在下一個輪詢間隔生效。"
 
 #: include/global_settings.php
@@ -9821,6 +9821,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "您的營業時間開始時間。格式：hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "您希望在預設圖表上顯示的時間範圍。"
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "透過 SMTP 傳送郵件時用於驗證的使用者名稱。（若不需要驗證請留空。）"
 
@@ -9853,28 +9857,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "這些設置在數據收集器級別維護。此處的值僅是首次創建數據收集器時使用的默認值。"
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "這是用於傳送測試訊息的電子郵件帳戶，以確保一切運作正常。"
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "這是將用於連結至 Kadupul 站台的伺服器位置。若 Kadupul 並非從根資料夾執行，則應包含子目錄。"
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "電子郵件中每行在自動換行前允許的字元數。(0 = 停用)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "密碼設定為過期前的最大天數。"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "非作用中帳戶被停用前的最大天數。Admin 帳戶不受此原則限制。"
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "允許密碼的最小長度。"
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9897,12 +9885,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "這是網頁伺服器上快取 RRDfiles 與 PNG 檔案的位置。此快取將由輪詢器管理。請確定您對此資料夾具有正確的讀取與寫入權限"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "密碼設定為過期前的最大天數。"
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "非作用中帳戶被停用前的最大天數。Admin 帳戶不受此原則限制。"
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "允許密碼的最小長度。"
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "這是圖表更新之間支持的最短時間。此值還用於設置某些 RRDfile 屬性。如果您的設備緩存數據並且不提供實時更新，您可能需要增加默認的最小刷新間隔以防止創建有間隙的圖形。"
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "這是伺服器上 sendmail 的路徑。（僅在郵件服務選擇 Sendmail 時使用）"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "這是將用於連結至 Kadupul 站台的伺服器位置。若 Kadupul 並非從根資料夾執行，則應包含子目錄。"
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9917,15 +9921,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "此設定僅適用於單一輪詢器系統，可在每個輪詢週期重建輪詢器輸出資料表，以防止大型資料庫的超大型系統上的記憶體資料表使用置換空間 (swap)。"
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "您希望在預設圖表上顯示的時間範圍。"
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "此值代表從圖表 RRA 中移除的最大突波數量。"
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "此值代表在計算變異數平均值前，要從取樣集中移除的高平均與低平均取樣數。若您選擇離群值為 5，則最高與最低的各 5 個平均值都會被移除。"
 
 #: include/global_settings.php
@@ -9946,7 +9946,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "這將要求新密碼必須包含至少 1 個特殊字元。"
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "這將要求新密碼必須同時包含小寫與大寫字元。"
 
 #: include/global_settings.php
@@ -10034,7 +10034,7 @@ msgid "Use Custom Fonts"
 msgstr "使用自訂字型"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "為每台主機的 RRD 檔案使用單獨的子資料夾。RRDfiles 的命名方式將為下列其中之一：<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>安裝後您可先變更此設定，再執行 CLI 指令碼 <b>structure_rra_paths.php</b> 來套用變更。注意：若您調降最大目錄數值以減少目錄數量，或變更目錄模式，重新執行 <b>structure_rra_paths.php</b> 指令碼後，空目錄不會被清除。"
 
 #: include/global_settings.php
@@ -10074,11 +10074,11 @@ msgid "Weekly on Sunday"
 msgstr "每週日"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "您希望將何種詳細層級寫入日誌檔。警告：設為 NONE 或 LOW 以外的任何狀態都可能迅速耗盡您的磁碟空間。"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "您希望將何種詳細層級寫入日誌檔。警告：設為 NONE 或 LOW 以外的任何狀態都可能迅速耗盡您的磁碟空間。"
 
 #: include/global_settings.php
@@ -10094,11 +10094,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "勾選選項後，使用者將能讓 Kadupul 進入即時模式。"
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "當 Boost 將更新命令傳送至 RRDtool 時，不得超過作業系統的最大引數長度。這會因作業系統與核心層級而異。例如：Windows 2000 <= 2048、FreeBSD <= 65535、Linux 2.6.22-- <= 131072、Linux 2.6.23++ 無限制"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "勾選時，表單與設定說明將會內嵌顯示；否則將在滑鼠游標停留在說明按鈕上時顯示。"
 
 #: include/global_settings.php
@@ -10106,7 +10106,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "勾選時，任何存取 Kadupul 的嘗試都將重新導向至 HTTPS 以確保高度安全性。"
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "建立新報表時，內嵌圖表應使用何種圖片類型。"
 
 #: include/global_settings.php
@@ -10126,7 +10126,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "顯示圖表時，允許圖表日期延伸至「未來」"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "啟用時，Kadupul 不會鎖定圖表。這可讓使用者更快速地手動修改與圖表相關的資料來源。"
 
 #: include/global_settings.php
@@ -10154,7 +10154,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "使用基本身份驗證時，如果將用戶名映射到有效的 Kadupul 帳戶時出現問題，則會向用戶顯示此處包含的消息。它可以包括文本和 HTML。"
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "檢視裝置名稱篩選下拉式選單時，勾選此選項將從主機名稱移除網域。"
 
 #: include/global_settings.php
@@ -10162,11 +10162,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "當您啟用 Boost 時，您的 RRD 檔案只會在使用者請求時，或經過此時間週期後才會更新。"
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "您希望將哪一種目錄模式用於結構化 RRD 路徑。預設為「裝置 ID」。當您有包含數千張圖表的裝置時，應使用「裝置 ID/資料查詢 ID」設定。變更目錄模式後，您必須再次執行結構化路徑 CLI 指令碼，以將 RRDfile 路徑修改為新模式。"
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "首次造訪圖表頁面時，您希望預設顯示哪一種圖表模式？"
 
 #: include/global_settings.php
@@ -10734,7 +10734,7 @@ msgid "Warnings++"
 msgstr "警告"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "XML 檔案中存在 &lt;arg_num_indexes&gt; 但未傳回資料，不支援 'Index Count Changed'"
 
 #: lib/data_query.php
@@ -10903,7 +10903,7 @@ msgstr "由於已定義 'rewrite_index' 或 'oid_suffix'，正在修正 '%s' 錯
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "找到 %s 個本機資料 ID 待驗證"
 
 #: lib/data_query.php
@@ -11020,7 +11020,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "僅可包含 &lt;direction&gt;input&lt;/direction&gt; 或 &lt;direction&gt;input-output&lt;/direction&gt; 欄位"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "新的排序欄位已驗證。排序欄位將會更新。"
 
 #: lib/data_query.php
@@ -11120,7 +11120,7 @@ msgstr "更新數據查詢排序緩存完成"
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "已完成 %s 個本機資料 ID 的驗證"
 
 #: lib/data_query.php
@@ -11137,7 +11137,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "您必須為資料來源「%s」選取一個 XML 輸出欄，並切換其右側的核取方塊"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "您的圖表範本未使用任何資料範本。請修正您的圖表範本"
 
 #: lib/data_query.php
@@ -11151,11 +11151,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value：「%s」=>「%s」"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "無法變更密碼欄位長度，因可能損毀密碼而無法繼續"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "無法判斷密碼欄位長度，因可能損毀密碼而無法繼續"
 
 #: lib/dsdebug.php
@@ -11272,10 +11272,6 @@ msgid "Link %s"
 msgstr "連結 %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "登入"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "登入身分為"
 
@@ -11283,6 +11279,10 @@ msgstr "登入身分為"
 #, php-format
 msgid "Logged in as %s"
 msgstr "登入身分為 %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "登入"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11293,7 +11293,7 @@ msgid "Logout"
 msgstr "登出"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "郵件程式錯誤：未設定收件者地址！！<br>若使用<i>測試郵件</i>連結，請設定<b>警示電子郵件</b>設定。"
 
 #: lib/functions.php
@@ -11372,7 +11372,7 @@ msgstr "警告：缺少關鍵的 Kadupul Include 檔案 %s。請找出並還原�
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "警告：PollerID:%s 具有無效的主機名稱:%s。無法透過 DNS 連繫！"
 
 #: lib/functions.php
@@ -11462,7 +11462,7 @@ msgid "All %d %s"
 msgstr "全部 %d %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "允許或限制表格欄位延伸超過目前視窗限制。"
 
 #: lib/html.php
@@ -12118,7 +12118,7 @@ msgid "Cascade to Branches"
 msgstr "連鎖套用至分支"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "若您想為報表使用自訂 HTML 與 CSS，請勾選此方塊。"
 
 #: lib/html_reports.php
@@ -12126,7 +12126,7 @@ msgid "Check this box to enable this Report."
 msgstr "勾選此方塊以啟用此報表。"
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "選擇要使用的自訂 HTML 包裝與 CSS 檔案。此檔案包含用於包裝報表的 HTML 與 CSS。若其內容不僅包含 CSS，您必須在檔案內放置特殊的 <REPORT> 標籤。此格式標籤將被報表內容取代。這些檔案位於 'formats' 目錄中。"
 
 #: lib/html_reports.php
@@ -12383,7 +12383,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "選擇要使用的設備模板。"
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "在設備類型的情況下，選擇要用於過濾的設備。"
 
 #: lib/html_reports.php
@@ -12455,11 +12455,11 @@ msgid "The number of Graph columns."
 msgstr "圖表欄數。"
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "此地址將用作電子郵件寄件者地址"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "此名稱將用作預設電子郵件寄件者"
 
 #: lib/html_reports.php
@@ -12477,22 +12477,22 @@ msgstr "樹狀目錄：%s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "無法傳送報表「%s」。請設定電子郵件寄件者名稱"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "無法傳送報表「%s」。請設定寄件者電子郵件地址"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "無法傳送報表「%s」。請設定電子郵件主旨"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "無法傳送報表「%s」。請設定收件者電子郵件地址"
 
 #: lib/html_reports.php
@@ -12588,7 +12588,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "基於安全性考量，Kadupul 正規表示式限制為最多 50 個字元。"
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Kadupul 正規表示式不可包含分號字元。"
 
 #: lib/html_utility.php
@@ -13044,12 +13044,12 @@ msgstr "無法設定 PHP 選項 %s，目前為 %s（應為 %s）"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "無法設定指定的 %sRRDTool 版本：%s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "無法設定指定的 %sRRDtool 版本：%s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "無法更新自動化選項集 %s"
 
 #: lib/installer.php
@@ -13122,7 +13122,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "套件 #%s '%s' 在設定檔 '%s' 下的匯入成功"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "若發生問題，強烈建議您先清除瀏覽器快取，關閉並重新開啟瀏覽器（不只是關閉 Kadupul 所在的分頁）後重試，再向 Kadupul 提出問題"
 
 #: lib/installer.php
@@ -13300,7 +13300,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "在極少數情況下，我們曾收到使用者回報因程式碼變更而遇到一些輕微問題。這些問題是由於瀏覽器保留了升級前的程式碼所致，雖然我們已採取措施將發生機率降至最低，但仍有可能發生。若您需要清除瀏覽器快取的說明，<a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> 是一個很好的起點。"
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "安裝完成後，應將 CSRF 路徑設為唯讀。"
 
 #: lib/installer.php
@@ -13377,7 +13377,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "請選取您希望在升級期間更新的裝置範本。"
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "請選取您希望在安裝後使用的裝置範本。若您的作業系統為 Windows，請務必選取 'Windows Device' 範本。若您的作業系統為 Linux/UNIX，請務必選取 'Local Linux Machine' 裝置範本。"
 
 #: lib/installer.php
@@ -13634,7 +13634,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "必須在 config.php 檔案中設定的變數包含下列項目："
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "白名單的運作方式為：當您首次匯入資料輸入方法，或重新匯入資料輸入方法且指令碼及/或引數有任何變更時，該資料輸入方法以及所有對應的資料來源將立即停用，直到管理員驗證該資料輸入方法有效為止。"
 
 #: lib/installer.php
@@ -13642,7 +13642,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "然後以管理員身分在 MySQL 中執行下列命令："
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "因此，在多個版本之前，Kadupul進行了增強，可以在這些類型的數據輸入法上提供白名單功能。儘管這樣做確實可以更徹底地保護Kadupul，但是它確實增加了Kadupul管理員導入和管理模板和軟件包所需的工作量。"
 
 #: lib/installer.php
@@ -13675,10 +13675,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "本程式為自由軟體；您可以依據自由軟體基金會所發布的 GNU General Public License 條款（採用授權條款第 2 版或依您選擇的任何後續版本）重新散布及/或修改本程式。"
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "此指令碼選項會解除目前遭到封鎖的資料輸入方法。"
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "此指令碼選項會重新啟用任何已停用的資料來源。"
 
@@ -13687,16 +13683,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "此指令碼選項會搜尋目前遭到封鎖的任何資料輸入方法，並提供封鎖原因的詳細資料。"
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "此指令碼選項會解除目前遭到封鎖的資料輸入方法。"
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "此版本的 Kadupul (%s) 似乎沒有有效的版本代碼，請聯絡 Kadupul 開發團隊以確保修正此問題。若您在正式發行版本中看到此錯誤，請立即在 GitHub 上回報"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "若要繼續，您<b>必須</b>建立一個新的資料庫，並將「cacti.sql」匯入其中："
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "為了協助識別處於此狀態的資料輸入方法，我們在 Kadupul 的 CLI 目錄中提供了驗證指令碼，可使用下列選項執行："
 
 #: lib/installer.php
@@ -13730,7 +13730,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "正在更新自動化選項集 %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "不建議更新您已經修改過的模板。模板的升級不會刪除對圖形和數據模板的修改，並可能導致意外行為。但是，如果您沒有對任何圖形、數據查詢或數據模板進行更改，則重新導入包應該沒有任何影響。在這種情況下，您必須在更新後從模板“同步圖表”。"
 
 #: lib/installer.php
@@ -13786,7 +13786,7 @@ msgstr "您似乎正在降級至舊版本。為較新版本所做的資料庫變
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "您正嘗試將 Kadupul %s 安裝到 0.6.x 資料庫上。遺憾的是，無法執行此操作。"
 
 #: lib/installer.php
@@ -13817,7 +13817,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "您的 Kadupul 伺服器 v%s 已安裝/更新完成。您現在可以開始使用本軟體。"
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "您的 Kadupul 設定在 config.php 中具有正確的相對路徑 (url_path)。"
 
 #: lib/installer.php
@@ -13845,7 +13845,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "您的資料庫預設定序似乎符合 UTF8 相容性"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "您的資料庫預設定序似乎不完全符合 UTF8 相容性。 "
 
 #: lib/installer.php
@@ -13944,12 +13944,12 @@ msgid "Unable to find user from DN"
 msgstr "無法從 DN 找到使用者"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "無法找到使用者的 DN"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
 msgstr "發生未預期的錯誤 %s (LDAP 錯誤：%s)，位於伺服器 (%s)"
 
 #: lib/ping.php
@@ -14057,13 +14057,13 @@ msgstr "外掛程式目錄「%s」必須先重新命名以移除名稱中的「p
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "目錄「%s」中的外掛程式未包含安裝函式「%s()」。此函式必須存在才能安裝該外掛程式。"
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "目錄「%s」中的外掛程式未包含版本函式「%s()」。此函式必須存在才能安裝該外掛程式。"
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "目錄「%s」中的外掛程式未包含版本函式「%s()」。此函式必須存在才能安裝該外掛程式。"
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "目錄「%s」中的外掛程式未包含安裝函式「%s()」。此函式必須存在才能安裝該外掛程式。"
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14123,7 +14123,7 @@ msgstr "圖表時間範圍："
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "傳送報表「%s」時發生問題，電子郵件子系統錯誤為「%s」"
 
 #: lib/reports.php
@@ -14177,7 +14177,7 @@ msgstr "錯誤：RRD 檔案不存在：%s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "錯誤：RRDfile %s 無法寫入"
 
 #: lib/rrd.php
@@ -14299,7 +14299,7 @@ msgstr "Kadupul RRA id 的 XFF 為「%s」，但應為「%s」"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Kadupul RRA id「%s」的列數不正確。目前列數為「%s」，但應為「%s」"
 
 #: lib/rrd.php
@@ -14459,7 +14459,7 @@ msgstr "嚴重錯誤：outlier-start 與 outlier-end 引數必須為 YYYY-MM-DD 
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "嚴重錯誤：無法備份 '%s'"
 
 #: lib/spikekill.php
@@ -14674,12 +14674,12 @@ msgstr "%s 調校"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s 會將 innodb_buffer_pool 分割為多個記憶體區域，以提升低於 10.5 版本的 MariaDB 效能。最大值為 64，但不應超過 CPU 核心/執行緒數量。當您的 innodb_buffer_pool 小於 1GB 時，應使用緩衝池大小除以 128MB。請持續套用此公式，直到達到 CPU 核心數或 64 的上限。"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s 會將 innodb_buffer_pool 分割為多個記憶體區域，以提升最高至（含）MySQL 8.0 版本的 MySQL 效能。最大值為 64，但不應超過 CPU 核心/執行緒數量。當您的 innodb_buffer_pool 小於 1GB 時，應使用緩衝池大小除以 128MB。請持續套用此公式，直到達到 CPU 核心數或 64 的上限。"
 
 #: lib/utility.php
@@ -14698,7 +14698,7 @@ msgstr "符合 MySQL 與系統的有效時區"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "從 %s %s 起，您可以控制 %s 將交易排清至磁碟的頻率。預設為 1 秒，但在高 I/O 系統中設為大於 1 的值可讓磁碟 I/O 更具循序性"
 
 #: lib/utility.php
@@ -14732,12 +14732,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "若您使用 SSD 磁碟，請使用此建議值。否則請勿設定此項目。"
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "若您的資料表具有非常大的索引，您必須將 Barracuda innodb_file_format 與 innodb_large_prefix 設為 1 來運作。若未這麼做，可能會導致外掛程式無法正確建立資料表。"
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB 會盡可能在系統記憶體中保存資料表與索引。因此，您應該將 innodb_buffer_pool 設得足夠大，以便在記憶體中保存盡可能多的資料表與索引。檢查 /var/lib/mysql/cacti 目錄的大小有助於判斷此值。我們建議使用系統總記憶體的 25%% 作為參考值，但實際需求會依您的系統規模而有所不同。"
 
 #: lib/utility.php
@@ -14751,7 +14751,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "建議您在任何高於 5.1 的 %s 版本中啟用 InnoDB。"
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "在使用 innodb_file_per_table 時，維持較大的資料表快取意味著更少的檔案開啟/關閉操作。"
 
 #: lib/utility.php
@@ -14776,7 +14776,7 @@ msgid "Recommended Value"
 msgstr "建議值"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "異常查詢不應導致資料庫對其他人離線。在這些查詢拖垮您的系統前終止它們。"
 
 #: lib/utility.php
@@ -14789,7 +14789,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "這是儲存中繼資料的位置。如果您有大量資料表，增加此值會很有幫助。"
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "除非您的 Kadupul 執行個體執行於具備內部日誌功能以因應系統突然當機的 ZFS 或 FusionI/O 上，否則此設定應保持開啟 (ON)。不過，若您擁有非常穩定的電源、系統極少當機且有備份，將此設定設為關閉 (OFF) 可讓資料庫效能提升將近 50%。"
 
 #: lib/utility.php
@@ -14797,11 +14797,11 @@ msgid "Variable"
 msgstr "變數"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "執行子查詢時，擁有較大的暫存資料表大小可將這些暫存資料表保留在記憶體中。"
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "執行聯結 (join) 時，若大小低於此值，將會保留在記憶體中而不會寫入暫存檔案。由於這是每個連線的記憶體配置，請務必小心不要設得過高。join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + 核心 MySQL/MariaDB 記憶體的總和應低於 80%。若建議值為負數，您必須調降此值及/或 sort_buffer_size，直到建議值符合允許的記憶體範圍。"
 
 #: lib/utility.php
@@ -15044,7 +15044,7 @@ msgstr "%s 個通知接收端"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "單擊“繼續”以刪除以下通知接收器"
 
 #: managers.php
@@ -15053,12 +15053,12 @@ msgstr "單擊“繼續”以禁用將以下通知對象轉發到此通知接收
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "單擊“繼續”以禁用以下通知接收器"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "單擊“繼續”以啟用以下通知接收器"
 
 #: managers.php
@@ -15163,7 +15163,7 @@ msgid "Automatically Trust Signer"
 msgstr "自動信任簽署者"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "變更/差異"
 
 #: package_import.php
@@ -15231,6 +15231,10 @@ msgid "Package"
 msgstr "包文件"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "套件詳細資訊"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "匯入"
 
@@ -15243,19 +15247,15 @@ msgid "Package XML File Damaged."
 msgstr "套件 XML 檔案已損毀。"
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "套件詳細資訊"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "取代資料來源與圖表範本建議值記錄。圖表與資料來源將在資料查詢重新建立索引後，或透過強制「取代建議值」程序後套用新名稱。"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "請參閱 cacti.log 以取得更多資訊。可能是您的 API 金鑰錯誤、套件遭到竄改，或該位置無法使用"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "請參閱 cacti.log 以取得更多資訊。可能是您的 API 金鑰錯誤、套件遭到竄改，或該位置無法使用。"
 
 #: package_import.php templates_import.php
@@ -15277,11 +15277,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "套件 %s 匯入成功"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "XML 檔案似乎無效。請聯絡套件作者"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "套件的 XML 檔案不存在"
 
 #: package_import.php
@@ -15302,7 +15302,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "您尚未信任此套件作者。若您希望匯入，請勾選「自動信任作者」核取方塊"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "外掛程式作者為此外掛程式提供的說明。"
 
 #: plugins.php
@@ -15395,7 +15395,7 @@ msgid "Plugin Name"
 msgstr "外掛程式名稱"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "外掛程式目錄名稱不可包含空格"
 
 #: plugins.php
@@ -15485,12 +15485,12 @@ msgstr "卸載此插件將刪除所有插件數據和設置。如果您確實要
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "錯誤：PHP 二進位檔路徑：%s 對輪詢器 ID %d 無效。輪詢器無法繼續！"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "錯誤：Spine 路徑：%s 對輪詢器 ID %d 無效。輪詢器無法繼續！"
 
 #: poller.php
@@ -15512,7 +15512,7 @@ msgstr "處於心跳模式的輪詢器"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "警告：%s 與輪詢器 ID %d 的輪詢器間隔不同步！輪詢器間隔為 %d 秒（上限為 %d 秒），但距離上次輪詢已過了 %d 秒！"
 
 #: poller.php
@@ -15566,7 +15566,7 @@ msgstr[0] "清除資料收集器統計資料"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "點擊「繼續」以清除資料收集器的統計資料。"
 
 #: pollers.php
@@ -15661,7 +15661,7 @@ msgid "No Data Collectors Found"
 msgstr "找不到資料收集器"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "此資料收集器資料庫的備註。"
 
 #: pollers.php
@@ -15790,12 +15790,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "存放用於連線至遠端資料庫的 SSL 金鑰的檔案。"
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "資料收集器的主機名稱。它可能需要是完整網域名稱 (FQDN)，以便遠端輪詢器能與其聯繫執行重新建立索引、即時繪圖等作業。"
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "遠端資料庫伺服器的主機名稱。"
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "資料收集器的主機名稱。它可能需要是完整網域名稱 (FQDN)，以便遠端輪詢器能與其聯繫執行重新建立索引、即時繪圖等作業。"
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15810,7 +15810,7 @@ msgid "The last time this Data Collector completed."
 msgstr "此資料收集器最後一次完成的時間。"
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "此資料收集器最後一次與主要 Kadupul 站台完整同步的時間。"
 
 #: pollers.php
@@ -15993,7 +15993,7 @@ msgid "Changing Permission Model Warning"
 msgstr "變更權限模型警告"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "變更權限模型將會改變使用者的有效圖表權限。"
 
 #: settings.php
@@ -16312,7 +16312,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>注意：</strong>目前所有核心 Kadupul 外掛程式皆尚未重新設計以搭配遠端資料收集器運作。因此，需要直接存取裝置的外掛程式（如 MacTrack 與 HMIB）目前無法搭配遠端資料收集器使用。不過，只要遠端資料收集器處於 <b>'online'</b> 模式，Thold 等外掛程式仍可正常運作。"
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>注意：</strong>您目前已登入遠端資料收集器。處於 <b>'online'</b> 模式時，您將能如同登入主 Kadupul 網站般檢視並控制大部分功能。此外，請務必注意遠端資料收集器必須使用 Kadupul 效能加速服務的<b>「隨選更新」(On Demand Updating)</b> 功能，且我們一律建議使用 Spine。當遠端資料收集器處於 <b>'offline'</b> 模式時，遠端資料收集器的網站將僅包含較少資訊；不過它會快取所有更新，直到可連線至主 Kadupul 資料庫與網頁伺服器為止，屆時會將其 Boost 資料表輸出倒回主 Kadupul 資料庫進行更新。"
 
 #: templates/platform/console_home_body.html.twig
@@ -16487,22 +16487,22 @@ msgstr "分支"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "單擊“繼續”以刪除以下樹。"
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "單擊“繼續”以發布以下樹。"
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "點擊「繼續」以解除鎖定以下樹狀目錄。"
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "單擊“繼續”以取消發布以下樹。"
 
 #: tree.php
@@ -16597,7 +16597,7 @@ msgid "The last user to have modified this Tree."
 msgstr "最後修改此樹狀目錄的使用者。"
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "用來參照此樹狀目錄的名稱。"
 
 #: tree.php
@@ -16788,7 +16788,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "單擊“繼續”以啟用所選用戶。"
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "單擊“繼續”以使用所選模板用戶設置和權限覆蓋用戶設置。將保留原始用戶的全名，密碼，域和啟用狀態，所有其他字段將從模板用戶覆蓋。"
 
 #: user_admin.php
@@ -17108,12 +17108,12 @@ msgstr "選擇此網域的類型。"
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "單擊“繼續”以刪除以下用戶域。"
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "單擊“繼續”以禁用以下用戶域。"
 
 #: user_domains.php
@@ -17121,7 +17121,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "單擊“繼續”以啟用以下用戶域。"
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "按一下「繼續」以將下列使用者網域設為預設網域。"
 
 #: user_domains.php
@@ -17151,15 +17151,11 @@ msgid "Domains"
 msgstr "網域"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "網域類型"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "有效使用者"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "啟用用戶域"
 
@@ -17176,16 +17172,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "將取代取自 LDAP 的電子郵件欄位。（在 Windows 上為：mail） "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "若勾選此核取方塊，使用者將可使用此網域登入。"
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "將選取的網域設為預設"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Cacti 嘗試針對 LDAP 伺服器進行驗證的模式。<blockquote><i>不搜尋</i> - 不進行辨別名稱 (DN) 搜尋，僅嘗試以提供的辨別名稱 (DN) 格式進行繫結。<br><br><i>匿名搜尋</i> - 嘗試透過匿名繫結在 LDAP 目錄中搜尋使用者名稱，以找出使用者的辨別名稱 (DN)。<br><br><i>特定搜尋</i> - 嘗試透過特定辨別名稱 (DN) 與特定密碼在 LDAP 目錄中搜尋使用者名稱，以找出使用者的辨別名稱 (DN)。</blockquote>"
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17251,22 +17243,22 @@ msgstr "清除"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "單擊“繼續”將以下用戶組複製到新用戶組。"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "單擊“繼續”以刪除以下用戶組"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "單擊“繼續”以禁用以下用戶組。"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "單擊“繼續”以啟用以下用戶組。"
 
 #: user_group_admin.php
@@ -17287,7 +17279,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "此使用者群組的預設樹狀目錄原則"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "依循使用者設定"
 
 #: user_group_admin.php
@@ -17618,11 +17610,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "詳細執行階段統計資料"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Kadupul 與 Spine 版本不同！"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "目錄不存在！！"
 
 #: utilities.php
@@ -17636,11 +17628,11 @@ msgstr "錯誤：已安裝的 RRDtool 版本未超過組態設定的版本。<br
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "錯誤：RRDtool 1.2.x+ 不支援 GIF 影像格式，但有 %d 個圖表與/或範本將影像格式設為 GIF。"
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "每個瀏覽器選項卡最多可以使用 10 個連接，具體取決於瀏覽器。"
 
 #: utilities.php
@@ -17698,7 +17690,7 @@ msgstr "已安裝。<span class=\"deviceDown\">注意：若您計畫使用 SNMPv
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "強烈建議您將 php.ini 的 memory_limit 修改為 %s 或更高。"
 
 #: utilities.php
@@ -18101,11 +18093,11 @@ msgid "Technical Support [%s]"
 msgstr "技術支援 [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "資料查詢快取會儲存從資料查詢輸入類型收集的資訊。這些欄位的值可用於圖表的圖例、垂直標籤、GPRINTS 文字區域以及 CDEF 中。"
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Kadupul 日誌會依據系統設定儲存統計資料、錯誤及其他訊息。此資訊可用於識別輪詢器與應用程式的問題。"
 
 #: utilities.php
@@ -18141,7 +18133,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "這會顯示 SNMP 代理程式正在處理的所有物件。"
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "此建議記憶體值是根據目前的資料來源數量計算得出，僅供建議參考，實際值可能因系統需求而異。"
 
 #: utilities.php
@@ -18178,7 +18170,7 @@ msgid "Update Frequency:"
 msgstr "更新頻率："
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "使用此公用程式顯示缺少 RRD 檔案或 RRDfiles 中缺少數值的問題。您需要在「設定 -> 系統設定 -> 資料」中啟用 rrdcheck"
 
 #: utilities.php

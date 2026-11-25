@@ -15,6 +15,6 @@
 "Selected Poller Interval": "Intervalle d'interrogation sélectionné"
 "Templates Using": "Modèles l'utilisant"
 "The amount of unknown data that can still be regarded as known.": "La proportion de données inconnues pouvant encore être considérée comme connue."
-"The frequency that data will be collected from the Data Source?": "La fréquence à laquelle les données seront collectées depuis la source de données ?"
+"The frequency that data will be collected from the Data Source.": "La fréquence à laquelle les données seront collectées depuis la source de données ?"
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Le nombre d'échantillons requis avant de remplir une ligne dans la spécification RRA.  Le premier RRA doit toujours avoir une valeur de 1."
 "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph.": "Lors de l'affichage d'un graphique basé sur le RRA en question, la période par défaut à afficher pour ce graphique."

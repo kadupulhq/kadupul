@@ -42,7 +42,7 @@
 "Selected Poller Interval": "الفاصل الزمني المحدد لـ Poller"
 "Templates Using": "القوالب المستخدِمة"
 "The amount of unknown data that can still be regarded as known.": "مقدار المعطيات غير المعروفة التي يمكن الاستمرار في اعتبارها معروفة."
-"The frequency that data will be collected from the Data Source?": "معدل تكرار جمع المعطيات من مصدر المعطيات؟"
+"The frequency that data will be collected from the Data Source.": "معدل تكرار جمع المعطيات من مصدر المعطيات؟"
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "عدد العينات المطلوبة قبل ملء صف واحد في مواصفات RRA. يجب أن تكون قيمة أول RRA دائما 1."
 "Title Format": "تنسيق العنوان"
 "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph.": "عند عرض مبيان يعتمد على RRA المعني، فهذا هو النطاق الزمني الافتراضي الذي يتم إظهاره لهذا المبيان."

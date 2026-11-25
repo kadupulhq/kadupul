@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 {% set domain = 'data_source_profile' %}
 {% set heading = operation == 'delete' ? t('Delete Data Source Profiles', {}, 'data_source_profile') : t('Duplicate Data Source Profiles', {}, 'data_source_profile') %}
 {% set intro = operation == 'delete' ? t('Click Continue to delete the following Data Source Profiles.', {}, 'data_source_profile') : t('Click Continue to duplicate the following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles.', {}, 'data_source_profile') %}
-{% set used_message = t('The default profile and profiles in use by Data Templates or Data Sources can not be deleted.', {}, 'data_source_profile') %}
+{% set used_message = t('The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.', {}, 'data_source_profile') %}
 {% set cancel_url = path('data_source_profile_list', filters) %}
 {% block extra_fields %}{% if form.title_format is defined %}{{ form_row(form.title_format) }}{% endif %}{% endblock %}
 {% block items %}

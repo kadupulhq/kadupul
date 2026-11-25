@@ -211,7 +211,7 @@ function form_actions() {
 		if (get_nfilter_request_var('drp_action') == '1') { // delete
 			print "<tr>
 				<td class='textArea'>
-					<p>" . __n('Click \'Continue\' to delete the following User Domain.', 'Click \'Continue\' to delete following User Domains.', cacti_sizeof($d_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to delete the following User Domain.', 'Click \'Continue\' to delete the following User Domains.', cacti_sizeof($d_array)) . "</p>
 					<div class='itemlist'><ul>$d_list</ul></div>
 				</td>
 			</tr>\n";
@@ -220,7 +220,7 @@ function form_actions() {
 		}else if (get_nfilter_request_var('drp_action') == '2') { // disable
 			print "<tr>
 				<td class='textArea'>
-					<p>" . __n('Click \'Continue\' to disable the following User Domain.', 'Click \'Continue\' to disable following User Domains.', cacti_sizeof($d_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to disable the following User Domain.', 'Click \'Continue\' to disable the following User Domains.', cacti_sizeof($d_array)) . "</p>
 					<div class='itemlist'><ul>$d_list</ul></div>
 				</td>
 			</tr>\n";
@@ -234,11 +234,11 @@ function form_actions() {
 				</td>
 			</tr>\n";
 
-			$save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __n('Enabled User Domain', 'Enable User Domains', cacti_sizeof($d_array)) . "'>";
+			$save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __n('Enable User Domain', 'Enable User Domains', cacti_sizeof($d_array)) . "'>";
 		}else if (get_nfilter_request_var('drp_action') == '4') { // default
 			print "<tr>
 				<td class='textArea'>
-					<p>" . __('Click \'Continue\' to make the following the following User Domain the default one.') . "</p>
+					<p>" . __('Click \'Continue\' to make the following User Domain the default one.') . "</p>
 					<div class='itemlist'><ul>$d_list</ul></div>
 				</td>
 			</tr>\n";
@@ -314,7 +314,7 @@ function domain_edit() {
 			),
 		'type' => array(
 			'method' => 'drop_array',
-			'friendly_name' => __('Domains Type'),
+			'friendly_name' => __('Domain Type'),
 			'description' => __('Choose what type of domain this is.'),
 			'value' => '|arg1:type|',
 			'array' => $domain_types,
@@ -332,7 +332,7 @@ function domain_edit() {
 		'enabled' => array(
 			'method' => 'checkbox',
 			'friendly_name' => __('Enabled'),
-			'description' => __('If this checkbox is checked, users will be able to login using this domain.'),
+			'description' => __('If this checkbox is checked, users will be able to log in using this domain.'),
 			'value' => '|arg1:enabled|',
 			'default' => '',
 			),
@@ -349,7 +349,7 @@ function domain_edit() {
 	$fields_domain_ldap_edit = array(
 		'server' => array(
 			'friendly_name' => __('Server(s)'),
-			'description' => __('A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user.'),
+			'description' => __('A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user.'),
 			'method' => 'textbox',
 			'value' => '|arg1:server|',
 			'default' => read_config_option('ldap_server'),
@@ -397,7 +397,7 @@ function domain_edit() {
 			),
 		'mode' => array(
 			'friendly_name' => __('Mode'),
-			'description' => __('Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN).'),
+			'description' => __('Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user\'s Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user\'s Distinguished Name (DN).'),
 			'method' => 'drop_array',
 			'value' => '|arg1:mode|',
 			'array' => $ldap_modes

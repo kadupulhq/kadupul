@@ -292,11 +292,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "Kugira ngo wimure Ibishushanyo byegeranyijwe biri hasi ubishyire mu Cyegeranyo gishingiye ku Nyandikorugero, banza ukore Inyandikorugero y'icyegeranyo ku Nyandikorugero y'igishushanyo '%s'."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "Kugira ngo wimure Ibishushanyo byegeranyijwe biri hasi ubishyire mu Cyegeranyo gishingiye ku Nyandikorugero, bigomba kuba bikoresha Inyandikorugero y'igishushanyo imwe gusa. Nyamuneka kanda 'Subira inyuma' maze uhitemo gusa Ibishushanyo byegeranyijwe bikoresha Inyandikorugero y'igishushanyo imwe."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "Kugira ngo wimure Ibishushanyo byegeranyijwe biri hasi bikoreshe Inyandikorugero y'icyegeranyo, hagomba kuba hari imwe isanzwe ihari. Nyamuneka kanda 'Subira inyuma' maze ubanze ukore Inyandikorugero y'icyegeranyo yawe mbere yo kongera kugerageza."
 
 #: aggregate_graphs.php
@@ -441,7 +441,7 @@ msgid "Template"
 msgstr "Inyandikorugero"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "Inyandikorugero y'igiteranyo ibi bishushanyo biteranyije bishingiyeho"
 
 #: aggregate_graphs.php
@@ -449,7 +449,7 @@ msgid "The internal database identifier for this object"
 msgstr "Indanga y'imbere mu bubiko bw'amakuru y'iki kintu"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "Ibishushanyo byegeranyijwe byatoranyijwe bigaragara ko bitagira Inyandikorugero z'icyegeranyo zihuye."
 
 #: aggregate_graphs.php
@@ -520,7 +520,7 @@ msgid "Aggregate Templates"
 msgstr "Inyandikorugero z'igiteranyo"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Inyandikorugero z'igiteranyo zikoreshwa ntizishobora gusibwa. Gukoreshwa bisobanura kuba zishingiweho n'igiteranyo."
 
 #: aggregate_templates.php
@@ -757,7 +757,7 @@ msgid "All your login sessions have been cleared."
 msgstr "Ibihe byawe byose byo kwinjira byahanaguwe."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "Aderesi ya imeyili ushobora kubonekeraho."
 
 #: auth_profile.php
@@ -1111,7 +1111,7 @@ msgid "Clear Filtered"
 msgstr "Kuraho ibyayunguruwe"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "Kanda 'Komeza' kugira ngo uhagarike ishakisha ry'umuyoboro rikomeje."
 
 #: automation_networks.php
@@ -1238,7 +1238,7 @@ msgid "Schedule"
 msgstr "Gahunda"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "Imiterere y'ubu y'itahura ry'iyi miyoboro"
 
 #: automation_networks.php
@@ -1679,11 +1679,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "Ku kiranga '%s', habonetse ikibazo '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "Ububiko bwa RRA bushobora kwandikwamo na poller?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "RRDfile ishobora kwandikwamo na poller?"
 
 #: data_debug.php
@@ -2063,7 +2063,7 @@ msgstr "Ihuza risomwa gusa kugeza igihe dosiye ya XML ibonekeye"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "Kanda 'Komeza' kugira ngo usibe iri baza ry'amakuru rikurikira."
 msgstr[1] "Kanda 'Komeza' kugira ngo usibe aya mabaza y'amakuru akurikira."
 
@@ -2073,7 +2073,7 @@ msgstr "Kanda 'Komeza' kugira ngo usibe iri huriro ry'igishushanyo cy'ibaza ry'a
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "Kanda 'Komeza' kugira ngo ukore kopi y'iri baza ry'amakuru rikurikira."
 msgstr[1] "Kanda 'Komeza' kugira ngo ukore kopi y'aya mabaza y'amakuru akurikira."
 
@@ -2235,7 +2235,7 @@ msgid "The name of this Data Query."
 msgstr "Izina ry'iri baza ry'amakuru."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "Umubare w'inyandikorugero z'ibishushanyo zikoresha iri shakisha ry'amakuru."
 
 #: data_queries.php
@@ -2287,7 +2287,7 @@ msgstr "Hitamo igikoresho iyi nkomoko y'amakuru ibarizwamo."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "Kanda 'Komeza' kugira ngo usibe iyi nkomoko y'amakuru ikurikira"
 msgstr[1] "Kanda 'Komeza' kugira ngo usibe izi nkomoko z'amakuru zikurikira"
 
@@ -2427,7 +2427,7 @@ msgid "External"
 msgstr "Hanze"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "Niba iyi nkomoko y'amakuru itagikoreshwa n'ibishushanyo, ishobora gusibwa."
 
 #: data_sources.php
@@ -2554,7 +2554,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "Niba amakuru azakusanywa cyangwa atazakusanywa kuri iyi nkomoko y'amakuru. Bigenzurirwa ku rwego rw'icyitegererezo cy'amakuru."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "Numara gukura akamenyetso muri aka gasanduku hanyuma ukabika icyitegererezo cy'amakuru, inkomoko z'amakuru zose zisanzweho zishingiye kuri iki cyitegererezo cy'amakuru zizatakaza amakuru yazo yihariye.  Ibi bishobora gutuma ikusanyamakuru n'ibishushanyo bidakora neza"
 
 #: data_templates.php
@@ -2616,7 +2616,7 @@ msgid "Data Templates [new]"
 msgstr "Ibyitegererezo by'amakuru [gishya]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "Ibyitegererezo by'amakuru bikiri gukoreshwa ntibishobora guhindurwa"
 
 #: data_templates.php
@@ -2693,7 +2693,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "Aka gaciro kahagaritswe kubera ko gaturuka ku gikoresho kandi kakaba ari ako gusomwa gusa."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "Aka gaciro kahagaritswe kubera ko gaturuka ku gikoresho cyangwa ku gikoresho kihariye cy'ishakisha ry'amakuru gikurikirana amasano y'ingenzi y'ishakisha ry'amakuru."
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2819,7 +2819,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "Kanda 'Komeza' kugira ngo ukore kopi y'inyandikorugero z'ibishushanyo zikurikira. Ushobora guhitamo guhindura imiterere y'umutwe w'inyandikorugero nshya z'ibishushanyo."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "Kanda 'Komeza' kugira ngo ukore guhuza kuzuye hagati y'ibishushanyo byawe n'inyandikorugero z'ibishushanyo zahiswemo. Niba ufite ikibazo gusa aho ibice by'igishushanyo bitajyanye n'inyandikorugero y'igishushanyo, banza ugerageze uburyo bwa Guhuza vuba ibishushanyo kuko bitwara igihe gito cyane.  Iki gikorwa ni ingenzi niba ufite ibishushanyo bifite verisiyo nyinshi z'inyandikorugero y'igishushanyo kandi ukaba wifuza kubiha isura imwe."
 
 #: graph_templates.php
@@ -3151,7 +3151,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "Hindura igikoresho kijyanye n'ibishushanyo"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Hitamo inyandikorugero y'igishushanyo hanyuma ukande 'Komeza' kugira ngo uhindure inyandikorugero y'igishushanyo ku bishushanyo bikurikira. Menya ko hagaragara gusa inyandikorugero z'ibishushanyo zihuza. Izihuza zimenyekanishwa n'uko zifite inkomoko z'amakuru zisa neza."
 
 #: graphs.php
@@ -3357,7 +3357,7 @@ msgid "The selected Tree is not available."
 msgstr "Igiti cyahiswemo ntigihari."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "Kugeza ubu nta nyandikorugero zihuriza hamwe zigenwe kuri iyi nyandikorugero y'igishushanyo. Nyamuneka banza ukore inyandikorugero ihuriza hamwe y'inyandikorugero y'ibishushanyo byahiswemo wongere ugerageze, cyangwa ukore gusa igishushanyo gihuriza hamwe kidafite inyandikorugero."
 
 #: graphs.php
@@ -3551,20 +3551,20 @@ msgid "Class"
 msgstr "Icyiciro"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "Kanda 'Komeza' kugira ngo usibe ibibazo by'amakuru bikurikira bizakurwa ku nyandikorugero y'igikoresho."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "Kanda 'Komeza' kugira ngo usibe inyandikorugero y'igishushanyo ikurikira izakurwa ku nyandikorugero y'igikoresho."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "Kanda 'Komeza' kugira ngo uhuze ibikoresho bifitanye isano n'inyandikorugero z'ibikoresho zahiswemo. Menya ko iki gikorwa gishobora gutwara igihe bitewe n'umubare w'ibikoresho byahujwe n'iyo nyandikorugero y'igikoresho."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "Kanda 'Komeza' kugira ngo usibe ibibazo by'amakuru bikurikira bizakurwa ku nyandikorugero y'igikoresho."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "Kanda 'Komeza' kugira ngo usibe inyandikorugero z'ibikoresho zikurikira."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "Kanda 'Komeza' kugira ngo usibe inyandikorugero y'igishushanyo ikurikira izakurwa ku nyandikorugero y'igikoresho."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3654,7 +3654,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Huza ibikoresho n'inyandikorugero z'ibikoresho"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "Icyiciro cy'iyi nyandikorugero y'igikoresho. Izina ry'icyiciro rigomba kuba rihagarariye imikorere yayo."
 
 #: host_templates.php
@@ -3679,7 +3679,7 @@ msgstr "IKOSA RIKOMEYE: Ugomba kuba winjiye kugira ngo ugere muri iki gice cya K
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "Niba wumva ko iri ari ikosa. Nyamuneka vugana n'Umuyobozi wawe wa Kadupul."
 
 #: include/auth.php
@@ -3695,7 +3695,7 @@ msgid "Not Logged In"
 msgstr "Ntiwinjiye"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "Abayobozi ba Kadupul bafite uburenganzira bwo Gushyiramo/Kuvugurura gusa ni bo bashobora kwinjira muri iki gihe"
 
 #: include/auth.php
@@ -5079,7 +5079,7 @@ msgid "Operator"
 msgstr "Ikiranga cy'imibare"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "Ipaji ntiyagenwe. Kubw'ibyo, ntishobora kugaragazwa."
 
 #: include/global_arrays.php
@@ -5645,8 +5645,8 @@ msgid "Use the First Handler Found"
 msgstr "Koresha umuhuzabikorwa wa mbere ubonetse"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "Koresha umuhuzabikorwa wa MonoTranslator GetText"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "Koresha umuhuzabikorwa wa MoTranslator GetText"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5791,7 +5791,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Iyo umubare wa index y'isuzuma ry'amakuru uhindutse, hazakorwa kongera gutondeka index."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Iyo igihe igikoresho kimaze gikora cya SNMP gisubiye inyuma, hazakorwa kongera gutondeka index."
 
 #: include/global_arrays.php
@@ -5835,7 +5835,7 @@ msgid "You are not allowed to change your password."
 msgstr "Ntiwemerewe guhindura ijambobanga ryawe."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "Ugomba kuba wafunguye uburyo bwo kugenzura abakoresha bwubatswemo kugira ngo ukoreshe iki gikorwa."
 
 #: include/global_arrays.php
@@ -5997,17 +5997,17 @@ msgstr "OID %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "ama-OID %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repetitions"
+msgid "%d Repetition"
 msgstr "Inshuro %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repitition"
+msgid "%d Repetitions"
 msgstr "Inshuro %d"
 
 #: include/global_form.php
@@ -6216,7 +6216,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "Hitamo ibaza ry'amakuru ryo gushyira kuri iri tegeko."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "Hitamo ikintu cyo mu ishami ry'igiti cyo gushyiraho.<br>Menya neza ko kikihari igihe iri tegeko rishyirwa mu bikorwa!"
 
 #: include/global_form.php
@@ -6226,6 +6226,10 @@ msgstr "Hitamo igiti kizashyirwamo ibigize igiti bishya."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "Hitamo izina ry'iyi nkomoko y'amakuru. Rishobora kuba ririmo ibihinduka bisimbura nka |host_description| cyangwa |query_fieldName|. Kugira ngo ubone urutonde rwuzuye rw'udusimbuzo twemewe, nyamuneka reba inyandiko zisobanura Kadupul."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "Hitamo izina ryihariye rihagarariye iki gice cy'amakuru imbere muri RRDfile."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6285,10 +6289,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "Hitamo uburyo wifuza gukoresha kugira ngo ukusanye amakuru muri ubu buryo bwo kwinjiza amakuru."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "Hitamo izina ryihariye rihagarariye iki gice cy'amakuru imbere muri RRDfile."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "Amahitamo rusange"
 
@@ -6341,7 +6341,7 @@ msgid "Determines if the user account is locked."
 msgstr "Bigena niba konti y'umukoresha ifunze."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "Bigena niba umukoresha ashobora kwinjira."
 
 #: include/global_form.php
@@ -6402,7 +6402,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "Injiza imiterere ya SNMP yo gukoresha kuri iki gikoresho."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Injiza ID ya moteri ya SNMP v3 yo gukoresha kuri iki gikoresho. Siga uyu mwanya urimo ubusa kugira ngo ukoreshe ID ya moteri ya SNMP yasobanuwe kuri buri mwakira w'amenyesha rya SNMPv3."
 
 #: include/global_form.php
@@ -6605,7 +6605,7 @@ msgid "Include Prefix Text"
 msgstr "Shyiramo inyandiko y'imbanziriza"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "Shyiramo inyandiko y'umutwe wa GPRINT y'ibishushanyo by'inkomoko hamwe n'igishushanyo/ibishushanyo bihurije hamwe."
 
 #: include/global_form.php
@@ -7113,7 +7113,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "Amakuru yoherezwa kuri script, arimo inzira yuzuye igana kuri script n'inkomoko z'ibinjizwa mu tuzitiro twa &lt;&gt;."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "Inshuro amakuru azajya akusanywa avuye ku nkomoko y'amakuru?"
 
 #: include/global_form.php
@@ -7217,7 +7217,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "Aho Igikoresho giherereye mu buryo bugaragara. Iyi nyandiko yisanzuye ishobora kuba icyumba, umwanya muri rack, n'ibindi."
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "Igisubizo cy'igenzura rya Whitespace ku buryo bwihariye bwo kwinjiza amakuru. Niba umurongo w'ibinjizwa uhindutse, kandi dosiye y'urutonde rwemewe ntivugururwe, ibishushanyo ntibizemererwa gukorwa."
 
 #: include/global_form.php
@@ -7233,7 +7233,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Ubwoko bw'igishushanyo gikorwa; PNG, GIF cyangwa SVG. Guhitamo ubwoko bw'ishusho y'igishushanyo biterwa cyane na RRDtool."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Ubwoko bw'ipaki ya ping yoherezwa.  <br><i>ICYITONDERWA: ICMP kuri Linux/UNIX isaba uburenganzira bwa root.</i>  <br><i>ICYITONDERWA: TCP Ping Closed - N'ubwo tcp ping itagira icyo itanga, igikoresho gishobora gufatwa nk'ikiri UP.</i>"
 
 #: include/global_form.php
@@ -7329,7 +7329,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "Inyandiko ihagaritse (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "Ikibanza iki Gikoresho gihujwe na cyo."
 
 #: include/global_form.php
@@ -7353,11 +7353,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "Igihe ureba igishushanyo gishingiye kuri RRA iri kuvugwa, igihe gisanzwe cyerekanwa kuri icyo gishushanyo."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Igihe ushyiraho inyandiko z'umurongo fatizo w'ibumoso, shyira itegeko ku miterere y'amakuru. Imiterere yemewe irimo \"numeric\" aho amakuru afatwa nk'imibare, \"timestamp\" aho uduciro dusobanurwa nk'ibimenyetso by'igihe bya UNIX (umubare w'amasegonda kuva muri Mutarama 1970) kandi tukagaragazwa hakoreshejwe imiterere ya strftime (ibisanzwe ni \"%Y-%m-%d %H:%M:%S\"). Reba kandi --units-length. Hanyuma \"duration\" aho uduciro dusobanurwa nk'igihe cyamaze muri milisegonda. Igeno ry'imiterere rikurikiza amategeko ya PRINT/GPRINT yemejwe na valstrfduration."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Igihe ushyiraho inyandiko z'umurongo fatizo w'iburyo, shyira itegeko ku miterere y'amakuru. Imiterere yemewe irimo \"numeric\" aho amakuru afatwa nk'imibare, \"timestamp\" aho uduciro dusobanurwa nk'ibimenyetso by'igihe bya UNIX (umubare w'amasegonda kuva muri Mutarama 1970) kandi tukagaragazwa hakoreshejwe imiterere ya strftime (ibisanzwe ni \"%Y-%m-%d %H:%M:%S\"). Reba kandi --units-length na --right-axis-format. Hanyuma \"duration\" aho uduciro dusobanurwa nk'igihe cyamaze muri milisegonda. Igeno ry'imiterere rikurikiza amategeko ya PRINT/GPRINT yemejwe na valstrfduration."
 
 #: include/global_form.php
@@ -7521,11 +7521,11 @@ msgid "56 Gbps Ethernet"
 msgstr "Ethernet ya 56 Gbps"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote><i>Kwemeza Umwirondoro kw'Imbere</i> - Kadupul ni yo igenzura iyemezwa ry'umwirondoro w'umukoresha, bigatuma ushobora gukora Abakoresha no kubaha uburenganzira ku bice bitandukanye bya Kadupul.<br><br><i>Kwemeza Umwirondoro kw'Ibanze kw'Urubuga (Web Basic)</i> - Kwemeza umwirondoro bikorwa na seriveri y'urubuga. Abakoresha bashobora kongerwamo cyangwa bagakorwa mu buryo bwikora ku kwinjira kwa mbere niba Umukoresha w'Icyitegererezo yashyizweho, bitaba ibyo uburenganzira bw'umushyitsi bwashyizweho bukazakoreshwa.<br><br><i>Kwemeza Umwirondoro kwa LDAP</i> - Kwemerera kwemeza umwirondoro hifashishijwe seriveri ya LDAP. Abakoresha bazakorwa mu buryo bwikora ku kwinjira kwa mbere niba Umukoresha w'Icyitegererezo yashyizweho, bitaba ibyo uburenganzira bw'umushyitsi bwashyizweho bukazakoreshwa. Niba igice cya LDAP cya PHP kitaremejwe, Kwemeza Umwirondoro kwa LDAP ntikuzagaragara nk'amahitamo ashobora gutoranywa.<br><br><i>Kwemeza Umwirondoro kwa Domain Nyinshi za LDAP/AD</i> - Kwemerera abayobozi gufasha amatsinda menshi atandukanye yo mu bubiko bunyuranye bwa LDAP/AD kugera ku bikoresho bya Kadupul. Kimwe no Kwemeza Umwirondoro kwa LDAP, igice cya PHP LDAP kirakenewe kugira ngo ukoreshe ubu buryo.</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "Urutonde rutandukanyijwe n'akitso rwa za ID z'Ibikoresho wifuza ko bijya mu buryo bwa Debug igihe cy'ikusanyamakuru. Urwo rwego rwa Debug rukora gusa mu gihe cy'ikusanyamakuru rya Kadupul."
 
 #: include/global_settings.php
@@ -7533,7 +7533,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "Amahitamo agenewe abakora porogaramu gusa yo gukurikirana iremwa ry'Inkomoko y'amakuru cyane cyane mu igenzura ryo kuba ari yonyine"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "Urutonde rutandukanyijwe n'umwanya rw'amazina ya DNS cyangwa aderesi za IP za seriveri za LDAP zemewe. Kadupul izagerageza gukoresha seriveri za LDAP uhereye ibumoso ujya iburyo kugira ngo yemeze umwirondoro w'umukoresha."
 
 #: include/global_settings.php
@@ -7753,7 +7753,7 @@ msgid "By Template/Data Query"
 msgstr "Hakoreshejwe Icyitegererezo/Ububaza bw'amakuru"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Mu buryo busanzwe ubufasha bw'ipaji ya Kadupul buboneka kuri kadupul.org. Ariko rero, niba sisitemu yawe idafite Interineti, ushobora gukurura inyandiko z'ubufasha mu miterere ya HTML ukazishyira mu bubiko bwa 'docs' kuri seriveri yawe ya Kadupul. Niba uhisemo gukoresha gusa ahantu h'imbere ku nyandiko z'ubufasha bw'ipaji, shira akamenyetso muri aka kazu."
 
 #: include/global_settings.php
@@ -7777,7 +7777,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "Hitamo aka kazu niba wifuza kugerageza Inkomoko z'amakuru mbere yo kuzikora ku nyandikorugero nshya n'izatumijwe vuba z'Ibishushanyo. Iyo Igerageza ry'Inkomoko z'amakuru ryemewe, niba Inkomoko y'amakuru idatanze amakuru yemewe, Igishushanyo ntikizakorwa. Iri genamiterere ni ingenzi niba wifuza kugira Inyandikorugero y'Igikoresho rusange ishobora gukubiyemo inyandikorugero nyinshi z'Ibishushanyo zishobora gukoreshwa ku buryo buhitamo bitewe n'imiterere y'Igikoresho ubwacyo. Icyitonderwa: Niba ufite inyandikomvugo imara igihe kirekire ikora nk'Inkomoko y'amakuru, igihe cyo gukora Ibishushanyo kiziyongera."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "Hitamo 'enabled' kugira ngo wemerere ishyirwa mu ndimi rya Kadupul. Uburyo bukomeye (strict mode) busaba ko ururimi rusabwe ruba runashyigikiwe n'imigereka (plugins) yose yashyizwe muri sisitemu yawe. Niba atari uko biri, ibintu byose bizajya bigaragara mu Cyongereza."
 
 #: include/global_settings.php
@@ -7957,7 +7957,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Ukoresha fatizo wemeza wa SNMP v3 ku Bikoresho bishya byose."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Indangamimerere fatizo ya Moteri ya SNMP v3 ku Bikoresho bishya byose. Siga iki gice kirimo ubusa kugira ngo ukoreshe SNMP Engine ID yagenwe kuri buri mwakirizi w'amamenyesha wa SNMPv3."
 
 #: include/global_settings.php
@@ -8173,11 +8173,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "Fungura cyangwa ufunge iyoherezwa ahandi (referrals) rya LDAP. Niba bifunzwe, bishobora kongera umuvuduko w'ishakisha."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "Ubushobozi bwa Gradient bwafunguriwe ibishushanyo bya AREA na STACK."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "Yemera kwinjiza inyandiko mu buryo butaziguye muri poller output boost bigatuma igihe kigabanukaho 25% muri buri cyiciro cyo gukusanya amakuru."
 
 #: include/global_settings.php user_domains.php
@@ -8269,7 +8269,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "Bikoreshwa hamwe n'Ubufasha bw'Imiyoboro yo Hanze bwa Kadupul. Ukoresheje iri genamiterere, ushobora guhisha Imbonerahamwe (Dashboard) ya Kadupul, kugira ngo werekane ipaji yawe bwite gusa."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "Ku bakoresha bafite uburenganzira bwo kugera kuri Console gusa, igihe uyu mukoresha ashobora kumara yinjiye mbere yo gusohorwa mu buryo bwikora. Menya ko niba utakoze igikorwa mu gihe kirenze isaha imwe, bishobora kuba ngombwa ko uvugurura mushakisha yawe. Menya kandi ko iri genamiterere ntacyo rihindura igihe Authentication Cookies zemejwe."
 
 #: include/global_settings.php
@@ -8417,11 +8417,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "Urifuza kureba ute Ibishushanyo byo mu gihe nyacyo?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "Imibare ya buri munsi igomba kuvugururwa kangahe?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "RRD igomba kugenzurwa kangahe?"
 
 #: include/global_settings.php
@@ -8429,7 +8429,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "Igihe igikorwa kimwe cyo gusuzuma gishobora kumara gitangiza ibyiciro bishya by'amategeko. Kohereza ubutumwa butegereje bikurikira isuzuma mu gihe gisigaye, kandi bishobora kohereza icyiciro kimwe nubwo igihe cyagenwe cyashize. Amategeko atagezweho asuzumwa mbere mu gikorwa gikurikiyeho."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "Ni OID zingahe zigomba gusubizwa kuri buri cyifuzo cya snmpbulkwalk? Ku Bikoresho bifite ibiti binini bya SNMP, kongera iyi ngano bizongera umuvuduko wo kongera gutondeka (re-index) kuri WAN."
 
 #: include/global_settings.php
@@ -8437,15 +8437,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "Ni amadosiye angahe y'ibikorwa wifuza kugumana? Koresha 0 kugira ngo utazasiba na rimwe. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "Inshuro wifuza ko iyerekanwa rya Log ya Kadupul rivugururwa."
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Uko Kadupul igomba gushyigikira amatariki y'Umukoresha hashingiwe ku isaha y'akarere ka mushakisha (browser) y'umukoresha."
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Uko Kadupul izajya yandika amakuru y'ibikorwa."
 
 #: include/global_settings.php
@@ -8461,7 +8461,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "Niba hashyizweho akamenyetso, Kadupul izandika amakuru y'inyongera ya LDAP muri Log ya Kadupul mu gihe cy'ibikorwa byo Guhuza (Binding) no Gushakisha (Searching)."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Niba Kadupul idashobora kumenya umuvuduko w'umuyoboro (interface) bitewe n'uko ifSpeed cyangwa ifHighSpeed bitashyizweho cyangwa bingana na zeru, ni akahe gaciro ntarengwa wifuza kuri dosiye za RRD zizavamo."
 
 #: include/global_settings.php
@@ -8489,7 +8489,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "Niba imbonerahamwe y'ibisohoka ya Boost irenze iki gipimo mu mubare w'inyandiko, ivugurura rizahita ribaho."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "Niba igikusanyamakuru cya Boost kirengeje iki gihe cy'imikorere, umuburo uzashyirwa mu nyandiko y'ibyabaye ya Cacti,"
 
 #: include/global_settings.php
@@ -8497,7 +8497,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "Niba ubu bubiko butarimo ubusa, amadosiye yawe ya RRD y'umwimerere azabikirwa ikopi y'ingoboka muri ubu bubiko."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "Niba aka gace katari ubusa, Boost izandika ibisohoka bya RRDUpdate biturutse mu gikorwa cy'igikusanyamakuru cya Boost."
 
 #: include/global_settings.php
@@ -8505,7 +8505,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "Niba iri genamiterere rishyizweho akamenyetso, Kadupul izuzuza imbonerahamwe za SNMP Agent amakuru y'ibikoresho na sisitemu ya Kadupul. Ntabwo yemeza SNMP Agent ubwayo."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "Niba ufite ibibazo ku bikusanyamakuru bya Kadupul, shyiraho iyi nzira ya dosiye maze amakosa asanzwe y'ibikusanyamakuru azajye yoherezwa muri iyi dosiye"
 
 #: include/global_settings.php
@@ -8685,7 +8685,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "Umubare ntarengwa w'ibintu by'inkomoko y'amakuru ku nshuro imwe"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "Ingano ntarengwa ya Imeri"
 
 #: include/global_settings.php
@@ -8740,20 +8740,20 @@ msgstr "Ubugari buto bw'igiti"
 msgid "Mode"
 msgstr "Uburyo"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Uburyo Cacti izagerageza kwemeza umukoresha kuri seriveri ya LDAP.<blockquote><i>Nta gushakisha</i> - Nta gushakisha Izina Ritandukanya (DN) kubaho, hageragezwa gusa guhuza hakoreshejwe imiterere y'Izina Ritandukanya (DN) yatanzwe.<br><br><i>Gushakisha mu ibanga (Anonymous)</i> - Hageragezwa gushakisha izina ry'umukoresha mu bubiko bwa LDAP binyuze mu guhuza mu buryo butagaragaza umwirondoro kugira ngo haboneke Izina Ritandukanya (DN) ry'umukoresha.<br><br><i>Gushakisha kwihariye</i> - Hageragezwa gushakisha izina ry'umukoresha mu bubiko bwa LDAP hakoreshejwe Izina Ritandukanya (DN) ryihariye n'Ijambobanga ryihariye byo guhuza kugira ngo haboneke Izina Ritandukanya (DN) ry'umukoresha."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "Buri kwezi ku Cyumweru"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "Isaha y'akarere ya mushakisha yanjye"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "Uduciro twa NaN"
 
 #: include/global_settings.php
@@ -9249,7 +9249,7 @@ msgid "Server(s)"
 msgstr "Seriveri"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Ese Boost igomba kwemeza ivugurura rya RRD ku bisabwa muri Kadupul? Niba ubihagaritse, iri hinduka ntirizatangira gukora kugeza nyuma y'ikindi cyiciro cy'ikusanyamakuru. Igihe ufite Ibikusanyamakuru bya Kure, iri genamiterere rigomba kuba rifunguye."
 
 #: include/global_settings.php
@@ -9269,7 +9269,7 @@ msgid "Should image caching be enabled?"
 msgstr "Kubika amashusho by'agateganyo bikwiye kwemerwa?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "Niba Ifite Ibishushanyo na Ifite Inkomoko y'amakuru bigomba guhora bihiswemo ku buryo bw'ibanze."
 
 #: include/global_settings.php
@@ -9293,7 +9293,7 @@ msgid "Show business hours"
 msgstr "Erekana amasaha y'akazi"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "Erekana gusa ahantu haboneka kuri site yahiswemo y'igikoresho."
 
 #: include/global_settings.php
@@ -9313,11 +9313,11 @@ msgid "Site Security"
 msgstr "Umutekano w'urubuga"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "Imwe mu mikorere ya Kadupul ishyigikira Gukurura no Kurekura (Drag-N-Drop). Niba hashyizweho akamenyetso, iri genamiterere rizakora. Ikitonderwa: Ku bakoresha bafite ubumuga bwo kutabona, iri genamiterere rishobora guhagarikwa."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "Amazina y'imbuga atandukanyijwe n'umwanya azemererwa kugerwaho hanze ya seriveri y'urubuga ubwayo. Ibi ni ingenzi ku bakoresha bahitamo gukoresha CDN, cyangwa urubuga rwakira amadosiye. Inkomoko zishobora kubamo utumenyetso twa wildcard urugero: *.mydomain.com, cyangwa porotokole, urugero: https://*.example.com. Izi nkomoko zisimbura zikubiyemo ubwoko bw'amashusho, CSS na JavaScript gusa."
 
 #: include/global_settings.php
@@ -9461,15 +9461,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "Imirongo y'ibikorwa (Threads) y'ibanze yemewe kuri buri gikorwa. IKITONDERWA: Guhera kuri Kadupul 1.2+, iri genamiterere ribikwa mu Ikusanyamakuru, kandi aka ni agaciro k'ibanze gusa. Gukoresha umubare munini igihe ukoresha Spine bizazamura umuvuduko. Nyamara, menya neza ko ufite imiyoboro ihagije ya MySQL/MariaDB yo gushyigikira iyi mibare: imiyoboro = ibikusanyamakuru * ibikorwa * (threads + script servers). Ugomba kandi kumenya neza ko ufite imiyoboro y'inyongera ihagije ku iyinjira ry'abakoresha."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "Aderesi ya Imeyili yoherezwaho Imeyili z'Imenyesha z'Ikoreshwa ryikora niba itashyizweho ku rwego rw'Urusobemiyoboro rw'Ikoreshwa ryikora. Niba aka kazu cyangwa agaciro k'Urusobemiyoboro rw'Ikoreshwa ryikora gasigaye ubusa, Kadupul izakoresha konti ya Imeyili y'Umuyobozi Mukuru wa Kadupul."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "Aderesi ya Imeyili ikoreshwa kuri Imeyili z'Imenyesha z'Ikoreshwa ryikora niba itashyizweho ku rwego rw'Urusobemiyoboro rw'Ikoreshwa ryikora. Niba aka kazu cyangwa agaciro k'Urusobemiyoboro rw'Ikoreshwa ryikora gasigaye ubusa, Kadupul izakoresha Aderesi ya Imeyili y'Uwohereza y'ibanze ya sisitemu."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "Izina rya Imeyili rikoreshwa kuri Imeyili z'Imenyesha z'Ikoreshwa ryikora niba ritashyizweho ku rwego rw'Urusobemiyoboro rw'Ikoreshwa ryikora. Niba aka kazu cyangwa agaciro k'Urusobemiyoboro rw'Ikoreshwa ryikora gasigaye ubusa, Kadupul izakoresha Izina ry'Uwohereza ry'ibanze rya sisitemu."
 
 #: include/global_settings.php
@@ -9581,7 +9581,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "Umubare w'ibanze w'ibikorwa bikorera icyarimwe kuri buri Ikusanyamakuru. IKITONDERWA: Guhera kuri Kadupul 1.2, iri genamiterere ribikwa mu Ikusanyamakuru. Kujya mbere, aka gaciro ni igenamiterere ry'ibanze gusa ku Ikusanyamakuru. Gukoresha umubare munini igihe ukoresha cmd.php bizazamura umuvuduko. Kuzamura umuvuduko muri Spine bikemuka neza ukoresheje igipimo cya threads. Igihe ukoresha Spine, dusaba umubare muto maze ugakoresha threads aho kuba ibikorwa byinshi. Igihe ukoresha cmd.php, ntukarenze inshuro 2 umubare w'imitima ya CPU (CPU cores)."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "Umubare fatizo w'imirongo igaragazwa mu mbonerahamwe."
 
 #: include/global_settings.php
@@ -9597,7 +9597,7 @@ msgid "The encryption method to use for the Email."
 msgstr "Uburyo bwo gushyira mu ibanga buzakoreshwa kuri imeri."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "Igikumwe cy'urufunguzo rusange rwa RSA Proxy y'ingoboka irimo gukoresha ubu. Ibi bikenewe kugira ngo hashyirweho ihuza ryizewe."
 
 #: include/global_settings.php
@@ -9657,6 +9657,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Igihe ntarengwa inyandiko y'Imibare y'Inkomoko y'Amakuru ya Kadupul ishobora gukora itateje ikosa ryo kurenza igihe ngo ihagarikwe."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "Igihe ntarengwa inyandiko yo Kubungabunga ya Kadupul ishobora gukora itateje ikosa ryo kurenza igihe ngo ihagarikwe."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Igihe ntarengwa inyandiko yo gusuzuma dosiye ya RRD ya Kadupul ishobora gukora itateje ikosa ryo kurenza igihe ngo ihagarikwe."
 
@@ -9665,19 +9669,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Igihe ntarengwa inyandiko yo Gukora Raporo ya Kadupul ishobora gukora itateje ikosa ryo kurenza igihe ngo ihagarikwe."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Igihe ntarengwa inyandiko yo Kubungabunga ya Kadupul ishobora gukora itateje ikosa ryo kurenza igihe ngo ihagarikwe."
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Igihe ntarengwa inyandiko ya Spikekill ya Kadupul ishobora gukora itateje ikosa ryo kurenza igihe ngo ihagarikwe."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "Umubare ntarengwa w'ububiko bw'ibikoresho buzakorwa hashingiwe kuri ID z'ibikoresho zashyizwe muri hash."
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "Ingano ntarengwa y'ubutumwa bwa imeri harimo n'imigereka yose."
 
 #: include/global_settings.php
@@ -9717,19 +9717,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "Umubare w'inkingi zikoreshwa igihe werekana ibishushanyo by'udushushanyo duto mu buryo bw'Igiti."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "Umubare w'ibikorwa bya DSStats bikorera icyarimwe byo gukoresha mu gutunganya inkomoko z'amakuru zose."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "Umubare w'ibikorwa bikorera icyarimwe by'amabwiriza ya Poller. Ntihazarenzwa ibwiriza rimwe rikorera icyarimwe kuri buri host mu itsinda ry'amabwiriza ya Poller."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "Umubare w'ibikorwa by'igenzura ry'amadosiye ya RRD bikorera icyarimwe byo gukoresha mu kugenzura amadosiye yose ya RRD."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "Umubare w'ibikorwa bya Boost bikorera icyarimwe byo gukoresha mu gutunganya RRD zose ziri mu mbonerahamwe ya Boost."
 
 #: include/global_settings.php
@@ -9805,7 +9805,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "Inzira igana kuri porogaramu yawe ya snmpwalk."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "Ubwoko bwa poller yo gukoresha. Iri genamiterere rizatangira gukurikizwa ku ntera ikurikira yo gukusanya amakuru."
 
 #: include/global_settings.php
@@ -9841,6 +9841,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "Isaha amasaha yawe y'akazi atangiriraho. Imiterere: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "Iki gihe wifuza kubona ku gishushanyo fatizo."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "Izina ry'umukoresha ryo kwemeza umwirondoro igihe wohereza ukoresheje SMTP. (Hasige ubusa niba udakeneye kwemeza umwirondoro.)"
 
@@ -9873,28 +9877,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "Iri genamiterere rigenzurirwa ku rwego rw'Ikusanyamakuru. Agaciro kari hano ni ak'ibanze gusa gakoreshwa igihe Ikusanyamakuru rishya riremwaho bwa mbere."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "Iyi ni konti ya imeri ikoreshwa mu kohereza ubutumwa bw'igerageza kugira ngo wemeze ko byose bikora neza."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "Aha ni ho hantu ha seriveri hazakoreshwa ku miyoboro igana ku rubuga rwa Kadupul. Hagomba kubamo n'ububiko bw'imbere niba Kadupul idakorera mu bubiko shingiro (root folder)."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "Uyu ni umubare w'inyuguti zizemererwa mbere y'uko umurongo wo muri imeri ukatwa mu buryo bwikora. (0 = Yahagaritswe)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "Uyu ni umubare ntarengwa w'iminsi mbere y'uko ijambobanga rita agaciro."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "Uyu ni umubare ntarengwa w'iminsi mbere y'uko konti zidakoreshwa zihagarikwa. Konti ya Admin ntiyarebwa n'iri tegeko."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "Ubu ni bwo burebure buto bw'amagambobanga yemewe."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9917,12 +9905,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "Aha ni ho kuri seriveri y'urubuga amadosiye ya RRDfiles n'amadosiye ya PNG azabikwa by'agateganyo. Ubu bubiko bw'agateganyo buzacungwa na poller. Reba neza ko ufite uburenganzira nyabwo bwo gusoma no kwandika muri ubu bubiko"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "Uyu ni umubare ntarengwa w'iminsi mbere y'uko ijambobanga rita agaciro."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "Uyu ni umubare ntarengwa w'iminsi mbere y'uko konti zidakoreshwa zihagarikwa. Konti ya Admin ntiyarebwa n'iri tegeko."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "Ubu ni bwo burebure buto bw'amagambobanga yemewe."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "Iki ni igihe gito cyemewe hagati y'ivugurura ry'Igishushanyo. Iyi ndangagaciro ikoreshwa kandi mu gushyiraho ibiranga bimwe bya RRDfile. Niba ufite Igikoresho kibika amakuru by'agateganyo kandi kidatanga ivugurura ry'igihe nyacyo, ushobora gukenera kongera Intera nto fatizo yo kuvugurura kugira ngo wirinde gukora Ibishushanyo birimo ibyuho."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "Iyi ni inzira igana kuri sendmail kuri seriveri yawe. (Ikoreshwa gusa iyo Sendmail yatoranyijwe nka Serivisi y'imeri)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "Aha ni ho hantu ha seriveri hazakoreshwa ku miyoboro igana ku rubuga rwa Kadupul. Hagomba kubamo n'ububiko bw'imbere niba Kadupul idakorera mu bubiko shingiro (root folder)."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9937,15 +9941,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "Iri genamiterere ni irya sisitemu zifite poller imwe gusa kugira ngo zongere zubake imbonerahamwe y'ibisohoka bya poller kuri buri nshuro yo gukusanya amakuru kugira ngo imbonerahamwe yo mu bubiko itimukira muri swap kuri sisitemu nini cyane zifite ububiko bunini bw'amakuru bwashobora gukoresha swap."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "Iki gihe wifuza kubona ku gishushanyo fatizo."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "Aka gaciro kagaragaza umubare ntarengwa w'amazamuka adasanzwe ugomba gukurwa muri RRA y'Igishushanyo."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "Aka gaciro kagaragaza umubare w'ingero z'impuzandengo zo hejuru n'izo hasi zizakurwa mu itsinda ry'ingero mbere yo kubara Impuzandengo y'ihindagurika. Nuhitamo agaciro k'ingero zidasanzwe ka 5, impuzandengo 5 zo hejuru na 5 zo hasi zombi zizakurwaho."
 
 #: include/global_settings.php
@@ -9966,7 +9966,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "Ibi bizasaba ko amagambobanga mashya aba arimo nibura ikimenyetso cyihariye 1."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "Ibi bizasaba ko amagambobanga mashya aba arimo inyuguti ntoya n'inyuguti nkuru zombi."
 
 #: include/global_settings.php
@@ -10054,7 +10054,7 @@ msgid "Use Custom Fonts"
 msgstr "Koresha imyandikire yihariye"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "Koresha ububiko bwungirije bwihariye ku madosiye ya RRD ya buri mudasobwa yakira.  Imyandikire y'amazina y'amadosiye ya RRD izaba imwe muri izi zikurikira:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>Ushobora gukora iri hinduka nyuma yo gushyiramo porogaramu ukoresheje script ya CLI <b>structure_rra_paths.php</b> nyuma yo guhindura.  ICYITONDERWA: Niba uhinduye agaciro k'umubare ntarengwa w'ububiko kugira ngo ugabanye umubare w'ububiko bw'amadosiye, cyangwa niba uhinduye imiterere y'ububiko, ububiko burimo ubusa ntibuzasibwa nyuma yo kongera gukoresha script ya <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php
@@ -10094,11 +10094,11 @@ msgid "Weekly on Sunday"
 msgstr "Buri cyumweru ku Cyumweru"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Urwego rw'ubusesengure wifuza ko rwoherezwa muri dosiye ya log.  IBURIRA: Kubireka ku rundi rwego rutari NONE cyangwa LOW bishobora kurangiza vuba umwanya wo ku bubiko."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Ni uruhe rwego rw'amakuru arambuye wifuza ko rwoherezwa muri dosiye y'inyandiko y'ibikorwa. IBURIRE: Gusiga mu rundi ruhande uretse NONE cyangwa LOW bishobora kurangiza umwanya wa disiki yawe vuba."
 
 #: include/global_settings.php
@@ -10114,11 +10114,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "Igihe iri genamiterere rishyizweho akamenyetso, Abakoresha bazashobora gushyira Kadupul mu buryo bw'igihe nyacyo (Real-time)."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "Iyo Boost yohereje amategeko yo kuvugurura kuri RRDtool, ntigomba kurenza uburebure ntarengwa bw'ibishingirwaho mu itegeko bwa sisitemu y'imikorere.  Ibi bihinduka bitewe na sisitemu y'imikorere n'urwego rwa kernel.  Urugero: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ nta mupaka"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "Iyo bihiswemo, ubufasha bw'Ifishi n'Igenamiterere buzagaragara aho bwanditse imbere.  Bitabaye ibyo, buzagaragara igihe utunze imbeba kuri buto y'ubufasha."
 
 #: include/global_settings.php
@@ -10126,7 +10126,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "Igihe hashyizweho akamenyetso, buri gikorwa cyose cyo kwinjira muri Kadupul kizajya cyoherezwa kuri HTTPS kugira ngo umutekano ube mwinshi."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "Igihe uhanga raporo nshya, ni ubuhe bwoko bw'ishusho bugomba gukoreshwa ku bishushanyo biri mu nyandiko."
 
 #: include/global_settings.php
@@ -10146,7 +10146,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "Igihe werekana Ibishushanyo, emera Amatariki y'Igishushanyo kwagukira 'mu gihe kizaza'"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "Igihe byemejwe, Kadupul ntizafunga Ibishushanyo. Ibi bituma umuntu ahindura mu buryo bwihuse n'intoki Inkomoko z'amakuru zijyanye n'Igishushanyo."
 
 #: include/global_settings.php
@@ -10174,7 +10174,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "Igihe ukoresha iyemezwa ry'ibanze, niba hari ibibazo byo guhuza izina ry'umukoresha na konti ya Kadupul yemewe, ubutumwa bwanditswe hano buzagaragarizwa abakoresha. Bushobora kubamo inyandiko isanzwe na HTML."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "Iyo ureba urutonde rumanuka rw'umuyunguruzi w'izina ry'Igikoresho, guhitamo ubu buryo bizakuraho domain ku izina rya hostname."
 
 #: include/global_settings.php
@@ -10182,11 +10182,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "Iyo wemeye Boost, amadosiye yawe ya RRD avugururwa gusa iyo yasabwe n'umukoresha, cyangwa iyo iki gihe kirangiye."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "Ni iyihe miterere y'ububiko bw'amadosiye wifuza gukoresha ku nzira zitunganyije za RRD.  'ID y'igikoresho' ni yo fatizo.  Igenamiterere 'ID y'igikoresho/ID y'isaba ry'amakuru' rikwiye gukoreshwa igihe ufite ibikoresho bifite ibihumbi by'ibishushanyo.  Nyuma yo guhindura imiterere y'ububiko bw'amadosiye, ugomba kongera gukoresha script ya CLI y'inzira zitunganyije kugira ngo uhindure inzira z'amadosiye ya RRD zijyane n'imiterere mishya."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "Ni ubuhe buryo bw'Igishushanyo wifuza ko bwajya bugaragara bwa mbere igihe ufunguye urupapuro rw'Ibishushanyo?"
 
 #: include/global_settings.php
@@ -10754,7 +10754,7 @@ msgid "Warnings++"
 msgstr "Imiburo++"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; iri mu idosiye XML ariko nta makuru yagarutse., 'Umubare w'ibirango wahindutse' ntiwemerewe"
 
 #: lib/data_query.php
@@ -10923,7 +10923,7 @@ msgstr "Gukosora umwanya utari wo wa 'method' kuri '%s' kuko 'rewrite_index' cya
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "Habonetse indangamubare z'amakuru y'imbere %s zo kugenzura"
 
 #: lib/data_query.php
@@ -11040,7 +11040,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "Igomba kuba irimo imirima ya &lt;direction&gt;input&lt;/direction&gt; cyangwa &lt;direction&gt;input-output&lt;/direction&gt; gusa"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "Umurima mushya wo gutondeka wemejwe.  Umurima wo gutondeka uzavugururwa."
 
 #: lib/data_query.php
@@ -11140,7 +11140,7 @@ msgstr "Kuvugurura ububiko bw'agateganyo bw'ibibazo by'amakuru y'igishushanyo by
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "Igenzura ry'indangamubare %s z'amakuru y'imbere rirarangiye"
 
 #: lib/data_query.php
@@ -11157,7 +11157,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "Ugomba guhitamo inkingi isohoka ya XML ku Nkomoko y'amakuru '%s' kandi ugashyira akamenyetso mu kadirishya kari iburyo bwayo"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "Inyandikorugero y'igishushanyo yawe nta Nyandikorugero z'amakuru ikoresha. Nyamuneka kosora Inyandikorugero y'igishushanyo yawe"
 
 #: lib/data_query.php
@@ -11171,11 +11171,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "Byanze guhindura uburebure bw'umwanya w'ijambobanga, ntibishobora gukomeza kuko bishobora kwangiza ijambobanga"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "Byanze kumenya uburebure bw'umwanya w'ijambobanga, ntibishobora gukomeza kuko bishobora kwangiza ijambobanga"
 
 #: lib/dsdebug.php
@@ -11292,10 +11292,6 @@ msgid "Link %s"
 msgstr "Ihuza %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "Winjiye nk'Umushyitsi"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "Winjiye nka"
 
@@ -11303,6 +11299,10 @@ msgstr "Winjiye nka"
 #, php-format
 msgid "Logged in as %s"
 msgstr "Winjiye nka %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "Winjiye nk'Umushyitsi"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11313,7 +11313,7 @@ msgid "Logout"
 msgstr "Gusohoka"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Ikosa ry'oherezabutumwa: Nta aderese y'uwakira yashyizweho!!<br>Niba ukoresha ihuza rya <i>Imeri y'igerageza</i>, nyamuneka shyiraho igenamiterere rya <b>Imeri y'imenyesha</b>."
 
 #: lib/functions.php
@@ -11392,7 +11392,7 @@ msgstr "IBURIRA: Dosiye y'ingenzi ya Kadupul yinjizwamo %s irabura. Nyamuneka sh
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "IBURIRA: PollerID:%s ifite izina ry'ububiko (hostname) ritemewe:%s. Ntibishobora kugerwaho binyuze kuri DNS!"
 
 #: lib/functions.php
@@ -11482,7 +11482,7 @@ msgid "All %d %s"
 msgstr "Byose %d %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "Emerera cyangwa uhagarike inkingi z'imbonerahamwe kurenga imipaka y'idirishya ririho."
 
 #: lib/html.php
@@ -12138,7 +12138,7 @@ msgid "Cascade to Branches"
 msgstr "Kurikiza ku mashami"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "Kanda muri aka kazu niba ushaka gukoresha HTML na CSS byihariye kuri iyi raporo."
 
 #: lib/html_reports.php
@@ -12146,7 +12146,7 @@ msgid "Check this box to enable this Report."
 msgstr "Kanda muri aka kazu kugira ngo ukoreshe iyi Raporo."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "Hitamo dosiye ya HTML na CSS byihariye yo gukoresha. Iyi dosiye irimo HTML na CSS bikikiza raporo yawe. Niba irimo ibirenze CSS gusa, ugomba gushyira akamenyetso kihariye ka <REPORT> imbere muri iyo dosiye. Ako kamenyetso k'imiterere kazasimburwa n'ibikubiye muri raporo. Izi dosiye ziri mu bubiko bwa 'formats'."
 
 #: lib/html_reports.php
@@ -12403,7 +12403,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "Hitamo inyandikorugero y'igikoresho yo gukoresha mu gushungura ibikoresho cyangwa ibishushanyo."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "Hitamo igikoresho cyo gukoresha mu gushungura cyangwa guhitamo ibishushanyo mu gihe ari ubwoko bw'igikoresho."
 
 #: lib/html_reports.php
@@ -12475,11 +12475,11 @@ msgid "The number of Graph columns."
 msgstr "Umubare w'inkingi z'igishushanyo."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "Iyi aderesi izakoreshwa nk'aderesi y'uwohereza imeyili"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "Iri zina rizakoreshwa nk'izina risanzwe ry'uwohereza imeyili"
 
 #: lib/html_reports.php
@@ -12497,22 +12497,22 @@ msgstr "Igiti: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "Ntibishoboka kohereza Raporo '%s'. Nyamuneka shyiraho izina ry'uwohereza imeyili"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "Ntibishoboka kohereza Raporo '%s'. Nyamuneka shyiraho aderesi ya imeyili yohereza"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "Ntibishoboka kohereza Raporo '%s'. Nyamuneka shyiraho umutwe wa imeyili"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "Ntibishoboka kohereza Raporo '%s'. Nyamuneka shyiraho aderesi za imeyili z'abakira"
 
 #: lib/html_reports.php
@@ -12608,7 +12608,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Imvugo zisanzwe (RegEx) za Kadupul zigarukira ku nyuguti 50 gusa ku mpamvu z'umutekano."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Imvugo zisanzwe (RegEx) za Kadupul ntizishobora kuba zirimo akamenyetso k'akabago n'akitso (;)."
 
 #: lib/html_utility.php
@@ -13064,12 +13064,12 @@ msgstr "Gushyiraho ihitamo rya PHP %s byanze, ni %s (rigomba kuba %s)"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "Byanze gushyiraho verisiyo ya %sRRDTool yavuzwe: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "Byanze gushyiraho verisiyo ya %sRRDtool yavuzwe: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "Kuvugurura Itsinda ry'Amahitamo y'Ibyikora %s byanze"
 
 #: lib/installer.php
@@ -13142,7 +13142,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Kwinjiza Ipaki #%s '%s' munsi y'Umwirondoro '%s' byagenze neza"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Mu gihe habaye ibibazo, birasabwa cyane ko usiba ububiko bw'agateganyo bwa mushakisha yawe, ugafunga hanyuma ukongera gufungura mushakisha yawe (atari akadirishya Kadupul iriho gusa) kandi ukongera ukagerageza, mbere yo kugeza ikibazo kuri Kadupul"
 
 #: lib/installer.php
@@ -13320,7 +13320,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "Mu bihe bidasanzwe, twagiye tubona raporo z'abakoresha bahura n'ibibazo bito bitewe n'impinduka muri kode. Ibi bibazo biterwa na mucukumbuzi ikomeza kubika kode ya mbere y'ivugurura kandi nubwo twafashe ingamba zo kugabanya amahirwe y'uko ibyo biba, birashobora gukomeza kubaho. Niba ukeneye amabwiriza y'uburyo wasiba ububiko bw'agateganyo bwa mucukumbuzi yawe, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> ni intangiriro nziza."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "Iyinjizwa nirirangira inzira ya CSRF igomba gushyirwa ku buryo bwo gusomwa gusa."
 
 #: lib/installer.php
@@ -13397,7 +13397,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "Nyamuneka hitamo Inyandikorugero z'Ibikoresho wifuza kuvugurura mu gihe cyo Kuzamura verisiyo."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Nyamuneka hitamo Inyandikorugero z'Ibikoresho wifuza gukoresha nyuma yo kwinjiza. Niba sisitemu yawe ari Windows, ugomba kumenya ko uhitamo Inyandikorugero ya 'Windows Device'. Niba sisitemu yawe ari Linux/UNIX, menya neza ko uhitamo Inyandikorugero y'Igikoresho ya 'Local Linux Machine'."
 
 #: lib/installer.php
@@ -13654,7 +13654,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Ibipimo bigomba gushyirwa muri dosiye ya config.php birimo ibi bikurikira:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Uburyo Urutonde rwemewe rukora ni uko iyo ukinjiza bwa mbere Uburyo bwo Kwinjiza Amakuru, cyangwa ukongera kubwinjiza, maze script cyangwa ibisobanuro bigahinduka mu buryo ubwo ari bwo bwose, ubwo Buryo bwo Kwinjiza Amakuru n'Inkomoko z'amakuru zose zijyanye na bwo bihita bihagarikwa kugeza igihe umuyobozi yemeje ko ubwo Buryo bwo Kwinjiza Amakuru ari bwo."
 
 #: lib/installer.php
@@ -13662,7 +13662,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "Hanyuma ukoreshe ibi bikurikira muri MySQL nk'umuyobozi:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Kubw'ibyo, guhera kuri verisiyo zashize, Kadupul yongewemo ubushobozi bwo gukoresha Urutonde rw'ibyemewe (Whitelist) kuri ubu bwoko bw'Uburyo bwo Kwinjiza Amakuru. Nubwo ibi birinda Kadupul mu buryo bwimbitse, byongera akazi gasabwa umuyobozi wa Kadupul mu gutumiza no gucunga Inyandikorugero n'Amapaki."
 
 #: lib/installer.php
@@ -13695,10 +13695,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "Iyi porogaramu ni porogaramu yisanzuye; ushobora kuyikwirakwiza no/cyangwa kuyihindura ukurikije amategeko ya GNU General Public License nk'uko yasohowe na Free Software Foundation; haba verisiyo ya 2 y'Uruhushya, cyangwa (uko ubihisemo) verisiyo iyo ari yo yose izaza nyuma."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Iri hitamo rya script rikuraho ihagarikwa ry'Uburyo bwo Kwinjiza Amakuru bwahagaritswe ubu."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Iri hitamo rya script rizongera rikoreshe Inkomoko z'amakuru zose zahagaritswe."
 
@@ -13707,16 +13703,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "Iri hitamo rya script rizashakisha Uburyo bwo Kwinjiza Amakuru bwose bwahagaritswe ubu kandi ritange ibisobanuro by'impamvu."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "Iri hitamo rya script rikuraho ihagarikwa ry'Uburyo bwo Kwinjiza Amakuru bwahagaritswe ubu."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Iyi verisiyo ya Kadupul (%s) ntabwo igaragara nk'ifite kode ya verisiyo yemewe, nyamuneka vugisha Itsinda rishinzwe gutunganya Kadupul kugira ngo ibi bikosorwe. Niba ubona iri kosa muri verisiyo yasohotse, nyamuneka tanga raporo ako kanya kuri GitHub"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Kugira ngo ushobore gukomeza, <b>UGOMBA</b> guhanga ububiko bushya bw'amakuru, ukatumizamo \"cacti.sql\":"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Kugira ngo kumenya Uburyo bwo Kwinjiza Amakuru buri muri iki cyiciro byorohe, twatanze porogaramu yo kugenzura mu bubiko bwa CLI bwa Kadupul ishobora gukoreshwa n'amahitamo akurikira:"
 
 #: lib/installer.php
@@ -13750,7 +13750,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "Kuvugurura Itsinda ry'Amahitamo y'Ibyikora %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "Kuvugurura Inyandikorugero wamaze gukoraho impinduka ntibigirwa inama. Kuzamura verisiyo y'Inyandikorugero NTIKUZAKURAHO impinduka zakozwe ku Nyandikorugero z'Ibishushanyo n'iz'Amakuru, kandi bishobora gutera imikorere ititezwe. Icyakora, niba utarakoze impinduka ku Gishushanyo, Kubaza Amakuru, cyangwa Inyandikorugero y'Amakuru iyo ari yo yose, kongera kwinjiza Ipaki nta ngaruka byagira. Muri icyo gihe, uzagomba gukora 'Sync Graphs' ukuye ku Nyandikorugero nyuma yo kuvugurura."
 
 #: lib/installer.php
@@ -13806,7 +13806,7 @@ msgstr "Bigaragara ko uri gusubiza inyuma kuri verisiyo ibanziriza iyi. Impinduk
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "Uragerageza kwinjiza Kadupul %s ku bubiko bw'amakuru bwa 0.6.x. Ku bw'amahirwe make, ibi ntibishoboka gukorwa."
 
 #: lib/installer.php
@@ -13837,7 +13837,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "Seriveri yawe ya Kadupul v%s yinjijwe/yavuguruwe. Ubu ushobora gutangira gukoresha iyi porogaramu."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "Igenamiterere ryawe rya Kadupul rifite inzira nyayo yigereranya (url_path) muri config.php."
 
 #: lib/installer.php
@@ -13865,7 +13865,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Itondekanwa fatizo ry'ububiko bw'amakuru bwawe rigaragara ko rihuye na UTF8"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Itondekanwa fatizo ry'ububiko bw'amakuru bwawe NTIRIGARAGARA ko rihuye byuzuye na UTF8. "
 
 #: lib/installer.php
@@ -13964,12 +13964,12 @@ msgid "Unable to find user from DN"
 msgstr "Ntibishobotse kubona umukoresha uhereye kuri DN"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "Ntibishobotse kubona DN y'abakoresha"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
 msgstr "Ikosa ritateganyijwe %s (Ikosa rya LDAP: %s) kuri Seriveri (%s)"
 
 #: lib/ping.php
@@ -14077,13 +14077,13 @@ msgstr "Ububiko bw'umugereka '%s' bukeneye guhindurirwa izina kugira ngo havanwe
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Umugereka uri mu bubiko '%s' nturimo umukoro wo gushyiramo '%s()'.  Uyu mukoro ugomba kubaho kugira ngo umugereka ushyirwemo."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Umugereka uri mu bubiko '%s' nturimo umukoro wa verisiyo '%s()'.  Uyu mukoro ugomba kubaho kugira ngo umugereka ushyirwemo."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Umugereka uri mu bubiko '%s' nturimo umukoro wa verisiyo '%s()'.  Uyu mukoro ugomba kubaho kugira ngo umugereka ushyirwemo."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Umugereka uri mu bubiko '%s' nturimo umukoro wo gushyiramo '%s()'.  Uyu mukoro ugomba kubaho kugira ngo umugereka ushyirwemo."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14143,7 +14143,7 @@ msgstr "Igihe cy'igishushanyo:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "Ibibazo mu kohereza Raporo '%s' Ikibazo muri sisitemu nto ya imeri Ikosa ni '%s'"
 
 #: lib/reports.php
@@ -14197,7 +14197,7 @@ msgstr "IKOSA: Idosiye ya RRD ntibaho: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "IKOSA: RRDfile %s ntiyandikwaho"
 
 #: lib/rrd.php
@@ -14319,7 +14319,7 @@ msgstr "XFF ya id ya RRA ya Kadupul ni '%s' ariko yagombye kuba '%s'"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Umubare w'imirongo kuri id ya RRA ya Kadupul '%s' ntabwo ari wo. Umubare w'imirongo ni '%s' ariko wagombye kuba '%s'"
 
 #: lib/rrd.php
@@ -14479,7 +14479,7 @@ msgstr "IKOSA RIKOMEYE: Ibipimo bya outlier-start na outlier-end bigomba kuba mu
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "IKOSA RIKOMEYE: Ntibishobotse kubika kopi ya '%s'"
 
 #: lib/spikekill.php
@@ -14694,12 +14694,12 @@ msgstr "Igenamikorere rya %s"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s izagabanyamo innodb_buffer_pool mu bice by'ububiko kugira ngo yongere imikorere kuri verisiyo za MariaDB ziri munsi ya 10.5. Agaciro ntarengwa ni 64, ariko ntikagomba kurenga umubare wa CPU cores/threads. Iyo innodb_buffer_pool yawe iri munsi ya 1GB, ugomba gukoresha ingano y'ikigega igabanyijwe na 128MB. Komeza ukoreshe iyi mibare kugeza ku mubare ntarengwa wa CPU cores cyangwa 64."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s izagabanyamo innodb_buffer_pool mu bice by'ububiko kugira ngo yongere imikorere kuri verisiyo za MySQL kugeza no kuri MySQL 8.0. Agaciro ntarengwa ni 64, ariko ntikagomba kurenga umubare wa CPU cores/threads. Iyo innodb_buffer_pool yawe iri munsi ya 1GB, ugomba gukoresha ingano y'ikigega igabanyijwe na 128MB. Komeza ukoreshe iyi mibare kugeza ku mubare ntarengwa wa CPU cores cyangwa 64."
 
 #: lib/utility.php
@@ -14718,7 +14718,7 @@ msgstr "Isaha y'akarere yemewe ihura na MySQL ndetse na sisitemu"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Guhera kuri %s %s, ushobora kugenzura incuro %s yohereza ibikorwa kuri disiki. Ibisanzwe ni isegonda 1, ariko muri sisitemu zifite I/O nyinshi gushyira agaciro karenze 1 bishobora gutuma I/O ya disiki ikurikirana neza"
 
 #: lib/utility.php
@@ -14752,12 +14752,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "Niba ufite disiki za SSD, koresha iki gitekerezo. Bitabaye ibyo, ntushyireho iri genamiterere."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "Niba imbonerahamwe zawe zifite indangamurongo nini cyane, ugomba gukoresha innodb_file_format ya Barracuda na innodb_large_prefix bingana na 1. Kutabikora bishobora gutuma imigereka idashobora gukora imbonerahamwe neza."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB izabika imbonerahamwe n'indangamurongo nyinshi zishoboka mu bubiko bwa sisitemu. Kubera iyo mpamvu, ugomba kugira innodb_buffer_pool nini bihagije kugira ngo ibike imbonerahamwe n'indangamurongo nyinshi mu bubiko. Kureba ingano y'ububiko bwa /var/lib/mysql/cacti bizagufasha kumenya aka gaciro. Turashishikariza 25%% by'ububiko bwose bwa sisitemu yawe, ariko ibyo ukeneye bizatandukana bitewe n'ingano ya sisitemu yawe."
 
 #: lib/utility.php
@@ -14771,7 +14771,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "Birashishikarizwa gushoboza InnoDB muri verisiyo iyo ari yo yose ya %s irenze 5.1."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "Kugira ububiko bw'imbonerahamwe bunini bisobanura ibikorwa bike byo gufungura/gufunga dosiye igihe ukoresha innodb_file_per_table."
 
 #: lib/utility.php
@@ -14796,7 +14796,7 @@ msgid "Recommended Value"
 msgstr "Agaciro gashishikarizwa"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Ibibazo bibi by'ububiko bw'amakuru ntibigomba gutuma ububiko bw'amakuru buva ku murongo ku bandi. Hagarika ibi bibazo mbere y'uko bihagarika sisitemu yawe."
 
 #: lib/utility.php
@@ -14809,7 +14809,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "Aha ni ho amakuru asobanura ayandi (metadata) abikwa. Niba ufite imbonerahamwe nyinshi, byaba byiza kongera iki."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Iri genamiterere rigomba kuguma kuri ON keretse niba Kadupul yawe ikorera kuri ZFS cyangwa FusionI/O zombi zifite uburyo bwazo bwo kwandika ibikorwa kugira ngo bihanganire igwa rya sisitemu ritunguranye. Ariko kandi, niba ufite umuriro w'amashanyarazi mwiza cyane, kandi sisitemu zawe zidakunda guhagarara kandi ufite kopi z'ububiko bw'amakuru, gushyira iri genamiterere kuri OFF bishobora kuguhesha hafi inyongera ya 50% mu mikorere y'ububikoshamakuru."
 
 #: lib/utility.php
@@ -14817,11 +14817,11 @@ msgid "Variable"
 msgstr "Impinduragaciro"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "Iyo ukora ibibazo byungirije (subqueries), kugira ingano nini y'imbonerahamwe z'igihe gito bituma izo mbonerahamwe z'igihe gito ziguma mu bubiko (memory)."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "Iyo ukora ihuza ry'imbonerahamwe (joins), niba biri munsi y'iyi ngano, bizaguma mu bubiko (memory) kandi ntibizigera byandikwa muri dosiye y'igihe gito. Kubera ko iri ari igenerwa ry'ububiko kuri buri kwihuza, hagomba kwitonderwa kutaryongera cyane. Igiteranyo cya join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + ububiko bw'ibanze bwa MySQL/MariaDB kigomba kuba munsi ya 80%. Niba igitekerezo gitangwa ari munsi ya zeru, ugomba kugabanya iki na/cyangwa sort_buffer_size kugeza igihe igitekerezo gihuye n'ububiko bwemewe."
 
 #: lib/utility.php
@@ -15064,7 +15064,7 @@ msgstr "Abakira imenyesha %s"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "Kanda 'Komeza' kugira ngo usibe uwakira imenyesha ukurikira"
 msgstr[1] "Kanda 'Komeza' kugira ngo usibe abakira imenyesha bakurikira"
 
@@ -15074,13 +15074,13 @@ msgstr "Kanda 'Komeza' kugira ngo uhagarike kohereza ibintu by'imenyesha bikurik
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "Kanda 'Komeza' kugira ngo uhagarike uwakira imenyesha ukurikira"
 msgstr[1] "Kanda 'Komeza' kugira ngo uhagarike abakira imenyesha bakurikira"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "Kanda 'Komeza' kugira ngo wemeze uwakira imenyesha ukurikira"
 msgstr[1] "Kanda 'Komeza' kugira ngo wemeze abakira imenyesha bakurikira"
 
@@ -15186,7 +15186,7 @@ msgid "Automatically Trust Signer"
 msgstr "Izera Uwashyizeho Umukono mu Buryo Bwikora"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "Impinduka/Ibitandukaniro"
 
 #: package_import.php
@@ -15254,6 +15254,10 @@ msgid "Package"
 msgstr "Ipaki"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "Ibisobanuro by'amapaki"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "Kuzana ipaki"
 
@@ -15266,19 +15270,15 @@ msgid "Package XML File Damaged."
 msgstr "Idosiye ya XML y'ipaki yangiritse."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "Ibisobanuro by'amapaki"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Simbuza ibyanditswe by'agaciro gasabwe by'Inkomoko y'amakuru n'Inyandikorugero y'igishushanyo. Ibishushanyo n'Inkomoko z'amakuru bizafata amazina mashya nyuma yo kongera gukora Data Query Reindex cyangwa ukoresheje igikorwa cyo gusimbuza ku gahato agaciro gasabwe."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "Reba muri cacti.log kugira ngo ubone ibisobanuro birambuye. Birashoboka ko habayeho ikosa ry'urufunguzo rwa API, cyangwa ipaki yahinduwe mu buryo butemewe, cyangwa aho iherereye ntihaboneka"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "Reba cacti.log kugira ngo ubone amakuru arambuye.  Bishobora kuba byatewe n'ikosa ry'urufunguzo rwa API cyangwa ipaki yarahinduwe mu buryo butemewe, cyangwa aho iherereye ntihaboneka."
 
 #: package_import.php templates_import.php
@@ -15300,11 +15300,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "Ipaki %s yinjijwe neza"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "Amadosiye ya XML agaragara nk'atemeye. Nyamuneka vugana n'uwakoze iyi paki"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "Amadosiye ya XML y'iyi paki ntabaho"
 
 #: package_import.php
@@ -15325,7 +15325,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "Nturizera uyu Mwanditsi w'Ipaki. Niba wifuza gutumiza, hitamo agasanduku ka Izera Umwanditsi mu Buryo Bwikora"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "Ibisobanuro uwakoze umugereka yahaye uwo mugereka."
 
 #: plugins.php
@@ -15418,7 +15418,7 @@ msgid "Plugin Name"
 msgstr "Izina ry'umugereka"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "Ububiko bw'amadosiye bw'imigereka ntibushobora kubamo imyanya"
 
 #: plugins.php
@@ -15508,12 +15508,12 @@ msgstr "Gukuramo uyu mugereka bizasiba amakuru yose n'igenamiterere by'umugereka
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "IKOSA: Inzira ya porogaramu ya PHP: %s ntiyemewe kuri id y'umukusanyamakuru %d. Umukusanyamakuru ntushobora gukomeza!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "IKOSA: Inzira ya spine: %s ntiyemewe kuri poller id %d. Poller ntishobora gukomeza!"
 
 #: poller.php
@@ -15535,7 +15535,7 @@ msgstr "Poller mu buryo bwa Heartbeat"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "IBURIRA: %s ntikijyanye n'igihe ntarengwa cya Poller kuri poller id %d! Igihe cya Poller ni amasegonda %d, hamwe n'igipimo ntarengwa cy'amasegonda %d, ariko hashize amasegonda %d kuva ku ikusanya riheruka!"
 
 #: poller.php
@@ -15590,7 +15590,7 @@ msgstr[1] "Siba Imibare y'Ibikusanya Amakuru"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "Kanda 'Komeza' kugira ngo usibe Imibare y'Igikusanya Amakuru kuri iki Gikusanya Amakuru."
 msgstr[1] "Kanda 'Komeza' kugira ngo usibe Imibare y'Igikusanya Amakuru kuri ibi Bikusanya Amakuru."
 
@@ -15693,7 +15693,7 @@ msgid "No Data Collectors Found"
 msgstr "Nta makusanyamakuru yabonetse"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "Inyandiko z'ububiko bw'amakuru bw'iki Gikusanya Amakuru."
 
 #: pollers.php
@@ -15822,12 +15822,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "Idosiye ibitse Urufunguzo rwa SSL rugomba gukoreshwa mu kwihuza n'ububiko bw'amakuru bwo kure."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "Izina rya hostname ry'Igikusanya Amakuru. Bishobora kuba ngombwa ko riba Izina ryuzuye ry'urubuga (FQDN) kugira ngo za Poller zo kure zishobore kuvugana na ryo mu bikorwa nko kongera gutondeka (re-indexing), gukora ibishushanyo mu gihe nyacyo, n'ibindi."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "Izina rya hostname rya seriveri y'ububiko bw'amakuru bwo kure."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "Izina rya hostname ry'Igikusanya Amakuru. Bishobora kuba ngombwa ko riba Izina ryuzuye ry'urubuga (FQDN) kugira ngo za Poller zo kure zishobore kuvugana na ryo mu bikorwa nko kongera gutondeka (re-indexing), gukora ibishushanyo mu gihe nyacyo, n'ibindi."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15842,7 +15842,7 @@ msgid "The last time this Data Collector completed."
 msgstr "Igihe cya nyuma iri kusanyamakuru ryarangije."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "Igihe cya nyuma iri Kusanyamakuru ryahujwe mu buryo bwuzuye n'urubuga nyamukuru rwa Kadupul."
 
 #: pollers.php
@@ -16025,7 +16025,7 @@ msgid "Changing Permission Model Warning"
 msgstr "Iburira ryo guhindura uburyo bw'uburenganzira"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "Guhindura uburyo bw'uburenganzira bizahindura uburenganzira nyakuri umukoresha afite ku bishushanyo."
 
 #: settings.php
@@ -16348,7 +16348,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>ICYITONDERWA:</strong> Kugeza ubu, nta na kimwe mu bice by'inyongera by'ibanze bya Kadupul (Plugins) cyongeye gutegurwa kugira ngo gikorane n'Ibikusanyamakuru bya kure. Kubw'ibyo, Inyongera nka MacTrack na HMIB, zisaba kugera ku bikoresho mu buryo butaziguye, ntizizakorana n'Ibikusanyamakuru bya kure kuri ubu. Icyakora, inyongera nka Thold zizakora igihe cyose Ikusanyamakuru rya kure riri mu buryo bwa <b>'online'</b>."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>ICYITONDERWA:</strong> Winjiye mu Ikusanyamakuru rya kure. Iyo riri <b>'online'</b>, uzashobora kureba no kugenzura igice kinini cy'Urubuga Nyamukuru rwa Kadupul nk'aho ari ho winjiriye. Nanone, ni ingenzi kumenya ko Ibikusanyamakuru bya kure bisabwa gukoresha serivisi za Kadupul zo kongera umuvuduko z'uburyo bwa <b>'On Demand Updating'</b>, kandi buri gihe tugira inama yo gukoresha Spine. Iyo Ikusanyamakuru rya kure riri <b>'offline'</b>, Urubuga rw'Ikusanyamakuru rya kure ruzaba rurimo amakuru make cyane. Icyakora, ruzabika by'agateganyo amavugurura yose kugeza igihe Ububiko bw'Amakuru Nyamukuru bwa Kadupul na Seriveri y'Urubuga bibonekeye. Hanyuma ruzohereza ibisohoka byo mu mbonerahamwe yarwo ya Boost bisubire mu Bubiko bw'Amakuru Nyamukuru bwa Kadupul kugira ngo bivugururwe."
 
 #: templates/platform/console_home_body.html.twig
@@ -16523,25 +16523,25 @@ msgstr "Amashami"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "Kanda kuri 'Komeza' kugira ngo usibe iki giti gikurikira."
 msgstr[1] "Kanda kuri 'Komeza' kugira ngo usibe ibi biti bikurikira."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "Kanda kuri 'Komeza' kugira ngo utangaze iki giti gikurikira."
 msgstr[1] "Kanda kuri 'Komeza' kugira ngo utangaze ibi biti bikurikira."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "Kanda kuri 'Komeza' kugira ngo ufungure iki giti gikurikira."
 msgstr[1] "Kanda kuri 'Komeza' kugira ngo ufungure ibi biti bikurikira."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "Kanda kuri 'Komeza' kugira ngo uhagarike itangazwa ry'iki giti gikurikira."
 msgstr[1] "Kanda kuri 'Komeza' kugira ngo uhagarike itangazwa ry'ibi biti bikurikira."
 
@@ -16639,7 +16639,7 @@ msgid "The last user to have modified this Tree."
 msgstr "Umukoresha wa nyuma wahinduye iki giti."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "Izina iki giti kizajya kimenyekanirwaho."
 
 #: tree.php
@@ -16832,7 +16832,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Kanda kuri 'Komeza' kugira ngo wemerere umukoresha/abakoresha bahiswemo."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Kanda kuri 'Komeza' kugira ngo usimbuze igenamiterere ry'umukoresha/abakoresha ukoresheje igenamiterere n'uburenganzira by'umukoresha w'icyitegererezo wahiswemo. Amazina yose, Ijambobanga, Urwego rw'iyinjira n'imimerere yo kwemererwa by'abakoresha ba mbere bizagumaho, indi myanya yose izasimburwa n'ibiva ku mukoresha w'icyitegererezo."
 
 #: user_admin.php
@@ -17152,13 +17152,13 @@ msgstr "Hitamo ubwoko bw'iyi domene."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "Kanda 'Komeza' kugira ngo usibe urubuga rw'umukoresha rukurikira."
 msgstr[1] "Kanda 'Komeza' kugira ngo usibe izi mbuga z'abakoresha zikurikira."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "Kanda 'Komeza' kugira ngo uhagarike iyi Domene y'abakoresha ikurikira."
 msgstr[1] "Kanda 'Komeza' kugira ngo uhagarike izi Domene z'abakoresha zikurikira."
 
@@ -17167,7 +17167,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "Kanda 'Komeza' kugira ngo ushoboze iyi Domene y'abakoresha ikurikira."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "Kanda 'Komeza' kugira ngo ugire iyi Domene y'abakoresha ikurikira iy'ibanze."
 
 #: user_domains.php
@@ -17199,15 +17199,11 @@ msgid "Domains"
 msgstr "Domene"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "Ubwoko bwa Domene"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "Umukoresha nyakuri"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "Domene y'abakoresha yashobojwe"
 msgstr[1] "Shoboza Domene z'abakoresha"
@@ -17225,16 +17221,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "Umwanya uzasimbura imeyili yakuwe muri LDAP. (kuri Windows: mail) "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "Niba aka gasanduku gashyizwemo akamenyetso, abakoresha bazashobora kwinjira bakoresheje iyi domene."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "Gira Domene yahiswemo iy'ibanze"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Uburyo Cacti izagerageza kwemeza umwirondoro kuri seriveri ya LDAP.<blockquote><i>Ntushakishe</i> - Nta gushakisha Izina Ritandukanya (DN) kubaho, hageragezwa gusa guhuza hakoreshejwe imiterere y'Izina Ritandukanya (DN) yatanzwe.<br><br><i>Gushakisha utamenyekanye</i> - Hageragezwa gushakisha izina ry'umukoresha mu bubiko bwa LDAP hakoreshejwe guhuza utamenyekanye kugira ngo haboneke Izina Ritandukanya (DN) ry'umukoresha.<br><br><i>Gushakisha kwihariye</i> - Hageragezwa gushakisha izina ry'umukoresha mu bubiko bwa LDAP hakoreshejwe Izina Ritandukanya (DN) ryihariye n'Ijambobanga ryihariye mu guhuza kugira ngo haboneke Izina Ritandukanya (DN) ry'umukoresha."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17300,25 +17292,25 @@ msgstr "Hanagura"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "Kanda 'Komeza' kugira ngo ukorere kopi iri Tsinda ry'abakoresha rikurikira mu Itsinda rishya ry'abakoresha."
 msgstr[1] "Kanda 'Komeza' kugira ngo ukorere kopi aya Matsinda y'abakoresha akurikira mu Matsinda mashya y'abakoresha."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "Kanda 'Komeza' kugira ngo usibe iri Tsinda ry'abakoresha rikurikira"
 msgstr[1] "Kanda 'Komeza' kugira ngo usibe aya Matsinda y'abakoresha akurikira"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "Kanda 'Komeza' kugira ngo uhagarike iri Tsinda ry'abakoresha rikurikira."
 msgstr[1] "Kanda 'Komeza' kugira ngo uhagarike aya Matsinda y'abakoresha akurikira."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "Kanda 'Komeza' kugira ngo ushoboze iri Tsinda ry'abakoresha rikurikira."
 msgstr[1] "Kanda 'Komeza' kugira ngo ushoboze aya Matsinda y'abakoresha akurikira."
 
@@ -17341,7 +17333,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "Politiki y'Igiti y'Ibanze y'iri Tsinda ry'abakoresha"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "Kurikiza Igenamiterere ry'abakoresha"
 
 #: user_group_admin.php
@@ -17675,11 +17667,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "Imibare irambuye y'igihe cyo gukora"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Verisiyo ya Kadupul na Spine ntizihura!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "Ububiko bw'amadosiye NTIBUBAHO!!"
 
 #: utilities.php
@@ -17693,11 +17685,11 @@ msgstr "IKOSA: Verisiyo ya RRDtool yashyizwemo ntisumbye verisiyo yagenwe.<br>Ny
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "IKOSA: RRDtool 1.2.x+ ntiyemera imiterere y'amashusho ya GIF, ariko ibishushanyo %d\" na/cyangwa inyandikorugero bifite GIF nk'imiterere y'ishusho."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "Buri tabo ya mushakisha ishobora gukoresha kugeza ku ihuza 10 bitewe na mushakisha."
 
 #: utilities.php
@@ -17755,7 +17747,7 @@ msgstr "Yashyizwemo. <span class=\"deviceDown\">Icyitonderwa: Niba uteganya guko
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "Birasabwa cyane ko uhindura memory_limit muri php.ini ukayishyira kuri %s cyangwa hejuru yaho."
 
 #: utilities.php
@@ -18158,11 +18150,11 @@ msgid "Technical Support [%s]"
 msgstr "Ubufasha bwa tekiniki [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "Ububiko bw'agateganyo bw'ibaza ry'amakuru bubika amakuru yakusanyijwe avuye mu bwoko bw'iyinjiza ry'ibaza ry'amakuru. Uduciro tuva muri iyi myanya dushobora gukoreshwa ahagenewe inyandiko ku Bishushanyo nk'ibisobanuro, inyandiko zihagaritse, na GPRINT ndetse no muri CDEF."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Log ya Kadupul ibika imibare, amakosa n'ubundi butumwa bitewe n'igenamiterere rya sisitemu. Aya makuru ashobora gukoreshwa mu kumenya ibibazo biri mu ikusanyamakuru no muri porogaramu."
 
 #: utilities.php
@@ -18198,7 +18190,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Ibi byerekana ibintu byose biri gutunganywa na SNMP Agent."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "Iki gipimo cy'ububiko giteganijwe kibarwa hashingiwe ku mubare w'inkomoko y'amakuru zihari kandi kigomba gukoreshwa nk'igitekerezo gusa, ibipimo nyabyo bishobora gutandukana bitewe na buri sisitemu n'ibikenewe."
 
 #: utilities.php
@@ -18235,7 +18227,7 @@ msgid "Update Frequency:"
 msgstr "Incuro zo kuvugurura:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "Koresha iki gikoresho gifasha kugira ngo werekane ibibazo bya dosiye za rrd zibuze cyangwa uduciro tubuze muri rrdfiles. Ukeneye kwemeza rrdcheck muri Iboneza->Igenamiterere->Amakuru"
 
 #: utilities.php

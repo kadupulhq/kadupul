@@ -293,11 +293,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "Để di chuyển Biểu đồ tổng hợp bên dưới sang Tập hợp dựa trên mẫu, trước tiên hãy tạo Mẫu tổng hợp cho Mẫu biểu đồ &#39; %s&#39;."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "Để di chuyển Biểu đồ tổng hợp bên dưới sang Tập hợp dựa trên mẫu, họ chỉ phải sử dụng một Mẫu biểu đồ. Vui lòng nhấn &#39;Trở về&#39; và sau đó chỉ chọn Biểu đồ tổng hợp sử dụng cùng một Mẫu biểu đồ."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "Để chuyển đổi các Đồ thị tổng hợp bên dưới sang sử dụng Mẫu tổng hợp, cần phải có sẵn một Mẫu tổng hợp. Vui lòng nhấn 'Trở về' rồi tạo Mẫu tổng hợp trước khi thử lại."
 
 #: aggregate_graphs.php
@@ -442,7 +442,7 @@ msgid "Template"
 msgstr "Mẫu"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "Mẫu Tổng hợp mà Đồ thị Tổng hợp này dựa trên"
 
 #: aggregate_graphs.php
@@ -450,7 +450,7 @@ msgid "The internal database identifier for this object"
 msgstr "Định danh cơ sở dữ liệu nội bộ cho đối tượng này"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "Các Biểu đồ tổng hợp đã chọn dường như không có Mẫu tổng hợp nào khớp."
 
 #: aggregate_graphs.php
@@ -521,7 +521,7 @@ msgid "Aggregate Templates"
 msgstr "Mẫu tổng hợp"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Các mẫu tổng hợp đang sử dụng không thể bị xóa. Trong sử dụng được định nghĩa là được tham chiếu bởi một Uẩn."
 
 #: aggregate_templates.php
@@ -758,7 +758,7 @@ msgid "All your login sessions have been cleared."
 msgstr "Tất cả các phiên đăng nhập của bạn đã bị xóa."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "Địa chỉ Email bạn có thể truy cập tại."
 
 #: auth_profile.php
@@ -1112,7 +1112,7 @@ msgid "Clear Filtered"
 msgstr "Đã lọc"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để hủy khi đi khám phá mạng."
 
 #: automation_networks.php
@@ -1239,7 +1239,7 @@ msgid "Schedule"
 msgstr "Lịch trình"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "Trạng thái hiện tại của Khám phá Mạng này"
 
 #: automation_networks.php
@@ -1678,11 +1678,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "Đối với thuộc tính '%s', đã phát hiện sự cố '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "Thư mục RRA có thể ghi được bằng pug không?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "RRDfile có thể ghi bằng pug không?"
 
 #: data_debug.php
@@ -2060,7 +2060,7 @@ msgstr "Hiệp hội Chỉ đọc cho đến khi định vị được tệp XML
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Truy vấn dữ liệu sau."
 
 #: data_queries.php
@@ -2069,7 +2069,7 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa Hiệp hội đồ thị t
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "Nhấp vào 'Tiếp tục' để nhân bản (các) Truy vấn dữ liệu sau."
 
 #: data_queries.php
@@ -2228,7 +2228,7 @@ msgid "The name of this Data Query."
 msgstr "Tên của truy vấn dữ liệu này."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "Số lượng mẫu biểu đồ sử dụng truy vấn dữ liệu này."
 
 #: data_queries.php
@@ -2279,7 +2279,7 @@ msgstr "Chọn thiết bị mà Nguồn dữ liệu này thuộc về."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Nguồn dữ liệu sau"
 
 #: data_sources.php
@@ -2410,7 +2410,7 @@ msgid "External"
 msgstr "Bên ngoài"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "Nếu Nguồn dữ liệu này không được sử dụng bởi Đồ thị, nó có thể bị xóa."
 
 #: data_sources.php
@@ -2534,7 +2534,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "Dữ liệu sẽ được thu thập cho Nguồn dữ liệu này hay không. Được kiểm soát ở cấp Mẫu dữ liệu."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "Sau khi bạn bỏ chọn hộp kiểm này và sau đó Lưu Mẫu dữ liệu, bất kỳ Nguồn dữ liệu hiện có nào dựa trên Mẫu dữ liệu này sẽ mất Dữ liệu tùy chỉnh của chúng. Điều này có thể dẫn đến việc Thu thập dữ liệu và Đồ thị bị hỏng"
 
 #: data_templates.php
@@ -2596,7 +2596,7 @@ msgid "Data Templates [new]"
 msgstr "Mẫu dữ liệu [mới]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "Mẫu dữ liệu đang sử dụng không thể được sửa đổi"
 
 #: data_templates.php
@@ -2673,7 +2673,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "Giá trị này bị vô hiệu hóa do nó được lấy từ Thiết bị và chỉ đọc."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "Giá trị này bị vô hiệu hóa do nó có giá trị được lấy từ thiết bị hoặc đối tượng Truy vấn dữ liệu đặc biệt theo dõi các liên kết Truy vấn dữ liệu dữ liệu quan trọng."
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2799,7 +2799,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để nhân đôi (các) Mẫu biểu đồ sau. Bạn có thể tùy ý thay đổi định dạng tiêu đề cho (các) Mẫu biểu đồ mới."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để đồng bộ hóa biểu đồ của bạn với (các) Mẫu biểu đồ sau. Chức năng này rất quan trọng nếu bạn có các Biểu đồ tồn tại với nhiều phiên bản của Mẫu biểu đồ và muốn làm cho tất cả chúng xuất hiện chung."
 
 #: graph_templates.php
@@ -3131,7 +3131,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "Thay đổi đồ thị liên kết"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Chọn Mẫu biểu đồ và nhấp vào &#39;Tiếp tục&#39; để thay đổi Mẫu biểu đồ cho (các) biểu đồ sau. Xin lưu ý rằng chỉ các Mẫu biểu đồ tương thích sẽ được hiển thị. Tương thích được xác định bởi những người có Nguồn dữ liệu giống hệt nhau."
 
 #: graphs.php
@@ -3337,7 +3337,7 @@ msgid "The selected Tree is not available."
 msgstr "Cây đã chọn không khả dụng."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "Hiện tại không có Mẫu tổng hợp nào được xác định cho Mẫu biểu đồ này. Trước tiên, vui lòng tạo Mẫu tổng hợp cho Mẫu biểu đồ đồ thị đã chọn và thử lại hoặc chỉ đơn giản là tạo một biểu đồ tổng hợp chưa được tạo mẫu."
 
 #: graphs.php
@@ -3531,20 +3531,20 @@ msgid "Class"
 msgstr "Lớp"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa các Truy vấn dữ liệu sau đây sẽ bị tách khỏi Mẫu thiết bị."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa Mẫu biểu đồ sau sẽ bị tách khỏi Mẫu thiết bị."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để đồng bộ hóa các thiết bị được liên kết với (các) Mẫu thiết bị đã chọn. Lưu ý rằng hành động này có thể mất một chút thời gian tùy thuộc vào số lượng Thiết bị được ánh xạ vào Mẫu thiết bị."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa các Truy vấn dữ liệu sau đây sẽ bị tách khỏi Mẫu thiết bị."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Mẫu thiết bị sau."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa Mẫu biểu đồ sau sẽ bị tách khỏi Mẫu thiết bị."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3634,7 +3634,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Đồng bộ hóa thiết bị với (các) mẫu thiết bị"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "Lớp của Mẫu thiết bị này. Tên lớp phải thể hiện đúng chức năng của nó."
 
 #: host_templates.php
@@ -3659,7 +3659,7 @@ msgstr "FATAL: Bạn phải đăng nhập để truy cập vào khu vực này c
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "Nếu bạn cảm thấy rằng đây là một lỗi. Vui lòng liên hệ với Quản trị viên Kadupul của bạn."
 
 #: include/auth.php
@@ -3675,7 +3675,7 @@ msgid "Not Logged In"
 msgstr "Chưa đăng nhập"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "Chỉ Quản trị viên Kadupul có đặc quyền Cài đặt / Nâng cấp mới có thể đăng nhập"
 
 #: include/auth.php
@@ -5059,7 +5059,7 @@ msgid "Operator"
 msgstr "Nhà điều hành"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "Trang không được xác định. Do đó, nó không thể được hiển thị."
 
 #: include/global_arrays.php
@@ -5625,8 +5625,8 @@ msgid "Use the First Handler Found"
 msgstr "Sử dụng trình xử lý đầu tiên được tìm thấy"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "Sử dụng Trình xử lý GetText MonoTranslator"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "Sử dụng Trình xử lý GetText MoTranslator"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5771,7 +5771,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Khi chỉ số Truy vấn dữ liệu thay đổi, Chỉ mục lại sẽ được thực hiện."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Khi thời gian hoạt động của thiết bị SNMP bị lùi, Chỉ số lại sẽ được thực hiện."
 
 #: include/global_arrays.php
@@ -5815,7 +5815,7 @@ msgid "You are not allowed to change your password."
 msgstr "Bạn không được phép thay đổi mật khẩu của bạn."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "Bạn phải tích hợp xác thực người dùng để bật tính năng này."
 
 #: include/global_arrays.php
@@ -5977,17 +5977,17 @@ msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "%d OID của"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repetitions"
+msgid "%d Repetition"
 msgstr "%d Lần lặp"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repitition"
+msgid "%d Repetitions"
 msgstr "%d Lần lặp"
 
 #: include/global_form.php
@@ -6196,7 +6196,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "Chọn một truy vấn dữ liệu để áp dụng cho quy tắc này."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "Chọn một mục cây phụ để nối vào. <br> Hãy chắc chắn rằng nó vẫn ở đó khi quy tắc này được thực thi!"
 
 #: include/global_form.php
@@ -6206,6 +6206,10 @@ msgstr "Chọn một cây cho các mục cây mới."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "Chọn tên cho nguồn dữ liệu này. Tên có thể bao gồm các biến thay thế như |host_description| hoặc |query_fieldName|. Để xem danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Kadupul."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "Chọn tên duy nhất để thể hiện đoạn dữ liệu này bên trong RRDfile."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6265,10 +6269,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "Chọn phương thức bạn muốn sử dụng để thu thập dữ liệu cho phương thức Nhập dữ liệu này."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "Chọn tên duy nhất để thể hiện đoạn dữ liệu này bên trong RRDfile."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "Tùy chọn chung"
 
@@ -6321,7 +6321,7 @@ msgid "Determines if the user account is locked."
 msgstr "Xác định nếu tài khoản người dùng bị khóa."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "Xác định xem người dùng có thể đăng nhập không."
 
 #: include/global_form.php
@@ -6382,7 +6382,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "Nhập Bối cảnh SNMP để sử dụng cho thiết bị này."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Nhập Id động cơ SNMP v3 để sử dụng cho thiết bị này. Để trống trường này để sử dụng ID SNMP Engine được xác định cho mỗi máy thu Thông báo SNMPv3."
 
 #: include/global_form.php
@@ -6585,7 +6585,7 @@ msgid "Include Prefix Text"
 msgstr "Bao gồm văn bản tiền tố"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "Bao gồm các văn bản tiêu đề GPRINT đồ thị nguồn với (các) biểu đồ tổng hợp."
 
 #: include/global_form.php
@@ -7093,7 +7093,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "Dữ liệu được gửi đến tập lệnh, bao gồm đường dẫn đầy đủ đến tập lệnh và nguồn đầu vào trong &lt;&gt; ngoặc."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "Tần suất mà dữ liệu sẽ được thu thập từ Nguồn dữ liệu?"
 
 #: include/global_form.php
@@ -7197,7 +7197,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "Vị trí vật lý của Thiết bị. Văn bản mẫu miễn phí này có thể là một căn phòng, vị trí giá, vv"
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "Kết quả kiểm tra xác minh khoảng trắng cho Phương thức nhập cụ thể. Nếu Chuỗi đầu vào thay đổi và tệp Danh sách trắng không được cập nhật, Đồ thị sẽ không được phép tạo."
 
 #: include/global_form.php
@@ -7213,7 +7213,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Loại biểu đồ được tạo ra; PNG, GIF hoặc SVG. Việc lựa chọn loại hình ảnh đồ thị phụ thuộc rất RRDtool."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Loại gói tin ping cần gửi. <br><i>LƯU Ý: ICMP trên Linux/UNIX yêu cầu quyền root.</i> <br><i>LƯU Ý: TCP Ping Đã đóng - Ngay cả khi tcp ping không thành công, thiết bị vẫn có thể được coi là HOẠT ĐỘNG (UP).</i>"
 
 #: include/global_form.php
@@ -7309,7 +7309,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "Nhãn dọc (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "Thiết bị này được liên kết với trang web nào."
 
 #: include/global_form.php
@@ -7333,11 +7333,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "Khi xem Biểu đồ dựa trên RRA được đề cập, Timespan mặc định sẽ hiển thị cho Biểu đồ đó."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Khi bạn thiết lập ghi nhãn trục trái, hãy áp dụng một quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm \"numeric\" trong đó dữ liệu được xử lý dưới dạng số, \"timestamp\" trong đó các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu diễn theo định dạng strftime (mặc định là \"%Y-%m-%d %H:%M:%S\"). Xem thêm --units-length. Cuối cùng là \"duration\" trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Việc định dạng tuân theo các quy tắc của PRINT/GPRINT có chỉ định valstrfduration."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Khi bạn thiết lập ghi nhãn trục phải, hãy áp dụng một quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm \"numeric\" trong đó dữ liệu được xử lý dưới dạng số, \"timestamp\" trong đó các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu diễn theo định dạng strftime (mặc định là \"%Y-%m-%d %H:%M:%S\"). Xem thêm --units-length và --right-axis-format. Cuối cùng là \"duration\" trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Việc định dạng tuân theo các quy tắc của PRINT/GPRINT có chỉ định valstrfduration."
 
 #: include/global_form.php
@@ -7501,11 +7501,11 @@ msgid "56 Gbps Ethernet"
 msgstr "Ethernet 56 Gbps"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote> <i>Xác thực tích hợp</i> - Kadupul xử lý xác thực người dùng, cho phép bạn tạo người dùng và cấp cho họ quyền đối với các khu vực khác nhau trong Kadupul. <br><br> <i>Xác thực cơ bản Web</i> - Xác thực được xử lý bởi máy chủ web. Người dùng có thể được thêm hoặc tạo tự động trong lần đăng nhập đầu tiên nếu Người dùng mẫu được xác định, nếu không, quyền khách được xác định sẽ được sử dụng. <br><br> <i>Xác thực LDAP</i> - Cho phép xác thực đối với máy chủ LDAP. Người dùng sẽ được tạo tự động trong lần đăng nhập đầu tiên nếu Người dùng mẫu được xác định, nếu không, quyền khách được xác định sẽ được sử dụng. Nếu mô-đun LDAP của PHP không được bật, Xác thực LDAP sẽ không xuất hiện dưới dạng tùy chọn có thể chọn. <br><br> <i>Xác thực tên miền nhiều LDAP / AD</i> - Cho phép quản trị viên hỗ trợ nhiều nhóm khác nhau từ các thư mục LDAP / AD khác nhau để truy cập tài nguyên Kadupul. Giống như Xác thực LDAP, mô-đun LDAP PHP được yêu cầu để sử dụng phương thức này. </blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "Danh sách được phân tách bằng dấu phẩy của ID thiết bị mà bạn muốn ở chế độ Gỡ lỗi trong khi thu thập dữ liệu. Mức gỡ lỗi này chỉ được áp dụng trong quá trình bỏ phiếu Kadupul."
 
 #: include/global_settings.php
@@ -7513,7 +7513,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "Nhà phát triển chỉ có tùy chọn để theo dõi việc tạo Nguồn dữ liệu chủ yếu xung quanh việc kiểm tra tính duy nhất"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "Danh sách tên máy chủ DNS hoặc địa chỉ IP được phân tách bằng dấu cách cho các máy chủ LDAP hợp lệ. Kadupul sẽ cố gắng sử dụng các máy chủ LDAP từ trái sang phải để xác thực người dùng."
 
 #: include/global_settings.php
@@ -7733,7 +7733,7 @@ msgid "By Template/Data Query"
 msgstr "Theo mẫu / Truy vấn dữ liệu"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Theo mặc định, trợ giúp trang Kadupul nằm tại kadupul.org. Tuy nhiên, nếu hệ thống của bạn không có kết nối Internet, bạn có thể tải tài liệu xuống cục bộ ở định dạng HTML và lưu trữ trong thư mục 'docs' của máy chủ Kadupul. Nếu bạn chỉ muốn sử dụng vị trí cục bộ cho tài liệu trợ giúp trang, hãy đánh dấu hộp kiểm này."
 
 #: include/global_settings.php
@@ -7757,7 +7757,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "Chọn hộp kiểm này nếu bạn muốn kiểm tra các Nguồn dữ liệu trước khi tạo các Nguồn dữ liệu cho các Mẫu biểu đồ mới và mới được nhập. Khi Nguồn dữ liệu thử nghiệm được bật, nếu Nguồn dữ liệu không trả về dữ liệu hợp lệ, Biểu đồ sẽ không được tạo. Cài đặt này rất quan trọng nếu bạn muốn có Mẫu thiết bị chung chung hơn có thể bao gồm nhiều Mẫu biểu đồ hơn có thể được áp dụng một cách chọn lọc tùy thuộc vào đặc điểm của chính Thiết bị. Lưu ý: Nếu bạn có một tập lệnh đang chạy dài làm Nguồn dữ liệu, thì thời gian tạo Đồ thị sẽ tăng lên."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "Chọn &#39;được bật&#39; để cho phép bản địa hóa Kadupul. Chế độ nghiêm ngặt yêu cầu ngôn ngữ được yêu cầu cũng sẽ được hỗ trợ bởi tất cả các plugin đang được cài đặt tại hệ thống của bạn. Nếu đó không phải là thực tế, mọi thứ sẽ được hiển thị bằng tiếng Anh."
 
 #: include/global_settings.php
@@ -7937,7 +7937,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Người dùng ủy quyền SNMP v3 mặc định cho tất cả các thiết bị mới."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Id động cơ SNMP v3 mặc định cho tất cả các thiết bị mới. Để trống trường này để sử dụng ID SNMP Engine được xác định cho mỗi máy thu Thông báo SNMPv3."
 
 #: include/global_settings.php
@@ -8153,11 +8153,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "Kích hoạt hoặc vô hiệu hóa các giới thiệu LDAP. Nếu bị tắt, nó có thể tăng tốc độ tìm kiếm."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "Đã bật hỗ trợ dải chuyển màu (Gradient) cho biểu đồ AREA và STACK."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "Cho phép chèn trực tiếp các bản ghi vào tăng đầu ra của pug với kết quả giảm 25% thời gian trong mỗi chu kỳ thăm dò ý kiến."
 
 #: include/global_settings.php user_domains.php
@@ -8249,7 +8249,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "Để sử dụng với Hỗ trợ liên kết ngoài của Kadupul. Sử dụng cài đặt này, bạn có thể ẩn Bảng điều khiển Kadupul, do đó bạn chỉ có thể hiển thị trang của riêng mình."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "Đối với người dùng chỉ có quyền truy cập Bảng điều khiển, người dùng này có thể đăng nhập trong bao lâu trước khi được tự động đăng xuất. Lưu ý rằng nếu bạn không hoạt động trong hơn một giờ, bạn có thể phải làm mới trình duyệt của mình. Cũng lưu ý rằng cài đặt này không ảnh hưởng khi bật Cookie xác thực."
 
 #: include/global_settings.php
@@ -8397,11 +8397,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "Bạn muốn xem đồ thị thời gian thực như thế nào?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "Số liệu thống kê hàng ngày nên được cập nhật thường xuyên như thế nào?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "RRD nên được kiểm tra thường xuyên như thế nào?"
 
 #: include/global_settings.php
@@ -8409,7 +8409,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "Thời gian tối đa một lượt đánh giá có thể bắt đầu các lô quy tắc mới. Việc gửi thông báo đang chờ trong hàng đợi diễn ra sau khi đánh giá với quỹ thời gian còn lại, và có thể gửi một lô ngay cả khi đã dùng hết quỹ thời gian. Các quy tắc chưa xử lý tới sẽ được đánh giá trước ở lượt chạy tiếp theo."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "Cần trả lại bao nhiêu OID cho mỗi yêu cầu snmpbulkwalk? Đối với các Thiết bị có cây SNMP lớn, việc tăng kích thước này sẽ tăng hiệu suất lập chỉ mục lại qua mạng WAN."
 
 #: include/global_settings.php
@@ -8417,15 +8417,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "Bạn muốn giữ lại bao nhiêu tệp nhật ký? Sử dụng 0 để không bao giờ xóa bất kỳ nhật ký. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "Tần suất bạn muốn hiển thị nhật ký Kadupul cập nhật."
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Cách Kadupul hỗ trợ Ngày của máy khách dựa trên múi giờ của trình duyệt máy khách."
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Kadupul sẽ xử lý việc ghi nhật ký sự kiện như thế nào."
 
 #: include/global_settings.php
@@ -8441,7 +8441,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "Nếu được chọn, Kadupul sẽ ghi thêm thông tin LDAP vào nhật ký Kadupul trong quá trình Liên kết (Binding) và Tìm kiếm (Searching)."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Nếu Kadupul không thể xác định tốc độ giao diện do ifSpeed hoặc ifHighSpeed không được đặt hoặc bằng 0, bạn muốn giá trị tối đa nào trên RRDfiles."
 
 #: include/global_settings.php
@@ -8469,7 +8469,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "Nếu bảng đầu ra tăng vượt quá kích thước này, trong các bản ghi, một bản cập nhật sẽ diễn ra."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "Nếu boost poller vượt quá thời gian chạy này, một cảnh báo sẽ được ghi vào nhật ký Cacti,"
 
 #: include/global_settings.php
@@ -8477,7 +8477,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "Nếu thư mục này không trống, thì RRDfiles ban đầu của bạn sẽ được sao lưu vào vị trí này."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "Nếu trường này không trống, Boost sẽ ghi lại đầu ra RRDupdate từ quá trình pug boost."
 
 #: include/global_settings.php
@@ -8485,7 +8485,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "Nếu tùy chọn này được chọn, Kadupul sẽ điền vào bảng SNMP Agent với thông tin hệ thống và thiết bị Kadupul. Nó không kích hoạt SNMP Agent."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "Nếu bạn gặp sự cố với Trình thu thập dữ liệu của Kadupul, hãy đặt đường dẫn tệp này và lỗi tiêu chuẩn của Trình thu thập dữ liệu sẽ được chuyển hướng đến tệp này"
 
 #: include/global_settings.php
@@ -8665,7 +8665,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "Mục nguồn dữ liệu tối đa trên mỗi lượt"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "Kích thước E-Mail tối đa"
 
 #: include/global_settings.php
@@ -8720,20 +8720,20 @@ msgstr "Chiều rộng cây tối thiểu"
 msgid "Mode"
 msgstr "Chế độ"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Chế độ mà Cacti sẽ sử dụng để cố gắng xác thực với máy chủ LDAP.<blockquote><i>Không tìm kiếm</i> - Không thực hiện tìm kiếm Tên phân biệt (DN), chỉ cố gắng liên kết (bind) bằng định dạng Tên phân biệt (DN) đã cung cấp.<br><br><i>Tìm kiếm ẩn danh</i> - Cố gắng tìm kiếm tên người dùng trong thư mục LDAP thông qua liên kết ẩn danh để xác định Tên phân biệt (DN) của người dùng.<br><br><i>Tìm kiếm cụ thể</i> - Cố gắng tìm kiếm tên người dùng trong thư mục LDAP thông qua Tên phân biệt (DN) cụ thể và Mật khẩu cụ thể để liên kết nhằm xác định Tên phân biệt (DN) của người dùng."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "Hàng tháng vào ngày"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "Múi giờ trình duyệt của tôi"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "NaN"
 
 #: include/global_settings.php
@@ -9229,7 +9229,7 @@ msgid "Server(s)"
 msgstr "May chu"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Boost có nên kích hoạt RRD theo yêu cầu cập nhật trong Kadupul không? Nếu bạn tắt, thay đổi này sẽ không có hiệu lực cho đến sau chu kỳ bỏ phiếu tiếp theo. Khi bạn có Bộ thu thập dữ liệu từ xa, cài đặt này được yêu cầu bật."
 
 #: include/global_settings.php
@@ -9249,7 +9249,7 @@ msgid "Should image caching be enabled?"
 msgstr "Có nên kích hoạt bộ nhớ đệm hình ảnh?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "Theo mặc định các đồ thị có và nguồn dữ liệu có được kiểm tra."
 
 #: include/global_settings.php
@@ -9273,7 +9273,7 @@ msgid "Show business hours"
 msgstr "Hiển thị giờ làm việc"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "Chỉ hiển thị các vị trí khả dụng tại địa điểm đã chọn của thiết bị."
 
 #: include/global_settings.php
@@ -9293,11 +9293,11 @@ msgid "Site Security"
 msgstr "Bảo mật Địa điểm"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "Một số giao diện của Kadupul hỗ trợ Drag-N-Drop. Nếu được chọn, tùy chọn này sẽ được bật. Lưu ý: Đối với người dùng khiếm thị, tùy chọn này có thể bị tắt."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "Các tên miền phân tách bằng dấu cách được phép truy cập từ bên ngoài Máy chủ Web. Điều này quan trọng đối với người dùng chọn sử dụng CDN hoặc trang lưu trữ ngoài. Các nguồn có thể bao gồm ký tự đại diện, ví dụ: *.mydomain.com, hoặc kèm giao thức, ví dụ: https://*.example.com. Các nguồn thay thế này chỉ bao gồm các loại Hình ảnh, CSS và JavaScript."
 
 #: include/global_settings.php
@@ -9441,15 +9441,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "Chủ đề mặc định được phép cho mỗi quá trình. LƯU Ý: Bắt đầu từ Kadupul 1.2+, cài đặt này được duy trì trong Trình thu thập dữ liệu và đây đơn giản là Cài đặt sẵn. Sử dụng số cao hơn khi sử dụng Spine sẽ cải thiện hiệu suất. Tuy nhiên, đảm bảo rằng bạn có đủ kết nối MySQL / MariaDB để hỗ trợ phương trình sau: links = bộ thu thập dữ liệu * quy trình * (chủ đề + máy chủ tập lệnh). Bạn cũng phải đảm bảo rằng bạn cũng có đủ kết nối dự phòng cho kết nối đăng nhập của người dùng."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "Địa chỉ Email để gửi Email thông báo tự động đến nếu không được chỉ định ở cấp Mạng tự động hóa. Nếu trường này hoặc giá trị Mạng Tự động bị bỏ trống, Kadupul sẽ sử dụng tài khoản Email Quản trị viên chính của Kadupul."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "Địa chỉ Email để sử dụng cho Email thông báo tự động hóa nếu không được chỉ định ở cấp Mạng tự động hóa. Nếu trường này hoặc giá trị Mạng Tự động bị bỏ trống, Kadupul sẽ sử dụng mặc định hệ thống Từ Địa chỉ Email."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "Tên Email để sử dụng cho Email thông báo tự động hóa nếu không được chỉ định ở cấp Mạng tự động hóa. Nếu trường này hoặc giá trị Mạng tự động bị bỏ trống, Kadupul sẽ sử dụng tên mặc định của hệ thống."
 
 #: include/global_settings.php
@@ -9561,7 +9561,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "Số lượng quy trình đồng thời để thực thi trên mỗi Trình thu thập dữ liệu. LƯU Ý: Bắt đầu từ Kadupul 1.2, cài đặt này được duy trì trong Trình thu thập dữ liệu. Tiến về phía trước, giá trị này chỉ là giá trị đặt trước cho Trình thu thập dữ liệu. Sử dụng số cao hơn khi sử dụng cmd.php sẽ cải thiện hiệu suất. Cải thiện hiệu suất trong Spine được giải quyết tốt nhất với tham số chủ đề. Khi sử dụng Spine, chúng tôi khuyên bạn nên sử dụng số lượng thấp hơn và tận dụng các chuỗi thay thế. Khi sử dụng cmd.php, sử dụng không quá 2 lần số lõi CPU."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "Số lượng hàng mặc định để hiển thị trên một bảng."
 
 #: include/global_settings.php
@@ -9577,7 +9577,7 @@ msgid "The encryption method to use for the Email."
 msgstr "Phương pháp mã hóa để sử dụng cho Email."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "Dấu vân tay của khóa RSA công khai hiện tại mà proxy dự phòng đang sử dụng. Điều này cần thiết để thiết lập một kết nối đáng tin cậy."
 
 #: include/global_settings.php
@@ -9637,6 +9637,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Lượng thời gian tối đa của tập lệnh Thống kê nguồn dữ liệu của Kadupul có thể chạy mà không gây ra lỗi hết thời gian và bị giết."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "Lượng thời gian tối đa mà tập lệnh Bảo trì của Kadupul có thể chạy mà không gây ra lỗi hết thời gian và bị giết."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Lượng thời gian tối đa mà tập lệnh Spikekill của Kadupul có thể chạy mà không gây ra lỗi hết thời gian và bị giết."
 
@@ -9645,19 +9649,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Lượng thời gian tối đa Tập lệnh tạo báo cáo của Kadupul có thể chạy mà không gây ra lỗi hết thời gian và bị giết."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Lượng thời gian tối đa mà tập lệnh Bảo trì của Kadupul có thể chạy mà không gây ra lỗi hết thời gian và bị giết."
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Lượng thời gian tối đa mà tập lệnh Spikekill của Kadupul có thể chạy mà không gây ra lỗi hết thời gian và bị giết."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "Số lượng Thư mục Thiết bị tối đa sẽ được tạo dựa trên ID Thiết bị được băm."
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "Kích thước tối đa của thư E-Mail bao gồm tất cả các tệp đính kèm."
 
 #: include/global_settings.php
@@ -9697,19 +9697,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "Số lượng cột sẽ sử dụng khi hiển thị biểu đồ hình thu nhỏ ở chế độ Cây."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "Số lượng tiến trình DSStats đồng thời được sử dụng để xử lý tất cả các Nguồn dữ liệu."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "Số lượng tiến trình Lệnh Poller đồng thời. Sẽ có tối đa một lệnh đồng thời trên mỗi máy chủ trong nhóm Lệnh Poller."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "Số lượng tiến trình kiểm tra RRDfile đồng thời được sử dụng để xử lý tất cả các tệp RRD."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "Số lượng các quá trình tăng đồng thời được sử dụng để sử dụng để xử lý tất cả các RRD trong bảng tăng."
 
 #: include/global_settings.php
@@ -9785,7 +9785,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "Đường dẫn đến nhị phân snmpwalk của bạn."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "Các loại xe đẩy để sử dụng. Cài đặt này sẽ có hiệu lực ở khoảng thời gian bỏ phiếu tiếp theo."
 
 #: include/global_settings.php
@@ -9821,6 +9821,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "Thời gian bắt đầu giờ làm việc của bạn. Định dạng: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "Thời gian này bạn muốn xem trên biểu đồ mặc định."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "Tên người dùng để xác thực khi gửi qua SMTP. (Để trống nếu bạn không yêu cầu xác thực.)"
 
@@ -9853,28 +9857,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "Các cài đặt này được duy trì ở cấp Bộ thu thập dữ liệu. Các giá trị ở đây chỉ là giá trị mặc định được sử dụng khi lần đầu tiên tạo Bộ thu thập dữ liệu."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "Đây là tài khoản Email được sử dụng để gửi tin nhắn kiểm tra để đảm bảo mọi thứ đều hoạt động bình thường."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "Đây là một vị trí máy chủ sẽ được sử dụng cho các liên kết đến trang web Kadupul."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "Đây là số lượng ký tự sẽ được phép trước khi một dòng trong Email được tự động ngắt từ. (0 = Vô hiệu hóa)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "Đây là số ngày tối đa trước khi mật khẩu được đặt hết hạn."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "Đây là số ngày tối đa trước khi tài khoản không hoạt động bị vô hiệu hóa. Tài khoản quản trị được loại trừ khỏi chính sách này."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "Đây là độ dài tối thiểu của mật khẩu được phép."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9897,12 +9885,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "Đây là vị trí trên máy chủ web nơi các tệp RRDfile và tệp PNG sẽ được lưu vào bộ nhớ đệm.  Bộ nhớ đệm này sẽ được quản lý bởi trình thăm dò (poller).  Hãy đảm bảo bạn có quyền đọc và ghi chính xác trên thư mục này"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "Đây là số ngày tối đa trước khi mật khẩu được đặt hết hạn."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "Đây là số ngày tối đa trước khi tài khoản không hoạt động bị vô hiệu hóa. Tài khoản quản trị được loại trừ khỏi chính sách này."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "Đây là độ dài tối thiểu của mật khẩu được phép."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "Đây là thời gian được hỗ trợ tối thiểu giữa các lần cập nhật Đồ thị. Giá trị này cũng được sử dụng để thiết lập các thuộc tính RRDfile nhất định. Nếu bạn có Thiết bị lưu trữ dữ liệu và không cung cấp các bản cập nhật theo thời gian thực, bạn có thể phải tăng Khoảng thời gian làm mới tối thiểu mặc định để ngăn việc tạo Đồ thị có khoảng trống."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "Đây là đường dẫn đến sendmail trên máy chủ của bạn. (Chỉ được sử dụng nếu Sendmail được chọn làm Dịch vụ thư)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "Đây là một vị trí máy chủ sẽ được sử dụng cho các liên kết đến trang web Kadupul."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9917,15 +9921,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "Thiết lập này chỉ dành cho các hệ thống có một poller duy nhất để xây dựng lại bảng poller output sau mỗi chu kỳ thăm dò, nhằm ngăn bảng bộ nhớ bị đẩy ra swap trên các hệ thống rất lớn có cơ sở dữ liệu lớn có thể sử dụng swap."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "Thời gian này bạn muốn xem trên biểu đồ mặc định."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "Giá trị này biểu thị số lượng gai tối đa cần xóa khỏi Biểu đồ RRA."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "Giá trị này biểu thị số lượng mẫu trung bình cao và thấp sẽ bị xóa khỏi bộ mẫu trước khi tính Trung bình phương sai. Nếu bạn chọn giá trị ngoại lệ là 5, thì cả trung bình 5 trên cùng và dưới cùng sẽ bị xóa."
 
 #: include/global_settings.php
@@ -9946,7 +9946,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "Điều này sẽ yêu cầu mật khẩu mới để chứa ít nhất 1 ký tự đặc biệt."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "Điều này sẽ yêu cầu mật khẩu mới để chứa cả ký tự chữ thường và chữ hoa."
 
 #: include/global_settings.php
@@ -10034,7 +10034,7 @@ msgid "Use Custom Fonts"
 msgstr "Sử dụng phông chữ tùy chỉnh"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "Sử dụng một thư mục con riêng cho các tệp RRD của mỗi máy chủ. Cách đặt tên các RRDfile sẽ là một trong các dạng sau:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>Bạn có thể thực hiện thay đổi này sau khi cài đặt bằng cách chạy script CLI <b>structure_rra_paths.php</b> sau khi thay đổi. LƯU Ý: Nếu bạn thay đổi giá trị Thư mục tối đa để giảm số lượng thư mục, hoặc nếu bạn thay đổi Mẫu thư mục, các thư mục trống sẽ không bị xóa sau khi bạn chạy lại script <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php
@@ -10074,11 +10074,11 @@ msgid "Weekly on Sunday"
 msgstr "Hàng tuần vào Chủ nhật"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Mức độ chi tiết nào bạn muốn gửi đến tệp nhật ký. CẢNH BÁO: Để ở bất kỳ trạng thái nào khác ngoài KHÔNG hoặc THẤP có thể làm cạn kiệt không gian đĩa của bạn một cách nhanh chóng."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Mức độ chi tiết nào bạn muốn gửi đến tệp nhật ký. CẢNH BÁO: Để ở bất kỳ trạng thái nào khác ngoài KHÔNG hoặc THẤP có thể làm cạn kiệt không gian đĩa của bạn một cách nhanh chóng."
 
 #: include/global_settings.php
@@ -10094,11 +10094,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "Khi một tùy chọn được chọn, người dùng sẽ có thể đưa Kadupul vào chế độ Thời gian thực."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "Khi boost gửi các lệnh cập nhật tới RRDtool, nó không được vượt quá Độ dài đối số tối đa của hệ điều hành. Điều này thay đổi tùy theo hệ điều hành và cấp độ kernel. Ví dụ: Windows 2000 &lt;= 2048, FreeBSD &lt;= 65535, Linux 2.6.22-- &lt;= 131072, Linux 2.6.23 ++ không giới hạn"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "Khi được chọn, Biểu mẫu và Cài đặt Trợ giúp sẽ được hiển thị nội tuyến. Nếu không, nó sẽ được trình bày khi di chuột qua nút trợ giúp."
 
 #: include/global_settings.php
@@ -10106,7 +10106,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "Khi được chọn, mọi nỗ lực truy cập Kadupul sẽ được chuyển hướng đến HTTPS để đảm bảo tính bảo mật cao."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "Khi tạo một báo cáo mới, loại hình ảnh nào sẽ được sử dụng cho các biểu đồ nội tuyến."
 
 #: include/global_settings.php
@@ -10126,7 +10126,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "Khi hiển thị Biểu đồ, cho phép Ngày biểu đồ mở rộng &#39;đến tương lai&#39;"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "Khi được bật, Kadupul sẽ không khóa Đồ thị. Điều này cho phép sửa đổi thủ công nhanh hơn các Nguồn dữ liệu liên quan đến biểu đồ."
 
 #: include/global_settings.php
@@ -10154,7 +10154,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "Khi sử dụng xác thực cơ bản, nếu có vấn đề khi ánh xạ tên người dùng với tài khoản Kadupul hợp lệ, thông báo có ở đây sẽ được hiển thị cho người dùng. Nó có thể bao gồm cả văn bản và HTML."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "Khi xem danh sách thả xuống Bộ lọc tên thiết bị, kiểm tra tùy chọn này sẽ tách thành tên miền từ tên máy chủ."
 
 #: include/global_settings.php
@@ -10162,11 +10162,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "Khi bạn bật boost, các tệp RRD của bạn chỉ được cập nhật khi người dùng yêu cầu hoặc khi khoảng thời gian này trôi qua."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "Mẫu thư mục nào bạn muốn sử dụng cho Đường dẫn RRD có cấu trúc. 'ID Thiết bị' là mặc định. Cài đặt 'ID Thiết bị/ID Truy vấn dữ liệu' nên được sử dụng khi bạn có các Thiết bị với hàng nghìn Đồ thị. Sau khi thay đổi Mẫu thư mục, bạn phải chạy lại script CLI Đường dẫn có cấu trúc để sửa đổi đường dẫn RRDfile sang Mẫu mới."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "Chế độ biểu đồ nào bạn muốn hiển thị theo mặc định khi bạn truy cập trang Đồ thị lần đầu tiên?"
 
 #: include/global_settings.php
@@ -10734,7 +10734,7 @@ msgid "Warnings++"
 msgstr "Cảnh báo"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; tồn tại trong tệp XML nhưng không có dữ liệu trả về, 'Số lượng chỉ mục đã thay đổi' không được hỗ trợ"
 
 #: lib/data_query.php
@@ -10903,7 +10903,7 @@ msgstr "Sửa trường &#39;phương thức&#39; sai cho &#39; %s&#39; vì &#39
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "Đã tìm thấy %s ID dữ liệu cục bộ cần xác minh"
 
 #: lib/data_query.php
@@ -11020,7 +11020,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "Phải chứa các trường &lt;direction&gt; input &lt;/ direction&gt; hoặc &lt;direction&gt; input-output &lt;/ direction&gt;"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "Trường sắp xếp mới được xác thực. Trường sắp xếp được cập nhật."
 
 #: lib/data_query.php
@@ -11120,7 +11120,7 @@ msgstr "Cập nhật truy vấn dữ liệu Sắp xếp Cache hoàn tất"
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "Hoàn tất xác minh %s ID dữ liệu cục bộ"
 
 #: lib/data_query.php
@@ -11137,7 +11137,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "Bạn phải chọn cột đầu ra XML cho Nguồn dữ liệu ' %s' và chuyển hộp kiểm sang bên phải"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "Mẫu biểu đồ của bạn không sử dụng Mẫu dữ liệu. Vui lòng sửa Mẫu biểu đồ của bạn"
 
 #: lib/data_query.php
@@ -11151,11 +11151,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "Không thể thay đổi độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "Không thể xác định độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
 #: lib/dsdebug.php
@@ -11272,10 +11272,6 @@ msgid "Link %s"
 msgstr "Liên kết %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "Đăng nhập như"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "Đăng nhập như"
 
@@ -11283,6 +11279,10 @@ msgstr "Đăng nhập như"
 #, php-format
 msgid "Logged in as %s"
 msgstr "Đăng nhập như %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "Đăng nhập như"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11293,7 +11293,7 @@ msgid "Logout"
 msgstr "Đăng xuất"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Lỗi trình gửi thư: Chưa thiết lập địa chỉ người nhận!!<br>Nếu đang sử dụng liên kết <i>Kiểm tra thư</i>, vui lòng thiết lập mục <b>Email cảnh báo</b>."
 
 #: lib/functions.php
@@ -11372,7 +11372,7 @@ msgstr "CẢNH BÁO: Thiếu Tệp bao gồm Kadupul quan trọng %s. Vui lòng 
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "CẢNH BÁO: PollerID:%s có tên máy chủ không hợp lệ:%s. Có thể không truy cập được qua DNS!"
 
 #: lib/functions.php
@@ -11462,7 +11462,7 @@ msgid "All %d %s"
 msgstr "Tất cả %d %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "Cho phép hoặc giới hạn các cột trong bảng vượt ra ngoài giới hạn cửa sổ hiện tại."
 
 #: lib/html.php
@@ -12118,7 +12118,7 @@ msgid "Cascade to Branches"
 msgstr "Cascade đến các chi nhánh"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "Chọn hộp này nếu bạn muốn sử dụng html và CSS tùy chỉnh cho báo cáo."
 
 #: lib/html_reports.php
@@ -12126,7 +12126,7 @@ msgid "Check this box to enable this Report."
 msgstr "Chọn hộp này để bật Báo cáo này."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "Chọn trình bao bọc html và tệp CSS tùy chỉnh để sử dụng. Tệp này chứa cả html và CSS để bao quanh báo cáo của bạn. Nếu nó chứa nhiều hơn chỉ đơn giản là CSS, bạn cần đặt một đặc biệt <REPORT> thẻ bên trong của tập tin. Thẻ định dạng này sẽ được thay thế bởi nội dung báo cáo. Các tệp này được đặt trong thư mục &#39;định dạng&#39;."
 
 #: lib/html_reports.php
@@ -12383,7 +12383,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "Chọn một mẫu thiết bị để sử dụng."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "Chọn một Thiết bị được sử dụng để lọc các Đồ thị được chọn trong trường hợp Loại thiết bị."
 
 #: lib/html_reports.php
@@ -12455,11 +12455,11 @@ msgid "The number of Graph columns."
 msgstr "Số lượng cột đồ thị."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "Địa chỉ này sẽ được sử dụng làm địa chỉ người gửi email"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "Tên này sẽ được sử dụng làm Tên người gửi E-mail mặc định"
 
 #: lib/html_reports.php
@@ -12477,22 +12477,22 @@ msgstr "Cây: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "Không thể gửi Báo cáo &#39; %s&#39;. Vui lòng đặt e-mail từ Tên"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "Không thể gửi Báo cáo &#39; %s&#39;. Vui lòng đặt e-mail từ địa chỉ"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "Không thể gửi Báo cáo &#39; %s&#39;. Vui lòng đặt một chủ đề e-mail"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "Không thể gửi Báo cáo &#39; %s&#39;. Vui lòng đặt địa chỉ email đích"
 
 #: lib/html_reports.php
@@ -12588,7 +12588,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Biểu thức chính quy của Kadupul chỉ được giới hạn tối đa 50 ký tự vì lý do bảo mật."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Biểu thức chính quy của Kadupul không thể chứa ký tự dấu chấm phẩy."
 
 #: lib/html_utility.php
@@ -13044,12 +13044,12 @@ msgstr "Không thể đặt tùy chọn PHP%s, là%s (nên là%s)"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "Không thể đặt phiên bản %sRRDTool được chỉ định: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "Không thể đặt phiên bản %sRRDtool được chỉ định: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "Cập nhật Bộ tùy chọn tự động hóa %s thất bại"
 
 #: lib/installer.php
@@ -13122,7 +13122,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Nhập gói #%s '%s' trong Hồ sơ '%s' đã thành công"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Trong trường hợp xảy ra sự cố, chúng tôi khuyên bạn nên xóa bộ nhớ cache của trình duyệt, đóng lại sau đó mở lại trình duyệt của bạn (không chỉ tab Kadupul đang bật) và thử lại, trước khi đưa ra vấn đề với Nhóm Kadupul"
 
 #: lib/installer.php
@@ -13300,7 +13300,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "Trong các trường hợp hiếm hoi, chúng tôi đã có báo cáo từ những người dùng gặp phải một số vấn đề nhỏ do thay đổi trong mã. Những vấn đề này là do trình duyệt giữ lại mã nâng cấp trước và trong khi chúng tôi đã thực hiện các bước để giảm thiểu khả năng này, thì nó vẫn có thể xảy ra. Nếu bạn cần hướng dẫn về cách xóa bộ nhớ cache của trình duyệt, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> là điểm khởi đầu tốt."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "Khi quá trình cài đặt đã hoàn tất đường dẫn CSRF, nên được đặt thành chỉ đọc."
 
 #: lib/installer.php
@@ -13377,7 +13377,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "Vui lòng chọn các Mẫu thiết bị mà bạn muốn cập nhật trong quá trình nâng cấp."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Vui lòng chọn Mẫu thiết bị bạn muốn sử dụng sau khi cài đặt. Nếu Hệ điều hành của bạn là Windows, bạn cần đảm bảo rằng bạn chọn Mẫu &#39;Thiết bị Windows&#39;. Nếu Hệ điều hành của bạn là Linux / UNIX, hãy đảm bảo bạn chọn Mẫu thiết bị &#39;Máy Linux cục bộ&#39;."
 
 #: lib/installer.php
@@ -13634,7 +13634,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Các biến phải được đặt trong tệp config.php bao gồm:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Cách hoạt động của Danh sách trắng (Whitelisting) là khi bạn nhập một Phương thức nhập dữ liệu lần đầu, hoặc nhập lại một Phương thức nhập dữ liệu, và script hoặc các tham số thay đổi theo bất kỳ cách nào, Phương thức nhập dữ liệu cùng tất cả các Nguồn dữ liệu tương ứng sẽ bị vô hiệu hóa ngay lập tức cho đến khi quản trị viên xác nhận rằng Phương thức nhập dữ liệu đó hợp lệ."
 
 #: lib/installer.php
@@ -13642,7 +13642,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "Sau đó chạy phần sau trong MySQL với tư cách quản trị viên:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Do đó, từ vài phiên bản trước, Kadupul đã được nâng cấp để cung cấp khả năng Danh sách trắng (Whitelist) cho các loại Phương thức nhập dữ liệu này.  Mặc dù điều này giúp bảo mật Kadupul kỹ lưỡng hơn, nhưng nó cũng làm tăng khối lượng công việc mà quản trị viên Kadupul phải thực hiện để nhập và quản lý các Mẫu và Gói."
 
 #: lib/installer.php
@@ -13675,10 +13675,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "Chương trình này là phần mềm miễn phí; bạn có thể phân phối lại và / hoặc sửa đổi nó theo các điều khoản của Giấy phép Công cộng GNU do Tổ chức Phần mềm Tự do xuất bản; phiên bản 2 của Giấy phép hoặc (tùy chọn của bạn) bất kỳ phiên bản mới hơn."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Tùy chọn tập lệnh này hủy bỏ các Phương thức nhập dữ liệu hiện đang bị cấm."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Tùy chọn tập lệnh này sẽ kích hoạt lại mọi Nguồn dữ liệu bị vô hiệu hóa."
 
@@ -13687,16 +13683,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "Tùy chọn tập lệnh này sẽ tìm kiếm bất kỳ Phương thức nhập dữ liệu nào hiện đang bị cấm và cung cấp chi tiết về lý do tại sao."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "Tùy chọn tập lệnh này hủy bỏ các Phương thức nhập dữ liệu hiện đang bị cấm."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Phiên bản Kadupul ( %s) này dường như không có mã phiên bản hợp lệ, vui lòng liên hệ với Nhóm phát triển Kadupul để đảm bảo điều này được thực hiện. Nếu bạn thấy lỗi này trong một bản phát hành, vui lòng đưa ra báo cáo ngay lập tức trên GitHub"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Để có thể tiếp tục, bạn <b>PHẢI</b> tạo một cơ sở dữ liệu mới, nhập &quot;cacti.sql&quot; vào đó:"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Để xác định Phương thức nhập dữ liệu ở trạng thái này, chúng tôi đã cung cấp tập lệnh xác thực trong thư mục CLI của Kadupul có thể chạy với các tùy chọn sau:"
 
 #: lib/installer.php
@@ -13730,7 +13730,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "Đang cập nhật Bộ tùy chọn tự động hóa %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "Không nên cập nhật các Mẫu mà bạn đã thực hiện sửa đổi. Việc Nâng cấp Mẫu sẽ KHÔNG xóa các sửa đổi đối với Mẫu Đồ thị và Dữ liệu, đồng thời có thể dẫn đến hành vi không mong muốn. Tuy nhiên, nếu bạn chưa thực hiện thay đổi đối với bất kỳ Biểu đồ, Truy vấn Dữ liệu hoặc Mẫu Dữ liệu nào, việc nhập lại Gói sẽ không có bất kỳ ảnh hưởng nào. Trong trường hợp đó, bạn sẽ phải 'Đồng bộ hóa Đồ thị' từ Mẫu sau khi cập nhật."
 
 #: lib/installer.php
@@ -13786,7 +13786,7 @@ msgstr "Bạn dường như đang hạ cấp xuống phiên bản trước. Thay
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "Bạn đang cố gắng cài đặt Kadupul %s vào cơ sở dữ liệu 0.6.x. Thật không may, điều này không thể được thực hiện."
 
 #: lib/installer.php
@@ -13817,7 +13817,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "Máy chủ Kadupul của bạn v %s đã được cài đặt / cập nhật. Bây giờ bạn có thể bắt đầu sử dụng phần mềm."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "Cấu hình Kadupul của bạn có đường dẫn chính xác tương đối (url_path) trong config.php."
 
 #: lib/installer.php
@@ -13845,7 +13845,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Đối chiếu cơ sở dữ liệu của bạn dường như tuân thủ UTF8"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Đối chiếu cơ sở dữ liệu của bạn dường như KHÔNG tuân thủ đầy đủ UTF8."
 
 #: lib/installer.php
@@ -13944,13 +13944,13 @@ msgid "Unable to find user from DN"
 msgstr "Không thể tìm thấy người dùng từ DN"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "Không thể tìm thấy người dùng DN"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
-msgstr "Lỗi không mong muốn %s (Lỗi Ldap: %s) trên Máy chủ (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
+msgstr "Lỗi không mong muốn %s (Lỗi LDAP: %s) trên Máy chủ (%s)"
 
 #: lib/ping.php
 msgid "Destination address not specified"
@@ -14057,13 +14057,13 @@ msgstr "Thư mục Plugin '%s' cần được đổi tên để xóa 'plugin_' k
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Plugin trong thư mục '%s' không bao gồm hàm cài đặt '%s()'. Hàm này phải tồn tại để plugin có thể được cài đặt."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Plugin trong thư mục '%s' không bao gồm hàm phiên bản '%s()'. Hàm này phải tồn tại để plugin có thể được cài đặt."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Plugin trong thư mục '%s' không bao gồm hàm phiên bản '%s()'. Hàm này phải tồn tại để plugin có thể được cài đặt."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Plugin trong thư mục '%s' không bao gồm hàm cài đặt '%s()'. Hàm này phải tồn tại để plugin có thể được cài đặt."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14123,7 +14123,7 @@ msgstr "Biểu đồ thời gian:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "Sự cố khi gửi Báo cáo '%s' Sự cố với e-mail Lỗi hệ thống con là '%s'"
 
 #: lib/reports.php
@@ -14177,7 +14177,7 @@ msgstr "LỖI: Tệp RRD không tồn tại: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "LRI: RRDfile %s không thể ghi"
 
 #: lib/rrd.php
@@ -14299,7 +14299,7 @@ msgstr "XFF cho id RRA của Kadupul &#39; %s&#39; phải là &#39; %s&#39;"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Số hàng cho Kadupul RRA id '%s' không chính xác. Số hàng hiện là '%s' nhưng phải là '%s'"
 
 #: lib/rrd.php
@@ -14459,7 +14459,7 @@ msgstr "LỖI NGHIÊM TRỌNG: Các tham số outlier-start và outlier-end ph�
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "LỖI NGHIÊM TRỌNG: Không thể sao lưu '%s'"
 
 #: lib/spikekill.php
@@ -14674,12 +14674,12 @@ msgstr "%s Điều chỉnh"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s sẽ chia innodb_buffer_pool thành các vùng bộ nhớ để cải thiện hiệu suất. Giá trị tối đa là 64. Khi innodb_buffer_pool của bạn dưới 1GB, bạn nên sử dụng kích thước nhóm chia cho 128MB. Tiếp tục sử dụng phương trình này tối đa 64."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s sẽ chia innodb_buffer_pool thành các vùng bộ nhớ để cải thiện hiệu suất. Giá trị tối đa là 64. Khi innodb_buffer_pool của bạn dưới 1GB, bạn nên sử dụng kích thước nhóm chia cho 128MB. Tiếp tục sử dụng phương trình này tối đa 64."
 
 #: lib/utility.php
@@ -14698,7 +14698,7 @@ msgstr "Một múi giờ hợp lệ phù hợp với MySQL và hệ thống"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Kể từ %s %s, bạn có thể kiểm soát tần suất %s xóa các giao dịch vào đĩa. Mặc định là 1 giây, nhưng trong các hệ thống I / O cao, cài đặt giá trị lớn hơn 1 có thể cho phép I / O của đĩa được tuần tự hơn"
 
 #: lib/utility.php
@@ -14732,12 +14732,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "Nếu bạn có đĩa SSD, hãy sử dụng đề xuất này. Nếu không, không đặt cài đặt này."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "Nếu các bảng của bạn có các chỉ mục rất lớn, bạn phải hoạt động với Barracuda innodb_file_format và innodb_large_prefix bằng 1. Việc không làm điều này có thể dẫn đến các plugin không thể tạo bảng đúng cách."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB sẽ giữ nhiều bảng và chỉ mục trong bộ nhớ hệ thống nhất có thể. Do đó, bạn nên đặt innodb_buffer_pool đủ lớn để chứa tối đa các bảng và chỉ mục trong bộ nhớ. Kiểm tra kích thước thư mục /var/lib/mysql/cacti sẽ giúp xác định giá trị này. Chúng tôi khuyến nghị mức 25%% tổng bộ nhớ hệ thống của bạn, nhưng yêu cầu thực tế sẽ thay đổi tùy theo quy mô hệ thống."
 
 #: lib/utility.php
@@ -14751,7 +14751,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "Bạn nên bật InnoDB ở bất kỳ phiên bản %s nào lớn hơn 5.1."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "Giữ bộ đệm của bảng lớn hơn có nghĩa là các thao tác mở / đóng tệp ít hơn khi sử dụng innodb_file_per_table."
 
 #: lib/utility.php
@@ -14776,7 +14776,7 @@ msgid "Recommended Value"
 msgstr "Giá trị đề xuất"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Các truy vấn giả không nên để cơ sở dữ liệu ngoại tuyến với người khác. Giết các truy vấn này trước khi chúng giết hệ thống của bạn."
 
 #: lib/utility.php
@@ -14789,7 +14789,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "Đây là nơi siêu dữ liệu được lưu trữ. Nếu bạn có nhiều bảng, sẽ rất hữu ích khi tăng cái này."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Cài đặt này nên giữ ở trạng thái BẬT (ON) trừ khi các phiên bản Kadupul của bạn đang chạy trên ZFS hoặc FusionI/O, cả hai đều có ghi nhật ký nội bộ (journaling) để xử lý sự cố hệ thống đột ngột. Tuy nhiên, nếu bạn có nguồn điện rất tốt, hệ thống hiếm khi sập nguồn và bạn có bản sao lưu, việc TẮT (OFF) cài đặt này có thể giúp bạn tăng hiệu năng cơ sở dữ liệu gần 50%."
 
 #: lib/utility.php
@@ -14797,11 +14797,11 @@ msgid "Variable"
 msgstr "Biến thể"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "Khi thực hiện các truy vấn con, có kích thước bảng tạm thời lớn hơn, hãy giữ các bảng tạm thời đó trong bộ nhớ."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "Khi thực hiện phép nối (join), nếu nhỏ hơn kích thước này, chúng sẽ được giữ trong bộ nhớ và không bao giờ ghi ra tệp tạm thời. Vì đây là cấp phát bộ nhớ theo từng kết nối, cần cẩn thận không tăng quá cao. Tổng của join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + bộ nhớ MySQL/MariaDB lõi phải dưới 80%. Nếu khuyến nghị là số âm, bạn phải giảm giá trị này và/hoặc sort_buffer_size cho đến khi khuyến nghị nằm trong bộ nhớ cho phép."
 
 #: lib/utility.php
@@ -15044,7 +15044,7 @@ msgstr "%s Người nhận thông báo"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Trình nhận thông báo sau"
 
 #: managers.php
@@ -15053,12 +15053,12 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để tắt chuyển tiếp các Đ�
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để tắt Trình nhận thông báo sau"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để bật Trình nhận thông báo sau"
 
 #: managers.php
@@ -15163,7 +15163,7 @@ msgid "Automatically Trust Signer"
 msgstr "Tự động tin cậy người ký"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "Thay đổi/Khác biệt"
 
 #: package_import.php
@@ -15231,6 +15231,10 @@ msgid "Package"
 msgstr "Gói tập tin"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "Gói tập tin"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "Nhập"
 
@@ -15243,19 +15247,15 @@ msgid "Package XML File Damaged."
 msgstr "Tệp XML gói bị hỏng."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "Gói tập tin"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Thay thế Bản ghi giá trị đề xuất của Nguồn dữ liệu và Mẫu đồ thị. Đồ thị và Nguồn dữ liệu sẽ nhận tên mới sau khi Lập lại chỉ mục Truy vấn dữ liệu hoặc bằng cách sử dụng quy trình Thay thế giá trị đề xuất bắt buộc."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "Xem cacti.log để biết thêm thông tin. Có thể bạn đã gặp lỗi Khóa API, gói đã bị can thiệp hoặc vị trí không khả dụng"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "Xem cacti.log để biết thêm thông tin. Có thể bạn đã gặp lỗi Khóa API, gói đã bị can thiệp hoặc vị trí không khả dụng."
 
 #: package_import.php templates_import.php
@@ -15277,11 +15277,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "Nhập Gói %s thành công"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "Các tệp XML có vẻ không hợp lệ. Vui lòng liên hệ tác giả gói"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "Các tệp XML cho gói không tồn tại"
 
 #: package_import.php
@@ -15302,7 +15302,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "Bạn chưa Tin cậy Tác giả Gói này. Nếu bạn muốn nhập, hãy đánh dấu hộp kiểm Tự động tin cậy Tác giả"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "Một mô tả mà tác giả Plugins đã đưa ra cho Plugin."
 
 #: plugins.php
@@ -15395,7 +15395,7 @@ msgid "Plugin Name"
 msgstr "Tên plugin"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "Thư mục plugin không thể bao gồm dấu cách"
 
 #: plugins.php
@@ -15485,12 +15485,12 @@ msgstr "Gỡ cài đặt Plugin này sẽ xóa tất cả Dữ liệu và Cài �
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "LỖI: Đường dẫn tệp thực thi PHP: %s không hợp lệ cho poller id %d. Poller không thể tiếp tục!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "LỖI: Đường dẫn spine: %s không hợp lệ cho poller id %d. Poller không thể tiếp tục!"
 
 #: poller.php
@@ -15512,7 +15512,7 @@ msgstr "Poller đang ở chế độ Heartbeat"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "CẢNH BÁO: %s không đồng bộ với Khoảng thời gian Poller cho poller id %d! Khoảng thời gian Poller là %d giây, tối đa là %d giây, nhưng đã %d giây trôi qua kể từ lần thăm dò cuối!"
 
 #: poller.php
@@ -15566,7 +15566,7 @@ msgstr[0] "Xóa thống kê cho Trình thu thập dữ liệu"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "Nhấp vào 'Tiếp tục' để xóa thống kê Trình thu thập dữ liệu cho (các) Trình thu thập dữ liệu."
 
 #: pollers.php
@@ -15661,7 +15661,7 @@ msgid "No Data Collectors Found"
 msgstr "Không tìm thấy người thu thập dữ liệu"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "Ghi chú cho cơ sở dữ liệu thu thập dữ liệu này."
 
 #: pollers.php
@@ -15790,12 +15790,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "Tệp giữ Khóa SSL để sử dụng để kết nối với cơ sở dữ liệu từ xa."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "Tên máy chủ lưu trữ dữ liệu. Nó có thể phải là một Tên miền đủ điều kiện để Người thăm dò từ xa liên hệ với nó cho các hoạt động như lập chỉ mục lại, vẽ đồ thị thời gian thực, v.v."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "Tên máy chủ cho máy chủ cơ sở dữ liệu từ xa."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "Tên máy chủ lưu trữ dữ liệu. Nó có thể phải là một Tên miền đủ điều kiện để Người thăm dò từ xa liên hệ với nó cho các hoạt động như lập chỉ mục lại, vẽ đồ thị thời gian thực, v.v."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15810,7 +15810,7 @@ msgid "The last time this Data Collector completed."
 msgstr "Lần cuối cùng Bộ thu thập dữ liệu này hoàn thành."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "Lần cuối cùng Bộ thu thập dữ liệu này được đồng bộ hóa hoàn toàn với trang web chính của Kadupul."
 
 #: pollers.php
@@ -15993,7 +15993,7 @@ msgid "Changing Permission Model Warning"
 msgstr "Cảnh báo thay đổi mô hình quyền"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "Việc thay đổi Mô hình quyền sẽ làm thay đổi quyền Đồ thị hiệu lực của người dùng."
 
 #: settings.php
@@ -16312,7 +16312,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>LƯU Ý: Cho</strong> đến nay, không có Plugin Kadupul lõi nào được thiết kế lại để hoạt động với Bộ thu thập dữ liệu từ xa. Do đó, các Plugin như MacTrack và HMIB, yêu cầu truy cập trực tiếp vào thiết bị sẽ không hoạt động với Bộ thu thập dữ liệu từ xa tại thời điểm này. Tuy nhiên, các plugin như Thold sẽ hoạt động miễn là Trình thu thập dữ liệu từ xa ở chế độ <b>&#39;trực tuyến&#39;</b> ."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>LƯU Ý:</strong> Bạn đã đăng nhập vào Bộ thu thập dữ liệu từ xa. Khi <b>&#39;trực tuyến&#39;</b> , bạn sẽ có thể xem và kiểm soát phần lớn Trang web chính của Kadupul giống như khi bạn đăng nhập vào nó. Ngoài ra, điều quan trọng cần lưu ý là Bộ thu thập dữ liệu từ xa được yêu cầu sử dụng tính năng <b>&#39;Cập nhật theo yêu cầu&#39; của</b> Dịch vụ Kadupul và chúng tôi luôn khuyên bạn nên sử dụng Spine. Khi Trình thu thập dữ liệu từ xa <b>&#39;ngoại tuyến&#39;</b> , Trang web của Trình thu thập dữ liệu từ xa sẽ chứa ít thông tin hơn. Tuy nhiên, nó sẽ lưu trữ tất cả các bản cập nhật cho đến khi Cơ sở dữ liệu chính và Máy chủ web có thể truy cập được. Sau đó, nó sẽ chuyển đầu ra bảng Boost của nó trở lại Cơ sở dữ liệu Kadupul chính để cập nhật."
 
 #: templates/platform/console_home_body.html.twig
@@ -16487,22 +16487,22 @@ msgstr "Chi nhánh"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Cây sau."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xuất bản Cây sau."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "Nhấp vào 'Tiếp tục' để mở khóa (các) Cây sau."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để hủy xuất bản Cây sau."
 
 #: tree.php
@@ -16597,7 +16597,7 @@ msgid "The last user to have modified this Tree."
 msgstr "Người dùng cuối cùng đã sửa đổi Cây này."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "Tên mà Cây này sẽ được gọi là."
 
 #: tree.php
@@ -16788,7 +16788,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để bật (các) Người dùng đã chọn."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để ghi đè cài đặt Người dùng bằng mẫu đã chọn Cài đặt và quyền của Người dùng. Người dùng ban đầu Tên đầy đủ, Mật khẩu, Địa hạt và trạng thái Bật sẽ được giữ lại, tất cả các trường khác sẽ được ghi đè từ Người dùng Mẫu."
 
 #: user_admin.php
@@ -17108,12 +17108,12 @@ msgstr "Chọn loại tên miền này."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Miền người dùng sau."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để tắt Miền người dùng sau."
 
 #: user_domains.php
@@ -17121,7 +17121,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để bật Miền người dùng sau."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để biến Miền người dùng sau thành tên mặc định sau."
 
 #: user_domains.php
@@ -17151,15 +17151,11 @@ msgid "Domains"
 msgstr "Miền"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "Loại tên miền"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "Người dùng hiệu quả"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "Tên miền người dùng được kích hoạt"
 
@@ -17176,16 +17172,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "Trường sẽ thay thế email được lấy từ LDAP. (trên windows: mail)"
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "Nếu hộp kiểm này được chọn, người dùng sẽ có thể đăng nhập bằng tên miền này."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "Đặt tên miền mặc định"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Chế độ mà Cacti sẽ sử dụng để cố gắng xác thực với máy chủ LDAP.<blockquote><i>Không tìm kiếm</i> - Không thực hiện tìm kiếm Tên phân biệt (DN), chỉ cố gắng liên kết (bind) bằng định dạng Tên phân biệt (DN) đã cung cấp.<br><br><i>Tìm kiếm ẩn danh</i> - Cố gắng tìm kiếm tên người dùng trong thư mục LDAP thông qua liên kết ẩn danh để xác định Tên phân biệt (DN) của người dùng.<br><br><i>Tìm kiếm cụ thể</i> - Cố gắng tìm kiếm tên người dùng trong thư mục LDAP thông qua Tên phân biệt (DN) cụ thể và Mật khẩu cụ thể để liên kết nhằm xác định Tên phân biệt (DN) của người dùng."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17251,22 +17243,22 @@ msgstr "Xóa"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để Sao chép Nhóm người dùng sau vào Nhóm người dùng mới."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Nhóm người dùng sau"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để tắt Nhóm người dùng sau."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để bật Nhóm người dùng sau."
 
 #: user_group_admin.php
@@ -17287,7 +17279,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "Chính sách cây mặc định cho nhóm người dùng này"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "Trì hoãn cài đặt người dùng"
 
 #: user_group_admin.php
@@ -17618,11 +17610,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "Thống kê thời gian chạy"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Phiên bản khác nhau của Kadupul và Spine!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "Thư mục KHÔNG tồn tại !!"
 
 #: utilities.php
@@ -17636,11 +17628,11 @@ msgstr "LRI: Phiên bản RRDtool đã cài đặt không vượt quá phiên b�
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, nhưng %d &quot;đồ thị và / hoặc mẫu có GIF được đặt làm định dạng hình ảnh."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "Mỗi tab trình duyệt có thể sử dụng tối đa 10 kết nối tùy thuộc vào trình duyệt."
 
 #: utilities.php
@@ -17698,7 +17690,7 @@ msgstr "Cài đặt. <span class=\"deviceDown\">Lưu ý: Nếu bạn đang dự 
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "Rất khuyến khích bạn thay đổi bộ nhớ php.ini_limit thành %s hoặc cao hơn."
 
 #: utilities.php
@@ -18101,11 +18093,11 @@ msgid "Technical Support [%s]"
 msgstr "Hỗ trợ kỹ thuật [ %s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "Cache truy vấn dữ liệu lưu trữ thông tin được thu thập từ các loại đầu vào Truy vấn dữ liệu. Các giá trị từ các trường này có thể được sử dụng trong vùng văn bản của Đồ thị cho Huyền thoại, Nhãn dọc và GPRINTS cũng như trong CDEF."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Nhật ký Kadupul lưu trữ thống kê, lỗi và thông báo khác tùy thuộc vào cài đặt hệ thống. Thông tin này có thể được sử dụng để xác định các vấn đề với pug và ứng dụng."
 
 #: utilities.php
@@ -18141,7 +18133,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Điều này cho thấy tất cả các đối tượng đang được SNMPAgent xử lý."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "Giá trị bộ nhớ được đề xuất này được tính dựa trên số lượng nguồn dữ liệu hiện tại và chỉ được sử dụng làm đề xuất, các giá trị thực tế có thể thay đổi hệ thống theo hệ thống dựa trên yêu cầu."
 
 #: utilities.php
@@ -18178,7 +18170,7 @@ msgid "Update Frequency:"
 msgstr "Tần số cập nhật:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "Sử dụng tiện ích này để hiển thị các sự cố về tệp rrd bị thiếu hoặc giá trị bị thiếu trong các tệp rrdfile. Bạn cần bật rrdcheck trong Cấu hình->Cài đặt->Dữ liệu"
 
 #: utilities.php

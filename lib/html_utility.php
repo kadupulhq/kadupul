@@ -1251,7 +1251,7 @@ function validate_is_regex($regex): bool|string
     }
 
     if (str_contains($regex, ';')) {
-        return __('Kadupul regular expressions can not includes the semi-color character.');
+        return __('Kadupul regular expressions cannot include the semicolon character.');
     }
 
     $warning = null;

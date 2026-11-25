@@ -157,7 +157,7 @@ $messages = array(
         'message' => __('You must select at least one field.'),
         'level' => MESSAGE_LEVEL_ERROR),
     6  => array(
-        'message' => __('You must have built in user authentication turned on to use this feature.'),
+        'message' => __('You must have built-in user authentication turned on to use this feature.'),
         'level' => MESSAGE_LEVEL_ERROR),
     7  => array(
         'message' => __('XML parse error.'),
@@ -388,7 +388,7 @@ $messages = array(
         'message' => __('Permission Denied.  You do not have permission to the requested action.'),
         'level' => MESSAGE_LEVEL_ERROR),
     'page_not_defined' => array(
-        'message' => __('Page is not defined.  Therefore, it can not be displayed.'),
+        'message' => __('Page is not defined.  Therefore, it cannot be displayed.'),
         'level' => MESSAGE_LEVEL_ERROR),
     'custom_error' => array(
         'message' => __('Unexpected error occurred'),
@@ -538,7 +538,7 @@ $reindex_types = array(
 
 $reindex_types_tips = array(
     DATA_QUERY_AUTOINDEX_NONE               => __('All Re-Indexing will be manual or managed through scripts or Device Automation.'),
-    DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME   => __('When the Devices SNMP uptime goes backward, a Re-Index will be performed.'),
+    DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME   => __('When the Device\'s SNMP uptime goes backward, a Re-Index will be performed.'),
     DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE   => __('When the Data Query index count changes, a Re-Index will be performed.'),
     DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION => __('Every polling cycle, a Re-Index will be performed.  Very expensive.')
 );
@@ -1949,7 +1949,7 @@ if (is_dir($config['base_path'] . '/include/vendor/gettext') && version_compare(
 }
 
 if (is_dir($config['base_path'] . '/include/vendor/monotranslator')) {
-    $i18n_supported_languages[CACTI_LANGUAGE_HANDLER_MOTRANSLATOR]  = __('Use the MonoTranslator GetText Handler');
+    $i18n_supported_languages[CACTI_LANGUAGE_HANDLER_MOTRANSLATOR]  = __('Use the MoTranslator GetText Handler');
 }
 
 $i18n_weekdays = array(

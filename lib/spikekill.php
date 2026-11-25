@@ -890,7 +890,7 @@ class spikekill
                         } else {
                             $restored = false;
 
-                            $message = __esc("FATAL: Unable to backup '%s'", $this->rrdfile);
+                            $message = __esc("FATAL: Unable to back up '%s'", $this->rrdfile);
 
                             $this->set_error($message);
 

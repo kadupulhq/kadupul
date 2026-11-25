@@ -320,11 +320,11 @@ if ($auth_method != 0) {
             raise_ajax_permission_denied();
 
             $title_header = __('Permission Denied');
-            $title_body = '<p>' . __('You are not permitted to access this section of Kadupul.') . '</p><p>' . __('If you feel that this is an error. Please contact your Kadupul Administrator.');
+            $title_body = '<p>' . __('You are not permitted to access this section of Kadupul.') . '</p><p>' . __('If you feel that this is an error, please contact your Kadupul Administrator.');
 
             if ($realm_id == 26) {
                 $title_header = __('Installation In Progress');
-                $title_body = '<p>' . __('There is an Installation or Upgrade in progress.') . '</p><p>' . __('Only Kadupul Administrators with Install/Upgrade privilege may login at this time') . '</p>';
+                $title_body = '<p>' . __('There is an Installation or Upgrade in progress.') . '</p><p>' . __('Only Kadupul Administrators with Install/Upgrade privilege may log in at this time') . '</p>';
             }
             print "<!DOCTYPE html>\n";
             print "<html lang='" . html_escape(CACTI_LOCALE) . "'>\n";

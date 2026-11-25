@@ -43,7 +43,7 @@
 "Selected Poller Interval": "Muddada Poller-ka ee la Doortay"
 "Templates Using": "Qaab-dhismeedyada Adeegsanaya"
 "The amount of unknown data that can still be regarded as known.": "Xaddiga xogta aan la garanayn ee weli loo aqoonsan karo mid la yaqaan."
-"The frequency that data will be collected from the Data Source?": "Inta jeer ee xogta laga soo ururinayo Isha Xogta?"
+"The frequency that data will be collected from the Data Source.": "Inta jeer ee xogta laga soo ururinayo Isha Xogta?"
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Tirada muunadaha loo baahan yahay ka hor inta aan la buuxin safka qeexidda RRA. RRA-ga ugu horreeya waa inuu had iyo jeer yeeshaa qiime ah 1."
 "Title Format": "Qaabka Cinwaanka"
 "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph.": "Marka la eegayo Jaantus ku saleysan RRA-ga laga hadlayo, Muddada Waqtiga ee caadiga ah ee loo muujiyo Jaantuskaas."

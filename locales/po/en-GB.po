@@ -292,12 +292,12 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "In order to migrate the Aggregate Graphs below to a Template based Aggregate, first create an Aggregate Template for the Graph Template '%s'."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilise the same Graph Template."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgstr "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 
 #: aggregate_graphs.php
 msgid "Included in Aggregate"
@@ -441,16 +441,16 @@ msgid "Template"
 msgstr "Template"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
-msgstr "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
+msgstr "The Aggregate Template that this Aggregate Graph is based upon"
 
 #: aggregate_graphs.php
 msgid "The internal database identifier for this object"
 msgstr "The internal database identifier for this object"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
-msgstr "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
+msgstr "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
@@ -520,8 +520,8 @@ msgid "Aggregate Templates"
 msgstr "Aggregate Templates"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
-msgstr "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
+msgstr "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 
 #: aggregate_templates.php
 msgid "Aggregate graph regeneration failed. Template settings may already have been saved; review them before retrying."
@@ -757,8 +757,8 @@ msgid "All your login sessions have been cleared."
 msgstr "All your login sessions have been cleared."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
-msgstr "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
+msgstr "An Email Address you can be reached at."
 
 #: auth_profile.php
 msgid "Clear Private Data"
@@ -1111,8 +1111,8 @@ msgid "Clear Filtered"
 msgstr "Clear Filtered"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
-msgstr "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
+msgstr "Click 'Continue' to cancel ongoing Network Discovery(s)."
 
 #: automation_networks.php
 msgid "Click 'Continue' to delete the following Network(s)."
@@ -1238,8 +1238,8 @@ msgid "Schedule"
 msgstr "Schedule"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
-msgstr "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
+msgstr "The Current Status of this Network's Discovery"
 
 #: automation_networks.php
 msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
@@ -1679,12 +1679,12 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "For attribute '%s', issue found '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
-msgstr "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
+msgstr "Is RRA Folder writable by poller?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
-msgstr "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
+msgstr "Is RRDfile writable by poller?"
 
 #: data_debug.php
 msgid "Is the Data Source set as Active?"
@@ -2063,9 +2063,9 @@ msgstr "Association Read Only until XML file located"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "Click 'Continue' to Delete the following Data Query."
-msgstr[1] "Click 'Continue' to Delete following Data Queries."
+msgstr[1] "Click 'Continue' to Delete the following Data Queries."
 
 #: data_queries.php
 msgid "Click 'Continue' to delete the following Data Query Graph Association."
@@ -2073,9 +2073,9 @@ msgstr "Click 'Continue' to delete the following Data Query Graph Association."
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "Click 'Continue' to duplicate the following Data Query."
-msgstr[1] "Click 'Continue' to duplicate following Data Queries."
+msgstr[1] "Click 'Continue' to duplicate the following Data Queries."
 
 #: data_queries.php
 msgid "Could not locate XML file."
@@ -2235,8 +2235,8 @@ msgid "The name of this Data Query."
 msgstr "The name of this Data Query."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
-msgstr "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
+msgstr "The number of Graph Templates using this Data Query."
 
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
@@ -2287,9 +2287,9 @@ msgstr "Choose the Device that this Data Source belongs to."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "Click 'Continue' to delete the following Data Source"
-msgstr[1] "Click 'Continue' to delete following Data Sources"
+msgstr[1] "Click 'Continue' to delete the following Data Sources"
 
 #: data_sources.php
 msgid "Click 'Continue' to disable the following Data Source."
@@ -2427,8 +2427,8 @@ msgid "External"
 msgstr "External"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
-msgstr "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
+msgstr "If this Data Source is no longer in use by Graphs, it can be Deleted."
 
 #: data_sources.php
 msgid "Leave the <strong>Graph</strong> untouched."
@@ -2554,8 +2554,8 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
-msgstr "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgstr "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 
 #: data_templates.php
 msgid "Change Data Source Profile"
@@ -2616,8 +2616,8 @@ msgid "Data Templates [new]"
 msgstr "Data Templates [new]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
-msgstr "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
+msgstr "Data Templates in use cannot be modified"
 
 #: data_templates.php
 msgid "Data Templates that are in use cannot be Deleted.  In use is defined as being referenced by a Data Source."
@@ -2693,8 +2693,8 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "This value is disabled due to it being derived from the Device and read only."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
-msgstr "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
+msgstr "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 
 #: data_templates.php graph_templates.php host_templates.php
 msgid "Title Format:"
@@ -2819,8 +2819,8 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "Click 'Continue' to duplicate the following Graph Template(s). You can optionally change the title format for the new Graph Template(s)."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
-msgstr "Click 'Continue' to perform a Full Synchronisation between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgstr "Click 'Continue' to perform a Full Synchronisation between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 
 #: graph_templates.php
 msgid "Click 'Continue' to perform a Quick Synchronization of your Graphs for the following Graph Template(s). Use this option if your Graphs have Graph Items that do not match your Graph Template.  If this option does not work, use the Full Sync Graphs option, which will take more time to complete."
@@ -3151,8 +3151,8 @@ msgid "Change Graph(s) Associated Device"
 msgstr "Change Graph(s) Associated Device"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
-msgstr "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgstr "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 
 #: graphs.php
 #, php-format
@@ -3357,8 +3357,8 @@ msgid "The selected Tree is not available."
 msgstr "The selected Tree is not available."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
-msgstr "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
+msgstr "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -3551,20 +3551,20 @@ msgid "Class"
 msgstr "Class"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "Click 'Continue' to Synchronise Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "Click 'Continue' to delete the following Device Template(s)."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3654,8 +3654,8 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Sync Devices to Device Template(s)"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
-msgstr "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
+msgstr "The Class of this Device Template.  The Class Name should be representative of its function."
 
 #: host_templates.php
 msgid "The internal database ID for this Device Template.  Useful when performing automation or debugging."
@@ -3679,8 +3679,8 @@ msgstr "FATAL: You must be logged in to access this area of Kadupul."
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
-msgstr "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
+msgstr "If you feel that this is an error, please contact your Kadupul Administrator."
 
 #: include/auth.php
 msgid "Installation In Progress"
@@ -3695,8 +3695,8 @@ msgid "Not Logged In"
 msgstr "Not Logged In"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
-msgstr "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
+msgstr "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
@@ -5079,8 +5079,8 @@ msgid "Operator"
 msgstr "Operator"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
-msgstr "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
+msgstr "Page is not defined.  Therefore, it cannot be displayed."
 
 #: include/global_arrays.php
 msgid "Paper-plane"
@@ -5645,8 +5645,8 @@ msgid "Use the First Handler Found"
 msgstr "Use the First Handler Found"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "Use the MonoTranslator GetText Handler"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "Use the MoTranslator GetText Handler"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5791,8 +5791,8 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "When the Data Query index count changes, a Re-Index will be performed."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
-msgstr "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
+msgstr "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 
 #: include/global_arrays.php
 msgid "Windows Related"
@@ -5835,8 +5835,8 @@ msgid "You are not allowed to change your password."
 msgstr "You are not allowed to change your password."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
-msgstr "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
+msgstr "You must have built-in user authentication turned on to use this feature."
 
 #: include/global_arrays.php
 msgid "You must select at least one Graph to add to a Report."
@@ -5997,18 +5997,18 @@ msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
-msgstr "%d OID's"
+msgid "%d OIDs"
+msgstr "%d OIDs"
+
+#: include/global_form.php
+#, php-format
+msgid "%d Repetition"
+msgstr "%d Repetition"
 
 #: include/global_form.php
 #, php-format
 msgid "%d Repetitions"
 msgstr "%d Repetitions"
-
-#: include/global_form.php
-#, php-format
-msgid "%d Repitition"
-msgstr "%d Repitition"
 
 #: include/global_form.php
 msgid "A CDEF (math) function to apply to this item on the graph or legend."
@@ -6216,8 +6216,8 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "Choose a Data Query to apply to this rule."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
-msgstr "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
+msgstr "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 
 #: include/global_form.php
 msgid "Choose a Tree for the new Tree Items."
@@ -6226,6 +6226,10 @@ msgstr "Choose a Tree for the new Tree Items."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "Choose a unique name to represent this piece of data inside of the RRDfile."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6285,10 +6289,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "Choose the method you wish to use to collect data for this Data Input method."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "Choose unique name to represent this piece of data inside of the RRDfile."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "Common Options"
 
@@ -6341,8 +6341,8 @@ msgid "Determines if the user account is locked."
 msgstr "Determines if the user account is locked."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
-msgstr "Determines if user is able to login."
+msgid "Determines if user is able to log in."
+msgstr "Determines if user is able to log in."
 
 #: include/global_form.php
 msgid "Device Site Association"
@@ -6402,8 +6402,8 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "Enter the SNMP Context to use for this device."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
-msgstr "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgstr "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 
 #: include/global_form.php
 msgid "Enter the UDP port number to use for SNMP (default is 161)."
@@ -6605,8 +6605,8 @@ msgid "Include Prefix Text"
 msgstr "Include Prefix Text"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
-msgstr "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
+msgstr "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 
 #: include/global_form.php
 msgid "Input String"
@@ -7113,8 +7113,8 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "The data that is sent to the script, which includes the complete path to the script and input sources in &lt;&gt; brackets."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
-msgstr "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
+msgstr "The frequency that data will be collected from the Data Source."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7217,8 +7217,8 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "The physical location of the Device.  This free form text can be a room, rack location, etc."
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
-msgstr "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
+msgstr "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 
 #: include/global_form.php
 msgid "The script/source used to gather data for this data source."
@@ -7233,8 +7233,8 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgstr "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 
 #: include/global_form.php
 msgid "The width (in pixels) of the graph area within the graph. This area does not include the legend, axis legends, or title."
@@ -7329,8 +7329,8 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "Vertical Label (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
-msgstr "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
+msgstr "What Site is this Device associated with?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7353,12 +7353,12 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "When you setup the left axis labelling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgstr "When you set up the left axis labelling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "When you setup the right axis labelling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgstr "When you set up the right axis labelling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7521,20 +7521,20 @@ msgid "56 Gbps Ethernet"
 msgstr "56 Gbps Ethernet"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilise this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgstr "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilise this method.</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
-msgstr "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgstr "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 
 #: include/global_settings.php
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
 msgstr "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
-msgstr "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgstr "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 
 #: include/global_settings.php
 msgid "Account Locking"
@@ -7753,7 +7753,7 @@ msgid "By Template/Data Query"
 msgstr "By Template/Data Query"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, tick this checkbox."
 
 #: include/global_settings.php
@@ -7777,8 +7777,8 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "Check this checkbox if you wish to test the Data Sources prior to their creation for new and newly imported Graph Templates.  With Test Data Sources enabled, if the Data Source does not return valid data, the Graph will not be created.  This setting is important if you wish to have a more generic Device Template that can include more Graph Templates that can be selectively applied depending on the characteristics of the Device itself.  Note: If you have a long running script as a Data Source, the time to create Graphs will be increased."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "Choose 'enabled' to allow the localisation of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
+msgstr "Choose 'enabled' to allow the localisation of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 
 #: include/global_settings.php
 msgid "Choose if RRDs will be stored locally or being handled by an external RRDtool proxy server."
@@ -7957,8 +7957,8 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Default SNMP v3 Authorisation User for all new Devices."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
-msgstr "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgstr "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 
 #: include/global_settings.php
 msgid "Default SNMP v3 Security Level for all new Devices."
@@ -8173,12 +8173,12 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "Enable or Disable LDAP referrals.  If disabled, it may increase the speed of searches."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
-msgstr "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
+msgstr "Enables Gradient Support for AREA and STACK charts."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
-msgstr "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
+msgstr "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 
 #: include/global_settings.php user_domains.php
 msgid "Encryption"
@@ -8269,8 +8269,8 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
-msgstr "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
+msgstr "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 
 #: include/global_settings.php
 msgid "Force Complexity Upon Old Passwords"
@@ -8417,36 +8417,36 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "How do you wish to view Realtime Graphs?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
-msgstr "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
+msgstr "How frequently should Daily Stats be updated?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
-msgstr "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
+msgstr "How frequently should RRD be checked?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
 msgstr "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
-msgstr "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgstr "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 
 #: include/global_settings.php
 msgid "How many log files do you wish to retain?  Use 0 to never remove any logs. (0-365)"
 msgstr "How many log files do you wish to retain?  Use 0 to never remove any logs. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
-msgstr "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
+msgstr "How often do you want the Kadupul log display to update?"
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
-msgstr "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
+msgstr "How should Kadupul support Client Dates based upon the Client browser's timezone."
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
-msgstr "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
+msgstr "How will Kadupul handle event logging?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8461,8 +8461,8 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
-msgstr "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgstr "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 
 #: include/global_settings.php
 msgid "If a Device Data Source is included in an Aggregate Graph, show that Graph along with other Device Graphs"
@@ -8489,24 +8489,24 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "If the boost output table exceeds this size, in records, an update will take place."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
+msgstr "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
 msgstr "If this directory is not empty, then your original RRDfiles will be backed up to this location."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
-msgstr "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
+msgstr "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 
 #: include/global_settings.php
 msgid "If this option is checked, Kadupul will populate SNMP Agent tables with Kadupul device and system information.  It does not enable the SNMP Agent itself."
 msgstr "If this option is checked, Kadupul will populate SNMP Agent tables with Kadupul device and system information.  It does not enable the SNMP Agent itself."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
-msgstr "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
+msgstr "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 
 #: include/global_settings.php
 msgid "If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process."
@@ -8685,8 +8685,8 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "Maximum Data Source Items Per Pass"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
-msgstr "Maximum E-Mail Size"
+msgid "Maximum Email Size"
+msgstr "Maximum Email Size"
 
 #: include/global_settings.php
 msgid "Maximum RRD Update Script Run Time"
@@ -8740,21 +8740,21 @@ msgstr "Minimum Tree Width"
 msgid "Mode"
 msgstr "Mode"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+msgstr "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
-msgstr "Monthly on Sunady"
+msgid "Monthly on Sunday"
+msgstr "Monthly on Sunday"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
-msgstr "My Browsers Timezone"
+msgid "My Browser's Timezone"
+msgstr "My Browser's Timezone"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
-msgstr "NaN's"
+msgid "NaNs"
+msgstr "NaNs"
 
 #: include/global_settings.php
 msgid "Native Alerting"
@@ -9249,8 +9249,8 @@ msgid "Server(s)"
 msgstr "Server(s)"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
-msgstr "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
+msgstr "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 
 #: include/global_settings.php
 msgid "Should Data Source Statistics be collected for this Kadupul system?"
@@ -9269,8 +9269,8 @@ msgid "Should image caching be enabled?"
 msgstr "Should image caching be enabled?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
-msgstr "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
+msgstr "Should the Has Graphs and Has Data Sources be Checked by Default?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -9293,8 +9293,8 @@ msgid "Show business hours"
 msgstr "Show business hours"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
-msgstr "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
+msgstr "Show only locations that are available at a device's selected site."
 
 #: include/global_settings.php
 msgid "Show only site specific locations"
@@ -9313,12 +9313,12 @@ msgid "Site Security"
 msgstr "Site Security"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
-msgstr "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
+msgstr "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgstr "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9461,16 +9461,16 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
-msgstr "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
+msgstr "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
-msgstr "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgstr "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
-msgstr "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgstr "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 
 #: include/global_settings.php
 msgid "The Maximum width of the Tree to expand to, after which time, Tree branches will scroll on the page."
@@ -9581,8 +9581,8 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
-msgstr "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
+msgstr "The default number of rows to display for a table."
 
 #: include/global_settings.php
 msgid "The default number of rows to return from an autocomplete based select pattern match."
@@ -9597,8 +9597,8 @@ msgid "The encryption method to use for the Email."
 msgstr "The encryption method to use for the Email."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
-msgstr "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
+msgstr "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 
 #: include/global_settings.php
 msgid "The fingerprint of the current public RSA key the proxy is using. This is required to establish a trusted connection."
@@ -9657,6 +9657,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "The maximum amount of time Kadupul's Data Source Statistics script can run without generating a timeout error and being killed."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 
@@ -9665,20 +9669,16 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgstr "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
-msgstr "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
+msgstr "The maximum number of Device Directories to be created based upon hashed Device IDs."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
-msgstr "The maximum number of Device Directories to be created based upon hashed Device ID's."
-
-#: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
-msgstr "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
+msgstr "The maximum size of the Email message including all attachments."
 
 #: include/global_settings.php
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
@@ -9717,20 +9717,20 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "The number of columns to use when displaying Thumbnail graphs in Tree mode."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
-msgstr "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
+msgstr "The number of concurrent DSStats processes to use to process all of the Data Sources."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
-msgstr "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
+msgstr "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
-msgstr "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
+msgstr "The number of concurrent RRDfile check processes to use to process all of rrd files."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
-msgstr "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
+msgstr "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 
 #: include/global_settings.php
 msgid "The number of concurrent script server processes to run per spine process.  Settings between 1 and 15 are accepted.  This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector."
@@ -9805,8 +9805,8 @@ msgid "The path to your snmpwalk binary."
 msgstr "The path to your snmpwalk binary."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
-msgstr "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
+msgstr "The poller type to use.  This setting will take effect at next polling interval."
 
 #: include/global_settings.php
 msgid "The polling interval in use.  This setting will affect how often RRDfiles are checked and updated.  <strong><u>NOTE: If you change this value, you must re-populate the poller cache.  Failure to do so, may result in lost data.</u></strong>"
@@ -9841,6 +9841,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "The time your business hours start. Format: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "The timespan you wish to see on the default graph."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 
@@ -9873,28 +9877,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "These settings are maintained at the Data Collector level.  The values here are only defaults used when first creating a Data Collector."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
-msgstr "This is a Email account used for sending a test message to ensure everything is working properly."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
+msgstr "This is an Email account used for sending a test message to ensure everything is working properly."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "This is maximum number of days before a password is set to expire."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "This is minimal length of allowed passwords."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9917,12 +9905,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "This is the location, on the web server where the RRDfiles and PNG files will be cached.  This cache will be managed by the poller.  Make sure you have the correct read and write permissions on this folder"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "This is the maximum number of days before a password is set to expire."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "This is the minimal length of allowed passwords."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9937,16 +9941,12 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "This timespan you wish to see on the default graph."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "This value represents the maximum number of spikes to remove from a Graph RRA."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
-msgstr "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgstr "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 
 #: include/global_settings.php
 #, php-format
@@ -9966,8 +9966,8 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "This will require new passwords to contain at least 1 special character."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
-msgstr "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
+msgstr "This will require new passwords to contain both lower and upper-case characters."
 
 #: include/global_settings.php
 msgid "Threads per Process"
@@ -10054,8 +10054,8 @@ msgid "Use Custom Fonts"
 msgstr "Use Custom Fonts"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
-msgstr "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgstr "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 
 #: include/global_settings.php
 msgid "User Language"
@@ -10094,12 +10094,12 @@ msgid "Weekly on Sunday"
 msgstr "Weekly on Sunday"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
-msgstr "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgstr "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
-msgstr "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgstr "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 
 #: include/global_settings.php
 msgid "What time of day should Weekly, Monthly, and Yearly Data be updated?  Format is HH:MM [am/pm]"
@@ -10114,20 +10114,20 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "When an option is checked, users will be able to put Kadupul into Real-time mode."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
-msgstr "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgstr "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
-msgstr "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
+msgstr "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 
 #: include/global_settings.php
 msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS to ensure high security."
 msgstr "When checked, any attempts to access Kadupul will be redirected to HTTPS to ensure high security."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
-msgstr "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
+msgstr "When creating a new report, what image type should be used for the inline graphs?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10146,7 +10146,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "When displaying Graphs, allow Graph Dates to extend 'to future'"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 
 #: include/global_settings.php
@@ -10174,20 +10174,20 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "When using basic authentication, if there are issues mapping the username to a valid Kadupul account, the message included here will be displayed to users.  It can include both text and HTML."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
-msgstr "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
+msgstr "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 
 #: include/global_settings.php
 msgid "When you enable boost, your RRD files are only updated when they are requested by a user, or when this time period elapses."
 msgstr "When you enable boost, your RRD files are only updated when they are requested by a user, or when this time period elapses."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
-msgstr "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgstr "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
-msgstr "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
+msgstr "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 
 #: include/global_settings.php
 msgid "Which mail service to use in order to send mail"
@@ -10754,8 +10754,8 @@ msgid "Warnings++"
 msgstr "Warnings++"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
+msgstr "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
@@ -10923,8 +10923,8 @@ msgstr "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffi
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
-msgstr "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
+msgstr "Found %s Local Data IDs to Verify"
 
 #: lib/data_query.php
 #, php-format
@@ -11040,8 +11040,8 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
-msgstr "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
+msgstr "New Sort Field validated.  Sort Field will be updated."
 
 #: lib/data_query.php
 msgid "No Index Changes Detected, Poller Cache Refreshed"
@@ -11140,8 +11140,8 @@ msgstr "Update graph data query cache complete"
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
-msgstr "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
+msgstr "Verification of %s Local Data IDs Complete"
 
 #: lib/data_query.php
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
@@ -11157,8 +11157,8 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
-msgstr "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
+msgstr "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 
 #: lib/data_query.php
 #, php-format
@@ -11171,12 +11171,12 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
-msgstr "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
+msgstr "Failed to alter password field length, cannot continue as it may corrupt password"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
-msgstr "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
+msgstr "Failed to determine password field length, cannot continue as it may corrupt password"
 
 #: lib/dsdebug.php
 #, php-format
@@ -11292,10 +11292,6 @@ msgid "Link %s"
 msgstr "Link %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "Logged in a Guest"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "Logged in as"
 
@@ -11303,6 +11299,10 @@ msgstr "Logged in as"
 #, php-format
 msgid "Logged in as %s"
 msgstr "Logged in as %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "Logged in as Guest"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11313,8 +11313,8 @@ msgid "Logout"
 msgstr "Logout"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgstr "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11392,8 +11392,8 @@ msgstr "WARNING:  Key Kadupul Include File %s missing.  Please locate and replac
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
-msgstr "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
+msgstr "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 
 #: lib/functions.php
 msgid "Your email settings are currently set as follows"
@@ -11482,8 +11482,8 @@ msgid "All %d %s"
 msgstr "All %d %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
-msgstr "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
+msgstr "Allow or limit the table columns to extend beyond the current window's limits."
 
 #: lib/html.php
 msgid "Alpha %"
@@ -12138,16 +12138,16 @@ msgid "Cascade to Branches"
 msgstr "Cascade to Branches"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
-msgstr "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
+msgstr "Check this box if you want to use custom HTML and CSS for the report."
 
 #: lib/html_reports.php
 msgid "Check this box to enable this Report."
 msgstr "Check this box to enable this Report."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
-msgstr "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgstr "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 
 #: lib/html_reports.php
 msgid "Click 'Continue' to delete the following Report(s)."
@@ -12403,8 +12403,8 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "Select a Device Template to use to filter for Devices or Graphs."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
-msgstr "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
+msgstr "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 
 #: lib/html_reports.php
 msgid "Select a Graph Template for the Device to be used to filter for or select Graphs in the case of a Device Type."
@@ -12475,12 +12475,12 @@ msgid "The number of Graph columns."
 msgstr "The number of Graph columns."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
-msgstr "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
+msgstr "This Address will be used as the Email Sender's address"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
-msgstr "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
+msgstr "This Name will be used as the default Email Sender"
 
 #: lib/html_reports.php
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -12497,23 +12497,23 @@ msgstr "Tree: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
-msgstr "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
+msgstr "Unable to send Report '%s'.  Please set an Email From Name"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
-msgstr "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
+msgstr "Unable to send Report '%s'.  Please set an Email from address"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
-msgstr "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
+msgstr "Unable to send Report '%s'.  Please set an Email subject"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
-msgstr "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
+msgstr "Unable to send Report '%s'.  Please set destination Email addresses"
 
 #: lib/html_reports.php
 msgid "Use Custom Format HTML"
@@ -12608,7 +12608,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Kadupul regular expressions are limited to 50 characters only for security reasons."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Kadupul regular expressions cannot include the semicolon character."
 
 #: lib/html_utility.php
@@ -13064,13 +13064,13 @@ msgstr "Failed to set PHP option %s, is %s (should be %s)"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "Failed to set specified %sRRDTool version: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "Failed to set specified %sRRDtool version: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
-msgstr "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
+msgstr "Failed to update Automation Option Set %s"
 
 #: lib/installer.php
 msgid "File not found"
@@ -13142,8 +13142,8 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Import of Package #%s '%s' under Profile '%s' succeeded"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
-msgstr "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgstr "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 
 #: lib/installer.php
 msgid "Input Validation Whitelist Protection"
@@ -13320,8 +13320,8 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
-msgstr "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
+msgstr "Once installation has completed, the CSRF path should be set to read-only."
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
@@ -13397,8 +13397,8 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "Please select the Device Templates that you wish to update during the Upgrade."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
-msgstr "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgstr "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 
 #: lib/installer.php
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
@@ -13654,16 +13654,16 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "The variables that must be set in the config.php file include the following:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
-msgstr "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgstr "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 
 #: lib/installer.php
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "Then run the following within MySQL as an administrator:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
-msgstr "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgstr "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 
 #: lib/installer.php
 msgid "These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time."
@@ -13695,10 +13695,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "This script option un-ban the Data Input Methods that are currently banned."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "This script option will re-enable any disabled Data Sources."
 
@@ -13707,17 +13703,21 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "This script option will un-ban the Data Input Methods that are currently banned."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgstr "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
-msgstr "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgstr "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 
 #: lib/installer.php
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
@@ -13750,8 +13750,8 @@ msgid "Updating Automation Option Set %s"
 msgstr "Updating Automation Option Set %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
-msgstr "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behaviour.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
+msgstr "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behaviour.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 
 #: lib/installer.php
 #, php-format
@@ -13806,7 +13806,7 @@ msgstr "You appear to be downgrading to a previous version.  Database changes ma
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 
 #: lib/installer.php
@@ -13837,8 +13837,8 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
-msgstr "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
+msgstr "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 
 #: lib/installer.php
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
@@ -13865,8 +13865,8 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Your database default collation appears to be UTF8 compliant"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
-msgstr "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
+msgstr "Your database default collation does NOT appear to be fully UTF8 compliant. "
 
 #: lib/installer.php
 msgid "Your server collation appears to be UTF8 compliant"
@@ -13964,13 +13964,13 @@ msgid "Unable to find user from DN"
 msgstr "Unable to find user from DN"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
-msgstr "Unable to find users DN"
+msgid "Unable to find user's DN"
+msgstr "Unable to find user's DN"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
-msgstr "Unexpected error %s (Ldap Error: %s) on Server (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
+msgstr "Unexpected error %s (LDAP Error: %s) on Server (%s)"
 
 #: lib/ping.php
 msgid "Destination address not specified"
@@ -14077,13 +14077,13 @@ msgstr "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from t
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14143,8 +14143,8 @@ msgstr "Graph Timespan:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
-msgstr "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
+msgstr "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 
 #: lib/reports.php
 #, php-format
@@ -14197,8 +14197,8 @@ msgstr "ERROR: RRD file does not exist: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
-msgstr "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
+msgstr "ERROR: RRDfile %s not writable"
 
 #: lib/rrd.php
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
@@ -14319,8 +14319,8 @@ msgstr "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
-msgstr "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
+msgstr "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 
 #: lib/rrd.php
 #, php-format
@@ -14479,8 +14479,8 @@ msgstr "FATAL: The outlier-start and outlier-end arguments must be in the format
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
-msgstr "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
+msgstr "FATAL: Unable to back up '%s'"
 
 #: lib/spikekill.php
 #, php-format
@@ -14694,13 +14694,13 @@ msgstr "%s Tuning"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
-msgstr "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgstr "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
-msgstr "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgstr "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 
 #: lib/utility.php
 #, php-format
@@ -14718,8 +14718,8 @@ msgstr "A valid timezone that matches MySQL and the system"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
-msgstr "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgstr "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 
 #: lib/utility.php
 msgid "Comments"
@@ -14752,13 +14752,13 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
-msgstr "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
+msgstr "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
+msgstr "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 
 #: lib/utility.php
 #, php-format
@@ -14771,8 +14771,8 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
-msgstr "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
+msgstr "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 
 #: lib/utility.php
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
@@ -14796,8 +14796,8 @@ msgid "Recommended Value"
 msgstr "Recommended Value"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
-msgstr "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
+msgstr "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 
 #: lib/utility.php
 #, php-format
@@ -14809,7 +14809,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journalling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 
 #: lib/utility.php
@@ -14817,12 +14817,12 @@ msgid "Variable"
 msgstr "Variable"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
-msgstr "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
+msgstr "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
-msgstr "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgstr "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 
 #: lib/utility.php
 #, php-format
@@ -15064,9 +15064,9 @@ msgstr "%s Notification Receivers"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "Click 'Continue' to delete the following Notification Receiver"
-msgstr[1] "Click 'Continue' to delete following Notification Receiver"
+msgstr[1] "Click 'Continue' to delete the following Notification Receivers"
 
 #: managers.php
 msgid "Click 'Continue' to disable forwarding the following Notification Objects to this Notification Receiver."
@@ -15074,15 +15074,15 @@ msgstr "Click 'Continue' to disable forwarding the following Notification Object
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "Click 'Continue' to disable the following Notification Receiver"
-msgstr[1] "Click 'Continue' to disable following Notification Receiver"
+msgstr[1] "Click 'Continue' to disable the following Notification Receivers"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "Click 'Continue' to enable the following Notification Receiver"
-msgstr[1] "Click 'Continue' to enable following Notification Receiver"
+msgstr[1] "Click 'Continue' to enable the following Notification Receivers"
 
 #: managers.php
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
@@ -15186,8 +15186,8 @@ msgid "Automatically Trust Signer"
 msgstr "Automatically Trust Signer"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
-msgstr "Changes/Diffferences"
+msgid "Changes/Differences"
+msgstr "Changes/Differences"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
@@ -15254,6 +15254,10 @@ msgid "Package"
 msgstr "Package"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "Package Details"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "Package Import"
 
@@ -15266,20 +15270,16 @@ msgid "Package XML File Damaged."
 msgstr "Package XML File Damaged."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "Packages Details"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
-msgstr "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
+msgstr "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
-msgstr "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
+msgstr "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 
 #: package_import.php templates_import.php
 msgid "Template Type"
@@ -15300,12 +15300,12 @@ msgid "The Package %s Imported Successfully"
 msgstr "The Package %s Imported Successfully"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
-msgstr "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
+msgstr "The XML file appears to be invalid.  Please contact the package author"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
-msgstr "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
+msgstr "The XML files for the package do not exist"
 
 #: package_import.php
 #, php-format
@@ -15325,8 +15325,8 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
-msgstr "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
+msgstr "A description that the Plugin's author has given to the Plugin."
 
 #: plugins.php
 msgid "Actions available include 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
@@ -15418,8 +15418,8 @@ msgid "Plugin Name"
 msgstr "Plugin Name"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
-msgstr "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
+msgstr "Plugin directories cannot include spaces"
 
 #: plugins.php
 #, php-format
@@ -15508,13 +15508,13 @@ msgstr "Uninstalling this Plugin will remove all Plugin Data and Settings.  If y
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
-msgstr "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
+msgstr "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
-msgstr "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
+msgstr "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 
 #: poller.php
 msgid "Kadupul System Notification"
@@ -15535,8 +15535,8 @@ msgstr "Poller in Heartbeat Mode"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
-msgstr "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
+msgstr "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 
 #: poller.php
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
@@ -15590,7 +15590,7 @@ msgstr[1] "Clear Statistics for Data Collectors"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgstr[1] "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 
@@ -15693,8 +15693,8 @@ msgid "No Data Collectors Found"
 msgstr "No Data Collectors Found"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
-msgstr "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
+msgstr "Notes for this Data Collector's Database."
 
 #: pollers.php
 msgid "Polling Time"
@@ -15822,12 +15822,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "The file holding the SSL Key to use to connect to the remote database."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "The hostname for the remote database server."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15842,8 +15842,8 @@ msgid "The last time this Data Collector completed."
 msgstr "The last time this Data Collector completed."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
-msgstr "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
+msgstr "The last time this Data Collector was full synced with the main Kadupul site."
 
 #: pollers.php
 msgid "The name of the remote database."
@@ -16025,8 +16025,8 @@ msgid "Changing Permission Model Warning"
 msgstr "Changing Permission Model Warning"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
-msgstr "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
+msgstr "Changing Permission Model will alter a user's effective Graph permissions."
 
 #: settings.php
 msgid "Files Selected"
@@ -16348,8 +16348,8 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
-msgstr "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
+msgstr "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 
 #: templates/platform/console_home_body.html.twig
 msgid "Number of Offline Records:"
@@ -16523,27 +16523,27 @@ msgstr "Branches"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "Click 'Continue' to delete the following Tree."
-msgstr[1] "Click 'Continue' to delete following Trees."
+msgstr[1] "Click 'Continue' to delete the following Trees."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "Click 'Continue' to publish the following Tree."
-msgstr[1] "Click 'Continue' to publish following Trees."
+msgstr[1] "Click 'Continue' to publish the following Trees."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "Click 'Continue' to un-lock the following Tree."
-msgstr[1] "Click 'Continue' to un-lock following Trees."
+msgstr[1] "Click 'Continue' to un-lock the following Trees."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "Click 'Continue' to un-publish the following Tree."
-msgstr[1] "Click 'Continue' to un-publish following Trees."
+msgstr[1] "Click 'Continue' to un-publish the following Trees."
 
 #: tree.php
 msgid "Cut"
@@ -16639,8 +16639,8 @@ msgid "The last user to have modified this Tree."
 msgstr "The last user to have modified this Tree."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
-msgstr "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
+msgstr "The name by which this Tree will be referred to."
 
 #: tree.php
 msgid "The original author of this Tree."
@@ -16832,8 +16832,8 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Click 'Continue' to enable the selected User(s)."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
-msgstr "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgstr "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 
 #: user_admin.php
 msgid "Copy User"
@@ -17152,23 +17152,23 @@ msgstr "Choose what type of domain this is."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "Click 'Continue' to delete the following User Domain."
-msgstr[1] "Click 'Continue' to delete following User Domains."
+msgstr[1] "Click 'Continue' to delete the following User Domains."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "Click 'Continue' to disable the following User Domain."
-msgstr[1] "Click 'Continue' to disable following User Domains."
+msgstr[1] "Click 'Continue' to disable the following User Domains."
 
 #: user_domains.php
 msgid "Click 'Continue' to enable the following User Domain."
 msgstr "Click 'Continue' to enable the following User Domain."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
-msgstr "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
+msgstr "Click 'Continue' to make the following User Domain the default one."
 
 #: user_domains.php
 msgid "Delete User Domain"
@@ -17199,17 +17199,13 @@ msgid "Domains"
 msgstr "Domains"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "Domains Type"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "Effective User"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
-msgstr[0] "Enabled User Domain"
+msgstr[0] "Enable User Domain"
 msgstr[1] "Enable User Domains"
 
 #: user_domains.php
@@ -17225,16 +17221,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "Field that will replace the email taken from LDAP. (on windows: mail) "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
-msgstr "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
+msgstr "If this checkbox is checked, users will be able to log in using this domain."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "Make Selected Domain Default"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17300,27 +17292,27 @@ msgstr "Clear"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "Click 'Continue' to Copy the following User Group to a new User Group."
-msgstr[1] "Click 'Continue' to Copy following User Groups to new User Groups."
+msgstr[1] "Click 'Continue' to Copy the following User Groups to new User Groups."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "Click 'Continue' to delete the following User Group"
-msgstr[1] "Click 'Continue' to delete following User Groups"
+msgstr[1] "Click 'Continue' to delete the following User Groups"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "Click 'Continue' to disable the following User Group."
-msgstr[1] "Click 'Continue' to disable following User Groups."
+msgstr[1] "Click 'Continue' to disable the following User Groups."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "Click 'Continue' to enable the following User Group."
-msgstr[1] "Click 'Continue' to enable following User Groups."
+msgstr[1] "Click 'Continue' to enable the following User Groups."
 
 #: user_group_admin.php
 msgid "Copy User Group"
@@ -17341,8 +17333,8 @@ msgid "Default Tree Policy for this User Group"
 msgstr "Default Tree Policy for this User Group"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
-msgstr "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
+msgstr "Defer to the User's Setting"
 
 #: user_group_admin.php
 msgid "Delete User Group"
@@ -17675,12 +17667,12 @@ msgid "Detailed Runtime Statistics"
 msgstr "Detailed Runtime Statistics"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
-msgstr "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
+msgstr "Different versions of Kadupul and Spine!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
-msgstr "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
+msgstr "Directory Does NOT Exist!"
 
 #: utilities.php
 msgid "Display Order"
@@ -17693,12 +17685,12 @@ msgstr "ERROR: Installed RRDtool version does not exceed configured version.<br>
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
+msgstr "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
-msgstr "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
+msgstr "Each browser tab can use up to 10 connections depending on the browser."
 
 #: utilities.php
 msgid "Error: Unable to clear log, file does not exist."
@@ -17755,8 +17747,8 @@ msgstr "Installed. <span class=\"deviceDown\">Note: If you are planning on using
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
-msgstr "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
+msgstr "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 
 #: utilities.php
 msgid "Kadupul Log Cleared"
@@ -18158,12 +18150,12 @@ msgid "Technical Support [%s]"
 msgstr "Technical Support [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
-msgstr "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
+msgstr "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
-msgstr "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
+msgstr "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
@@ -18198,8 +18190,8 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "This shows all objects being handled by the SNMP Agent."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
-msgstr "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgstr "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 
 #: utilities.php
 msgid "Threads: "
@@ -18235,8 +18227,8 @@ msgid "Update Frequency:"
 msgstr "Update Frequency:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
-msgstr "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
+msgstr "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 
 #: utilities.php
 msgid "User Login History"

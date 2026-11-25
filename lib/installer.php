@@ -786,7 +786,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         if (isset($param_rrdver) && strlen($param_rrdver)) {
             $rrdver = $this->sanitizeRRDVersion($param_rrdver, '');
             if (empty($rrdver)) {
-                $this->addError(Installer::STEP_BINARY_LOCATIONS, 'RRDVersion', 'setRRDVersion()', __('Failed to set specified %sRRDTool version: %s', $prefix, $param_rrdver));
+                $this->addError(Installer::STEP_BINARY_LOCATIONS, 'RRDVersion', 'setRRDVersion()', __('Failed to set specified %sRRDtool version: %s', $prefix, $param_rrdver));
             } else {
                 $this->paths['rrdtool_version']['default'] = $param_rrdver;
                 set_install_config_option('install_rrdtool_version', $param_rrdver);
@@ -1804,8 +1804,8 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
     {
         global $database_username, $database_default;
         $output  = Installer::sectionTitleError();
-        $output .= Installer::sectionNormal(__('You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed.', CACTI_VERSION));
-        $output .= Installer::sectionNormal(__('To be able continue, you <b>MUST</b> create a new database, import "cacti.sql" into it:', CACTI_VERSION));
+        $output .= Installer::sectionNormal(__('You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed.', CACTI_VERSION));
+        $output .= Installer::sectionNormal(__('To be able to continue, you <b>MUST</b> create a new database, import "cacti.sql" into it:', CACTI_VERSION));
         $output .= Installer::sectionCode(sprintf("mysql -u %s -p [new_database] < cacti.sql", $database_username, $database_default));
         $output .= Installer::sectionNormal(__('You <b>MUST</b> then update "include/config.php" to point to the new database.'));
         $output .= Installer::sectionNormal(__('NOTE: Your existing data will not be modified, nor will it or any history be available to the new install'));
@@ -2092,7 +2092,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
             $output .= Installer::sectionNormal('<span class="textError"><strong>' . __('ERROR:') . '</strong> ' . __('Please update config.php with the correct relative URI location of Kadupul (url_path).') . '</span>');
             $enabled['location'] = DB_STATUS_ERROR;
         } else {
-            $output .= Installer::sectionNormal(__('Your Kadupul configuration has the relative correct path (url_path) in config.php.'));
+            $output .= Installer::sectionNormal(__('Your Kadupul configuration has the correct relative path (url_path) in config.php.'));
         }
 
         $output .= Installer::sectionSubTitleEnd();
@@ -2295,7 +2295,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
                 $output .= Installer::sectionSubTitle(__('Upgrade'));
                 $output .= Installer::sectionNormal(__('Upgrade from <strong>%s</strong> to <strong>%s</strong>', $this->old_cacti_version, CACTI_VERSION));
 
-                $output .= Installer::sectionWarning(__('In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul'));
+                $output .= Installer::sectionWarning(__('In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul'));
                 $output .= Installer::sectionNormal(__('On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href=\'https://www.refreshyourcache.com\' target=\'_blank\'>https://www.refreshyourcache.com/</a> is a good starting point.'));
                 $output .= Installer::sectionNormal(__('If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it.'));
 
@@ -2638,7 +2638,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
             $output .= Installer::sectionNormal($text);
             $output .= Installer::sectionNormal(__('An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions.'));
             $output .= Installer::sectionNote('<span class="cactiInstallSectionCode" style="width: 95%; display: inline-flex;">' . $code . '</span>', '', '', __('EXAMPLE:'));
-            $output .= Installer::sectionNote(__('Once installation has completed the CSRF path, should be set to read-only.'));
+            $output .= Installer::sectionNote(__('Once installation has completed, the CSRF path should be set to read-only.'));
         } else {
             $output .= Installer::sectionNormal('<font color="#008000">' . __('All folders are writable') . '</font>');
         }
@@ -2706,14 +2706,14 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
     {
         $output  = Installer::sectionTitle(__('Input Validation Whitelist Protection'));
         $output .= Installer::sectionNormal(__('Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure.'));
-        $output .= Installer::sectionNormal(__('Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages.'));
-        $output .= Installer::sectionNormal(__('The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid.'));
-        $output .= Installer::sectionNormal(__('To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul\'s CLI directory that can be run with the following options:'));
+        $output .= Installer::sectionNormal(__('Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages.'));
+        $output .= Installer::sectionNormal(__('The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid.'));
+        $output .= Installer::sectionNormal(__('To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul\'s CLI directory that can be run with the following options:'));
 
         $output .= Installer::sectionNormal(
             '<ul>' .
             '<li><b><i>php -q input_whitelist.php --audit</i></b> - ' . __('This script option will search for any Data Input Methods that are currently banned and provide details as to why.') . '</li>' .
-            '<li><b><i>php -q input_whitelist.php --update</i></b> - ' . __('This script option un-ban the Data Input Methods that are currently banned.') . '</li>' .
+            '<li><b><i>php -q input_whitelist.php --update</i></b> - ' . __('This script option will un-ban the Data Input Methods that are currently banned.') . '</li>' .
             '<li><b><i>php -q input_whitelist.php --push</i></b> - ' . __('This script option will re-enable any disabled Data Sources.') . '</li>' .
             '</ul>'
         );
@@ -2843,9 +2843,9 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
 
         if ($this->getMode() == Installer::MODE_UPGRADE) {
             $output .= Installer::sectionNormal(__('Please select the Device Templates that you wish to update during the Upgrade.'));
-            $output .= Installer::sectionWarning(__('Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to \'Sync Graphs\' to from the Templates after update.'));
+            $output .= Installer::sectionWarning(__('Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to \'Sync Graphs\' from the Templates after update.'));
         } else {
-            $output .= Installer::sectionNormal(__('Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the \'Windows Device\' Template.  If your Operating System is Linux/UNIX, make sure you select the \'Local Linux Machine\' Device Template.'));
+            $output .= Installer::sectionNormal(__('Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the \'Windows Device\' Template.  If your Operating System is Linux/UNIX, make sure you select the \'Local Linux Machine\' Device Template.'));
         }
 
         $templates = install_setup_get_templates();
@@ -2912,7 +2912,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
             $output .= Installer::sectionNormal(__('Your database default collation appears to be UTF8 compliant'));
         } else {
             $output .= Installer::sectionWarning(
-                __('Your database default collation does NOT appear to be full UTF8 compliant. ') .
+                __('Your database default collation does NOT appear to be fully UTF8 compliant. ') .
                 __('Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to \'utf8mb4_unicode_ci\' by running the following: ') .
                 Installer::sectionCode(
                     'mysql> ALTER DATABASE ' . $database . ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
@@ -3801,7 +3801,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
                         array($snmp_id)
                     );
                 } else {
-                    log_install_always('', __('Failed to updated Automation Option Set %s', $snmp_id));
+                    log_install_always('', __('Failed to update Automation Option Set %s', $snmp_id));
                 }
             } else {
                 log_install_always('', __('Failed to find any automation option set'));

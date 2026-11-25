@@ -408,7 +408,7 @@ function form_actions()
         } elseif (get_request_var('drp_action') == '4') { // retemplate
             print "<tr>
 				<td class='textArea'>
-					<p>" . __('Click \'Continue\' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don\'t match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance.') . "</p>
+					<p>" . __('Click \'Continue\' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don\'t match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance.') . "</p>
 					<div class='itemlist'><ul>$graph_list</ul></div>
 				</td>
 			</tr>";

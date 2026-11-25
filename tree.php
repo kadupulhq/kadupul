@@ -775,7 +775,7 @@ function form_actions()
         if (get_nfilter_request_var('drp_action') == '1') { // delete
             print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to delete the following Tree.', 'Click \'Continue\' to delete following Trees.', cacti_sizeof($tree_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to delete the following Tree.', 'Click \'Continue\' to delete the following Trees.', cacti_sizeof($tree_array)) . "</p>
 					<div class='itemlist'><ul>$tree_list</ul></div>
 				</td>
 			</tr>\n";
@@ -784,7 +784,7 @@ function form_actions()
         } elseif (get_nfilter_request_var('drp_action') == '2') { // publish
             print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to publish the following Tree.', 'Click \'Continue\' to publish following Trees.', cacti_sizeof($tree_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to publish the following Tree.', 'Click \'Continue\' to publish the following Trees.', cacti_sizeof($tree_array)) . "</p>
 					<div class='itemlist'><ul>$tree_list</ul></div>
 				</td>
 			</tr>\n";
@@ -793,7 +793,7 @@ function form_actions()
         } elseif (get_nfilter_request_var('drp_action') == '3') { // un-publish
             print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to un-publish the following Tree.', 'Click \'Continue\' to un-publish following Trees.', cacti_sizeof($tree_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to un-publish the following Tree.', 'Click \'Continue\' to un-publish the following Trees.', cacti_sizeof($tree_array)) . "</p>
 					<div class='itemlist'><ul>$tree_list</ul></div>
 				</td>
 			</tr>\n";
@@ -802,7 +802,7 @@ function form_actions()
         } elseif (get_nfilter_request_var('drp_action') == '4') { // un-lock
             print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to un-lock the following Tree.', 'Click \'Continue\' to un-lock following Trees.', cacti_sizeof($tree_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to un-lock the following Tree.', 'Click \'Continue\' to un-lock the following Trees.', cacti_sizeof($tree_array)) . "</p>
 					<div class='itemlist'><ul>$tree_list</ul></div>
 				</td>
 			</tr>\n";
@@ -2321,7 +2321,7 @@ function tree()
             'display' => __('Tree Name'),
             'align' => 'left',
             'sort' => 'ASC',
-            'tip' => __('The name by which this Tree will be referred to as.')
+            'tip' => __('The name by which this Tree will be referred to.')
         ),
         'id' => array(
             'display' => __('ID'),

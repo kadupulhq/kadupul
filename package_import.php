@@ -403,13 +403,13 @@ function package_get_details()
 
                 unlink($xmlfile);
             } else {
-                raise_message_javascript(__('Error in Package'), __('The package "%s" download or validation failed', html_escape($package_name)), __('See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available.'));
+                raise_message_javascript(__('Error in Package'), __('The package "%s" download or validation failed', html_escape($package_name)), __('See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available.'));
             }
         }
 
         import_display_package_data($templates, $files, $package_name, $filename, $data);
     } else {
-        raise_message_javascript(__('Error in Package'), __('The package download or validation failed'), __('See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available'));
+        raise_message_javascript(__('Error in Package'), __('The package download or validation failed'), __('See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available'));
     }
 }
 
@@ -493,10 +493,10 @@ function import_validate_public_key($xmlfile, $accept = false)
                 return get_public_key();
             }
         } else {
-            raise_message_javascript(__('Error in Package'), __('Package XML File Damaged.'), __('The XML files appears to be invalid.  Please contact the package author'));
+            raise_message_javascript(__('Error in Package'), __('Package XML File Damaged.'), __('The XML file appears to be invalid.  Please contact the package author'));
         }
     } else {
-        raise_message_javascript(__('Error in Package'), __('The XML files for the package does not exist'), __('Check the package repository file for files that should exist and find the one that is missing'));
+        raise_message_javascript(__('Error in Package'), __('The XML files for the package do not exist'), __('Check the package repository file for files that should exist and find the one that is missing'));
     }
 
     return false;
@@ -542,7 +542,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 
     $details = import_package_get_details($xmlfile);
 
-    html_start_box(__('Packages Details'), '100%', '', '1', 'center', '');
+    html_start_box(__('Package Details'), '100%', '', '1', 'center', '');
 
     $display_text = array(
         array(
@@ -684,7 +684,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
                 'display' => __('Status')
             ),
             array(
-                'display' => __('Changes/Diffferences')
+                'display' => __('Changes/Differences')
             )
         );
 

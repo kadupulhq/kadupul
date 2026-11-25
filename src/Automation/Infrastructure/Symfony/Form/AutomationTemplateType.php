@@ -39,9 +39,9 @@ final class AutomationTemplateType extends AbstractType
                 'help' => 'Choose the Availability Method to use for Discovered Devices.',
                 'choices' => array_flip(AvailabilityMethods::LABELS),
             ])
-            ->add('sysDescr', TextType::class, self::match('System Description Match', 'This is a unique string that will be matched to a devices sysDescr string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression.', AutomationTemplate::DESCRIPTION_LENGTH))
-            ->add('sysName', TextType::class, self::match('System Name Match', 'This is a unique string that will be matched to a devices sysName string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression.', AutomationTemplate::NAME_LENGTH))
-            ->add('sysOid', TextType::class, self::match('System OID Match', 'This is a unique string that will be matched to a devices sysOid string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression.', AutomationTemplate::OID_LENGTH))
+            ->add('sysDescr', TextType::class, self::match('System Description Match', 'This is a unique string that will be matched to a device\'s sysDescr string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression.', AutomationTemplate::DESCRIPTION_LENGTH))
+            ->add('sysName', TextType::class, self::match('System Name Match', 'This is a unique string that will be matched to a device\'s sysName string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression.', AutomationTemplate::NAME_LENGTH))
+            ->add('sysOid', TextType::class, self::match('System OID Match', 'This is a unique string that will be matched to a device\'s sysOid string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression.', AutomationTemplate::OID_LENGTH))
             ->add('revision', HiddenType::class, ['required' => false]);
     }
 

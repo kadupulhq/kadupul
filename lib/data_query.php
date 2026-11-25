@@ -155,7 +155,7 @@ function run_data_query_work($host_id, $snmp_query_id, $automation = false, $for
             }
         }
 
-        query_debug_timer_offset('data_query', __esc('Verification of %s Local Data ID\'s Complete', cacti_sizeof($local_data)));
+        query_debug_timer_offset('data_query', __esc('Verification of %s Local Data IDs Complete', cacti_sizeof($local_data)));
 
         if ((cacti_sizeof($changed_ids) || cacti_sizeof($orphaned_ids)) && !$force) {
             /* update title cache for graph and data source */
@@ -343,7 +343,7 @@ function data_query_reindex_local($host_id, $snmp_query_id, $query_array)
             $push_out     = array();
 
             if (cacti_sizeof($local_data)) {
-                query_debug_timer_offset('data_query', __esc('Found %s Local Data ID\'s to Verify', cacti_sizeof($local_data)));
+                query_debug_timer_offset('data_query', __esc('Found %s Local Data IDs to Verify', cacti_sizeof($local_data)));
 
                 foreach ($local_data as $data_source) {
                     // Just in case there is a forced type from the data source page
@@ -628,7 +628,7 @@ function query_check_suitable($new_sort_field, $old_sort_field, $host_id, $snmp_
         return false;
     }
 
-    query_debug_timer_offset('data_query', __esc('New Sort Field validated.  Sort Field be updated.'));
+    query_debug_timer_offset('data_query', __esc('New Sort Field validated.  Sort Field will be updated.'));
 
     return true;
 }
@@ -804,7 +804,7 @@ function query_script_host($host_id, $snmp_query_id)
         // if the number of indexes does not exist use emulation
         if (!cacti_sizeof($script_num_index_array)) {
             query_debug_timer_offset('data_query', __esc('Data Query returned no indexes.'));
-            query_debug_timer_offset('data_query', __('&lt;arg_num_indexes&gt; exists in XML file but no data returned., \'Index Count Changed\' not supported'));
+            query_debug_timer_offset('data_query', __('&lt;arg_num_indexes&gt; exists in XML file but no data returned, \'Index Count Changed\' not supported'));
         }
 
         query_debug_timer_offset('data_query', __esc('Executing script for num of indexes \'%s\'', $script_path));
@@ -2847,7 +2847,7 @@ function api_data_query_errors($snmp_query_graph_id, $post)
             }
         }
     } else {
-        raise_message('assign_error', __('Your Graph Template has not Data Templates in use.  Please correct your Graph Template'), MESSAGE_LEVEL_ERROR);
+        raise_message('assign_error', __('Your Graph Template has no Data Templates in use.  Please correct your Graph Template'), MESSAGE_LEVEL_ERROR);
         $errors = true;
     }
 

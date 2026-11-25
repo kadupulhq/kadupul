@@ -25,7 +25,7 @@ $group_actions = array(
 $href_options = array(
     3 => array(
         'radio_value' => '4',
-        'radio_caption' => __('Defer to the Users Setting')
+        'radio_caption' => __('Defer to the User\'s Setting')
     ),
     0 => array(
         'radio_value' => '1',
@@ -44,7 +44,7 @@ $href_options = array(
 $gperm_options = array(
     0 => array(
         'radio_value' => '1',
-        'radio_caption' => __('Defer to the Users Setting')
+        'radio_caption' => __('Defer to the User\'s Setting')
     ),
     1 => array(
         'radio_value' => '2',
@@ -74,7 +74,7 @@ $fields_user_group_edit = array(
     'enabled' => array(
         'method' => 'checkbox',
         'friendly_name' => __('Enabled'),
-        'description' => __('Determines if user is able to login.'),
+        'description' => __('Determines if user is able to log in.'),
         'value' => '|arg1:enabled|',
         'default' => ''
     ),
@@ -452,7 +452,7 @@ function form_actions()
         if ((get_nfilter_request_var('drp_action') == '1') && (cacti_sizeof($group_array))) { /* delete */
             print "<tr>
 				<td class='textArea'>
-					<p>" . __n('Click \'Continue\' to delete the following User Group', 'Click \'Continue\' to delete following User Groups', cacti_sizeof($group_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to delete the following User Group', 'Click \'Continue\' to delete the following User Groups', cacti_sizeof($group_array)) . "</p>
 					<div class='itemlist'><ul>$group_list</ul></div>
 				</td>
 			</tr>";
@@ -465,7 +465,7 @@ function form_actions()
         if ((get_nfilter_request_var('drp_action') == '2') && (cacti_sizeof($group_array))) { /* copy */
             print "<tr>
 				<td class='textArea'>
-					<p>" . __n('Click \'Continue\' to Copy the following User Group to a new User Group.', 'Click \'Continue\' to Copy following User Groups to new User Groups.', cacti_sizeof($group_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to Copy the following User Group to a new User Group.', 'Click \'Continue\' to Copy the following User Groups to new User Groups.', cacti_sizeof($group_array)) . "</p>
 					<div class='itemlist'><ul>$group_list</ul></div>
 				</td>
 			</tr>
@@ -482,7 +482,7 @@ function form_actions()
         if ((get_nfilter_request_var('drp_action') == '3') && (cacti_sizeof($group_array))) { /* enable */
             print "<tr>
 				<td class='textArea'>
-					<p>" . __n('Click \'Continue\' to enable the following User Group.', 'Click \'Continue\' to enable following User Groups.', cacti_sizeof($group_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to enable the following User Group.', 'Click \'Continue\' to enable the following User Groups.', cacti_sizeof($group_array)) . "</p>
 					<div class='itemlist'><ul>$group_list</ul></div>
 				</td>
 			</tr>";
@@ -493,7 +493,7 @@ function form_actions()
         if ((get_nfilter_request_var('drp_action') == '4') && (cacti_sizeof($group_array))) { /* disable */
             print "<tr>
 				<td class='textArea'>
-					<p>" . __n('Click \'Continue\' to disable the following User Group.', 'Click \'Continue\' to disable following User Groups.', cacti_sizeof($group_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to disable the following User Group.', 'Click \'Continue\' to disable the following User Groups.', cacti_sizeof($group_array)) . "</p>
 					<div class='itemlist'><ul>$group_list</ul></div>
 				</td>
 			</tr>";

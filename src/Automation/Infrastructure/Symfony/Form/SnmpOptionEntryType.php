@@ -32,7 +32,7 @@ final class SnmpOptionEntryType extends AbstractType
         $builder
             ->add('snmp_version', ChoiceType::class, ['label' => 'SNMP Version', 'choices' => ['Version 1' => 1, 'Version 2' => 2, 'Version 3' => 3], 'invalid_message' => $invalid])
             ->add('snmp_port', IntegerType::class, self::integer('SNMP Port', 'Enter the UDP port number to use for SNMP (default is 161).', 1, 65535))
-            ->add('snmp_timeout', IntegerType::class, self::integer('SNMP Timeout', 'The maximum number of milliseconds Cacti will wait for an SNMP response (does not work with php-snmp support).', 0, SnmpOptionEntryChange::TIMEOUT_MAX))
+            ->add('snmp_timeout', IntegerType::class, self::integer('SNMP Timeout', 'The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).', 0, SnmpOptionEntryChange::TIMEOUT_MAX))
             ->add('snmp_retries', IntegerType::class, self::integer('SNMP Retries', 'The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.', 0, SnmpOptionEntryChange::RETRIES_MAX))
             ->add('max_oids', ChoiceType::class, ['label' => 'Maximum OIDs Per Get Request', 'choices' => array_combine(array_map('strval', SnmpOptionEntryChange::MAX_OIDS), SnmpOptionEntryChange::MAX_OIDS), 'choice_translation_domain' => false, 'invalid_message' => $invalid])
             ->add('bulk_walk_size', ChoiceType::class, ['label' => 'Bulk Walk Maximum Repetitions', 'choices' => ['Auto Detect on Re-Index' => -1, 'Auto Detect/Set on first Re-Index' => 0] + array_combine(array_map('strval', array_slice(SnmpOptionEntryChange::BULK_WALK_SIZES, 2)), array_slice(SnmpOptionEntryChange::BULK_WALK_SIZES, 2)), 'invalid_message' => $invalid])

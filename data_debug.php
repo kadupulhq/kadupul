@@ -835,12 +835,12 @@ function debug_view()
         ),
         array(
             'name' => 'rrd_folder_writable',
-            'title' => __('Is RRA Folder writeable by poller?'),
+            'title' => __('Is RRA Folder writable by poller?'),
             'value' => dirname($real_path)
         ),
         array(
             'name' => 'rrd_writable',
-            'title' => __('Is RRDfile writeable by poller?'),
+            'title' => __('Is RRDfile writable by poller?'),
             'value' => $real_path
         ),
         array(

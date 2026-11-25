@@ -42,7 +42,7 @@
 "Selected Poller Interval": "Elanelam-potoanan'ny Mpanangona voafidy"
 "Templates Using": "Modely mampiasa"
 "The amount of unknown data that can still be regarded as known.": "Ny habetsahan'ny angon-drakitra tsy fantatra izay mbola azo heverina ho fantatra."
-"The frequency that data will be collected from the Data Source?": "Ny matetika hanangonana ny angon-drakitra avy amin'ny loharanon-drakitra?"
+"The frequency that data will be collected from the Data Source.": "Ny matetika hanangonana ny angon-drakitra avy amin'ny loharanon-drakitra?"
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Ny isan'ny santionany ilaina alohan'ny hamenoana andalana iray ao amin'ny famaritana RRA. Ny RRA voalohany dia tokony hanana sanda 1 foana."
 "Title Format": "Endriky ny lohateny"
 "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph.": "Rehefa mijery kisary mifototra amin'ilay RRA resahina, ny elanelam-potoana tsotra haseho ho an'io kisary io."

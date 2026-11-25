@@ -292,11 +292,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "Iji bufee Eserese Nchịkọta dị n'okpuru gaa na Nchịkọta dabere na Ndebiri, buru ụzọ mepụta Ndebiri Nchịkọta maka Ndebiri Eserese '%s'."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "Iji bufee Eserese Nchịkọta dị n'okpuru gaa na Nchịkọta dabere na Ndebiri, ha ga-ejirịrị naanị otu Ndebiri Eserese. Biko pịa 'Laghachi' wee họrọ naanị Eserese Nchịkọta na-eji otu Ndebiri Eserese ahụ."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "Iji bufee Eserese Nchịkọta dị n'okpuru ka ha jiri Ndebiri Nchịkọta, otu ga-adịrịrị na mbụ. Biko pịa 'Laghachi' wee buru ụzọ mepụta Ndebiri Nchịkọta gị tupu ịnwaa ọzọ."
 
 #: aggregate_graphs.php
@@ -441,7 +441,7 @@ msgid "Template"
 msgstr "Atụmatụ"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "Atụmatụ Nchịkọta nke Eserese Nchịkọta a dabere na ya"
 
 #: aggregate_graphs.php
@@ -449,7 +449,7 @@ msgid "The internal database identifier for this object"
 msgstr "Ihe njirimara database dị n'ime maka ihe a"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "Eserese Nchịkọta ahọpụtara eyighị ka ha nwere Atụmatụ Nchịkọta dabara adaba."
 
 #: aggregate_graphs.php
@@ -520,7 +520,7 @@ msgid "Aggregate Templates"
 msgstr "Tẹmpletị Nchịkọta"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Enweghị ike ihichapụ Tẹmpletị Nchịkọta a na-eji eme ihe. Iji eme ihe pụtara na Nchịkọta na-ezo aka na ya."
 
 #: aggregate_templates.php
@@ -757,7 +757,7 @@ msgid "All your login sessions have been cleared."
 msgstr "Ekpochapụrụ oge nbanye gị niile."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "Adreesị Email a ga-eru gị."
 
 #: auth_profile.php
@@ -1111,7 +1111,7 @@ msgid "Clear Filtered"
 msgstr "Kpochaa Ndị Azachara"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "Pịa 'Gaa n'ihu' iji kagbuo Nchọpụta Netwọkụ na-aga n'ihu."
 
 #: automation_networks.php
@@ -1238,7 +1238,7 @@ msgid "Schedule"
 msgstr "Nhazi Oge"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "Ọnọdụ Ugbu A nke Nchọpụta Netwọkụ a"
 
 #: automation_networks.php
@@ -1677,11 +1677,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "Maka njirimara '%s', achọtara nsogbu '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "Ndekọ RRA ọ na-ekwe ka poller dee ya?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "RRDfile ọ na-ekwe ka poller dee ya?"
 
 #: data_debug.php
@@ -2059,7 +2059,7 @@ msgstr "Njikọ Bụ Naanị Ọgụgụ ruo mgbe achọtara faịlụ XML"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "Pịa 'Gaa n'ihu' iji Hichapụ Ajụjụ Data ndị a."
 
 #: data_queries.php
@@ -2068,7 +2068,7 @@ msgstr "Pịa 'Gaa n'ihu' iji hichapụ Njikọ Eserese Ajụjụ Data na-eson�
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "Pịa 'Gaa n'ihu' iji mepụta oyiri Ajụjụ Data ndị a."
 
 #: data_queries.php
@@ -2227,7 +2227,7 @@ msgid "The name of this Data Query."
 msgstr "Aha nke Ajụjụ Data a."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "Ọnụọgụ Atụmatụ Eserese na-eji Ajụjụ Data a."
 
 #: data_queries.php
@@ -2278,7 +2278,7 @@ msgstr "Họrọ Ngwaọrụ nke Isi Data a bụ nke ya."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "Pịa 'Gaa n'ihu' iji hichapụ Isi Data ndị a"
 
 #: data_sources.php
@@ -2409,7 +2409,7 @@ msgid "External"
 msgstr "Nke Èzí"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "Ọ bụrụ na Eserese anaghịzi eji Isi Iyi Data a eme ihe, enwere ike Ihichapụ ya."
 
 #: data_sources.php
@@ -2533,7 +2533,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "Ma a ga-anakọta data maka Isi Iyi Data a ma ọ bụ na a gaghị anakọta ya. A na-achịkwa ya n'ọkwa Atụmatụ Data."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "Mgbe ị kagbuchara igbe nhọrọ a wee Chekwaa Tẹmpletị Data ahụ, Isi Data ọ bụla dị ugbu a dabere na Tẹmpletị Data a ga-efunarị Data Omenala ha. Nke a nwere ike ibute Nchịkọta Data na Eserese mebiri emebi"
 
 #: data_templates.php
@@ -2595,7 +2595,7 @@ msgid "Data Templates [new]"
 msgstr "Tẹmpletị Data [ọhụrụ]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "Enweghị ike ịgbanwe Tẹmpletị Data a na-eji eme ihe"
 
 #: data_templates.php
@@ -2672,7 +2672,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "Agbanyụọla ọnụọgụgụ a n'ihi na ewepụtara ya site na Ngwaọrụ ahụ ma ọ bụ naanị-ọgụgụ."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "Agbanyụọla ọnụọgụgụ a n'ihi na ewepụtara ọnụọgụgụ ya site na Ngwaọrụ ma ọ bụ ihe Ajụjụ Data pụrụ iche nke na-esochi njikọ Ajụjụ Data dị mkpa."
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2798,7 +2798,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "Pịa 'Gaa n'ihu' iji mepụta oyiri Tẹmpletị Eserese ndị a. Ị nwere ike ịgbanwe usoro isiokwu maka Tẹmpletị Eserese ọhụrụ ma ọ bụrụ na ịchọrọ."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "Pịa 'Gaa n'ihu' iji mee Nmekọrịta Zuru Ezu n'etiti Eserese gị na Tẹmpletị Eserese ahọpụtara. Ọ bụrụ na i nwere ọnọdụ ebe Ihe Eserese anaghị adaba na Tẹmpletị Eserese, buru ụzọ nwaa nhọrọ Nmekọrịta Eserese Ngwa Ngwa n'ihi na ọ ga-ewe obere oge. Ọrụ a dị mkpa ma ọ bụrụ na i nwere Eserese dị na ọtụtụ nsụgharị nke Tẹmpletị Eserese ma chọọ ime ka ha niile yie n'ọdịdị."
 
 #: graph_templates.php
@@ -3130,7 +3130,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "Gbanwee Ngwaọrụ Jikọtara na Eserese"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Họrọ Tẹmpletị Eserese ma pịa 'Gaa n'ihu' iji gbanwee Tẹmpletị Eserese maka Eserese ndị a. Biko rịba ama, na ọ bụ naanị Tẹmpletị Eserese dakọtara ka a ga-egosipụta. A na-achọpụta ndakọrịta site na ndị nwere otu Isi Data."
 
 #: graphs.php
@@ -3336,7 +3336,7 @@ msgid "The selected Tree is not available."
 msgstr "Osisi ahọpụtara adịghị."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "Enweghị Atụmatụ Nchịkọta akọwapụtara ugbu a maka Atụmatụ Eserese a. Biko buru ụzọ mepụta Atụmatụ Nchịkọta maka Atụmatụ Eserese nke Eserese ahọpụtara ma nwaa ọzọ, ma ọ bụ mepụta Eserese Nchịkọta na-enweghị atụmatụ."
 
 #: graphs.php
@@ -3530,20 +3530,20 @@ msgid "Class"
 msgstr "Klaasị"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "Pịa 'Gaa n'ihu' iji hichapụ Ajụjụ Data ndị a ga-ewepụ njikọ ha na Tẹmpletị Ngwaọrụ."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "Pịa 'Gaa n'ihu' iji hichapụ Tẹmpletị Eserese ndị a ga-ewepụ njikọ ha na Tẹmpletị Ngwaọrụ."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "Pịa 'Gaa n'ihu' iji Mekọrịta Ngwaọrụ jikọtara na Tẹmpletị Ngwaọrụ ahọpụtara. Rịba ama na omume a nwere ike iwe oge dabere na ọnụọgụ Ngwaọrụ ejikọtara na Tẹmpletị Ngwaọrụ ahụ."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "Pịa 'Gaa n'ihu' iji hichapụ Ajụjụ Data ndị a ga-ewepụ njikọ ha na Tẹmpletị Ngwaọrụ."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "Pịa 'Gaa n'ihu' iji hichapụ Tẹmpletị Ngwaọrụ ndị a."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "Pịa 'Gaa n'ihu' iji hichapụ Tẹmpletị Eserese ndị a ga-ewepụ njikọ ha na Tẹmpletị Ngwaọrụ."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3633,7 +3633,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Mekọrịta Ngwaọrụ na Atụmatụ Ngwaọrụ"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "Klas nke Atụmatụ Ngwaọrụ a. Aha Klas kwesịrị igosipụta ọrụ ya."
 
 #: host_templates.php
@@ -3658,7 +3658,7 @@ msgstr "NJỌ NKE UKWUU: Ị ga-abanyerịrị iji nweta mpaghara a nke Kadupul.
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "Ọ bụrụ na i chere na nke a bụ njehie. Biko kpọtụrụ Onye Nchịkwa Kadupul gị."
 
 #: include/auth.php
@@ -3674,7 +3674,7 @@ msgid "Not Logged In"
 msgstr "Abanyeghị"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "Naanị Ndị Nchịkwa Kadupul nwere ikike Nwụnye/Nkwalite nwere ike ịbanye n'oge a"
 
 #: include/auth.php
@@ -5058,7 +5058,7 @@ msgid "Operator"
 msgstr "Onye Ọrụ"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "Akọwapụtaghị ibe. Ya mere, enweghị ike igosipụta ya."
 
 #: include/global_arrays.php
@@ -5624,8 +5624,8 @@ msgid "Use the First Handler Found"
 msgstr "Jiri Onye Njikwa Mbụ Achọtara"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "Jiri Onye Njikwa GetText MonoTranslator"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "Jiri Onye Njikwa GetText MoTranslator"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5770,7 +5770,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Mgbe ọnụọgụ ndepụta Ajụjụ Data gbanwere, a ga-eme Re-Index."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Mgbe oge ọrụ SNMP nke Ngwaọrụ laghachiri azụ, a ga-eme Re-Index."
 
 #: include/global_arrays.php
@@ -5814,7 +5814,7 @@ msgid "You are not allowed to change your password."
 msgstr "Ekwereghị gị ịgbanwe okwuntụghe gị."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "Ị ga-agbanwuo nkwenye onye ọrụ e wuru n'ime iji jiri njirimara a."
 
 #: include/global_arrays.php
@@ -5976,17 +5976,17 @@ msgstr "OID %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "OID %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repetitions"
+msgid "%d Repetition"
 msgstr "Nkwughachi %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repitition"
+msgid "%d Repetitions"
 msgstr "Nkwughachi %d"
 
 #: include/global_form.php
@@ -6195,7 +6195,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "Họrọ Ajụjụ Data iji tinye na iwu a."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "Họrọ Ihe Sub-Tree iji jikọọ na ya.<br>Jide n'aka na ọ ka dị ebe ahụ mgbe emejupụtara iwu a!"
 
 #: include/global_form.php
@@ -6205,6 +6205,10 @@ msgstr "Họrọ Osisi maka Ihe Osisi ọhụrụ."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "Họrọ aha maka isi data a. O nwere ike ịgụnye mgbanwe nnọchi dị ka |host_description| ma ọ bụ |query_fieldName|. Maka ndepụta zuru ezu nke mkpado nnọchi akwadoro, biko lee akwụkwọ Kadupul."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "Họrọ aha pụrụ iche iji nọchite anya akụkụ data a n'ime RRDfile."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6264,10 +6268,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "Họrọ ụzọ ịchọrọ iji chịkọta data maka ụzọ Ntinye Data a."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "Họrọ aha pụrụ iche iji nọchite anya akụkụ data a n'ime RRDfile."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "Nhọrọ Nkịtị"
 
@@ -6320,7 +6320,7 @@ msgid "Determines if the user account is locked."
 msgstr "Na-ekpebi ma akpọchịrị akaụntụ onye ọrụ."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "Na-ekpebi ma onye ọrụ nwere ike ịbanye."
 
 #: include/global_form.php
@@ -6381,7 +6381,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "Tinye Ọnọdụ SNMP iji jiri maka ngwaọrụ a."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Tinye ID Injini SNMP v3 iji jiri maka ngwaọrụ a. Hapụ mpaghara a n'efu iji jiri ID Injini SNMP akọwara maka onye nnata Ọkwa SNMPv3 ọ bụla."
 
 #: include/global_form.php
@@ -6584,7 +6584,7 @@ msgid "Include Prefix Text"
 msgstr "Gụnye Ederede Mmalite"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "Gụnye Isiokwu GPRINT nke Eserese isi iyi ya na Eserese Nchịkọta."
 
 #: include/global_form.php
@@ -7092,7 +7092,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "Data e zigara na script, nke gụnyere ụzọ zuru ezu gaa na script na isi iyi ntinye n'ime brackets &lt;&gt;."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "Ugboro ole a ga-anakọta data site na Isi Iyi Data?"
 
 #: include/global_form.php
@@ -7196,7 +7196,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "Ebe anụ ahụ nke Ngwaọrụ. Ederede efu a nwere ike ịbụ ụlọ, ebe rack, wdg."
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "Nsonaazụ nke nnyocha nkwenye Whitespace maka Ụzọ Ntinye pụrụ iche. Ọ bụrụ na Eriri Ntinye agbanwee, ma emeliteghị faịlụ Whitelist, agaghị ekwe ka e mepụta Eserese."
 
 #: include/global_form.php
@@ -7212,7 +7212,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Ụdị eserese a na-emepụta; PNG, GIF ma ọ bụ SVG. Nhọrọ ụdị onyonyo eserese dabere nke ukwuu na RRDtool."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Ụdị ngwugwu ping a ga-ezipu. <br><i>RỊBA AMA: ICMP na Linux/UNIX chọrọ ikike root.</i> <br><i>RỊBA AMA: TCP Ping Mechiri - Ọbụlagodi na tcp ping agaghị nke ọma, enwere ike iwere ngwaọrụ ahụ dịka UP.</i>"
 
 #: include/global_form.php
@@ -7308,7 +7308,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "Akara Kwụ Ọtọ (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "Saịtị nke Ngwaọrụ a jikọtara na ya."
 
 #: include/global_form.php
@@ -7332,11 +7332,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "Mgbe ị na-ele Eserese dabere na RRA a na-ekwu maka ya, Ogologo Oge ndabere iji gosi maka Eserese ahụ."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Mgbe ị haziri akara axis aka ekpe, tinye iwu n'ụdị data. Ụdị a na-akwado gụnyere \"numeric\" ebe a na-ewere data dịka ọnụọgụ, \"timestamp\" ebe a na-akọwa ọnụọgụgụ dịka akara oge UNIX (ọnụọgụ sekọnd kemgbe Jenụwarị 1970) ma gosipụta ya site na iji ụdị strftime (ndabere bụ \"%Y-%m-%d %H:%M:%S\"). Leekwa --units-length. N'ikpeazụ \"duration\" ebe a na-akọwa ọnụọgụgụ dịka ogologo oge na milliseconds. Nhazi na-eso iwu nke valstrfduration ruru eru PRINT/GPRINT."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Mgbe ị haziri akara axis aka nri, tinye iwu n'ụdị data. Ụdị a na-akwado gụnyere \"numeric\" ebe a na-ewere data dịka ọnụọgụ, \"timestamp\" ebe a na-akọwa ọnụọgụgụ dịka akara oge UNIX (ọnụọgụ sekọnd kemgbe Jenụwarị 1970) ma gosipụta ya site na iji ụdị strftime (ndabere bụ \"%Y-%m-%d %H:%M:%S\"). Leekwa --units-length na --right-axis-format. N'ikpeazụ \"duration\" ebe a na-akọwa ọnụọgụgụ dịka ogologo oge na milliseconds. Nhazi na-eso iwu nke valstrfduration ruru eru PRINT/GPRINT."
 
 #: include/global_form.php
@@ -7500,11 +7500,11 @@ msgid "56 Gbps Ethernet"
 msgstr "Ethernet 56 Gbps"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote><i>Nkwado Njirimara Dị N'ime</i> - Kadupul na-ahụ maka nkwado njirimara onye ọrụ, nke na-enye gị ohere ịmepụta ndị ọrụ ma nye ha ikike na mpaghara dị iche iche n'ime Kadupul.<br><br><i>Nkwado Njirimara Web Basic</i> - Sava web na-ahụ maka nkwado njirimara. Enwere ike ịgbakwunye ma ọ bụ mepụta ndị ọrụ na-akpaghị aka na mbanye mbụ ma ọ bụrụ na akọwara Onye Ọrụ Tẹmpletị, ma ọ bụghị ya, a ga-eji ikike ọbịa akọwara mee ihe.<br><br><i>Nkwado Njirimara LDAP</i> - Na-enye ohere maka nkwado njirimara megide sava LDAP. A ga-emepụta ndị ọrụ na-akpaghị aka na mbanye mbụ ma ọ bụrụ na akọwara Onye Ọrụ Tẹmpletị, ma ọ bụghị ya, a ga-eji ikike ọbịa akọwara mee ihe. Ọ bụrụ na agbanyeghị modul LDAP nke PHP, Nkwado Njirimara LDAP agaghị apụta dị ka nhọrọ a ga-ahọrọ.<br><br><i>Nkwado Njirimara Ọtụtụ Dọmenị LDAP/AD</i> - Na-enye ndị nchịkwa ohere ịkwado ọtụtụ otu dị iche iche sitere na ndekọ LDAP/AD dị iche iche iji nweta akụrụngwa Kadupul. Dị ka Nkwado Njirimara LDAP, modul PHP LDAP dị mkpa iji jiri usoro a.</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "Ndepụta ID Ngwaọrụ e ji rikọm kewaa nke ị chọrọ ka ọ dị n'ọnọdụ Debug n'oge nchịkọta data. Ọkwa Debug a dị naanị n'oge usoro nnyocha Kadupul."
 
 #: include/global_settings.php
@@ -7512,7 +7512,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "Nhọrọ naanị maka onye mmepe iji chọpụta mmepụta Isi Data karịsịa gburugburu nyocha maka ịdị iche."
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "Ndepụta aha host DNS ma ọ bụ adreesị IP e ji oghere kewaa maka sava LDAP ziri ezi. Kadupul ga-anwa iji sava LDAP site n'aka ekpe gaa n'aka nri iji kwado njirimara onye ọrụ."
 
 #: include/global_settings.php
@@ -7732,7 +7732,7 @@ msgid "By Template/Data Query"
 msgstr "Site na Tẹmpletị/Ajụjụ Data"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Site na ndabere, enyemaka ibe Kadupul dị na kadupul.org. Otú ọ dị, ọ bụrụ na sistemụ gị enweghị ohere ịntanetị, ị nwere ike ibudata akwụkwọ ahụ n'ime ụlọ n'usoro HTML ma kwado ya n'ebe 'docs' nke sava Kadupul gị. Ọ bụrụ na ị họrọ naanị iji ebe dị n'ime ụlọ maka akwụkwọ enyemaka ibe, kaa akara na igbe nhọrọ a."
 
 #: include/global_settings.php
@@ -7756,7 +7756,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "Kaa akara na igbe nhọrọ a ma ọ bụrụ na ịchọrọ ịnwale Isi Data tupu mmepụta ha maka Tẹmpletị Eserese ọhụrụ na ndị ebubatara ọhụrụ. Site na Ịnwale Isi Data agbanyere, ọ bụrụ na Isi Data eweghachighị data ziri ezi, agaghị emepụta Eserese ahụ. Ntọala a dị mkpa ma ọ bụrụ na ịchọrọ inwe Tẹmpletị Ngwaọrụ zuru oke nke nwere ike ịgụnye Tẹmpletị Eserese ndị ọzọ enwere ike itinye n'ụzọ ahọpụtara dabere na njirimara nke Ngwaọrụ ahụ n'onwe ya. Nkọwa: Ọ bụrụ na ị nwere skripụt na-agba ogologo oge dị ka Isi Data, oge iji mepụta Eserese ga-abawanye."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "Họrọ 'agbanyere' iji kwere nhazi asụsụ nke Kadupul. Ọnọdụ siri ike chọrọ ka plọgin niile etinyere na sistemụ gị kwadokwa asụsụ a rịọrọ. Ọ bụrụ na ọ bụghị eziokwu, a ga-egosipụta ihe niile na Bekee."
 
 #: include/global_settings.php
@@ -7936,7 +7936,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Onye Ọrụ Nkwado SNMP v3 Ndabere maka Ngwaọrụ ọhụrụ niile."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "ID Injini SNMP v3 Ndabere maka Ngwaọrụ ọhụrụ niile. Hapụ mpaghara a n'efu iji jiri ID Injini SNMP akọwara maka onye nnata Ọkwa SNMPv3 ọ bụla."
 
 #: include/global_settings.php
@@ -8152,11 +8152,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "Gbanye ma ọ bụ Gbanyụọ ntụnye aka LDAP. Ọ bụrụ na agbanyụrụ ya, o nwere ike ime ka ọchụchọ dị ngwa."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "Agbanyere Nkwado Gradient maka chaatị AREA na STACK."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "Na-enyere ntinye ozugbo nke ndekọ n'ime poller output boost aka nke na-ebute mbelata oge 25% na usoro nnyocha ọ bụla."
 
 #: include/global_settings.php user_domains.php
@@ -8248,7 +8248,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "Maka ojiji ya na Nkwado Njikọ Mpụga nke Kadupul. Site na iji ntọala a, ị nwere ike izo Dashboard Kadupul, ka i wee nwee ike igosi naanị ibe nke gị."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "Maka ndị ọrụ nwere ohere Console naanị, ogologo oge onye ọrụ a nwere ike ịnọ na nbanye tupu apụọ ya na-akpaghị aka. Rịba ama na ọ bụrụ na ị rụbeghị ọrụ ihe karịrị otu awa, ọ ga-adị mkpa ka ị megharịa ihe nchọgharị gị. Rịbakwa ama na ntọala a enweghị mmetụta mgbe agbanyere Cookies Nkwenye."
 
 #: include/global_settings.php
@@ -8396,11 +8396,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "Otu ị chọrọ isi lee Eserese Oge Ezigbo?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "Ugboro ole ka ekwesịrị imelite Ndekọ Ọnụọgụgụ Kwa Ụbọchị?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "Ugboro ole ka ekwesịrị inyocha RRD ?"
 
 #: include/global_settings.php
@@ -8408,7 +8408,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "Ogologo oge otu ọsọ nnyocha nwere ike ịmalite ogbe iwu ọhụrụ. Izipu ọkwa ndị dị n'ahịrị na-eso nnyocha na oge fọdụrụ, ma nwee ike izipu otu ogbe ọbụna mgbe oke oge ahụ gwụrụ. A ga-ebu ụzọ nyochaa iwu ndị a na-eruteghị na ọsọ na-esote."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "OID ole ka ekwesịrị iweghachi n'otu arịrịọ snmpbulkwalk? Maka Ngwaọrụ nwere osisi SNMP buru ibu, ịbawanye ogo a ga-eme ka arụmọrụ re-index dịkwuo mma na WAN."
 
 #: include/global_settings.php
@@ -8416,15 +8416,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "Faịlụ log ole ka ị chọrọ idobe? Jiri 0 ka ị ghara iwepụ log ọ bụla. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "Ugboro ole ị chọrọ ka ngosi log Kadupul melite."
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Otu Kadupul kwesịrị isi kwado Ụbọchị Onye Ahịa dabere na mpaghara oge ihe nchọgharị Onye Ahịa."
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Otu Kadupul ga-esi jikwaa ndekọ ihe omume."
 
 #: include/global_settings.php
@@ -8440,7 +8440,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "Ọ bụrụ na Enyochara Kadupul ga-edekọ ozi LDAP ọzọ na log Kadupul n'oge ọrụ Njikọ na Nchọta."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Ọ bụrụ na Kadupul enweghị ike ikpebi ọsọ interface n'ihi na etinyeghị ifSpeed ma ọ bụ ifHighSpeed ma ọ bụ na ha bụ efu, gịnị bụ uru kachasị nke ị chọrọ na RRDfiles ga-esi pụta."
 
 #: include/global_settings.php
@@ -8468,7 +8468,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "Ọ bụrụ na tebụl mmepụta boost karịrị ogo a, na ndekọ, mmelite ga-ewere ọnọdụ."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "Ọ bụrụ na boost poller karịrị oge arụmọrụ a, a ga-etinye ịdọ aka ná ntị na cacti log,"
 
 #: include/global_settings.php
@@ -8476,7 +8476,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "Ọ bụrụ na ndekọ a abụghị oghere, mgbe ahụ a ga-echekwa RRDfiles mbụ gị na ebe a."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "Ọ bụrụ na ubi a abụghị oghere, Boost ga-edekọ mmepụta RRDUpdate sitere na usoro boost\tpoller."
 
 #: include/global_settings.php
@@ -8484,7 +8484,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "Ọ bụrụ na enyochara nhọrọ a, Kadupul ga-emejupụta tebụl SNMP Agent na ozi ngwaọrụ na sistemụ Kadupul. Ọ naghị agbanye SNMP Agent n'onwe ya."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "Ọ bụrụ na ị na-enwe nsogbu na Ndị Nchịkọta Data Kadupul, tọọ ụzọ faịlụ a ma a ga-atụgharị njehie ọkọlọtọ Ndị Nchịkọta Data na faịlụ a"
 
 #: include/global_settings.php
@@ -8664,7 +8664,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "Ihe Isi Iyi Data Kachasị Kwa Ngafe"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "Ogo E-Mail Kachasị"
 
 #: include/global_settings.php
@@ -8719,21 +8719,21 @@ msgstr "Obosara Osisi Opekempe"
 msgid "Mode"
 msgstr "Ọnọdụ"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Ụdị cacti ga-anwa iji nyochaa megide seva LDAP.<blockquote><i>Enweghị Nchọta</i> - Enweghị nchọta Aha Pụrụ Iche (DN) na-eme, naanị nwaa ijikọ na ụdị Aha Pụrụ Iche (DN) enyere.<br><br><i>Nchọta Amaghị Aha</i> - Na-anwa ịchọ aha njirimara megide ndekọ LDAP site na njikọ amaghị aha iji chọta Aha Pụrụ Iche (DN) nke onye ọrụ.<br><br><i>Nchọta Pụrụ Iche</i> - Na-anwa ịchọ aha njirimara megide ndekọ LDAP site na Aha Pụrụ Iche (DN) Pụrụ Iche na Okwuntụghe Pụrụ Iche maka njikọ iji chọta Aha Pụrụ Iche (DN) nke onye ọrụ."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "Kwa Ọnwa na Sọnde"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "Mpaghara Oge Ihe Nchọgharị M"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
-msgstr "NaN's"
+msgid "NaNs"
+msgstr "NaNs"
 
 #: include/global_settings.php
 msgid "Native Alerting"
@@ -9228,7 +9228,7 @@ msgid "Server(s)"
 msgstr "Seva"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Boost ọ ga-akwado mmelite RRD mgbe achọrọ na Kadupul? Ọ bụrụ na ị gbanyụọ ya, mgbanwe a agaghị arụ ọrụ ruo mgbe oge polling na-esote gasịrị. Mgbe ị nwere Ndị Nchịkọta Data Dị N'ebe Dị Anya, a chọrọ ka agbanwuo ntọala a."
 
 #: include/global_settings.php
@@ -9248,7 +9248,7 @@ msgid "Should image caching be enabled?"
 msgstr "E kwesịrị ịgbanwuo caching onyonyo?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "E kwesịrị ịlele Has Graphs na Has Data Sources na Ndabere."
 
 #: include/global_settings.php
@@ -9272,7 +9272,7 @@ msgid "Show business hours"
 msgstr "Gosi awa azụmahịa"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "Gosi naanị ebe ndị dị na saịtị ngwaọrụ ahọpụtara."
 
 #: include/global_settings.php
@@ -9292,11 +9292,11 @@ msgid "Site Security"
 msgstr "Nchekwa Saịtị"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "Ụfọdụ ihu Kadupul na-akwado Drag-N-Drop. Ọ bụrụ na a lelee ya, a ga-agbanwuo nhọrọ a. Rịba ama: Maka onye ọrụ nwere nsogbu anya, enwere ike ịgbanyụ nhọrọ a."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "Aha ngalaba e ji oghere kewaa nke a ga-ekwe ka e nweta na mpụga Seva Weebụ n'onwe ya. Nke a dị mkpa maka ndị ọrụ họọrọ iji CDN, ma ọ bụ saịtị nnabata. Isi iyi nwere ike ịgụnye wildcards dịka: *.mydomain.com, ma ọ bụ protocol, dịka: https://*.example.com. Isi Iyi Ndị Ọzọ a gụnyere naanị ụdị Onyonyo, CSS na JavaScript."
 
 #: include/global_settings.php
@@ -9440,15 +9440,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "Eriri (Threads) Ndabere ekwere maka usoro ọ bụla. RỊBA AMA: Malite na Kadupul 1.2+, a na-edobe ntọala a na Onye Nchịkọta Data, nke a bụ naanị Preset. Iji ọnụọgụ dị elu mgbe ị na-eji Spine ga-eme ka arụmọrụ ka mma. Agbanyeghị, hụ na ị nwere njikọ MySQL/MariaDB zuru ezu iji kwado nha nhata a: connections = data collectors * processes * (threads + script servers). Ị ga-ahụrịrị na ị nwere njikọ mapụtara zuru ezu maka njikọ nbanye onye ọrụ kwa."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "Adreesị Ozi-e iji ziga Ozi-e Ọkwa Akpaaka ma ọ bụrụ na akọwapụtaghị ya n'ọkwa Netwọkụ Akpaaka. Ọ bụrụ na ogige a, ma ọ bụ ọnụọgụ Netwọkụ Akpaaka efu, Kadupul ga-eji akaụntụ Ozi-e nke Onye Nchịkwa Kadupul Mbụ."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "Adreesị Ozi-e iji mee maka Ozi-e Ọkwa Akpaaka ma ọ bụrụ na akọwapụtaghị ya n'ọkwa Netwọkụ Akpaaka. Ọ bụrụ na ogige a, ma ọ bụ ọnụọgụ Netwọkụ Akpaaka efu, Kadupul ga-eji Adreesị Ozi-e Site na ndabere sistemụ."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "Aha Ozi-e iji mee maka Ozi-e Ọkwa Akpaaka ma ọ bụrụ na akọwapụtaghị ya n'ọkwa Netwọkụ Akpaaka. Ọ bụrụ na ogige a, ma ọ bụ ọnụọgụ Netwọkụ Akpaaka efu, Kadupul ga-eji Aha Site na ndabere sistemụ."
 
 #: include/global_settings.php
@@ -9560,7 +9560,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "Ọnụọgụ ndabere nke usoro na-agba n'otu oge maka Onye Nchịkọta Data ọ bụla. RỊBA AMA: Malite na Kadupul 1.2, a na-edobe ntọala a na Onye Nchịkọta Data. N'ihu, ọnụọgụ a bụ naanị preset maka Onye Nchịkọta Data. Iji ọnụọgụ dị elu mgbe ị na-eji cmd.php ga-eme ka arụmọrụ ka mma. A kacha edozi mmụba arụmọrụ na Spine site na parameter threads. Mgbe ị na-eji Spine, anyị na-atụ aro ọnụọgụ dị ala ma jiri threads kama. Mgbe ị na-eji cmd.php, ejila ihe karịrị 2x ọnụọgụ cores CPU."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "Ọnụọgụ ndabere nke ahịrị a ga-egosipụta maka tebụl."
 
 #: include/global_settings.php
@@ -9576,7 +9576,7 @@ msgid "The encryption method to use for the Email."
 msgstr "Ụzọ nzuzo (encryption) a ga-eji maka Ozi-e."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "Akara mkpịsị aka nke igodo RSA ọha ugbu a nke proxy ndabere na-eji. A chọrọ nke a iji guzobe njikọ tụkwasịrị obi."
 
 #: include/global_settings.php
@@ -9636,6 +9636,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Oge kachasị script Ọnụọgụgụ Isi Iyi Data nke Kadupul nwere ike ịgba n'emeghị njehie nkwụsị oge ma gbuo ya."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "Oge kachasị script Ndozi nke Kadupul nwere ike ịgba n'emeghị njehie nkwụsị oge ma gbuo ya."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Oge kachasị script nnyocha RRDfile nke Kadupul nwere ike ịgba n'emeghị njehie nkwụsị oge ma gbuo ya."
 
@@ -9644,19 +9648,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Oge kachasị script Mmepụta Akụkọ nke Kadupul nwere ike ịgba n'emeghị njehie nkwụsị oge ma gbuo ya."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Oge kachasị script Ndozi nke Kadupul nwere ike ịgba n'emeghị njehie nkwụsị oge ma gbuo ya."
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Oge kachasị script Spikekill nke Kadupul nwere ike ịgba n'emeghị njehie nkwụsị oge ma gbuo ya."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "Ọnụọgụ kachasị nke Ndekọ Ngwaọrụ a ga-emepụta dabere na ID Ngwaọrụ e mere hash."
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "Nha kachasị nke ozi E-Mail gụnyere mgbakwunye niile."
 
 #: include/global_settings.php
@@ -9696,19 +9696,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "Ọnụọgụ kọlụm ị ga-eji mgbe ị na-egosipụta eserese Thumbnail n'ọnọdụ Osisi."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "Ọnụọgụ usoro DSStats na-agba n'otu oge iji hazie Isi Iyi Data niile."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "Ọnụọgụ usoro Iwu Poller na-agba n'otu oge. A ga-enwekarị otu iwu na-agba n'otu oge maka host ọ bụla n'ime ọdọ Iwu Poller."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "Ọnụọgụ usoro nnyocha RRDfile na-agba n'otu oge iji hazie faịlụ rrd niile."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "Ọnụọgụ usoro boost na-agba n'otu oge iji hazie RRD niile dị na tebụl boost."
 
 #: include/global_settings.php
@@ -9784,7 +9784,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "Ụzọ gaa na binary snmpwalk gị."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "Ụdị poller a ga-eji. Ntọala a ga-arụ ọrụ n'oge polling na-esote."
 
 #: include/global_settings.php
@@ -9820,6 +9820,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "Oge awa azụmahịa gị na-amalite. Ụdị: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "Ogologo oge a ị chọrọ ịhụ na eserese ndabere."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "Aha onye ọrụ iji mee nkwenye mgbe a na-ezipu site na SMTP. (Hapụ ya efu ma ọ bụrụ na ị chọghị nkwenye.)"
 
@@ -9852,28 +9856,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "A na-edobe ntọala ndị a n'ọkwa Onye Nchịkọta Data. Ọnụọgụgụ ndị dị ebe a bụ naanị ndabere e ji mee mgbe mbụ a na-emepụta Onye Nchịkọta Data."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "Nke a bụ akaụntụ Ozi-e e ji ezipu ozi nnwale iji hụ na ihe niile na-arụ ọrụ nke ọma."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "Nke a bụ ebe seva a ga-eji maka njikọ gaa na saịtị Kadupul. Nke a kwesịrị ịgụnye subdirectory ma ọ bụrụ na Kadupul anaghị agba site na folda mgbọrọgwụ."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "Nke a bụ mkpụrụedemede ole a ga-ekwe ka ọ dị tupu a kechie ahịrị n'ime Ozi-e na-akpaghị aka. (0 = Agbanyụọla)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "Nke a bụ ọnụọgụ ụbọchị kachasị tupu okwuntụghe akwụsị ịrụ ọrụ."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "Nke a bụ ọnụọgụ ụbọchị kachasị tupu agbanyụọ akaụntụ ndị na-anaghị arụ ọrụ. Ewepụrụ akaụntụ Admin n'iwu a."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "Nke a bụ ogologo kacha nta nke okwuntụghe ekwere."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9896,12 +9884,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "Nke a bụ ebe, na seva weebụ ebe a ga-echekwa RRDfiles na faịlụ PNG na cache. Poller ga-elekọta cache a. Hụ na ị nwere ikike ịgụ na ide ziri ezi na folda a"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "Nke a bụ ọnụọgụ ụbọchị kachasị tupu okwuntụghe akwụsị ịrụ ọrụ."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "Nke a bụ ọnụọgụ ụbọchị kachasị tupu agbanyụọ akaụntụ ndị na-anaghị arụ ọrụ. Ewepụrụ akaụntụ Admin n'iwu a."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "Nke a bụ ogologo kacha nta nke okwuntụghe ekwere."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "Nke a bụ oge kacha nta a na-akwado n'etiti mmelite Eserese. A na-ejikwa ọnụọgụgụ a tọọ ụfọdụ àgwà RRDfile. Ọ bụrụ na ị nwere Ngwaọrụ na-echekwa data na cache ma ọ naghị enye mmelite realtime, ị nwere ike ịba ụba Oge Umeghari Kacha Nta ndabere iji gbochie imepụta Eserese nwere oghere."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "Nke a bụ ụzọ gaa na sendmail na seva gị. (A na-eji ya naanị ma ọ bụrụ na ahọpụtara Sendmail dịka Ọrụ Ozi)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "Nke a bụ ebe seva a ga-eji maka njikọ gaa na saịtị Kadupul. Nke a kwesịrị ịgụnye subdirectory ma ọ bụrụ na Kadupul anaghị agba site na folda mgbọrọgwụ."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9916,15 +9920,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "Ntọala a bụ maka sistemụ otu poller naanị iji wughachi tebụl mmepụta poller n'oge polling ọ bụla iji gbochie tebụl ebe nchekwa ịgbanwe swap na sistemụ buru ibu nke nwere nnukwu databases nwere ike iji swap."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "Ogologo oge a ị chọrọ ịhụ na eserese ndabere."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "Ọnụọgụgụ a na-anọchite anya ọnụọgụ spikes kachasị ị ga-ewepụ na RRA Eserese."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "Ọnụọgụgụ a na-anọchite anya ọnụọgụ ihe nlele nkezi dị elu na nke dị ala a ga-ewepụ na setịpụ ihe nlele tupu agbakọọ Nkezi Variance. Ọ bụrụ na ị họrọ ọnụọgụgụ outlier nke 5, mgbe ahụ a ga-ewepụ ma nkezi 5 kachasị elu ma nke kachasị ala."
 
 #: include/global_settings.php
@@ -9945,7 +9945,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "Nke a ga-achọ ka okwuntụghe ọhụrụ nwee opekata mpe 1 mkpụrụedemede pụrụ iche."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "Nke a ga-achọ ka okwuntụghe ọhụrụ nwee ma mkpụrụedemede obere na nnukwu mkpụrụedemede."
 
 #: include/global_settings.php
@@ -10033,7 +10033,7 @@ msgid "Use Custom Fonts"
 msgstr "Jiri Mkpụrụ Edemede Omenala"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "Jiri obere folda dị iche maka faịlụ RRD nke host ọ bụla. Aha RRDfiles ga-abụ otu n'ime ndị a:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>I nwere ike ime mgbanwe a mgbe ntinye gasịrị site n'ịgba script CLI <b>structure_rra_paths.php</b> mgbe i mechara mgbanwe ahụ. RỊBA AMA: Ọ bụrụ na ị gbanwee ọnụọgụgụ Max Directories iji belata ọnụọgụ ndekọ, ma ọ bụ ọ bụrụ na ị gbanwee Ụkpụrụ Ndekọ, agaghị ekpochapụ ndekọ efu mgbe ị gbasịrị script <b>structure_rra_paths.php</b> ọzọ."
 
 #: include/global_settings.php
@@ -10073,11 +10073,11 @@ msgid "Weekly on Sunday"
 msgstr "Kwa Izu na Sọnde"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Ọkwa nkọwa ole ka ị chọrọ iziga na faịlụ ndekọ. ỊDỌ AKA NÁ NTỊ: Ịhapụ n'ọnọdụ ọ bụla karịa NONE ma ọ bụ LOW nwere ike igwụ ohere diski gị ngwa ngwa."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Ọkwa nkọwa ole ka ị chọrọ iziga na faịlụ ndekọ. ỊDỌ AKA NÁ NTỊ: Ịhapụ n'ọnọdụ ọ bụla karịa NONE ma ọ bụ LOW nwere ike igwụ ohere diski gị ngwa ngwa."
 
 #: include/global_settings.php
@@ -10093,11 +10093,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "Mgbe a lelere nhọrọ, ndị ọrụ ga-enwe ike itinye Kadupul n'ọnọdụ Real-time."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "Mgbe boost zitere iwu mmelite na RRDtool, ọ gaghị agafe Ogologo Arụmụka Kachasị nke sistemụ arụmọrụ. Nke a dị iche site na sistemụ arụmọrụ na ọkwa kernel. Dịka ọmụmaatụ: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "Mgbe a lelere ya, a ga-egosipụta Enyemaka Ụdị na Ntọala n'ahịrị. Ma ọ bụghị ya, a ga-egosipụta ya mgbe a na-efegharị n'elu bọtịnụ enyemaka."
 
 #: include/global_settings.php
@@ -10105,7 +10105,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "Mgbe a lelere ya, mgbalị ọ bụla ịnweta Kadupul ka a ga-ebufe na HTTPS iji hụ na nchekwa dị elu."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "Mgbe ị na-emepụta akụkọ ọhụrụ, ụdị onyonyo dị aṅaa ka e kwesịrị iji maka eserese dị n'ahịrị."
 
 #: include/global_settings.php
@@ -10125,7 +10125,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "Mgbe ị na-egosipụta Eserese, kwe ka Ụbọchị Eserese gbasaa 'ruo n'ọdịnihu'"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "Mgbe agbanwuola ya, Kadupul agaghị akpọchi Eserese. Nke a na-enye ohere mgbanwe ngwa ngwa n'aka nke Isi Iyi Data metụtara Eserese."
 
 #: include/global_settings.php
@@ -10153,7 +10153,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "Mgbe ị na-eji nkwenye ntọala, ọ bụrụ na enwere nsogbu n'ịkọwa aha onye ọrụ na akaụntụ Kadupul ziri ezi, ozi etinyere ebe a ga-egosipụta ndị ọrụ. O nwere ike ịgụnye ma ederede ma HTML."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "Mgbe ị na-ele nbudata nzacha aha Ngwaọrụ, ịlele nhọrọ a ga-ewepụ ngalaba site na hostname."
 
 #: include/global_settings.php
@@ -10161,11 +10161,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "Mgbe ị gbanwuola boost, a na-emelite faịlụ RRD gị naanị mgbe onye ọrụ rịọrọ ha, ma ọ bụ mgbe oge a gafere."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "Kedu Ụkpụrụ Ndekọ nke ị chọrọ iji maka Ụzọ RRD A Haziri Ahazi. 'ID Ngwaọrụ' bụ ndabere. E kwesịrị iji ntọala 'ID Ngwaọrụ/ID Ajụjụ Data' mgbe ị nwere Ngwaọrụ nwere puku kwuru puku Eserese. Mgbe Ị gbanwere Ụkpụrụ Ndekọ, ị ga-agba script CLI Ụzọ A Haziri Ahazi ọzọ iji gbanwee ụzọ RRDfile gaa na Ụkpụrụ ọhụrụ."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "Kedu ọnọdụ Eserese nke ị chọrọ ka e gosipụta na ndabere mgbe mbụ ị gara na ibe Eserese?"
 
 #: include/global_settings.php
@@ -10733,7 +10733,7 @@ msgid "Warnings++"
 msgstr "Ịdọ Aka Ná Ntị++"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; dị na faịlụ XML mana enweghị data alọghachiri., 'Index Count Changed' akwadoghị"
 
 #: lib/data_query.php
@@ -10902,7 +10902,7 @@ msgstr "Na-edozi ubi 'method' ezighi ezi maka '%s' ebe ọ bụ na akọwapụta
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "Ahụrụ ID Data Mpaghara %s iji Nyochaa"
 
 #: lib/data_query.php
@@ -11019,7 +11019,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "Ga-enwerịrị ubi &lt;direction&gt;input&lt;/direction&gt; ma ọ bụ &lt;direction&gt;input-output&lt;/direction&gt; naanị"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "Akwadoro Ubi Nhazi Ọhụrụ. A ga-emelite Ubi Nhazi."
 
 #: lib/data_query.php
@@ -11119,7 +11119,7 @@ msgstr "Mmelite cache ajụjụ data eserese ezuola"
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "Nkwado nke ID Data Mpaghara %s Ezuola"
 
 #: lib/data_query.php
@@ -11136,7 +11136,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "Ị ga-ahọrọ kọlụm mmepụta XML maka Isi Iyi Data '%s' ma gbanwee igbe nlele n'aka nri ya"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "Atụmatụ Eserese gị enweghị Atụmatụ Data a na-eji. Biko dozie Atụmatụ Eserese gị"
 
 #: lib/data_query.php
@@ -11150,11 +11150,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "Degharịa uru: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "Ọ dara ịgbanwe ogologo mpaghara okwuntụghe, enweghị ike ịga n'ihu n'ihi na o nwere ike imebi okwuntụghe"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "Ọ dara ịchọpụta ogologo mpaghara okwuntụghe, enweghị ike ịga n'ihu n'ihi na o nwere ike imebi okwuntụghe"
 
 #: lib/dsdebug.php
@@ -11271,10 +11271,6 @@ msgid "Link %s"
 msgstr "Njikọ %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "Banyere dịka Onye Ọbịa"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "Banyere dịka"
 
@@ -11282,6 +11278,10 @@ msgstr "Banyere dịka"
 #, php-format
 msgid "Logged in as %s"
 msgstr "Banyere dịka %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "Banyere dịka Onye Ọbịa"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11292,7 +11292,7 @@ msgid "Logout"
 msgstr "Ọpụpụ"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Njehie Onye Nzipu Ozi: Enweghị adreesị onye nnata edobere!!<br>Ọ bụrụ na ị na-eji njikọ <i>Test Mail</i>, biko tọọ ntọala <b>Alert e-mail</b>."
 
 #: lib/functions.php
@@ -11371,7 +11371,7 @@ msgstr "ỊDỌ AKA NÁ NTỊ: Faịlụ Mgbakwunye Kadupul Dị Mkpa %s na-efu.
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "ỊDỌ AKA NÁ NTỊ: PollerID:%s nwere hostname adịghị mma:%s. Enweghị ike iru ya site na DNS!"
 
 #: lib/functions.php
@@ -11461,7 +11461,7 @@ msgid "All %d %s"
 msgstr "%d %s Niile"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "Kwere ma ọ bụ gbochie kọlụm tebụl ka ha gbasaa gafee oke windo dị ugbu a."
 
 #: lib/html.php
@@ -12117,7 +12117,7 @@ msgid "Cascade to Branches"
 msgstr "Gbasaa na Ngalaba"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "Kaa akara na igbe a ma ọ bụrụ na ịchọrọ iji html na CSS omenala maka akụkọ ahụ."
 
 #: lib/html_reports.php
@@ -12125,7 +12125,7 @@ msgid "Check this box to enable this Report."
 msgstr "Kaa akara na igbe a iji gbanye Akụkọ a."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "Họrọ ihe mkpuchi html omenala na faịlụ CSS ị ga-eji. Faịlụ a nwere ma html ma CSS iji kechie gburugburu akụkọ gị. Ọ bụrụ na o nwere ihe karịrị naanị CSS, i kwesịrị itinye mkpado <REPORT> pụrụ iche n'ime faịlụ ahụ. A ga-eji ọdịnaya akụkọ dochie mkpado usoro a. Faịlụ ndị a dị na ndekọ faịlụ 'formats'."
 
 #: lib/html_reports.php
@@ -12382,7 +12382,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "Họrọ Atụmatụ Ngwaọrụ ị ga-eji zaa Ngwaọrụ ma ọ bụ Eserese."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "Họrọ Ngwaọrụ a ga-eji zaa ma ọ bụ họrọ Eserese n'ihe gbasara Ụdị Ngwaọrụ."
 
 #: lib/html_reports.php
@@ -12454,11 +12454,11 @@ msgid "The number of Graph columns."
 msgstr "Ọnụọgụ kọlụm Eserese."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "A ga-eji Adreesị a dịka adreesị Onye Zitere E-mail"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "A ga-eji Aha a dịka Onye Zitere E-mail ndabere"
 
 #: lib/html_reports.php
@@ -12476,22 +12476,22 @@ msgstr "Osisi: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "Enweghị ike izipu Akụkọ '%s'. Biko tọọ Aha Site Na nke e-mail"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "Enweghị ike izipu Akụkọ '%s'. Biko tọọ adreesị site na nke e-mail"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "Enweghị ike izipu Akụkọ '%s'. Biko tọọ isiokwu e-mail"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "Enweghị ike izipu Akụkọ '%s'. Biko tọọ adreesị e-mail ebe ọ na-aga"
 
 #: lib/html_reports.php
@@ -12587,7 +12587,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Okwu mgbe niile nke Kadupul nwere oke mkpụrụedemede 50 naanị maka ihe nchedo."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Okwu mgbe niile nke Kadupul enweghị ike ịgụnye mkpụrụedemede semicolon."
 
 #: lib/html_utility.php
@@ -13043,12 +13043,12 @@ msgstr "Enweghị ike ịtọ nhọrọ PHP %s, ọ bụ %s (kwesịrị ịbụ
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "Enweghị ike ịtọ ụdị %sRRDTool akọwapụtara: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "Enweghị ike ịtọ ụdị %sRRDtool akọwapụtara: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "Enweghị ike imelite Otu Nhọrọ Automation %s"
 
 #: lib/installer.php
@@ -13121,7 +13121,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Mbubata Ngwugwu #%s '%s' n'okpuru Profaịlụ '%s' gara nke ọma"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Ọ bụrụ na enwee nsogbu, a na-atụ aro nke ukwuu ka ị kpochapụ cache ihe nchọgharị gị, mechie wee meghee ihe nchọgharị gị ọzọ (ọ bụghị naanị taabụ Kadupul dị na ya) ma nwaa ọzọ, tupu ịkọrọ Kadupul nsogbu"
 
 #: lib/installer.php
@@ -13299,7 +13299,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "N'oge ụfọdụ dị ụkọ, anyị enwetala akụkọ site n'aka ndị ọrụ na-enwe obere nsogbu n'ihi mgbanwe na koodu. Nsogbu ndị a na-abụ n'ihi na ihe nchọgharị na-ejigide koodu tupu nkwalite, ma ọ bụ ezie na anyị ewerela nzọụkwụ iji belata ohere nke a, ọ ka nwere ike ime. Ọ bụrụ na ịchọrọ ntuziaka maka otu esi ekpochapụ cache ihe nchọgharị gị, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> bụ ebe dị mma ịmalite."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "Ozugbo nwụnye gwụchara, ụzọ CSRF kwesịrị ịbụ nke edobere ka ọ bụrụ ọgụgụ naanị."
 
 #: lib/installer.php
@@ -13376,7 +13376,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "Biko họrọ Ndebiri Ngwaọrụ ndị ị chọrọ imelite n'oge Nkwalite."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Biko họrọ Ndebiri Ngwaọrụ ndị ị chọrọ iji mgbe Nwụnye gasịrị. Ọ bụrụ na Sistemụ Arụmọrụ gị bụ Windows, ị ga-ahụ na ị họọrọ Ndebiri 'Windows Device'. Ọ bụrụ na Sistemụ Arụmọrụ gị bụ Linux/UNIX, hụ na ị họọrọ Ndebiri Ngwaọrụ 'Local Linux Machine'."
 
 #: lib/installer.php
@@ -13633,7 +13633,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Mgbanwe ndị a ga-atọrịrị na faịlụ config.php gụnyere ndị a:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Otu Whitelisting si arụ ọrụ bụ na mgbe mbụ ị bubatara Ụzọ Ntinye Data, ma ọ bụ bubata Ụzọ Ntinye Data ọzọ, ma script na/ma ọ bụ arụmụka agbanwee n'ụzọ ọ bụla, a ga-agbanyụ Ụzọ Ntinye Data, na Isi Iyi Data niile kwekọrọ ozugbo ruo mgbe onye nchịkwa kwadoro na Ụzọ Ntinye Data ahụ dị mma."
 
 #: lib/installer.php
@@ -13641,7 +13641,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "Mgbe ahụ gbaa ihe ndị a n'ime MySQL dịka onye nchịkwa:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Ya mere, ọtụtụ ụdị gara aga, e kwalitere Kadupul iji nye ikike Whitelist na ụdị Ụzọ Ntinye Data ndị a. Ọ bụ ezie na nke a na-echebe Kadupul nke ọma karị, ọ na-abawanye ọrụ nke onye nchịkwa Kadupul chọrọ iji bubata ma jikwaa Atụmatụ na Ngwugwu."
 
 #: lib/installer.php
@@ -13674,10 +13674,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "Mmemme a bụ ngwanrọ n'efu; ị nwere ike ikesa ya ọzọ ma ọ bụ gbanwee ya n'okpuru usoro nke GNU General Public License dịka Free Software Foundation bipụtara; ma ọ bụ ụdị 2 nke Ikikere ahụ, ma ọ bụ (na nhọrọ gị) ụdị ọ bụla sochirinụ."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Nhọrọ script a na-ewepụ mmachibido n'elu Ụzọ Ntinye Data nke a machibidoro ugbu a."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Nhọrọ script a ga-agbanwuo Isi Iyi Data ọ bụla agbanyụrụ."
 
@@ -13686,16 +13682,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "Nhọrọ script a ga-achọ Ụzọ Ntinye Data ọ bụla a machibidoro ugbu a ma nye nkọwa ihe kpatara ya."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "Nhọrọ script a na-ewepụ mmachibido n'elu Ụzọ Ntinye Data nke a machibidoro ugbu a."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Ụdị Kadupul a (%s) eyighị ka ọ nwere koodu ụdị ziri ezi, biko kpọtụrụ Otu Mmepe Kadupul iji hụ na e doziri nke a. Ọ bụrụ na ị na-ahụ njehie a na mbipụta, biko weta akụkọ ozugbo na GitHub"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Iji nwee ike ịga n'ihu, ị <b>GA-EMEPỤTARỊRỊ</b> database ọhụrụ, bubata \"cacti.sql\" n'ime ya:"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Iji mee ka ịchọpụta Ụzọ Ntinye Data n'ọnọdụ a dị mfe, anyị enyela script nkwado na ndekọ CLI nke Kadupul nke enwere ike ịgba na nhọrọ ndị a:"
 
 #: lib/installer.php
@@ -13729,7 +13729,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "Na-emelite Nhazi Nhọrọ Akpaaka %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "Imelite Atụmatụ nke ị meelarị mgbanwe na ha abụghị ihe amamihe. Nkwalite nke Atụmatụ AGAGHỊ ewepụ mgbanwe na Atụmatụ Eserese na Data, ma nwee ike ibute omume a na-atụghị anya ya. Agbanyeghị, ọ bụrụ na ị meghị mgbanwe na Eserese, Ajụjụ Data, ma ọ bụ Atụmatụ Data ọ bụla, ibubata Ngwugwu ahụ ọzọ ekwesịghị inwe mmetụta ọ bụla. N'ọnọdụ ahụ, ị ga-eme 'Mekọrịta Eserese' site na Atụmatụ mgbe mmelite gasịrị."
 
 #: lib/installer.php
@@ -13785,7 +13785,7 @@ msgstr "O yiri ka ị na-agbadata n'ụdị gara aga. Agaghị eweghachite mgban
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "Ị na-agbalị ịwụnye Kadupul %s na database 0.6.x. N'ụzọ dị mwute, enweghị ike ime nke a."
 
 #: lib/installer.php
@@ -13816,7 +13816,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "Seva Kadupul gị v%s awụnyela/emelitela. I nwere ike ịmalite iji ngwanrọ ahụ ugbu a."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "Nhazi Kadupul gị nwere ụzọ ziri ezi (url_path) na config.php."
 
 #: lib/installer.php
@@ -13844,7 +13844,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Nchịkọta okwu ndabere database gị yiri ka ọ na-akwado UTF8"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Nchịkọta okwu ndabere database gị EYIGHỊ ka ọ na-akwado UTF8 zuru oke. "
 
 #: lib/installer.php
@@ -13943,13 +13943,13 @@ msgid "Unable to find user from DN"
 msgstr "Enweghị ike ịchọta onye ọrụ site na DN"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "Enweghị ike ịchọta DN ndị ọrụ"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
-msgstr "Njehie a na-atụghị anya ya %s (Njehie Ldap: %s) na Seva (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
+msgstr "Njehie a na-atụghị anya ya %s (Njehie LDAP: %s) na Seva (%s)"
 
 #: lib/ping.php
 msgid "Destination address not specified"
@@ -14056,13 +14056,13 @@ msgstr "E kwesịrị ịgbanwe aha ndekọ Plugin '%s' iji wepụ 'plugin_' n'a
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Plugin dị na ndekọ '%s' anaghị agụnye ọrụ ntinye '%s()'. Ọrụ a ga-adịrịrị ka e wee wụnye plugin ahụ."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Plugin dị na ndekọ '%s' anaghị agụnye ọrụ ụdị '%s()'. Ọrụ a ga-adịrịrị ka e wee wụnye plugin ahụ."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Plugin dị na ndekọ '%s' anaghị agụnye ọrụ ụdị '%s()'. Ọrụ a ga-adịrịrị ka e wee wụnye plugin ahụ."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Plugin dị na ndekọ '%s' anaghị agụnye ọrụ ntinye '%s()'. Ọrụ a ga-adịrịrị ka e wee wụnye plugin ahụ."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14122,7 +14122,7 @@ msgstr "Oge Eserese:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "Nsogbu izipu Akụkọ '%s' Nsogbu na Subsystem e-mail Njehie bụ '%s'"
 
 #: lib/reports.php
@@ -14176,7 +14176,7 @@ msgstr "NJEHIE: Faịlụ RRD adịghị: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "NJEHIE: Enweghị ike ide na RRDfile %s"
 
 #: lib/rrd.php
@@ -14298,7 +14298,7 @@ msgstr "XFF maka ID RRA Kadupul bụ '%s' mana o kwesịrị ịbụ '%s'"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Ọnụọgụ ahịrị maka ID RRA Kadupul '%s' ezighị ezi. Ọnụọgụ ahịrị bụ '%s' mana o kwesịrị ịbụ '%s'"
 
 #: lib/rrd.php
@@ -14458,7 +14458,7 @@ msgstr "NJỌ NKE UKWUU: Arụmụka outlier-start na outlier-end ga-abụrịr�
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "NJỌ NKE UKWUU: Enweghị ike ịkwado ndabere '%s'"
 
 #: lib/spikekill.php
@@ -14673,12 +14673,12 @@ msgstr "Ndozi %s"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s ga-ekewa innodb_buffer_pool n'ime mpaghara ebe nchekwa iji melite arụmọrụ maka nsụgharị MariaDB dị n'okpuru 10.5. Ọnụọgụ kachasị elu bụ 64, mana o kwesịghị ịkarị ọnụọgụ CPU cores/threads. Mgbe innodb_buffer_pool gị dị n'okpuru 1GB, i kwesịrị iji nha pool kewaa ya 128MB. Gaa n'ihu na-eji usoro a ruo oke ọnụọgụ CPU cores ma ọ bụ 64."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s ga-ekewa innodb_buffer_pool n'ime mpaghara ebe nchekwa iji melite arụmọrụ maka nsụgharị MySQL ruo ma gụnyere MySQL 8.0. Ọnụọgụ kachasị elu bụ 64, mana o kwesịghị ịkarị ọnụọgụ CPU cores/threads. Mgbe innodb_buffer_pool gị dị n'okpuru 1GB, i kwesịrị iji nha pool kewaa ya 128MB. Gaa n'ihu na-eji usoro a ruo oke ọnụọgụ CPU cores ma ọ bụ 64."
 
 #: lib/utility.php
@@ -14697,7 +14697,7 @@ msgstr "Mpaghara oge ziri ezi nke dakọtara na MySQL na sistemụ"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Site na %s %s, ị nwere ike ịchịkwa ugboro ole %s na-ebunye azụmahịa na diski. Ndabere bụ sekọnd 1, mana na sistemụ I/O dị elu ịtọ ka ọ bụrụ uru karịrị 1 nwere ike inye ohere ka diski I/O dịkwuo n'usoro"
 
 #: lib/utility.php
@@ -14731,12 +14731,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "Ọ bụrụ na ị nwere diski SSD, jiri atụmatụ a. Ma ọ bụghị ya, etinyela ntọala a."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "Ọ bụrụ na tebụl gị nwere ndeksi buru ibu nke ukwuu, ị ga-arụ ọrụ na Barracuda innodb_file_format na innodb_large_prefix hà ka 1. Ịghara ime nke a nwere ike ime ka plugins ghara ịmepụta tebụl nke ọma."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB ga-ejide ọtụtụ tebụl na ndeksi na ebe nchekwa sistemụ dịka o kwere mee. Ya mere, ị kwesịrị ime ka innodb_buffer_pool buo ibu zuru oke ijide ọtụtụ tebụl na ndeksi na ebe nchekwa. Ịlele ogo ndekọ /var/lib/mysql/cacti ga-enyere aka ikpebi uru a. Anyị na-atụ aro 25%% nke mkpokọta ebe nchekwa sistemụ gị, mana ihe ị chọrọ ga-adịgasị iche dabere na ogo sistemụ gị."
 
 #: lib/utility.php
@@ -14750,7 +14750,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "A na-atụ aro ka ị gbanye InnoDB na ụdị %s ọ bụla karịrị 5.1."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "Idebe cache tebụl buru ibu pụtara obere ọrụ imeghe/imechi faịlụ mgbe a na-eji innodb_file_per_table."
 
 #: lib/utility.php
@@ -14775,7 +14775,7 @@ msgid "Recommended Value"
 msgstr "Uru Akwadoro"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Ajụjụ rogue ekwesịghị ime ka nchekwa data pụọ n'ịntanetị maka ndị ọzọ. Gbuo ajụjụ ndị a tupu ha egbuo sistemụ gị."
 
 #: lib/utility.php
@@ -14788,7 +14788,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "Nke a bụ ebe a na-echekwa metadata. Ọ bụrụ na ị nwere ọtụtụ tebụl, ọ ga-aba uru ịba ụba nke a."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Ntọala a kwesịrị ịnọgide na ON belụsọ ma ọ bụrụ na Kadupul gị na-agba na ZFS ma ọ bụ FusionI/O nke abụọ ha nwere journaling dị n'ime iji nabata ọdịda sistemụ mberede. Agbanyeghị, ọ bụrụ na ị nwere ezigbo ọkụ, na sistemụ gị anaghị ada ada ma ị nwere ndabere, ịgbanwu ntọala a na OFF nwere ike inye gị ihe fọrọ nke nta ka ọ bụrụ 50% mmụba na arụmọrụ database."
 
 #: lib/utility.php
@@ -14796,11 +14796,11 @@ msgid "Variable"
 msgstr "Mgbanwe (Variable)"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "Mgbe ị na-agba subqueries, inwe nha tebụl nwa oge buru ibu, na-edobe tebụl nwa oge ndị ahụ n'ebe nchekwa."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "Mgbe ị na-eme joins, ọ bụrụ na ha dị n'okpuru nha a, a ga-edobe ha n'ebe nchekwa ma agaghị ede ha na faịlụ nwa oge. Ebe ọ bụ na nke a bụ oke ebe nchekwa maka njikọ ọ bụla, a ga-akpachara anya ka a ghara ịba ụba ya nke ukwuu. Ngụkọta nke join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + ebe nchekwa MySQL/MariaDB isi kwesịrị ịdị n'okpuru 80%. Ọ bụrụ na ndụmọdụ ahụ bụ negative, ị ga-ebelatarịrị nke a na/ma ọ bụ sort_buffer_size ruo mgbe ndụmọdụ ahụ dabara n'ime ebe nchekwa ekwere."
 
 #: lib/utility.php
@@ -15043,7 +15043,7 @@ msgstr "Ndị Nnata Ọkwa %s"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "Pịa 'Gaa n'ihu' iji hichapụ Onye Nnata Ọkwa ndị a"
 
 #: managers.php
@@ -15052,12 +15052,12 @@ msgstr "Pịa 'Gaa n'ihu' iji gbanyụọ iziga Ihe Ọkwa ndị a na Onye Nnata
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "Pịa 'Gaa n'ihu' iji gbanyụọ Onye Nnata Ọkwa ndị a"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "Pịa 'Gaa n'ihu' iji gbanye Onye Nnata Ọkwa ndị a"
 
 #: managers.php
@@ -15162,7 +15162,7 @@ msgid "Automatically Trust Signer"
 msgstr "Tụkwasị Onye Bịanyere Aka Obi Na-akpaghị Aka"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "Mgbanwe/Ndịiche"
 
 #: package_import.php
@@ -15230,6 +15230,10 @@ msgid "Package"
 msgstr "Ngwugwu"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "Nkọwa Ngwugwu"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "Mbubata Ngwugwu"
 
@@ -15242,19 +15246,15 @@ msgid "Package XML File Damaged."
 msgstr "Faịlụ XML Ngwugwu Mebiri Eme."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "Nkọwa Ngwugwu"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Dochie Ndekọ Uru A Tụrụ Aro nke Isi Iyi Data na Ndebiri Eserese. Eserese na Isi Iyi Data ga-ewere aha ọhụrụ mgbe Data Query Reindex gasịrị ma ọ bụ site n'iji usoro Dochie Uru A Tụrụ Aro amanyere."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "Lee cacti.log maka ozi ndị ọzọ. O nwere ike ịbụ na ị nwere njehie API Key ma ọ bụ na e metụrụ ngwugwu ahụ aka, ma ọ bụ na ebe ahụ adịghị"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "Lee cacti.log maka ozi ndị ọzọ. O nwere ike ịbụ na ị nwere njehie API Key ma ọ bụ na e metụrụ ngwugwu ahụ aka, ma ọ bụ na ebe ahụ adịghị."
 
 #: package_import.php templates_import.php
@@ -15276,11 +15276,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "Ebubatala Ngwugwu %s Nke Ọma"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "Faịlụ XML yiri ka ọ dịghị mma. Biko kpọtụrụ onye dere ngwugwu"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "Faịlụ XML maka ngwugwu ahụ adịghị"
 
 #: package_import.php
@@ -15301,7 +15301,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "Ị tụkwasịbeghị Onye Dere Ngwugwu a Obi. Ọ bụrụ na ịchọrọ ibubata, lelee igbe Tụkwasị Onye Odee Obi Na-akpaghị aka"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "Nkọwa nke onye dere Plọgin ahụ nyere Plọgin ahụ."
 
 #: plugins.php
@@ -15394,7 +15394,7 @@ msgid "Plugin Name"
 msgstr "Aha Plugin"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "Ndekọ plugin enweghị ike ịgụnye oghere"
 
 #: plugins.php
@@ -15484,12 +15484,12 @@ msgstr "Iwepụ ntinye Plugin a ga-ewepụ Data Plugin na Ntọala niile. Ọ b�
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "NJEHIE: Ụzọ binary PHP: %s abaghị uru maka id poller %d. Poller enweghị ike ịga n'ihu!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "NJEHIE: Ụzọ spine: %s abaghị uru maka id poller %d. Poller enweghị ike ịga n'ihu!"
 
 #: poller.php
@@ -15511,7 +15511,7 @@ msgstr "Poller n'Ọnọdụ Obi Na-akụ"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "ỊDỌ AKA NÁ NTỊ: %s adabaghị na Oge Poller maka id poller %d! Oge Poller bụ sekọnd %d, nwere kachasị nke sekọnd %d, mana sekọnd %d agafeela kemgbe poll ikpeazụ!"
 
 #: poller.php
@@ -15565,7 +15565,7 @@ msgstr[0] "Kpochaa Ndekọ ọnụọgụ maka Ngwa Nchịkọta Data"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "Pịa 'Gaa n'ihu' iji Kpochaa Ndekọ ọnụọgụ Ngwa Nchịkọta Data maka Ngwa Nchịkọta Data ndị a."
 
 #: pollers.php
@@ -15660,7 +15660,7 @@ msgid "No Data Collectors Found"
 msgstr "Ahụghị Ndị Nchịkọta Data"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "Ndetu maka Nchekwa Data Ndị Nchịkọta Data a."
 
 #: pollers.php
@@ -15789,12 +15789,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "Faịlụ ji Igodo SSL iji jikọọ na database dị n'ebe dị anya."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "Hostname maka Onye Nchịkọta Data. O nwere ike ịbụ Aha Ngalaba Zuru Ezu (FQDN) ka Pollers dị n'ebe dị anya wee kpọtụrụ ya maka ọrụ dịka re-indexing, eserese Real-time, wdg."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "Hostname maka seva database dị n'ebe dị anya."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "Hostname maka Onye Nchịkọta Data. O nwere ike ịbụ Aha Ngalaba Zuru Ezu (FQDN) ka Pollers dị n'ebe dị anya wee kpọtụrụ ya maka ọrụ dịka re-indexing, eserese Real-time, wdg."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15809,7 +15809,7 @@ msgid "The last time this Data Collector completed."
 msgstr "Oge ikpeazụ Onye Nchịkọta Data a mechara."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "Oge ikpeazụ e jiri saịtị Kadupul isi mekọrịta Onye Nchịkọta Data a kpamkpam."
 
 #: pollers.php
@@ -15992,7 +15992,7 @@ msgid "Changing Permission Model Warning"
 msgstr "Ịdọ Aka Ná Ntị Mgbanwe Ụdị Ikike"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "Ịgbanwe Ụdị Ikike ga-agbanwe ikike Eserese dị irè nke ndị ọrụ."
 
 #: settings.php
@@ -16311,7 +16311,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>NKỌWA:</strong> Ọ dịghị nke ọ bụla n'ime Plọgin Isi Kadupul, ruo taa, ka emegharịrị ka ọ rụọ ọrụ na Ngwa Nchịkọta Data Dị Anya. Ya mere, Plọgin ndị dị ka MacTrack, na HMIB, nke chọrọ ohere ozugbo na ngwaọrụ agaghị arụ ọrụ na Ngwa Nchịkọta Data Dị Anya n'oge a. Otú ọ dị, plọgin ndị dị ka Thold ga-arụ ọrụ ma ọ bụrụhaala na Ngwa Nchịkọta Data Dị Anya dị n'ọnọdụ <b>'n'ịntanetị'</b>."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>NKỌWA:</strong> Ị banyere na Ngwa Nchịkọta Data Dị Anya. Mgbe ọ dị <b>'n'ịntanetị'</b>, ị ga-enwe ike ilele ma jikwaa ọtụtụ n'ime Weebụsaịtị Isi Kadupul dị ka a ga-asị na ị banyere na ya. Ọzọkwa, ọ dị mkpa ịmara na Ngwa Nchịkọta Data Dị Anya kwesịrị iji njirimara <b>'Mmelite Mgbe Achọrọ Ya'</b> nke Ọrụ Nwelite Arụmọrụ Kadupul, anyị na-akwadokwa iji Spine mgbe niile. Mgbe Ngwa Nchịkọta Data Dị Anya <b>'anọghị n'ịntanetị'</b>, Weebụsaịtị Ngwa Nchịkọta Data Dị Anya ga-enwe obere ozi. Otú ọ dị, ọ ga-echekwa mmelite niile nwa oge ruo mgbe enwere ike iru Nchekwa Data Isi Kadupul na Sava Web. Mgbe ahụ ọ ga-ebuga nsonaazụ tebụl Boost ya laghachi na Nchekwa Data Isi Kadupul maka mmelite."
 
 #: templates/platform/console_home_body.html.twig
@@ -16486,22 +16486,22 @@ msgstr "Ngalaba"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "Pịa 'Gaa n'ihu' iji hichapụ Osisi ndị a."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "Pịa 'Gaa n'ihu' iji bipụta Osisi ndị a."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "Pịa 'Gaa n'ihu' iji kpọghee Osisi ndị a."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "Pịa 'Gaa n'ihu' iji kwụsị mbipụta Osisi ndị a."
 
 #: tree.php
@@ -16596,7 +16596,7 @@ msgid "The last user to have modified this Tree."
 msgstr "Onye ọrụ ikpeazụ gbanwere Osisi a."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "Aha e ji akpọ Osisi a."
 
 #: tree.php
@@ -16787,7 +16787,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Pịa 'Gaa n'ihu' iji gbanye Ndị Ọrụ ahọpụtara."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Pịa 'Gaa n'ihu' iji jiri ntọala na ikike Onye Ọrụ tẹmpletị ahọpụtara dechie ntọala Ndị Ọrụ. A ga-edobe Aha Zuru Ezu nke ndị ọrụ mbụ, Okwuntụghe, Mpaghara na Ọnọdụ Nbanye, a ga-ejikwa Tẹmpletị Onye Ọrụ dechie mpaghara ndị ọzọ niile."
 
 #: user_admin.php
@@ -17107,12 +17107,12 @@ msgstr "Họrọ ụdị dọmenị nke a bụ."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "Pịa 'Gaa n'ihu' iji hichapụ Dọmenị Onye Ọrụ ndị a."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "Pịa 'Gaa n'ihu' iji gbanyụọ Dọmenị Onye Ọrụ ndị a."
 
 #: user_domains.php
@@ -17120,7 +17120,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "Pịa 'Gaa n'ihu' iji gbanye Dọmenị Onye Ọrụ na-esonụ."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "Pịa 'Gaa n'ihu' iji mee ka Dọmenị Onye Ọrụ na-esonụ bụrụ nke ndabere."
 
 #: user_domains.php
@@ -17150,15 +17150,11 @@ msgid "Domains"
 msgstr "Dọmenị"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "Ụdị Dọmenị"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "Onye Ọrụ Dị Irè"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "Gbanye Dọmenị Onye Ọrụ"
 
@@ -17175,16 +17171,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "Ubi ga-anọchi email e wetara site na LDAP. (na windows: mail) "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "Ọ bụrụ na enyochara igbe nlele a, ndị ọrụ ga-enwe ike ịbanye site na iji ngalaba a."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "Mee Ngalaba Ahọpụtara Ndabara"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Ụdị cacti ga-anwa iji nyochaa megide seva LDAP.<blockquote><i>Enweghị Nchọta</i> - Enweghị nchọta Aha Pụrụ Iche (DN) na-eme, naanị nwaa ijikọ na ụdị Aha Pụrụ Iche (DN) enyere.<br><br><i>Nchọta Amaghị Aha</i> - Na-anwa ịchọ aha njirimara megide ndekọ LDAP site na njikọ amaghị aha iji chọta Aha Pụrụ Iche (DN) nke ndị ọrụ.<br><br><i>Nchọta Pụrụ Iche</i> - Na-anwa ịchọ aha njirimara megide ndekọ LDAP site na Aha Pụrụ Iche (DN) Pụrụ Iche na Okwuntụghe Pụrụ Iche maka njikọ iji chọta Aha Pụrụ Iche (DN) nke ndị ọrụ."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17250,22 +17242,22 @@ msgstr "Kpochaa"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "Pịa 'Gaa n'ihu' iji Detuo Otu Ndị Ọrụ ndị a gaa n'Otu Ndị Ọrụ ọhụrụ."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "Pịa 'Gaa n'ihu' iji hichapụ Otu Ndị Ọrụ ndị a"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "Pịa 'Gaa n'ihu' iji gbanyụọ Otu Ndị Ọrụ ndị a."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "Pịa 'Gaa n'ihu' iji gbanye Otu Ndị Ọrụ ndị a."
 
 #: user_group_admin.php
@@ -17286,7 +17278,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "Ụkpụrụ Osisi Ndabere maka Otu Ndị Ọrụ a"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "Zighachi na Ntọala Ndị Ọrụ"
 
 #: user_group_admin.php
@@ -17617,11 +17609,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "Ndekọ ọnụọgụ Oge Mkpọchi Zuru Ezu"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Nsụgharị Kadupul na Spine dị iche!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "Ndekọ Faịlụ ADỊGHỊ!!"
 
 #: utilities.php
@@ -17635,11 +17627,11 @@ msgstr "NJEHIE: Nsụgharị RRDtool etinyere agafebeghị nsụgharị ahaziri.
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "NJEHIE: RRDtool 1.2.x+ anaghị akwado usoro foto GIF, mana eserese na/ma ọ bụ tẹmpletị %d\" nwere GIF edobere dị ka usoro foto."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "Taabụ ihe nchọgharị ọ bụla nwere ike iji njikọ ruru 10 dabere na ihe nchọgharị ahụ."
 
 #: utilities.php
@@ -17697,7 +17689,7 @@ msgstr "Ewụnyere. <span class=\"deviceDown\">Rịba ama: Ọ bụrụ na ị n
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "A na-atụ aro nke ukwuu ka ị gbanwee php.ini memory_limit gị ka ọ bụrụ %s ma ọ bụ karịa."
 
 #: utilities.php
@@ -18100,11 +18092,11 @@ msgid "Technical Support [%s]"
 msgstr "Nkwado Teknụzụ [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "Cache Ajụjụ Data na-echekwa ozi anakọtara site na ụdị ntinye Ajụjụ Data. Enwere ike iji ọnụọgụgụ sitere na ogige ndị a na mpaghara ederede nke Eserese maka Nkọwa (Legends), Akara Kwụ Ọtọ (Vertical Labels), na GPRINTS yana na CDEFs."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Ndekọ Kadupul na-echekwa ọnụọgụgụ, njehie na ozi ndị ọzọ dabere na ntọala sistemụ. Enwere ike iji ozi a chọpụta nsogbu na poller na ngwa."
 
 #: utilities.php
@@ -18140,7 +18132,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Nke a na-egosi ihe niile SNMP Agent na-elekọta."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "A gbakọrọ ọnụọgụgụ ebe nchekwa a tụrụ aro dabere na ọnụọgụ isi iyi data dị ugbu a ma a ga-eji ya naanị dịka aro, ezigbo ọnụọgụgụ nwere ike ịdị iche site na sistemụ ruo sistemụ dabere na ihe achọrọ."
 
 #: utilities.php
@@ -18177,7 +18169,7 @@ msgid "Update Frequency:"
 msgstr "Ugboro Mmelite:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "Jiri ngwaọrụ a gosipụta nsogbu gbasara faịlụ rrd na-efu ma ọ bụ ọnụọgụgụ na-efu na rrdfiles. Ị ga-agbanwuo rrdcheck na Nhazi->Ntọala->Data"
 
 #: utilities.php

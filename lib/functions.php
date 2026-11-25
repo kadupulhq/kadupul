@@ -4265,7 +4265,7 @@ function draw_login_status($using_guest_account = false)
     if (isset($_SESSION['sess_user_id']) && $_SESSION['sess_user_id'] === $guest_account) {
         api_plugin_hook('nav_login_before');
 
-        print __('Logged in as') . " <span id='user' class='user usermenuup'>" . __('guest') . "</span></div><div><ul class='menuoptions' style='display:none;'>" . ($auth_method != 2 ? "<li><a href='" . $config['url_path'] . "index.php?login=true'>" . __('Login as Regular User') . "</a></li>" : "<li><a href='#'>" . __('Logged in a Guest') . '</a></li>');
+        print __('Logged in as') . " <span id='user' class='user usermenuup'>" . __('guest') . "</span></div><div><ul class='menuoptions' style='display:none;'>" . ($auth_method != 2 ? "<li><a href='" . $config['url_path'] . "index.php?login=true'>" . __('Login as Regular User') . "</a></li>" : "<li><a href='#'>" . __('Logged in as Guest') . '</a></li>');
 
         print "<li class='menuHr'><hr class='menu'></li>";
         print "<li id='userCommunity'><a href='https://github.com/kadupulhq/kadupul/discussions' target='_blank' rel='noopener'>" . __('User Community') . "</a></li>";
@@ -5793,7 +5793,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
         cacti_log('ERROR: No recipient address set!!', false, 'MAILER');
         cacti_debug_backtrace('MAILER ERROR');
 
-        return __('Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting.');
+        return __('Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting.');
     }
 
     $replyto   = parse_email_details($replyto);
@@ -6921,7 +6921,7 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI')
         if (debounce_run_notification('poller_down:' . $poller_id)) {
             cacti_log(sprintf('WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!', $poller_id, $hostname), false, $logtype);
 
-            admin_email(__('Kadupul System Warning'), __('WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!', $poller_id, $hostname));
+            admin_email(__('Kadupul System Warning'), __('WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!', $poller_id, $hostname));
         }
 
         return '';
@@ -8315,7 +8315,7 @@ function raise_ajax_permission_denied()
 {
     if (is_page_ajax()) {
         header('HTTP/1.1 401 ' . __('Permission Denied'));
-        print __('You are not permitted to access this section of Kadupul.') . '  ' . __('If you feel that this is an error. Please contact your Kadupul Administrator.');
+        print __('You are not permitted to access this section of Kadupul.') . '  ' . __('If you feel that this is an error, please contact your Kadupul Administrator.');
         exit;
     }
 }

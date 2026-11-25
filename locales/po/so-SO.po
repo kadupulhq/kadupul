@@ -292,11 +292,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "Si loogu raro Jaantusyada Isugeynta ee hoose Isugeyn ku salaysan Qaab, marka hore abuur Qaab Isugeyn oo loogu talagalay Qaabka Jaantuska '%s'."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "Si loogu raro Jaantusyada Isugeynta ee hoose Isugeyn ku salaysan Qaab, waa inay isticmaalaan hal Qaab Jaantus oo keliya. Fadlan riix 'Ku noqo' ka dibna dooro oo keliya Jaantusyada Isugeynta ee adeegsada isku Qaabka Jaantuska."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "Si loogu raro Jaantusyada Isugeynta ee hoose inay isticmaalaan Qaab Isugeyn, waa in mid hore u jiro. Fadlan riix 'Ku noqo' ka dibna marka hore abuur Qaabkaaga Isugeynta ka hor intaadan isku dayin mar kale."
 
 #: aggregate_graphs.php
@@ -441,7 +441,7 @@ msgid "Template"
 msgstr "Qaab-dhismeed"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "Qaab-dhismeedka Isku-darka ee ay ku salaysan yihiin Jaantusyadan Isku-darku"
 
 #: aggregate_graphs.php
@@ -449,7 +449,7 @@ msgid "The internal database identifier for this object"
 msgstr "Aqoonsiga kaydka xogta gudaha ee shaygan"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "Jaantusyada Isugeynta ee la doortay uma muuqdaan inay leeyihiin wax Qaabab Isugeyn ah oo u dhigma."
 
 #: aggregate_graphs.php
@@ -520,7 +520,7 @@ msgid "Aggregate Templates"
 msgstr "Qaab-dhismeedyada Isku-darka"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Qaab-dhismeedyada Isku-darka ee la isticmaalayo lama Tirtiri karo.  Isticmaalka waxaa loola jeedaa in uu tixraacayo Isku-dar."
 
 #: aggregate_templates.php
@@ -757,7 +757,7 @@ msgid "All your login sessions have been cleared."
 msgstr "Dhammaan fadhiyadaada galitaanka waa la nadiifiyay."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "Cinwaan Iimayl oo lagaa heli karo."
 
 #: auth_profile.php
@@ -1111,7 +1111,7 @@ msgid "Clear Filtered"
 msgstr "Nadiifi Kuwa La Shaandheeyay"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "Guji 'Sii wad' si aad u joojiso Sahamin(ada) Shabakadda ee socota."
 
 #: automation_networks.php
@@ -1238,7 +1238,7 @@ msgid "Schedule"
 msgstr "Jadwalka"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "Xaaladda Hadda ee Sahaminta Shabakaddan"
 
 #: automation_networks.php
@@ -1679,11 +1679,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "Sifada '%s', waxaa laga helay cilladda '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "Galka RRA ma u furan yahay wax-ku-qorista poller-ka?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "Faylka RRD ma u furan yahay wax-ku-qorista poller-ka?"
 
 #: data_debug.php
@@ -2063,7 +2063,7 @@ msgstr "Xiriirintu waa Akhris Kaliya ilaa laga helo faylka XML"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "Guji 'Sii wad' si aad u Tirtirto Weydiinta Xogta ee soo socota."
 msgstr[1] "Guji 'Sii wad' si aad u Tirtirto Weydiimaha Xogta ee soo socda."
 
@@ -2073,7 +2073,7 @@ msgstr "Guji 'Sii wad' si aad u tirtirto Xiriirinta Jaantuska Weydiinta Xogta ee
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "Guji 'Sii wad' si aad nuqul uga samayso Weydiinta Xogta ee soo socota."
 msgstr[1] "Guji 'Sii wad' si aad nuqul uga samayso Weydiimaha Xogta ee soo socda."
 
@@ -2235,7 +2235,7 @@ msgid "The name of this Data Query."
 msgstr "Magaca Weydiintan Xogta."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "Tirada Qaab-dhismeedyada Jaantusyada ee isticmaalaya Weydiintan Xogta."
 
 #: data_queries.php
@@ -2287,7 +2287,7 @@ msgstr "Dooro Qalabka ay Isha Xogtani ka tirsan tahay."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "Guji 'Sii wad' si aad u tirtirto Isha Xogta ee soo socota"
 msgstr[1] "Guji 'Sii wad' si aad u tirtirto Ilaha Xogta ee soo socda"
 
@@ -2427,7 +2427,7 @@ msgid "External"
 msgstr "Dibadda"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "Haddii Isha Xogtan aysan mar dambe isticmaalin Jaantusyadu, waa la Tirtiri karaa."
 
 #: data_sources.php
@@ -2554,7 +2554,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "Haddii xog loo ururin doono Isha Xogtan iyo in kale. Waxaa laga maamulaa heerka Qaab-dhismeedka Xogta."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "Ka dib markaad ka saarto saxda sanduuqan hubinta ka dibna aad Kaydiso Qaab-dhismeedka Xogta, Ilo kasta oo Xog ah oo hadda jira oo ku salaysan Qaab-dhismeedkan Xogta waxay lumin doonaan Xogtooda Gaarka ah.  Tani waxay keeni kartaa Ururinta Xogta iyo Jaantusyada oo xumaada"
 
 #: data_templates.php
@@ -2616,7 +2616,7 @@ msgid "Data Templates [new]"
 msgstr "Qaab-dhismeedyada Xogta [cusub]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "Qaab-dhismeedyada Xogta ee la isticmaalayo lama beddeli karo"
 
 #: data_templates.php
@@ -2693,7 +2693,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "Qiimahan waa la hawl-gabiyay sababtoo ah waxaa laga soo qaatay Qalabka waana mid la akhriyo oo keliya."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "Qiimahan waa la hawl-gabiyay sababtoo ah qiimihiisa waxaa laga soo qaatay Qalabka ama shayga gaarka ah ee Weydiinta Xogta kaas oo la socda xiriirrada muhiimka ah ee Weydiinta Xogta."
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2819,7 +2819,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "Guji 'Sii wad' si aad u koobiyayso Qaabka/Qaababka Jaantuska ee soo socda. Waxaad si ikhtiyaari ah u beddeli kartaa qaabka cinwaanka ee Qaabka/Qaababka Jaantuska cusub."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "Guji 'Sii wad' si aad u samayso Isku-habayn Buuxda oo u dhaxaysa Jaantusyadaada iyo Qaabka/Qaababka Jaantuska ee la doortay. Haddii ay kugu dhacdo xaalad ay Shayyada Jaantusku iswaafaqin Qaabka Jaantuska, isku day ikhtiyaarka Isku-habaynta Degdegga ah ee Jaantusyada marka hore maadaama uu waqti aad u yar qaadanayo. Hawshani waa muhiim haddii aad leedahay Jaantusyo ku jira noocyo badan oo Qaab Jaantus ah oo aad rabto in dhammaantood ay yeeshaan muuqaal isku mid ah."
 
 #: graph_templates.php
@@ -3151,7 +3151,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "Beddel Qalabka La Xiriira Jaantus(yada)"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Dooro Qaab Jaantus oo guji 'Sii wad' si aad u beddesho Qaabka Jaantuska ee Jaantus(yad)an soo socda. Fadlan ogow, kaliya Qaababka Jaantuska ee iswaafaqsan ayaa la soo bandhigi doonaa. Iswaafajinta waxaa lagu gartaa kuwa leh Ilo Xog oo isku mid ah."
 
 #: graphs.php
@@ -3357,7 +3357,7 @@ msgid "The selected Tree is not available."
 msgstr "Geedka la doortay lama heli karo."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "Hadda ma jiraan Qaab-dhismeedyo Isku-dar ah oo loo qeexay Qaab-dhismeedkan Jaantuska.  Fadlan marka hore u abuur Qaab-dhismeed Isku-dar ah Qaab-dhismeedka Jaantuska ee Jaantusyada la doortay oo mar kale isku day, ama si fudud u abuur Jaantus Isku-dar ah oo aan qaab-dhismeed lahayn."
 
 #: graphs.php
@@ -3551,20 +3551,20 @@ msgid "Class"
 msgstr "Nooca"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "Guji 'Sii wad' si aad u tirtirto Weydiimaha Xogta ee soo socda kuwaas oo laga saari doono Qaab-dhismeedka Qalabka."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "Guji 'Sii wad' si aad u tirtirto Qaab-dhismeedka Jaantuska ee soo socda kaas oo laga saari doono Qaab-dhismeedka Qalabka."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "Guji 'Sii wad' si aad u Iswaafajiso Qalabka ku xiran Qaab-dhismeedka/Qaab-dhismeedyada Qalabka ee la doortay. Ogow in falkani uu qaadan karo wakhti iyadoo ku xiran tirada Qalabka ku xiran Qaab-dhismeedka Qalabka."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "Guji 'Sii wad' si aad u tirtirto Weydiimaha Xogta ee soo socda kuwaas oo laga saari doono Qaab-dhismeedka Qalabka."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "Guji 'Sii wad' si aad u tirtirto Qaab-dhismeedka/Qaab-dhismeedyada Qalabka ee soo socda."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "Guji 'Sii wad' si aad u tirtirto Qaab-dhismeedka Jaantuska ee soo socda kaas oo laga saari doono Qaab-dhismeedka Qalabka."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3654,7 +3654,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Ku iswaafaji Qalabka Qaab-dhismeedka/Qaab-dhismeedyada Qalabka"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "Nooca Qaab-dhismeedka Qalabkan. Magaca Nooca waa inuu matalaa shaqadiisa."
 
 #: host_templates.php
@@ -3679,7 +3679,7 @@ msgstr "HALIS: Waa inaad gashaa si aad u hesho qaybtan Kadupul."
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "Haddii aad dareento in tani tahay khalad. Fadlan la xiriir Maamulahaaga Kadupul."
 
 #: include/auth.php
@@ -3695,7 +3695,7 @@ msgid "Not Logged In"
 msgstr "Maadan galin"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "Kaliya Maamulayaasha Kadupul ee leh mudnaanta Rakibidda/Cusboonaysiinta ayaa gali kara waqtigan"
 
 #: include/auth.php
@@ -5079,7 +5079,7 @@ msgid "Operator"
 msgstr "Hawl-wadeen"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "Bogga lama qeexin. Sidaas darteed, lama soo bandhigi karo."
 
 #: include/global_arrays.php
@@ -5645,8 +5645,8 @@ msgid "Use the First Handler Found"
 msgstr "Isticmaal Habeeyaha Ugu Horreeya ee La Helo"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "Isticmaal Habeeyaha MonoTranslator GetText"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "Isticmaal Habeeyaha MoTranslator GetText"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5791,7 +5791,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Marka tirada tusmada Weydiinta Xogtu isbeddesho, Dib-u-tusmayn ayaa la samayn doonaa."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Marka waqtiga shaqada SNMP ee Qalabku dib u noqdo, Dib-u-tusmayn ayaa la samayn doonaa."
 
 #: include/global_arrays.php
@@ -5835,7 +5835,7 @@ msgid "You are not allowed to change your password."
 msgstr "Laguma oggola inaad beddesho eraygaaga sirta ah."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "Waa inaad shiddaa xaqiijinta isticmaalaha ee ku dhex jirta si aad u isticmaasho sifadan."
 
 #: include/global_arrays.php
@@ -5997,17 +5997,17 @@ msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repetitions"
+msgid "%d Repetition"
 msgstr "%d Ku-celcelin"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repitition"
+msgid "%d Repetitions"
 msgstr "%d Ku-celcelin"
 
 #: include/global_form.php
@@ -6216,7 +6216,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "Dooro Weydiin Xog oo lagu dabakho xeerkan."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "Dooro Shayga Geed-hoosaadka si aad ugu xidho.<br>Hubi inuu weli meesha yaallo marka xeerkan la fuliyo!"
 
 #: include/global_form.php
@@ -6226,6 +6226,10 @@ msgstr "U dooro Geed walxaha Geedka cusub."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "Dooro magac isha xogtan.  Waxaa ku jiri kara doorsoomayaasha beddelka sida |host_description| ama |query_fieldName|.  Liiska buuxa ee sumadaha beddelka ee la taageero, fadlan eeg dukumeentiga Kadupul."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "Dooro magac gaar ah oo matalaya qaybtan xogta ee ku jirta gudaha RRDfile."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6285,10 +6289,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "Dooro habka aad rabto inaad u adeegsato ururinta xogta habkan Gelinta Xogta."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "Dooro magac gaar ah oo matalaya qaybtan xogta ee ku jirta gudaha RRDfile."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "Ikhtiyaarrada Caadiga ah"
 
@@ -6341,7 +6341,7 @@ msgid "Determines if the user account is locked."
 msgstr "Wuxuu go'aamiyaa haddii koontada isticmaaluhu xiran tahay."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "Wuxuu go'aamiyaa haddii isticmaaluhu awoodo inuu galo."
 
 #: include/global_form.php
@@ -6402,7 +6402,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "Geli Macnaha Guud ee SNMP ee loo isticmaalayo qalabkan."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Geli Aqoonsiga Matoorka SNMP v3 ee loo isticmaalayo qalabkan. Meeshan ka tag iyadoo bannaan si aad u isticmaasho Aqoonsiga Matoorka SNMP ee loo qeexay qaataha Ogeysiisyada SNMPv3 kasta."
 
 #: include/global_form.php
@@ -6605,7 +6605,7 @@ msgid "Include Prefix Text"
 msgstr "Ku Dar Qoraalka Horgalaha"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "Ku dar Qoraalka Cinwaanka GPRINT ee Jaantusyada isha ah Jaantuska/Jaantusyada la Isku Daray."
 
 #: include/global_form.php
@@ -7113,7 +7113,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "Xogta loo diro qoraalka (script), taas oo ay ku jiraan waddada buuxda ee qoraalka iyo ilaha gelinta ee ku dhex jira qaansada &lt;&gt;."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "Inta jeer ee xogta laga soo ururinayo Isha Xogta?"
 
 #: include/global_form.php
@@ -7217,7 +7217,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "Goobta jireed ee Qalabka. Qoraalkan xorta ah wuxuu noqon karaa qol, meel raak ah, iwm."
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "Natiijada hubinta xaqiijinta booska cad ee Habka Gelinta gaarka ah. Haddii Xarigga Gelinta isbeddelo, oo aan la cusbooneysiin faylka Liiska Cad (Whitelist), lama oggolaan doono in la abuuro Jaantusyo."
 
 #: include/global_form.php
@@ -7233,7 +7233,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Nooca jaantuska la soo saaro; PNG, GIF ama SVG. Xulashada nooca sawirka jaantuska waxay si weyn ugu xiran tahay RRDtool."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Nooca xirmada ping ee la dirayo. <br><i>FIIRO GAAR AH: ICMP ee Linux/UNIX waxay u baahan tahay mudnaanta root.</i> <br><i>FIIRO GAAR AH: TCP Ping Closed - Xitaa haddii tcp ping uusan guuleysan, qalabka waxaa loo tixgelin karaa mid SHIDAN (UP).</i>"
 
 #: include/global_form.php
@@ -7329,7 +7329,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "Summadda Toosan (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "Goobtee ayuu Qalabkani ku xiran yahay."
 
 #: include/global_form.php
@@ -7353,11 +7353,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "Marka la eegayo Jaantus ku saleysan RRA-ga laga hadlayo, Muddada Waqtiga ee caadiga ah ee loo muujiyo Jaantuskaas."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Marka aad dejinayso summadaynta dhidibka bidix, ku dabaq xeer qaabka xogta. Qaababka la taageero waxaa ka mid ah \"numeric\" halkaas oo xogta loo tixgeliyo tiro ahaan, \"timestamp\" halkaas oo qiyamka loo fasiro calaamadaha waqtiga ee UNIX (tirada ilbiriqsiyada tan iyo Jannaayo 1970) laguna muujiyo qaabka strftime (kan caadiga ah waa \"%Y-%m-%d %H:%M:%S\"). Sidoo kale eeg --units-length. Ugu dambayn \"duration\" halkaas oo qiyamka loo fasiro muddada milisekan ahaan. Qaabayntu waxay raacdaa xeerarka PRINT/GPRINT ee u qalma valstrfduration."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Marka aad dejinayso summadaynta dhidibka midig, ku dabaq xeer qaabka xogta. Qaababka la taageero waxaa ka mid ah \"numeric\" halkaas oo xogta loo tixgeliyo tiro ahaan, \"timestamp\" halkaas oo qiyamka loo fasiro calaamadaha waqtiga ee UNIX (tirada ilbiriqsiyada tan iyo Jannaayo 1970) laguna muujiyo qaabka strftime (kan caadiga ah waa \"%Y-%m-%d %H:%M:%S\"). Sidoo kale eeg --units-length iyo --right-axis-format. Ugu dambayn \"duration\" halkaas oo qiyamka loo fasiro muddada milisekan ahaan. Qaabayntu waxay raacdaa xeerarka PRINT/GPRINT ee u qalma valstrfduration."
 
 #: include/global_form.php
@@ -7521,11 +7521,11 @@ msgid "56 Gbps Ethernet"
 msgstr "56 Gbps Ethernet"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote><i>Xaqiijinta Ku Dhex-dhisan</i> - Kadupul ayaa maamula xaqiijinta isticmaalaha, taas oo kuu oggolaanaysa inaad abuurto isticmaalayaal oo aad siiso xuquuqo qaybaha kala duwan ee gudaha Kadupul.<br><br><i>Xaqiijinta Aasaasiga ah ee Webka</i> - Xaqiijinta waxaa maamula server-ka webka. Isticmaalayaasha waa lagu dari karaa ama si otomaatig ah ayaa loo abuuri karaa galitaanka koowaad haddii la qeexay Isticmaalaha Qaab-dhismeedka, haddii kale waxaa la adeegsan doonaa oggolaanshooyinka martida ee la qeexay.<br><br><i>Xaqiijinta LDAP</i> - Waxay oggolaataa xaqiijin ka dhan ah server-ka LDAP. Isticmaalayaasha si otomaatig ah ayaa loo abuuri doonaa galitaanka koowaad haddii la qeexay Isticmaalaha Qaab-dhismeedka, haddii kale waxaa la adeegsan doonaa oggolaanshooyinka martida ee la qeexay. Haddii qaybta LDAP ee PHP aysan shaqaynayn, Xaqiijinta LDAP uma muuqan doonto sidii ikhtiyaar la dooran karo.<br><br><i>Xaqiijinta Dhoowrka Domain ee LDAP/AD</i> - Waxay u oggolaataa maamulayaasha inay taageeraan kooxo badan oo kala duwan oo ka socda hagayaal LDAP/AD oo kala duwan si ay u galaan kheyraadka Kadupul. Sida Xaqiijinta LDAP oo kale, qaybta LDAP ee PHP ayaa looga baahan yahay si looga faa'iidaysto habkan.</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "Liis hakad ku kala soocan oo ah aqoonsiyada Qalabka ee aad rabto inay ku jiraan habka Baadhista (Debug) inta lagu jiro xog-ururinta. Heerkan Baadhistu wuxuu shaqeeyaa oo keliya inta uu socdo habka xog-ururinta ee Kadupul."
 
 #: include/global_settings.php
@@ -7533,7 +7533,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "Ikhtiyaar u gaar ah horumariyeyaasha oo lagu raadraaco abuurista Ilaha Xogta, gaar ahaan hubinta gaarnimada"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "Liis meel-bannaan ku kala soocan oo ah magacyada martigeliyaha DNS ama ciwaannada IP ee loogu talagalay server-rada LDAP ee saxda ah. Kadupul wuxuu isku dayi doonaa inuu adeegsado server-rada LDAP laga bilaabo bidix ilaa midig si uu u xaqiijiyo isticmaale."
 
 #: include/global_settings.php
@@ -7753,7 +7753,7 @@ msgid "By Template/Data Query"
 msgstr "Sida Qaabka/Weydiinta Xogta"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Si caadi ah caawinta bogga Kadupul waxay ku taallaa kadupul.org. Si kastaba ha ahaatee, haddii nidaamkaagu uusan lahayn marin Internet, waxaad si maxalli ah ugu soo dejisan kartaa dukumeentiyada qaabka HTML oo aad ku martigelin kartaa goobta 'docs' ee server-kaaga Kadupul. Haddii aad doorato inaad ka faa'iidaysato oo keliya goobta maxalliga ah dukumeentiyada caawinta bogga, calaamadee sanduuqan."
 
 #: include/global_settings.php
@@ -7777,7 +7777,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "Calaamadee sanduuqan haddii aad rabto inaad tijaabiso Ilaha Xogta ka hor intaan la samayn Qaab-dhismeedyada Jaantuska ee cusub iyo kuwa dhowaan la soo dejiyay. Marka Tijaabada Ilaha Xogta ay shidan tahay, haddii Isha Xogtu aysan soo celin xog sax ah, Jaantuska lama samayn doono. Dejintani waxay muhiim tahay haddii aad rabto inaad yeelato Qaab-dhismeed Qalab oo guud kaas oo ku dari kara Qaab-dhismeedyo Jaantus oo badan kuwaas oo si xulasho ah loo adeegsan karo iyadoo ku xiran sifooyinka Qalabka laftiisa. Fiiro gaar ah: Haddii aad leedahay qoraal (script) muddo dheer socda sida Isha Xogta, waqtiga lagu sameeyo Jaantusyada wuu kordhi doonaa."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "Dooro 'enabled' si aad u oggolaato tarjumaadda luqadda Kadupul. Habka adag wuxuu u baahan yahay in luqadda la codsaday ay sidoo kale taageeraan dhammaan plugins-ka ku rakiban nidaamkaaga. Haddii taasi jirin, wax walba waxaa lagu soo bandhigi doonaa Ingiriisi."
 
 #: include/global_settings.php
@@ -7957,7 +7957,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Isticmaalaha Oggolaanshaha SNMP v3 ee caadiga ah ee dhammaan Qalabka cusub."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Aqoonsiga Matoorka SNMP v3 (Engine Id) ee caadiga ah ee dhammaan Qalabka cusub. Goobtan bannaan u daa si loo adeegsado SNMP Engine ID-ga lagu qeexay qaabilaha Ogeysiiska SNMPv3 kasta."
 
 #: include/global_settings.php
@@ -8173,11 +8173,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "Daar ama dami gudbinta LDAP. Haddii la damiyo, waxay kordhin kartaa xawaaraha raadinta."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "Daar Taageerada Midab-isbeddelka ee jaantusyada AREA iyo STACK."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "Wuxuu suurtageliyaa gelinta tooska ah ee diiwaannada gudaha poller output boost, taas oo waqtiga 25% ku yareysa wareeg kasta oo xog-ururin ah."
 
 #: include/global_settings.php user_domains.php
@@ -8269,7 +8269,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "Loogu talagalay in lala adeegsado Taageerada Xiriiriyaha Dibadda ee Kadupul. Adigoo adeegsanaya dejintan, waxaad qarin kartaa Guddiga Kadupul, si aad u soo bandhigto boggaaga oo keliya."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "Isticmaalayaasha leh gelitaanka Console-ka oo keliya, inta uu isticmaalahani ku jiri karo galitaanka ka hor inta aan si toos ah looga saarin. Ogow haddii aadan wax dhaqdhaqaaq ah samayn wax ka badan hal saac, waxaa laga yaabaa inaad u baahato inaad dib u cusboonaysiiso biraawsarkaaga. Sidoo kale ogow in dejintani aysan wax saamayn ah lahayn marka Kukiyada Xaqiijinta ay shidan yihiin."
 
 #: include/global_settings.php
@@ -8417,11 +8417,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "Sideed u rabtaa inaad u aragto Jaantusyada Waqtiga-dhabta ah?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "Intee jeer ayay tahay in la cusboonaysiiyo Tirakoobka Maalinlaha ah?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "Intee jeer ayay tahay in la hubiyo RRD?"
 
 #: include/global_settings.php
@@ -8429,7 +8429,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "Inta uu hal wareeg oo qiimeyn ah bilaabi karo dufcado cusub oo xeerar ah. Dirista ogeysiisyada safka ku jira waxay raacdaa qiimeynta iyadoo la adeegsanayo waqtiga haray, waxayna diri kartaa hal dufcad xitaa marka miisaaniyadda la dhammeeyo. Xeerarka aan la gaarin waxaa marka hore qiimeeya wareegga xiga."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "Immisa OID ayaa la soo celinayaa codsi snmpbulkwalk kasta? Qalabka leh geedasha SNMP ee waaweyn, kordhinta cabbirkan waxay kordhin doontaa waxqabadka dib-u-tusmaynta ee shabakadda WAN."
 
 #: include/global_settings.php
@@ -8437,15 +8437,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "Immisa fayl oo diiwaan ah ayaad rabtaa inaad hayso?  Isticmaal 0 si aan weligaa looga saarin wax diiwaan ah. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "Intee in le'eg ayaad rabtaa in bandhigga diiwaanka Kadupul la cusboonaysiiyo."
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Sida ay tahay in Kadupul u taageero Taariikhaha Macmiilka iyadoo lagu salaynayo aagga waqtiga ee biraawsarrada macmiilka."
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Sida Kadupul u maamuli doono diiwaangelinta dhacdooyinka."
 
 #: include/global_settings.php
@@ -8461,7 +8461,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "Haddii la calaamadeeyo, Kadupul wuxuu ku diiwaangelin doonaa macluumaad dheeraad ah oo LDAP ah diiwaanka Kadupul inta lagu jiro hawlaha Xiridda (Binding) iyo Raadinta (Searching)."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Haddii Kadupul uusan go'aamin karin xawaaraha isku-xirka sababtoo ah ifSpeed ama ifHighSpeed midna aan la dejin ama ay yihiin eber, qiime intee le'eg oo ugu sarreeya ayaad rabtaa in lagu dejiyo RRDfiles-ka ka soo baxa."
 
 #: include/global_settings.php
@@ -8489,7 +8489,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "Haddii shaxda wax-soo-saarka boost ay ka badato cabbirkan, xagga tirada diiwaannada, cusboonaysiin ayaa dhici doonta."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "Haddii xog-uruuriyaha boost uu ka bato waqtigan shaqada, digniin ayaa lagu qori doonaa diiwaanka cacti,"
 
 #: include/global_settings.php
@@ -8497,7 +8497,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "Haddii galkani uusan madhnayn, markaas RRDfiles-kaaga asalka ah waxaa lagu kaydin doonaa goobtan."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "Haddii goobtani aysan bannaanayn, Boost wuxuu diiwaangelin doonaa wax-soo-saarka RRDUpdate ee ka imaanaya habka xog-uruuriyaha boost."
 
 #: include/global_settings.php
@@ -8505,7 +8505,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "Haddii ikhtiyaarkan la calaamadeeyo, Kadupul wuxuu ku buuxin doonaa miisaska Wakiilka SNMP macluumaadka qalabka iyo nidaamka Kadupul. Ma daaro Wakiilka SNMP laftiisa."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "Haddii aad dhibaato kala kulanto Xog-ururiyeyaasha Kadupul, deji waddadan faylka si khaladka caadiga ah ee Xog-ururiyeyaasha loogu leexiyo faylkan"
 
 #: include/global_settings.php
@@ -8685,7 +8685,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "Tirada Ugu Badan ee Shayada Ilaha Xogta Halkii Wareeg"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "Xajmiga Ugu Badan ee Iimaylka"
 
 #: include/global_settings.php
@@ -8740,20 +8740,20 @@ msgstr "Ballaca Ugu Yar ee Geedka"
 msgid "Mode"
 msgstr "Habka"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Habka uu Cacti isku dayi doono inuu ku xaqiijiyo adeegaha LDAP.<blockquote><i>Raadin La'aan</i> - Ma jirto raadin Magac Gaar ah (DN) oo dhacaysa, kaliya isku day inaad ku xidho qaabka Magaca Gaarka ah (DN) ee la bixiyay.<br><br><i>Raadin Qarsoon</i> - Waxay isku daydaa inay ka raadiso magaca isticmaalaha tusaha LDAP iyadoo adeegsanaysa xidhidh qarsoon si loo helo Magaca Gaarka ah (DN) ee isticmaalaha.<br><br><i>Raadin Gaar ah</i> - Waxay isku daydaa inay ka raadiso magaca isticmaalaha tusaha LDAP iyadoo adeegsanaysa Magac Gaar ah (DN) oo cayiman iyo Eray Sireed cayiman si loogu xidho loona helo Magaca Gaarka ah (DN) ee isticmaalaha."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "Bishii mar Axadda"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "Aagga Waqtiga ee Birawsarkayga"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "Qiimaha NaN"
 
 #: include/global_settings.php
@@ -9249,7 +9249,7 @@ msgid "Server(s)"
 msgstr "Adeegaha/Adeegayaasha"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Miyaa Boost uu daarayaa cusboonaysiinta RRD ee marka loo baahdo gudaha Kadupul? Haddii aad damiso, isbeddelkani ma dhaqan geli doono ilaa kaddib wareegga xigta ee xog-ururinta. Marka aad leedahay Xog-ururiyeyaal Fog, dejintan waxaa loo baahan yahay inay shidnaato."
 
 #: include/global_settings.php
@@ -9269,7 +9269,7 @@ msgid "Should image caching be enabled?"
 msgstr "Ma in la daaro kaydinta kumeelgaarka ah ee sawirrada?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "Haddii Leeyahay Jaantusyo iyo Leeyahay Ilaha Xogta ay tahay in la calaamadeeyo si caadi ah."
 
 #: include/global_settings.php
@@ -9293,7 +9293,7 @@ msgid "Show business hours"
 msgstr "Muuji saacadaha shaqada"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "Muuji oo keliya goobaha laga heli karo xarunta loo doortay qalabka."
 
 #: include/global_settings.php
@@ -9313,11 +9313,11 @@ msgid "Site Security"
 msgstr "Amniga Goobta"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "Qaar ka mid ah is-dhexgalyada Kadupul waxay taageeraan Jiid-iyo-Deji (Drag-N-Drop). Haddii la calaamadeeyo ikhtiyaarkan waa la daari doonaa. Ogow: Isticmaalayaasha aragga naafada ka ah, ikhtiyaarkan waa la damin karaa."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "Magacyada domain-ka ee meel bannaan lagu kala soocay oo loo oggolaanayo in laga galo meel ka baxsan Adeegaha Webka laftiisa. Tani waxay muhiim u tahay isticmaalayaasha doorta inay isticmaalaan CDN, ama goob martigelin ah. Iluhu waxay yeelan karaan calaamado guud (wildcards) tusaale ahaan: *.mydomain.com, ama borotokool, tusaale ahaan: https://*.example.com. Ilahan Kale waxay ka kooban yihiin noocyada Sawirka, CSS iyo JavaScript keliya."
 
 #: include/global_settings.php
@@ -9461,15 +9461,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "Tirada caadiga ah ee Threads-ka la oggol yahay geeddi-socodkiiba. OGOW: Laga bilaabo Kadupul 1.2+, dejintan waxaa lagu hayaa Xog-ururiyaha, tanina waa oo keliya Dejin Horudhac ah. Isticmaalka tiro ka badan marka la adeegsanayo Spine waxay hagaajin doontaa waxqabadka. Si kastaba ha ahaatee, hubi inaad leedahay xiriirrada MySQL/MariaDB oo ku filan si ay u taageeraan isla'egtan: connections = data collectors * processes * (threads + script servers). Waa inaad sidoo kale hubisaa inaad leedahay xiriirro dheeraad ah oo ku filan xiriirrada galitaanka isticmaalayaasha."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "Ciwaanka Iimaylka ee loo diro Iimayllada Ogeysiiska Otomaatigga haddii aan lagu cayimin heerka Shabakadda Otomaatigga. Haddii midkood goobtan, ama qiimaha Shabakadda Otomaatigga laga tago iyagoo bannaan, Kadupul wuxuu adeegsan doonaa koontada Iimaylka ee Maamulaha Koowaad ee Kadupul."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "Ciwaanka Iimaylka ee loo adeegsado Iimayllada Ogeysiiska Otomaatigga haddii aan lagu cayimin heerka Shabakadda Otomaatigga. Haddii midkood goobtan, ama qiimaha Shabakadda Otomaatigga laga tago iyagoo bannaan, Kadupul wuxuu adeegsan doonaa Ciwaanka Iimaylka Diraha ee caadiga ah ee nidaamka."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "Magaca Iimaylka ee loo adeegsado Iimayllada Ogeysiiska Otomaatigga haddii aan lagu cayimin heerka Shabakadda Otomaatigga. Haddii midkood goobtan, ama qiimaha Shabakadda Otomaatigga laga tago iyagoo bannaan, Kadupul wuxuu adeegsan doonaa Magaca Diraha ee caadiga ah ee nidaamka."
 
 #: include/global_settings.php
@@ -9581,7 +9581,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "Tirada caadiga ah ee geeddi-socodyada isku mar shaqeeya ee la fulinayo Xog-ururiye kasta. OGOW: Laga bilaabo Kadupul 1.2, dejintan waxaa lagu hayaa gudaha Xog-ururiyaha. Wixii hadda ka dambeeya, qiimahani waa oo keliya dejin horudhac ah oo loogu talagalay Xog-ururiyaha. Isticmaalka tiro ka badan marka la adeegsanayo cmd.php waxay hagaajin doontaa waxqabadka. Hagaajinta waxqabadka ee Spine waxaa ugu fiican in lagu xalliyo cabbirka threads. Marka la adeegsanayo Spine, waxaan ku talinaynaa tiro ka yar oo taa beddelkeeda la adeegsado threads. Marka la adeegsanayo cmd.php, ha isticmaalin wax ka badan 2x tirada xudunta CPU."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "Tirada caadiga ah ee safafka lagu soo bandhigayo shaxda."
 
 #: include/global_settings.php
@@ -9597,7 +9597,7 @@ msgid "The encryption method to use for the Email."
 msgstr "Habka siraynta ee loo adeegsanayo Iimaylka."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "Raadka faraha ee furaha guud ee RSA ee uu proxy-ga kaydka ahi hadda isticmaalayo. Tani waxaa loo baahan yahay si loo dhiso xiriir la aamini karo."
 
 #: include/global_settings.php
@@ -9657,6 +9657,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Muddada ugu badan ee uu shaqayn karo qoraalka Tirakoobka Ilaha Xogta ee Kadupul iyadoo aan la dhalin khalad waqti-dhammaad ah laguna joojin."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "Muddada ugu badan ee uu shaqayn karo qoraalka Dayactirka ee Kadupul iyadoo aan la dhalin khalad waqti-dhammaad ah laguna joojin."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Muddada ugu badan ee uu shaqayn karo qoraalka hubinta RRDfile ee Kadupul iyadoo aan la dhalin khalad waqti-dhammaad ah laguna joojin."
 
@@ -9665,19 +9669,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Muddada ugu badan ee uu shaqayn karo qoraalka Soo-saarista Warbixinnada Kadupul iyadoo aan la dhalin khalad waqti-dhammaad ah laguna joojin."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Muddada ugu badan ee uu shaqayn karo qoraalka Dayactirka ee Kadupul iyadoo aan la dhalin khalad waqti-dhammaad ah laguna joojin."
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Muddada ugu badan ee uu shaqayn karo qoraalka Spikekill ee Kadupul iyadoo aan la dhalin khalad waqti-dhammaad ah laguna joojin."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "Tirada ugu badan ee Gallada Qalabka ee la abuurayo iyadoo lagu salaynayo Aqoonsiyada Qalabka ee la hash-gareeyay."
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "Xajmiga ugu badan ee farriinta Iimaylka oo ay ku jiraan dhammaan lifaaqyada."
 
 #: include/global_settings.php
@@ -9717,19 +9717,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "Tirada tiirarka la isticmaalayo marka la muujinayo jaantusyada Sawirrada Yar-yar ee habka Geedka."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "Tirada hawlaha DSStats ee isku mar shaqaynaya ee loo adeegsanayo ka shaqaynta dhammaan Ilaha Xogta."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "Tirada habraacyada Amarka Ururiyaha ee isku mar shaqeeya. Waxaa jiri doona ugu badnaan hal amar oo isku mar shaqeeya martigeliye kasta gudaha barkadda Amarka Ururiyaha."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "Tirada hawlaha hubinta faylka RRD ee isku mar shaqaynaya ee loo adeegsanayo ka shaqaynta dhammaan faylasha rrd."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "Tirada hawlaha boost ee isku mar shaqaynaya ee loo adeegsanayo ka shaqaynta dhammaan RRD-yada ku jira shaxda boost."
 
 #: include/global_settings.php
@@ -9805,7 +9805,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "Waddada faylkaaga binary-ga ee snmpwalk."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "Nooca ururiyaha la isticmaalayo. Dejintani waxay dhaqan geli doontaa xilliga ururinta xiga."
 
 #: include/global_settings.php
@@ -9841,6 +9841,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "Waqtiga ay saacadahaaga shaqadu bilaabmaan. Qaabka: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "Muddada waqti ee aad rabto inaad ku aragto jaantuska caadiga ah."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "Magaca isticmaalaha ee lagu xaqiijinayo marka wax lagu dirayo SMTP. (Ka tag meel bannaan haddii aadan u baahnayn xaqiijin.)"
 
@@ -9873,28 +9877,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "Dejintan waxaa lagu maamulaa heerka Ururiyaha Xogta. Qiimayaasha halkan ku yaal waa kuwo hore u degan oo keliya oo la isticmaalo marka ugu horreysa ee la abuurayo Ururiyaha Xogta."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "Kani waa akoon Iimayl ah oo loo adeegsado dirista farriin tijaabo ah si loo hubiyo in wax walba si sax ah u shaqeynayaan."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "Tani waa goobta server-ka ee loo adeegsan doono xiriiriyeyaasha bogga Kadupul. Tani waa inay ku jirtaa galka-hoosaadka haddii Kadupul uusan ka shaqaynayn galka xididka (root)."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "Tani waa tirada xarfaha la oggol yahay ka hor inta uusan sadar ku jira Iimaylka si toos ah u laabmin. (0 = Waa la damiyay)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "Tani waa tirada ugu badan ee maalmaha ka hor inta uusan dhicin erayga sirta ah."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "Tani waa tirada ugu badan ee maalmaha ka hor inta aan la xirin koontooyinka aan shaqayn. Koontada Maamulaha (Admin) waa laga reebay siyaasaddan."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "Kani waa dhererka ugu yar ee erayada sirta ah ee la oggol yahay."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9917,12 +9905,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "Tani waa goobta ku taal adeegaha shabakadda ee lagu kaydin doono faylalka RRD iyo faylalka PNG.  Kaydkan waxaa maamuli doona xog-ururiyaha.  Hubi inaad ku leedahay oggolaanshaha saxda ah ee akhriska iyo qoraalka galkan"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "Tani waa tirada ugu badan ee maalmaha ka hor inta uusan dhicin erayga sirta ah."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "Tani waa tirada ugu badan ee maalmaha ka hor inta aan la xirin koontooyinka aan shaqayn. Koontada Maamulaha (Admin) waa laga reebay siyaasaddan."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "Kani waa dhererka ugu yar ee erayada sirta ah ee la oggol yahay."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "Tani waa waqtiga ugu yar ee la taageeray ee u dhexeeya cusboonaysiinta Jaantuska.  Qiimahan waxaa sidoo kale loo isticmaalaa in lagu dejiyo sifooyinka qaarkood ee faylka RRD.  Haddii aad haysato Qalab kaydiya xogta oo aan bixin cusboonaysiin waqtiga-dhabta ah, waxaa laga yaabaa inaad u baahato inaad kordhiso Xilliga Ugu Yar ee Cusboonaysiinta ee caadiga ah si looga hortago samaynta Jaantusyo leh daldaloolo."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "Kani waa jidka loo maro sendmail ee ku jira adeegahaaga. (Waxaa keliya la adeegsadaa haddii Sendmail loo doorto Adeegga Boostada)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "Tani waa goobta server-ka ee loo adeegsan doono xiriiriyeyaasha bogga Kadupul. Tani waa inay ku jirtaa galka-hoosaadka haddii Kadupul uusan ka shaqaynayn galka xididka (root)."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9937,15 +9941,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "Dejintani waxay ku kooban tahay nidaamyada hal ururiye leh oo keliya si dib loogu dhiso jadwalka soo-saarka ururiyaha wareeg kasta oo ururin ah si looga hortago in jadwalka xusuusta uu u wareego swap nidaamyada aadka u waaweyn ee leh kaydyada xogta waaweyn ee isticmaali kara swap."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "Muddada waqti ee aad rabto inaad ku aragto jaantuska caadiga ah."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "Qiimahani wuxuu matalaa tirada ugu badan ee kororka degdegga ah ee laga saari karo RRA-da Jaantuska."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "Qiimahani wuxuu matalaa tirada muunadaha celceliska sare iyo hoose ee laga saari doono kooxda muunadaha ka hor inta aan la xisaabin Celceliska Kala-duwanaanshaha. Haddii aad doorato qiime ka baxsan xadka oo ah 5, markaas waxaa laga saarayaa 5-ta celcelis ee ugu sarreysa iyo 5-ta ugu hooseysa labadaba."
 
 #: include/global_settings.php
@@ -9966,7 +9966,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "Tani waxay shardi ka dhigaysaa in erayada sirta ah ee cusubi ay ku jiraan ugu yaraan 1 xaraf oo gaar ah."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "Tani waxay shardi ka dhigaysaa in erayada sirta ah ee cusubi ay ka koobnaadaan xarfo yaryar iyo kuwo waaweyn labadaba."
 
 #: include/global_settings.php
@@ -10054,7 +10054,7 @@ msgid "Use Custom Fonts"
 msgstr "Isticmaal Faraha Gaarka ah"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "U isticmaal gal-hoosaad gaar ah faylasha RRD ee martigeliye kasta. Magacaabista faylasha RRD waxay noqon doontaa mid ka mid ah kuwan soo socda:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>Waxaad samayn kartaa isbeddelkan rakibidda ka dib adigoo socodsiinaya qoraalka CLI ee <b>structure_rra_paths.php</b> markaad isbeddelka samayso ka dib. FIIRO GAAR AH: Haddii aad beddesho qiimaha Ugu Badnaan Gallada si aad u yarayso tirada gallada, ama aad beddesho Qaabka Galka, gallada madhan lama tirtiri doono ka dib markaad dib u socodsiiso qoraalka <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php
@@ -10094,11 +10094,11 @@ msgid "Weekly on Sunday"
 msgstr "Todobaadkii mar Axadda"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Heerka faahfaahinta ee aad rabto in loo diro faylka diiwaanka.  DIGNIIN: Ka tegista xaalad kale oo aan ahayn NONE ama LOW waxay si dhakhso ah u dhameyn kartaa booska diskigaaga."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Heerka faahfaahinta ee aad rabto in loo diro faylka diiwaanka. DIGNIIN: Ka tagidda xaalad aan ahayn NONE ama LOW waxay si degdeg ah u dhammayn kartaa booska diskigaaga."
 
 #: include/global_settings.php
@@ -10114,11 +10114,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "Marka ikhtiyaarkan la calaamadeeyo, isticmaalayaashu waxay awoodi doonaan inay Kadupul geliyaan habka Waqtiga-dhabta ah (Real-time)."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "Marka boost uu u diro amarro cusboonaysiin ah RRDtool, ma aha inuu ka bato Dhererka Ugu Badan ee Halbeegyada Amarka ee nidaamka hawlgalka. Tani waxay ku kala duwan tahay nidaamka hawlgalka iyo heerka kernel-ka. Tusaale ahaan: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ aan xadidnayn"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "Marka la calaamadeeyo, Caawimaadda Foomka iyo Dejinta waxaa lagu muujin doonaa isla goobta dhexdeeda.  Haddii kale waxaa la soo bandhigi doonaa marka dul-istaag lagu sameeyo badhanka caawimaadda."
 
 #: include/global_settings.php
@@ -10126,7 +10126,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "Marka la calaamadeeyo, isku day kasta oo lagu galo Kadupul waxaa loo leexin doonaa HTTPS si loo xaqiijiyo amni sare."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "Marka la abuurayo warbixin cusub, nooca sawirka ee loo adeegsanayo jaantusyada gudaha ku jira."
 
 #: include/global_settings.php
@@ -10146,7 +10146,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "Marka la muujinayo Jaantusyada, u oggolow Taariikhaha Jaantuska inay u fidaan 'mustaqbalka'"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "Marka la daarayo, Kadupul ma qufuli doono Jaantusyada. Tani waxay oggolaanaysaa wax-ka-beddel gacanta ah oo degdeg ah oo lagu sameeyo Ilaha Xogta ee la xiriira Jaantus."
 
 #: include/global_settings.php
@@ -10174,7 +10174,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "Marka la adeegsanayo xaqiijinta aasaasiga ah, haddii ay jiraan dhibaatooyin ku saabsan ku-xiridda magaca isticmaalaha koonto Kadupul oo sax ah, farriinta halkan ku jirta ayaa loo soo bandhigi doonaa isticmaalayaasha. Waxaa ku jiri kara labadaba qoraal iyo HTML."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "Marka la eegayo liisaska shaandhada magaca Qalabka, calaamadaynta ikhtiyaarkan waxay magaca martigeliyaha ka saari doontaa domain-ka."
 
 #: include/global_settings.php
@@ -10182,11 +10182,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "Marka aad daarto boost, faylashaada RRD waxaa la cusboonaysiiyaa oo keliya marka uu isticmaale dalbado, ama marka muddadan waqtigu dhammaato."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "Qaabkee Galka ah ayaad rabtaa inaad u isticmaasho Waddooyinka RRD ee Qaabaysan. 'Aqoonsiga Qalabka' waa kan caadiga ah. Dejinta 'Aqoonsiga Qalabka/Aqoonsiga Waydiinta Xogta' waa in la isticmaalaa marka aad leedahay Qalab leh kumanaan Jaantusyada ah. Ka dib markaad beddesho Qaabka Galka, waa inaad mar kale socodsiisaa qoraalka CLI ee Waddada Qaabaysan si aad ugu beddesho waddooyinka faylka RRD Qaabka cusub."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "Habkee Jaantus ah ayaad rabtaa in si caadi ah loo muujiyo marka aad markii ugu horreysay booqato bogga Jaantusyada?"
 
 #: include/global_settings.php
@@ -10754,7 +10754,7 @@ msgid "Warnings++"
 msgstr "Digniinaha++"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; wuu ku jiraa faylka XML laakiin wax xog ah lama soo celin., 'Index Count Changed' lama taageero"
 
 #: lib/data_query.php
@@ -10923,7 +10923,7 @@ msgstr "Waxaa la saxayaa goobta qaldan ee 'method' ee '%s' maadaama 'rewrite_ind
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "Waxaa la helay %s Aqoonsiyada Xogta Maxalliga ah si loo hubiyo"
 
 #: lib/data_query.php
@@ -11040,7 +11040,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "Waa inuu ka koobnaadaa goobaha &lt;direction&gt;input&lt;/direction&gt; ama &lt;direction&gt;input-output&lt;/direction&gt; oo keliya"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "Goobta Kala-soocidda Cusub waa la xaqiijiyay.  Goobta Kala-soocidda waa la cusboonaysiin doonaa."
 
 #: lib/data_query.php
@@ -11140,7 +11140,7 @@ msgstr "Cusbooneysiinta kaydka ku-meel-gaarka ah (cache) ee weydiinta xogta jaan
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "Hubinta %s Aqoonsiyada Xogta Maxalliga ah waa la dhammaystiray"
 
 #: lib/data_query.php
@@ -11157,7 +11157,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "Waa inaad u doorataa tiirka wax-soo-saarka XML ee Isha Xogta '%s' oo aad rogtaa sanduuqa calaamadeynta ee dhankeeda midig ku yaal"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "Qaabkaaga Jaantuska ma isticmaalayo wax Qaabab Xog ah. Fadlan sax Qaabkaaga Jaantuska"
 
 #: lib/data_query.php
@@ -11171,11 +11171,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "Waa lagu guuldareystay in la beddelo dhererka goobta erayga sirta ah, lama sii wadi karo maadaama ay kharibi karto erayga sirta ah"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "Waa lagu guuldareystay in la go'aamiyo dhererka goobta erayga sirta ah, lama sii wadi karo maadaama ay kharibi karto erayga sirta ah"
 
 #: lib/dsdebug.php
@@ -11292,10 +11292,6 @@ msgid "Link %s"
 msgstr "Xiriirinta %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "Waxaa lagu soo galay Marti ahaan"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "Waxaa lagu soo galay sidii"
 
@@ -11303,6 +11299,10 @@ msgstr "Waxaa lagu soo galay sidii"
 #, php-format
 msgid "Logged in as %s"
 msgstr "Waxaa lagu soo galay sidii %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "Waxaa lagu soo galay Marti ahaan"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11313,7 +11313,7 @@ msgid "Logout"
 msgstr "Ka bax"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Ciladda Diraha Iimaylka: Lama dejin cinwaanka qaataha!!<br>Haddii aad isticmaalayso xiriirinta <i>Tijaabada Iimaylka</i>, fadlan deji dejinta <b>Iimaylka Digniinta</b>."
 
 #: lib/functions.php
@@ -11392,7 +11392,7 @@ msgstr "DIGNIIN: Faylka Muhiimka ah ee Ku-darista Kadupul %s waa maqan yahay. Fa
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "DIGNIIN: PollerID:%s wuxuu leeyahay hostname aan sax ahayn:%s.  Lagama heli karo DNS!"
 
 #: lib/functions.php
@@ -11482,7 +11482,7 @@ msgid "All %d %s"
 msgstr "Dhammaan %d %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "U oggolow ama xaddid tiirarka shaxda inay ka baxaan xadka daaqadda hadda jirta."
 
 #: lib/html.php
@@ -12138,7 +12138,7 @@ msgid "Cascade to Branches"
 msgstr "U fidi Laamaha"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "Calaamadee sanduuqan haddii aad rabto inaad u isticmaasho html iyo CSS gaar ah warbixinta."
 
 #: lib/html_reports.php
@@ -12146,7 +12146,7 @@ msgid "Check this box to enable this Report."
 msgstr "Calaamadee sanduuqan si aad u hawlgeliso Warbixintan."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "Dooro faylka duubista html iyo CSS ee gaarka ah ee la isticmaalayo. Faylkani wuxuu ka kooban yahay html iyo CSS labadaba si loogu duubo warbixintaada. Haddii uu ka kooban yahay wax ka badan CSS oo keliya, waxaad u baahan tahay inaad geliso sumad gaar ah oo <REPORT> ah gudaha faylka. Sumaddan qaabeynta waxaa lagu beddeli doonaa nuxurka warbixinta. Faylashani waxay ku yaallaan galka 'formats'."
 
 #: lib/html_reports.php
@@ -12403,7 +12403,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "Dooro Qaabka Qalabka ee la isticmaalo si loogu shaandheeyo Qalabka ama Jaantusyada."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "Dooro Qalab la isticmaalo si loogu shaandheeyo ama looga xusho Jaantusyada haddii uu yahay Nooca Qalabka."
 
 #: lib/html_reports.php
@@ -12475,11 +12475,11 @@ msgid "The number of Graph columns."
 msgstr "Tirada tiirarka Jaantuska."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "Cinwaankan waxaa loo isticmaali doonaa cinwaanka Diraha Iimaylka"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "Magacan waxaa loo isticmaali doonaa Diraha Iimaylka ee caadiga ah"
 
 #: lib/html_reports.php
@@ -12497,22 +12497,22 @@ msgstr "Geed: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "Suurtagal ma aha in la diro Warbixinta '%s'. Fadlan deji Magaca Diraha iimaylka"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "Lama diri karo Warbixinta '%s'. Fadlan deji cinwaanka iimaylka laga dirayo"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "Suurtagal ma aha in la diro Warbixinta '%s'. Fadlan deji mawduuca iimaylka"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "Suurtagal ma aha in la diro Warbixinta '%s'. Fadlan deji cinwaannada iimaylka ee loo dirayo"
 
 #: lib/html_reports.php
@@ -12608,7 +12608,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Weedhaha joogtada ah ee Kadupul waxay ku xaddidan yihiin 50 xaraf oo keliya sababo amni awgood."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Weedhaha joogtada ah ee Kadupul ma ku jiri karaan xarfaha semicolon."
 
 #: lib/html_utility.php
@@ -13064,12 +13064,12 @@ msgstr "Waxaa lagu guul-darraystay in la dejiyo xulashada PHP %s, waa %s (waa in
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "Waa lagu guuldareystay in la dejiyo nooca %sRRDTool ee la cayimay: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "Waa lagu guuldareystay in la dejiyo nooca %sRRDtool ee la cayimay: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "Waxaa lagu guul-darraystay in la cusboonaysiiyo Xirmada Xulashada Otomaatiga ah %s"
 
 #: lib/installer.php
@@ -13142,7 +13142,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Soo dejinta Xirmada #%s '%s' ee hoos timaadda Astaanta '%s' way guulaysatay"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Haddii ay dhibaatooyin dhacaan, waxaa si xooggan lagugula talinayaa inaad nadiifiso kaydka ku meel gaarka ah (cache) ee biraawsarkaaga, xidho ka dibna dib u furto biraawsarkaaga (ma aha oo kaliya tabka Kadupul uu ku jiro) oo aad mar kale isku daydo, ka hor intaadan soo gudbin ciladda Kadupul"
 
 #: lib/installer.php
@@ -13320,7 +13320,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "Marmar dhif ah, waxaan helnay warbixino ka yimid isticmaalayaasha oo la kulmay dhibaatooyin yaryar sababo la xiriira isbeddelada koodhka.  Dhibaatooyinkan waxaa keena biraawsarka oo haysta koodhkii kor u qaadista kahor, inkastoo aan qaadnay tillaabooyin lagu yaraynayo fursadaha tan, haddana way dhici kartaa.  Haddii aad u baahan tahay tilmaamo ku saabsan sida loo nadiifiyo kaydka ku meel gaarka ah ee biraawsarkaaga, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> waa meel wanaagsan oo laga bilaabo."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "Marka rakibiddu dhammaato dariiqa CSRF waa in lagu dejiyaa akhris-keliya."
 
 #: lib/installer.php
@@ -13397,7 +13397,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "Fadlan dooro Qaab-dhismeedyada Qalabka ee aad rabto inaad cusboonaysiiso inta lagu jiro Kor-u-qaadidda."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Fadlan dooro Qaababka Qalabka (Device Templates) ee aad rabto inaad isticmaasho Rakibidda ka dib. Haddii Nidaamkaaga Hawlgalku yahay Windows, waxaad u baahan tahay inaad hubiso inaad doorato Qaabka 'Windows Device'. Haddii Nidaamkaaga Hawlgalku yahay Linux/UNIX, hubi inaad doorato Qaabka Qalabka 'Local Linux Machine'."
 
 #: lib/installer.php
@@ -13654,7 +13654,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Doorsoomayaasha ay tahay in lagu dejiyo faylka config.php waxaa ka mid ah kuwan soo socda:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Habka uu u shaqeeyo Liiska Caddaan waxa weeye marka aad markii ugu horreysay soo dejiso Habka Gelinta Xogta, ama aad dib u soo dejiso Habka Gelinta Xogta, oo script-ka ama dooduhu (arguments) si uun isku beddelaan, Habka Gelinta Xogta iyo dhammaan Ilaha Xogta ee u dhigma isla markiiba waa la damin doonaa ilaa maamuluhu xaqiijiyo in Habka Gelinta Xogtu sax yahay."
 
 #: lib/installer.php
@@ -13662,7 +13662,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "Kadib ku socodsii waxa soo socda gudaha MySQL adigoo ah maamule:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Sidaas darteed, dhowr nooc ka hor, Kadupul waxaa lagu xoojiyay awoodaha Liiska Cad (Whitelist) ee noocyadan Hababka Gelinta Xogta ah. Inkasta oo tani ay si qoto dheer u sugto amniga Kadupul, waxay kordhisaa shaqada looga baahan yahay maamulaha Kadupul si uu u soo dejiyo oo u maamulo Qaababka (Templates) iyo Xidhmooyinka (Packages)."
 
 #: lib/installer.php
@@ -13695,10 +13695,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "Barnaamijkani waa software xor ah; dib baad u qaybin kartaa ama wax ka beddeli kartaa iyadoo la raacayo shuruudaha Shatiga Guud ee Dadweynaha ee GNU (GNU General Public License) sida ay u daabacday Hay'adda Free Software Foundation; nooca 2aad ee Shatiga, ama (doorashadaada) nooc kasta oo ka dambeeya."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Ikhtiyaarkan script-ka wuxuu ka qaadayaa mamnuucidda Hababka Gelinta Xogta ee hadda mamnuuca ah."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Ikhtiyaarkan script-ka wuxuu dib u shidi doonaa Ilaha Xogta kasta oo damisan."
 
@@ -13707,16 +13703,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "Ikhtiyaarkan script-ka wuxuu raadin doonaa Hab kasta oo Gelinta Xogta ah oo hadda mamnuuc ah wuxuuna bixin doonaa faahfaahinta sababta."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "Ikhtiyaarkan script-ka wuxuu ka qaadayaa mamnuucidda Hababka Gelinta Xogta ee hadda mamnuuca ah."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Noocan Kadupul (%s) uma muuqdo inuu leeyahay koodh nooc oo sax ah, fadlan la xiriir Kooxda Horumarinta Kadupul si aad u hubiso in tan la saxo. Haddii aad qaladkan ku aragto sii-dayn rasmi ah, fadlan isla markiiba warbixin ka gudbi GitHub"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Si aad u awooddo inaad sii wadato, <b>WAA INAAD</b> abuurtaa keyd xog cusub, oo aad ku soo dejisaa \"cacti.sql\":"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Si loo fududeeyo aqoonsiga Hababka Gelinta Xogta ee xaaladdan ku jira, waxaan ku bixinnay qoraal xaqiijin ah galka CLI ee Kadupul kaas oo lagu ordi karo ikhtiyaarrada soo socda:"
 
 #: lib/installer.php
@@ -13750,7 +13750,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "Waxaa la cusboonaysiinayaa Xirmada Xulashada Otomaatiga ah %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "Cusboonaysiinta Qaab-dhismeedyada aad horay wax uga beddeshay laguma talinayo. Kor-u-qaadidda Qaab-dhismeedyada MA ka saari doonto wax-ka-beddelka Qaab-dhismeedyada Jaantuska iyo Xogta, waxayna keeni kartaa dhaqan aan la filayn. Si kastaba ha ahaatee, haddii aadan wax ka beddelin wax Jaantus ah, Weydiin Xog ah, ama Qaab-dhismeed Xog ah, dib-u-soo-dejinta Xirmada ma yeelan doonto wax saamayn ah. Xaaladdaas, waxaad u baahan doontaa inaad samayso 'Isku-waafaji Jaantusyada' ee Qaab-dhismeedyada cusboonaysiinta ka dib."
 
 #: lib/installer.php
@@ -13806,7 +13806,7 @@ msgstr "Waxaad u muuqataa inaad hoos ugu dhigayso nooc hore.  Isbeddelada kaydka
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "Waxaad isku dayaysaa inaad ku rakibto Kadupul %s kaydka xogta 0.6.x. Nasiib darro, tan lama samayn karo."
 
 #: lib/installer.php
@@ -13837,7 +13837,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "Seerferkaaga Kadupul v%s waa la rakibay/la casriyeeyay. Hadda waxaad bilaabi kartaa isticmaalka barnaamijka."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "Habayntaada Kadupul waxay leedahay jidka qaraabada ah ee saxda ah (url_path) ee ku jira config.php."
 
 #: lib/installer.php
@@ -13865,7 +13865,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Isku-habaynta xarfaha caadiga ah ee database-kaagu waxay u muuqataa inay u hoggaansan tahay UTF8"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Isku-habaynta xarfaha caadiga ah ee database-kaagu UMA muuqato inay si buuxda ugu hoggaansan tahay UTF8. "
 
 #: lib/installer.php
@@ -13964,12 +13964,12 @@ msgid "Unable to find user from DN"
 msgstr "Lama heli karo isticmaalaha laga helo DN"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "Lama heli karo DN-ka isticmaalayaasha"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
 msgstr "Khalad aan la filayn %s (Khalad LDAP: %s) oo ka dhacay Serfarka (%s)"
 
 #: lib/ping.php
@@ -14077,13 +14077,13 @@ msgstr "Faylka kordhinta '%s' waxaa loo baahan yahay in magaca laga beddelo si l
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Kordhinta ku jirta faylka '%s' kuma jirto shaqada rakibidda '%s()'. Shaqadani waa inay jirtaa si kordhinta loo rakibo."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Kordhinta ku jirta faylka '%s' kuma jirto shaqada nooca '%s()'. Shaqadani waa inay jirtaa si kordhinta loo rakibo."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Kordhinta ku jirta faylka '%s' kuma jirto shaqada nooca '%s()'. Shaqadani waa inay jirtaa si kordhinta loo rakibo."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Kordhinta ku jirta faylka '%s' kuma jirto shaqada rakibidda '%s()'. Shaqadani waa inay jirtaa si kordhinta loo rakibo."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14143,7 +14143,7 @@ msgstr "Muddada Jaantuska:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "Dhibaatooyin ayaa ka jira dirista Warbixinta '%s' Dhibaatada nidaamka hoose ee iimaylka Khaladku waa '%s'"
 
 #: lib/reports.php
@@ -14197,7 +14197,7 @@ msgstr "KHALAD: Faylka RRD ma jiro: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "KHALAD: RRDfile %s lama qori karo"
 
 #: lib/rrd.php
@@ -14319,7 +14319,7 @@ msgstr "XFF ee aqoonsiga RRA ee Kadupul waa '%s' laakiin waa inuu noqdaa '%s'"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Tirada safafka ee aqoonsiga RRA ee Kadupul '%s' ma saxna. Tirada safafka waa '%s' laakiin waa inay noqdaan '%s'"
 
 #: lib/rrd.php
@@ -14479,7 +14479,7 @@ msgstr "HALIS: Doodaha outlier-start iyo outlier-end waa inay ku qoran yihiin qa
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "HALIS: Lama awoodin in la kaydiyo nuqulka '%s'"
 
 #: lib/spikekill.php
@@ -14694,12 +14694,12 @@ msgstr "Hagaajinta %s"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s wuxuu u qaybin doonaa innodb_buffer_pool gobollo xusuus ah si loo wanaajiyo waxqabadka noocyada MariaDB ee ka yar 10.5. Qiimaha ugu sarreeya waa 64, laakiin waa inuusan ka badnaan tirada xudunta/dunta CPU. Marka innodb_buffer_pool uu ka yar yahay 1GB, waa inaad isticmaashaa cabbirka kaydka oo loo qaybiyay 128MB. Sii wad isticmaalka isla'egtan ilaa tirada ugu badan ee xudunta CPU ama 64."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s wuxuu u qaybin doonaa innodb_buffer_pool gobollo xusuus ah si loo wanaajiyo waxqabadka noocyada MySQL ilaa iyo oo ay ku jirto MySQL 8.0. Qiimaha ugu sarreeya waa 64, laakiin waa inuusan ka badnaan tirada xudunta/dunta CPU. Marka innodb_buffer_pool uu ka yar yahay 1GB, waa inaad isticmaashaa cabbirka kaydka oo loo qaybiyay 128MB. Sii wad isticmaalka isla'egtan ilaa tirada ugu badan ee xudunta CPU ama 64."
 
 #: lib/utility.php
@@ -14718,7 +14718,7 @@ msgstr "Aag-waqti sax ah oo la mid ah MySQL iyo nidaamka"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Laga bilaabo %s %s, waxaad xakamayn kartaa inta jeer ee %s uu wax-is-dhaafsiga ugu shubo saxanka. Qiimaha caadiga ah waa 1 ilbiriqsi, laakiin nidaamyada I/O-ga sare leh, u dejinta qiime ka weyn 1 waxay u oggolaan kartaa I/O-ga saxanka inuu noqdo mid isku xiga"
 
 #: lib/utility.php
@@ -14752,12 +14752,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "Haddii aad leedahay saxannada SSD, isticmaal soo-jeedintan. Haddii kale, ha dejin dejintan."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "Haddii jadwaladaadu leeyihiin tusmooyin aad u waaweyn, waa inaad ku shaqeysaa innodb_file_format oo ah Barracuda iyo innodb_large_prefix oo u dhigma 1. Ku guuldareysiga samaynta tani waxay keeni kartaa in kordhintu (plugins) aysan si sax ah u abuuri karin jadwalada."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB wuxuu xusuusta nidaamka ku hayn doonaa jadwalada iyo tusmooyinka ugu badan ee suurtogalka ah. Sidaa darteed, waa inaad ka dhigtaa innodb_buffer_pool mid ku filan oo xusuusta ku haya inta ugu badan ee jadwalada iyo tusmooyinka. Hubinta cabbirka galka /var/lib/mysql/cacti waxay kaa caawin doontaa go'aaminta qiimahan. Waxaan kugula talinaynaa 25%% oo ka mid ah wadarta xusuusta nidaamkaaga, laakiin baahiyahaagu way kala duwanaan doonaan iyadoo ku xiran cabbirka nidaamkaaga."
 
 #: lib/utility.php
@@ -14771,7 +14771,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "Waxaa lagugula talinayaa inaad daarto InnoDB nooc kasta oo %s ah oo ka weyn 5.1."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "Ka dhigista kaydka ku-meel-gaarka ah ee jadwalka (table cache) mid weyn waxay ka dhigan tahay hawlgallo yar oo furid/xirid faylal ah marka la isticmaalayo innodb_file_per_table."
 
 #: lib/utility.php
@@ -14796,7 +14796,7 @@ msgid "Recommended Value"
 msgstr "Qiimaha Lagula Talinayo"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Weydiimaha xunxun (rogue queries) ma aha inay sababaan in kaydka xogtu ka baxo khadka dadka kale. Jooji weydiimahan ka hor inta aysan curyaamin nidaamkaaga."
 
 #: lib/utility.php
@@ -14809,7 +14809,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "Tani waa halka lagu kaydiyo xogta faahfaahsan (metadata). Haddii aad leedahay jadwalo badan, waxaa faa'iido leh in tan la kordhiyo."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Dejintani waa inay ahaataa ON ilaa xaaladdaada Kadupul ay ku shaqaynayso ZFS ama FusionI/O kuwaas oo labaduba leh diiwaan-gelin gudaha ah si ay ula qabsadaan burburka nidaamka ee kadiska ah. Si kastaba ha ahaatee, haddii aad leedahay koronto aad u wanaagsan, oo nidaamyadaadu ay dhif u dhacaan oo aad leedahay kayd-celin (backups), u rogidda dejintan OFF waxay ku siin kartaa ku dhowaad 50% kordhin xagga waxqabadka kaydka xogta ah."
 
 #: lib/utility.php
@@ -14817,11 +14817,11 @@ msgid "Variable"
 msgstr "Doorsoome"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "Marka la fulinayo weydiimaha hoose (subqueries), haysashada cabbir jadwal ku-meel-gaar ah oo weyn waxay jadwaladaas ku-meel-gaarka ah ku haysaa xusuusta."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "Marka la samaynayo isku-darka jadwalada (joins), haddii ay ka yar yihiin cabbirkan, waxaa lagu hayn doonaa xusuusta mana lagu qori doono fayl ku-meel-gaar ah. Maadaama tani ay tahay qoondeyn xusuus oo isku-xir kasta ah, waa in laga taxaddaraa inaan aad loo kordhin. Wadarta join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + xusuusta asaasiga ah ee MySQL/MariaDB waa inay ka hoosaysaa 80%. Haddii taladu ay tahay taban (negative), waa inaad yaraysaa tan iyo/ama sort_buffer_size ilaa taladu ay ku habboonaato xusuusta la oggol yahay."
 
 #: lib/utility.php
@@ -15064,7 +15064,7 @@ msgstr "%s Qaatayaasha Ogeysiisyada"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "Guji 'Sii wad' si aad u tirtirto Qaataha Ogeysiisyada soo socda"
 msgstr[1] "Guji 'Sii wad' si aad u tirtirto Qaatayaasha Ogeysiisyada soo socda"
 
@@ -15074,13 +15074,13 @@ msgstr "Guji 'Sii wad' si aad u joojiso u-gudbinta Shayyada Ogeysiiska ee soo so
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "Guji 'Sii wad' si aad u damiso Qaataha Ogeysiisyada soo socda"
 msgstr[1] "Guji 'Sii wad' si aad u damiso Qaatayaasha Ogeysiisyada soo socda"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "Guji 'Sii wad' si aad u hawlgeliso Qaataha Ogeysiisyada soo socda"
 msgstr[1] "Guji 'Sii wad' si aad u hawlgeliso Qaatayaasha Ogeysiisyada soo socda"
 
@@ -15186,7 +15186,7 @@ msgid "Automatically Trust Signer"
 msgstr "Si Toos ah u Aamin Saxeexaha"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "Isbeddellada/Farqiyada"
 
 #: package_import.php
@@ -15254,6 +15254,10 @@ msgid "Package"
 msgstr "Xirmo"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "Faahfaahinta Xirmooyinka"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "Soo Dejinta Xirmada"
 
@@ -15266,19 +15270,15 @@ msgid "Package XML File Damaged."
 msgstr "Faylka XML ee Xirmada waa dhaawacmay."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "Faahfaahinta Xirmooyinka"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Beddel Diiwaannada Qiimaha la Soo Jeediyay ee Isha Xogta iyo Qaab-dhismeedka Jaantuska. Jaantusyada iyo Ilaha Xogta waxay qaadan doonaan magacyo cusub ka dib dib-u-tusmaynta Weydiinta Xogta ama iyadoo la adeegsanayo habka qasabka ah ee Beddelka Qiimaha la Soo Jeediyay."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "Eeg cacti.log si aad u hesho macluumaad dheeraad ah. Waxay noqon kartaa inaad la kulantay khalad Furaha API, ama xirmada la farageliyay, ama goobta lama heli karo"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "Eeg cacti.log si aad u hesho macluumaad dheeraad ah. Waxay noqon kartaa inaad qabtay cilad Fure API ah ama xirmada la farageliyay, ama goobtu aysan diyaar ahayn."
 
 #: package_import.php templates_import.php
@@ -15300,11 +15300,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "Xirmada %s Si Guul Leh Ayaa Loo Soo Dejiyay"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "Faylasha XML waxay u muuqdaan kuwo aan sax ahayn. Fadlan la xiriir qoraaga xirmada"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "Faylasha XML ee xirmada ma jiraan"
 
 #: package_import.php
@@ -15325,7 +15325,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "Ma aadan aaminin Qoraaga Xidhmadan. Haddii aad rabto inaad soo dejiso, calaamadee sanduuqa hubinta ee Si Toos ah u Aamin Qoraaga"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "Sharaxaad uu qoraaga Plugin-ku u siiyay Plugin-ka."
 
 #: plugins.php
@@ -15418,7 +15418,7 @@ msgid "Plugin Name"
 msgstr "Magaca Plugin-ka"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "Galka Plugin-yadu ma lahaan karaan meelo bannaan"
 
 #: plugins.php
@@ -15508,12 +15508,12 @@ msgstr "Ka saaridda rakibaadda Plugin-kan waxay tirtiri doontaa dhammaan Xogta i
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "KHALAD: Waddada faylka fulinta PHP: %s ma aha mid sax ah oo loogu talagalay aqoonsiga poller %d. Poller-ku ma sii wadi karo!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "KHALAD: Waddada spine: %s ma aha mid sax ah aqoonsiga poller %d. Poller-ku ma sii wadi karo!"
 
 #: poller.php
@@ -15535,7 +15535,7 @@ msgstr "Poller wuxuu ku jiraa Habka Heartbeat"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "DIGNIIN: %s iskuma jaanqaadna Xilliga Poller-ka ee aqoonsiga poller %d! Xilliga Poller-ku waa %d ilbiriqsi, iyadoo ugu badnaan tahay %d ilbiriqsi, laakiin %d ilbiriqsi ayaa ka soo wareegtay tan iyo ururintii ugu dambaysay!"
 
 #: poller.php
@@ -15590,7 +15590,7 @@ msgstr[1] "Nadiifi Tirakoobyada Ururiyayaasha Xogta"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "Guji 'Sii wad' si aad u Nadiifiso Tirakoobyada Ururiyaha Xogta ee Ururiyaha Xogta."
 msgstr[1] "Guji 'Sii wad' si aad u Nadiifiso Tirakoobyada Ururiyaha Xogta ee Ururiyayaasha Xogta."
 
@@ -15693,7 +15693,7 @@ msgid "No Data Collectors Found"
 msgstr "Lama Helin Wax Ururiye Xog ah"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "Qoraallada ku saabsan Kaydka Xogta ee Ururiyahan Xogta."
 
 #: pollers.php
@@ -15822,12 +15822,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "Faylka haya Furaha SSL ee loo adeegsado in lagu xirmo kaydka xogta fog."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "Magaca martigeliyaha ee Ururiyaha Xogta. Waxaa laga yaabaa inay lagama maarmaan noqoto inuu ahaado Magac Domain oo Buuxa (FQDN) si Poller-rada fog ay ula xiriiraan hawlo ay ka mid yihiin dib-u-tixraacidda, jaantus-samaynta waqtiga dhabta ah, iwm."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "Magaca martigeliyaha ee adeegaha kaydka xogta fog."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "Magaca martigeliyaha ee Ururiyaha Xogta. Waxaa laga yaabaa inay lagama maarmaan noqoto inuu ahaado Magac Domain oo Buuxa (FQDN) si Poller-rada fog ay ula xiriiraan hawlo ay ka mid yihiin dib-u-tixraacidda, jaantus-samaynta waqtiga dhabta ah, iwm."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15842,7 +15842,7 @@ msgid "The last time this Data Collector completed."
 msgstr "Markii ugu dambaysay ee Ururiyahan Xogtu dhammaystiray."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "Markii ugu dambeysay ee Xog-uruuriyahani uu si buuxda ula jaanqaaday bogga ugu weyn ee Kadupul."
 
 #: pollers.php
@@ -16025,7 +16025,7 @@ msgid "Changing Permission Model Warning"
 msgstr "Digniinta Beddelidda Qaabka Ogolaanshaha"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "Beddelidda Qaabka Ogolaanshaha waxay wax ka beddeli doontaa ogolaanshaha Jaantuska ee dhabta ah ee isticmaalayaasha."
 
 #: settings.php
@@ -16348,7 +16348,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>FIIRO GAAR AH:</strong> Midna ka mid ah Qalab-kordhinta Aasaasiga ah ee Kadupul, ilaa hadda, dib looma qaabeynin si ay ula shaqeeyaan Xog-uruuriyayaasha Fog.  Sidaas darteed, Qalab-kordhinta sida MacTrack, iyo HMIB, kuwaas oo u baahan marin toos ah oo qalabka ah ma la shaqeyn doonaan Xog-uruuriyayaasha Fog waqtigan.  Si kastaba ha ahaatee, qalab-kordhinta sida Thold way shaqeyn doontaa ilaa inta Xog-uruuriyaha Fog uu ku jiro qaabka <b>'online'</b>."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>FIIRO GAAR AH:</strong> Waxaad ku soo gashay Xog-uruuriye Fog.  Marka uu yahay <b>'online'</b>, waxaad awoodi doontaa inaad aragto oo aad maamusho inta badan Bogga Ugu Weyn ee Kadupul sidii adigoo isaga ku soo galay.  Sidoo kale, waxaa muhiim ah in la ogaado in Xog-uruuriyayaasha Fog looga baahan yahay inay isticmaalaan astaanta <b>'On Demand Updating'</b> ee Adeegyada Xoojinta Waxqabadka Kadupul, waxaana mar walba kugula talinaynaa isticmaalka Spine.  Marka Xog-uruuriyaha Fog uu yahay <b>'offline'</b>, Bogga Xog-uruuriyayaasha Fog wuxuu yeelan doonaa macluumaad aad uga yar.  Si kastaba ha ahaatee, wuxuu kaydin doonaa dhammaan cusbooneysiinta ilaa Kaydka Xogta iyo Adeegaha Webka ee Ugu Weyn ee Kadupul la gaari karo.  Ka dib wuxuu ku shubi doonaa natiijada miiskiisa Boost dib ugu celinta Kaydka Xogta Ugu Weyn ee Kadupul si loo cusbooneysiiyo."
 
 #: templates/platform/console_home_body.html.twig
@@ -16523,25 +16523,25 @@ msgstr "Laamaha"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "Guji 'Sii wad' si aad u tirtirto Geedkan soo socda."
 msgstr[1] "Guji 'Sii wad' si aad u tirtirto Geedahan soo socda."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "Guji 'Sii wad' si aad u daabacdo Geedkan soo socda."
 msgstr[1] "Guji 'Sii wad' si aad u daabacdo Geedahan soo socda."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "Guji 'Sii wad' si aad qufulka uga furto Geedkan soo socda."
 msgstr[1] "Guji 'Sii wad' si aad qufulka uga furto Geedahan soo socda."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "Guji 'Sii wad' si aad uga noqoto daabacaadda Geedkan soo socda."
 msgstr[1] "Guji 'Sii wad' si aad uga noqoto daabacaadda Geedahan soo socda."
 
@@ -16639,7 +16639,7 @@ msgid "The last user to have modified this Tree."
 msgstr "Isticmaalihii ugu dambeeyay ee wax ka beddela Geedkan."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "Magaca loogu yeeri doono Geedkan."
 
 #: tree.php
@@ -16832,7 +16832,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Guji 'Sii wad' si aad u hawl-geliso Isticmaalaha/Isticmaalayaasha la doortay."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Guji 'Sii wad' si aad ugu dul-qorto dejinta Isticmaalaha/Isticmaalayaasha dejinta iyo ogolaanshaha Isticmaalaha qaab-dhismeedka la doortay.  Magaca Oo Buuxa, Erayga sirta ah, Aagga iyo xaaladda Hawl-gelinta ee isticmaalayaasha asalka ah waa la hayn doonaa, dhammaan meelaha kale waxaa laga dul-qori doonaa Isticmaalaha Qaab-dhismeedka."
 
 #: user_admin.php
@@ -17152,13 +17152,13 @@ msgstr "Dooro nooca domain-kani uu yahay."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "Guji 'Sii wad' si aad u tirtirto Domain-ka Isticmaalaha ee soo socda."
 msgstr[1] "Guji 'Sii wad' si aad u tirtirto Domain-yada Isticmaalaha ee soo socda."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "Guji 'Sii wad' si aad u damiso Domain-ka Isticmaalaha ee soo socda."
 msgstr[1] "Guji 'Sii wad' si aad u damiso Domain-yada Isticmaalaha ee soo socda."
 
@@ -17167,7 +17167,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "Guji 'Sii wad' si aad u hawlgeliso Domain-ka Isticmaalaha ee soo socda."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "Guji 'Sii wad' si aad Domain-ka Isticmaalaha ee soo socda uga dhigto kan caadiga ah."
 
 #: user_domains.php
@@ -17199,15 +17199,11 @@ msgid "Domains"
 msgstr "Domain-yada"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "Nooca Domain-yada"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "Isticmaalaha Dhabta ah"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "Domain-ka Isticmaalaha ee La Hawlgeliyay"
 msgstr[1] "Hawlgeli Domain-yada Isticmaalaha"
@@ -17225,16 +17221,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "Goobta beddeli doonta iimaylka laga soo qaatay LDAP. (dhanka Windows: mail) "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "Haddii sanduuqan calaamadaynta la saxo, isticmaalayaashu waxay awoodi doonaan inay galaan iyagoo adeegsanaya domain-kan."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "Ka Dhig Domain-ka La Doortay midka Caadiga ah"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Habka ay Cacti isku dayi doonto inay ku xaqiijiso aqoonsiga server-ka LDAP.<blockquote><i>Raadin La'aan</i> - Ma jiro wax baaritaan ah oo Distinguished Name (DN) ah oo dhaca, kaliya waxay isku daydaa inay ku xirto qaabka Distinguished Name (DN) ee la bixiyay.<br><br><i>Raadin Qarsoon</i> - Waxay isku daydaa inay magaca isticmaalaha ka raadiso diiwaanka LDAP iyadoo adeegsanaysa ku xirid qarsoon si loo helo Distinguished Name (DN) ee isticmaalaha.<br><br><i>Raadin Gaar ah</i> - Waxay isku daydaa inay magaca isticmaalaha ka raadiso diiwaanka LDAP iyadoo adeegsanaysa Distinguished Name (DN) Gaar ah iyo Erayga sirta ah ee Gaarka ah si ay u hesho Distinguished Name (DN) ee isticmaalaha."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17300,25 +17292,25 @@ msgstr "Nadiifi"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "Guji 'Sii wad' si aad u Koobiyayso Kooxda Isticmaalayaasha ee soo socota una samayso Koox Isticmaalayaal oo cusub."
 msgstr[1] "Guji 'Sii wad' si aad u Koobiyayso Kooxaha Isticmaalayaasha ee soo socda una samayso Kooxo Isticmaalayaal oo cusub."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "Guji 'Sii wad' si aad u tirtirto Kooxda Isticmaalayaasha ee soo socota"
 msgstr[1] "Guji 'Sii wad' si aad u tirtirto Kooxaha Isticmaalayaasha ee soo socda"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "Guji 'Sii wad' si aad u damiso Kooxda Isticmaalayaasha ee soo socota."
 msgstr[1] "Guji 'Sii wad' si aad u damiso Kooxaha Isticmaalayaasha ee soo socda."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "Guji 'Sii wad' si aad u hawlgeliso Kooxda Isticmaalayaasha ee soo socota."
 msgstr[1] "Guji 'Sii wad' si aad u hawlgeliso Kooxaha Isticmaalayaasha ee soo socda."
 
@@ -17341,7 +17333,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "Siyaasadda Geedka ee Caadiga ah ee Kooxdan Isticmaalayaasha"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "U daa Dejinta Isticmaalayaasha"
 
 #: user_group_admin.php
@@ -17675,11 +17667,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "Tirokoobka Faahfaahsan ee Waqtiga Shaqada"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Noocyo kala duwan oo Kadupul iyo Spine ah!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "Galku MA JIRO!!"
 
 #: utilities.php
@@ -17693,11 +17685,11 @@ msgstr "QALAD: Nooca RRDtool ee rakiban kama badna nooca la habeeyay.<br>Fadlan 
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "QALAD: RRDtool 1.2.x+ ma taageero qaabka sawirrada GIF, laakiin %d\" jaantus(yo) iyo/ama qaabab ayaa GIF loogu dejiyay qaabka sawirka."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "Tab kasta oo biraawsarka ah wuxuu isticmaali karaa ilaa 10 isku-xir iyadoo ku xiran biraawsarka."
 
 #: utilities.php
@@ -17755,7 +17747,7 @@ msgstr "Wuu rakiban yahay. <span class=\"deviceDown\">Fiiro gaar ah: Haddii aad 
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "Waxaa si xooggan lagugu talinayaa inaad u beddesho php.ini memory_limit ilaa %s ama ka sare."
 
 #: utilities.php
@@ -18158,11 +18150,11 @@ msgid "Technical Support [%s]"
 msgstr "Taageerada Farsamada [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "Kaydka Weydiinta Xogta wuxuu kaydiyaa macluumaadka laga soo ururiyay noocyada gelinta Weydiinta Xogta. Qiimaha meelahan laga helo waxaa lagu adeegsan karaa meesha qoraalka ee Jaantusyada ee Sharraxaadda (Legends), Calaamadaha Tooska ah, iyo GPRINT iyo sidoo kale CDEF."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Diiwaanka Kadupul wuxuu kaydiyaa tirokoobka, khaladaadka iyo fariimaha kale iyadoo ku xiran dejinta nidaamka.  Macluumaadkan waxaa loo isticmaali karaa in lagu aqoonsado dhibaatooyinka xog-uruuriyaha iyo barnaamijka."
 
 #: utilities.php
@@ -18198,7 +18190,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Tani waxay muujinaysaa dhammaan walxaha uu maamulo Wakiilka SNMP."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "Qiimahan xusuusta ee la soo jeediyay waxaa lagu xisaabiyay iyadoo lagu saleynayo tirada ilaha xogta ee jira waxaana loo isticmaalaa kaliya talo ahaan, qiimaha dhabta ahi wuu ku kala duwanaan karaa nidaam ilaa nidaam iyadoo ku xiran baahiyaha."
 
 #: utilities.php
@@ -18235,7 +18227,7 @@ msgid "Update Frequency:"
 msgstr "Inta Jeer ee Cusboonaysiinta:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "Adeegso qalabkan si aad u muujiso dhibaatooyinka faylasha rrd ee maqan ama qiimayaasha ka maqan faylasha rrd. Waxaad u baahan tahay inaad ka daarto rrdcheck gudaha Habaynta->Dejinta->Xogta"
 
 #: utilities.php

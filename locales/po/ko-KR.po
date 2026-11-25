@@ -293,11 +293,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "아래의 집계 그래프를 템플릿 기반 집계로 마이그레이션하려면 먼저 그래프 템플릿 &#39; %s&#39;의 집계 템플릿을 만드십시오."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "아래의 집계 그래프를 템플릿 기반 집계로 마이그레이션하려면 하나의 그래프 템플릿 만 사용해야합니다. &#39;Return&#39;키를 누른 다음 동일한 그래프 템플릿을 사용하는 집계 그래프 만 선택하십시오."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "아래의 집계 그래프를 집계 템플릿을 사용하도록 마이그레이션하려면 집계 템플릿이 이미 존재해야 합니다. 'Return'을 누른 다음 먼저 집계 템플릿을 생성한 후 다시 시도하십시오."
 
 #: aggregate_graphs.php
@@ -442,7 +442,7 @@ msgid "Template"
 msgstr "템플릿"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "이 집계 그래프가 기반으로하는 집계 템플릿"
 
 #: aggregate_graphs.php
@@ -450,7 +450,7 @@ msgid "The internal database identifier for this object"
 msgstr "이 객체의 내부 데이터베이스 식별자"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "선택한 집계 그래프에 일치하는 집계 템플릿이 없는 것 같습니다."
 
 #: aggregate_graphs.php
@@ -521,7 +521,7 @@ msgid "Aggregate Templates"
 msgstr "집계 템플릿"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "사용중인 집계 템플릿은 삭제할 수 없습니다. 사용 중은 집계에 의해 참조되는 것으로 정의됩니다."
 
 #: aggregate_templates.php
@@ -758,7 +758,7 @@ msgid "All your login sessions have been cleared."
 msgstr "모든 로그인 세션이 지워졌습니다."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "연락 할 이메일 주소."
 
 #: auth_profile.php
@@ -1112,7 +1112,7 @@ msgid "Clear Filtered"
 msgstr "필터링 지우기"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "네트워크 검색을 취소하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: automation_networks.php
@@ -1239,7 +1239,7 @@ msgid "Schedule"
 msgstr "일정"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "이 네트워크 발견의 현재 상태"
 
 #: automation_networks.php
@@ -1678,11 +1678,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "'%s' 속성에서 '%s' 문제가 발견되었습니다"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "폴러로 RRA Folder를 쓸 수 있습니까?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "폴러가 RRDfile을 쓸 수 있습니까?"
 
 #: data_debug.php
@@ -2060,7 +2060,7 @@ msgstr "XML 파일을 찾을 때까지 연결 읽기 전용"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "다음 데이터 쿼리를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: data_queries.php
@@ -2069,7 +2069,7 @@ msgstr "다음 데이터 쿼리 그래프 연관을 삭제하려면 &#39;계속&
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "다음 데이터 쿼리를 복제하려면 '계속'을 클릭하십시오."
 
 #: data_queries.php
@@ -2228,7 +2228,7 @@ msgid "The name of this Data Query."
 msgstr "이 데이터 쿼리의 이름입니다."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "이 데이터 쿼리를 사용하는 그래프 템플릿 수입니다."
 
 #: data_queries.php
@@ -2279,7 +2279,7 @@ msgstr "이 데이터 소스가 속한 장치를 선택하십시오."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "다음 데이터 소스를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: data_sources.php
@@ -2410,7 +2410,7 @@ msgid "External"
 msgstr "외부"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "이 데이터 소스가 그래프에서 오랫동안 사용되지 않으면 삭제 될 수 있습니다."
 
 #: data_sources.php
@@ -2534,7 +2534,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "이 데이터 소스에 대해 데이터 수집 여부. 데이터 템플릿 수준에서 제어됩니다."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "이 확인란의 선택을 취소한 다음 데이터 템플릿 저장을 클릭하면 이 데이터 템플릿을 기반으로 하는 기존 데이터 소스의 사용자 지정 데이터가 손실됩니다. 이로 인해 데이터 수집 및 그래프가 손상될 수 있습니다."
 
 #: data_templates.php
@@ -2596,7 +2596,7 @@ msgid "Data Templates [new]"
 msgstr "데이터 템플릿 [신규]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "사용중인 데이터 템플릿은 수정할 수 없습니다."
 
 #: data_templates.php
@@ -2673,7 +2673,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "이 값은 장치에서 파생되고 읽기 전용이므로 비활성화됩니다."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "이 값은 중요한 데이터 데이터 쿼리 연결을 추적하는 장치 또는 특수 데이터 쿼리 개체에서 파생되는 값으로 인해 비활성화됩니다."
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2799,7 +2799,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "다음 그래프 템플릿을 복제하려면 &#39;계속&#39;을 클릭하십시오. 새 그래프 템플리트의 제목 형식을 선택적으로 변경할 수 있습니다."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "그래프를 다음 그래프 템플릿과 동기화하려면 &#39;계속&#39;을 클릭하십시오. 이 함수는 여러 버전의 그래프 템플릿과 함께 존재하고 모든 모양이 공통으로 나타나기를 원하는 그래프가있는 경우 중요합니다."
 
 #: graph_templates.php
@@ -3131,7 +3131,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "그래프 변경 관련 장치"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "다음 그래프에 대한 그래프 템플릿을 변경하려면 그래프 템플릿을 선택하고 &#39;계속&#39;을 클릭하십시오. 호환 가능한 그래프 템플릿 만 표시됩니다. 호환은 동일한 데이터 소스를 가진 사람이 식별합니다."
 
 #: graphs.php
@@ -3337,7 +3337,7 @@ msgid "The selected Tree is not available."
 msgstr "선택한 트리를 사용할 수 없습니다."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "현재이 그래프 템플리트에 대해 정의 된 집계 템플리트가 없습니다. 먼저 선택한 그래프 그래프 템플릿에 대한 전체 템플릿을 만들고 다시 시도하거나 템플릿이 적용되지 않은 총 그래프를 작성하십시오."
 
 #: graphs.php
@@ -3531,20 +3531,20 @@ msgid "Class"
 msgstr "클래식"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "&#39;계속&#39;을 클릭하여 다음 데이터를 삭제하면 장치 템플릿에서 쿼리가 분리됩니다."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "다음 그래프 템플리트를 삭제하려면 &#39;계속&#39;을 클릭하고 장치 템플리트에서 연결 해제됩니다."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "선택한 장치 템플릿과 관련된 장치를 동기화하려면 &#39;계속&#39;을 클릭하십시오. 이 작업은 장치 템플릿에 매핑 된 장치 수에 따라 다소 시간이 걸릴 수 있습니다."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "&#39;계속&#39;을 클릭하여 다음 데이터를 삭제하면 장치 템플릿에서 쿼리가 분리됩니다."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "다음 장치 템플릿을 삭제하려면 &#39;계속&#39;을 클릭하십시오."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "다음 그래프 템플리트를 삭제하려면 &#39;계속&#39;을 클릭하고 장치 템플리트에서 연결 해제됩니다."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3634,7 +3634,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "장치를 장치 템플릿에 동기화"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "이 장치 템플릿의 클래스입니다. 클래스 이름은 그 기능을 대표해야 합니다."
 
 #: host_templates.php
@@ -3659,7 +3659,7 @@ msgstr "치명적 : Kadupul의이 영역에 액세스하려면 로그인해야�
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "이것이 오류라고 생각하면. Kadupul 관리자에게 문의하십시오."
 
 #: include/auth.php
@@ -3675,7 +3675,7 @@ msgid "Not Logged In"
 msgstr "로그인하지 않았습니다."
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "현재 설치 / 업그레이드 권한이있는 Kadupul 관리자 만 로그인 할 수 있습니다."
 
 #: include/auth.php
@@ -5059,7 +5059,7 @@ msgid "Operator"
 msgstr "운영자"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "페이지가 정의되지 않았습니다. 따라서 표시 할 수 없습니다."
 
 #: include/global_arrays.php
@@ -5625,8 +5625,8 @@ msgid "Use the First Handler Found"
 msgstr "발견된 첫 번째 처리기 사용"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "MonoTranslator GetText 처리기 사용"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "MoTranslator GetText 처리기 사용"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5771,7 +5771,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "데이터 쿼리 인덱스 수가 변경되면 재 인덱싱이 수행됩니다."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "장치 SNMP 가동 시간이 뒤로 이동하면 다시 색인이 수행됩니다."
 
 #: include/global_arrays.php
@@ -5815,7 +5815,7 @@ msgid "You are not allowed to change your password."
 msgstr "암호를 변경할 수 없습니다."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "이 기능을 사용하려면 내장 된 사용자 인증이 켜져 있어야합니다."
 
 #: include/global_arrays.php
@@ -5977,18 +5977,18 @@ msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "%d OID"
+
+#: include/global_form.php
+#, php-format
+msgid "%d Repetition"
+msgstr "%d 반복"
 
 #: include/global_form.php
 #, php-format
 msgid "%d Repetitions"
 msgstr "반복 %d 회"
-
-#: include/global_form.php
-#, php-format
-msgid "%d Repitition"
-msgstr "%d 반복"
 
 #: include/global_form.php
 msgid "A CDEF (math) function to apply to this item on the graph or legend."
@@ -6196,7 +6196,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "이 규칙에 적용 할 데이터 쿼리를 선택하십시오."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "후크 할 하위 트리 항목을 선택하십시오. <br> 이 규칙이 실행될 때 여전히 존재한다는 것을 확인하십시오!"
 
 #: include/global_form.php
@@ -6206,6 +6206,10 @@ msgstr "새 트리 항목에 대한 트리를 선택하십시오."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "이 데이터 소스의 이름을 지정하십시오. |host_description| 또는 |query_fieldName| 같은 대체 변수를 포함할 수 있습니다. 지원되는 대체 태그의 전체 목록은 Kadupul 설명서를 참조하십시오."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "고유 한 이름을 선택하여 RRD 파일 내부에서이 데이터 부분을 나타냅니다."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6265,10 +6269,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "이 데이터 입력 방법에 대한 데이터를 수집하는 데 사용할 방법을 선택하십시오."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "고유 한 이름을 선택하여 RRD 파일 내부에서이 데이터 부분을 나타냅니다."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "공통 옵션"
 
@@ -6321,7 +6321,7 @@ msgid "Determines if the user account is locked."
 msgstr "사용자 계정이 잠겨 있는지 확인합니다."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "사용자가 로그인 할 수 있는지 여부를 결정합니다."
 
 #: include/global_form.php
@@ -6382,7 +6382,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "이 장치에 사용할 SNMP 컨텍스트를 입력하십시오."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "이 장치에 사용할 SNMP v3 엔진 ID를 입력하십시오. SNMPv3 알림 수신기별로 정의되는 SNMP 엔진 ID를 사용하려면이 필드를 비워 둡니다."
 
 #: include/global_form.php
@@ -6585,7 +6585,7 @@ msgid "Include Prefix Text"
 msgstr "인덱스 포함"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "소스 그래프 GPRINT 제목 텍스트를 집계 그래프와 함께 포함시킵니다."
 
 #: include/global_form.php
@@ -7093,7 +7093,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "스크립트로 전송되는 데이터로, 스크립트의 전체 경로와 &lt;&gt; 대괄호로 묶인 입력 소스가 포함됩니다."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "데이터가 데이터 소스에서 수집되는 빈도"
 
 #: include/global_form.php
@@ -7197,7 +7197,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "장치의 실제 위치. 이 무료 서식 텍스트는 회의실, 랙 위치 등이 될 수 있습니다."
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "특정 입력 방법에 대한 공백 확인 검사의 결과입니다. 입력 문자열이 변경되고 허용 목록 파일이 업데이트되지 않으면 그래프를 만들 수 없습니다."
 
 #: include/global_form.php
@@ -7213,7 +7213,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "생성 된 그래프의 유형. PNG, GIF 또는 SVG. 그래프 이미지 유형의 선택은 매우 RRDtool에 의존합니다."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "전송할 Ping 패킷 유형입니다.  <br><i>참고: Linux/UNIX에서 ICMP를 사용하려면 root 권한이 필요합니다.</i>  <br><i>참고: TCP Ping 닫힘 - TCP Ping이 성공하지 않더라도 장치가 UP 상태로 간주될 수 있습니다.</i>"
 
 #: include/global_form.php
@@ -7309,7 +7309,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "세로 레이블 (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "이 장치는 어떤 사이트와 연결되어 있습니다."
 
 #: include/global_form.php
@@ -7333,11 +7333,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "해당 RRA를 기반으로 그래프를 볼 때 해당 그래프에 표시 할 기본 시간대입니다."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "왼쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;%Y-%m-%d %H:%M:%S&quot;). --units-length도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "오른쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;%Y-%m-%d %H:%M:%S&quot;). --units-length 및 --right-axis-format도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
 
 #: include/global_form.php
@@ -7501,11 +7501,11 @@ msgid "56 Gbps Ethernet"
 msgstr "56Gbps 이더넷"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote> <i>내장 인증</i> - Kadupul는 사용자 인증을 처리하여 사용자를 생성하고 Kadupul 내의 다른 영역에 권한을 부여 할 수 있습니다. <br><br> <i>웹 기본 인증</i> - 인증은 웹 서버에서 처리합니다. 템플릿 사용자가 정의 된 경우 처음 로그인 할 때 사용자가 자동으로 추가되거나 생성 될 수 있습니다. 그렇지 않으면 정의 된 게스트 권한이 사용됩니다. <br><br> <i>LDAP 인증</i> - LDAP 서버에 대한 인증을 허용합니다. 템플릿 사용자가 정의되면 사용자는 처음 로그인 할 때 자동으로 만들어지며, 그렇지 않으면 정의 된 게스트 권한이 사용됩니다. PHP LDAP 모듈이 활성화되어 있지 않으면 LDAP 인증이 선택 가능한 옵션으로 나타나지 않습니다. <br><br> <i>다중 LDAP / AD 도메인 인증</i> - 관리자는 Kadupul 리소스에 액세스하기 위해 여러 LDAP / AD 디렉토리의 여러 이질적인 그룹을 지원할 수 있습니다. LDAP 인증과 마찬가지로이 방법을 사용하려면 PHP LDAP 모듈이 필요합니다. </blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "데이터 수집 중에 디버그 모드에 있기를 원하는 쉼표로 구분 된 장치 ID 목록입니다. 이 디버그 레벨은 Kadupul 폴링 프로세스 동안 제자리에 있습니다."
 
 #: include/global_settings.php
@@ -7513,7 +7513,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "독창성 검사를 중심으로 데이터 소스 생성을 추적하는 개발자 전용 옵션"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "유효한 LDAP 서버의 DNS 호스트 이름 또는 IP 주소의 공백으로 구분된 목록입니다. Kadupul는 사용자 인증을 위해 왼쪽에서 오른쪽으로 LDAP 서버를 사용하려고 시도합니다."
 
 #: include/global_settings.php
@@ -7733,7 +7733,7 @@ msgid "By Template/Data Query"
 msgstr "템플릿 / 데이터 쿼리 별"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "기본적으로 Kadupul 페이지 도움말은 kadupul.org에 위치합니다. 그러나 시스템이 인터넷에 연결되어 있지 않은 경우 HTML 형식의 문서를 로컬로 다운로드하여 Kadupul 서버의 'docs' 위치에 호스팅할 수 있습니다. 페이지 도움말 문서에 로컬 위치만 사용하려면 이 확인란을 선택하세요."
 
 #: include/global_settings.php
@@ -7757,7 +7757,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "새로 가져온 그래프 템플릿과 새로 가져온 그래프 템플릿을 만들기 전에 데이터 소스를 테스트하려면 이 확인란을 선택합니다. 테스트 데이터 소스가 활성화된 상태에서 데이터 소스가 유효한 데이터를 반환하지 않으면 그래프가 생성되지 않습니다. 이 설정은 장치 자체의 특성에 따라 선택적으로 적용할 수 있는 더 많은 그래프 템플릿을 포함할 수 있는 보다 일반적인 장치 템플릿을 원하는 경우 중요합니다. 참고: 데이터 소스로 오래 실행되는 스크립트가 있는 경우 그래프를 만드는 시간이 늘어납니다."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "Kadupul의 현지화를 허용하려면 &#39;사용함&#39;을 선택하십시오. strict 모드에서는 시스템에 설치된 모든 플러그인이 요청한 언어를 지원해야합니다. 그것이 사실이 아니라면 모든 것이 영어로 표시됩니다."
 
 #: include/global_settings.php
@@ -7937,7 +7937,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "모든 새 장치에 대한 기본 SNMP v3 인증 사용자."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "모든 새 장치에 대한 기본 SNMP v3 엔진 ID. SNMPv3 알림 수신기별로 정의되는 SNMP 엔진 ID를 사용하려면이 필드를 비워 둡니다."
 
 #: include/global_settings.php
@@ -8153,11 +8153,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "LDAP 참조를 활성화 또는 비활성화합니다. 사용 중지하면 검색 속도가 빨라질 수 있습니다."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "영역 및 스택 차트에 대해 그라디언트 지원을 활성화했습니다."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "폴링 출력 향상에 레코드를 직접 삽입 할 수 있으므로 각 폴링 사이클의 시간이 25 % 단축됩니다."
 
 #: include/global_settings.php user_domains.php
@@ -8249,7 +8249,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "Kadupul의 외부 링크 지원과 함께 사용하십시오. 이 설정을 사용하면 Kadupul 대시 보드를 숨길 수 있으므로 자신 만의 페이지 만 표시 할 수 있습니다."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "콘솔 액세스 권한만 있는 사용자의 경우 이 사용자가 자동으로 로그아웃되기 전에 로그인 상태를 유지할 수 있는 시간입니다. 한 시간 이상 활동하지 않으면 브라우저를 새로 고쳐야 할 수 있습니다. 또한 이 설정은 인증 쿠키가 활성화된 경우 영향을 미치지 않습니다."
 
 #: include/global_settings.php
@@ -8397,11 +8397,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "실시간 그래프를 어떻게보고 싶습니까?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "Daily Stats를 얼마나 자주 업데이트해야합니까?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "RRD를 얼마나 자주 확인해야 합니까?"
 
 #: include/global_settings.php
@@ -8409,7 +8409,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "단일 평가 실행에서 새 규칙 배치를 시작할 수 있는 최대 시간입니다. 대기 중인 알림 전송은 평가 후 남은 시간 내에 수행되며, 시간 예산을 모두 소진한 경우에도 한 배치는 전송할 수 있습니다. 도달하지 못한 규칙은 다음 실행에서 우선 평가됩니다."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "snmpbulkwalk 요청 당 얼마나 많은 OID가 반환되어야합니까? 대형 SNMP 트리가있는 장치의 경우이 크기를 늘리면 WAN보다 인덱스 다시 성능이 향상됩니다."
 
 #: include/global_settings.php
@@ -8417,15 +8417,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "얼마나 많은 로그 파일을 보유 하시겠습니까? 로그를 절대 제거하지 않으려면 0을 사용하십시오. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "Kadupul 로그 표시를 얼마나 자주 업데이트 하시겠습니까?"
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Kadupul는 클라이언트 브라우저 시간대에 따라 클라이언트 날짜를 어떻게 지원해야 합니까?"
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Kadupul는 어떻게 이벤트 로깅을 처리 할 것입니까?"
 
 #: include/global_settings.php
@@ -8441,7 +8441,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "Checked Kadupul는 바인딩 및 검색 활동 중에 Kadupul 로그에 추가 LDAP 정보를 기록합니다."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Kadupul가 ifSpeed 또는 ifHighSpeed가 설정되지 않았거나 0으로 인해 인터페이스 속도를 결정할 수없는 경우 결과 RRD 파일에서 최대 값을 원하는대로 설정하십시오."
 
 #: include/global_settings.php
@@ -8469,7 +8469,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "부스트 출력 테이블이이 크기를 초과하면 레코드에서 업데이트가 수행됩니다."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "Boost 폴러가 이 런타임을 초과하면 Cacti 로그에 경고가 기록되며,"
 
 #: include/global_settings.php
@@ -8477,7 +8477,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "이 디렉토리가 비어 있지 않으면 원래 RRD 파일이이 위치에 백업됩니다."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "이 필드가 비어 있지 않으면 Boost는 부스트 폴러 프로세스의 RRDupdate 출력을 기록합니다."
 
 #: include/global_settings.php
@@ -8485,7 +8485,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "이 옵션을 선택하면 Kadupul는 Kadupul 장치 및 시스템 정보로 SNMP 에이전트 테이블을 채 웁니다. SNMP 에이전트 자체를 활성화하지는 않습니다."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "Kadupul의 Data Collector에 문제가있는 경우이 파일 경로를 설정하면 Data Collector 표준 오류가이 파일로 리디렉션됩니다"
 
 #: include/global_settings.php
@@ -8665,7 +8665,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "합격 당 최대 데이터 소스 항목"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "최대 전자 메일 크기"
 
 #: include/global_settings.php
@@ -8720,20 +8720,20 @@ msgstr "최소 트리 너비"
 msgid "Mode"
 msgstr "모드"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Kadupul가 LDAP 서버에 대해 인증을 시도하는 모드. <blockquote> <i>검색하지 않음</i> - 고유 이름 (DN) 검색이 발생하지 않고 제공된 DN (고유 이름) 형식으로 바인딩을 시도합니다. <br><br> <i>익명 검색</i> - 익명 바인딩을 통해 LDAP 디렉토리에 대한 사용자 이름을 검색하여 사용자의 고유 이름 (DN)을 찾습니다. <br><br> <i>특정 검색</i> - 사용자의 고유 이름 (DN)을 찾기 위해 특정 식별 이름 (DN) 및 특정 암호를 통해 LDAP 디렉토리에 대한 사용자 이름을 검색하려고 시도합니다."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "매월 일요일"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "내 브라우저 시간대"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "NaN"
 
 #: include/global_settings.php
@@ -9229,7 +9229,7 @@ msgid "Server(s)"
 msgstr "서버"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Boost가 Kadupul에서 주문형 RRD 업데이트를 활성화해야합니까? 사용하지 않으면이 변경 사항은 다음 폴링주기 이후에 적용됩니다. 원격 데이터 수집기가 있으면이 설정이 켜져 있어야합니다."
 
 #: include/global_settings.php
@@ -9249,7 +9249,7 @@ msgid "Should image caching be enabled?"
 msgstr "이미지 캐싱을 사용해야합니까?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "그래프가 있고 데이터 원본이 기본적으로 선택되어 있어야합니다."
 
 #: include/global_settings.php
@@ -9273,7 +9273,7 @@ msgid "Show business hours"
 msgstr "업무 시간 표시"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "선택한 사이트에서 사용할 수 있는 위치만 표시합니다."
 
 #: include/global_settings.php
@@ -9293,11 +9293,11 @@ msgid "Site Security"
 msgstr "보안"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "Kadupul의 인터페이스 중 일부는 Drag-N-Drop을 지원합니다. 이 옵션을 선택하면이 옵션이 활성화됩니다. 참고 : 시각 장애가있는 사용자의 경우이 옵션이 비활성화되어있을 수 있습니다."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "웹 서버 자체 외부에서 액세스가 허용될 공백으로 구분된 도메인 이름입니다. 이는 CDN 또는 호스팅 사이트를 사용하는 사용자에게 중요합니다. 소스에는 *.mydomain.com과 같은 와일드카드 또는 https://*.example.com. 과 같은 프로토콜을 포함할 수 있습니다. 이러한 대체 소스에는 이미지, CSS 및 JavaScript 유형만 포함됩니다."
 
 #: include/global_settings.php
@@ -9441,15 +9441,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "프로세스 당 허용되는 기본 스레드. 참고 : Kadupul 1.2 이상부터는이 설정이 데이터 수집기에서 유지되며 이는 단순히 프리셋입니다. Spine을 사용할 때 높은 숫자를 사용하면 성능이 향상됩니다. 그러나 다음 방정식을 지원할 수있는 충분한 MySQL / MariaDB 연결이 있는지 확인하십시오. connections = data collector * processes * (threads + script servers). 또한 사용자 로그인 연결을위한 예비 연결이 충분한 지 확인해야합니다."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "자동화 네트워크 수준에서 지정되지 않은 경우 자동화 알림 전자 메일을 보낼 전자 메일 주소입니다. 이 필드 나 Automation Network 값이 비어 있으면 Kadupul는 Primary Kadupul Admins Email 계정을 사용합니다."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "자동화 네트워크 수준에서 지정되지 않은 경우 자동화 알림 전자 메일에 사용할 전자 메일 주소입니다. 이 필드 또는 Automation Network 값을 공백으로 남겨두면 Kadupul는 시스템의 전자 메일 주소 기본값을 사용합니다."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "자동화 네트워크 수준에서 지정되지 않은 경우 자동화 알림 전자 메일에 사용할 전자 메일 이름입니다. 이 필드 또는 Automation Network 값을 공백으로 남겨두면 Kadupul는 시스템 기본값 From Name을 사용합니다."
 
 #: include/global_settings.php
@@ -9561,7 +9561,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "Data Collector 당 실행할 기본 프로세스 수입니다. 참고 : Kadupul 1.2부터는이 설정이 데이터 수집기에서 유지 관리됩니다. 앞으로이 값은 데이터 수집기에 대한 사전 설정 일뿐입니다. cmd.php를 사용할 때 높은 숫자를 사용하면 성능이 향상됩니다. Spine의 성능 향상은 threads 매개 변수를 사용하여 해결할 수 있습니다. Spine을 사용할 때는 낮은 수와 스레드를 사용하는 것이 좋습니다. cmd.php를 사용할 때는 CPU 코어 수의 2 배를 초과해서는 안됩니다."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "테이블에 표시 할 기본 행 수입니다."
 
 #: include/global_settings.php
@@ -9577,7 +9577,7 @@ msgid "The encryption method to use for the Email."
 msgstr "전자 메일에 사용할 암호화 방법입니다."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "백업 프록시가 사용중인 현재 공용 RSA 키의 지문. 신뢰할 수있는 연결을 설정하는 데 필요합니다."
 
 #: include/global_settings.php
@@ -9637,6 +9637,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Kadupul의 데이터 소스 통계 스크립트가 시간 종료 오류를 발생시키지 않고 실행될 수있는 최대 시간입니다."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "시간 초과 오류가 발생하지 않고 Kadupul의 유지 보수 스크립트가 실행될 수있는 최대 시간."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Kadupul의 Spikekill 스크립트가 시간 종료 오류를 발생시키지 않고 실행될 수있는 최대 시간입니다."
 
@@ -9645,19 +9649,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Kadupul의 보고서 생성 스크립트가 시간 종료 오류를 발생시키지 않고 실행될 수있는 최대 시간입니다."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "시간 초과 오류가 발생하지 않고 Kadupul의 유지 보수 스크립트가 실행될 수있는 최대 시간."
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Kadupul의 Spikekill 스크립트가 시간 종료 오류를 발생시키지 않고 실행될 수있는 최대 시간입니다."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "해시된 장치 ID를 기반으로 생성할 장치 디렉토리의 최대 수입니다."
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "모든 첨부 파일을 포함하는 전자 메일 메시지의 최대 크기입니다."
 
 #: include/global_settings.php
@@ -9697,19 +9697,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "트리 모드에서 축소판 그림을 표시 할 때 사용할 열의 수입니다."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "모든 데이터 소스를 처리하는 데 사용할 동시 DSStats 프로세스 수입니다."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "동시 Poller 명령 프로세스의 수입니다. 는 Poller 명령 풀 내에서 호스트당 최대 하나의 동시 명령입니다."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "모든 RRD 파일을 처리하는 데 사용할 동시 RRDfile 검사 프로세스 수입니다."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "부스트 테이블의 모든 RRD를 처리하는 데 사용할 동시 부스트 프로세스 수입니다."
 
 #: include/global_settings.php
@@ -9785,7 +9785,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "snmpwalk 바이너리 경로."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "사용할 폴러 유형입니다. 이 설정은 다음 폴링 간격에서 적용됩니다."
 
 #: include/global_settings.php
@@ -9821,6 +9821,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "영업 시간이 시작되는 시간입니다. 형식: hh: mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "이 시간대는 기본 그래프에서보고 싶습니다."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "SMTP를 통해 보낼 때 인증 할 사용자 이름입니다. 인증이 필요하지 않으면 비워 둡니다."
 
@@ -9853,28 +9857,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "이러한 설정은 데이터 수집기 수준에서 유지됩니다. 여기에 있는 값은 데이터 수집기를 처음 생성할 때 사용되는 기본값일 뿐입니다."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "이것은 모든 것이 제대로 작동하는지 테스트 메시지를 보내는 데 사용되는 전자 메일 계정입니다."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "이는 Kadupul 사이트에 대한 링크에 사용될 서버 위치입니다."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "전자 메일의 줄이 자동으로 줄 바꿈되기 전에 허용되는 문자 수입니다. (0 = 사용 안 함)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "암호가 만료되기 전의 최대 일 수입니다."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "비활성 계정이 비활성화되기 전의 최대 일 수입니다. 관리자 계정은이 정책에서 제외됩니다."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "이것은 허용 된 암호의 최소 길이입니다."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9897,12 +9885,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "이 위치는 RRD 파일과 PNG 파일이 캐시 될 웹 서버의 위치입니다. 이 캐시는 폴러가 관리합니다. 이 폴더에 대해 올바른 읽기 및 쓰기 권한이 있는지 확인하십시오."
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "암호가 만료되기 전의 최대 일 수입니다."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "비활성 계정이 비활성화되기 전의 최대 일 수입니다. 관리자 계정은이 정책에서 제외됩니다."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "이것은 허용 된 암호의 최소 길이입니다."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "그래프 업데이트 사이에 지원되는 최소 시간입니다. 이 값은 특정 RRDfile 속성을 설정하는 데에도 사용됩니다. 데이터를 캐시하고 실시간 업데이트를 제공하지 않는 장치가 있는 경우 간격이 있는 그래프가 생성되지 않도록 기본 최소 새로 고침 간격을 늘려야 할 수 있습니다."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "이것은 서버에서 sendmail에 대한 경로입니다. (센드 메일이 메일 서비스로 선택된 경우에만 사용됨)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "이는 Kadupul 사이트에 대한 링크에 사용될 서버 위치입니다."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9917,15 +9921,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "이 설정은 단일 폴러 시스템에 대해서만 각 폴링 사이클에서 폴러 출력 테이블을 재구축하여 메모리 테이블이 스왑을 사용할 수 있는 대규모 데이터베이스가 있는 매우 큰 시스템에서 스왑하는 것을 방지하기 위한 것입니다."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "이 시간대는 기본 그래프에서보고 싶습니다."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "이 값은 그래프 RRA에서 제거 할 최대 스파이크 수를 나타냅니다."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "이 값은 분산 평균을 계산하기 전에 샘플 세트에서 고 / 저 평균 샘플 수가 제거 될 것임을 나타냅니다. 이상치 값 5를 선택하면 상단 및 하단 모두 평균값이 제거됩니다."
 
 #: include/global_settings.php
@@ -9946,7 +9946,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "이렇게하려면 최소 1 개의 특수 문자를 포함하는 새 암호가 필요합니다."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "이렇게하려면 대문자와 소문자를 모두 포함하는 새로운 암호가 필요합니다."
 
 #: include/global_settings.php
@@ -10034,7 +10034,7 @@ msgid "Use Custom Fonts"
 msgstr "사용자 정의 글꼴 사용"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "각 호스트의 RRD 파일에 대해 별도의 하위 폴더를 사용합니다. RRDfiles의 명명 규칙은 다음 중 하나가 됩니다:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>설치 후 변경한 다음 CLI 스크립트 <b>structure_rra_paths.php</b>를 실행하여 이 변경을 적용할 수 있습니다. 참고: 디렉터리 수를 줄이기 위해 최대 디렉터리 값을 변경하거나 디렉터리 패턴을 변경한 경우 <b>structure_rra_paths.php</b> 스크립트를 다시 실행한 후에도 빈 디렉터리는 정리되지 않습니다."
 
 #: include/global_settings.php
@@ -10074,11 +10074,11 @@ msgid "Weekly on Sunday"
 msgstr "매주 일요일"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "로그 파일에 어떤 레벨의 상세 정보를 보내고 싶습니까? 경고 : NONE 또는 LOW 이외의 다른 상태로두면 디스크 공간이 빠르게 소모 될 수 있습니다."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "로그 파일에 어떤 레벨의 상세 정보를 보내고 싶습니까? 경고 : NONE 또는 LOW 이외의 다른 상태로두면 디스크 공간이 빠르게 소모 될 수 있습니다."
 
 #: include/global_settings.php
@@ -10094,11 +10094,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "옵션을 선택하면 사용자가 Kadupul를 실시간 모드로 설정할 수 있습니다."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "부스트가 RRDtool에 업데이트 명령을 보내면 운영 체제의 최대 인수 길이를 초과하지 않아야합니다. 이는 운영 체제 및 커널 수준에 따라 다릅니다. 예 : Windows 2000 &lt;= 2048, FreeBSD &lt;= 65535, Linux 2.6.22-- &lt;= 131072, Linux 2.6.23 ++ 무제한"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "이 옵션을 선택하면 양식 및 설정 도움말이 인라인으로 표시됩니다. 그렇지 않으면 도움말 버튼 위로 마우스를 가져 가면 표시됩니다."
 
 #: include/global_settings.php
@@ -10106,7 +10106,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "이 옵션을 선택하면 Kadupul에 액세스하려는 모든 시도가 높은 보안을 위해 HTTPS로 리디렉션됩니다."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "새 보고서를 만들 때 어떤 이미지 유형을 인라인 그래프에 사용해야합니다."
 
 #: include/global_settings.php
@@ -10126,7 +10126,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "그래프를 표시 할 때 그래프 날짜를 &#39;미래로&#39;확장 할 수 있습니다."
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "활성화되면 Kadupul는 그래프를 잠그지 않습니다. 이를 통해 그래프와 관련된 데이터 소스를보다 빠르게 수동으로 수정할 수 있습니다."
 
 #: include/global_settings.php
@@ -10154,7 +10154,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "기본 인증을 사용할 때 사용자 이름을 유효한 Kadupul 계정에 매핑하는 데 문제가 있는 경우 여기에 포함된 메시지가 사용자에게 표시됩니다. 텍스트와 HTML을 모두 포함할 수 있습니다."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "장치 이름 필터 드롭 다운을 볼 때이 옵션을 선택하면 호스트 이름에서 도메인으로 제거됩니다."
 
 #: include/global_settings.php
@@ -10162,11 +10162,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "부스트 기능을 활성화하면 RRD 파일은 사용자가 요청하거나이 기간이 경과 한 경우에만 업데이트됩니다."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "구조화된 RRD 경로에 어떤 디렉터리 패턴을 사용하시겠습니까? '장치 ID' 는 기본값입니다. 수천 개의 그래프가 있는 장치가 있는 경우 '장치 ID/데이터 쿼리 ID' 설정을 사용해야 합니다. 디렉토리 패턴을 변경한 후 구조화된 경로 CLI 스크립트를 다시 실행하여 RRD 파일 경로를 새 패턴으로 수정해야 합니다."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "그래프 페이지를 처음 방문했을 때 기본적으로 표시되는 그래프 모드는 무엇입니까?"
 
 #: include/global_settings.php
@@ -10734,7 +10734,7 @@ msgid "Warnings++"
 msgstr "경고"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt;가 XML 파일에 존재하지만 반환된 데이터가 없습니다. 'Index Count Changed'는 지원되지 않습니다"
 
 #: lib/data_query.php
@@ -10903,7 +10903,7 @@ msgstr "&#39;rewrite_index&#39;또는 &#39;oid_suffix&#39;가 정의되었으므
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "확인할 로컬 데이터 ID %s개를 찾았습니다"
 
 #: lib/data_query.php
@@ -11020,7 +11020,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "&lt;direction&gt;input&lt;/direction&gt; 또는 &lt;direction&gt;input-output&lt;/direction&gt; 필드만 포함해야 합니다"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "새 정렬 필드 유효성이 검사되었습니다. 필드 정렬 정렬."
 
 #: lib/data_query.php
@@ -11120,7 +11120,7 @@ msgstr "데이터 업데이트 쿼리 캐시 완료 정렬"
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "%s 로컬 데이터 ID의 확인 완료"
 
 #: lib/data_query.php
@@ -11137,7 +11137,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "데이터 소스 ' %s'에 대한 XML 출력 열을 선택하고 오른쪽으로 확인란을 전환해야합니다."
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "그래프 템플릿에 데이터 템플릿이 사용되지 않았습니다. 그래프 템플릿을 수정하십시오."
 
 #: lib/data_query.php
@@ -11151,11 +11151,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "암호 필드 길이를 변경하는 데 실패했으며 암호를 손상시킬 수 있으므로 계속할 수 없습니다."
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "암호 필드 길이를 확인하지 못했습니다. 암호가 손상 될 수 있으므로 계속할 수 없습니다."
 
 #: lib/dsdebug.php
@@ -11272,10 +11272,6 @@ msgid "Link %s"
 msgstr "%s 링크"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "게스트로 로그인됨"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "다음 계정으로 로그인"
 
@@ -11283,6 +11279,10 @@ msgstr "다음 계정으로 로그인"
 #, php-format
 msgid "Logged in as %s"
 msgstr "%s으로 로그인됨"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "게스트로 로그인됨"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11293,7 +11293,7 @@ msgid "Logout"
 msgstr "로그아웃"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "메일러 오류: 수신자 주소가 설정되지 않았습니다!<br><i>테스트 메일</i> 링크를 사용하는 경우 <b>경고 이메일</b> 설정을 지정하십시오."
 
 #: lib/functions.php
@@ -11372,7 +11372,7 @@ msgstr "경고: 주요 Kadupul 포함 파일 %s이(가) 누락되었습니다. �
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "경고: PollerID: %s 에 유효하지 않은 호스트 이름: %s 이 (가) 있습니다. DNS를 통해 연결할 수 없습니까!"
 
 #: lib/functions.php
@@ -11462,7 +11462,7 @@ msgid "All %d %s"
 msgstr "전체 %d  %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "현재 창 제한을 초과하여 확장하도록 테이블 열을 허용하거나 제한합니다."
 
 #: lib/html.php
@@ -12118,7 +12118,7 @@ msgid "Cascade to Branches"
 msgstr "지점으로 계단식 연결"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "보고서에 사용자 정의 HTML 및 CSS를 사용하려면이 상자를 선택하십시오."
 
 #: lib/html_reports.php
@@ -12126,7 +12126,7 @@ msgid "Check this box to enable this Report."
 msgstr "이 보고서를 사용하려면이 확인란을 선택하십시오."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "사용할 맞춤 HTML 래퍼 및 CSS 파일을 선택하십시오. 이 파일에는 보고서를 둘러 쌀 수있는 HTML과 CSS가 모두 들어 있습니다. 단순한 CSS 이상을 포함하고 있다면 특별한 <REPORT> 파일 안의 태그. 이 형식 태그는 보고서 내용으로 바뀝니다. 이 파일들은 &#39;formats&#39;디렉토리에 있습니다."
 
 #: lib/html_reports.php
@@ -12383,7 +12383,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "사용할 장치 템플릿을 선택하십시오."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "장치 유형의 경우 그래프에 대한 선택의 필터링에 사용할 장치를 선택하십시오."
 
 #: lib/html_reports.php
@@ -12455,11 +12455,11 @@ msgid "The number of Graph columns."
 msgstr "그래프 열 수입니다."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "이 주소는 전자 메일 보낸 사람 주소로 사용됩니다."
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "이 이름은 기본 전자 메일 보낸 사람으로 사용됩니다."
 
 #: lib/html_reports.php
@@ -12477,22 +12477,22 @@ msgstr "트리: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "보고서 &#39; %s&#39;을 (를) 보낼 수 없습니다. 이름에서 전자 메일을 설정하십시오."
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "보고서 &#39; %s&#39;을 (를) 보낼 수 없습니다. 주소에서 전자 메일을 설정하십시오."
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "보고서 &#39; %s&#39;을 (를) 보낼 수 없습니다. 이메일 제목을 설정하십시오."
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "보고서 &#39; %s&#39;을 (를) 보낼 수 없습니다. 대상 전자 메일 주소를 설정하십시오."
 
 #: lib/html_reports.php
@@ -12588,7 +12588,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Kadupul 정규 표현식은 보안상의 이유로 50자로 제한됩니다."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Kadupul 정규 표현식에는 세미콜론 문자를 포함할 수 없습니다."
 
 #: lib/html_utility.php
@@ -13044,12 +13044,12 @@ msgstr "PHP 옵션 %s을 (를) 설정하지 못했습니다. %s (%s 여야 함)"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "지정된  %sRRDTool 버전을 설정하지 못했습니다 :  %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "지정된  %sRRDtool 버전을 설정하지 못했습니다 :  %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "자동화 옵션 세트 %s 업데이트 실패"
 
 #: lib/installer.php
@@ -13122,7 +13122,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "프로필 '%s'에서 패키지 # %s '%s'을 (를) 가져 왔습니다."
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "문제가 발생할 경우 Kadupul Group과 관련된 문제를 제기하기 전에 브라우저 캐시를 지우고 브라우저를 닫은 다음 (Kadupul 탭 만이 아니라) 브라우저를 다시 열고 다시 시도하는 것이 좋습니다"
 
 #: lib/installer.php
@@ -13300,7 +13300,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "드물 긴하지만 코드의 변경으로 인해 사소한 문제가 발생한 사용자의 신고가있었습니다. 이러한 문제는 브라우저가 사전 업그레이드 코드를 유지함에 따라 발생하며 이러한 오류의 가능성을 최소화하기위한 조치를 취한 상태에서도 여전히 발생할 수 있습니다. 브라우저 캐시를 지우는 방법에 대한 지침이 필요하면 <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> 가 좋은 출발점입니다."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "설치가 CSRF 경로를 완료하면 읽기 전용으로 설정해야합니다."
 
 #: lib/installer.php
@@ -13377,7 +13377,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "업그레이드 중에 업데이트할 장치 템플릿을 선택하십시오."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "설치 후에 사용할 장치 템플릿을 선택하십시오. 운영 체제가 Windows 인 경우 &#39;Windows 장치&#39;템플리트를 선택해야합니다. 운영 체제가 Linux / UNIX 인 경우 &#39;로컬 Linux 시스템&#39;장치 템플릿을 선택하십시오."
 
 #: lib/installer.php
@@ -13634,7 +13634,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "config.php 파일에서 설정해야하는 변수는 다음과 같습니다."
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "화이트리스트 작동 방식은 데이터 입력 방법을 처음 가져오거나 다시 가져올 때 스크립트나 인수가 조금이라도 변경되면 관리자가 해당 데이터 입력 방법이 유효한지 검증할 때까지 해당 데이터 입력 방법과 관련된 모든 데이터 소스가 즉시 비활성화되는 것입니다."
 
 #: lib/installer.php
@@ -13642,7 +13642,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "그런 다음 MySQL에서 관리자로 다음을 실행하십시오."
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "따라서 여러 버전 전에 Kadupul는 이러한 유형의 데이터 입력 방법에 대한 화이트리스트 기능을 제공하도록 향상되었습니다. 이렇게하면 Kadupul를 한 시간 더 안전하게 보호 할 수 있지만 Kadupul 관리자가 템플릿 및 패키지를 가져오고 관리하는 데 필요한 작업량을 증가시킵니다."
 
 #: lib/installer.php
@@ -13675,10 +13675,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "이 프로그램은 무료 소프트웨어입니다. 자유 소프트웨어 재단이 발표 한 GNU 일반 공중 사용 허가서 (GPL)의 조건에 따라 배포하거나 수정할 수 있습니다. 라이센스 버전 2 또는 귀하의 선택에 따라 최신 버전을 선택하십시오."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "이 스크립트 옵션은 현재 금지 된 데이터 입력 방법을 금지 해제합니다."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "이 스크립트 옵션은 비활성화 된 모든 데이터 소스를 다시 활성화합니다."
 
@@ -13687,16 +13683,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "이 스크립트 옵션은 현재 금지 된 모든 데이터 입력 방법을 검색하고 이유에 대한 세부 사항을 제공합니다."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "이 스크립트 옵션은 현재 금지 된 데이터 입력 방법을 금지 해제합니다."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "이 버전의 Kadupul ( %s)는 유효한 버전 코드가없는 것으로 보입니다. Kadupul Development Team에 연락하여이 코드가 적용되었는지 확인하십시오. 릴리스에서이 오류가 표시되는 경우 GitHub에서 즉시 보고서를 제출하십시오."
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "수 당신이 그것으로 새 데이터베이스 가져 오기 &quot;cacti.sql&quot;를 <b>작성해야합니다</b> 계속 될하려면 :"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "이 상태에서 데이터 입력 방법을 식별하기 위해 다음 옵션으로 실행할 수있는 유효성 검사 스크립트를 Kadupul의 CLI 디렉토리에 제공했습니다."
 
 #: lib/installer.php
@@ -13730,7 +13730,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "자동화 옵션 세트 업데이트 %s"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "이미 수정한 템플릿을 업데이트하는 것은 바람직하지 않습니다. 템플릿을 업그레이드해도 그래프 및 데이터 템플릿에 대한 수정 사항은 제거되지 않으며 예기치 않은 동작이 발생할 수 있습니다. 그러나 그래프, 데이터 쿼리 또는 데이터 템플릿을 변경하지 않은 경우 패키지를 다시 가져와도 아무런 영향이 없습니다. 이 경우 업데이트 후 템플릿에서 '그래프 동기화'를 수행해야 합니다."
 
 #: lib/installer.php
@@ -13786,7 +13786,7 @@ msgstr "이전 버전으로 다운그레이드하는 것으로 보입니다. 최
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "0.6.x 데이터베이스에 Kadupul  %s을 (를) 설치하려고합니다. 불행하게도, 이것은 수행 될 수 없습니다."
 
 #: lib/installer.php
@@ -13817,7 +13817,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "Kadupul Server v  %s이 (가) 설치 / 업데이트되었습니다. 이제 소프트웨어를 사용할 수 있습니다."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "Kadupul 구성은 config.php에 상대 경로 (url_path)가 있습니다."
 
 #: lib/installer.php
@@ -13845,7 +13845,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "데이터베이스 기본 데이터 정렬은 UTF8과 호환되는 것으로 보입니다."
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "데이터베이스 기본 데이터 정렬은 전체 UTF8과 호환되지 않습니다."
 
 #: lib/installer.php
@@ -13944,13 +13944,13 @@ msgid "Unable to find user from DN"
 msgstr "DN에서 사용자를 찾을 수 없습니다."
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "사용자 DN을 찾을 수 없습니다."
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
-msgstr "서버 (%s) 에서 예기치 않은 오류 %s (Ldap 오류: %s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
+msgstr "서버 (%s) 에서 예기치 않은 오류 %s (LDAP 오류: %s)"
 
 #: lib/ping.php
 msgid "Destination address not specified"
@@ -14057,13 +14057,13 @@ msgstr "플러그인 디렉토리 '%s' 을 (를) 설치하기 전에 이름에�
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "'%s' 디렉토리의 플러그인에 설치 함수 '%s ()' 이 (가) 포함되어 있지 않습니다. 플러그인을 설치하려면 이 기능이 있어야 합니다."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "'%s' 디렉토리의 플러그인에 버전 함수 '%s ()' 이 (가) 포함되어 있지 않습니다. 플러그인을 설치하려면 이 기능이 있어야 합니다."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "'%s' 디렉토리의 플러그인에 버전 함수 '%s ()' 이 (가) 포함되어 있지 않습니다. 플러그인을 설치하려면 이 기능이 있어야 합니다."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "'%s' 디렉토리의 플러그인에 설치 함수 '%s ()' 이 (가) 포함되어 있지 않습니다. 플러그인을 설치하려면 이 기능이 있어야 합니다."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14123,7 +14123,7 @@ msgstr "그래프 시간대 :"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "보고서 '%s'을 (를) 보내는 데 문제가 있음 전자 메일 하위 시스템 오류 문제는 '%s'입니다."
 
 #: lib/reports.php
@@ -14177,7 +14177,7 @@ msgstr "오류: RRD 파일이 존재하지 않습니다: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
 #: lib/rrd.php
@@ -14299,7 +14299,7 @@ msgstr "Kadupul RRA ID의 XFF가 '%s'이지만 '%s'이어야 합니다"
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s' 의 행 수가 잘못되었습니다. 행 수는 '%s' 이지만 '%s' 이어야 합니다"
 
 #: lib/rrd.php
@@ -14459,7 +14459,7 @@ msgstr "치명적 오류: outlier-start 및 outlier-end 인수는 YYYY-MM-DD HH:
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "치명적 오류: '%s'을(를) 백업할 수 없습니다"
 
 #: lib/spikekill.php
@@ -14674,12 +14674,12 @@ msgstr "%s 튜닝"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
 #: lib/utility.php
@@ -14698,7 +14698,7 @@ msgstr "MySQL 및 시스템과 일치하는 유효한 시간대"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "%s  %s부터는  %s에서 트랜잭션을 디스크로 플러시하는 빈도를 제어 할 수 있습니다. 기본값은 1 초이지만 높은 I / O 시스템에서 1보다 큰 값으로 설정하면 디스크 I / O가보다 순차적으로 이루어질 수 있습니다"
 
 #: lib/utility.php
@@ -14732,12 +14732,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 그렇지 않은 경우이 설정을 지정하지 마십시오."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "테이블에 인덱스가 매우 큰 경우 Barracuda innodb_file_format 및 innodb_large_prefix를 1로 사용하여 작업해야합니다.이를 수행하지 않으면 테이블을 제대로 작성할 수없는 플러그인이 발생할 수 있습니다."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB는 가능한 한 많은 테이블과 인덱스를 시스템 메모리에 유지합니다. 따라서 가능한 한 많은 테이블과 인덱스를 메모리에 저장할 수 있도록 innodb_buffer_pool을 충분히 크게 설정해야 합니다. /var/lib/mysql/cacti 디렉터리의 크기를 확인하면 이 값을 결정하는 데 도움이 됩니다. 전체 시스템 메모리의 25%% 수준을 권장하지만, 요구 사항은 시스템 규모에 따라 달라집니다."
 
 #: lib/utility.php
@@ -14751,7 +14751,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "5.1보다 큰 %s 버전에서 InnoDB를 활성화하는 것이 좋습니다."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "테이블 캐쉬를 크게 유지하면 innodb_file_per_table을 사용할 때 파일 열기 / 닫기 작업이 줄어 듭니다."
 
 #: lib/utility.php
@@ -14776,7 +14776,7 @@ msgid "Recommended Value"
 msgstr "권장 값"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "사기성 쿼리는 데이터베이스가 다른 데이터베이스로 오프라인 상태가되어서는 안됩니다. 그들이 시스템을 죽이기 전에 이러한 쿼리를 종료하십시오."
 
 #: lib/utility.php
@@ -14789,7 +14789,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "여기서 메타 데이터가 저장됩니다. 테이블이 많으면이 값을 늘리는 것이 좋습니다."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Kadupul 인스턴스가 갑작스러운 시스템 충돌을 처리하기 위한 자체 저널링을 갖춘 ZFS 또는 FusionI/O에서 실행 중인 경우가 아니면 이 설정은 ON으로 유지해야 합니다. 그러나 전원 공급이 매우 안정적이고 시스템이 거의 다운되지 않으며 백업이 있는 경우 이 설정을 OFF로 전환하면 데이터베이스 성능이 약 50% 향상될 수 있습니다."
 
 #: lib/utility.php
@@ -14797,11 +14797,11 @@ msgid "Variable"
 msgstr "변수"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "임시 테이블 크기가 더 큰 서브 쿼리를 실행할 때 임시 테이블을 메모리에 보관하십시오."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "조인을 수행할 때 이 크기 미만인 경우 임시 파일에 기록되지 않고 메모리에 유지됩니다. 이는 연결당 메모리 할당이므로 너무 높게 설정하지 않도록 주의해야 합니다. join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + 핵심 MySQL/MariaDB 메모리의 합계는 80% 미만이어야 합니다. 권장 값이 음수인 경우 허용 메모리 내에 맞도록 이 값 및/또는 sort_buffer_size를 줄여야 합니다."
 
 #: lib/utility.php
@@ -15044,7 +15044,7 @@ msgstr "알림 수신기  %s 개"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "다음 알림 수신기를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: managers.php
@@ -15053,12 +15053,12 @@ msgstr "다음 알림 개체를이 알림 수신자로 전달하지 않으려면
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "다음 알림 수신자를 사용 중지하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "&#39;계속&#39;을 클릭하여 다음 알림 수신기를 사용하도록 설정하십시오."
 
 #: managers.php
@@ -15163,7 +15163,7 @@ msgid "Automatically Trust Signer"
 msgstr "서명자 자동 신뢰"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "변경 사항/차이점"
 
 #: package_import.php
@@ -15231,6 +15231,10 @@ msgid "Package"
 msgstr "패키지 파일"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "패키지 파일"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "가져오기"
 
@@ -15243,19 +15247,15 @@ msgid "Package XML File Damaged."
 msgstr "패키지 XML 파일이 손상되었습니다."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "패키지 파일"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "데이터 원본 및 그래프 템플릿 제안 값 레코드를 대체합니다. 그래프 및 데이터 원본은 데이터 쿼리 재인덱스 후 또는 제안된 값 강제 교체 프로세스를 사용하여 새 이름을 사용합니다."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "자세한 내용은 cacti.log를 참조하세요. API 키 오류가 있거나 패키지가 길들여졌거나 위치를 사용할 수 없는 것일 수 있습니다."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "자세한 내용은 cacti.log를 참조하세요. API 키 오류가 있거나 패키지가 길들여졌거나 위치를 사용할 수 없는 것일 수 있습니다."
 
 #: package_import.php templates_import.php
@@ -15277,11 +15277,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "패키지 %s 을 (를) 성공적으로 가져왔습니다"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "XML 파일이 유효하지 않은 것 같습니다. 패키지 작성자에게 문의하세요."
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "패키지의 XML 파일이 존재하지 않습니다"
 
 #: package_import.php
@@ -15302,7 +15302,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "이 패키지 작성자를 신뢰하지 않았습니다. 가져오려면 자동 신뢰 작성자 확인란을 선택합니다."
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "플러그인 작성자가 플러그인에 부여한 설명."
 
 #: plugins.php
@@ -15395,7 +15395,7 @@ msgid "Plugin Name"
 msgstr "플러그인 이름"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "플러그인 디렉토리는 공백을 포함 할 수 없습니다."
 
 #: plugins.php
@@ -15485,12 +15485,12 @@ msgstr "이 플러그인을 제거하면 모든 플러그인 데이터 및 설�
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "오류: PHP 바이너리 경로 %s이(가) 잘못되었습니다(폴러 ID: %d). 폴러를 계속할 수 없습니다!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "오류: Spine 경로: %s이(가) 폴러 ID %d에 유효하지 않습니다. 폴러를 계속할 수 없습니다!"
 
 #: poller.php
@@ -15512,7 +15512,7 @@ msgstr "하트비트 모드의 폴러"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "경고: %s 이 (가) 폴러 ID %d 의 폴러 간격과 동기화되지 않았습니다! 폴러 간격은 %d 초이며 최대 %d 초이지만 마지막 설문 조사 이후 %d 초가 지났습니다!"
 
 #: poller.php
@@ -15566,7 +15566,7 @@ msgstr[0] "데이터 수집기 통계 지우기"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "해당 데이터 수집기의 통계를 지우려면 '계속'을 클릭하십시오."
 
 #: pollers.php
@@ -15661,7 +15661,7 @@ msgid "No Data Collectors Found"
 msgstr "데이터 수집기 없음"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "이 데이터 수집기 데이터베이스에 대한 참고 사항."
 
 #: pollers.php
@@ -15790,12 +15790,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "원격 데이터베이스에 연결하는 데 사용할 SSL 키가있는 파일입니다."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "데이터 수집기의 호스트 이름입니다. 원격 폴러가 재 인덱싱, 실시간 그래프 작성 등과 같은 활동을 위해 원격 폴러에게 연락하는 데는 정규화 된 도메인 이름이어야합니다."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "원격 데이터베이스 서버의 호스트 이름."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "데이터 수집기의 호스트 이름입니다. 원격 폴러가 재 인덱싱, 실시간 그래프 작성 등과 같은 활동을 위해 원격 폴러에게 연락하는 데는 정규화 된 도메인 이름이어야합니다."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15810,7 +15810,7 @@ msgid "The last time this Data Collector completed."
 msgstr "이 데이터 수집기가 마지막으로 완료 한 시간."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "이 데이터 수집기가 Kadupul 주요 사이트와 완전히 동기화 된 마지막 시간입니다."
 
 #: pollers.php
@@ -15993,7 +15993,7 @@ msgid "Changing Permission Model Warning"
 msgstr "권한 모델 변경 경고"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "권한 모델을 변경하면 사용자에게 유효한 그래프 권한이 변경됩니다."
 
 #: settings.php
@@ -16312,7 +16312,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>참고 :</strong> Core Kadupul Plugins는 현재까지 Remote Data Collector와 함께 작동하도록 다시 설계되지 않았습니다. 따라서 장치에 직접 액세스해야하는 MacTrack 및 HMIB와 같은 플러그인은 현재 원격 데이터 수집기에서 작동하지 않습니다. 그러나 Thold와 같은 플러그인은 원격 데이터 수집기가 <b>&#39;온라인&#39;</b> 모드에있는 한 계속 작동합니다."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>참고 :</strong> 원격 데이터 수집기에 로그인되어 있습니다. <b>&#39;온라인&#39;</b> 을 사용하면 로그인 한 것처럼 주요 Kadupul 웹 사이트의 대부분을보고 제어 할 수 있습니다. 또한 Remote Data Collector는 Kadupul의 Performance Boosting Services <b>&#39;On Demand Updating&#39;</b> 기능을 사용해야하며, Spine을 사용하는 것이 좋습니다. 원격 데이터 수집기가 <b>&#39;오프라인&#39;</b> 인 경우 원격 데이터 수집기 웹 사이트에 훨씬 적은 정보가 포함됩니다. 그러나 주요 Kadupul 데이터베이스 및 웹 서버에 도달 할 때까지 모든 업데이트를 캐시합니다. 그런 다음 업데이트를 위해 메인 Kadupul 데이터베이스에 다시 Boost 테이블 출력을 덤프합니다."
 
 #: templates/platform/console_home_body.html.twig
@@ -16487,22 +16487,22 @@ msgstr "지사"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "다음 트리를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "다음 트리를 게시하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "다음 트리를 게시 취소하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "다음 트리를 게시 취소하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: tree.php
@@ -16597,7 +16597,7 @@ msgid "The last user to have modified this Tree."
 msgstr "이 트리를 마지막으로 수정 한 사용자입니다."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "이 트리를 가리키는 이름입니다."
 
 #: tree.php
@@ -16788,7 +16788,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "선택한 사용자를 사용하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "&#39;계속&#39;을 클릭하여 선택한 템플릿 사용자 설정 및 권한으로 사용자 설정을 덮어 씁니다. 원래 사용자의 전체 이름, 암호, 영역 및 사용 가능 상태가 유지되며 다른 모든 필드는 템플리트 사용자가 겹쳐 씁니다."
 
 #: user_admin.php
@@ -17108,12 +17108,12 @@ msgstr "도메인의 유형을 선택하십시오."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "&#39;계속&#39;을 클릭하여 다음 사용자 도메인을 삭제하십시오."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "&#39;계속&#39;을 클릭하여 다음 사용자 도메인을 사용 중지하십시오."
 
 #: user_domains.php
@@ -17121,7 +17121,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "&#39;계속&#39;을 클릭하여 다음 사용자 도메인을 사용하도록 설정하십시오."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "&#39;계속&#39;을 클릭하여 다음 사용자 도메인을 기본 도메인으로 만드십시오."
 
 #: user_domains.php
@@ -17151,15 +17151,11 @@ msgid "Domains"
 msgstr "도메인"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "도메인 유형"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "효과적인 사용자"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "사용 가능한 사용자 도메인"
 
@@ -17176,16 +17172,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "LDAP에서 가져온 전자 메일을 대체 할 필드입니다. (창문에 : 메일)"
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "이 확인란을 선택하면 사용자는이 도메인을 사용하여 로그인 할 수 있습니다."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "선택한 도메인 기본값으로 만들기"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Kadupul가 LDAP 서버에 대해 인증을 시도하는 모드. <blockquote> <i>검색하지 않음</i> - 고유 이름 (DN) 검색이 발생하지 않고 제공된 DN (고유 이름) 형식으로 바인딩을 시도합니다. <br><br> <i>익명 검색</i> - 익명 바인딩을 통해 LDAP 디렉토리에 대한 사용자 이름을 검색하여 사용자 DN (고유 이름)을 찾습니다. <br><br> <i>특정 검색</i> - 사용자 고유 이름 (DN)을 찾기 위해 특정 고유 이름 (DN) 및 특정 암호를 통해 LDAP 디렉토리에 대한 사용자 이름을 검색하려고 시도합니다."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17251,22 +17243,22 @@ msgstr "지우기"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "다음 사용자 그룹을 새 사용자 그룹에 복사하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "다음 사용자 그룹을 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "다음 사용자 그룹을 사용 중지하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "다음 사용자 그룹을 사용하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: user_group_admin.php
@@ -17287,7 +17279,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "이 사용자 그룹의 기본 트리 정책"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "사용자 설정을 연기하십시오."
 
 #: user_group_admin.php
@@ -17618,11 +17610,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "런타임 통계"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Kadupul와 Spine의 다른 버전!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "디렉토리가 존재하지 않습니다 !!"
 
 #: utilities.php
@@ -17636,11 +17628,11 @@ msgstr "오류 : 설치된 RRDtool 버전이 구성된 버전을 초과하지 �
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "오류 : RRDtool 1.2.x +는 GIF 이미지 형식을 지원하지 않지만 %d &quot;그래프 및 / 또는 템플릿에는 GIF가 이미지 형식으로 설정되어 있습니다."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "각 브라우저 탭은 브라우저에 따라 최대 10개의 연결을 사용할 수 있습니다."
 
 #: utilities.php
@@ -17698,7 +17690,7 @@ msgstr "설치되었습니다. <span class=\"deviceDown\">참고 : SNMPv3을 사
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "php.ini memory_limit를  %s 이상으로 변경하는 것이 좋습니다."
 
 #: utilities.php
@@ -18101,11 +18093,11 @@ msgid "Technical Support [%s]"
 msgstr "기술 지원 [ %s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "데이터 쿼리 캐시는 데이터 쿼리 입력 유형에서 수집 된 정보를 저장합니다. 이 필드의 값은 CDEF뿐만 아니라 범례 그래프, 수직 레이블 및 GPRINTS의 텍스트 영역에서 사용할 수 있습니다."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Kadupul Log는 시스템 설정에 따라 통계, 오류 및 기타 메시지를 저장합니다. 이 정보는 폴러 및 응용 프로그램의 문제점을 식별하는 데 사용할 수 있습니다."
 
 #: utilities.php
@@ -18141,7 +18133,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "SNMPAgent가 처리하는 모든 개체를 표시합니다."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "이 제안 된 메모리 값은 현재 데이터 소스 수에 따라 계산되며 제안으로 만 사용되며 실제 값은 요구 사항에 따라 시스템에 따라 다를 수 있습니다."
 
 #: utilities.php
@@ -18178,7 +18170,7 @@ msgid "Update Frequency:"
 msgstr "업데이트 빈도 :"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "이 유틸리티를 사용하여 rrd 파일에서 누락된 rrd 파일 또는 누락된 값이 있는 문제를 표시합니다. 구성- > 설정- > 데이터에서 rrdcheck를 활성화해야 합니다"
 
 #: utilities.php

@@ -389,7 +389,7 @@ function form_actions()
         if (get_nfilter_request_var('drp_action') == '1') { /* delete */
             print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to Delete the following Data Query.', 'Click \'Continue\' to Delete following Data Queries.', cacti_sizeof($dq_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to Delete the following Data Query.', 'Click \'Continue\' to Delete the following Data Queries.', cacti_sizeof($dq_array)) . "</p>
 					<div class='itemlist'><ul>$dq_list</ul></div>
 				</td>
 			</tr>";
@@ -398,7 +398,7 @@ function form_actions()
         } elseif (get_nfilter_request_var('drp_action') == '2') { /* duplicatie */
             print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to duplicate the following Data Query.', 'Click \'Continue\' to duplicate following Data Queries.', cacti_sizeof($dq_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to duplicate the following Data Query.', 'Click \'Continue\' to duplicate the following Data Queries.', cacti_sizeof($dq_array)) . "</p>
 					<div class='itemlist'><ul>$dq_list</ul></div>
 					<p><strong>" . __('Name Format:') . "</strong><br>";
 
@@ -1492,7 +1492,7 @@ function data_query()
             'display' => __('Templates Using'),
             'align' => 'right',
             'sort' => 'DESC',
-            'tip' => __('The number of Graphs Templates using this Data Query.')
+            'tip' => __('The number of Graph Templates using this Data Query.')
         ),
         'data_input_method' => array(
             'display' => __('Data Input Method'),

@@ -247,7 +247,7 @@ function utilities_view_tech()
 
         $graph_gif_count = db_fetch_cell('SELECT COUNT(*) FROM graph_templates_graph WHERE image_format_id = 2');
         if ($graph_gif_count > 0) {
-            $rrdtool_errors[] = "<span class='deviceDown'>" . __('ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d" graph(s) and/or templates have GIF set as the image format.', $graph_gif_count) . '</span>';
+            $rrdtool_errors[] = "<span class='deviceDown'>" . __('ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format.', $graph_gif_count) . '</span>';
         }
 
         /* Get spine version */
@@ -345,7 +345,7 @@ function utilities_view_tech()
         if (file_exists(read_config_option('path_spine')) && $poller_options[read_config_option('poller_type')] == 'spine') {
             $type = $spine_version;
             if (!strpos($spine_version, CACTI_VERSION)) {
-                $type .= '<span class="textError"> (' . __('Different version of Kadupul and Spine!') . ')</span>';
+                $type .= '<span class="textError"> (' . __('Different versions of Kadupul and Spine!') . ')</span>';
             }
         } else {
             $type = $poller_options[read_config_option('poller_type')];
@@ -465,7 +465,7 @@ function utilities_view_tech()
         print '<td>' . $db_connections . '<br>' .
             __('Assumes 100 spare connections for Web page users and other various connections.') . '<br>' .
             __('The minimum required can vary greatly if there is heavy user Graph viewing activity.') . '<br>' .
-            __('Each browser tab can use upto 10 connections depending on the browser.') . '</td>';
+            __('Each browser tab can use up to 10 connections depending on the browser.') . '</td>';
         form_end_row();
 
         form_alternate_row();
@@ -780,8 +780,8 @@ function utilities_view_tech()
             if ((ini_get('memory_limit') == -1)) {
                 print __("You've set memory limit to 'unlimited'.") . "<br>";
             }
-            print __('It is highly suggested that you alter you php.ini memory_limit to %s or higher.', memory_readable($memory_suggestion)) . ' <br/>' .
-                __('This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements.');
+            print __('It is highly suggested that you alter your php.ini memory_limit to %s or higher.', memory_readable($memory_suggestion)) . ' <br/>' .
+                __('This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements.');
             print '</span><br>';
         }
         print '</td>';
@@ -2383,7 +2383,7 @@ function utilities()
         ),
         __('Log Administration') => array(
             'link'  => 'utilities.php?action=view_logfile',
-            'description' => __('The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.')
+            'description' => __('The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application.')
         ),
         __('View User Log') => array(
             'link'  => 'app.php/utilities/login-history',
@@ -2398,7 +2398,7 @@ function utilities()
         ),
         __('View Data Query Cache') => array(
             'link'  => 'utilities.php?action=view_snmp_cache',
-            'description' => __('The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF\'s.')
+            'description' => __('The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs.')
         ),
         __('Rebuild Poller Cache') => array(
             'link'  => 'utilities.php?action=clear_poller_cache',
@@ -2444,7 +2444,7 @@ function utilities()
             __('RRDfile Checker') => array(
                 'link'  => 'rrdcheck.php',
                 'mode'  => 'online',
-                'description' => __('Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data')
+                'description' => __('Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data')
             ),
         );
     }
@@ -2753,7 +2753,7 @@ function boost_display_run_status()
             $cache_files    = '<strong>' . __('WARNING:') . '</strong> ' . __('Unknown');
         }
     } else {
-        $directory_size = '<strong>' . __('WARNING:') . '</strong> ' . __('Directory Does NOT Exist!!');
+        $directory_size = '<strong>' . __('WARNING:') . '</strong> ' . __('Directory Does NOT Exist!');
         $cache_files    = '<strong>' . __('WARNING:') . '</strong> ' . __('N/A');
     }
 
