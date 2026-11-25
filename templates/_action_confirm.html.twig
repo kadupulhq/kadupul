@@ -5,9 +5,9 @@ SPDX-License-Identifier: GPL-3.0-or-later
 Confirmation page for a bulk action on a selection. The caller sets
 domain, cancel_url, heading, intro and, when some rows block the action,
 used and used_message. The three texts are t() messages so
-translation:extract finds them in the caller. The caller fills the
-items block with the selected rows and extra_fields with any field shown
-before the hidden selection. `form` carries the hidden selection and
+translation:extract finds them in the caller. The caller sets item_names
+to the selected rows' names, or fills the items block itself, and fills
+extra_fields with any field shown before the hidden selection. `form` carries the hidden selection and
 revisions fields. A page whose form differs from that shape
 keeps its own template.
 #}
@@ -19,7 +19,7 @@ keeps its own template.
     <h1>{{ heading|trans }}</h1>
     <p>{{ intro|trans }}</p>
     <ul>
-        {% block items %}{% endblock %}
+        {% block items %}{% for name in item_names ?? [] %}<li>{{ name }}</li>{% endfor %}{% endblock %}
     </ul>
     {% if used %}<p role="alert">{{ used_message|trans }}</p>{% endif %}
     {{ form_start(form) }}

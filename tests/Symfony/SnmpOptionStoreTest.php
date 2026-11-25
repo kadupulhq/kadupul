@@ -9,17 +9,21 @@ declare(strict_types=1);
 
 namespace Kadupul\Tests;
 
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\Middleware;
 use Kadupul\Automation\Application\Port\AutomationTemplateAccess;
 use Kadupul\Automation\Application\Query\AutomationTemplateAccessDenied;
 use Kadupul\Automation\Domain\SnmpOptionEntry;
 use Kadupul\Automation\Domain\SnmpOptionEntryChange;
+use Kadupul\Automation\Domain\SnmpOptionSet;
 use Kadupul\Automation\Infrastructure\Persistence\DbalSnmpOptionStore;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\AbstractLogger;
 
 final class SnmpOptionStoreTest extends TestCase
 {
@@ -27,7 +31,11 @@ final class SnmpOptionStoreTest extends TestCase
         'snmp_auth_protocol' => '[None]', 'snmp_priv_protocol' => '[None]', 'snmp_context' => '', 'snmp_engine_id' => ''];
     private const array NO_CREDENTIALS = ['snmp_community' => '', 'snmp_username' => '', 'snmp_password' => '', 'snmp_priv_passphrase' => ''];
 
+    private const array V3_SECRETS = ['snmp_username' => 'copy-user', 'snmp_password' => 'copy-auth-pass', 'snmp_priv_passphrase' => 'copy-priv-pass'];
+
     private Connection $database;
+    /** @var object{sql: list<string>} every statement the store's connection ran */
+    private object $statements;
     private DbalSnmpOptionStore $store;
     private bool $revoked = false;
     /** @var list<bool> */
@@ -37,7 +45,19 @@ final class SnmpOptionStoreTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        $statements = new class extends AbstractLogger {
+            /** @var list<string> */
+            public array $sql = [];
+
+            public function log($level, string|\Stringable $message, array $context = []): void
+            {
+                if (is_string($context['sql'] ?? null)) {
+                    $this->sql[] = $context['sql'];
+                }
+            }
+        };
+        $this->statements = $statements;
+        $this->database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true, 'wrapperClass' => IdentityLessConnection::class], (new Configuration())->setMiddlewares([new Middleware($statements)]));
         foreach ([
             "CREATE TABLE automation_snmp (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL DEFAULT '')",
             "CREATE TABLE automation_snmp_items (id INTEGER PRIMARY KEY AUTOINCREMENT, snmp_id INT NOT NULL DEFAULT 0, sequence INT NOT NULL DEFAULT 0,
@@ -46,6 +66,7 @@ final class SnmpOptionStoreTest extends TestCase
                 snmp_password TEXT DEFAULT NULL, snmp_auth_protocol TEXT DEFAULT '', snmp_priv_passphrase TEXT DEFAULT '', snmp_priv_protocol TEXT DEFAULT '',
                 snmp_context TEXT DEFAULT '', snmp_engine_id TEXT DEFAULT '')",
             'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)',
+            'CREATE TABLE automation_networks (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, snmp_id INT)',
         ] as $statement) {
             $this->database->executeStatement($statement);
         }
@@ -202,6 +223,207 @@ final class SnmpOptionStoreTest extends TestCase
         self::assertSame([[11, 1], [13, 2], [12, 3], [10, 4]], $this->sequences($set));
     }
 
+    public function testBulkDeleteRemovesSetsWithTheirEntriesAndLeavesNetworkReferences(): void
+    {
+        [$core, $edge, $kept] = $this->sets(['Core', 'Edge', 'Kept']);
+        $this->database->insert('automation_networks', ['name' => 'Office', 'snmp_id' => $core]);
+        $revisions = $this->revisions([$core, $edge]);
+        self::assertSame([$core, $edge], array_keys($this->store->findSets([$edge, 999, $core])));
+        self::assertSame([], $this->store->findSets([]));
+
+        $before = count($this->statements->sql);
+        $this->store->deleteSets(7, [$core, $edge], $revisions);
+        $two = count($this->statements->sql) - $before;
+        self::assertSame([(string) $kept], array_map('strval', $this->database->fetchFirstColumn('SELECT id FROM automation_snmp')));
+        self::assertSame([(string) $kept], array_map('strval', $this->database->fetchFirstColumn('SELECT DISTINCT snmp_id FROM automation_snmp_items')));
+        // Legacy left a network pointing at a deleted set; that is unchanged.
+        self::assertSame((string) $core, (string) $this->database->fetchOne('SELECT snmp_id FROM automation_networks'));
+        $event = $this->audit[array_key_last($this->audit)];
+        self::assertSame(['automation.snmp_option.delete', AuditEvent::SUCCEEDED], [$event->action, $event->outcome]);
+        self::assertTrue($this->checkedInTransaction[array_key_last($this->checkedInTransaction)]);
+
+        // Fifty sets cost the same statements as two: nothing runs per selected row.
+        $many = $this->sets(array_map(static fn(int $number): string => 'Set ' . $number, range(1, 50)));
+        $revisions = $this->revisions($many);
+        $before = count($this->statements->sql);
+        $this->store->deleteSets(7, $many, $revisions);
+        self::assertSame($two, count($this->statements->sql) - $before);
+        self::assertSame(1, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp'));
+    }
+
+    public function testBulkDeleteRefusesStaleMissingAndMalformedSelectionsWithoutWriting(): void
+    {
+        [$core, $edge] = $this->sets(['Core', 'Edge']);
+        $revisions = $this->revisions([$core, $edge]);
+        $checks = count($this->checkedInTransaction);
+        foreach ([
+            'empty' => [[], []],
+            'unsorted' => [[$edge, $core], $revisions],
+            'repeated' => [[$core, $core], [$core => $revisions[$core]]],
+            'zero' => [[0], [0 => 'x']],
+            'beyond the column' => [[4294967296], [4294967296 => 'x']],
+            'text id' => [['1'], [1 => 'x']],
+            'too many' => [range(1, 101), array_fill(1, 101, 'x')],
+            'missing revision' => [[$core, $edge], [$core => $revisions[$core]]],
+            'non-text revision' => [[$core], [$core => 1]],
+        ] as $case => [$ids, $given]) {
+            try {
+                $this->store->deleteSets(7, $ids, $given);
+                self::fail('Accepted selection: ' . $case);
+            } catch (\InvalidArgumentException) {
+            }
+        }
+        // A malformed selection is refused before a transaction or an actor check starts.
+        self::assertCount($checks, $this->checkedInTransaction);
+
+        $this->database->update('automation_snmp', ['name' => 'Renamed'], ['id' => $edge]);
+        foreach ([[[$core, $edge], $revisions, 'changed since'], [[$core, 999], [$core => $revisions[$core], 999 => 'x'], 'no longer exist']] as [$ids, $given, $message]) {
+            try {
+                $this->store->deleteSets(7, $ids, $given);
+                self::fail('Accepted a selection that should report: ' . $message);
+            } catch (\InvalidArgumentException $error) {
+                self::assertStringContainsString($message, $error->getMessage());
+            }
+        }
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp'));
+        self::assertSame(4, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items'));
+
+        // The entries go first; when the set rows cannot be removed, they come back.
+        $this->database->executeStatement("CREATE TRIGGER refuse_set_delete BEFORE DELETE ON automation_snmp BEGIN SELECT RAISE(ABORT, 'refused'); END");
+        try {
+            $this->store->deleteSets(7, [$core], [$core => $revisions[$core]]);
+            self::fail('A failed deletion reported success.');
+        } catch (\InvalidArgumentException $error) {
+            self::fail('A database failure was reported as a correctable refusal: ' . $error->getMessage());
+        } catch (\Throwable) {
+        }
+        self::assertSame(4, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items'));
+        self::assertSame(AuditEvent::FAILED, $this->audit[array_key_last($this->audit)]->outcome);
+
+        $this->revoked = true;
+        try {
+            $this->store->deleteSets(7, [$core], [$core => $revisions[$core]]);
+            self::fail('A revoked actor deleted.');
+        } catch (AutomationTemplateAccessDenied) {
+        }
+        self::assertSame(AuditEvent::DENIED, $this->audit[array_key_last($this->audit)]->outcome);
+    }
+
+    public function testUnconfirmedDeletionAndDuplicationRollBackAndAreAudited(): void
+    {
+        [$core, $edge] = $this->sets(['Core', 'Edge']);
+        $revisions = $this->revisions([$core, $edge]);
+        $items = (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items');
+
+        // A set row that survives its DELETE leaves the count short of the selection.
+        $this->database->executeStatement('CREATE TRIGGER keep_core BEFORE DELETE ON automation_snmp WHEN OLD.id = ' . $core . ' BEGIN SELECT RAISE(IGNORE); END');
+        try {
+            $this->store->deleteSets(7, [$core, $edge], $revisions);
+            self::fail('An unconfirmed deletion was reported as done.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('SNMP Option Set deletion was not confirmed.', $error->getMessage());
+        }
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp'));
+        self::assertSame($items, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items'));
+        self::assertSame(AuditEvent::FAILED, $this->audit[array_key_last($this->audit)]->outcome);
+
+        // MySQL answers 0 when an insert generated no ID; that is not a copy.
+        $this->database->executeStatement('DROP TRIGGER keep_core');
+        self::assertInstanceOf(IdentityLessConnection::class, $this->database);
+        $this->database->identityLess = true;
+        try {
+            $this->store->duplicateSets(7, [$core], [$core => $revisions[$core]], '<name> (1)');
+            self::fail('An unconfirmed duplication was reported as done.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('SNMP Option Set duplication was not confirmed.', $error->getMessage());
+        }
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp'));
+        self::assertSame($items, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items'));
+        self::assertSame(AuditEvent::FAILED, $this->audit[array_key_last($this->audit)]->outcome);
+    }
+
+    public function testDuplicateCopiesEntriesWithStoredCredentialsInsideTheDatabase(): void
+    {
+        [$core, $empty] = $this->sets(['Core', 'Empty']);
+        $this->database->executeStatement('DELETE FROM automation_snmp_items WHERE snmp_id = ?', [$empty]);
+        $this->database->update('automation_snmp_items', ['bulk_walk_size' => 25, 'sequence' => 9], ['snmp_id' => $core, 'snmp_version' => 3]);
+        $source = $this->entryRows($core);
+
+        $revisions = $this->revisions([$core, $empty]);
+        $before = count($this->statements->sql);
+        $this->store->duplicateSets(7, [$core, $empty], $revisions, SnmpOptionSet::NAME_FORMAT);
+        $two = array_slice($this->statements->sql, $before);
+        $copies = $this->database->fetchAllKeyValue('SELECT name, id FROM automation_snmp WHERE id NOT IN (?, ?)', [$core, $empty]);
+        self::assertSame(['Core (1)', 'Empty (1)'], array_keys($copies));
+        // Every column but the entry ID and its set is carried over, bulk_walk_size included.
+        self::assertSame($source, $this->entryRows((int) $copies['Core (1)']));
+        self::assertSame($source, $this->entryRows($core));
+        self::assertSame([], $this->entryRows((int) $copies['Empty (1)']));
+
+        // The credentials never pass through PHP: no statement selects them, and one statement copies every entry.
+        $copying = array_values(array_filter($two, static fn(string $sql): bool => str_contains($sql, 'INSERT INTO automation_snmp_items')));
+        self::assertCount(1, $copying);
+        foreach ($two as $sql) {
+            if ($sql !== $copying[0]) {
+                self::assertStringNotContainsString('snmp_password', $sql);
+                self::assertStringNotContainsString('snmp_community', $sql);
+            }
+        }
+        $event = $this->audit[array_key_last($this->audit)];
+        self::assertSame(['automation.snmp_option.duplicate', AuditEvent::SUCCEEDED], [$event->action, $event->outcome]);
+        foreach (['copy-community', ...array_values(self::V3_SECRETS)] as $secret) {
+            self::assertStringNotContainsString($secret, serialize($this->audit));
+        }
+
+        // One insert per copied set, and nothing else grows with the selection.
+        $many = $this->sets(array_map(static fn(int $number): string => 'Set ' . $number, range(1, 40)));
+        $revisions = $this->revisions($many);
+        $before = count($this->statements->sql);
+        $this->store->duplicateSets(7, $many, $revisions, '<name> copy');
+        // Lock, one copy statement for all entries, and one insert per set.
+        self::assertCount(4, $two);
+        self::assertSame(42, count($this->statements->sql) - $before);
+        self::assertSame(40, (int) $this->database->fetchOne("SELECT COUNT(*) FROM automation_snmp WHERE name LIKE 'Set % copy'"));
+        self::assertSame(80, (int) $this->database->fetchOne("SELECT COUNT(*) FROM automation_snmp_items i INNER JOIN automation_snmp s ON s.id = i.snmp_id WHERE s.name LIKE 'Set % copy'"));
+    }
+
+    public function testDuplicateNamesFollowTheLegacyFormatAndMustFitTheColumn(): void
+    {
+        self::assertSame('Core (1)', SnmpOptionSet::copyName('<name> (1)', 'Core'));
+        self::assertSame('Core/Core', SnmpOptionSet::copyName('<name>/<name>', 'Core'));
+        // Without the token every copy gets the same name, as on the legacy page; other tokens are literal text.
+        self::assertSame('Fixed <nom>', SnmpOptionSet::copyName('Fixed <nom>', 'Core'));
+        self::assertSame(str_repeat('é', 96) . ' (1)', SnmpOptionSet::copyName('<name> (1)', str_repeat('é', 96)));
+        foreach ([['<name> (1)', str_repeat('n', 97)], ['', 'Core'], ['<name>', ''], [str_repeat('x', 256), 'Core'], ["<name>\n", 'Core'], ["<name>\0", 'Core'], ["\xff<name>", 'Core']] as [$format, $name]) {
+            try {
+                SnmpOptionSet::copyName($format, $name);
+                self::fail('Accepted the name format ' . json_encode($format, JSON_INVALID_UTF8_SUBSTITUTE));
+            } catch (\InvalidArgumentException) {
+            }
+        }
+
+        [$short, $long] = $this->sets(['Short', str_repeat('n', 97)]);
+        $revisions = $this->revisions([$short, $long]);
+        $sets = (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp');
+        $entries = (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items');
+        foreach ([
+            'one name too long for the column' => fn() => $this->store->duplicateSets(7, [$short, $long], $revisions, '<name> (1)'),
+            'empty format' => fn() => $this->store->duplicateSets(7, [$short], [$short => $revisions[$short]], ''),
+            'stale' => fn() => $this->store->duplicateSets(7, [$short], [$short => 'stale'], '<name> (1)'),
+            'missing' => fn() => $this->store->duplicateSets(7, [$short, 999], [$short => $revisions[$short], 999 => 'x'], '<name> (1)'),
+            'unsorted' => fn() => $this->store->duplicateSets(7, [$long, $short], $revisions, '<name> (1)'),
+        ] as $case => $write) {
+            try {
+                $write();
+                self::fail('Duplicated with ' . $case);
+            } catch (\InvalidArgumentException) {
+            }
+        }
+        // A refusal for one set leaves no copy of another.
+        self::assertSame($sets, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp'));
+        self::assertSame($entries, (int) $this->database->fetchOne('SELECT COUNT(*) FROM automation_snmp_items'));
+    }
+
     public function testRevocationInsideTheTransactionWritesNothingAndIsAudited(): void
     {
         $this->revoked = true;
@@ -226,9 +448,56 @@ final class SnmpOptionStoreTest extends TestCase
         self::assertStringNotContainsString('never-a-default', serialize($defaults));
     }
 
+    /**
+     * Each set gets a community entry and an SNMPv3 entry holding credentials.
+     *
+     * @param list<string> $names
+     * @return list<int>
+     */
+    private function sets(array $names): array
+    {
+        $ids = [];
+        foreach ($names as $name) {
+            $this->database->insert('automation_snmp', ['name' => $name]);
+            $ids[] = $id = (int) $this->database->lastInsertId();
+            $this->database->insert('automation_snmp_items', ['snmp_id' => $id, 'sequence' => 1, 'snmp_version' => 2, 'snmp_community' => 'copy-community']);
+            $this->database->insert('automation_snmp_items', ['snmp_id' => $id, 'sequence' => 2, 'snmp_version' => 3, 'snmp_community' => '', 'snmp_auth_protocol' => 'SHA', 'snmp_priv_protocol' => 'AES', 'snmp_context' => 'ctx', 'snmp_engine_id' => '80001f88'] + self::V3_SECRETS);
+        }
+        return $ids;
+    }
+
+    /**
+     * @param list<int> $ids
+     * @return array<int, string>
+     */
+    private function revisions(array $ids): array
+    {
+        return array_map(static fn(SnmpOptionSet $set): string => $set->revision, $this->store->findSets($ids));
+    }
+
+    /** @return list<array<string, string|null>> a set's entries without their ID and set */
+    private function entryRows(int $set): array
+    {
+        return array_map(
+            static fn(array $row): array => array_map(static fn(mixed $value): ?string => $value === null ? null : (string) $value, array_diff_key($row, ['id' => true, 'snmp_id' => true])),
+            $this->database->fetchAllAssociative('SELECT * FROM automation_snmp_items WHERE snmp_id = ? ORDER BY sequence, id', [$set]),
+        );
+    }
+
     /** @return list<array{int, int}> */
     private function sequences(int $set): array
     {
         return array_map(static fn(array $row): array => [(int) $row['id'], (int) $row['sequence']], $this->database->fetchAllAssociative('SELECT id, sequence FROM automation_snmp_items WHERE snmp_id = ? ORDER BY sequence, id', [$set]));
+    }
+}
+
+/** A connection whose last insert ID can be made to read 0, as MySQL reports an insert that generated none. */
+final class IdentityLessConnection extends Connection
+{
+    public bool $identityLess = false;
+
+    public function lastInsertId(): int|string
+    {
+        return $this->identityLess ? 0 : parent::lastInsertId();
     }
 }

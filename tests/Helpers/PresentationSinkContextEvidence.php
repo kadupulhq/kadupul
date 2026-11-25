@@ -48,7 +48,6 @@ final class PresentationSinkContextEvidence
     public static function sources(): array
     {
         return [
-            'automation_snmp.php',
             'cacti.sql',
             'cli/refresh_csrf.php',
             'color_templates.php',

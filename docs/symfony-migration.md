@@ -2802,9 +2802,11 @@ existing full replication. Set and entry forms carry a revision, and a move
 carries a revision of the set's whole order, so a stale form is refused with
 409. A move swaps an entry with its neighbour and renumbers the set from 1.
 
-`automation_snmp.php` forwards the old edit links to the new routes and
-answers 409 to posts of the old set and entry forms. The set list and its bulk
-delete and duplicate actions remain in `automation_snmp.php` for now.
+`automation_snmp.php` is a forwarder to `/automation/snmp-options/legacy`. That
+route checks the same access first, then redirects the old list, edit and
+entry links (bookmarked `filter`, `rows`, `page` and sort values are validated
+and carried to the list), answers 409 to every post and to the old move,
+remove and save actions, and 400 to anything else. It reads and writes nothing.
 
 Differences from legacy:
 
@@ -2820,6 +2822,66 @@ Differences from legacy:
 - An entry is found only within its own set; legacy did not check the pairing.
 - A new entry does not prefill the default community from settings.
 - There is no drag and drop; an entry moves one place at a time.
+
+#### List and bulk actions
+
+The list is the shared administration list at `/automation/snmp-options`
+(`AdministrationListController`). For this screen it links to the Symfony
+editor and carries a selection column inside a GET form, which opens
+`/automation/snmp-options/actions/delete` or `.../duplicate` with `ids[]`. The
+confirmation page lists the selected names and posts a Symfony form with the
+selection, one revision per set and a CSRF token; duplication adds the name
+format. The list shows no credentials, and neither does the confirmation.
+
+Authorization: console access and the Automation realm (23) are resolved
+before the selection is parsed or any set is read. Deleting and duplicating
+run through `AuditedPrimaryWrite` (`automation.snmp_option.delete` and
+`automation.snmp_option.duplicate`), so the account and realm are rechecked
+inside the transaction, the primary collector is required and the audit event
+names only the set IDs. Responses are `private, no-store`.
+
+Deleting locks the selected sets, checks every revision, then removes the
+entries and the sets in one transaction with a fixed number of statements.
+Duplicating inserts one row per new set and copies all entries with a single
+`INSERT ... SELECT`, so stored credentials are copied inside the database and
+never loaded into PHP, sent to the browser or audited.
+
+Kept from legacy: deleting a set that discovery networks use is allowed and
+leaves their `automation_networks.snmp_id` pointing at the missing set. Saving
+such a network in the network editor then asks for an existing set.
+
+Differences from legacy:
+
+- A selection holds 1 to 100 sets. No selection is a 400 with a message, not
+  a silent return to the list. IDs must be plain decimal integers.
+- A set renamed or removed after the confirmation page was opened stops the
+  whole action with 409 or 404. The revision covers a set's ID and name, not
+  its entries.
+- The `<name>` token is the same in every language. Legacy translated the
+  default format, and a translated token was then never replaced.
+- Every new name must be 1 to 100 characters, the width of
+  `automation_snmp.name`. Legacy accepted any format and let the database
+  truncate or reject the result.
+- A copy keeps each entry's `bulk_walk_size`; legacy reset it to the column
+  default.
+- After a successful action the browser returns to the list without a
+  notice. Legacy showed a message after duplicating.
+- The list keeps the differences of the shared administration lists: no
+  saved filter preferences, no total count, and an ID column.
+- On a remote collector that is offline the action and legacy routes are not
+  served, like the editor routes; the list itself still is.
+
+Verification: `SnmpOptionStoreTest` (deletion and duplication against an
+SQLite schema with the real column set, statement counts, rollback, audit
+contents), `SnmpOptionRoutesTest` (401, 403, 400, 404, 409, 422, 502,
+subdirectory base path, French preference, offline collector, legacy
+mapping), `AdministrationListRoutesTest` (selection form) and
+`LegacyPageForwarderTest`. Deletion and duplication were also run once by hand
+against MariaDB 10.11 with the `cacti.sql` schema; no automated test does that.
+
+Rollback: revert the change. No schema or stored data changes, so the old
+`automation_snmp.php` list works again as soon as it is restored; copies made
+through the new route are ordinary sets.
 
 ### Discovery network editor
 

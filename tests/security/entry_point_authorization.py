@@ -183,7 +183,7 @@ def refusal(response):
 
 def has_feature_realm(entry):
     """These migrated pages require a feature grant in addition to Console."""
-    legacy = {'gprint_presets.php', 'vdef.php', 'cdef.php', 'automation_templates.php', 'color_templates.php',
+    legacy = {'gprint_presets.php', 'vdef.php', 'cdef.php', 'automation_templates.php', 'automation_snmp.php', 'color_templates.php',
               'color_templates_items.php', 'aggregate_templates.php', 'host_templates.php',
               'color.php', 'links.php', 'data_input.php', 'rrdcheck.php', 'data_source_profiles.php', 'graph_templates_inputs.php'}
     prefixes = ('relationships', 'graphing/gprint-presets', 'graph-definitions/vdefs',

@@ -18,6 +18,7 @@ use Kadupul\Graphing\Domain\DataSourceProfileRra;
 use Kadupul\Graphing\Domain\DataSourceProfileSizing;
 use Kadupul\Graphing\Infrastructure\Symfony\DataSourceProfileText;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyRequestId;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +32,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class LegacyDataSourceProfilesController
 {
-    private const string ID = '/\A(?:0|[1-9][0-9]{0,7})\z/D';
     private const string INTEGER = '/\A-?[0-9]{1,10}\z/D';
 
     #[Route('/graphing/data-source-profiles/legacy', name: 'data_source_profile_legacy', methods: ['GET', 'HEAD', 'POST'])]
@@ -147,13 +147,7 @@ final class LegacyDataSourceProfilesController
 
     private static function id(mixed $raw): int
     {
-        if ($raw === '') {
-            return 0;
-        }
-        if (!is_string($raw) || preg_match(self::ID, $raw) !== 1) {
-            throw new \InvalidArgumentException('Invalid profile request.');
-        }
-        return (int) $raw;
+        return LegacyRequestId::parse($raw, 'Invalid profile request.');
     }
 
     private static function redirect(string $url): RedirectResponse

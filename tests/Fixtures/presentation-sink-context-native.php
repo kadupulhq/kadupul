@@ -13,7 +13,7 @@ require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 if (getenv('PRESENTATION_SINK_CONTEXT_COVERAGE') === '1') {
     $testLoader = require $root . '/tests/vendor/autoload.php';
     $filter = new SebastianBergmann\CodeCoverage\Filter();
-    foreach (['automation_snmp.php','color_templates.php','data_queries.php','data_sources.php','data_templates.php','lib/html.php','lib/html_utility.php','lib/html_validate.php','lib/database.php','lib/auth.php','lib/html_form.php'] as $source) $filter->includeFile($root . '/' . $source);
+    foreach (['color_templates.php','data_queries.php','data_sources.php','data_templates.php','lib/html.php','lib/html_utility.php','lib/html_validate.php','lib/database.php','lib/auth.php','lib/html_form.php'] as $source) $filter->includeFile($root . '/' . $source);
     $coverage = new SebastianBergmann\CodeCoverage\CodeCoverage((new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($filter), $filter);
     $snapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/presentation-sink-context-native.php', $input, PresentationSinkContextEvidence::sources());
     $coverage->start('native presentation sink contexts');

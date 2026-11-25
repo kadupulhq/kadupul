@@ -158,8 +158,8 @@ PHP;
 // External-link actions are covered by the Symfony Link presentation tests.
 // Data Input Methods, Palette and VDEF now use Symfony. Their presentation and authorization tests
 // cover legacy URL rejection, GET editors, POST mutations and CSRF failures.
-// SNMP Option Set entries use Symfony too (SnmpOptionRoutesTest); the legacy
-// actions are checked below to answer 409 without reaching a handler.
+// SNMP Option Sets use Symfony too; SnmpOptionRoutesTest checks that the
+// legacy actions answer 409 without writing.
 function itemActionCases()
 {
     return array(
@@ -231,20 +231,6 @@ test('item actions refuse a GET or an untokened POST before the handler runs', f
 test('item actions run from a POST that carries a valid token', function ($controller, $action, $fields, $reached = 'HANDLER') {
     expect(runItemActionRequest($this, $controller, 'POST', 'valid', $action, $fields))->toBe($reached . 'STATUS:200');
 })->with(itemActionCases());
-
-test('retired SNMP Option Set actions answer 409 without reaching a handler', function ($action, $fields) {
-    foreach (array(array('GET', 'missing'), array('POST', 'valid')) as [$method, $token]) {
-        $output = runItemActionRequest($this, 'automation_snmp.php', $method, $token, $action, $fields);
-        expect($output)->not->toContain('HANDLER')->toEndWith('STATUS:409');
-    }
-})->with(array(
-    array('save', array('name' => 'Replayed')),
-    array('ajax_dnd', array('snmp_item' => array('line1', 'line2'))),
-    array('item_moveup', array()),
-    array('item_movedown', array()),
-    array('item_remove_confirm', array()),
-    array('item_remove', array()),
-));
 
 test('item editors and lists still open by GET', function ($controller, $action) {
     expect(runItemActionRequest($this, $controller, 'GET', 'missing', $action))->toBe('READSTATUS:200');
