@@ -14154,7 +14154,7 @@ msgstr "CDP 未知数据点(0)"
 
 #: lib/rrd.php
 msgid "Cur Row"
-msgstr "Cur 行"
+msgstr "当前行"
 
 #: lib/rrd.php
 #, php-format

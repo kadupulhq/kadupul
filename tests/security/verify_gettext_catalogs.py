@@ -18,7 +18,7 @@ import re
 import subprocess
 import tempfile
 
-COMPATIBILITY_CONTENT_SHA256 = "53689b6da6cbe380a4be82e5dbdbce7d6b1cefbf6e8630f8f1717a93786bd314"
+COMPATIBILITY_CONTENT_SHA256 = "0fb3a4339804330d58470a6706200a2a0c9f971ec9f2966881f9287bdc330af6"
 # Catalogs record file-only references so moving lines never rewrites them.
 LINE_REFERENCE = re.compile(r":\d+$")
 # "Label (--option ...)" labels name an RRDtool option that must stay verbatim.

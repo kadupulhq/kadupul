@@ -48,33 +48,33 @@ msgstr " [ Daftar Grafik Kustom Diterapkan - Bersihkan untuk Mengatur Ulang ]"
 
 #: aggregate_graphs.php graphs.php
 msgid "Add Graphs to Report"
-msgstr "Informasi Tambahan"
+msgstr "Tambahkan Grafik ke Laporan"
 
 #: aggregate_graphs.php
 #, php-format
 msgid "Aggregate Graph %s"
-msgstr "Aggregate Graph %s"
+msgstr "Grafik Agregat %s"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph Accessed does not Exist"
-msgstr "Regenerasi grafik agregat gagal. Pengaturan grafik lainnya mungkin sudah tersimpan; tinjau pengaturan tersebut sebelum mencoba lagi."
+msgstr "Grafik Agregat yang Diakses Tidak Ada"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
-msgstr "Pengaturan grafik agregat tidak dapat dikonfirmasi. Pengaturan lainnya mungkin sudah tersimpan; tinjau pengaturan tersebut sebelum mencoba lagi."
+msgstr "Grafik Agregat tidak Ada"
 
 #: aggregate_graphs.php include/global_arrays.php
 msgid "Aggregate Graphs"
-msgstr "Item agregat tidak dapat disimpan. Pengaturan grafik lainnya mungkin sudah tersimpan; tinjau pengaturan tersebut sebelum mencoba lagi."
+msgstr "Grafik Agregat"
 
 #: aggregate_graphs.php
 msgid "Aggregate Name:"
-msgstr "Perataan"
+msgstr "Nama Agregat:"
 
 #: aggregate_graphs.php
 #, php-format
 msgid "Aggregate Preview %s"
-msgstr "Aggregate Preview %s"
+msgstr "Pratinjau Agregat %s"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
@@ -82,11 +82,11 @@ msgstr "Pratinjau Agregat Tidak Ada"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
-msgstr "Semua Perangkat"
+msgstr "Templat Agregat"
 
 #: aggregate_graphs.php
 msgid "Aggregate Template:"
-msgstr "Semua Pengindeksan Ulang akan dilakukan secara manual atau dikelola melalui skrip atau Otomatisasi Perangkat."
+msgstr "Templat Agregat:"
 
 #: aggregate_graphs.php
 msgid "Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying."
@@ -505,11 +505,11 @@ msgstr "[edit: %s]"
 #: aggregate_templates.php
 #, php-format
 msgid "Aggregate Template [edit: %s]"
-msgstr "Aggregate Template [edit: %s]"
+msgstr "Templat Agregat [edit: %s]"
 
 #: aggregate_templates.php
 msgid "Aggregate Template [new]"
-msgstr "Semua Baris"
+msgstr "Templat Agregat [baru]"
 
 #: aggregate_templates.php
 msgid "Aggregate Template not found."
@@ -517,11 +517,11 @@ msgstr "Templat Agregat tidak ditemukan."
 
 #: aggregate_templates.php include/global_arrays.php
 msgid "Aggregate Templates"
-msgstr "Semua Templat Dipilih"
+msgstr "Templat Agregat"
 
 #: aggregate_templates.php
 msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
-msgstr "Semua Tipe"
+msgstr "Templat Agregat yang sedang digunakan tidak dapat Dihapus. Sedang digunakan berarti dirujuk oleh sebuah Agregat."
 
 #: aggregate_templates.php
 msgid "Aggregate graph regeneration failed. Template settings may already have been saved; review them before retrying."
@@ -680,7 +680,7 @@ msgstr "Kata sandi baru Anda tidak cocok, silakan ketik ulang."
 #: auth_login.php
 #, php-format
 msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
-msgstr "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
+msgstr "Akses Ditolak! ID pengguna tamu %s tidak ada. Silakan hubungi Administrator Anda."
 
 #: auth_login.php lib/auth.php
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
@@ -690,7 +690,7 @@ msgstr "Akses Ditolak! Login Gagal."
 
 #: auth_login.php
 msgid "Access Denied!  User account disabled."
-msgstr "Aksi yang tersedia meliputi 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
+msgstr "Akses Ditolak! Akun pengguna dinonaktifkan."
 
 #: auth_login.php
 msgid "Access Denied! User account locked."
@@ -750,7 +750,7 @@ msgstr "Anda tidak memiliki akses ke area mana pun di Kadupul.  Hubungi administ
 
 #: auth_profile.php include/global_form.php
 msgid "A more descriptive name for this user, that can include spaces or special characters."
-msgstr "Nama untuk grafik terkait ini."
+msgstr "Nama yang lebih deskriptif untuk pengguna ini, yang dapat mencakup spasi atau karakter khusus."
 
 #: auth_profile.php
 msgid "All your login sessions have been cleared."
@@ -845,15 +845,15 @@ msgstr "Data Pribadi Anda telah dibersihkan."
 
 #: automation_devices.php
 msgid "Add Device"
-msgstr "Ditambahkan oleh Otomatisasi Cacti"
+msgstr "Tambah Perangkat"
 
 #: automation_devices.php
 msgid "Add Device(s)"
-msgstr "Ditambahkan oleh Otomatisasi Kadupul"
+msgstr "Tambahkan Perangkat"
 
 #: automation_devices.php
 msgid "Added manually through device automation interface."
-msgstr "Alamat2"
+msgstr "Ditambahkan secara manual melalui antarmuka otomatisasi perangkat."
 
 #: automation_devices.php
 msgid "Availability Method"
@@ -1532,7 +1532,7 @@ msgstr "<tidak diatur>"
 
 #: data_debug.php data_sources.php data_templates.php plugins.php
 msgid "Active"
-msgstr "Tambahkan Templat Grafik ke Templat Perangkat"
+msgstr "Aktif"
 
 #: data_debug.php data_sources.php data_templates.php graphs.php graphs_new.php
 #: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
@@ -2022,19 +2022,19 @@ msgstr "Verifikasi Daftar Putih Berhasil."
 
 #: data_queries.php utilities.php
 msgid "Action"
-msgstr "Tambah Perangkat"
+msgstr "Tindakan"
 
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
-msgstr "Tambahkan Grafik Terpilih ke Laporan"
+msgstr "Tambah"
 
 #: data_queries.php
 msgid "Add Data Source Name Suggested Name"
-msgstr "Tambahkan ke sebuah Laporan"
+msgstr "Tambahkan Nama yang Disarankan untuk Nama Sumber Data"
 
 #: data_queries.php
 msgid "Add Graph Title Suggested Name"
-msgstr "Default Tambahan"
+msgstr "Tambahkan Nama yang Disarankan untuk Judul Grafik"
 
 #: data_queries.php
 msgid "Associated Data Templates"
@@ -2534,7 +2534,7 @@ msgstr "Apakah data akan dikumpulkan atau tidak untuk Sumber Data ini. Dikontrol
 
 #: data_templates.php
 msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
-msgstr "Templat Agregat:"
+msgstr "Setelah Anda menghapus centang kotak centang ini lalu Menyimpan Templat Data, Sumber Data yang ada yang berbasis Templat Data ini akan kehilangan Data Kustomnya. Hal ini dapat menyebabkan Pengumpulan Data dan Grafik menjadi rusak"
 
 #: data_templates.php
 msgid "Change Data Source Profile"
@@ -2953,11 +2953,11 @@ msgstr "Filter ini akan membatasi Sumber Data yang terlihat di dropdown Sumber D
 
 #: graph_view.php
 msgid "Add Selected Graphs to Report"
-msgstr "Opsi SNMP Tambahan"
+msgstr "Tambahkan Grafik Terpilih ke Laporan"
 
 #: graph_view.php
 msgid "Add to a Report"
-msgstr "Area tambahan yang digunakan untuk catatan acak terkait Situs ini."
+msgstr "Tambahkan ke sebuah Laporan"
 
 #: graph_view.php lib/html.php lib/html_graph.php lib/html_tree.php
 msgid "All Graphs & Templates"
@@ -3507,19 +3507,19 @@ msgstr "PERINGATAN: Halaman Kadupul:%s untuk Pengguna:%s Menghasilkan Kesalahan 
 
 #: host_templates.php
 msgid "Add Data Query"
-msgstr "Tambah Pohon"
+msgstr "Tambah Kueri Data"
 
 #: host_templates.php
 msgid "Add Data Query to Device Template"
-msgstr "Tambahkan ke Laporan"
+msgstr "Tambahkan Kueri Data ke Templat Perangkat"
 
 #: host_templates.php
 msgid "Add Graph Template"
-msgstr "Menambahkan Perangkat ke Pohon Default"
+msgstr "Tambah Templat Grafik"
 
 #: host_templates.php
 msgid "Add Graph Template to Device Template"
-msgstr "Pengaturan Pengumpul Data Tambahan"
+msgstr "Tambahkan Templat Grafik ke Templat Perangkat"
 
 #: host_templates.php
 msgid "Associated Data Queries"
@@ -3898,11 +3898,11 @@ msgstr "AES-128"
 
 #: include/global_arrays.php
 msgid "AES-192"
-msgstr "Setujui Perjanjian Lisensi GPL"
+msgstr "AES-192"
 
 #: include/global_arrays.php
 msgid "AES-192-C"
-msgstr "Akses Ditolak! Templat domain belum dikonfigurasi. Silakan hubungi Administrator Anda."
+msgstr "AES-192-C"
 
 #: include/global_arrays.php
 msgid "AES-256"
@@ -3910,7 +3910,7 @@ msgstr "AES-256"
 
 #: include/global_arrays.php
 msgid "AES-256-C"
-msgstr "Akses Ditolak! Login Dinonaktifkan."
+msgstr "AES-256-C"
 
 #: include/global_arrays.php lib/html.php
 msgid "About Kadupul"
@@ -3918,16 +3918,16 @@ msgstr "Tentang Kadupul"
 
 #: include/global_arrays.php
 msgid "Access Points, Controllers"
-msgstr "Tambah"
+msgstr "Titik Akses, Pengontrol"
 
 #: include/global_arrays.php lib/api_automation.php lib/html_reports.php
 #: plugins.php
 msgid "Actions"
-msgstr "Tambah Templat Grafik"
+msgstr "Tindakan"
 
 #: include/global_arrays.php
 msgid "Active Directory"
-msgstr "Tambahkan Grafik ke Laporan"
+msgstr "Active Directory"
 
 #: include/global_arrays.php
 msgid "After Boost"
@@ -3935,7 +3935,7 @@ msgstr "Setelah Boost"
 
 #: include/global_arrays.php
 msgid "Aggregate"
-msgstr "Pembuatan grafik agregat tidak dapat dikonfirmasi. Tinjau pengaturan grafik sebelum mencoba lagi."
+msgstr "Agregat"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
@@ -6011,35 +6011,35 @@ msgstr "Fungsi VDEF (matematika) untuk diterapkan pada item ini di legenda grafi
 
 #: include/global_form.php
 msgid "A description for this data query."
-msgstr "Deskripsi yang diberikan oleh pembuat Plugin untuk Plugin tersebut."
+msgstr "Deskripsi untuk kueri data ini."
 
 #: include/global_form.php
 msgid "A name for this associated graph."
-msgstr "Warna yang bagus"
+msgstr "Nama untuk grafik terkait ini."
 
 #: include/global_form.php
 msgid "A name for this data query."
-msgstr "Sumbu kedua akan digambar di sebelah kanan grafik. Sumbu ini terikat pada sumbu kiri melalui parameter skala dan pergeseran."
+msgstr "Nama untuk kueri data ini."
 
 #: include/global_form.php
 msgid "A nice Color"
-msgstr "Daftar nama host DNS atau alamat IP yang dipisahkan spasi untuk server LDAP yang valid. Cacti akan mencoba menggunakan server LDAP dari kiri ke kanan untuk mengautentikasi pengguna."
+msgstr "Warna yang bagus"
 
 #: include/global_form.php
 msgid "A second axis will be drawn to the right of the graph. It is tied to the left axis via the scale and shift parameters."
-msgstr "Daftar nama host DNS atau alamat IP yang dipisahkan spasi untuk server LDAP yang valid. Kadupul akan mencoba menggunakan server LDAP dari kiri ke kanan untuk mengautentikasi pengguna."
+msgstr "Sumbu kedua akan digambar di sebelah kanan grafik. Sumbu ini terikat pada sumbu kiri melalui parameter skala dan pergeseran."
 
 #: include/global_form.php
 msgid "A suitable Class for the Device Template."
-msgstr "Nama yang berguna untuk pohon grafik ini."
+msgstr "Kelas yang sesuai untuk Templat Perangkat."
 
 #: include/global_form.php
 msgid "A useful name for this CDEF."
-msgstr "Nama yang berguna untuk templat host ini."
+msgstr "Nama yang berguna untuk CDEF ini."
 
 #: include/global_form.php
 msgid "A useful name for this Data Storage and Polling Profile."
-msgstr "Zona waktu yang valid yang cocok dengan MySQL dan sistem"
+msgstr "Nama yang berguna untuk Profil Penyimpanan Data dan Polling ini."
 
 #: include/global_form.php
 msgid "A useful name for this Rule."
@@ -6047,23 +6047,23 @@ msgstr "Nama yang berguna untuk Aturan ini."
 
 #: include/global_form.php
 msgid "A useful name for this Template."
-msgstr "AES"
+msgstr "Nama yang berguna untuk Templat ini."
 
 #: include/global_form.php
 msgid "A useful name for this graph tree."
-msgstr "AES-192"
+msgstr "Nama yang berguna untuk pohon grafik ini."
 
 #: include/global_form.php
 msgid "A useful name for this host template."
-msgstr "AES-192-C"
+msgstr "Nama yang berguna untuk templat host ini."
 
 #: include/global_form.php
 msgid "Account Options"
-msgstr "Tambahkan Nama yang Disarankan untuk Nama Sumber Data"
+msgstr "Opsi Akun"
 
 #: include/global_form.php
 msgid "Additional Options"
-msgstr "Setelah instalasi selesai, Anda dapat menjadikan beberapa direktori ini hanya-baca untuk meningkatkan keamanan."
+msgstr "Opsi Tambahan"
 
 #: include/global_form.php
 msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
@@ -6071,15 +6071,15 @@ msgstr "Setelah kegagalan awal, jumlah percobaan ulang ping yang akan dilakukan 
 
 #: include/global_form.php
 msgid "Aggregate Graph Settings"
-msgstr "Regenerasi grafik agregat gagal. Pengaturan templat mungkin sudah tersimpan; tinjau pengaturan tersebut sebelum mencoba lagi."
+msgstr "Pengaturan Grafik Agregat"
 
 #: include/global_form.php
 msgid "Aggregate Template Name"
-msgstr "Semua Grafik & Templat"
+msgstr "Nama Templat Agregat"
 
 #: include/global_form.php
 msgid "Aggregate Template Settings"
-msgstr "Semua Grafik telah ditambahkan ke Laporan. Grafik Duplikat dengan Rentang Waktu yang sama dilewati."
+msgstr "Pengaturan Templat Agregat"
 
 #: include/global_form.php
 msgid "Aggregation Level"
@@ -7517,19 +7517,19 @@ msgstr "Daftar nama host DNS atau alamat IP yang dipisahkan spasi untuk server L
 
 #: include/global_settings.php
 msgid "Account Locking"
-msgstr "Tambahkan Kueri Data ke Templat Perangkat"
+msgstr "Penguncian Akun"
 
 #: include/global_settings.php
 msgid "Additional Data Collector Settings"
-msgstr "Setelah Boost"
+msgstr "Pengaturan Pengumpul Data Tambahan"
 
 #: include/global_settings.php lib/html.php
 msgid "Advanced"
-msgstr "Nama Agregat:"
+msgstr "Lanjutan"
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr "Templat Agregat [baru]"
+msgstr "Setelah jumlah hari ini, jam kerja tidak akan ditambahkan ke grafik. <br/>Disarankan: 62 hari"
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
@@ -10206,11 +10206,11 @@ msgstr "Tampilkan Grafik dari Agregat ini"
 
 #: lib/api_aggregate.php
 msgid "Aggregate Items are not editable"
-msgstr "Pengaturan templat agregat tidak dapat dikonfirmasi. Tinjau pengaturan grafik sebelum mencoba lagi."
+msgstr "Item Agregat tidak dapat diedit"
 
 #: lib/api_aggregate.php
 msgid "Aggregate Items are not modifiable"
-msgstr "Perangkat Teragregasi"
+msgstr "Item Agregat tidak dapat diubah"
 
 #: lib/api_aggregate.php lib/html.php
 msgid "CF Type"
@@ -10514,12 +10514,12 @@ msgstr "Akses Ditolak! Login Dinonaktifkan."
 
 #: lib/auth.php
 msgid "Access Denied!  No password provided by user."
-msgstr "Aksi gagal"
+msgstr "Akses Ditolak! Pengguna tidak memberikan kata sandi."
 
 #: lib/auth.php
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
-msgstr "Aksi[%s]"
+msgstr "Akses Ditolak! ID pengguna templat %s tidak ada. Silakan hubungi Administrator Anda."
 
 #: lib/auth.php
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12090,7 +12090,7 @@ msgstr "Ekspresi reguler yang kompatibel dengan Perl (REGEXP) yang digunakan unt
 
 #: lib/html_reports.php
 msgid "Administrator Level"
-msgstr "Item Agregat tidak dapat diubah"
+msgstr "Tingkat Administrator"
 
 #: lib/html_reports.php
 msgid "Alignment"
@@ -12752,23 +12752,23 @@ msgstr "About to import Package #%s '%s'."
 
 #: lib/installer.php
 msgid "Accept GPL License Agreement"
-msgstr "Akses Ditolak! Akun pengguna terkunci."
+msgstr "Setujui Perjanjian Lisensi GPL"
 
 #: lib/installer.php
 msgid "Adding Device to Default Tree"
-msgstr "Tingkat Administrator"
+msgstr "Menambahkan Perangkat ke Pohon Default"
 
 #: lib/installer.php
 msgid "Adding extra snmp settings for automation"
-msgstr "Lanjutan"
+msgstr "Menambahkan pengaturan snmp tambahan untuk otomatisasi"
 
 #: lib/installer.php
 msgid "Additional Defaults"
-msgstr "Setelah kegagalan awal, jumlah percobaan ulang ping yang akan dilakukan Cacti sebelum dinyatakan gagal."
+msgstr "Default Tambahan"
 
 #: lib/installer.php
 msgid "Additional SNMP Options"
-msgstr "Setelah jumlah hari ini, jam kerja tidak akan ditambahkan ke grafik. <br/>Disarankan: 62 hari"
+msgstr "Opsi SNMP Tambahan"
 
 #: lib/installer.php
 msgid "Additional Steps After Installation"
@@ -12776,7 +12776,7 @@ msgstr "Langkah Tambahan Setelah Instalasi"
 
 #: lib/installer.php
 msgid "After the install is complete, you can make some of these directories read only to increase security."
-msgstr "Pengaturan Templat Agregat"
+msgstr "Setelah instalasi selesai, Anda dapat menjadikan beberapa direktori ini hanya-baca untuk meningkatkan keamanan."
 
 #: lib/installer.php
 msgid "All folders are writable"
@@ -14082,7 +14082,7 @@ msgstr "(Tidak Berbasis Kueri)"
 
 #: lib/reports.php
 msgid "Add to Report"
-msgstr "Informasi alamat tambahan untuk Situs."
+msgstr "Tambahkan ke Laporan"
 
 #: lib/reports.php
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
@@ -14684,16 +14684,16 @@ msgstr "%s akan membagi innodb_buffer_pool menjadi beberapa wilayah memori untuk
 #: lib/utility.php
 #, php-format
 msgid "A minimum of %s m execution time"
-msgstr "Batas memori minimal %s"
+msgstr "Waktu eksekusi minimal %s m"
 
 #: lib/utility.php
 #, php-format
 msgid "A minimum of %s memory limit"
-msgstr "A minimum of %s memory limit"
+msgstr "Batas memori minimal %s"
 
 #: lib/utility.php
 msgid "A valid timezone that matches MySQL and the system"
-msgstr "AES-256"
+msgstr "Zona waktu yang valid yang cocok dengan MySQL dan sistem"
 
 #: lib/utility.php
 #, php-format
@@ -14854,7 +14854,7 @@ msgstr "Dengan penyimpanan jenis SSD modern, memiliki beberapa utas tulis io men
 
 #: lib/vdef.php
 msgid "A useful name for this VDEF."
-msgstr "AES-128"
+msgstr "Nama yang berguna untuk VDEF ini."
 
 #: link.php
 #, php-format
@@ -15302,15 +15302,15 @@ msgstr "Anda belum Mempercayai Pembuat Paket ini.  Jika ingin mengimpor, centang
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
-msgstr "Opsi khusus pengembang untuk melacak pembuatan Sumber Data terutama terkait pemeriksaan keunikan"
+msgstr "Deskripsi yang diberikan oleh pembuat Plugin untuk Plugin tersebut."
 
 #: plugins.php
 msgid "Actions available include 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
-msgstr "Tambahkan Templat Grafik ke Perangkat"
+msgstr "Tindakan yang tersedia meliputi 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
 
 #: plugins.php
 msgid "Active/Installed"
-msgstr "Tambah Cabang Akar"
+msgstr "Aktif/Terinstal"
 
 #: plugins.php
 msgid "Are you sure you want to Uninstall?"
@@ -15981,7 +15981,7 @@ msgstr "Total Ukuran [MB]:"
 
 #: settings.php
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
-msgstr "Templat Agregat tidak ditemukan."
+msgstr "Setelah Anda mengubah Model Izin Grafik, Anda sebaiknya mengaudit izin Grafik Efektif dari Pengguna dan Grup Pengguna Anda untuk memastikan bahwa Anda masih memiliki kontrol yang memadai atas Grafik Anda. CATATAN: Jika Anda ingin membatasi semua Grafik pada Model Izin Grafik Perangkat atau Templat Grafik, Kebijakan Grafik default harus diatur ke 'Tolak'."
 
 #: settings.php
 msgid "All Templates Selected"
@@ -16042,7 +16042,7 @@ msgstr "0 - 23"
 
 #: sites.php
 msgid "Additional Information"
-msgstr "Setelah kegagalan awal, jumlah percobaan ulang ping yang akan dilakukan Kadupul sebelum dinyatakan gagal."
+msgstr "Informasi Tambahan"
 
 #: sites.php
 msgid "Additional Site Address information"
@@ -16054,19 +16054,19 @@ msgstr "Informasi alamat tambahan untuk Situs."
 
 #: sites.php
 msgid "Additional area use for random notes related to this Site."
-msgstr "Grafik Agregat yang Diakses Tidak Ada"
+msgstr "Area tambahan yang digunakan untuk catatan acak terkait Situs ini."
 
 #: sites.php
 msgid "Address Information"
-msgstr "Pengaturan Grafik Agregat"
+msgstr "Informasi Alamat"
 
 #: sites.php
 msgid "Address1"
-msgstr "Grafik Agregat tidak Ada"
+msgstr "Alamat1"
 
 #: sites.php
 msgid "Address2"
-msgstr "Item Agregat tidak dapat diedit"
+msgstr "Alamat2"
 
 #: sites.php
 msgid "Alternate Name"
@@ -16454,11 +16454,11 @@ msgstr "Pohon harus dikunci agar dapat diedit."
 
 #: tree.php
 msgid "Add Root Branch"
-msgstr "Opsi Tambahan"
+msgstr "Tambah Cabang Akar"
 
 #: tree.php
 msgid "Add Tree"
-msgstr "Informasi Alamat Situs Tambahan"
+msgstr "Tambah Pohon"
 
 #: tree.php
 msgid "Alphabetic"
@@ -16748,7 +16748,7 @@ msgstr "IZINKAN"
 
 #: user_admin.php user_group_admin.php
 msgid "Access Granted"
-msgstr "Aktif/Terinstal"
+msgstr "Akses Diberikan"
 
 #: user_admin.php user_group_admin.php
 msgid "Access Restricted"
@@ -17225,11 +17225,11 @@ msgstr "eMail"
 
 #: user_group_admin.php
 msgid "A more descriptive name for this group, that can include spaces or special characters."
-msgstr "Nama yang lebih deskriptif untuk pengguna ini, yang dapat mencakup spasi atau karakter khusus."
+msgstr "Nama yang lebih deskriptif untuk grup ini, yang dapat mencakup spasi atau karakter khusus."
 
 #: user_group_admin.php
 msgid "Add to Group"
-msgstr "Langkah Tambahan Setelah Instalasi"
+msgstr "Tambahkan ke Grup"
 
 #: user_group_admin.php
 msgid "Allow Users of this Group to keep custom User Settings"
@@ -17453,7 +17453,7 @@ msgstr "(Pengguna Dihapus)"
 #: utilities.php
 #, php-format
 msgid "Action[%s]"
-msgstr "Action[%s]"
+msgstr "Tindakan[%s]"
 
 #: utilities.php
 msgid "Allow the search term to include the index column"
