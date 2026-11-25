@@ -22,6 +22,7 @@ class RouteSamples(unittest.TestCase):
                       'app.php/graph-definitions/cdefs', 'app.php/graphing/colors/import',
                       'app.php/automation/templates/{id}/move/{direction}', 'automation_templates.php',
                       'app.php/automation/snmp-options/actions/{operation}', 'app.php/automation/snmp-options/legacy', 'automation_snmp.php',
+                      'app.php/automation/graph-rules/actions/{operation}',
                       'app.php/templates/devices', 'app.php/templates/graphs', 'app.php/templates/data-sources',
                       'app.php/templates/aggregates', 'app.php/data-collection/queries', 'app.php/automation/snmp-options',
                       'app.php/automation/graph-rules', 'app.php/automation/tree-rules', 'app.php/automation/networks',
