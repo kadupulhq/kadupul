@@ -88,12 +88,13 @@ def verify_automation_templates(harness, session, user_id, check):
         check(status in (200, 401) and 'login_password' in body and 'administration-list' not in body
               and urlsplit(url).path == '/automation_graph_rules.php', 'Graph Rule anonymous legacy refusal shows the login page')
         status, _, url = fetch('/automation_graph_rules.php?header=false')
-        check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules' and not urlsplit(url).query,
-              'legacy automation_graph_rules.php GET forwards to the Symfony Graph Rule list')
+        # Only the path: in a shared session the list restores filters an earlier scenario left behind.
+        check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules',
+              'legacy automation_graph_rules.php GET forwards to the Symfony Graph Rule list: status=%d url=%s' % (status, url))
         status, _, url = fetch('/automation_graph_rules.php?filter=Traffic&rows=10&page=1&sort_column=name&sort_direction=DESC&rule_status=-1&snmp_query_id=-1')
         check(status == 200 and urlsplit(url).path == '/app.php/automation/graph-rules'
               and urlsplit(url).query == 'filter=Traffic&rows=10&page=1&sort_column=name&sort_direction=DESC',
-              'legacy Graph Rule bookmark keeps its list filters and drops the legacy-only ones')
+              'legacy Graph Rule bookmark keeps its list filters and drops the legacy-only ones: status=%d url=%s' % (status, url))
         rules = scalar("SELECT COALESCE(GROUP_CONCAT(CONCAT_WS(':', id, name, enabled) ORDER BY id), '') FROM automation_graph_rules")
         rule = scalar('SELECT COALESCE(MIN(id), 1) FROM automation_graph_rules')
         # csrf-magic tokens are per page; take one from the still-legacy rule editor, as a stale form would carry.
