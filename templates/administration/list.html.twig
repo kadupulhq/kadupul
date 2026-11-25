@@ -10,9 +10,10 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% block body %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony generates the fixed management_snmp_mibs route without supplied URL or parameters. #}
 {% if screen.value in ['snmp-objects', 'snmp-notifications'] %}<p><a href="{{ path('management_snmp_mibs') }}">{{ 'Registered SNMP MIBs'|trans({}, 'management') }}</a></p>{% endif %}
-{# Screens whose editor and bulk actions are Symfony routes. The others still open their PHP forms. #}
+{# Screens whose editor and bulk actions are Symfony routes. The others still open their PHP forms.
+   Their texts are in the automation domain, named literally so the translation checks can follow them. #}
 {% set native = {
-    'snmp-options': {create: 'automation_snmp_option_create', edit: 'automation_snmp_option_edit', action: 'automation_snmp_option_action', domain: 'automation', limit: constant('Kadupul\\Automation\\Application\\Port\\SnmpOptionStore::MAX_SELECTION')}
+    'snmp-options': {create: 'automation_snmp_option_create', edit: 'automation_snmp_option_edit', action: 'automation_snmp_option_action', limit: constant('Kadupul\\Automation\\Application\\Port\\SnmpOptionStore::MAX_SELECTION')}
 }[screen.value] ?? null %}
 <h1>{{ screen.title|trans }}</h1>
 {% if not native %}<p>{{ 'Changes and advanced filters use the existing administration forms.'|trans }}</p>{% endif %}
@@ -71,15 +72,15 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {# The selection is a GET form: each button opens its confirmation page, which carries the CSRF token and writes. #}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route named in this template. #}
 <form method="get" action="{{ path(native.action, {operation: 'delete'}) }}" aria-describedby="administration-list-selection">
-<p id="administration-list-selection">{{ 'Select up to %count% rows at a time.'|trans({'%count%': native.limit}, native.domain) }}</p>
+<p id="administration-list-selection">{{ 'Select up to %count% rows at a time.'|trans({'%count%': native.limit}, 'automation') }}</p>
 {% endif %}
 <table class="cactiTable" id="administration-list">
     <caption>{{ screen.title|trans }}</caption>
-    <thead><tr>{% if native %}<th scope="col">{{ 'Select'|trans({}, native.domain) }}</th>{% endif %}{% for column, label in screen.columns %}{{ lists.sort_header(route, filters|merge({page: 1}), column, label, 'administration') }}{% endfor %}</tr></thead>
+    <thead><tr>{% if native %}<th scope="col">{{ 'Select'|trans({}, 'automation') }}</th>{% endif %}{% for column, label in screen.columns %}{{ lists.sort_header(route, filters|merge({page: 1}), column, label, 'administration') }}{% endfor %}</tr></thead>
     <tbody>
     {% for record in records %}
         <tr class="{{ loop.index is odd ? 'odd' : 'even' }}">
-        {% if native %}{{ lists.selection_cell(record.id, record.name, native.domain) }}{% endif %}
+        {% if native %}{{ lists.selection_cell(record.id, record.name, 'automation') }}{% endif %}
         {% for column, label in screen.columns %}
             {% set value = record[column] %}
             <td>{% if column == 'name' and screen.editable %}
@@ -148,9 +149,9 @@ SPDX-License-Identifier: GPL-2.0-or-later
     </tbody>
 </table>
 {% if native %}
-    <button type="submit">{{ 'Delete selected'|trans({}, native.domain) }}</button>
+    <button type="submit">{{ 'Delete selected'|trans({}, 'automation') }}</button>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route named in this template. #}
-    <button type="submit" formaction="{{ path(native.action, {operation: 'duplicate'}) }}">{{ 'Duplicate selected'|trans({}, native.domain) }}</button>
+    <button type="submit" formaction="{{ path(native.action, {operation: 'duplicate'}) }}">{{ 'Duplicate selected'|trans({}, 'automation') }}</button>
 </form>
 {% endif %}
 {{ lists.pagination(route, filters, filters.page, filters.page > 1, hasNext, 'List pages', 'Page %page%', {'%page%': filters.page}, 'administration') }}
