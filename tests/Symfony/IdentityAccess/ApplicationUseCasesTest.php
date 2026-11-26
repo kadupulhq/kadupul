@@ -167,7 +167,7 @@ final class ApplicationUseCasesTest extends TestCase
     {
         $gen = CredentialGeneration::generate();
         $user = new User(id: 11, username: 'carol', accountRealm: 0, credentialGeneration: $gen, passwordChangeAllowed: true);
-        $account = new LocalPasswordAccount($user, md5('weak'), false, $gen);
+        $account = new LocalPasswordAccount($user, 'legacy-stored-hash', false, $gen);
 
         $store = $this->createMock(PasswordCredentialStore::class);
         $store->method('findLocalAccountByUsername')->willReturnMap([
@@ -176,13 +176,13 @@ final class ApplicationUseCasesTest extends TestCase
         ]);
         $store->method('lockoutPolicy')->willReturn(new LockoutPolicy(5, 30));
         $store->method('complexityPolicy')->willReturn(new PasswordComplexityPolicy(true, 8, true, true, true));
-        $store->expects($this->once())->method('updatePasswordPreservingSessions')->with(11, md5('weak'), 'upgraded-hash')->willReturn(true);
+        $store->expects($this->once())->method('updatePasswordPreservingSessions')->with(11, 'legacy-stored-hash', 'upgraded-hash')->willReturn(true);
         $store->expects($this->once())->method('requirePasswordChange')->with(11);
         $store->expects($this->once())->method('recordLastLogin')->with(11);
 
         $verifier = $this->createMock(PasswordVerifier::class);
         $verifier->expects($this->once())->method('padUnknownUserTiming');
-        $verifier->method('verify')->willReturnCallback(static fn(string $hash, string $plain): bool => $hash === md5($plain));
+        $verifier->method('verify')->willReturnCallback(static fn(string $hash, string $plain): bool => $hash === 'legacy-stored-hash' && $plain === 'weak');
         $verifier->method('needsRehash')->willReturn(true);
         $verifier->method('hash')->willReturn('upgraded-hash');
 
