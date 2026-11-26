@@ -2348,6 +2348,16 @@ function test_data_source($data_template_id, $host_id, $snmp_query_id = 0, $snmp
 
 		if (($data_input['type_id'] == DATA_INPUT_TYPE_SCRIPT) ||
 			($data_input['type_id'] == DATA_INPUT_TYPE_PHP_SCRIPT_SERVER)) {
+			if (!function_exists('data_input_whitelist_check') && isset($config['library_path'])) {
+				include_once($config['library_path'] . '/utility.php');
+			}
+
+			if (function_exists('data_input_whitelist_check') && !data_input_whitelist_check($data_input['id'])) {
+				cacti_log('WARNING: Data Input ID ' . (int) $data_input['id'] . ' failed whitelist check in test_data_source()', false, 'POLLER');
+
+				return false;
+			}
+
 			if ($data_input['type_id'] == DATA_INPUT_TYPE_PHP_SCRIPT_SERVER) {
 				$action = POLLER_ACTION_SCRIPT_PHP;
 			} else {
@@ -4613,17 +4623,22 @@ function draw_navigation_text($type = 'url') {
 			$parts = explode('-', get_request_var('node'));
 
 			// Check for tree anchor
-			if (str_contains(get_request_var('node'), 'tree_anchor')) {
-				$tree_id = $parts[1];
+			if (str_contains(get_request_var('node'), 'tree_anchor') && isset($parts[1])) {
+				$tree_id = (int) $parts[1];
 				$leaf_id = 0;
-			} elseif (str_contains(get_request_var('node'), 'tbranch')) {
+			} elseif (str_contains(get_request_var('node'), 'tbranch') && isset($parts[1])) {
 				// Check for branch
-				$leaf_id = $parts[1];
-				$tree_id = db_fetch_cell_prepared('SELECT graph_tree_id
+				$leaf_id = (int) $parts[1];
+				$tree_id = (int) db_fetch_cell_prepared('SELECT graph_tree_id
 					FROM graph_tree_items
 					WHERE id = ?',
 					array($leaf_id));
 			}
+		}
+
+		if ($tree_id > 0 && !is_tree_allowed($tree_id, 0, true)) {
+			$tree_id = 0;
+			$leaf_id = 0;
 		}
 
 		if ($leaf_id > 0) {
@@ -4632,20 +4647,25 @@ function draw_navigation_text($type = 'url') {
 				WHERE id = ?',
 				array($leaf_id));
 
-			if (cacti_sizeof($leaf)) {
+			if (cacti_sizeof($leaf) && is_tree_allowed((int) $leaf['graph_tree_id'], 0, true)) {
 				if ($leaf['host_id'] > 0) {
-					$leaf_name = db_fetch_cell_prepared('SELECT description
-						FROM host
-						WHERE id = ?',
-						array($leaf['host_id']));
+					if (is_device_allowed((int) $leaf['host_id'])) {
+						$leaf_name = db_fetch_cell_prepared('SELECT description
+							FROM host
+							WHERE id = ?',
+							array((int) $leaf['host_id']));
+					} else {
+						$leaf_name = '';
+					}
 				} else {
 					$leaf_name = $leaf['title'];
 				}
 
-				$tree_name = db_fetch_cell_prepared('SELECT name
+				$tree_name = db_fetch_cell_prepared("SELECT name
 					FROM graph_tree
-					WHERE id = ?',
-					array($leaf['graph_tree_id']));
+					WHERE id = ?
+					AND enabled = 'on'",
+					array((int) $leaf['graph_tree_id']));
 			} else {
 				$leaf_name = __('Leaf');
 				$tree_name = '';
@@ -4653,19 +4673,27 @@ function draw_navigation_text($type = 'url') {
 
 			if (isset_request_var('hgd') && get_nfilter_request_var('hgd') != '') {
 				$parts = explode(':', get_nfilter_request_var('hgd'));
-				input_validate_input_number($parts[1]);
+				$hgd_id = isset($parts[1]) ? (int) $parts[1] : 0;
+				input_validate_input_number($hgd_id);
+				$leaf_sub = '';
 
 				if ($parts[0] == 'gt') {
-					$leaf_sub = db_fetch_cell_prepared('SELECT name
-						FROM graph_templates
-						WHERE id = ?',
-						array($parts[1]));
-				} else {
-					if ($parts[1] > 0) {
+					if ($hgd_id > 0 && is_graph_template_allowed($hgd_id)) {
 						$leaf_sub = db_fetch_cell_prepared('SELECT name
-							FROM snmp_query
+							FROM graph_templates
 							WHERE id = ?',
-							array($parts[1]));
+							array($hgd_id));
+					}
+				} else {
+					if ($hgd_id > 0) {
+						$dq_total = -1;
+						$leaf_host_allowed = (cacti_sizeof($leaf) && $leaf['host_id'] > 0 && is_device_allowed((int) $leaf['host_id']));
+						if ($leaf_host_allowed || cacti_sizeof(get_allowed_devices('EXISTS (SELECT 1 FROM host_snmp_query AS hsq WHERE hsq.host_id = h.id AND hsq.snmp_query_id = ' . $hgd_id . ')', '', 1, $dq_total))) {
+							$leaf_sub = db_fetch_cell_prepared('SELECT name
+								FROM snmp_query
+								WHERE id = ?',
+								array($hgd_id));
+						}
 					} else {
 						$leaf_sub = __('Non Query Based');
 					}
@@ -4677,10 +4705,11 @@ function draw_navigation_text($type = 'url') {
 			$leaf_name = '';
 			$leaf_sub  = '';
 
-			if ($tree_id > 0) {
-				$tree_name = db_fetch_cell_prepared('SELECT name
+			if ($tree_id > 0 && is_tree_allowed($tree_id, 0, true)) {
+				$tree_name = db_fetch_cell_prepared("SELECT name
 					FROM graph_tree
-					WHERE id = ?',
+					WHERE id = ?
+					AND enabled = 'on'",
 					array($tree_id));
 			} else {
 				$tree_name = '';
@@ -4692,23 +4721,28 @@ function draw_navigation_text($type = 'url') {
 		if ($tree_title != '') {
 			$current_nav .= "<li><a id='nav_title' href='#'>" . html_escape($tree_title) . '</a></li>';
 		}
-	} elseif (preg_match('#link.php\?id=(\d+)#', $_SERVER['REQUEST_URI'], $matches)) {
-		$externalLinks = db_fetch_row_prepared('SELECT title, style FROM external_links WHERE id = ?', array($matches[1]));
-		$title = $externalLinks['title'];
-		$style = $externalLinks['style'];
-
-		if ($style == 'CONSOLE') {
-			$current_nav = "<ul id='breadcrumbs'>
-				<li>
-					<a id='nav_0' href='" . $config['url_path'] . "index.php'>" . __('Console') . '</a>' . (get_selected_theme() == 'classic' ? ' > ':'') .
-				'</li>';
-
-			$current_nav .= "<li><a id='nav_1' href='#'>" . __('Link %s', html_escape($title)) . '</a></li>';
-		} else {
-			$current_nav = "<ul id='breadcrumbs'><li><a id='nav_0'>" . html_escape($title) . '</a></li>';
-		}
-
+	} elseif (preg_match('#link\.php\?id=(\d+)#', $_SERVER['REQUEST_URI'], $matches)) {
+		$link_id = (int) $matches[1];
 		$tree_title = '';
+
+		if ($link_id > 0 && is_realm_allowed(10000 + $link_id)) {
+			$externalLinks = db_fetch_row_prepared("SELECT title, style FROM external_links WHERE id = ? AND enabled = 'on'", array($link_id));
+			if (cacti_sizeof($externalLinks)) {
+				$title = $externalLinks['title'];
+				$style = $externalLinks['style'];
+
+				if ($style == 'CONSOLE') {
+					$current_nav = "<ul id='breadcrumbs'>
+						<li>
+							<a id='nav_0' href='" . $config['url_path'] . "index.php'>" . __('Console') . '</a>' . (get_selected_theme() == 'classic' ? ' > ':'') .
+						'</li>';
+
+					$current_nav .= "<li><a id='nav_1' href='#'>" . __('Link %s', html_escape($title)) . '</a></li>';
+				} else {
+					$current_nav = "<ul id='breadcrumbs'><li><a id='nav_0'>" . html_escape($title) . '</a></li>';
+				}
+			}
+		}
 	} else {
 		$tree_title = '';
 	}
@@ -4735,7 +4769,8 @@ function draw_navigation_text($type = 'url') {
  * @return - the original navigation text with all substitutions made
  */
 function resolve_navigation_variables($text) {
-	$graphTitle = get_graph_title(get_filter_request_var('local_graph_id'));
+	$local_graph_id = (int) get_filter_request_var('local_graph_id');
+	$graphTitle     = ($local_graph_id > 0 && is_graph_allowed($local_graph_id)) ? get_graph_title($local_graph_id) : '';
 
 	if (preg_match_all("/\|([a-zA-Z0-9_]+)\|/", $text, $matches)) {
 		foreach($matches[1] as $i => $match) {
@@ -5291,7 +5326,7 @@ function sanitize_search_string($string) {
  *
  * @return string    - the sanitized uri
  */
-function sanitize_uri($uri, $preserve_brackets = false, bool $preserve_graph_action = true) {
+function sanitize_uri($uri, $preserve_brackets = false, bool $preserve_graph_action = true, bool $decode = true) {
 	static $drop_char_match = array(
 		'^', '$',
 		'<', '>',
@@ -5316,7 +5351,7 @@ function sanitize_uri($uri, $preserve_brackets = false, bool $preserve_graph_act
 		''
 	);
 
-	if (is_urlencoded($uri)) {
+	if ($decode && is_urlencoded($uri)) {
 		$uri = urldecode($uri);
 	}
 
@@ -6414,7 +6449,7 @@ function email_test() {
 	} elseif ($how == 1) {
 		$mail     = __('Sendmail') . '<br><b>' . __('Sendmail Path'). '</b>: ';
 		$sendmail = read_config_option('settings_sendmail_path');
-		$mail    .= $sendmail;
+		$mail    .= html_escape($sendmail);
 	} elseif ($how == 2) {
 		print __('Method: SMTP') . '<br>';
 
@@ -6427,14 +6462,14 @@ function email_test() {
 		$smtp_secure   = read_config_option('settings_smtp_secure');
 		$smtp_timeout  = read_config_option('settings_smtp_timeout');
 
-		$mail .= '<b>' . __('Device') . "</b>: $smtp_host<br>";
-		$mail .= '<b>' . __('Port') . "</b>: $smtp_port<br>";
+		$mail .= '<b>' . __('Device') . '</b>: ' . html_escape($smtp_host) . '<br>';
+		$mail .= '<b>' . __('Port') . '</b>: ' . html_escape($smtp_port) . '<br>';
 
 		if ($smtp_username != '' && $smtp_password != '') {
 			$mail .= '<b>' . __('Authentication') . '</b>: true<br>';
-			$mail .= '<b>' . __('Username') . "</b>: $smtp_username<br>";
+			$mail .= '<b>' . __('Username') . '</b>: ' . html_escape($smtp_username) . '<br>';
 			$mail .= '<b>' . __('Password') . '</b>: (' . __('Not Shown for Security Reasons') . ')<br>';
-			$mail .= '<b>' . __('Security') . "</b>: $smtp_secure<br>";
+			$mail .= '<b>' . __('Security') . '</b>: ' . html_escape($smtp_secure) . '<br>';
 		} else {
 			$mail .= '<b>' . __('Authentication') . '</b>: false<br>';
 		}
@@ -6442,10 +6477,10 @@ function email_test() {
 		if (read_config_option('settings_ping_mail') == 0) {
 			$ping_results = ping_mail_server($smtp_host, $smtp_port, $smtp_username, $smtp_password, $smtp_timeout, $smtp_secure);
 
-			print __('Ping Results:') . ' ' . ($ping_results == 1 ? __('Success'):$ping_results) . '<br>';
+			print __('Ping Results:') . ' ' . ($ping_results == 1 ? __('Success') : html_escape($ping_results)) . '<br>';
 
 			if ($ping_results != 1) {
-				$mail .= '<b>' . __('Ping Results') . '</b>: ' . $ping_results . '<br>';
+				$mail .= '<b>' . __('Ping Results') . '</b>: ' . html_escape($ping_results) . '<br>';
 			} else {
 				$mail .= '<b>' . __('Ping Results') . '</b>: ' . __('Success') . '<br>';
 			}
@@ -6476,7 +6511,7 @@ function email_test() {
 	}
 
 	print '<center><table><tr><td>';
-	print "<table><tr><td>$errors</td><tr></table></table></center>";
+	print '<table><tr><td>' . html_escape($errors) . '</td><tr></table></table></center>';
 }
 
 /**

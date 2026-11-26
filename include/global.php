@@ -384,12 +384,18 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
 		print $li . 'the database is running.' . $il;
 		print $li . 'the credentials in config.php are valid.' . $il;
 		print $lu . $sp;
-		if (isset_request_var('display_db_errors') && !empty($config['DATABASE_ERROR'])) {
-			print $ps . 'The following database errors occurred: ' . $ul;
-			foreach ($config['DATABASE_ERROR'] as $e) {
-				print $li . $e['Code'] . ': ' . $e['Error'] . $il;
+		if (!empty($config['DATABASE_ERROR'])) {
+			if (!$config['is_web']) {
+				print $ps . 'The following database errors occurred: ' . $ul;
+				foreach ($config['DATABASE_ERROR'] as $e) {
+					print $li . $e['Code'] . ': ' . $e['Error'] . $il;
+				}
+				print $lu . $sp;
+			} else {
+				foreach ($config['DATABASE_ERROR'] as $e) {
+					error_log('Cacti DB connection error ' . $e['Code'] . ': ' . $e['Error']);
+				}
 			}
-			print $lu . $sp;
 		}
 		exit;
 	} else {
@@ -401,6 +407,11 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
 /* check cacti log is available */
 $log_filename = cacti_log_file();
 if (!is_resource_writable($log_filename)) {
+	if ($config['is_web']) {
+		error_log('Cacti system log file is not writable: ' . $log_filename);
+		die('System log file is not available for writing, please enable write access' . PHP_EOL);
+	}
+
 	die('System log file is not available for writing, please enable write access' . PHP_EOL . 'Log: ' . $log_filename . PHP_EOL);
 }
 
@@ -665,7 +676,7 @@ if ($config['is_web']) {
 				 * that plugins, bookmarks and scripts still use, so only a GET
 				 * the browser does not mark as coming from another site is let
 				 * through; every other method still lacks a token and gets 405. */
-				if (in_array($bad, array('save', 'update_data', 'changepassword'), true)) {
+				if (in_array($bad, array('save', 'update_data', 'changepassword', 'send_test'), true)) {
 					cacti_log('WARNING: Attempt to use GET method for POST operations from IP ' . get_client_addr(), false, 'WEBUI');
 				} elseif ($method === 'GET' && !csrf_request_is_cross_site()) {
 					break;

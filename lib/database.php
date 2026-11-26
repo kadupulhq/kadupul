@@ -616,10 +616,12 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 			}
 
 			if ($log) {
+				$logged_sql = db_redact_sql_for_log(clean_up_lines($sql));
+
 				if ($en == 1213 || $en == 1205 || $en == 1020) {
 					$errors++;
 					if ($errors > 30) {
-						cacti_log("ERROR: Too many Lock/Deadlock errors occurred! SQL:'" . clean_up_lines($sql) . "'", true, 'DBCALL', POLLER_VERBOSITY_DEBUG);
+						cacti_log("ERROR: Too many Lock/Deadlock errors occurred! SQL:'" . $logged_sql . "'", true, 'DBCALL', POLLER_VERBOSITY_DEBUG);
 						$database_last_error = 'Too many Lock/Deadlock errors occurred!';
 					} else {
 						usleep(200000);
@@ -627,11 +629,11 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 						continue;
 					}
 				} elseif ($en == 1153) {
-					if (strlen($sql) > 1024) {
-						$sql = substr($sql, 0, 1024) . '...';
+					if (strlen($logged_sql) > 1024) {
+						$logged_sql = substr($logged_sql, 0, 1024) . '...';
 					}
 
-					cacti_log('ERROR: A DB ' . $execute_name . ' Too Large!, Error: ' . $en . ', SQL: \'' . clean_up_lines($sql) . '\'', false, 'DBCALL', POLLER_VERBOSITY_DEBUG);
+					cacti_log('ERROR: A DB ' . $execute_name . ' Too Large!, Error: ' . $en . ', SQL: \'' . $logged_sql . '\'', false, 'DBCALL', POLLER_VERBOSITY_DEBUG);
 					cacti_log('ERROR: A DB ' . $execute_name . ' Too Large!, Error: ' . $errorinfo[2], false, 'DBCALL', POLLER_VERBOSITY_DEBUG);
 					cacti_debug_backtrace('SQL', false, true, 0, 1);
 
@@ -650,7 +652,7 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 						}
 					}
 				} else {
-					cacti_log('ERROR: A DB ' . $execute_name . ' Failed!, Error: ' . $en . ', SQL: \'' . clean_up_lines($sql) . '\'', false, 'DBCALL', POLLER_VERBOSITY_DEBUG);
+					cacti_log('ERROR: A DB ' . $execute_name . ' Failed!, Error: ' . $en . ', SQL: \'' . $logged_sql . '\'', false, 'DBCALL', POLLER_VERBOSITY_DEBUG);
 					cacti_log('ERROR: A DB ' . $execute_name . ' Failed!, Error: ' . $errorinfo[2], false);
 					cacti_debug_backtrace('SQL', false, true, 0, 1);
 
@@ -2324,11 +2326,31 @@ function _db_replace($db_conn, $table, $fieldArray, $keyCols) {
 	$return_code = db_execute($sql, true, $db_conn);
 
 	if (!$return_code) {
-		cacti_log("ERROR: SQL Save Failed for Table '$table'.  SQL:'" . clean_up_lines($sql) . "'", false, 'DBCALL');
+		$columns = implode(', ', array_keys($fieldArray));
+		cacti_log("ERROR: SQL Save Failed for Table '$table' (columns: $columns).", false, 'DBCALL');
 		return false;
 	}
 
 	return db_fetch_insert_id($db_conn);
+}
+
+/**
+ * db_redact_sql_for_log - redact literal values when a SQL statement references
+ *   sensitive credential columns or carries inline VALUES clauses.
+ *
+ * @param  (string) $sql
+ *
+ * @return (string)
+ */
+function db_redact_sql_for_log($sql) {
+	$sql = (string) $sql;
+
+	if (preg_match('/\b(password|passwd|passphrase|secret|token|community|dbpass|priv_passphrase|auth_pass|apikey|api_key)\b/i', $sql)) {
+		$sql = preg_replace('/\bVALUES\s*\(.*?\)/is', 'VALUES ([REDACTED])', $sql);
+		$sql = preg_replace("/(['\"])(?:\\\\.|(?!\\1).)*\\1/", "'[REDACTED]'", $sql);
+	}
+
+	return $sql;
 }
 
 /**
@@ -2718,8 +2740,21 @@ function db_switch_main_to_local() {
 function db_dump_data($database = '', $tables = '', $credentials = array(), $output_file = false, $options = '--extended-insert=FALSE') {
 	global $database_default, $database_username, $database_password;
 
-	$database    = ($database == '') ? $database_default : $database;
-	$output_file = ($output_file === false) ? '/tmp/cacti.dump.sql' : $output_file;
+	$database = ($database == '') ? $database_default : $database;
+
+	if ($output_file === false || $output_file === '') {
+		$output_file = tempnam(sys_get_temp_dir(), 'cacti_dump_');
+		if ($output_file === false) {
+			cacti_log("ERROR: Failed to create temporary dump file for database '$database'", false, 'DBCALL');
+
+			return 1;
+		}
+		@chmod($output_file, 0600);
+	} elseif (is_link($output_file)) {
+		cacti_log("ERROR: Refusing to write database dump to symlink '$output_file'", false, 'DBCALL');
+
+		return 1;
+	}
 
 	/* Extract username and password from credentials array or globals */
 	$username = isset($credentials['user']) ? $credentials['user'] : $database_username;

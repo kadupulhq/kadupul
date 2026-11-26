@@ -137,11 +137,10 @@ test('each page guard calls csrf_require_post, strict only for the save 1.2.31 a
 	expect($wrong)->toBe(array());
 });
 
-test('a same-origin or header-less GET passes a page guard 1.2.31 did not have', function () {
+test('a same-origin GET passes a page guard 1.2.31 did not have and a header-less GET is refused', function () {
 	$wrong = array();
 
 	$same = array(
-		'no headers'                 => array(),
 		'Sec-Fetch-Site same-origin' => array('HTTP_SEC_FETCH_SITE' => 'same-origin'),
 		'Sec-Fetch-Site none'        => array('HTTP_SEC_FETCH_SITE' => 'none'),
 		'matching Referer'           => array('HTTP_REFERER' => 'https://cacti.example/cacti/color.php'),
@@ -151,6 +150,10 @@ test('a same-origin or header-less GET passes a page guard 1.2.31 did not have',
 		foreach ($actions as $action => $strict) {
 			if ($strict) {
 				continue;
+			}
+
+			if (($result = run_checked((string) guard_statement($page, $action), 'GET')) !== '405') {
+				$wrong[] = "$page:$action no headers: $result";
 			}
 
 			foreach ($same as $label => $server) {
@@ -239,7 +242,7 @@ test('an RRD cleaner rescan refuses a GET only from another site', function () {
 
 	$rescan = array('rescan' => '1');
 
-	expect(run_checked($matches[0], 'GET', $rescan))->toBe('pass:restart')
+	expect(run_checked($matches[0], 'GET', $rescan))->toBe('405')
 		->and(run_checked($matches[0], 'GET', $rescan, array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass:restart')
 		->and(run_checked($matches[0], 'GET', $rescan, array(), array('HTTP_SEC_FETCH_SITE' => 'cross-site')))->toBe('405')
 		->and(run_checked($matches[0], 'GET', $rescan, array(), array('HTTP_REFERER' => 'https://attacker.example/')))->toBe('405')
@@ -322,5 +325,5 @@ test('only a GET gets the same-site relaxation; HEAD, PUT, DELETE and PATCH get 
 
 	expect($wrong)->toBe(array())
 		->and(run_checked('csrf_require_post();', 'GET', array(), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass')
-		->and(run_checked('csrf_require_post();', 'GET'))->toBe('pass');
+		->and(run_checked('csrf_require_post();', 'GET'))->toBe('405');
 });

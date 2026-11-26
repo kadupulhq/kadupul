@@ -278,13 +278,20 @@ function csrf_request_is_cross_site() {
 		return !in_array(strtolower(trim($_SERVER['HTTP_SEC_FETCH_SITE'])), array('same-origin', 'none'), true);
 	}
 
+	$checked = false;
+
 	foreach (array('HTTP_ORIGIN', 'HTTP_REFERER') as $header) {
-		if (isset($_SERVER[$header]) && $_SERVER[$header] !== '' && !csrf_request_host_matches($_SERVER[$header])) {
-			return true;
+		if (isset($_SERVER[$header]) && $_SERVER[$header] !== '') {
+			$checked = true;
+
+			if (!csrf_request_host_matches($_SERVER[$header])) {
+				return true;
+			}
 		}
 	}
 
-	return false;
+	/* Fail closed on headerless GET requests (e.g. plain HTTP with stripped Referer) */
+	return !$checked;
 }
 
 /**

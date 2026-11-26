@@ -46,6 +46,17 @@ api_plugin_hook_function('graph');
 
 include_once('./lib/html_tree.php');
 
+$exists = db_fetch_cell_prepared('SELECT local_graph_id
+	FROM graph_templates_graph
+	WHERE local_graph_id = ?',
+	array(get_request_var('local_graph_id')));
+
+/* take graph permissions into account before emitting headers or titles */
+if ($exists && !is_graph_allowed(get_request_var('local_graph_id'))) {
+	header('Location: permission_denied.php');
+	exit;
+}
+
 top_graph_header();
 
 if (!isset_request_var('rra_id')) {
@@ -60,21 +71,10 @@ if (get_request_var('rra_id') == 'all' || isempty_request_var('rra_id')) {
 	$rra_filter = get_request_var('rra_id');
 }
 
-$exists = db_fetch_cell_prepared('SELECT local_graph_id
-	FROM graph_templates_graph
-	WHERE local_graph_id = ?',
-	array(get_request_var('local_graph_id')));
-
 /* make sure the graph requested exists (sanity) */
 if (!$exists) {
 	print '<strong><font class="txtErrorTextBox">' . __('GRAPH DOES NOT EXIST') . '</font></strong>';
 	bottom_footer();
-	exit;
-}
-
-/* take graph permissions into account here */
-if (!is_graph_allowed(get_request_var('local_graph_id'))) {
-	header('Location: permission_denied.php');
 	exit;
 }
 

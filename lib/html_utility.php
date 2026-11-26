@@ -1098,10 +1098,19 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 	$url = trim($url);
 	$url = str_replace('\\', '/', $url);
 
-	// Decode the url to make it readable if encoded
+	// Decode iteratively before running security checks so double-encoded payloads cannot slip past validation
+	$decode_passes = 0;
+	while (is_urlencoded($url) && $decode_passes < 5) {
+		$decoded = urldecode($url);
+		if ($decoded === $url) {
+			break;
+		}
+		$url = trim(str_replace('\\', '/', $decoded));
+		$decode_passes++;
+	}
+
 	if (is_urlencoded($url)) {
-		$url = urldecode($url);
-		$url = str_replace('\\', '/', $url);
+		return $default;
 	}
 
 	// reject URLs with protocol schemes (external redirects, javascript:, data:)
@@ -1195,8 +1204,19 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 		}
 	}
 	// A redirect destination owns its action and must not inherit the source request's action.
-	$safe = sanitize_uri($ref_path . ($ref_query !== null ? '?' . $ref_query : ''), false, false);
+	// Do not URL-decode again after security checks have completed.
+	$safe = sanitize_uri($ref_path . ($ref_query !== null ? '?' . $ref_query : ''), false, false, false);
 	if ($safe === '' || strpos($safe, '//') === 0) {
+		return $default;
+	}
+
+	if (function_exists('validate_local_redirect_path')) {
+		return validate_local_redirect_path($safe, $default);
+	}
+
+	if (preg_match('/[\x00-\x1f\x7f]/', $safe) || preg_match('/^\s/', $safe)
+		|| $safe[0] === '\\' || ($safe[0] === '/' && isset($safe[1]) && ($safe[1] === '/' || $safe[1] === '\\'))
+		|| preg_match('/^[^\/?#]*:/', $safe)) {
 		return $default;
 	}
 

@@ -294,12 +294,14 @@ class CactiSecureHeaders {
 		header('X-Frame-Options: SAMEORIGIN');
 
 		if ($mode === 'nonce-report') {
+			/* Keep baseline enforcing CSP active alongside the report-only nonce policy */
+			header('Content-Security-Policy: ' . self::buildCspPolicy('', '', $alternates, ''));
 			header('Content-Security-Policy-Report-Only: ' . $csp);
 		} else {
 			header('Content-Security-Policy: ' . $csp);
 		}
 
-		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+		if (self::isHttpsRequest()) {
 			header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
 		}
 
@@ -312,5 +314,31 @@ class CactiSecureHeaders {
 		header('Referrer-Policy: strict-origin-when-cross-origin');
 		header('Permissions-Policy: camera=(), geolocation=(), interest-cohort=(), microphone=(), payment=(), usb=()');
 		header('Cache-Control: no-store, no-cache, must-revalidate');
+	}
+
+	/**
+	 * Determine whether the current request arrived over HTTPS directly or
+	 * through a configured trusted reverse proxy.
+	 *
+	 * @return bool
+	 */
+	public static function isHttpsRequest() : bool {
+		global $config;
+
+		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && strtolower((string) $_SERVER['HTTPS']) !== 'off') {
+			return true;
+		}
+
+		if (!empty($config['proxy_headers']) && isset($_SERVER['REMOTE_ADDR'])
+			&& function_exists('is_trusted_proxy_addr') && is_trusted_proxy_addr($_SERVER['REMOTE_ADDR'])) {
+			$fwd_proto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? strtolower(trim((string) $_SERVER['HTTP_X_FORWARDED_PROTO'])) : '';
+			$fwd_ssl   = isset($_SERVER['HTTP_X_FORWARDED_SSL']) ? strtolower(trim((string) $_SERVER['HTTP_X_FORWARDED_SSL'])) : '';
+
+			if ($fwd_proto === 'https' || $fwd_ssl === 'on') {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

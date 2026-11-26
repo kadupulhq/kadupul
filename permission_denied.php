@@ -28,7 +28,7 @@ $version = get_cacti_version();
 
 if (isset($_SERVER['HTTP_REFERER'])) {
 	$redirect = validate_redirect_url($_SERVER['HTTP_REFERER'], 'index.php');
-	$goBack = "<td colspan='2' class='center'>[<a href='" . $redirect . "'>" . __('Return') . "</a> | <a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
+	$goBack = "<td colspan='2' class='center'>[<a href='" . html_escape($redirect) . "'>" . __('Return') . "</a> | <a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
 } else {
 	$goBack = "<td colspan='2' class='center'>[<a class='returnTo' href='#'>" . __('Return') . "</a> | <a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
 }

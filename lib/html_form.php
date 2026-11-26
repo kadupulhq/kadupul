@@ -1680,6 +1680,11 @@ function form_save_button($cancel_url, $force_type = '', $key_field = 'id', $aja
 	$force_type_html = str_replace('`', '&#96;', $force_type_html);
 	if ($force_type != 'import' && $force_type != 'export' && $force_type != 'save' && $force_type != 'close' && $cancel_url != '') {
 		$cancel_url_html = sanitize_uri($cancel_url, false, false);
+		if (function_exists('validate_local_redirect_path')) {
+			$cancel_url_html = validate_local_redirect_path($cancel_url_html, '');
+		} elseif (preg_match('/^(?:\/\/|\\\\|[^\/?#]*:)/', $cancel_url_html)) {
+			$cancel_url_html = '';
+		}
 		$cancel_url_html = htmlspecialchars($cancel_url_html, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$cancel_url_html = str_replace('`', '&#96;', $cancel_url_html);
 		$calt_html = htmlspecialchars((string) $calt, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);

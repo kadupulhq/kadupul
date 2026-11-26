@@ -28,7 +28,7 @@ namespace CrossSiteGetGuardTest;
  * @return array<int, string>
  */
 function legacy_actions() {
-	return array('save', 'update_data', 'changepassword');
+	return array('save', 'update_data', 'changepassword', 'send_test');
 }
 
 /**
@@ -136,7 +136,6 @@ function cross_site_headers() {
  */
 function same_site_headers() {
 	return array(
-		'no headers'                 => array(),
 		'Sec-Fetch-Site same-origin' => array('HTTP_SEC_FETCH_SITE' => 'same-origin'),
 		'Sec-Fetch-Site none'        => array('HTTP_SEC_FETCH_SITE' => 'none'),
 		'matching Referer'           => array('HTTP_REFERER' => 'https://cacti.example/cacti/host.php?action=edit'),
@@ -160,12 +159,12 @@ function legacy_get_actions() {
 		'reindex', 'gt_add', 'query_add', 'query_change', 'query_verbose',
 		'ping_host', 'enable_debug', 'disable_debug', 'repopulate',
 		'item_add_gt', 'item_remove_gt', 'item_add_dq', 'item_remove_dq',
-		'ping', 'restart', 'remall', 'arcall', 'send_test', 'perm_remove',
+		'ping', 'restart', 'remall', 'arcall', 'perm_remove',
 		'clear_poller_cache', 'rebuild_resource_cache', 'clear_logfile', 'purge_logfile', 'clear_user_log',
 	);
 }
 
-test('the state changing GET actions 1.2.31 accepted are refused only from another site', function () {
+test('the state changing GET actions 1.2.31 accepted are refused from another site or without site headers', function () {
 	$listed  = listed_actions();
 	$missing = array_values(array_diff(legacy_get_actions(), $listed));
 	$wrong   = array();
@@ -177,7 +176,7 @@ test('the state changing GET actions 1.2.31 accepted are refused only from anoth
 		$same       = run_guard('GET', array('action' => $action), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin'));
 		$cross      = run_guard('GET', array('action' => $action), array(), array('HTTP_SEC_FETCH_SITE' => 'cross-site'));
 
-		if ($headerless !== 'pass' || $same !== 'pass' || $cross !== '405') {
+		if ($headerless !== '405' || $same !== 'pass' || $cross !== '405') {
 			$wrong[] = "$action: $headerless/$same/$cross";
 		}
 	}
@@ -185,7 +184,7 @@ test('the state changing GET actions 1.2.31 accepted are refused only from anoth
 	expect($wrong)->toBe(array());
 });
 
-test('a GET without site headers behaves as in 1.2.31 for every listed action', function () {
+test('a GET without site headers is refused for every listed action', function () {
 	$actions = listed_actions();
 
 	expect($actions)->toContain('item_remove');
@@ -193,16 +192,15 @@ test('a GET without site headers behaves as in 1.2.31 for every listed action', 
 	$differ = array();
 
 	foreach ($actions as $action) {
-		$expected = in_array($action, legacy_actions(), true) ? '405' : 'pass';
-		$result   = run_guard('GET', array('action' => $action));
+		$result = run_guard('GET', array('action' => $action));
 
-		if ($result !== $expected) {
+		if ($result !== '405') {
 			$differ[] = $action . ': ' . $result;
 		}
 	}
 
 	expect($differ)->toBe(array())
-		->and(run_guard('GET', array('action' => 'actions', 'selected_items' => 'x')))->toBe('pass');
+		->and(run_guard('GET', array('action' => 'actions', 'selected_items' => 'x')))->toBe('405');
 });
 
 test('a same-origin GET of a listed action passes', function () {
@@ -440,7 +438,7 @@ test('device template and remaining removal and send actions are refused only fr
 	expect(array_values(array_diff($actions, listed_actions())))->toBe(array());
 
 	foreach ($actions as $action) {
-		expect(run_guard('GET', array('action' => $action)))->toBe('pass', $action)
+		expect(run_guard('GET', array('action' => $action)))->toBe('405', $action)
 			->and(run_guard('GET', array('action' => $action), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass', $action)
 			->and(run_guard('GET', array('action' => $action), array(), array('HTTP_SEC_FETCH_SITE' => 'cross-site')))->toBe('405', $action);
 	}

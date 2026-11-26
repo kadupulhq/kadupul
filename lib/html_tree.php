@@ -27,17 +27,28 @@ function process_tree_settings() {
 
 	if (isset_request_var('hide')) {
 		if ((get_request_var('hide') == '0') || (get_request_var('hide') == '1')) {
-			/* only update expand/contract info is this user has rights to keep their own settings */
-			if ((isset($current_user)) && ($current_user['graph_settings'] == 'on')) {
-				db_execute_prepared('DELETE FROM settings_tree
-					WHERE graph_tree_item_id = ?
-					AND user_id = ?',
-					array(get_request_var('branch_id'), $_SESSION['sess_user_id']));
+			csrf_require_post(true);
 
-				db_execute_prepared('INSERT INTO settings_tree
-					(graph_tree_item_id, user_id,status)
-					VALUES (?, ?, ?)',
-					array(get_request_var('branch_id'), $_SESSION['sess_user_id'], get_request_var('hide')));
+			$branch_id = get_filter_request_var('branch_id');
+
+			/* only update expand/contract info if this user has rights to keep their own settings */
+			if ((isset($current_user)) && ($current_user['graph_settings'] == 'on') && $branch_id > 0) {
+				$tree_id = (int) db_fetch_cell_prepared('SELECT graph_tree_id
+					FROM graph_tree_items
+					WHERE id = ?',
+					array($branch_id));
+
+				if ($tree_id > 0 && is_tree_allowed($tree_id, 0, true)) {
+					db_execute_prepared('DELETE FROM settings_tree
+						WHERE graph_tree_item_id = ?
+						AND user_id = ?',
+						array($branch_id, $_SESSION['sess_user_id']));
+
+					db_execute_prepared('INSERT INTO settings_tree
+						(graph_tree_item_id, user_id,status)
+						VALUES (?, ?, ?)',
+						array($branch_id, $_SESSION['sess_user_id'], get_request_var('hide')));
+				}
 			}
 		}
 	}
