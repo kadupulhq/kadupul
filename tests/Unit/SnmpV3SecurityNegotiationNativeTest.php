@@ -147,7 +147,7 @@ test('native SNMPv3 session and binary options preserve security negotiation', f
         ->and($result['info']['timeout'])->toBe(1501)->and($result['info']['port'])->toBe('1161')
         ->and($result['arguments'])->toBe(array('-u', 'user', '-l', $level, ...$authentication, '-n', 'context', '-e', 'engine'))
         ->and($result['command'])->toBe(array('/native/bin/snmpget', '-O', 'fntevU', ...$result['arguments'],
-            '-v', '3', '-t', '2', '-r', '2', 'udp6:[2001:db8::1]:1161', '.1.3.6.1'));
+            '-v', '3', '-t', '2', '-r', '2', '--', 'udp6:[2001:db8::1]:1161', '.1.3.6.1'));
 })->with(array(
     'empty authentication' => array(array('', 'SHA', '', 'AES'), 'noAuthNoPriv', '', array()),
     'explicitly absent authentication' => array(array('auth', '[None]', 'priv', '[None]'), 'noAuthNoPriv', '', array()),

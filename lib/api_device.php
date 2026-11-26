@@ -1348,7 +1348,7 @@ function api_device_save(
     $save['external_id']          = form_input_validate($external_id, 'external_id', '', true, 3);
 
     $save['description']          = form_input_validate($description, 'description', '', false, 3);
-    $save['hostname']             = form_input_validate(trim($hostname), 'hostname', '', false, 3);
+    $save['hostname']             = form_input_validate(trim($hostname), 'hostname', '\A[a-zA-Z0-9:\[][a-zA-Z0-9._:\[\]%-]*\z', false, 3);
     $save['notes']                = form_input_validate($notes, 'notes', '', true, 3);
     $save['location']             = form_input_validate($location, 'location', '', true, 3);
 

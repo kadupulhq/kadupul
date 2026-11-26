@@ -132,7 +132,7 @@ final class Device
         if ($description === '' || !mb_check_encoding($description, 'UTF-8') || mb_strlen($description) > 150 || str_contains($description, "\0")) {
             throw new \InvalidArgumentException('The name must contain 1–150 characters.');
         }
-        if ($hostname === '' || strlen($hostname) > 100 || !preg_match('/\A[a-zA-Z0-9._:\[\]%-]+\z/D', $hostname)) {
+        if ($hostname === '' || strlen($hostname) > 100 || !preg_match('/\A[a-zA-Z0-9:\[][a-zA-Z0-9._:\[\]%-]*\z/D', $hostname)) {
             throw new \InvalidArgumentException('Enter a hostname or IP address of at most 100 characters.');
         }
         if (strlen($notes) > 65535 || !mb_check_encoding($notes, 'UTF-8') || str_contains($notes, "\0")) {

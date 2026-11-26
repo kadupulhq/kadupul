@@ -754,7 +754,7 @@ function format_plugin_row($plugin, $last_plugin, $include_ordering, $table)
 
     $row = plugin_actions($plugin, $table);
 
-    $row .= "<td><a href='" . html_escape($plugin['webpage']) . "' target='_blank' rel='noopener'>" . filter_value($plugin['infoname'], get_request_var('filter')) . '</a></td>';
+    $row .= "<td><a href='" . html_escape(html_safe_href((string) ($plugin['webpage'] ?? ''))) . "' target='_blank' rel='noopener'>" . filter_value($plugin['infoname'], get_request_var('filter')) . '</a></td>';
 
     $row .= "<td class='nowrap'>" . filter_value($plugin['name'], get_request_var('filter')) . "</td>\n";
 
@@ -785,6 +785,7 @@ function format_plugin_row($plugin, $last_plugin, $include_ordering, $table)
     $row .= '</td>';
 
     if ($plugin['requires'] != '') {
+        $nr = array();
         $requires = explode(' ', $plugin['requires']);
         foreach ($requires as $r) {
             $nr[] = ucfirst($r);
@@ -795,9 +796,9 @@ function format_plugin_row($plugin, $last_plugin, $include_ordering, $table)
         $requires = $plugin['requires'];
     }
 
-    $row .= "<td class='nowrap'>" . $plugin['author'] . "</td>\n";
-    $row .= "<td class='nowrap'>" . $requires . "</td>\n";
-    $row .= "<td class='right'>" . $plugin['version'] . "</td>\n";
+    $row .= "<td class='nowrap'>" . html_escape($plugin['author']) . "</td>\n";
+    $row .= "<td class='nowrap'>" . html_escape($requires) . "</td>\n";
+    $row .= "<td class='right'>" . html_escape($plugin['version']) . "</td>\n";
 
     if ($include_ordering) {
         $row .= "<td class='nowrap right'>";
@@ -827,12 +828,20 @@ function format_plugin_row($plugin, $last_plugin, $include_ordering, $table)
 
 function plugin_required_for_others($plugin, $table)
 {
-    $required_for_others = db_fetch_cell("SELECT GROUP_CONCAT(directory)
+    $escaped_directory = function_exists('db_like_escape')
+        ? db_like_escape($plugin['directory'])
+        : str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), (string) $plugin['directory']);
+
+    $required_for_others = db_fetch_cell_prepared(
+        "SELECT GROUP_CONCAT(directory)
 		FROM $table
-		WHERE requires LIKE '%" . $plugin['directory'] . "%'
-		AND status IN (1,4)");
+		WHERE requires LIKE ?
+		AND status IN (1,4)",
+        array('%' . $escaped_directory . '%')
+    );
 
     if ($required_for_others) {
+        $np    = array();
         $parts = explode(',', $required_for_others);
         foreach ($parts as $p) {
             $np[] = ucfirst($p);
@@ -901,10 +910,12 @@ function plugin_actions($plugin, $table)
 
             break;
         default: // Old PIA
-            $path = $config['base_path'] . '/plugins/' . $plugin['directory'];
+            $path = cacti_plugin_path($plugin['directory'], '');
             $directory  = $plugin['name'];
 
-            if (!file_exists("$path/setup.php")) {
+            if ($path === false) {
+                $link .= "<a class='pierror' href='#' title='" . __esc('Plugin directory \'%s\' is invalid', $plugin['directory']) . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
+            } elseif (!file_exists("$path/setup.php")) {
                 $link .= "<a class='pierror' href='#' title='" . __esc('Plugin directory \'%s\' is missing setup.php', $plugin['directory']) . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
             } elseif (!file_exists("$path/INFO")) {
                 $link .= "<a class='pierror' href='#' title='" . __esc('Plugin is lacking an INFO file') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";

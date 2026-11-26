@@ -310,9 +310,9 @@ PHP;
             self::assertCount(14, $record);
             $calls = array_map(static fn($line) => json_decode($line, true, 512, JSON_THROW_ON_ERROR), $record);
             foreach (['get', 'get', 'getnext'] as $index => $binary) {
-                self::assertSame([$directory . '/snmp ' . $binary, '-O', $index === 1 ? 'fntevx' : 'fntevUx', '-c', 'community " & | ^', '-v', '2c', '-t', '2', '-r', '2', 'host" name:1161', '.1.3.6.1'], $calls[$index]);
+                self::assertSame([$directory . '/snmp ' . $binary, '-O', $index === 1 ? 'fntevx' : 'fntevUx', '-c', 'community " & | ^', '-v', '2c', '-t', '2', '-r', '2', '--', 'host" name:1161', '.1.3.6.1'], $calls[$index]);
             }
-            self::assertSame([$directory . '/snmp get', '-O', 'fntevU', ...$expectedAuth[2], '-v', '3', '-t', '2', '-r', '2', 'udp6:[::1]:161', '.1.3.6.1'], $calls[3]);
+            self::assertSame([$directory . '/snmp get', '-O', 'fntevU', ...$expectedAuth[2], '-v', '3', '-t', '2', '-r', '2', '--', 'udp6:[::1]:161', '.1.3.6.1'], $calls[3]);
             $index = 4;
             foreach ([1, 2] as $version) {
                 foreach ([1, 10] as $bulk) {
@@ -322,7 +322,7 @@ PHP;
                         if ($increasing === 'on') {
                             $extra[] = '-Cc';
                         }
-                        self::assertSame([$directory . '/snmp ' . ($isBulk ? 'bulkwalk' : 'walk'), '-O', 'QnU', '-c', 'community " & | ^', '-v', $version === 2 ? '2c' : '1', '-t', '2', '-r', '2', ...$extra, '192.0.2.1:161', '.1.3.6.1'], $calls[$index++]);
+                        self::assertSame([$directory . '/snmp ' . ($isBulk ? 'bulkwalk' : 'walk'), '-O', 'QnU', '-c', 'community " & | ^', '-v', $version === 2 ? '2c' : '1', '-t', '2', '-r', '2', ...$extra, '--', '192.0.2.1:161', '.1.3.6.1'], $calls[$index++]);
                     }
                 }
             }

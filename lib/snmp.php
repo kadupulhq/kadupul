@@ -487,26 +487,34 @@ function cacti_get_snmpv3_auth_arguments($auth_proto, $auth_user, $auth_pass, $p
 /**
  * Build the argument list for a Net-SNMP binary command.
  *
- * @param string         $binary        Configured executable path.
- * @param string         $output_options Net-SNMP output flags.
- * @param array          $auth_arguments Authentication option/value pairs.
- * @param string         $version        SNMP version.
- * @param int            $timeout        Timeout in seconds.
- * @param int            $retries        Retry count.
- * @param string         $target         Host and port argument.
- * @param string         $oid            Requested OID.
+ * @param string            $binary          Configured executable path.
+ * @param string            $output_options  Net-SNMP output flags.
+ * @param array             $auth_arguments  Authentication option/value pairs.
+ * @param string            $version         SNMP version.
+ * @param int               $timeout         Timeout in seconds.
+ * @param int               $retries         Retry count.
+ * @param string            $target          Host and port argument.
+ * @param string            $oid             Requested OID.
  * @param array<int,string> $extra_arguments Additional options before target.
  *
- * @return array<int, string>
+ * @return array<int, string>|null Null when an argument is unsafe.
  */
 function cacti_snmp_build_binary_command($binary, $output_options, array $auth_arguments, $version, $timeout, $retries, $target, $oid, array $extra_arguments = array())
 {
+    $oid_string = (string) $oid;
+    if (str_starts_with(ltrim($oid_string), '-')) {
+        if (function_exists('cacti_log')) {
+            cacti_log(sprintf("WARNING: SNMP command rejected unsafe OID '%s'", $oid_string), false, 'SECURITY');
+        }
+        return null;
+    }
+
     return array_merge(
         array($binary, '-O', $output_options),
         $auth_arguments,
         array('-v', (string) $version, '-t', (string) $timeout, '-r', (string) $retries),
         $extra_arguments,
-        array($target, $oid)
+        array('--', (string) $target, $oid_string)
     );
 }
 
@@ -892,6 +900,10 @@ function cacti_snmp_walk(
                 $extra_arguments
             );
 
+            if ($command === null) {
+                return array();
+            }
+
             if (isset($_SESSION)) {
                 debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
             }
@@ -914,6 +926,10 @@ function cacti_snmp_walk(
                 $oid,
                 $extra_arguments
             );
+
+            if ($command === null) {
+                return array();
+            }
 
             if (isset($_SESSION)) {
                 debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));

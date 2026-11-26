@@ -107,13 +107,47 @@ $plugins = db_fetch_assoc('SELECT `directory`
 	ORDER BY id');
 
 if ($plugins && cacti_sizeof($plugins)) {
-	$lang_names = [$cacti_locale, $lang2locale[$cacti_locale]['filename']];
+	$lang_names   = [$cacti_locale, $lang2locale[$cacti_locale]['filename']];
+	$plugins_base = $config['base_path'] . '/plugins';
+	$plugins_root = realpath($plugins_base);
 
 	foreach ($plugins as $plugin) {
-		$plugin = $plugin['directory'];
+		$plugin = (string) ($plugin['directory'] ?? '');
 
-		$path2catalogue = get_mo_language_file($lang_names, null, $config['base_path'] . '/plugins/' . $plugin);
+		if (!preg_match('/\A[A-Za-z0-9_-]+\z/D', $plugin)) {
+			continue;
+		}
+
+		$plugin_dir = $plugins_base . '/' . $plugin;
+		if (function_exists('cacti_path_is_within')) {
+			if (!cacti_path_is_within($plugin_dir, $plugins_base)) {
+				continue;
+			}
+			$resolved_plugin_dir = realpath($plugin_dir);
+		} else {
+			$resolved_plugin_dir = realpath($plugin_dir);
+			if ($plugins_root === false || $resolved_plugin_dir === false || !str_starts_with($resolved_plugin_dir, $plugins_root . '/')) {
+				continue;
+			}
+		}
+
+		if ($resolved_plugin_dir === false || !is_dir($resolved_plugin_dir)) {
+			continue;
+		}
+
+		$path2catalogue = get_mo_language_file($lang_names, null, $resolved_plugin_dir);
 		if (!empty($path2catalogue) && file_exists($path2catalogue)) {
+			if (function_exists('cacti_path_is_within')) {
+				if (!cacti_path_is_within($path2catalogue, $resolved_plugin_dir)) {
+					continue;
+				}
+			} else {
+				$resolved_catalogue = realpath($path2catalogue);
+				if ($resolved_catalogue === false || !str_starts_with($resolved_catalogue, $resolved_plugin_dir . '/')) {
+					continue;
+				}
+			}
+
 			$cacti_textdomains[$plugin]['path2catalogue'] = $path2catalogue;
 		}
 	}

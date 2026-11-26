@@ -104,12 +104,21 @@ $exit_code = 0;
 
 if (cacti_sizeof($plugins)) {
     foreach ($plugins as $plugin) {
+        if (!is_string($plugin) || preg_match('/\A[A-Za-z0-9_-]+\z/D', $plugin) !== 1) {
+            print "ERROR: Plugin '$plugin' is invalid.  Plugin not processed." . PHP_EOL;
+            $exit_code = 1;
+            continue;
+        }
+
         print "NOTE: Plugin '$plugin' processing started" . PHP_EOL;
 
         if ($install) {
             $installed = false;
+            $plugin_dir = function_exists('cacti_plugin_path')
+                ? cacti_plugin_path($plugin, '')
+                : $config['base_path'] . '/plugins/' . $plugin;
 
-            if (is_dir($config['base_path'] . '/plugins/' . $plugin)) {
+            if ($plugin_dir !== false && is_dir($plugin_dir)) {
                 print "NOTE: Plugin directory for Plugin $plugin exists" . PHP_EOL;
 
                 if (!api_plugin_installed($plugin)) {

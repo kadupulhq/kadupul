@@ -112,7 +112,7 @@ test('native binary SNMP readers preserve execution and caller-specific output c
             continue;
         }
         $options = ($index === 1 ? 'fntev' : 'fntevU') . ($case[1] === 3 ? 'x' : '');
-        $arguments = array('-O', $options, '-c', 'ordinary community', '-v', '2c', '-t', '2', '-r', '2', 'udp6:[2001:db8::1]:1161', '.1.3.6.1');
+        $arguments = array('-O', $options, '-c', 'ordinary community', '-v', '2c', '-t', '2', '-r', '2', '--', 'udp6:[2001:db8::1]:1161', '.1.3.6.1');
         expect($actual['commands'])->toBe(array($arguments))->and($actual['reads'])->toBe(array($index === 2 ? 'path_snmpgetnext' : 'path_snmpget'));
         if ($session) {
             $logged = implode(' ', array_map('escapeshellarg', array('<owned-binary>', ...$arguments)));

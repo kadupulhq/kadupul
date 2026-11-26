@@ -63,6 +63,9 @@ final readonly class NotificationReceiverChange
                 throw new \InvalidArgumentException('Enter a description and a hostname.');
             }
         }
+        if (preg_match('/\A[a-zA-Z0-9:\[][a-zA-Z0-9._:\[\]%-]*\z/D', $settings['hostname']) !== 1) {
+            throw new \InvalidArgumentException('Enter a valid hostname or IP address.');
+        }
         $ranges = ['max_log_size' => [1, self::LOG_SIZE_MAX], 'snmp_port' => [1, 65535]];
         foreach ($ranges as $key => [$min, $max]) {
             if (!is_int($settings[$key]) || $settings[$key] < $min || $settings[$key] > $max) {
