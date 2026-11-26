@@ -139,6 +139,7 @@
       <file>Unit/Core/Rrd/RrdFetchFailureTest.php</file>
       <file>Unit/Core/Rrd/RrdObservedWindowTest.php</file>
       <file>Unit/Core/Rrd/RrdPathOverrideCoverageTest.php</file>
+      <file>Unit/Core/Rrd/RrdMaintenanceMessageCoverageTest.php</file>
       <file>Unit/Core/Rrd/RrdResizeArchiveIndexTest.php</file>
       <file>Unit/Core/Rrd/RrdCompareReadOnlyTest.php</file>
       <file>Unit/Forms/MultiselectSettingFallbackTest.php</file>
