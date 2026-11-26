@@ -33,7 +33,14 @@ if (isset_request_var('error')) {
 		die_html_input_error('page');
 	}
 
-	$page  = basename(get_nfilter_request_var('page'));
+	$raw_page = get_nfilter_request_var('page');
+	$script   = basename(explode('?', $raw_page)[0]);
+
+	if (!preg_match('/^[a-z0-9_.-]+\.php$/i', $script) ||
+		(!file_exists($config['base_path'] . '/' . $script) && !cacti_sizeof(glob($config['base_path'] . '/plugins/*/' . $script)))) {
+		$script = 'unknown';
+	}
+
 	$error = get_filter_request_var('error');
 
 	if (isset($_SESSION['sess_user_id'])) {
@@ -49,26 +56,14 @@ if (isset_request_var('error')) {
 	if (!isset($_SESSION['sess_help_error_time']) || time() - $_SESSION['sess_help_error_time'] >= 10) {
 		$_SESSION['sess_help_error_time'] = time();
 
-		$message = sprintf('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error:%d', $page, $username, $error);
+		$message = sprintf('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error:%d', $script, $username, $error);
 
 		cacti_log($message, false);
 
-		/* each debounce key is a settings row, so key on a script that exists in
-		   Cacti or a plugin rather than on the request value, and on the user so
-		   one account cannot mail the admin for every page in turn */
-		$script = basename(explode('?', get_nfilter_request_var('page'))[0]);
-
-		if (!preg_match('/^[a-z0-9_.-]+\.php$/i', $script) ||
-			(!file_exists($config['base_path'] . '/' . $script) && !cacti_sizeof(glob($config['base_path'] . '/plugins/*/' . $script)))) {
-			$script = 'unknown';
-		}
-
 		if (debounce_claim_notification('page_error_user_' . $user_id, 300) && debounce_claim_notification('page_error_' . $script)) {
-			/* the notice is HTML mail and page is the request's own value. Only
-			   angle brackets are escaped, so a page query string reads as before. */
 			$tags = array('<' => '&lt;', '>' => '&gt;');
 
-			admin_email(__('Cacti System Warning'), __('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!', strtr($page, $tags), strtr($username, $tags), $error));
+			admin_email(__('Cacti System Warning'), __('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!', strtr($script, $tags), strtr($username, $tags), $error));
 		}
 	}
 } elseif (isset_request_var('page')) {

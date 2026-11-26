@@ -408,19 +408,21 @@ function utilities_view_tech() {
 		print '</td>';
 		form_end_row();
 
-		$processes = db_fetch_cell('SELECT
-			GROUP_CONCAT(
-				CONCAT("' . __('Name: ') . '", name, ", ' . __('Procs: ') . '", processes) SEPARATOR "<br>"
-			) AS poller
+		$pollers = db_fetch_assoc('SELECT name, processes, threads
 			FROM poller
-			WHERE disabled=""');
+			WHERE disabled = ""');
 
-		$threads = db_fetch_cell('SELECT
-			GROUP_CONCAT(
-				CONCAT("' . __('Name: ') . '", name, ", ' . __('Threads: ') . '", threads) SEPARATOR "<br>"
-			) AS poller
-			FROM poller
-			WHERE disabled=""');
+		$process_lines = array();
+		$thread_lines  = array();
+		if (cacti_sizeof($pollers)) {
+			foreach ($pollers as $p) {
+				$process_lines[] = __('Name: ') . html_escape($p['name']) . ', ' . __('Procs: ') . (int) $p['processes'];
+				$thread_lines[]  = __('Name: ') . html_escape($p['name']) . ', ' . __('Threads: ') . (int) $p['threads'];
+			}
+		}
+
+		$processes = implode('<br>', $process_lines);
+		$threads   = implode('<br>', $thread_lines);
 
 		form_alternate_row();
 		print '<td>' . __('Concurrent Processes') . '</td>';
@@ -432,11 +434,11 @@ function utilities_view_tech() {
 		print '<td>' . $threads . '</td>';
 		form_end_row();
 
-		$script_servers = read_config_option('php_servers');
+		$script_servers = (int) read_config_option('php_servers');
 
 		form_alternate_row();
 		print '<td>' . __('PHP Servers') . '</td>';
-		print '<td>' . html_escape($script_servers) . '</td>';
+		print '<td>' . html_escape((string) $script_servers) . '</td>';
 		form_end_row();
 
 		if ($config['poller_id'] == 1) {
@@ -462,10 +464,11 @@ function utilities_view_tech() {
 			$max_local_connections = 0;
 		}
 
-		$total_dc_threads = db_fetch_cell("SELECT
-			SUM((processes * threads) + (processes * $script_servers)) AS threads
+		$total_dc_threads = db_fetch_cell_prepared('SELECT
+			SUM((processes * threads) + (processes * ?)) AS threads
 			FROM poller
-			WHERE disabled = ''");
+			WHERE disabled = ""',
+			array($script_servers));
 
 		$recommend_mc = $total_dc_threads + 100;
 
@@ -1010,6 +1013,7 @@ function utilities_view_user_log() {
 	} else {
 		$rows = get_request_var('rows');
 	}
+	$rows = max(1, (int) $rows);
 
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -1185,7 +1189,7 @@ function utilities_view_user_log() {
 		ON ua.username=ul.username
 		$sql_where
 		" . get_order_string(array('username', 'full_name', 'realm', 'time', 'result', 'ip')) . "
-		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+		LIMIT " . max(0, (int) ($rows * (max(1, (int) get_request_var('page')) - 1))) . ',' . (int) $rows;
 
 	$user_log = db_fetch_assoc_prepared($user_log_sql, $params);
 
@@ -1585,23 +1589,29 @@ function utilities_view_logfile() {
 		$host_start = strpos($item, 'Device[');
 		$ds_start   = strpos($item, 'DS[');
 
-		if (!$host_start && !$ds_start) {
+		if ($host_start === false && $ds_start === false) {
 			$new_item = html_escape($item);
 		} else {
 			$new_item = '';
-			while ($host_start) {
-				$host_end   = strpos($item, ']', $host_start);
+			while ($host_start !== false) {
+				$host_end = strpos($item, ']', $host_start);
+				if ($host_end === false) {
+					break;
+				}
 				$host_id    = substr($item, $host_start + 7, $host_end - ($host_start + 7));
-				$new_item  .= html_escape(substr($item, 0, $host_start + 7)) . "<a href='" . html_escape('host.php?action=edit&id=' . $host_id) . "'>" . html_escape(substr($item, $host_start + 7, $host_end - ($host_start + 7))) . '</a>';
+				$new_item  .= html_escape(substr($item, 0, $host_start + 7)) . "<a href='" . html_escape('host.php?action=edit&id=' . $host_id) . "'>" . html_escape($host_id) . '</a>';
 				$item       = substr($item, $host_end);
 				$host_start = strpos($item, 'Device[');
 			}
 
 			$ds_start = strpos($item, 'DS[');
-			while ($ds_start) {
-				$ds_end    = strpos($item, ']', $ds_start);
+			while ($ds_start !== false) {
+				$ds_end = strpos($item, ']', $ds_start);
+				if ($ds_end === false) {
+					break;
+				}
 				$ds_id     = substr($item, $ds_start + 3, $ds_end - ($ds_start + 3));
-				$new_item .= html_escape(substr($item, 0, $ds_start + 3)) . "<a href='" . html_escape('data_sources.php?action=ds_edit&id=' . $ds_id) . "'>" . html_escape(substr($item, $ds_start + 3, $ds_end - ($ds_start + 3))) . '</a>';
+				$new_item .= html_escape(substr($item, 0, $ds_start + 3)) . "<a href='" . html_escape('data_sources.php?action=ds_edit&id=' . $ds_id) . "'>" . html_escape($ds_id) . '</a>';
 				$item      = substr($item, $ds_end);
 				$ds_start  = strpos($item, 'DS[');
 			}
@@ -1729,6 +1739,7 @@ function utilities_view_snmp_cache() {
 	} else {
 		$rows = get_request_var('rows');
 	}
+	$rows = max(1, (int) $rows);
 
 	$refresh['seconds'] = '300';
 	$refresh['page']    = 'utilities.php?action=view_snmp_cache&header=false';
@@ -1922,7 +1933,7 @@ function utilities_view_snmp_cache() {
 		WHERE hsc.host_id = h.id
 		AND hsc.snmp_query_id = sq.id
 		$sql_where
-		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+		LIMIT " . max(0, (int) ($rows * (max(1, (int) get_request_var('page')) - 1))) . ',' . (int) $rows;
 
 	$snmp_cache = db_fetch_assoc($snmp_cache_sql);
 
@@ -2029,6 +2040,7 @@ function utilities_view_poller_cache() {
 	} else {
 		$rows = get_request_var('rows');
 	}
+	$rows = max(1, (int) $rows);
 
 	$refresh['seconds'] = '300';
 	$refresh['page']    = 'utilities.php?action=view_poller_cache';
@@ -2263,7 +2275,7 @@ function utilities_view_poller_cache() {
 		ON pi.host_id = h.id
 		$sql_where
 		$order_string
-		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+		LIMIT " . max(0, (int) ($rows * (max(1, (int) get_request_var('page')) - 1))) . ',' . (int) $rows;
 
 	$poller_cache = db_fetch_assoc_prepared($poller_sql, $params);
 
@@ -2982,7 +2994,7 @@ function boost_display_run_status() {
 		print '<td>' . __('Image Caching Status:') . '</td><td>' . ($boost_cache == '' ? __('Disabled') : __('Enabled')) . '</td>';
 
 		form_alternate_row();
-		print '<td>' . __('Cache Directory:') . '</td><td>' . $cache_directory . '</td>';
+		print '<td>' . __('Cache Directory:') . '</td><td>' . html_escape((string) $cache_directory) . '</td>';
 
 		form_alternate_row();
 		print '<td>' . __('Cached Files:') . '</td><td>' . $cache_files . '</td>';
@@ -3050,6 +3062,7 @@ function snmpagent_utilities_run_cache() {
 	} else {
 		$rows = get_request_var('rows');
 	}
+	$rows = max(1, (int) $rows);
 
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -3169,7 +3182,7 @@ function snmpagent_utilities_run_cache() {
 
 	$total_rows = db_fetch_cell("SELECT COUNT(*) FROM snmpagent_cache WHERE 1 $sql_where");
 
-	$snmp_cache_sql = "SELECT * FROM snmpagent_cache WHERE 1 $sql_where LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+	$snmp_cache_sql = "SELECT * FROM snmpagent_cache WHERE 1 $sql_where LIMIT " . max(0, (int) ($rows * (max(1, (int) get_request_var('page')) - 1))) . ',' . (int) $rows;
 	$snmp_cache = db_fetch_assoc($snmp_cache_sql);
 
 	/* generate page list */
@@ -3301,6 +3314,7 @@ function snmpagent_utilities_run_eventlog(){
 	} else {
 		$rows = get_request_var('rows');
 	}
+	$rows = max(1, (int) $rows);
 
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -3459,7 +3473,7 @@ function snmpagent_utilities_run_eventlog(){
 			GROUP BY mib, name
 		) AS sc ON sc.name = snl.notification AND sc.mib = snl.mib
 		WHERE $sql_where
-		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+		LIMIT " . max(0, (int) ($rows * (max(1, (int) get_request_var('page')) - 1))) . ',' . (int) $rows;
 
 	$total_rows = db_fetch_cell("SELECT COUNT(*)
 		FROM snmpagent_notifications_log AS snl
@@ -3514,7 +3528,7 @@ function snmpagent_utilities_run_eventlog(){
 	$('.tooltip').tooltip({
 		track: true,
 		position: { collision: 'flipfit' },
-		content: function() { return $(this).attr('title'); }
+		content: function() { return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize($(this).attr('title')) : $(this).attr('title'); }
 	});
 	</script>
 	<?php

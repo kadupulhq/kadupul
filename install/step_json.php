@@ -40,15 +40,15 @@ include('install/functions.php');
 include('lib/installer.php');
 include('lib/utility.php');
 
-$debug = false;
+csrf_require_post(true);
 
+$debug = false;
 
 $initialData = array();
 /* ================= input validation ================= */
-get_nfilter_request_var('data', array());
-if (isset_request_var('data') && get_nfilter_request_var('data')) {
+if (isset($_POST['data']) && $_POST['data']) {
 	log_install_debug('json','Using supplied data');
-	$initialData = get_nfilter_request_var('data');
+	$initialData = $_POST['data'];
 	if (!is_array($initialData)) {
 		$initialData = array($initialData);
 	}

@@ -39,8 +39,8 @@ $rra_path = $config['rra_path'] . '/';
 set_default_action();
 
 if (isset_request_var('rescan')) {
-	/* a rescan rebuilds the RRDfile list, so refuse one another site starts */
-	csrf_require_post();
+	/* a rescan rebuilds the RRDfile list, so require strict POST with CSRF */
+	csrf_require_post(true);
 	set_request_var('action', 'restart');
 }
 
@@ -50,6 +50,7 @@ if (!rrd_maintenance_cleanup_supported()) {
 
 switch(get_request_var('action')) {
 case 'actions' :
+	csrf_require_post(true);
 	top_header();
 	do_rrd();
 	/* show current table again */
@@ -58,6 +59,7 @@ case 'actions' :
 
 	break;
 case 'restart' :
+	csrf_require_post(true);
 	top_header();
 	/* fill files name table */
 	rrdclean_fill_table();
@@ -67,6 +69,7 @@ case 'restart' :
 	break;
 case 'remall' :
 case 'arcall' :
+	csrf_require_post(true);
 	top_header();
 	/* fill files name table */
 	remove_all_rrds();
@@ -365,6 +368,7 @@ function list_rrd() {
 	} else {
 		$rows = get_request_var('rows');
 	}
+	$rows = max(1, (int) $rows);
 
 	html_start_box( __('RRD Cleaner'), '100%', '', '3', 'center', '');
 	filter();
@@ -400,7 +404,7 @@ function list_rrd() {
 		$sql_where");
 
 	$sql_order = get_order_string(array('name', 'name_cache', 'local_data_id', 'data_template_id', 'data_template_name', 'last_mod', 'size'));
-	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+	$sql_limit = ' LIMIT ' . max(0, (int) ($rows * (max(1, (int) get_request_var('page')) - 1))) . ',' . (int) $rows;
 
 	$file_list = db_fetch_assoc("SELECT rc.id, rc.name, rc.last_mod, rc.size,
 		rc.name_cache, rc.local_data_id, rc.data_template_id, dt.name AS data_template_name
@@ -489,7 +493,15 @@ function remove_all_rrds() {
 	/* install the rrdclean error handler */
 	set_error_handler('rrdclean_error_handler');
 
-	$action = get_nfilter_request_var('raction');
+	$route_action = get_request_var('action');
+	if ($route_action === 'remall') {
+		$action = 1;
+	} elseif ($route_action === 'arcall') {
+		$action = 3;
+	} else {
+		restore_error_handler();
+		return false;
+	}
 
 	/* add to data_source_purge_action table */
 	db_execute_prepared('INSERT INTO data_source_purge_action
@@ -524,8 +536,14 @@ function do_rrd() {
 	/* install the rrdclean error handler */
 	set_error_handler('rrdclean_error_handler');
 
+	$drp_action = (string) get_nfilter_request_var('drp_action');
+	if (!in_array($drp_action, array('1', '3'), true)) {
+		restore_error_handler();
+		return false;
+	}
+
 	foreach ($_POST as $var => $val) {
-		if (preg_match('/^chk_(.*)$/', $var, $matches)) {
+		if (preg_match('/^chk_([0-9]+)\z/', $var, $matches)) {
 			/* recreate the file name */
 			$unused_file = db_fetch_row_prepared('SELECT id, name, local_data_id
 				FROM data_source_purge_temp
@@ -541,7 +559,7 @@ function do_rrd() {
 				VALUES(?, ?, ?)
 				ON DUPLICATE KEY UPDATE local_data_id = VALUES(local_data_id)";
 
-			db_execute_prepared($sql, array($unused_file['name'], $unused_file['local_data_id'], get_nfilter_request_var('drp_action')));
+			db_execute_prepared($sql, array($unused_file['name'], $unused_file['local_data_id'], (int) $drp_action));
 
 			/* drop from data_source_purge table */
 			db_execute_prepared('DELETE FROM data_source_purge_temp WHERE id = ?', array($matches[1]));
@@ -646,7 +664,7 @@ function filter() {
 				$('#rescan').on('click', function() {
 					$('#text').text('Rebuilding RRDfile Listing');
 					pulsate('#text');
-					$.get('rrdcleaner.php?header=false&rescan=1&clear=1')
+					$.post('rrdcleaner.php', { header: 'false', rescan: '1', clear: '1', __csrf_magic: csrfMagicToken })
 						.done(function(data) {
 							checkForLogout(data);
 
@@ -662,7 +680,7 @@ function filter() {
 				$('#arcall').on('click', function() {
 					$('#text').text('Scheduling Archiving of All Unknowns');
 					pulsate('#text');
-					$.get('rrdcleaner.php?header=false&action=arcall&raction=3&clear=1')
+					$.post('rrdcleaner.php', { header: 'false', action: 'arcall', clear: '1', __csrf_magic: csrfMagicToken })
 						.done(function(data) {
 							checkForLogout(data);
 
@@ -678,7 +696,7 @@ function filter() {
 				$('#remall').on('click', function() {
 					$('#text').text('Scheduling Purging of All Unknowns');
 					pulsate('#text');
-					$.get('rrdcleaner.php?header=false&action=remall&raction=1&clear=1')
+					$.post('rrdcleaner.php', { header: 'false', action: 'remall', clear: '1', __csrf_magic: csrfMagicToken })
 						.done(function(data) {
 							checkForLogout(data);
 

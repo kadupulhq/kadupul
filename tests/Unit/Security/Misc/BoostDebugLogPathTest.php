@@ -120,7 +120,8 @@ test('the settings page refuses a Boost debug log path that does not end in .log
 test('a .log Boost debug log path still gets the path name check', function () {
 	$result = boost_log_settings_save('/var/log/kadupul/boost log.log');
 
-	expect($result['error_fields'])->toBe(array('path_boost_log'))
+	expect($result['calls']['saved'])->toBe(array())
+		->and($result['error_fields'])->toBe(array('path_boost_log'))
 		->and($result['calls']['messages'])->toBe(array(35, 36));
 });
 

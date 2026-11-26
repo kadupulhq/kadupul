@@ -1342,7 +1342,9 @@ $settings = array(
 			'method' => 'textbox',
 			'default' => '1',
 			'max_length' => '10',
-			'size' => '5'
+			'size' => '5',
+			'filter' => FILTER_VALIDATE_INT,
+			'options' => array('options' => array('min_range' => 1, 'max_range' => 15))
 		),
 		'script_timeout' => array(
 			'friendly_name' => __('Script and Script Server Timeout Value'),

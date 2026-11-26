@@ -234,7 +234,7 @@ test('graph input removal answers any GET with 405 before the caller redirects',
 		->and(run_checked($check, 'POST', array(), array('__csrf_magic' => 'sid:x'), array('HTTP_SEC_FETCH_SITE' => 'cross-site')))->toBe('pass:removed');
 });
 
-test('an RRD cleaner rescan refuses a GET only from another site', function () {
+test('an RRD cleaner rescan strictly requires POST with a CSRF token', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/rrdcleaner.php');
 
 	/* rescan=1 carries no action for the global guard, and rebuilds the RRDfile list */
@@ -243,7 +243,7 @@ test('an RRD cleaner rescan refuses a GET only from another site', function () {
 	$rescan = array('rescan' => '1');
 
 	expect(run_checked($matches[0], 'GET', $rescan))->toBe('405')
-		->and(run_checked($matches[0], 'GET', $rescan, array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass:restart')
+		->and(run_checked($matches[0], 'GET', $rescan, array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('405')
 		->and(run_checked($matches[0], 'GET', $rescan, array(), array('HTTP_SEC_FETCH_SITE' => 'cross-site')))->toBe('405')
 		->and(run_checked($matches[0], 'GET', $rescan, array(), array('HTTP_REFERER' => 'https://attacker.example/')))->toBe('405')
 		->and(run_checked($matches[0], 'POST', $rescan, array('__csrf_magic' => 'sid:x'), array('HTTP_SEC_FETCH_SITE' => 'cross-site')))->toBe('pass:restart')

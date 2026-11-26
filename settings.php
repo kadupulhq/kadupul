@@ -76,6 +76,38 @@ case 'save':
 		}
 	}
 
+	if (isset($settings[get_request_var('tab')]['settings_smtp_password'])) {
+		$smtp_saved_password = (string) read_config_option('settings_smtp_password', true);
+
+		if ($smtp_saved_password !== '') {
+			$smtp_saved_host   = (string) read_config_option('settings_smtp_host', true);
+			$smtp_saved_port   = (string) read_config_option('settings_smtp_port', true);
+			$smtp_saved_secure = (string) read_config_option('settings_smtp_secure', true);
+
+			$smtp_sub_host   = (string) get_nfilter_request_var('settings_smtp_host', $smtp_saved_host);
+			$smtp_sub_port   = (string) get_nfilter_request_var('settings_smtp_port', $smtp_saved_port);
+			$smtp_sub_secure = (string) get_nfilter_request_var('settings_smtp_secure', $smtp_saved_secure);
+
+			$smtp_changed = ($smtp_sub_host !== $smtp_saved_host || $smtp_sub_port !== $smtp_saved_port || $smtp_sub_secure !== $smtp_saved_secure);
+			$smtp_pass    = (string) get_nfilter_request_var('settings_smtp_password');
+			$smtp_confirm = (string) get_nfilter_request_var('settings_smtp_password_confirm');
+
+			if ($smtp_changed && ($smtp_pass === '' || $smtp_pass !== $smtp_confirm)) {
+				$_SESSION['sess_error_fields']['settings_smtp_password'] = 'settings_smtp_password';
+
+				raise_message('smtp_password_reentry', __('Enter the SMTP Password again to change the SMTP Hostname, Port, or Security setting.  Nothing was saved.'), MESSAGE_LEVEL_ERROR);
+
+				if (isset_request_var('header') && get_nfilter_request_var('header') == 'false') {
+					header('Location: settings.php?header=false&tab=' . get_request_var('tab'));
+				} else {
+					header('Location: settings.php?tab=' . get_request_var('tab'));
+				}
+
+				exit;
+			}
+		}
+	}
+
 	foreach ($settings[get_request_var('tab')] as $field_name => $field_array) {
 		if (($field_array['method'] == 'header') || ($field_array['method'] == 'spacer' )){
 			/* do nothing */
@@ -157,6 +189,7 @@ case 'save':
 					$_SESSION['sess_error_fields'][$field_name] = $field_name;
 					$_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
 					$errors[36] = 36;
+					$continue = false;
 				}
 
 				if ($continue) {
@@ -220,6 +253,15 @@ case 'save':
 					array($field_name));
 			}
 		} elseif (isset_request_var($field_name)) {
+			if ($field_array['method'] == 'drop_array' && isset($field_array['array']) && is_array($field_array['array'])) {
+				$submitted_val = get_nfilter_request_var($field_name);
+				if (is_array($submitted_val) || !array_key_exists($submitted_val, $field_array['array'])) {
+					$_SESSION['sess_error_fields'][$field_name] = $field_name;
+					$errors[3] = 3;
+					continue;
+				}
+			}
+
 			if (($field_array['method'] == 'textbox' || $field_array['method'] == 'drop_sql') && isset($field_array['filter'])) {
 				if (isset($field_array['options'])) {
 					$value = filter_var(get_nfilter_request_var($field_name), $field_array['filter'], $field_array['options']);
@@ -490,8 +532,8 @@ default:
 						array($field_name));
 				}
 
-				/* the saved search password stays on the server; a blank field keeps it */
-				if ($field_name == 'ldap_specific_password') {
+				/* saved passwords stay on the server; leaving a password field blank preserves the existing secret */
+				if (isset($field_array['method']) && $field_array['method'] == 'textbox_password') {
 					$form_array[$field_name]['value'] = '';
 				}
 			}

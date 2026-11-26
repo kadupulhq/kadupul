@@ -155,7 +155,12 @@ class Installer implements JsonSerializable {
 		}
 		$this->stepError = false;
 
-		if ($step == Installer::STEP_INSTALL) {
+		if (cacti_version_compare(CACTI_VERSION, $this->old_cacti_version, '==')) {
+			/* Cacti is already installed at the current version; refuse wizard re-entry */
+			log_install_high('step', 'Already installed at current version: ' . clean_up_lines(var_export($this->old_cacti_version, true)));
+			$step           = Installer::STEP_COMPLETE;
+			$install_params = array();
+		} elseif ($step == Installer::STEP_INSTALL) {
 			$install_version = read_config_option('install_version', true);
 
 			log_install_high('step', 'Previously complete: ' . clean_up_lines(var_export($install_version, true)));
@@ -835,18 +840,40 @@ class Installer implements JsonSerializable {
 					$should_set = true;
 					if ($blank && empty($path)) {
 						// allow this
-					} elseif ($check == 'writable') {
-						$should_set = is_resource_writable(dirname($path) . '/') || $optional;
-						if ($should_set) {
-							$should_set = is_resource_writable($path) || $optional;
-						}
-						if (!$should_set && !$optional) {
-							$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Resource is not writable'));
-						}
-					} elseif ($check == 'file_exists') {
-						$should_set = (!empty($path) && file_exists($path)) || $optional;
-						if (!$should_set) {
-							$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('File not found'));
+					} else {
+						if (!is_string($path) || !is_valid_pathname($path)) {
+							$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Invalid path specified'));
+							$should_set = false;
+						} elseif ($check == 'writable') {
+							$should_set = is_resource_writable(dirname($path) . '/') || $optional;
+							if ($should_set) {
+								$should_set = is_resource_writable($path) || $optional;
+							}
+							if (!$should_set && !$optional) {
+								$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Resource is not writable'));
+							}
+						} elseif ($check == 'file_exists') {
+							$binary_patterns = array(
+								'path_php_binary'   => '/^php[0-9._-]*(?:\.exe)?\z/i',
+								'path_rrdtool'      => '/^rrdtool(?:\.exe)?\z/i',
+								'path_snmpwalk'     => '/^snmpwalk(?:\.exe)?\z/i',
+								'path_snmpget'      => '/^snmpget(?:\.exe)?\z/i',
+								'path_snmpbulkwalk' => '/^snmpbulkwalk(?:\.exe)?\z/i',
+								'path_snmpgetnext'  => '/^snmpgetnext(?:\.exe)?\z/i',
+								'path_snmptrap'     => '/^snmptrap(?:\.exe)?\z/i',
+								'path_spine'        => '/^spine(?:\.exe)?\z/i',
+								'path_sendmail'     => '/^(?:sendmail|msmtp|ssmtp|postfix)(?:\.exe)?\z/i',
+							);
+
+							if (isset($binary_patterns[$name]) && !empty($path) && preg_match($binary_patterns[$name], basename($path)) !== 1) {
+								$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Invalid executable name'));
+								$should_set = false;
+							} else {
+								$should_set = (!empty($path) && is_file($path)) || $optional;
+								if (!$should_set) {
+									$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('File not found'));
+								}
+							}
 						}
 					}
 
@@ -1683,17 +1710,17 @@ class Installer implements JsonSerializable {
 		$output  = Installer::sectionTitleError();
 		$output .= Installer::sectionNormal(__('You are attempting to install Cacti %s onto a 0.6.x database. Unfortunately, this can not be performed.', CACTI_VERSION));
 		$output .= Installer::sectionNormal(__('To be able continue, you <b>MUST</b> create a new database, import "cacti.sql" into it:', CACTI_VERSION));
-		$output .= Installer::sectionCode(sprintf("mysql -u %s -p [new_database] < cacti.sql", $database_username, $database_default));
+		$output .= Installer::sectionCode(sprintf("mysql -u %s -p [new_database] < cacti.sql", html_escape((string) $database_username)));
 		$output .= Installer::sectionNormal(__('You <b>MUST</b> then update "include/config.php" to point to the new database.'));
 		$output .= Installer::sectionNormal(__('NOTE: Your existing data will not be modified, nor will it or any history be available to the new install'));
 		return $output;
 	}
 
 	private function exitSqlNeeded() {
-		global $config, $database_username, $database_default, $database_password;
+		global $config, $database_username, $database_default;
 		$output  = Installer::sectionTitleError();
 		$output .= Installer::sectionNormal(__("You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"));
-		$output .= Installer::sectionCode(sprintf("mysql -u %s -p %s < cacti.sql", $database_username, $database_default));
+		$output .= Installer::sectionCode(sprintf("mysql -u %s -p %s < cacti.sql", html_escape((string) $database_username), html_escape((string) $database_default)));
 		$output .= Installer::sectionNormal(__("This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."));
 		$output .= Installer::sectionNormal(__("You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"));
 
@@ -1705,7 +1732,7 @@ class Installer implements JsonSerializable {
 		}
 
 		$output .= Installer::sectionNormal(__("Then run the following within MySQL as an administrator:"));
-		$output .= Installer::sectionCode(sprintf("mysql &gt; GRANT SELECT ON mysql.time_zone_name to '%s'@'localhost' IDENTIFIED BY '%s'", $database_username, $database_password));
+		$output .= Installer::sectionCode(sprintf("mysql &gt; GRANT SELECT ON mysql.time_zone_name to '%s'@'localhost' IDENTIFIED BY '&lt;your_password&gt;'", html_escape((string) $database_username)));
 		return $output;
 	}
 
@@ -3048,9 +3075,9 @@ class Installer implements JsonSerializable {
 							}
 
 							$output .= '<tr class=\'cactiInstallSqlRow\'>';
-							$output .= '<td class=\'cactiInstallSqlIcon ' . $cssClass . '\' width=\'50\'><i class=\'' . $dbIcon . '\'></i></td>';
-							$output .= '<td class=\'cactiInstallSqlLeft\'>' . $sql_temp . '</td>';
-							$output .= '<td class=\'cactiInstallSqlRight ' . $cssClass . '\'>' . $dbStatus . '</td>';
+							$output .= '<td class=\'cactiInstallSqlIcon ' . html_escape((string) $cssClass) . '\' width=\'50\'><i class=\'' . html_escape((string) $dbIcon) . '\'></i></td>';
+							$output .= '<td class=\'cactiInstallSqlLeft\'>' . html_escape((string) $sql_temp) . '</td>';
+							$output .= '<td class=\'cactiInstallSqlRight ' . html_escape((string) $cssClass) . '\'>' . html_escape((string) $dbStatus) . '</td>';
 							$output .= '</tr>';
 
 							// set sql failure if status set to zero on any action
@@ -3748,7 +3775,7 @@ class Installer implements JsonSerializable {
 
 		$output_log = '';
 		foreach ($logcontents as $logline) {
-			$output_log = $logline.'<br/>' . $output_log;
+			$output_log = html_escape($logline) . '<br/>' . $output_log;
 		}
 
 		if (empty($output_log)) {
