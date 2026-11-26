@@ -18,7 +18,7 @@ import re
 import subprocess
 import tempfile
 
-COMPATIBILITY_CONTENT_SHA256 = "241909acf069b916e2fb4c9ee0ab342fe9f3b8f4da492eb6f10eb839c7a11947"
+COMPATIBILITY_CONTENT_SHA256 = "539fce9124558c6876f3b63fae9c67dfe2a7020dafbb1b67312a7ed3347e31a2"
 # Legacy gettext is frozen on main: new UI strings belong in Symfony ICU YAML
 # catalogs under config/translations/*.yaml rather than expanding cacti.pot.
 MAX_STATIC_GETTEXT_MESSAGES = 4180
@@ -43,7 +43,7 @@ FORBIDDEN_INVISIBLE = re.compile(r"[\u200B\uFEFF\u0640\u00AD\u200E]")
 DOUBLE_SENTENCE_PUNCT = re.compile(r"([?!\uFF1F\uFF01][.\u3002])\s*$")
 SENTENCE_END_PUNCT = re.compile(r"[.!?。？！۔።։।]\s*$")
 BRAND_CACTI = re.compile(r"(?<![A-Za-z0-9_])cacti(?![A-Za-z0-9_])", re.IGNORECASE)
-LOCALE_CODE = re.compile(r"[a-z]{2}-[A-Z]{2}")
+LOCALE_CODE = re.compile(r"[a-z]{2,3}-[A-Z]{2}")
 SCRIPT_NAME = re.compile(r"[A-Z][A-Za-z_]+")
 # Thai prose does not use trailing periods.
 END_STOP_EXEMPT_LOCALES = frozenset(("th-TH",))
