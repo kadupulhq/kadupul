@@ -649,8 +649,10 @@ loadPageNoHeader('automation_snmp.php?action=ajax_dnd&id=<?php
 
 					$('#cdialog').dialog({
 						title: <?php
-							print json_encode(__('Delete SNMP Option Item'),
-								JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+							print json_encode(
+								__('Delete SNMP Option Item'),
+								JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+							); ?>,
 						close: function () { $('.delete').blur(); $('.selectable').removeClass('selected'); },
 						minHeight: 80,
 						minWidth: 500

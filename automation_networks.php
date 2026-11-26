@@ -821,8 +821,10 @@ function network_edit() {
 		$('#day_of_week').multiselect({
 			selectedList: 7,
 			noneSelectedText: <?php
-				print json_encode(__('Select the days(s) of the week'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+				print json_encode(
+					__('Select the days(s) of the week'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				); ?>,
 			header: false,
 			height: 54,
 			groupColumns: true,
@@ -833,8 +835,10 @@ function network_edit() {
 		$('#month').multiselect({
 			selectedList: 7,
 			noneSelectedText: <?php
-				print json_encode(__('Select the month(s) of the year'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+				print json_encode(
+					__('Select the month(s) of the year'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				); ?>,
 			header: false,
 			height: 82,
 			groupColumns: true,
@@ -845,8 +849,10 @@ function network_edit() {
 		$('#day_of_month').multiselect({
 			selectedList: 15,
 			noneSelectedText: <?php
-				print json_encode(__('Select the day(s) of the month'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+				print json_encode(
+					__('Select the day(s) of the month'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				); ?>,
 			header: false,
 			height: 162,
 			groupColumns: true,
@@ -857,8 +863,10 @@ function network_edit() {
 		$('#monthly_week').multiselect({
 			selectedList: 4,
 			noneSelectedText: <?php
-				print json_encode(__('Select the week(s) of the month'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+				print json_encode(
+					__('Select the week(s) of the month'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				); ?>,
 			header: false,
 			height: 28,
 			groupColumns: true,
@@ -869,8 +877,10 @@ function network_edit() {
 		$('#monthly_day').multiselect({
 			selectedList: 7,
 			noneSelectedText: <?php
-				print json_encode(__('Select the day(s) of the week'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+				print json_encode(
+					__('Select the day(s) of the week'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				); ?>,
 			header: false,
 			height: 54,
 			groupColumns: true,
@@ -968,15 +978,23 @@ function network_edit() {
 			$('#row_recur_every').find('td:first').each(function() {
 				var html = $(this).html();
 				html = html.replace(<?php
-					print json_encode(__('every X Weeks'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, <?php
-					print json_encode(__('every X Days'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+					print json_encode(
+						__('every X Weeks'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>, <?php
+					print json_encode(
+						__('every X Days'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>);
 				html = html.replace(<?php
-					print json_encode(__('every X.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, <?php
-					print json_encode(__('every X Days.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+					print json_encode(
+						__('every X.'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>, <?php
+					print json_encode(
+						__('every X Days.'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>);
 				$(this).html(html);
 			});
 
@@ -993,15 +1011,23 @@ function network_edit() {
 			$('#row_recur_every').find('td:first').each(function() {
 				var html = $(this).html();
 				html = html.replace(<?php
-					print json_encode(__('every X Days'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, <?php
-					print json_encode(__('every X Weeks'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+					print json_encode(
+						__('every X Days'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>, <?php
+					print json_encode(
+						__('every X Weeks'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>);
 				html = html.replace(<?php
-					print json_encode(__('every X.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>, <?php
-					print json_encode(__('every X Weeks.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
+					print json_encode(
+						__('every X.'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>, <?php
+					print json_encode(
+						__('every X Weeks.'),
+						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					); ?>);
 				$(this).html(html);
 			});
 
