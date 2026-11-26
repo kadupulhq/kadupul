@@ -2258,36 +2258,6 @@ parameters:
 			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
 
 		-
-			message: '#^Cannot access offset ''body'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Cannot access offset ''event'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Cannot access offset ''table'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Cannot access offset ''timing'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
 			message: '#^Cannot cast mixed to float\.$#'
 			identifier: cast.double
 			count: 4
@@ -2306,38 +2276,8 @@ parameters:
 			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
 
 		-
-			message: '#^Function data_source_profile_reference_triggers not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Parameter \#1 \$body of closure expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, ''intval'' given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
 
@@ -2576,12 +2516,6 @@ parameters:
 			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
 
 		-
-			message: '#^Binary operation "\." between ''\-\-imgformat\='' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
-
-		-
 			message: '#^Binary operation "\." between ''\-\-logarithmic'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -2702,12 +2636,6 @@ parameters:
 			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
 
 		-
-			message: '#^Binary operation "\." between mixed and ''/global_arrays\.php'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
-
-		-
 			message: '#^Binary operation "\." between mixed and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
@@ -2716,7 +2644,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 28
+			count: 27
 			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
 
 		-
@@ -2729,18 +2657,6 @@ parameters:
 			message: '#^Binary operation "\.\=" between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 2
-			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
-
-		-
-			message: '#^Cannot access offset ''include_path'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
 
 		-
@@ -2758,7 +2674,7 @@ parameters:
 		-
 			message: '#^Constant RRD_NL not found\.$#'
 			identifier: constant.notFound
-			count: 46
+			count: 20
 			path: src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php
 
 		-
@@ -9106,7 +9022,7 @@ parameters:
 		-
 			message: '#^Binary operation "\+" between mixed and 10000 results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 2
+			count: 1
 			path: src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php
 
 		-
@@ -11360,30 +11276,6 @@ parameters:
 			path: src/Platform/Infrastructure/Symfony/Console/LegacyArguments.php
 
 		-
-			message: '#^Cannot call method boot\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Platform/Infrastructure/Symfony/Console/LegacyCli.php
-
-		-
-			message: '#^Cannot call method forLegacy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Platform/Infrastructure/Symfony/Console/LegacyCli.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Platform/Infrastructure/Symfony/Console/LegacyCli.php
-
-		-
-			message: '#^Cannot call method getContainer\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Platform/Infrastructure/Symfony/Console/LegacyCli.php
-
-		-
 			message: '#^Casting to string something that''s already string\.$#'
 			identifier: cast.useless
 			count: 1
@@ -11392,12 +11284,6 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 1
-			path: src/Platform/Infrastructure/Symfony/Console/LegacyCli.php
-
-		-
-			message: '#^Parameter \#1 \$kernel of class Symfony\\Bundle\\FrameworkBundle\\Console\\Application constructor expects Symfony\\Component\\HttpKernel\\KernelInterface, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Platform/Infrastructure/Symfony/Console/LegacyCli.php
 

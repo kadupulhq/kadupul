@@ -418,13 +418,12 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
 
     /**
      * Deletion and the read-only rule rely on the reference triggers from
-     * lib/data_source_profile_integrity.php; a missing or altered one fails
+     * DataSourceProfileReferenceTriggers; a missing or altered one fails
      * closed, as the legacy page's data_source_profile_reference_guards_available() did.
      */
     private function assertReferenceGuards(): void
     {
-        require_once dirname(__DIR__, 4) . '/lib/data_source_profile_integrity.php';
-        $definitions = \data_source_profile_reference_triggers();
+        $definitions = DataSourceProfileReferenceTriggers::definitions();
         $names = array_keys($definitions);
         $rows = $this->database->fetchAllAssociative(
             'SELECT TRIGGER_NAME, EVENT_OBJECT_TABLE, ACTION_TIMING, EVENT_MANIPULATION, ACTION_STATEMENT FROM information_schema.TRIGGERS
@@ -434,12 +433,13 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
         $normalize = static fn(string $body): string => (string) preg_replace('/\s+/', ' ', trim($body));
         $found = [];
         foreach ($rows as $row) {
-            $definition = $definitions[$row['TRIGGER_NAME'] ?? ''] ?? null;
+            $triggerName = is_string($row['TRIGGER_NAME'] ?? null) ? $row['TRIGGER_NAME'] : '';
+            $definition = $definitions[$triggerName] ?? null;
             if ($definition === null || ($row['EVENT_OBJECT_TABLE'] ?? '') !== $definition['table'] || ($row['ACTION_TIMING'] ?? '') !== $definition['timing']
                 || ($row['EVENT_MANIPULATION'] ?? '') !== $definition['event'] || $normalize((string) ($row['ACTION_STATEMENT'] ?? '')) !== $normalize($definition['body'])) {
                 throw new \RuntimeException('Data Source Profile reference guards are modified. Run the database upgrade before changing profiles.');
             }
-            $found[$row['TRIGGER_NAME']] = true;
+            $found[$triggerName] = true;
         }
         if (count($found) !== count($definitions)) {
             throw new \RuntimeException('Data Source Profile reference guards are missing. Run the database upgrade before changing profiles.');

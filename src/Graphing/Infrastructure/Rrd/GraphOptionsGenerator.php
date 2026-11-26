@@ -10,6 +10,12 @@ namespace Kadupul\Graphing\Infrastructure\Rrd;
 /** Build legacy RRDtool graph options without changing their wire representation. */
 final class GraphOptionsGenerator
 {
+    /** Matches $image_types in include/global_arrays.php. */
+    private const array IMAGE_TYPES = [
+        1 => 'PNG',
+        3 => 'SVG',
+    ];
+
     /** Generate the options portion of a graph command.
      *
      * @param int|string $graph_start Start bound passed to RRDtool.
@@ -22,10 +28,6 @@ final class GraphOptionsGenerator
      */
     public function build($graph_start, $graph_end, &$graph, &$graph_data_array, ?\DateTimeImmutable $now = null): string
     {
-        global $config, $image_types;
-
-        include($config['include_path'] . '/global_arrays.php');
-
         /* define some variables */
         $scale               = '';
         $rigid               = '';
@@ -132,8 +134,11 @@ final class GraphOptionsGenerator
         }
 
         /* basic graph options */
+        $imageFormatId = is_numeric($graph['image_format_id'] ?? null) ? (int) $graph['image_format_id'] : 0;
+        $imageFormat = self::IMAGE_TYPES[$imageFormatId] ?? '';
+        $rrdNewline = is_string(RRD_NL) ? RRD_NL : '';
         $graph_opts .=
-            '--imgformat=' . $image_types[$graph['image_format_id']] . RRD_NL .
+            '--imgformat=' . $imageFormat . $rrdNewline .
             '--start=' . rrdtool_pipe_quote($graph_start) . RRD_NL .
             '--end=' . rrdtool_pipe_quote($graph_end) . RRD_NL;
 
