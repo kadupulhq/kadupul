@@ -386,7 +386,8 @@ class spikekill {
 		if ($this->method == SPIKE_METHOD_STDDEV) {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . __esc('Standard Devs: %s', $this->stddev) . ($this->html ? '</p>': PHP_EOL);
 		} elseif ($this->method == SPIKE_METHOD_VARIANCE) {
-			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . __esc('Variance %%:    %s %%', number_format_i18n($this->percent * 100, 2)) . ($this->html ? '</p>': PHP_EOL);
+			/* __gettext() unescapes %% to % before sprintf() would run in __(), so substitute %s directly to avoid PHP 8 ValueError. */
+			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . html_escape(str_replace('%s', number_format_i18n($this->percent * 100, 2), __gettext('Variance %%:    %s %%'))) . ($this->html ? '</p>': PHP_EOL);
 		}
 
 		if ($this->out_start > 0) {
