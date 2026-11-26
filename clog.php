@@ -5,8 +5,6 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-$guest_account=true;
-
 include('./include/auth.php');
 include_once('./lib/clog_webapi.php');
 include_once('./lib/poller.php');

@@ -457,4 +457,156 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         }
     }
 
+    public function testExistingActorEnforcesMustChangePasswordForLocalAccountsAcrossAuthMethods(): void
+    {
+        require_once dirname(__DIR__, 2) . '/lib/auth.php';
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+        $pdo->exec("INSERT INTO settings VALUES ('auth_method','1'),('guest_user','3'),('force_https','')");
+        $pdo->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT)');
+        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, must_change_password TEXT, password_change TEXT)');
+        $pdo->exec("INSERT INTO user_auth VALUES (9, 'account', 0, 'on', '', 'stored-hash', 'on', 'on')");
+        $credential = \auth_session_credential_generation(9, 'stored-hash', $pdo);
+        $database = $this->createMock(DatabaseConnection::class);
+        $database->method('get')->willReturn($pdo);
+        $authentication = $this->authentication(Request::create('/about'), $database);
+
+        // Forced password change blocks local realm 0 under both auth_method 1 and auth_method 3.
+        self::assertNull($authentication->existingActor(9, $credential));
+        $pdo->exec("UPDATE settings SET value = '3' WHERE name = 'auth_method'");
+        self::assertNull($authentication->existingActor(9, $credential));
+
+        // When password_change is disabled, or the account is non-local, or the flag is cleared, the actor is admitted.
+        $pdo->exec("UPDATE user_auth SET password_change = '' WHERE id = 9");
+        self::assertSame(9, $authentication->existingActor(9, $credential)?->id);
+
+        $pdo->exec("UPDATE user_auth SET realm = 3, must_change_password = 'on', password_change = 'on' WHERE id = 9");
+        self::assertSame(9, $authentication->existingActor(9, $credential)?->id);
+
+        $pdo->exec("UPDATE user_auth SET realm = 0, must_change_password = '', password_change = 'on' WHERE id = 9");
+        self::assertSame(9, $authentication->existingActor(9, $credential)?->id);
+    }
+
+    public function testRememberedCookieRotationPreservesV1GenerationBindingAndPersistsSessionRememberToken(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $program = <<<'PHP'
+            <?php
+            declare(strict_types=1);
+
+            namespace Kadupul\IdentityAccess\Infrastructure\Legacy {
+                function setcookie(string $name, string $value = '', array|int $expires_or_options = 0): bool
+                {
+                    $GLOBALS['captured_cookies'][] = ['name' => $name, 'value' => $value, 'options' => $expires_or_options];
+                    return true;
+                }
+            }
+
+            namespace {
+                $root = $argv[1];
+                require $root . '/include/vendor/autoload.php';
+                require_once $root . '/lib/auth.php';
+
+                $GLOBALS['captured_cookies'] = [];
+                $pdo = new PDO('sqlite::memory:');
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+                $pdo->exec("INSERT INTO settings VALUES ('auth_method','1'),('auth_cache_enabled','on'),('guest_user','3'),('force_https','')");
+                $pdo->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT)');
+                $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, must_change_password TEXT, password_change TEXT)');
+                $pdo->exec("INSERT INTO user_auth VALUES (9, 'account', 0, 'on', '', 'stored-hash', '', 'on')");
+                $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, token TEXT, hostname TEXT, last_update TEXT)');
+                $pdo->exec('CREATE TABLE user_log (username TEXT, user_id INTEGER, result INTEGER, ip TEXT, time TEXT)');
+                $pdo->exec('CREATE TABLE sessions (id TEXT PRIMARY KEY, remote_addr TEXT, access INTEGER, data TEXT, user_id INTEGER, user_agent TEXT)');
+
+                $generation = \auth_session_credential_generation(9, 'stored-hash', $pdo);
+                $initialRaw = bin2hex(random_bytes(32));
+                $initialToken = 'v1.' . $initialRaw . '.' . hash_hmac('sha256', $initialRaw, $generation);
+                $initialHash = hash('sha512', $initialToken);
+                $pdo->prepare("INSERT INTO user_auth_cache (user_id, token, hostname, last_update) VALUES (9, ?, '127.0.0.1', datetime('now'))")->execute([$initialHash]);
+
+                $_SERVER = ['REMOTE_ADDR' => '127.0.0.1'];
+                $_COOKIE = ['cacti_remembers' => '9,0,' . $initialToken];
+                $request = Symfony\Component\HttpFoundation\Request::create('/about', 'GET', [], $_COOKIE, [], $_SERVER);
+                $request->attributes->set('_route', 'platform_about');
+                $requests = new Symfony\Component\HttpFoundation\RequestStack();
+                $requests->push($request);
+
+                $database = new readonly class ($pdo) implements Kadupul\Platform\Contract\DatabaseConnection {
+                    public function __construct(private PDO $pdo) {}
+                    public function get(): PDO { return $this->pdo; }
+                };
+                $configuration = new readonly class ($root) implements Kadupul\Platform\Contract\LegacyConfiguration {
+                    public function __construct(private string $root) {}
+                    public function values(): array
+                    {
+                        return ['root' => $this->root, 'session_name' => 'AboutRotateUnit', 'database_sessions' => true, 'url_path' => '/', 'cookie_domain' => ''];
+                    }
+                };
+                $audit = new readonly class implements Kadupul\IdentityAccess\Contract\AuditTrail {
+                    public function record(Kadupul\IdentityAccess\Contract\AuditEvent $event): void {}
+                };
+
+                $auth = new Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyBrowserAuthentication(
+                    $requests,
+                    $database,
+                    $configuration,
+                    new Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationSession($configuration, $database),
+                    $audit,
+                );
+                $actor = $auth->restore();
+                $storedHash = $pdo->query('SELECT token FROM user_auth_cache WHERE user_id = 9')->fetchColumn();
+                $sessionData = (string) $pdo->query('SELECT data FROM sessions')->fetchColumn();
+
+                // Verify cookie-less session revocation deletes the rotated token via sess_remember_token.
+                $_COOKIE = [];
+                \clear_auth_cookie($pdo, static function (): void {}, ['session_token' => ['user_id' => 9, 'hash' => $storedHash], 'cookie' => null]);
+                $remainingAfterRevoke = (int) $pdo->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn();
+
+                echo json_encode([
+                    'actor_id' => $actor?->id,
+                    'generation' => $generation,
+                    'initial_hash' => $initialHash,
+                    'stored_hash' => $storedHash,
+                    'session_data' => $sessionData,
+                    'cookies' => $GLOBALS['captured_cookies'],
+                    'remaining_after_revoke' => $remainingAfterRevoke,
+                ], JSON_THROW_ON_ERROR);
+            }
+            PHP;
+        $script = tempnam(sys_get_temp_dir(), 'remember-rotate-test-');
+        file_put_contents($script, $program);
+        try {
+            $process = proc_open([PHP_BINARY, $script, $root], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+            self::assertIsResource($process);
+            $stdout = stream_get_contents($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            self::assertSame(0, proc_close($process), $stderr);
+            self::assertSame('', $stderr);
+        } finally {
+            unlink($script);
+        }
+
+        require_once $root . '/lib/auth.php';
+        $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame(9, $result['actor_id']);
+        self::assertNotSame($result['initial_hash'], $result['stored_hash']);
+
+        $rememberCookie = array_find($result['cookies'], static fn(array $cookie): bool => $cookie['name'] === 'cacti_remembers');
+        self::assertIsArray($rememberCookie);
+        $parts = explode(',', $rememberCookie['value']);
+        self::assertCount(3, $parts);
+        self::assertSame('9', $parts[0]);
+        self::assertSame('0', $parts[1]);
+        $rotatedToken = $parts[2];
+        self::assertStringStartsWith('v1.', $rotatedToken);
+        self::assertTrue(\auth_cookie_generation_valid($rotatedToken, $result['generation']));
+        self::assertFalse(\auth_cookie_generation_valid($rotatedToken, str_repeat('b', 64)));
+        self::assertSame($result['stored_hash'], hash('sha512', $rotatedToken));
+        self::assertStringContainsString('sess_remember_token|a:2:{s:7:"user_id";i:9;s:4:"hash";s:128:"' . $result['stored_hash'] . '";}', $result['session_data']);
+        self::assertSame(0, $result['remaining_after_revoke']);
+    }
+
 }

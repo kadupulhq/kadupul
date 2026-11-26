@@ -40,7 +40,7 @@ final readonly class NativeAdministrativeActorPolicy implements AdministrativeAc
         }
         require_once dirname(__DIR__, 4) . '/lib/auth.php';
         $this->assertParticipants();
-        $users = $this->rows('SELECT username, password, enabled, locked,
+        $users = $this->rows('SELECT username, password, realm, enabled, locked,
             must_change_password, password_change FROM user_auth WHERE id = ? FOR UPDATE', [$actorId]);
         if (count($users) !== 1) {
             throw new UserManagementDenied($actorId);
@@ -53,7 +53,7 @@ final readonly class NativeAdministrativeActorPolicy implements AdministrativeAc
         $auth = $this->rows("SELECT value FROM settings WHERE name = 'auth_method' LOCK IN SHARE MODE", []);
         $method = $auth[0]['value'] ?? '1';
         if (!in_array($method, ['1', '2', '3', '4', 1, 2, 3, 4], true)
-            || ($user['must_change_password'] === 'on' && ($method === '1' || $method === 1) && $user['password_change'] === 'on')) {
+            || (in_array($user['realm'] ?? null, [0, '0'], true) && $user['must_change_password'] === 'on' && $user['password_change'] === 'on')) {
             throw new UserManagementDenied($actorId);
         }
         $guests = $this->rows("SELECT value FROM settings WHERE name = 'guest_user' LOCK IN SHARE MODE", []);

@@ -189,4 +189,41 @@ final class NativeAuthenticationSessionTest extends TestCase
             self::assertSame('', session_id());
         }
     }
+
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testRememberTokenIsPersistedAndMalformedRememberTokensAreRefused(): void
+    {
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdo->exec('CREATE TABLE sessions (id TEXT PRIMARY KEY, remote_addr TEXT, access INTEGER, data TEXT, user_id INTEGER, user_agent TEXT)');
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['root' => '/fixture', 'session_name' => 'AboutRememberUnit', 'database_sessions' => true, 'url_path' => '/', 'cookie_domain' => '']);
+        $database = $this->createMock(DatabaseConnection::class);
+        $database->method('get')->willReturn($pdo);
+        $sessions = new NativeAuthenticationSession($configuration, $database);
+        $request = Request::create('/about');
+        $credential = hash('sha256', 'fixture-password');
+        $tokenHash = hash('sha512', 'v1.token');
+
+        foreach ([
+            ['user_id' => 10, 'hash' => $tokenHash],
+            ['user_id' => 9, 'hash' => 'short'],
+            ['user_id' => 9, 'hash' => strtoupper($tokenHash)],
+        ] as $invalid) {
+            try {
+                $sessions->establish(9, $request, '127.0.0.1', $credential, $invalid);
+                self::fail('A malformed remember token must be refused before opening a session.');
+            } catch (\RuntimeException $failure) {
+                self::assertSame('Authentication session cannot be established.', $failure->getMessage());
+                self::assertSame(PHP_SESSION_NONE, session_status());
+            }
+        }
+        self::assertSame(0, (int) $pdo->query('SELECT COUNT(*) FROM sessions')->fetchColumn());
+
+        $id = $sessions->establish(9, $request, '127.0.0.1', $credential, ['user_id' => 9, 'hash' => $tokenHash]);
+        $data = (string) $pdo->query('SELECT data FROM sessions')->fetchColumn();
+        self::assertStringContainsString('sess_remember_token|a:2:{s:7:"user_id";i:9;s:4:"hash";s:128:"' . $tokenHash . '";}', $data);
+        $sessions->revoke($id, $request);
+    }
 }

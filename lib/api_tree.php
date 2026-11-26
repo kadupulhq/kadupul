@@ -735,6 +735,10 @@ function api_tree_rename_node($tree_id, $node_id = '', $title = '')
  * @returns - string of the tree items in html format */
 function api_tree_get_main($tree_id, $parent = 0)
 {
+    if ($tree_id > 0 && !is_tree_allowed($tree_id, 0, true)) {
+        return;
+    }
+
     $is_root = false;
     if ($parent == -1) {
         $parent  = 0;

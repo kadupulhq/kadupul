@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Kadupul\Automation\Infrastructure\Persistence\DbalNetworkDeviceCatalog;
 use Kadupul\Graphing\Infrastructure\Persistence\DbalInstanceCatalog;
 use Kadupul\IdentityAccess\Contract\ManagementVisibility;
@@ -75,6 +76,48 @@ final class InstanceCatalogBoundaryTest extends TestCase
             } catch (\UnexpectedValueException) {
                 self::assertTrue(true);
             }
+        }
+    }
+
+    public function testSimpleDeviceShortcutAppliesOnlyToModesWhereDevicePolicyIsAnUnconditionalDisjunct(): void
+    {
+        $database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        foreach ([
+            'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT NOT NULL)',
+            'CREATE TABLE user_auth (id INTEGER PRIMARY KEY, policy_graphs INTEGER NOT NULL, policy_hosts INTEGER NOT NULL, policy_graph_templates INTEGER NOT NULL)',
+            'CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY, enabled TEXT NOT NULL, policy_graphs INTEGER NOT NULL, policy_hosts INTEGER NOT NULL, policy_graph_templates INTEGER NOT NULL)',
+            'CREATE TABLE user_auth_group_members (group_id INTEGER NOT NULL, user_id INTEGER NOT NULL)',
+            'CREATE TABLE user_auth_perms (user_id INTEGER NOT NULL, item_id INTEGER NOT NULL, type INTEGER NOT NULL)',
+            'CREATE TABLE user_auth_group_perms (group_id INTEGER NOT NULL, item_id INTEGER NOT NULL, type INTEGER NOT NULL)',
+            'CREATE TABLE host (id INTEGER PRIMARY KEY)',
+            'CREATE TABLE graph_local (id INTEGER PRIMARY KEY, host_id INTEGER NOT NULL, graph_template_id INTEGER NOT NULL)',
+            'CREATE TABLE graph_templates_graph (local_graph_id INTEGER PRIMARY KEY)',
+        ] as $ddl) {
+            $database->executeStatement($ddl);
+        }
+        $database->executeStatement('INSERT INTO host VALUES (1), (2), (3)');
+        $database->executeStatement('INSERT INTO graph_local VALUES (101, 1, 10), (102, 2, 20)');
+        $database->executeStatement('INSERT INTO graph_templates_graph VALUES (101), (102)');
+        // policy_hosts = 1 with zero type=3 exceptions, but graph and template defaults deny.
+        $database->executeStatement('INSERT INTO user_auth VALUES (42, 2, 1, 2)');
+        $database->executeStatement('INSERT INTO user_auth_perms VALUES (42, 10, 4)');
+        $visibility = new DbalManagementVisibility($database);
+
+        foreach ([1 => [1, 2, 3], 2 => [1], 3 => [1, 2, 3], 4 => [1]] as $mode => $expectedDevices) {
+            $database->executeStatement("DELETE FROM settings WHERE name = 'graph_auth_method'");
+            $database->executeStatement("INSERT INTO settings VALUES ('graph_auth_method', ?)", [(string) $mode]);
+            $scope = $visibility->forActor(42);
+            $devices = array_map('intval', $database->fetchFirstColumn($scope['devices']));
+            sort($devices);
+            self::assertSame($expectedDevices, $devices, 'mode=' . $mode);
+        }
+
+        // Without any template exception, modes 2 and 4 must not expose any device.
+        $database->executeStatement('DELETE FROM user_auth_perms WHERE user_id = 42');
+        foreach ([2, 4] as $mode) {
+            $database->executeStatement("UPDATE settings SET value = ? WHERE name = 'graph_auth_method'", [(string) $mode]);
+            $scope = $visibility->forActor(42);
+            self::assertSame([], $database->fetchFirstColumn($scope['devices']), 'no exceptions mode=' . $mode);
         }
     }
 }

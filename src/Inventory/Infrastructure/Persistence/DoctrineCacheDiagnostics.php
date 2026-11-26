@@ -100,18 +100,18 @@ final readonly class DoctrineCacheDiagnostics implements CacheDiagnostics
     private function scope(int $actorId): string
     {
         // Match get_allowed_management_device_ids_sql(): no graph-view hide-
-        // disabled/deleted filter, and retain its simple device-permission shortcut.
+        // disabled/deleted filter, and restrict the simple device-permission
+        // shortcut strictly to modes where device policy is an unconditional disjunct.
         $policies = $this->database->fetchAllAssociative(DeviceVisibilityRules::POLICIES, [$actorId, $actorId]);
         $user = array_find($policies, static fn(array $policy): bool => $policy['kind'] === 'user');
         if ($user === null) {
             throw new \RuntimeException('Management actor is unavailable.');
         }
-        $simple = (int) $user['policy_hosts'] === 1
+        $mode = DeviceVisibilityRules::mode($this->database->fetchOne(DeviceVisibilityRules::MODE));
+        $simple = in_array($mode, [1, 3], true)
+            && (int) $user['policy_hosts'] === 1
             && (int) $this->database->fetchOne('SELECT COUNT(*) FROM user_auth_perms WHERE user_id = ? AND type = 3', [$actorId]) === 0;
-        $predicate = $simple ? '1 = 1' : DeviceVisibilityRules::predicate(
-            DeviceVisibilityRules::mode($this->database->fetchOne(DeviceVisibilityRules::MODE)),
-            $policies,
-        );
+        $predicate = $simple ? '1 = 1' : DeviceVisibilityRules::predicate($mode, $policies);
         return "SELECT DISTINCT h.id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id > 0 AND ($predicate)";
     }
 }

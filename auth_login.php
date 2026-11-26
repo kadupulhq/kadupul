@@ -55,20 +55,36 @@ $error_msg     = '';                                  // The errors message in c
 global $error, $error_msg;
 
 if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
-    if (($auth_method == 4 && $frv_realm === 0) || ($auth_method == 3 && in_array($frv_realm, array(0, 1), true))) {
-        // User picked 'local' from dropdown;
-        $auth_method = 1;
-    } else {
-        $auth_method = read_config_option('auth_method');
-    }
+    $configured_auth_method = read_config_option('auth_method');
 
-    // Compensate as the dropdown for LDAP is off by one
-    if ($frv_realm == 2) {
-        $realm = 3;
-    } elseif ($auth_method == 2) {
-        $realm = $auth_method;
+    if ($configured_auth_method == 3) {
+        if (in_array($frv_realm, array(0, 1), true)) {
+            $auth_method = 1;
+            $realm       = 0;
+        } elseif (in_array($frv_realm, array(2, 3), true)) {
+            $auth_method = 3;
+            $realm       = 3;
+        } else {
+            http_response_code(400);
+            exit;
+        }
+    } elseif ($configured_auth_method == 4 && $frv_realm === 0) {
+        // User picked 'local' from dropdown
+        $auth_method = 1;
+        $realm       = 0;
     } else {
-        $realm = $frv_realm;
+        $auth_method = $configured_auth_method;
+
+        // Compensate as the dropdown for LDAP is off by one
+        if ($auth_method == 1) {
+            $realm = 0;
+        } elseif ($auth_method == 2) {
+            $realm = 2;
+        } elseif ($frv_realm == 2) {
+            $realm = 3;
+        } else {
+            $realm = $frv_realm;
+        }
     }
 
     cacti_log("DEBUG: User '" . $username . "' attempting to login with realm " . $frv_realm . ", using method " . $auth_method, false, 'AUTH', POLLER_VERBOSITY_DEBUG);

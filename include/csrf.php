@@ -338,7 +338,7 @@ function csrf_refuse_cross_site_get()
 {
     $method = $_SERVER['REQUEST_METHOD'] ?? '';
 
-    if ($method === 'POST' || ($method === 'GET' && !csrf_request_is_cross_site())) {
+    if ($method === 'POST' || ($method === 'GET' && csrf_request_is_same_origin())) {
         return;
     }
 

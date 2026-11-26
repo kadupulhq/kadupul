@@ -24,7 +24,7 @@ $root = dirname(__DIR__, 4);
 if (!function_exists(__NAMESPACE__ . '\report_page_error')) {
     $source = file_get_contents($root . '/help.php');
     $open   = "if (isset_request_var('error')) {\n";
-    $start  = strpos($source, $open);
+    $start  = strrpos($source, $open);
     $end    = strpos($source, "\n} elseif (isset_request_var('page')) {");
 
     expect($start)->not->toBeFalse();
@@ -166,7 +166,8 @@ function report_in_session($page, $now)
 function page_keys()
 {
     return array_values(array_filter(array_keys($GLOBALS['help_settings']), function ($key) {
-        return strpos($key, 'debounce_page_error_user_') !== 0;
+        return strpos($key, 'debounce_page_error_user_') !== 0
+            && strpos($key, 'debounce_page_error_log_user_') !== 0;
     }));
 }
 
@@ -249,10 +250,19 @@ test('one user mails the admin at most once in five minutes', function () {
     report('graph_view.php', 1000000);
     report('host.php', 1000100);
     report('data_sources.php', 1000300);
-    report('data_sources.php', 1000301);
+    report('data_sources.php', 1000310);
 
     expect($GLOBALS['help_log'])->toHaveCount(4);
     expect($GLOBALS['help_mail'])->toHaveCount(2);
+});
+
+test('fresh sessions for the same user cannot bypass the ten-second log throttle', function () {
+    report('graph_view.php', 1000000);
+    report('host.php', 1000001);
+    report('data_sources.php', 1000009);
+    report('data_sources.php', 1000010);
+
+    expect($GLOBALS['help_log'])->toHaveCount(2);
 });
 
 test('distinct junk page values share one settings row', function () {

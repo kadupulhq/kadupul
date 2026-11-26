@@ -13,7 +13,7 @@ $csrfSource = file_get_contents($root . '/include/csrf.php');
 if ($csrfSource === false) {
     throw new RuntimeException('Cannot read the production purge request guard');
 }
-foreach (['csrf_refuse_cross_site_get', 'csrf_request_is_cross_site', 'csrf_request_host_matches', 'csrf_strip_host_port'] as $function) {
+foreach (['csrf_refuse_cross_site_get', 'csrf_request_is_cross_site', 'csrf_request_is_same_origin', 'csrf_request_host_matches', 'csrf_strip_host_port'] as $function) {
     eval(test_php_function_source($csrfSource, $function));
 }
 

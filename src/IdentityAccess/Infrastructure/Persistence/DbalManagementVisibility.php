@@ -35,8 +35,9 @@ final readonly class DbalManagementVisibility implements ManagementVisibility
         }
         $exceptions = $this->database->fetchAllKeyValue('SELECT type, COUNT(*) FROM user_auth_perms WHERE user_id = ? AND type IN (1, 3) GROUP BY type', [$actorId]);
         $simpleGraphs = self::integer($user['policy_graphs']) === 1 && self::integer($exceptions[1] ?? 0) === 0;
-        $simpleDevices = self::integer($user['policy_hosts']) === 1 && self::integer($exceptions[3] ?? 0) === 0;
-        $mode = $simpleGraphs && $simpleDevices ? 1 : VisibilitySql::mode($this->database->fetchOne(VisibilitySql::MODE));
+        $simpleHosts = self::integer($user['policy_hosts']) === 1 && self::integer($exceptions[3] ?? 0) === 0;
+        $mode = VisibilitySql::mode($this->database->fetchOne(VisibilitySql::MODE));
+        $simpleDevices = in_array($mode, [1, 3], true) && $simpleHosts;
         $policy = $simpleGraphs && $simpleDevices ? '1 = 1' : VisibilitySql::predicate($mode, $policies);
         return [
             'graphs' => "SELECT DISTINCT gl.id FROM graph_local gl INNER JOIN graph_templates_graph gtg ON gtg.local_graph_id = gl.id

@@ -2815,7 +2815,11 @@ function getPresentHTTPErrorOrRedirect(data, url) {
 	if (typeof url != 'undefined') {
 		if (data.status >= 500) {
 			// Let the HTTP Error stick log an error
-			$.get(urlPath + 'help.php?page=' + encodeURIComponent(url) + '&error=' + data.status);
+			$.post(urlPath + 'help.php', {
+				page: url,
+				error: data.status,
+				__csrf_magic: csrfMagicToken
+			});
 		} else if (data.status >= 400) {
 			// Let the HTTP Error stick
 		} else if (data.statusText != 'abort') {

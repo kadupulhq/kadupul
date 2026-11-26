@@ -17,9 +17,16 @@ final readonly class NativeAuthenticationSession
 {
     public function __construct(private LegacyConfiguration $configuration, private DatabaseConnection $database) {}
 
-    public function establish(int $user, Request $request, string $ip, string $credential): string
+    /** @param array{user_id: int, hash: string}|null $rememberToken */
+    public function establish(int $user, Request $request, string $ip, string $credential, ?array $rememberToken = null): string
     {
-        if ($user <= 0 || preg_match('/\A[a-f0-9]{64}\z/D', $credential) !== 1 || session_status() !== PHP_SESSION_NONE || headers_sent()) {
+        if (
+            $user <= 0
+            || preg_match('/\A[a-f0-9]{64}\z/D', $credential) !== 1
+            || ($rememberToken !== null && ($rememberToken['user_id'] !== $user || preg_match('/\A[a-f0-9]{128}\z/D', $rememberToken['hash']) !== 1))
+            || session_status() !== PHP_SESSION_NONE
+            || headers_sent()
+        ) {
             throw new \RuntimeException('Authentication session cannot be established.');
         }
         $config = $this->configuration->values();
@@ -54,6 +61,9 @@ final readonly class NativeAuthenticationSession
             }
             $created = session_id();
             $_SESSION = ['sess_user_id' => $user, 'sess_user_credential' => $credential, 'cacti_cwd' => $config['root']];
+            if ($rememberToken !== null) {
+                $_SESSION['sess_remember_token'] = $rememberToken;
+            }
             session_write_close();
             if (session_status() !== PHP_SESSION_NONE || !$handler->written) {
                 throw new \RuntimeException('Authentication session was not persisted.');

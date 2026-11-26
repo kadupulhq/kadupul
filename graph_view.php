@@ -242,6 +242,10 @@ switch (get_nfilter_request_var('action')) {
 
         break;
     case 'get_node':
+        if (!is_view_allowed('show_tree')) {
+            exit;
+        }
+
         $parent  = -1;
         $tree_id = 0;
 

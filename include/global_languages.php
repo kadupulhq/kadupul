@@ -56,8 +56,10 @@ if ($locale_resolution->requested) {
 	unset($_SESSION['sess_current_date1']);
 	unset($_SESSION['sess_current_date2']);
 
-	/* save customized language setting (authenticated users only) */
-	set_user_setting('language', $user_locale);
+	/* Persist language preference only on authenticated non-guest POST requests */
+	if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !empty($_SESSION['sess_user_id']) && (int) $_SESSION['sess_user_id'] !== (int) get_guest_account()) {
+		set_user_setting('user_language', $user_locale);
+	}
 }
 
 /* allow RRDtool to display i18n */

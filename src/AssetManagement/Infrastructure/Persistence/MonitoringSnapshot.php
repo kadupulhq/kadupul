@@ -7,11 +7,12 @@ declare(strict_types=1);
 
 namespace Kadupul\AssetManagement\Infrastructure\Persistence;
 
-use Kadupul\AssetManagement\Domain\AssetData;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
 use Kadupul\AssetManagement\Application\Port\MonitoringInventory;
+use Kadupul\AssetManagement\Domain\AssetData;
 use Kadupul\AssetManagement\Domain\AssetError;
+use Kadupul\IdentityAccess\Contract\VisibilitySql;
 
 /**
  * Reads the monitored devices from the host table as asset observations.
@@ -24,13 +25,36 @@ final readonly class MonitoringSnapshot implements MonitoringInventory
     public function __construct(private Connection $database) {}
 
     /**
-     * Returns one observation per device id, stamped with $observedAt.
+     * Returns one observation per visible device id, stamped with $observedAt.
      *
-     * @throws AssetError when any id is not an existing, undeleted device
+     * @param list<int> $ids
+     * @return list<array<string, mixed>>
+     * @throws AssetError when the actor cannot be scoped or any id is not an existing, undeleted, visible device
      */
-    public function observations(array $ids, string $observedAt): array
+    public function observations(int $actorId, array $ids, string $observedAt): array
     {
-        $rows = $this->database->fetchAllAssociative("SELECT id, description, hostname, location FROM host WHERE deleted = '' AND id IN (?) ORDER BY id", [$ids], [ArrayParameterType::INTEGER]);
+        if ($actorId < 1) {
+            throw new AssetError('denied');
+        }
+        if ($ids === []) {
+            return [];
+        }
+        $policies = $this->database->fetchAllAssociative(VisibilitySql::POLICIES, [$actorId, $actorId]);
+        $user = array_find($policies, static fn(array $policy): bool => $policy['kind'] === 'user');
+        if ($user === null) {
+            throw new AssetError('denied');
+        }
+        $mode = VisibilitySql::mode($this->database->fetchOne(VisibilitySql::MODE));
+        $predicate = VisibilitySql::predicate($mode, $policies);
+        $rows = $this->database->fetchAllAssociative(
+            "SELECT DISTINCT h.id, h.description, h.hostname, h.location
+             FROM host h
+             LEFT JOIN graph_local gl ON gl.host_id = h.id
+             WHERE h.deleted = '' AND h.id > 0 AND h.id IN (?) AND ($predicate)
+             ORDER BY h.id",
+            [$ids],
+            [ArrayParameterType::INTEGER],
+        );
         if (count($rows) !== count($ids)) {
             throw new AssetError('not_found');
         }

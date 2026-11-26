@@ -172,7 +172,7 @@ final class AssetRegistryDatabaseTest extends AssetRegistryTest
             throw new \RuntimeException('Only an explicitly task-owned asset test database is allowed.');
         }
         $db = DriverManager::getConnection($params, $this->queryConfiguration());
-        foreach (['asset_registry', 'asset_record', 'asset_event', 'asset_observation', 'host'] as $table) {
+        foreach (['asset_registry', 'asset_record', 'asset_event', 'asset_observation', 'host', 'settings', 'user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_perms', 'user_auth_group_perms', 'graph_local'] as $table) {
             $db->executeStatement('DROP TABLE IF EXISTS ' . $table);
         }
         $sql = file_get_contents(dirname(__DIR__, 3) . '/install/asset-management.sql');

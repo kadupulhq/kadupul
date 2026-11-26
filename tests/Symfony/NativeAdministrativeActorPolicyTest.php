@@ -151,6 +151,15 @@ final class NativeAdministrativeActorPolicyTest extends TestCase
             $this->database->executeStatement("UPDATE settings SET value=? WHERE name='auth_method'", [$method]);
             self::assertFalse($this->admitted($policy));
         }
+        // Forced password change follows local realm 0 regardless of auth_method.
+        $this->database->executeStatement("UPDATE settings SET value='3' WHERE name='auth_method'");
+        $pdo->exec("UPDATE user_auth SET realm=0,must_change_password='on',password_change='on' WHERE id=42");
+        self::assertFalse($this->admitted($policy));
+        $pdo->exec("UPDATE user_auth SET realm=3,must_change_password='on',password_change='on' WHERE id=42");
+        self::assertTrue($this->admitted($policy));
+        $this->database->executeStatement("UPDATE settings SET value='1' WHERE name='auth_method'");
+        self::assertTrue($this->admitted($policy));
+        $pdo->exec("UPDATE user_auth SET realm=0,must_change_password='',password_change='' WHERE id=42");
         $pdo->exec("DELETE FROM settings WHERE name IN ('guest_user','auth_method')");
         self::assertTrue($this->admitted($policy));
         $pdo->exec('DELETE FROM user_auth WHERE id=42');

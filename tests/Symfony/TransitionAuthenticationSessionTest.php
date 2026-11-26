@@ -12,6 +12,9 @@ namespace Kadupul\Tests;
 use Kadupul\IdentityAccess\Application\Command\TransitionAuthenticationSession;
 use Kadupul\IdentityAccess\Application\Port\AuthenticationTransitionAccounts;
 use Kadupul\IdentityAccess\Application\Port\AuthenticationTransitionSession;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationTransitionSession;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
 final class TransitionAuthenticationSessionTest extends TestCase
@@ -119,5 +122,27 @@ final class TransitionAuthenticationSessionTest extends TestCase
         $session->expects(self::never())->method('logCompleted');
 
         self::assertFalse((new TransitionAuthenticationSession($accounts, $session))(42, 'login'));
+    }
+
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testNativeClearPermissionCachesClearsLogLevelAndRealmCaches(): void
+    {
+        require_once dirname(__DIR__, 2) . '/lib/functions.php';
+        $_SESSION = [
+            'sess_user_realms' => [8 => true, 18 => true],
+            'sess_user_config_array' => ['theme' => 'modern'],
+            'sess_config_array' => ['auth_method' => '1'],
+            'sess_clog_level' => 2,
+            'sess_keep' => 'retained',
+        ];
+
+        (new NativeAuthenticationTransitionSession())->clearPermissionCaches();
+
+        self::assertArrayNotHasKey('sess_user_realms', $_SESSION);
+        self::assertArrayNotHasKey('sess_user_config_array', $_SESSION);
+        self::assertArrayNotHasKey('sess_config_array', $_SESSION);
+        self::assertArrayNotHasKey('sess_clog_level', $_SESSION);
+        self::assertSame('retained', $_SESSION['sess_keep']);
     }
 }

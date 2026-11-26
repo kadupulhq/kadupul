@@ -202,7 +202,7 @@ final readonly class AssetRegistry implements AssetWriter
                     if (count(array_unique($ids)) !== count($ids)) {
                         throw new AssetError('invalid_fields');
                     }
-                    $observations = $this->import($after, ['source' => 'kadupul-monitoring', 'observations' => $this->monitoring->observations($ids, $now)], $requestId, $now);
+                    $observations = $this->import($after, ['source' => 'kadupul-monitoring', 'observations' => $this->monitoring->observations($actor->id, $ids, $now)], $requestId, $now);
                     $result['observations'] = count($observations);
                     break;
                 case 'source_failure':

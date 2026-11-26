@@ -16,5 +16,5 @@ interface MonitoringInventory
      * @param list<int> $ids
      * @return list<array<string, mixed>>
      */
-    public function observations(array $ids, string $observedAt): array;
+    public function observations(int $actorId, array $ids, string $observedAt): array;
 }

@@ -432,6 +432,9 @@ function set_user_setting($config_name, $value, $user = -1)
         cacti_log('NOTE: Attempt to set user setting \'' . $config_name . '\', with no user id: ' . cacti_debug_backtrace('', false, false, 0, 1), false, $mode, POLLER_VERBOSITY_MEDIUM);
     } elseif (!LegacySettingsStorage::acceptsUserId($user)) {
         cacti_log('ERROR: Invalid user id in set_user_setting: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
+    } elseif ((int) $user > 0 && (int) $user === (int) get_guest_account()) {
+        /* Shared guest visitors must not mutate persistent settings_user rows. */
+        $settings_user[$config_name]['value'] = $value;
     } elseif (db_table_exists('settings_user')) {
         if (strlen($config_name) > 255) {
             cacti_log("ERROR: User setting name '$config_name' is too long, will be truncated", false, 'SYSTEM');
@@ -6414,42 +6417,12 @@ function poller_maintenance()
 
 function clog_admin()
 {
-    if (!isset($_SESSION['sess_clog_level'])) {
-        clog_authorized();
-    }
-
-    if ($_SESSION["sess_clog_level"] == CLOG_PERM_ADMIN) {
-        return true;
-    } else {
-        return false;
-    }
+    return isset($_SESSION['sess_user_id']) && is_realm_allowed(18);
 }
 
 function clog_authorized()
 {
-    if (!isset($_SESSION['sess_clog_level'])) {
-        if (isset($_SESSION['sess_user_id'])) {
-            if (is_realm_allowed(18)) {
-                $_SESSION['sess_clog_level'] = CLOG_PERM_ADMIN;
-            } else {
-                if (is_realm_allowed(19)) {
-                    $_SESSION['sess_clog_level'] = CLOG_PERM_USER;
-                } else {
-                    $_SESSION['sess_clog_level'] = CLOG_PERM_NONE;
-                }
-            }
-        } else {
-            $_SESSION['sess_clog_level'] = CLOG_PERM_NONE;
-        }
-    }
-
-    if ($_SESSION['sess_clog_level'] == CLOG_PERM_USER) {
-        return true;
-    } elseif ($_SESSION['sess_clog_level'] == CLOG_PERM_ADMIN) {
-        return true;
-    } else {
-        return false;
-    }
+    return isset($_SESSION['sess_user_id']) && (is_realm_allowed(18) || is_realm_allowed(19));
 }
 
 function cacti_debug_backtrace($entry = '', $html = false, $record = true, $limit = 0, $skip = 0)

@@ -11,6 +11,15 @@ $guest_account = true;
 include('./include/auth.php');
 
 if (isset_request_var('error')) {
+    cacti_require_post_request();
+
+    if (empty($_SESSION['sess_user_id']) || (int) $_SESSION['sess_user_id'] === (int) get_guest_account()) {
+        http_response_code(403);
+        exit;
+    }
+}
+
+if (isset_request_var('error')) {
     /* page[]= is not a page name, and basename() throws on an array */
     if (!is_string(get_nfilter_request_var('page'))) {
         die_html_input_error('page');
@@ -27,24 +36,25 @@ if (isset_request_var('error')) {
         $username = 'unknown';
     }
 
-    /* the browser reports every failed request, so a session may log one
-       report every 10 seconds */
-    if (!isset($_SESSION['sess_help_error_time']) || time() - $_SESSION['sess_help_error_time'] >= 10) {
+    /* each debounce key is a settings row, so key on a script that exists in
+       Kadupul or a plugin rather than on the request value, and on the user so
+       one account cannot mail the admin for every page in turn */
+    $script = basename(explode('?', get_nfilter_request_var('page'))[0]);
+
+    if (!preg_match('/^[a-z0-9_.-]+\.php$/i', $script)
+        || (!file_exists($config['base_path'] . '/' . $script) && !cacti_sizeof(glob($config['base_path'] . '/plugins/*/' . $script)))) {
+        $script = 'unknown';
+    }
+
+    /* the browser reports every failed request, so enforce both a per-session
+       and a server-side per-user throttle to prevent cookie-less log flooding */
+    if ((!isset($_SESSION['sess_help_error_time']) || time() - $_SESSION['sess_help_error_time'] >= 10)
+        && debounce_claim_notification('page_error_log_user_' . $user_id, 9)) {
         $_SESSION['sess_help_error_time'] = time();
 
         $message = sprintf('WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error:%d', $page, $username, $error);
 
         cacti_log($message, false);
-
-        /* each debounce key is a settings row, so key on a script that exists in
-           Kadupul or a plugin rather than on the request value, and on the user so
-           one account cannot mail the admin for every page in turn */
-        $script = basename(explode('?', get_nfilter_request_var('page'))[0]);
-
-        if (!preg_match('/^[a-z0-9_.-]+\.php$/i', $script)
-            || (!file_exists($config['base_path'] . '/' . $script) && !cacti_sizeof(glob($config['base_path'] . '/plugins/*/' . $script)))) {
-            $script = 'unknown';
-        }
 
         if (debounce_claim_notification('page_error_user_' . $user_id, 300) && debounce_claim_notification('page_error_' . $script)) {
             /* the notice is HTML mail and page is the request's own value. Only

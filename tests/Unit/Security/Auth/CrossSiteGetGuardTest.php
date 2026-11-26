@@ -134,21 +134,21 @@ test('a cross-site GET cannot run a state-changing action', function (string $qu
     'table purge' => array('action=purge', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
     'table purge, foreign Origin' => array('action=purge', array('HTTP_ORIGIN' => 'https://attacker.example.net')),
     'rule quick edit' => array('action=qedit&id=1&name=x', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
+    'Sec-Fetch-Site none without same-origin evidence' => array('action=lock&id=1', array('HTTP_SEC_FETCH_SITE' => 'none')),
+    'missing origin headers on state-changing GET' => array('action=query_reload&id=1', array()),
 ));
 
 test('a state-changing action by a method other than GET or POST is refused', function (string $method) {
     expect(cross_site_guard_run($method, 'action=remove&id=4')['stdout'])->toBe('405');
 })->with(array('HEAD', 'PUT', 'DELETE'));
 
-test('same-origin and header-less GET requests still reach the page', function (string $query, array $headers) {
+test('same-origin GET requests still reach the page', function (string $query, array $headers) {
     $result = cross_site_guard_run('GET', $query, $headers);
 
     expect($result['stderr'])->toBe('')
         ->and($result['stdout'])->toBe('DISPATCHED:200');
 })->with(array(
     'same-origin XHR' => array('action=create_node&id=4', array('HTTP_SEC_FETCH_SITE' => 'same-origin')),
-    'typed or bookmarked' => array('action=lock&id=1', array('HTTP_SEC_FETCH_SITE' => 'none')),
-    'script without headers' => array('action=query_reload&id=1', array()),
     'own Referer with port' => array('action=unlock&id=1', array('HTTP_REFERER' => 'https://kadupul.example.com:8443/tree.php')),
     'own Origin' => array('action=item_remove&id=1', array('HTTP_ORIGIN' => 'https://KADUPUL.example.com')),
     'same-origin table purge' => array('action=purge', array('HTTP_SEC_FETCH_SITE' => 'same-origin')),

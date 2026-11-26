@@ -39,6 +39,7 @@ final readonly class NativeAuthenticationTransitionSession implements Authentica
         \kill_session_var('sess_user_realms');
         \kill_session_var('sess_user_config_array');
         \kill_session_var('sess_config_array');
+        \kill_session_var('sess_clog_level');
     }
 
     public function bindCredential(int $userId): void

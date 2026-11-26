@@ -61,6 +61,15 @@ class AssetRegistryTest extends TestCase
     {
         $this->db = $this->connection();
         $this->db->executeStatement('CREATE TABLE host (id INTEGER PRIMARY KEY, description VARCHAR(255), hostname VARCHAR(255), location VARCHAR(255), deleted VARCHAR(2))');
+        $this->db->executeStatement('CREATE TABLE settings (name VARCHAR(75) PRIMARY KEY, value VARCHAR(255) NOT NULL)');
+        $this->db->executeStatement('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, policy_graphs INTEGER NOT NULL, policy_hosts INTEGER NOT NULL, policy_graph_templates INTEGER NOT NULL)');
+        $this->db->executeStatement('CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY, enabled VARCHAR(2) NOT NULL, policy_graphs INTEGER NOT NULL, policy_hosts INTEGER NOT NULL, policy_graph_templates INTEGER NOT NULL)');
+        $this->db->executeStatement('CREATE TABLE user_auth_group_members (group_id INTEGER NOT NULL, user_id INTEGER NOT NULL)');
+        $this->db->executeStatement('CREATE TABLE user_auth_perms (user_id INTEGER NOT NULL, item_id INTEGER NOT NULL, type INTEGER NOT NULL)');
+        $this->db->executeStatement('CREATE TABLE user_auth_group_perms (group_id INTEGER NOT NULL, item_id INTEGER NOT NULL, type INTEGER NOT NULL)');
+        $this->db->executeStatement('CREATE TABLE graph_local (id INTEGER PRIMARY KEY, host_id INTEGER NOT NULL, graph_template_id INTEGER NOT NULL)');
+        $this->db->insert('settings', ['name' => 'graph_auth_method', 'value' => '3']);
+        $this->db->insert('user_auth', ['id' => 1, 'policy_graphs' => 1, 'policy_hosts' => 1, 'policy_graph_templates' => 1]);
         $this->store = new DoctrineAssetStore($this->db);
         $this->access = $this->createMock(AssetAccess::class);
         $this->access->method('requireActor')->willReturnCallback(function (): Actor {
@@ -263,6 +272,51 @@ class AssetRegistryTest extends TestCase
         $this->assertSame('', $identity['asset_id']);
         $this->rejected('not_found', fn() => $this->apply('monitoring', ['device_ids' => [1, 2]]));
         $this->assertSame('Switch', $this->db->fetchOne('SELECT description FROM host WHERE id=1'));
+    }
+
+    public function testMonitoringImportEnforcesDeviceVisibilityUniformlyWithoutExistenceOracle(): void
+    {
+        $this->db->insert('host', ['id' => 1, 'description' => 'Visible switch', 'hostname' => '192.0.2.1', 'location' => 'Rack A', 'deleted' => '']);
+        $this->db->insert('host', ['id' => 2, 'description' => 'Hidden payroll host', 'hostname' => '192.0.2.2', 'location' => 'Vault', 'deleted' => '']);
+        $this->db->insert('host', ['id' => 3, 'description' => 'Deleted switch', 'hostname' => '192.0.2.3', 'location' => 'Rack B', 'deleted' => 'on']);
+        $this->db->insert('graph_local', ['id' => 101, 'host_id' => 1, 'graph_template_id' => 10]);
+        $this->db->insert('graph_local', ['id' => 102, 'host_id' => 2, 'graph_template_id' => 20]);
+
+        // Restrict actor 1 to device 1 only under mode 3.
+        $this->db->update('user_auth', ['policy_graphs' => 2, 'policy_hosts' => 2, 'policy_graph_templates' => 2], ['id' => 1]);
+        $this->db->insert('user_auth_perms', ['user_id' => 1, 'item_id' => 1, 'type' => 3]);
+
+        $this->apply('monitoring', ['device_ids' => [1]]);
+        $this->assertCount(1, $this->store->snapshot()['identities']);
+
+        // Hidden existing device, deleted device, missing device, and mixed batches all produce identical not_found.
+        foreach ([[2], [3], [999], [1, 2]] as $ids) {
+            $this->rejected('not_found', fn() => $this->apply('monitoring', ['device_ids' => $ids]));
+        }
+
+        // Under modes 2 and 4, policy_hosts = 1 alone must not grant visibility to device 2.
+        $this->db->executeStatement('DELETE FROM user_auth_perms WHERE user_id = 1');
+        $this->db->update('user_auth', ['policy_graphs' => 2, 'policy_hosts' => 1, 'policy_graph_templates' => 2], ['id' => 1]);
+        $this->db->insert('user_auth_perms', ['user_id' => 1, 'item_id' => 10, 'type' => 4]);
+        foreach (['2', '4'] as $mode) {
+            $this->db->update('settings', ['value' => $mode], ['name' => 'graph_auth_method']);
+            $this->rejected('not_found', fn() => $this->apply('monitoring', ['device_ids' => [2]]));
+            $this->apply('monitoring', ['device_ids' => [1]]);
+        }
+
+        // An enabled group grant admits device 2; disabling the group revokes it.
+        $this->db->update('settings', ['value' => '3'], ['name' => 'graph_auth_method']);
+        $this->db->update('user_auth', ['policy_hosts' => 2], ['id' => 1]);
+        $this->db->insert('user_auth_group', ['id' => 5, 'enabled' => 'on', 'policy_graphs' => 2, 'policy_hosts' => 2, 'policy_graph_templates' => 2]);
+        $this->db->insert('user_auth_group_members', ['group_id' => 5, 'user_id' => 1]);
+        $this->db->insert('user_auth_group_perms', ['group_id' => 5, 'item_id' => 2, 'type' => 3]);
+        $this->apply('monitoring', ['device_ids' => [2]]);
+        $this->db->update('user_auth_group', ['enabled' => ''], ['id' => 5]);
+        $this->rejected('not_found', fn() => $this->apply('monitoring', ['device_ids' => [2]]));
+
+        // Missing user_auth policy row fails closed.
+        $this->db->executeStatement('DELETE FROM user_auth WHERE id = 1');
+        $this->rejected('denied', fn() => $this->apply('monitoring', ['device_ids' => [1]]));
     }
 
     public function testBaselineAndReviewMetricsKeepUnknownSeparate(): void

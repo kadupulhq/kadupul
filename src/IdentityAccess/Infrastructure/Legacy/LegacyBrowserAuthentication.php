@@ -35,8 +35,8 @@ final readonly class LegacyBrowserAuthentication
         if ($this->setting($database, 'force_https') === 'on' && ($request === null || !$request->isSecure() || !Request::createFromGlobals()->isSecure())) {
             throw new AccessDeniedHttpException('HTTPS is required.');
         }
-        $user = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, enabled, locked, password FROM user_auth WHERE id = ?', [$id]));
-        if (!$this->eligible($database, $user)) {
+        $user = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id, username, realm, enabled, locked, password, must_change_password, password_change FROM user_auth WHERE id = ?', [$id]));
+        if (!$this->eligible($database, $user) || (is_array($user) && $this->passwordChangeRequired($user))) {
             return null;
         }
         require_once dirname(__DIR__, 4) . '/lib/auth.php';
@@ -114,18 +114,22 @@ final readonly class LegacyBrowserAuthentication
             require_once dirname(__DIR__, 4) . '/lib/auth.php';
             $generation = \auth_session_credential_generation($id, $user['password'], $database);
             $actor = new Actor($id, $user['username']);
+            $rememberToken = null;
             if ($reason === 'cookie_restore') {
                 $removed = BrowserAuthenticationSql::execute($database, 'DELETE FROM user_auth_cache WHERE id = ? AND user_id = ? AND hostname = ? AND token = ?', [$credential['cache'], $id, $ip, $credential['hash']]);
                 if ($removed->rowCount() !== 1) {
                     throw new \RuntimeException('Remembered authentication token was not consumed.');
                 }
-                $replacement = bin2hex(random_bytes(32));
-                $inserted = BrowserAuthenticationSql::execute($database, 'INSERT INTO user_auth_cache (user_id, hostname, last_update, token) VALUES (?, ?, CURRENT_TIMESTAMP, ?)', [$id, $ip, hash('sha512', $replacement)]);
+                $raw = bin2hex(random_bytes(32));
+                $replacement = 'v1.' . $raw . '.' . hash_hmac('sha256', $raw, $generation);
+                $replacementHash = hash('sha512', $replacement);
+                $inserted = BrowserAuthenticationSql::execute($database, 'INSERT INTO user_auth_cache (user_id, hostname, last_update, token) VALUES (?, ?, CURRENT_TIMESTAMP, ?)', [$id, $ip, $replacementHash]);
                 if ($inserted->rowCount() !== 1) {
                     throw new \RuntimeException('Remembered authentication token insertion was not confirmed.');
                 }
+                $rememberToken = ['user_id' => $id, 'hash' => $replacementHash];
             }
-            $session = $this->sessions->establish($id, $request, $ip, $generation);
+            $session = $this->sessions->establish($id, $request, $ip, $generation, $rememberToken);
             $this->log($database, $user['username'], $id, $reason === 'basic_restore' ? 1 : 2, $ip);
             if (!$database->commit()) {
                 throw new \RuntimeException('Browser authentication commit was not confirmed.');
@@ -244,6 +248,14 @@ final readonly class LegacyBrowserAuthentication
         }
         $guest = $this->setting($database, 'guest_user');
         return (int) $user['id'] !== (int) $guest && $user['username'] !== $guest;
+    }
+
+    /** @param array<mixed, mixed> $user */
+    private function passwordChangeRequired(array $user): bool
+    {
+        return in_array($user['realm'] ?? null, [0, '0'], true)
+            && ($user['must_change_password'] ?? null) === 'on'
+            && ($user['password_change'] ?? null) === 'on';
     }
 
     private function method(\PDO $database): int

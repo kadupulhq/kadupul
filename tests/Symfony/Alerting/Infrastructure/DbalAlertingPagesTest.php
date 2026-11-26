@@ -238,6 +238,28 @@ final class DbalAlertingPagesTest extends TestCase
         self::assertNull($this->incidentCatalog->find(7, $incident, self::NOW));
     }
 
+    public function testDeletedDataSourceFullAccessShortcutAppliesOnlyInModes1And3(): void
+    {
+        $rule = $this->insertRule(101);
+        $incident = $this->openIncident($rule);
+        $this->database->delete('data_template_rrd', ['local_data_id' => 101]);
+        $this->database->delete('data_local', ['id' => 101]);
+
+        foreach (['1' => true, '2' => false, '3' => true, '4' => false, '5' => false] as $mode => $visible) {
+            $this->database->executeStatement("DELETE FROM settings WHERE name = 'graph_auth_method'");
+            $this->database->insert('settings', ['name' => 'graph_auth_method', 'value' => $mode]);
+            if ($visible) {
+                self::assertNotNull($this->incidentCatalog->find(self::ADMIN, $incident, self::NOW), 'mode=' . $mode);
+                self::assertNotNull($this->ruleCatalog->find(self::ADMIN, $rule), 'mode=' . $mode);
+            } else {
+                self::assertNull($this->incidentCatalog->find(self::ADMIN, $incident, self::NOW), 'mode=' . $mode);
+                self::assertSame([], $this->incidentCatalog->page(self::ADMIN, false, 1)->incidents, 'mode=' . $mode);
+                self::assertNull($this->ruleCatalog->find(self::ADMIN, $rule), 'mode=' . $mode);
+                self::assertSame(AcknowledgeOutcome::NotFound, $this->incidents->acknowledge(self::ADMIN, $incident, self::NOW), 'mode=' . $mode);
+            }
+        }
+    }
+
     public function testAnIncidentIsVisibleThroughTheSeriesItOpenedOnNotItsRulesCurrentSeries(): void
     {
         // Opened on hidden data source 201; the rule is then moved to 101,

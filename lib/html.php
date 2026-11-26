@@ -2453,6 +2453,13 @@ function html_spikekill_actions()
 
             break;
         case 'spikesave':
+            cacti_require_post_request();
+
+            if (!is_realm_allowed(1043)) {
+                http_response_code(403);
+                exit;
+            }
+
             switch (get_nfilter_request_var('setting')) {
                 case 'ravgnan':
                     $id = get_nfilter_request_var('id');
@@ -2674,8 +2681,8 @@ function html_spikekill_js()
 			$(this).find('i:first').addClass(iconClass('check'));
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
-			strURL = '?action=spikesave&setting=ravgnan&id='+$(this).attr('id').replace('method_','');
-			$.get(strURL)
+			strURL = '?action=spikesave&setting=ravgnan&id='+encodeURIComponent($(this).attr('id').replace('method_',''));
+			$.post(strURL, { __csrf_magic: csrfMagicToken })
 				.fail(function(data) {
 					getPresentHTTPError(data);
 				});
@@ -2686,8 +2693,8 @@ function html_spikekill_js()
 			$(this).find('i:first').addClass(iconClass('check'));
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
-			strURL = '?action=spikesave&setting=rkills&id='+$(this).attr('id').replace('kills_','');
-			$.get(strURL)
+			strURL = '?action=spikesave&setting=rkills&id='+encodeURIComponent($(this).attr('id').replace('kills_',''));
+			$.post(strURL, { __csrf_magic: csrfMagicToken })
 				.fail(function(data) {
 					getPresentHTTPError(data);
 				});
@@ -2698,8 +2705,8 @@ function html_spikekill_js()
 			$(this).find('i:first').addClass(iconClass('check'));
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
-			strURL = '?action=spikesave&setting=rstddev&id='+$(this).attr('id').replace('stddev_','');
-			$.get(strURL)
+			strURL = '?action=spikesave&setting=rstddev&id='+encodeURIComponent($(this).attr('id').replace('stddev_',''));
+			$.post(strURL, { __csrf_magic: csrfMagicToken })
 				.fail(function(data) {
 					getPresentHTTPError(data);
 				});

@@ -37,7 +37,7 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
         if ($authMethod !== false && !in_array((int) $authMethod, [1, 2, 3, 4], true)) {
             return null;
         }
-        $query = $this->database->get()->prepare('SELECT id, username, enabled, locked, password FROM user_auth WHERE id = ?' . $this->readLock());
+        $query = $this->database->get()->prepare('SELECT id, username, realm, enabled, locked, password, must_change_password, password_change FROM user_auth WHERE id = ?' . $this->readLock());
         $query->execute([$id]);
         $user = $query->fetch();
         if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on') {
@@ -48,6 +48,9 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
         $binding = $snapshot['sess_user_credential'] ?? null;
         if (!is_string($binding) || preg_match('/\A[a-f0-9]{64}\z/D', $binding) !== 1 || !hash_equals(\auth_session_credential_generation($id, $user['password'], $this->database->get()), $binding)) {
             $this->session->revoke();
+            return null;
+        }
+        if (is_array($user) && in_array($user['realm'] ?? null, [0, '0'], true) && ($user['must_change_password'] ?? null) === 'on' && ($user['password_change'] ?? null) === 'on') {
             return null;
         }
         $guest = $this->database->get()->query("SELECT value FROM settings WHERE name = 'guest_user'" . $this->readLock())->fetchColumn();

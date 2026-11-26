@@ -55,14 +55,18 @@ final readonly class SeriesVisibility
     /**
      * The actor has full device access, as get_simple_device_perms() in
      * lib/auth.php and DbalManagementVisibility's simple device policy
-     * decide it: the account's device policy allows (policy_hosts 1) and it
-     * has no device exceptions (user_auth_perms type 3). The legacy group
-     * branch joins only groups that have exceptions, so it never grants
-     * full access and is not repeated. $actorId is an int.
+     * decide it: graph_auth_method is 1 (Permissive, or unset) or 3 (Device),
+     * the account's device policy allows (policy_hosts 1), and it has no
+     * device exceptions (user_auth_perms type 3). Under modes 2 (Restrictive)
+     * and 4 (Graph Template), device policy alone never grants full access, so
+     * deleted data sources fail closed. The legacy group branch joins only
+     * groups that have exceptions, so it never grants full access and is not
+     * repeated. $actorId is an int.
      */
     public static function allDevices(int $actorId): string
     {
-        return "(EXISTS (SELECT 1 FROM user_auth uav WHERE uav.id = $actorId AND uav.policy_hosts = 1)
+        return "(NOT EXISTS (SELECT 1 FROM settings sv WHERE sv.name = 'graph_auth_method' AND (sv.value IS NULL OR sv.value NOT IN ('1', '3')))
+            AND EXISTS (SELECT 1 FROM user_auth uav WHERE uav.id = $actorId AND uav.policy_hosts = 1)
             AND NOT EXISTS (SELECT 1 FROM user_auth_perms uapv WHERE uapv.user_id = $actorId AND uapv.type = 3))";
     }
 

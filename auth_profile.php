@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-$guest_account = true;
 include('./include/auth.php');
 
 cacti_require_post_actions(array('save', 'update_data', 'clear_user_settings', 'reset_default', 'logout_everywhere'));
@@ -118,7 +117,7 @@ function api_auth_clear_user_settings()
 {
     $user = $_SESSION['sess_user_id'];
 
-    if (!empty($user)) {
+    if (!empty($user) && is_view_allowed('graph_settings')) {
         if (isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
             db_execute_prepared(
                 'DELETE FROM settings_user
@@ -139,7 +138,7 @@ function api_auth_clear_user_setting($name)
 {
     global $settings_user;
 
-    if ($name === 'auth_credential_generation') {
+    if ($name === 'auth_credential_generation' || !is_view_allowed('graph_settings')) {
         return;
     }
 
