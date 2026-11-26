@@ -8616,7 +8616,7 @@ msgstr "Options communes"
 
 #: include/global_form.php:705
 msgid "Title (--title)"
-msgstr "Titre II"
+msgstr "Titre (--title)"
 
 #: include/global_form.php:709
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation."
@@ -8716,7 +8716,7 @@ msgstr "Utiliser une mise à l'échelle logarithmique sur l'axe des y"
 
 #: include/global_form.php:803
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Unités SI pour la mise à l'échelle logarithmique (--units =si)"
+msgstr "Unités SI pour la mise à l'échelle logarithmique (--units=si)"
 
 #: include/global_form.php:806
 msgid "Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default."
@@ -8825,7 +8825,7 @@ msgstr "Formateur de l'axe droit (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Lorsque vous configurez l'étiquetage de l'axe droit, appliquez une règle au format de données.  Les formats pris en charge comprennent \"numérique\" où les données sont traitées comme numériques, \"horodatage\" où les valeurs sont interprétées comme des horodatages UNIX (nombre de secondes depuis janvier 1970) et exprimées au format strftime (par défaut \"%Y-%m-%d %H:%M:%S\").  Voir aussi les formats --unités-longueur et --axe droit.  Enfin, la \"durée\", où les valeurs sont interprétées comme la durée en millisecondes.  Le formatage suit les règles de valstrfduration qualifiées PRINT/GPRINT."
+msgstr "Lorsque vous configurez l'étiquetage de l'axe droit, appliquez une règle au format de données.  Les formats pris en charge comprennent \"numérique\" où les données sont traitées comme numériques, \"horodatage\" où les valeurs sont interprétées comme des horodatages UNIX (nombre de secondes depuis janvier 1970) et exprimées au format strftime (par défaut \"%Y-%m-%d %H:%M:%S\").  Voir aussi --units-length et --right-axis-format.  Enfin, la \"durée\", où les valeurs sont interprétées comme la durée en millisecondes.  Le formatage suit les règles de valstrfduration qualifiées PRINT/GPRINT."
 
 #: include/global_form.php:909
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
@@ -12811,7 +12811,7 @@ msgstr "Système:"
 
 #: lib/api_device.php:1595 lib/api_device.php:1603
 msgid "Uptime:"
-msgstr "Temps d&apos;activation & #160;:"
+msgstr "Temps d&apos;activation&#160;:"
 
 #: lib/api_device.php:1606
 msgid "Hostname:"

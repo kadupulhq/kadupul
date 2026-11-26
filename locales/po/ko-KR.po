@@ -8683,7 +8683,7 @@ msgstr "로그 y 축 스케일링 사용"
 
 #: include/global_form.php:803
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "대수 스케일링을위한 SI 단위 (--units = si)"
+msgstr "대수 스케일링을위한 SI 단위 (--units=si)"
 
 #: include/global_form.php:806
 msgid "Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default."
@@ -8691,7 +8691,7 @@ msgstr "지수 표기법 대신에 로그 스케일링에 SI 단위를 사용하
 
 #: include/global_form.php:809
 msgid "Rigid Boundaries Mode (--rigid)"
-msgstr "경직된 경계 모드 (-rigid)"
+msgstr "경직된 경계 모드 (--rigid)"
 
 #: include/global_form.php:812
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."

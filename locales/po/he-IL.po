@@ -8764,19 +8764,19 @@ msgstr "השתמש ב-<br> --alt-autoscale כדי להתאים את קנה המ�
 
 #: include/global_form.php:779
 msgid "Use --alt-autoscale (ignoring given limits)"
-msgstr "השתמש - alt-autoscale (התעלמות גבולות נתון)"
+msgstr "השתמש --alt-autoscale (התעלמות גבולות נתון)"
 
 #: include/global_form.php:783
 msgid "Use --alt-autoscale-max (accepting a lower limit)"
-msgstr "השתמש - alt-autoscale-max (קבלת גבול נמוך)"
+msgstr "השתמש --alt-autoscale-max (קבלת גבול נמוך)"
 
 #: include/global_form.php:787
 msgid "Use --alt-autoscale-min (accepting an upper limit)"
-msgstr "השתמש - alt-autoscale-min (קבלת גבול עליון)"
+msgstr "השתמש --alt-autoscale-min (קבלת גבול עליון)"
 
 #: include/global_form.php:791
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
-msgstr "השתמש - alt-autoscale (קבלת שני הגבולות, ברירת המחדל RRDtool)"
+msgstr "השתמש --alt-autoscale (קבלת שני הגבולות, ברירת המחדל RRDtool)"
 
 #: include/global_form.php:796
 msgid "Logarithmic Scaling (--logarithmic)"

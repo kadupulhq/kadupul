@@ -11402,7 +11402,7 @@ msgstr "Läge"
 
 #: include/global_settings.php:1832
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Läge vilken Kadupul försöker autentisera mot LDAP-servern. <blockquote> <i>Ingen sökning</i> - <i>Sökning utan</i> Distinguished Name (DN) sker, försök bara binda med det angivna Distinguished Name-formatet (DN). <br><br> <i>Anonym Sökning</i> - Försök att söka efter användarnamn mot LDAP-katalog via anonym bindning för att lokalisera användarens Distinguished Name (DN). <br><br> <i>Särskild</i> sökning - Försök att söka efter användarnamn mot LDAP-katalog via Specifikt Distinguished Name (DN) och Specifikt lösenord för bindning för att lokalisera användarens Distinguished Name (DN)."
+msgstr "Läge vilken Cacti försöker autentisera mot LDAP-servern. <blockquote> <i>Ingen sökning</i> - <i>Sökning utan</i> Distinguished Name (DN) sker, försök bara binda med det angivna Distinguished Name-formatet (DN). <br><br> <i>Anonym Sökning</i> - Försök att söka efter användarnamn mot LDAP-katalog via anonym bindning för att lokalisera användarens Distinguished Name (DN). <br><br> <i>Särskild</i> sökning - Försök att söka efter användarnamn mot LDAP-katalog via Specifikt Distinguished Name (DN) och Specifikt lösenord för bindning för att lokalisera användarens Distinguished Name (DN)."
 
 #: include/global_settings.php:1838 user_domains.php:511
 msgid "Distinguished Name (DN)"
@@ -11786,7 +11786,7 @@ msgstr "Maximal körtid för RRD Update Script"
 
 #: include/global_settings.php:2200
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
-msgstr "Om boost-pollern överskrider denna körtid kommer en varning att placeras i Kadupul-loggen,"
+msgstr "Om boost-pollern överskrider denna körtid kommer en varning att placeras i Cacti-loggen,"
 
 #: include/global_settings.php:2206
 msgid "Enable direct population of poller_output_boost table"
@@ -19547,7 +19547,7 @@ msgstr "Kryptering som servern stöder. TLS stöds endast av protokollversion 3.
 
 #: user_domains.php:505
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Läge som Kadupul kommer att försöka autentisera mot LDAP-servern.<blockquote><i>Ingen</i> sökning - Ingen sökning efter Distinguished Name (DN) sker, bara försök att binda med det angivna formatet för Distinguished Name (DN).<br><br><i>Anonym sökning</i> - Försöker söka efter användarnamn mot LDAP-katalogen via anonym bindning för att hitta användarens Distinguished Name (DN).<br><br><i>Specifik</i> sökning - Försöker söka efter användarnamn mot LDAP-katalogen via specifikt Distinguished Name (DN) och specifikt lösenord för bindning för att hitta användarens Distinguished Name (DN)."
+msgstr "Läge som Cacti kommer att försöka autentisera mot LDAP-servern.<blockquote><i>Ingen</i> sökning - Ingen sökning efter Distinguished Name (DN) sker, bara försök att binda med det angivna formatet för Distinguished Name (DN).<br><br><i>Anonym sökning</i> - Försöker söka efter användarnamn mot LDAP-katalogen via anonym bindning för att hitta användarens Distinguished Name (DN).<br><br><i>Specifik</i> sökning - Försöker söka efter användarnamn mot LDAP-katalogen via specifikt Distinguished Name (DN) och specifikt lösenord för bindning för att hitta användarens Distinguished Name (DN)."
 
 #: user_domains.php:555
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."

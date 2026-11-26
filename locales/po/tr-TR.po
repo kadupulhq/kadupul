@@ -8698,15 +8698,15 @@ msgstr "--alt-autoscale kullan (verilen sınırları yoksayarak)"
 
 #: include/global_form.php:783
 msgid "Use --alt-autoscale-max (accepting a lower limit)"
-msgstr "--Alt-autoscale-max kullanın (daha düşük bir limit kabul)"
+msgstr "--alt-autoscale-max kullanın (daha düşük bir limit kabul)"
 
 #: include/global_form.php:787
 msgid "Use --alt-autoscale-min (accepting an upper limit)"
-msgstr "--Alt-autoscale-min kullan (üst sınırı kabul et)"
+msgstr "--alt-autoscale-min kullan (üst sınırı kabul et)"
 
 #: include/global_form.php:791
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
-msgstr "--Alt-autoscale öğesini kullanın (her iki limiti de kabul edin, varsayılan RRDtool)"
+msgstr "--alt-autoscale öğesini kullanın (her iki limiti de kabul edin, varsayılan RRDtool)"
 
 #: include/global_form.php:796
 msgid "Logarithmic Scaling (--logarithmic)"

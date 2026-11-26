@@ -8751,7 +8751,7 @@ msgstr "为了避免消除锯齿模糊效果RRDtool 将点指向设备分辨率�
 
 #: include/global_form.php:866
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "备用Y坐标"
+msgstr "备用Y坐标 (--alt-y-grid)"
 
 #: include/global_form.php:869
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."

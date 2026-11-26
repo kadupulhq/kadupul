@@ -8683,7 +8683,7 @@ msgstr "Sử dụng tỷ lệ trục y logarit"
 
 #: include/global_form.php:803
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "Đơn vị SI cho Thang đo logarit (--units = si)"
+msgstr "Đơn vị SI cho Thang đo logarit (--units=si)"
 
 #: include/global_form.php:806
 msgid "Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default."
