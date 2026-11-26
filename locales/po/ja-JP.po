@@ -8678,7 +8678,7 @@ msgstr "対数y軸スケーリングを使用"
 
 #: include/global_form.php:803
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "対数スケーリングのSI単位（--units = si）"
+msgstr "対数スケーリングのSI単位（--units=si）"
 
 #: include/global_form.php:806
 msgid "Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default."

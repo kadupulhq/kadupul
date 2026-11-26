@@ -1,0 +1,51 @@
+name: i18n catalog validation
+
+on:
+  pull_request:
+    branches: [lts/1.2, 'chore/consolidate-lts-*']
+    paths:
+      - '**/*.php'
+      - 'locales/**'
+      - 'tests/security/verify_gettext_catalogs.py'
+      - 'tests/security/test_verify_gettext_catalogs.py'
+      - '.github/workflows/i18n-validation.yml'
+  push:
+    branches: [lts/1.2]
+    paths:
+      - '**/*.php'
+      - 'locales/**'
+      - 'tests/security/verify_gettext_catalogs.py'
+      - 'tests/security/test_verify_gettext_catalogs.py'
+      - '.github/workflows/i18n-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: i18n-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-catalogs:
+    name: Validate gettext POT, PO, and MO catalogs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install GNU gettext
+        run: |
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends gettext
+
+      - name: Run gettext catalog validator unit tests
+        run: python3 -m unittest discover -s tests/security -p 'test_verify_gettext_catalogs.py' -v
+
+      - name: Validate POT extraction, all 49 PO/MO catalogs, and translation guards
+        run: python3 tests/security/verify_gettext_catalogs.py

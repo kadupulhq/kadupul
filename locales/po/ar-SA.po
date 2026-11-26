@@ -8858,7 +8858,7 @@ msgstr "استخدم قياس محور y لوغاريتمي"
 
 #: include/global_form.php:803
 msgid "SI Units for Logarithmic Scaling (--units=si)"
-msgstr "وحدات SI للتحجيم اللوغاريتمي (--units = si)"
+msgstr "وحدات SI للتحجيم اللوغاريتمي (--units=si)"
 
 #: include/global_form.php:806
 msgid "Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default."
