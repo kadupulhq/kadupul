@@ -169,11 +169,11 @@ msgstr "Danna 'Ci gaba' don haɗa Jadawali(Jadawalai) masu zuwa da Jadawalin Ha�
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to combine the following Aggregate Graph(s) into a single Aggregate Graph."
-msgstr "Danna 'Ci gaba' don haɗa Jadawalin(Jadawalan) Haɗaka masu zuwa zuwa Jadawalin Haɗaka guda ɗaya."
+msgstr "Danna 'Ci gaba' don haɗa Jadawalin(Jadawalan) Haɗaka masu zuwa su zama Jadawalin Haɗaka guda ɗaya."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Danna 'Ci gaba' don mayar da Jadawalin(Jadawalan) Haɗaka masu zuwa zuwa Jadawali na yau da kullum."
+msgstr "Danna 'Ci gaba' don mayar da Jadawalin(Jadawalan) Haɗaka masu zuwa su zama Jadawali na yau da kullum."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -1458,7 +1458,7 @@ msgstr "Launi Marar Suna"
 
 #: data_debug.php
 msgid "<not set>"
-msgstr "<ba a saita ba>"
+msgstr "<not set>"
 
 #: data_debug.php data_sources.php data_templates.php plugins.php
 msgid "Active"
@@ -2302,7 +2302,7 @@ msgstr "Zaɓin Samfurin Bayanai [sabo]"
 msgid "Delete Data Source"
 msgid_plural "Delete Data Sources"
 msgstr[0] "Goge Tushen Bayanai"
-msgstr[1] "Goge Tushen Bayanai"
+msgstr[1] "Goge Tusoshin Bayanai"
 
 #: data_sources.php
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
@@ -2326,7 +2326,7 @@ msgstr "Na'ura"
 msgid "Disable Data Source"
 msgid_plural "Disable Data Sources"
 msgstr[0] "Kashe Tushen Bayanai"
-msgstr[1] "Kashe Tushen Bayanai"
+msgstr[1] "Kashe Tusoshin Bayanai"
 
 #: data_sources.php
 msgid "Disable Data Source."
@@ -2349,7 +2349,7 @@ msgstr "Gyara Jadawali: '%s'."
 msgid "Enable Data Source"
 msgid_plural "Enable Data Sources"
 msgstr[0] "Kunna Tushen Bayanai"
-msgstr[1] "Kunna Tushen Bayanai"
+msgstr[1] "Kunna Tusoshin Bayanai"
 
 #: data_sources.php
 msgid "Enable Data Source."
@@ -2421,7 +2421,7 @@ msgstr "Sake Aiwatar da Sunayen da Aka Ba da Shawara"
 msgid "Reapply Suggested Naming to Data Source"
 msgid_plural "Reapply Suggested Naming to Data Sources"
 msgstr[0] "Sake Aiwatar da Sunan da Aka Ba da Shawara zuwa Tushen Bayanai"
-msgstr[1] "Sake Aiwatar da Sunan da Aka Ba da Shawara zuwa Tushen Bayanai"
+msgstr[1] "Sake Aiwatar da Sunan da Aka Ba da Shawara zuwa Tusoshin Bayanai"
 
 #: data_sources.php
 msgid "Selected Data Template"
@@ -2761,7 +2761,7 @@ msgstr "Danna 'Ci gaba' don yin Daidaitawa Da Sauri na Jadawalanka don Samfurin(
 
 #: graph_templates.php
 msgid "Click 'Continue' to resize the following Graph Template(s) and Graph(s) to the Height and Width below.  The defaults below are maintained in Settings."
-msgstr "Danna 'Ci gaba' don sake girman Samfurin(Samfuran) Jadawali da Jadawali(Jadawalai) masu zuwa zuwa Tsayi da Faɗi da ke ƙasa. Ana kula da saitunan asali da ke ƙasa a cikin Saituna."
+msgstr "Danna 'Ci gaba' don sake girman Samfurin(Samfuran) Jadawali da Jadawali(Jadawalai) da ke biye zuwa Tsayi da Faɗi da ke ƙasa. Ana kula da saitunan asali da ke ƙasa a cikin Saituna."
 
 #: graph_templates.php
 msgid "Delete Graph Template(s)"
@@ -3106,7 +3106,7 @@ msgstr "Danna 'Ci gaba' don aiwatar da Dokokin Sarrafa Kansa ga Jadawalai masu z
 
 #: graphs.php
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
-msgstr "Danna 'Ci gaba' don mayar da Jadawali(Jadawalai) masu zuwa zuwa Samfurin(Samfuran) Jadawali. Za ka iya canza tsarin take don sabon Samfurin(Samfuran) Jadawali a zaɓe."
+msgstr "Danna 'Ci gaba' don mayar da Jadawali(Jadawalai) masu zuwa su zama Samfurin(Samfuran) Jadawali. Za ka iya canza tsarin take don sabon Samfurin(Samfuran) Jadawali a zaɓe."
 
 #: graphs.php
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
@@ -7055,7 +7055,7 @@ msgstr "Bayanin da ake aikawa zuwa ga script ɗin, wanda ya haɗa da cikakkiyar 
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Yawan lokacin da za a tattara bayanai daga Tushen Bayanan?"
+msgstr "Yawan lokacin da za a tattara bayanai daga Tushen Bayanan."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "Alamar Tsaye (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Wane Wuri wannan Na'urar take da alaƙa da shi."
+msgstr "Wane Wuri wannan Na'urar take da alaƙa da shi?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "Fayilolin rajista nawa kuke son ajiyewa? Yi amfani da 0 don kada a taɓa
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Sau nawa kuke son nunin rajistar Kadupul ya sabunta."
+msgstr "Sau nawa kuke son nunin rajistar Kadupul ya sabunta?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "Yaya ya kamata Kadupul ya tallafa wa Kwanan Watan Abokin Ciniki bisa yan
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Yaya Kadupul zai sarrafa rajistar al'amura."
+msgstr "Yaya Kadupul zai sarrafa rajistar al'amura?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "Idan teburin fitarwar boost ya wuce wannan girman, a cikin rikodi, za a 
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Idan boost poller ya wuce wannan lokacin aiki, za a sanya gargaɗi a cikin cacti log,"
+msgstr "Idan boost poller ya wuce wannan lokacin aiki, za a sanya gargaɗi a cikin cacti log."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "Shin a kunna ajiyar hoto na wucin gadi (caching)?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Shin a zaɓi Yana da Jadawalai da Yana da Tushen Bayanai ta Tsoho."
+msgstr "Shin a zaɓi Yana da Jadawalai da Yana da Tushen Bayanai ta Tsoho?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "Idan an zaɓa, duk wani yunƙurin shiga Kadupul za a tura shi zuwa HTTPS
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Yayin ƙirƙirar sabon rahoto, wane nau'in hoto ya kamata a yi amfani da shi don jadawalan cikin layi."
+msgstr "Yayin ƙirƙirar sabon rahoto, wane nau'in hoto ya kamata a yi amfani da shi don jadawalan cikin layi?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -13555,7 +13555,7 @@ msgstr "An gano bayanan da ke tafe daga fayil ɗin saitin Kadupul. Idan ba daida
 
 #: lib/installer.php
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
-msgstr "Ya kamata a canza tebura masu zuwa zuwa UTF8 da InnoDB tare da tsarin layi mai ƙarfi (Dynamic).  Da fatan za a zaɓi teburan da kake son canzawa yayin tsarin shigarwa."
+msgstr "Ya kamata a canza tebura da ke biye zuwa UTF8 da InnoDB tare da tsarin layi mai ƙarfi (Dynamic).  Da fatan za a zaɓi teburan da kake son canzawa yayin tsarin shigarwa."
 
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
@@ -15011,7 +15011,7 @@ msgstr[1] "Danna 'Ci gaba' don goge Masu Karɓar Sanarwa masu zuwa"
 
 #: managers.php
 msgid "Click 'Continue' to disable forwarding the following Notification Objects to this Notification Receiver."
-msgstr "Danna 'Ci gaba' don kashe tura Abubuwan Sanarwa masu zuwa zuwa wannan Mai Karɓar Sanarwa."
+msgstr "Danna 'Ci gaba' don kashe tura Abubuwan Sanarwa masu zuwa ga wannan Mai Karɓar Sanarwa."
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
@@ -15027,7 +15027,7 @@ msgstr[1] "Danna 'Ci gaba' don kunna Masu Karɓar Sanarwa masu zuwa"
 
 #: managers.php
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
-msgstr "Danna 'Ci gaba' don tura Abubuwan Sanarwa masu zuwa zuwa wannan Mai Karɓar Sanarwa."
+msgstr "Danna 'Ci gaba' don tura Abubuwan Sanarwa masu zuwa ga wannan Mai Karɓar Sanarwa."
 
 #: managers.php
 msgid "Disable Notification Objects"
@@ -18313,3 +18313,5 @@ msgstr "VDEFs [sabo]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Ba za a iya Share VDEFs da ake amfani da su ba. Ana nufin amfani da su lokacin da Jadawali ko Samfurin Jadawali ya yi nuni zuwa gare su."
+
+

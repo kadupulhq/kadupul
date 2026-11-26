@@ -1575,7 +1575,7 @@ msgstr "يحدد ما إذا كان مصدر المعطيات مفعّلًا."
 
 #: data_debug.php
 msgid "Determines if the Data Source is located in the Poller Cache."
-msgstr "يحدد ما إذا كان مصدر المعطيات موجودًا في الذاكرة المؤقتة لـ Poller."
+msgstr "يحدد ما إذا كان مصدر المعطيات موجودًا في الذاكرة المؤقتة ل Poller."
 
 #: data_debug.php
 msgid "Determines if the RRDfile has been getting good recent Data."
@@ -2244,11 +2244,11 @@ msgstr "تغيير الجهاز"
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "اختر جهازًا جديدًا لمصادر المعطيات هذه وانقر على 'متابعة'."
-msgstr[1] "اختر جهازًا جديدًا لمصدر المعطيات هذا وانقر على 'متابعة'."
-msgstr[2] "اختر جهازًا جديدًا لمصدرَي المعطيات هذين وانقر على 'متابعة'."
-msgstr[3] "اختر جهازًا جديدًا لمصادر المعطيات هذه وانقر على 'متابعة'."
-msgstr[4] "اختر جهازًا جديدًا لمصادر المعطيات هذه وانقر على 'متابعة'."
-msgstr[5] "اختر جهازًا جديدًا لمصادر المعطيات هذه وانقر على 'متابعة'."
+msgstr[1] "اختر جهازًا جديدًا لمصدر المعطيات هذا وانقر على 'متابعة'"
+msgstr[2] "اختر جهازًا جديدًا لمصدرَي المعطيات هذين وانقر على 'متابعة'"
+msgstr[3] "اختر جهازًا جديدًا لمصادر المعطيات هذه وانقر على 'متابعة'"
+msgstr[4] "اختر جهازًا جديدًا لمصادر المعطيات هذه وانقر على 'متابعة'"
+msgstr[5] "اختر جهازًا جديدًا لمصادر المعطيات هذه وانقر على 'متابعة'"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -2796,7 +2796,7 @@ msgstr "%d ثانية متبقية."
 
 #: graph_realtime.php
 msgid "Kadupul Real-time Graphing"
-msgstr "المبيان الفوري لـ Kadupul"
+msgstr "المبيان الفوري ل Kadupul"
 
 #: graph_realtime.php include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -3481,16 +3481,16 @@ msgstr "تعيين التحديد كافتراضي"
 
 #: graphs_new.php
 msgid "New Graphs for None Host Type"
-msgstr "مبيانات جديدة لـ None Host Type"
+msgstr "مبيانات جديدة ل None Host Type"
 
 #: graphs_new.php
 #, php-format
 msgid "New Graphs for [ %s ] (%s %s)"
-msgstr "مبيانات جديدة لـ [ %s ] (%s %s)"
+msgstr "مبيانات جديدة ل [ %s ] (%s %s)"
 
 #: graphs_new.php
 msgid "New Graphs for [ All Devices ]"
-msgstr "مبيانات جديدة لـ [ جميع الأجهزة ]"
+msgstr "مبيانات جديدة ل [ جميع الأجهزة ]"
 
 #: graphs_new.php include/global_form.php lib/html.php lib/html_filter.php
 #: lib/installer.php lib/rrd.php utilities.php
@@ -4791,7 +4791,7 @@ msgstr "مساعدة Kadupul"
 
 #: include/global_arrays.php
 msgid "Kadupul Related"
-msgstr "متعلق بـ Kadupul"
+msgstr "متعلق ب Kadupul"
 
 #: include/global_arrays.php
 msgid "Kadupul Settings"
@@ -4896,7 +4896,7 @@ msgstr "فاتح"
 
 #: include/global_arrays.php
 msgid "Linux Related"
-msgstr "مرتبط بـ Linux"
+msgstr "مرتبط ب Linux"
 
 #: include/global_arrays.php
 msgid "List Mode"
@@ -4920,7 +4920,7 @@ msgstr "عرض السجل"
 
 #: include/global_arrays.php
 msgid "Log file specified is not a Kadupul log or archive file."
-msgstr "ملف السجل المحدد ليس ملف سجل أو ملف أرشيف خاصًا بـ Kadupul."
+msgstr "ملف السجل المحدد ليس ملف سجل أو ملف أرشيف خاصًا ب Kadupul."
 
 #: include/global_arrays.php
 msgid "Log file specified was Kadupul archive file and was removed."
@@ -5015,7 +5015,7 @@ msgstr "نطاقات LDAP/AD متعددة"
 
 #: include/global_arrays.php
 msgid "NAS/SAN Related"
-msgstr "مرتبط بـ NAS/SAN"
+msgstr "مرتبط ب NAS/SAN"
 
 #: include/global_arrays.php
 msgid "NONE - Syslog Only if Selected"
@@ -5149,7 +5149,7 @@ msgstr "البولندية"
 
 #: include/global_arrays.php
 msgid "Poller Resource Cache cleared.  Main Data Collector will rebuild at the next poller start, and Remote Data Collectors will sync afterwards."
-msgstr "تم مسح ذاكرة التخزين المؤقت لموارد المستطلع (Poller). سيعيد مجمع المعطيات الرئيسي بناءها عند بدء التشغيل التالي للمستطلع، وستتم مزامنة مجمعات المعطيات عن بعد بعد ذلك."
+msgstr "تم مسح ذاكرة التخزين المؤقت لموارد المستطلع (Poller). سيعيد مجمع المعطيات الرئيسي بناءها عند بدء التشغيل التالي للمستطلع، وستتم مزامنة مجمعات المعطيات عن بعد لاحقاً."
 
 #: include/global_arrays.php
 msgid "Portuguese"
@@ -5318,7 +5318,7 @@ msgstr "SNMP getNext"
 
 #: include/global_arrays.php
 msgid "SNMPv3 Auth Passphrases must be 8 characters or greater."
-msgstr "يجب أن تتكون عبارة سر المصادقة لـ SNMPv3 من 8 أحرف على الأقل."
+msgstr "يجب أن تتكون عبارة سر المصادقة ل SNMPv3 من 8 أحرف على الأقل."
 
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
@@ -5367,7 +5367,7 @@ msgstr "سكربت/أمر"
 
 #: include/global_arrays.php
 msgid "Selected Poller Interval"
-msgstr "الفاصل الزمني المحدد لـ Poller"
+msgstr "الفاصل الزمني المحدد ل Poller"
 
 #: include/global_arrays.php
 msgid "Send Now"
@@ -5517,11 +5517,11 @@ msgstr "يجب أن ينتهي ملف سجل Kadupul بالامتداد '.log'"
 
 #: include/global_arrays.php
 msgid "The SNMP v3 Authentication Passphrases do not match"
-msgstr "لا تتطابق عبارتا سر المصادقة لـ SNMP v3"
+msgstr "لا تتطابق عبارتا سر المصادقة ل SNMP v3"
 
 #: include/global_arrays.php
 msgid "The SNMP v3 Privacy Passphrases do not match"
-msgstr "لا تتطابق عبارتا سر الخصوصية لـ SNMP v3"
+msgstr "لا تتطابق عبارتا سر الخصوصية ل SNMP v3"
 
 #: include/global_arrays.php
 msgid "The directory highlighted does not exist.  Please enter a valid directory."
@@ -5615,7 +5615,7 @@ msgstr "UDP Ping"
 
 #: include/global_arrays.php
 msgid "UPS Related"
-msgstr "مرتبط بـ UPS"
+msgstr "مرتبط ب UPS"
 
 #: include/global_arrays.php
 msgid "Unable to Add Graphs.  Current user is not owner"
@@ -5764,7 +5764,7 @@ msgstr "عرض السجل"
 
 #: include/global_arrays.php utilities.php
 msgid "View Poller Cache"
-msgstr "عرض الذاكرة المؤقتة لـ Poller"
+msgstr "عرض الذاكرة المؤقتة ل Poller"
 
 #: include/global_arrays.php utilities.php
 msgid "View SNMP Agent Cache"
@@ -5821,7 +5821,7 @@ msgstr "عندما تتراجع مدة تشغيل SNMP للجهاز، سيتم �
 
 #: include/global_arrays.php
 msgid "Windows Related"
-msgstr "مرتبط بـ Windows"
+msgstr "مرتبط ب Windows"
 
 #: include/global_arrays.php
 msgid "XML parse error."
@@ -5905,7 +5905,7 @@ msgstr "[تحذير]"
 
 #: include/global_arrays.php
 msgid "begins with"
-msgstr "يبدأ بـ"
+msgstr "يبدأ ب"
 
 #: include/global_arrays.php
 msgid "center"
@@ -5921,7 +5921,7 @@ msgstr "أيام"
 
 #: include/global_arrays.php
 msgid "does not begin with"
-msgstr "لا يبدأ بـ"
+msgstr "لا يبدأ ب"
 
 #: include/global_arrays.php
 msgid "does not contain"
@@ -5929,7 +5929,7 @@ msgstr "لا يحتوي على"
 
 #: include/global_arrays.php
 msgid "does not end with"
-msgstr "لا ينتهي بـ"
+msgstr "لا ينتهي ب"
 
 #: include/global_arrays.php
 msgid "does not match regular expression"
@@ -5937,7 +5937,7 @@ msgstr "لا يطابق التعبير النمطي"
 
 #: include/global_arrays.php
 msgid "ends with"
-msgstr "ينتهي بـ"
+msgstr "ينتهي ب"
 
 #: include/global_arrays.php lib/api_device.php
 msgid "hours"
@@ -6282,7 +6282,7 @@ msgstr "اختر قالب المبيان لاستخدامه في عنصر قال
 
 #: include/global_form.php
 msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "اختر جامع المعطيات/المستطلع الخاص بـ Kadupul لاستخدامه في جمع المعطيات من هذا الجهاز."
+msgstr "اختر جامع المعطيات/المستطلع الخاص ب Kadupul لاستخدامه في جمع المعطيات من هذا الجهاز."
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -6412,7 +6412,7 @@ msgstr "أدخل اسما لهذا الحقل %s. ملاحظة: إذا كنت ت
 
 #: include/global_form.php
 msgid "Enter a name for this GPRINT preset, make sure it is something you recognize."
-msgstr "أدخل اسما لهذا الإعداد المسبق لـ GPRINT، وتأكد من أنه اسم يسهل التعرف عليه."
+msgstr "أدخل اسما لهذا الإعداد المسبق ل GPRINT، وتأكد من أنه اسم يسهل التعرف عليه."
 
 #: include/global_form.php
 msgid "Enter a name for this graph item input, make sure it is something you recognize."
@@ -7139,7 +7139,7 @@ msgstr "المعطيات التي يتم إرسالها إلى النص البر
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "معدل تكرار جمع المعطيات من مصدر المعطيات؟"
+msgstr "معدل تكرار جمع المعطيات من مصدر المعطيات."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7167,11 +7167,11 @@ msgstr "التسمية المطبوعة عموديا على يسار المبي�
 
 #: include/global_form.php
 msgid "The maximum amount of time that can pass before data is entered as 'unknown'. (Usually 2x300=600)"
-msgstr "المدة الزمنية القصوى التي يمكن أن تمر قبل تسجيل المعطيات كـ 'غير معروفة'. (عادة 2x300=600)"
+msgstr "المدة الزمنية القصوى التي يمكن أن تمر قبل تسجيل المعطيات ك 'غير معروفة'. (عادة 2x300=600)"
 
 #: include/global_form.php
 msgid "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up."
-msgstr "الحد الأقصى لعدد محاولات الوصول إلى جهاز عبر سلسلة القراءة لـ SNMP قبل التوقف."
+msgstr "الحد الأقصى لعدد محاولات الوصول إلى جهاز عبر سلسلة القراءة ل SNMP قبل التوقف."
 
 #: include/global_form.php
 msgid "The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support)."
@@ -7299,7 +7299,7 @@ msgstr "الحد الأعلى (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
-msgstr "استخدام --alt-autoscale (قبول كلا الحدين، الإعداد الافتراضي لـ RRDtool)"
+msgstr "استخدام --alt-autoscale (قبول كلا الحدين، الإعداد الافتراضي ل RRDtool)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (ignoring given limits)"
@@ -7315,7 +7315,7 @@ msgstr "استخدام --alt-autoscale-min (مع قبول حد أعلى)"
 
 #: include/global_form.php
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "استخدم <br> --alt-autoscale للتحجيم إلى القيمة الدنيا والقصوى المطلقتين <br> --alt-autoscale-max للتحجيم إلى القيمة القصوى، باستخدام حد أدنى محدد <br> --alt-autoscale-min للتحجيم إلى القيمة الدنيا، باستخدام حد أعلى محدد <br> --alt-autoscale (مع حدود) للتحجيم باستخدام كل من الحد الأدنى والحد الأعلى (الإعداد الافتراضي لـ RRDtool) <br>"
+msgstr "استخدم <br> --alt-autoscale للتحجيم إلى القيمة الدنيا والقصوى المطلقتين <br> --alt-autoscale-max للتحجيم إلى القيمة القصوى، باستخدام حد أدنى محدد <br> --alt-autoscale-min للتحجيم إلى القيمة الدنيا، باستخدام حد أعلى محدد <br> --alt-autoscale (مع حدود) للتحجيم باستخدام كل من الحد الأدنى والحد الأعلى (الإعداد الافتراضي ل RRDtool) <br>"
 
 #: include/global_form.php
 msgid "Use Logarithmic y-axis scaling"
@@ -7355,7 +7355,7 @@ msgstr "التسمية العمودية (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "الموقع الذي يرتبط به هذا الجهاز."
+msgstr "ما الموقع الذي يرتبط به هذا الجهاز؟"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7363,7 +7363,7 @@ msgstr "ما يجب فعله عند ولوج هذا المستخدم."
 
 #: include/global_form.php
 msgid "What unit Kadupul should use on the Y-axis. Use 3 to display everything in \"k\" or -6 to display everything in \"u\" (micro)."
-msgstr "الوحدة التي يجب أن يستخدمها Kadupul على المحور العمودي (Y). استخدم 3 لعرض كل شيء بـ \"k\" أو -6 لعرض كل شيء بـ \"u\" (ميكرو)."
+msgstr "الوحدة التي يجب أن يستخدمها Kadupul على المحور العمودي (Y). استخدم 3 لعرض كل شيء ب \"k\" أو -6 لعرض كل شيء ب \"u\" (ميكرو)."
 
 #: include/global_form.php
 msgid "When data is gathered, the data for this field will be put into this data source."
@@ -7547,7 +7547,7 @@ msgstr "56 جيجابت في الثانية إيثرنت"
 
 #: include/global_settings.php
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i>المصادقة المدمجة</i> - يتولى Kadupul مصادقة المستخدمين، مما يتيح لك إنشاء مستخدمين ومنحهم صلاحيات لمختلف الأقسام داخل Kadupul.<br><br><i>مصادقة الويب الأساسية</i> - يتولى خادم الويب معالجة المصادقة. يمكن إضافة المستخدمين أو إنشاؤهم تلقائيًا عند أول ولوج إذا كان مستخدم القالب معرّفًا، وإلا فستُستعمل صلاحيات الضيف المحددة.<br><br><i>مصادقة LDAP</i> - تتيح المصادقة عبر خادم LDAP. سيُنشأ المستخدمون تلقائيًا عند أول ولوج إذا كان مستخدم القالب معرّفًا، وإلا فستُستعمل صلاحيات الضيف المحددة. وإذا لم تكن وحدة LDAP الخاصة بـ PHP مفعّلة، فلن تظهر مصادقة LDAP كخيار متاح للتحديد.<br><br><i>مصادقة نطاقات LDAP/AD متعددة</i> - تتيح للمسؤولين دعم عدة مجموعات متباينة من أدلة LDAP/AD مختلفة للولوج إلى موارد Kadupul. وكما هو الحال مع مصادقة LDAP، فإن وحدة PHP LDAP مطلوبة لاستعمال هذه الطريقة.</blockquote>"
+msgstr "<blockquote><i>المصادقة المدمجة</i> - يتولى Kadupul مصادقة المستخدمين، مما يتيح لك إنشاء مستخدمين ومنحهم صلاحيات لمختلف الأقسام داخل Kadupul.<br><br><i>مصادقة الويب الأساسية</i> - يتولى خادم الويب معالجة المصادقة. يمكن إضافة المستخدمين أو إنشاؤهم تلقائيًا عند أول ولوج إذا كان مستخدم القالب معرّفًا، وإلا فستُستعمل صلاحيات الضيف المحددة.<br><br><i>مصادقة LDAP</i> - تتيح المصادقة عبر خادم LDAP. سيُنشأ المستخدمون تلقائيًا عند أول ولوج إذا كان مستخدم القالب معرّفًا، وإلا فستُستعمل صلاحيات الضيف المحددة. وإذا لم تكن وحدة LDAP الخاصة ب PHP مفعّلة، فلن تظهر مصادقة LDAP كخيار متاح للتحديد.<br><br><i>مصادقة نطاقات LDAP/AD متعددة</i> - تتيح للمسؤولين دعم عدة مجموعات متباينة من أدلة LDAP/AD مختلفة للولوج إلى موارد Kadupul. وكما هو الحال مع مصادقة LDAP، فإن وحدة PHP LDAP مطلوبة لاستعمال هذه الطريقة.</blockquote>"
 
 #: include/global_settings.php
 msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
@@ -7595,7 +7595,7 @@ msgstr "السماح للمبيان بالامتداد إلى المستقبل"
 
 #: include/global_settings.php
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr "السماح بـ JavaScript المضمّن بدون Nonce"
+msgstr "السماح ب JavaScript المضمّن بدون Nonce"
 
 #: include/global_settings.php
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
@@ -7807,7 +7807,7 @@ msgstr "اختر 'مفعّل' للسماح بتوطين Kadupul. يتطلب ال
 
 #: include/global_settings.php
 msgid "Choose if RRDs will be stored locally or being handled by an external RRDtool proxy server."
-msgstr "اختر ما إذا كان سيتم تخزين ملفات RRD محلياً أو معالجتها عبر خادم وكيل خارجي لـ RRDtool."
+msgstr "اختر ما إذا كان سيتم تخزين ملفات RRD محلياً أو معالجتها عبر خادم وكيل خارجي ل RRDtool."
 
 #: include/global_settings.php
 msgid "Choose whether to expand the Graph Templates and Data Queries used by a Device on Tree."
@@ -7847,11 +7847,11 @@ msgstr "يتحكم في تعطيل التحقق من تزايد OID أثناء �
 
 #: include/global_settings.php
 msgid "Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts."
-msgstr "يتحكم في سياسة CSP لـ script-src. يُبلغ خيار وضع Nonce - الإبلاغ فقط عن السكربتات المضمّنة التي تفتقر إلى nonce دون حظرها. يدعم التنفيذ أيضًا وضع nonce الإلزامي من خلال التهيئة المباشرة، ولكن هذا الوضع غير معروض هنا لأن العديد من الصفحات والإضافات المدمجة لا تزال تستخدم سكربتات مضمّنة بدون nonces. قد يؤدي تمكين الإلزام قبل ترحيل تلك السكربتات إلى تعطيل الصفحات والإضافات. استخدم CactiSecureHeaders::getNonceAttribute() عند إضافة سكربتات مضمّنة."
+msgstr "يتحكم في سياسة CSP ل script-src. يُبلغ خيار وضع Nonce - الإبلاغ فقط عن السكربتات المضمّنة التي تفتقر إلى nonce دون حظرها. يدعم التنفيذ أيضًا وضع nonce الإلزامي من خلال التهيئة المباشرة، ولكن هذا الوضع غير معروض هنا لأن العديد من الصفحات والإضافات المدمجة لا تزال تستخدم سكربتات مضمّنة بدون nonces. قد يؤدي تمكين الإلزام قبل ترحيل تلك السكربتات إلى تعطيل الصفحات والإضافات. استخدم CactiSecureHeaders::getNonceAttribute() عند إضافة سكربتات مضمّنة."
 
 #: include/global_settings.php
 msgid "Cron/Daemon Interval"
-msgstr "الفاصل الزمني لـ Cron/الخدمة الخلفية"
+msgstr "الفاصل الزمني ل Cron/الخدمة الخلفية"
 
 #: include/global_settings.php
 msgid "Custom Date Format"
@@ -7963,7 +7963,7 @@ msgstr "نوع Ping الافتراضي لجميع الأجهزة الجديدة.
 
 #: include/global_settings.php
 msgid "Default SNMP read community for all new Devices."
-msgstr "مجتمع القراءة الافتراضي لـ SNMP لجميع الأجهزة الجديدة."
+msgstr "مجتمع القراءة الافتراضي ل SNMP لجميع الأجهزة الجديدة."
 
 #: include/global_settings.php
 msgid "Default SNMP retries for all new Devices."
@@ -7979,7 +7979,7 @@ msgstr "عبارة سر تخويل SNMP v3 الافتراضية لجميع ال�
 
 #: include/global_settings.php
 msgid "Default SNMP v3 Authorization User for all new Devices."
-msgstr "مستخدم التخويل الافتراضي لـ SNMP v3 لجميع الأجهزة الجديدة."
+msgstr "مستخدم التخويل الافتراضي ل SNMP v3 لجميع الأجهزة الجديدة."
 
 #: include/global_settings.php
 msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
@@ -7987,7 +7987,7 @@ msgstr "معرف محرك SNMP v3 الافتراضي لجميع الأجهزة �
 
 #: include/global_settings.php
 msgid "Default SNMP v3 Security Level for all new Devices."
-msgstr "مستوى الأمان الافتراضي لـ SNMP v3 لجميع الأجهزة الجديدة."
+msgstr "مستوى الأمان الافتراضي ل SNMP v3 لجميع الأجهزة الجديدة."
 
 #: include/global_settings.php
 msgid "Default SNMP version for all new Devices."
@@ -8083,7 +8083,7 @@ msgstr "نمط الدليل"
 
 #: include/global_settings.php
 msgid "Disable RRDtool Watermark"
-msgstr "تعطيل العلامة المائية لـ RRDtool"
+msgstr "تعطيل العلامة المائية ل RRDtool"
 
 #: include/global_settings.php
 msgid "Disable Resource Cache Replication"
@@ -8163,7 +8163,7 @@ msgstr "تمكين التخزين المؤقت للصور"
 
 #: include/global_settings.php
 msgid "Enable Lotus Notes (R) tweak"
-msgstr "تمكين التعديل الخاص بـ Lotus Notes (R)"
+msgstr "تمكين التعديل الخاص ب Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
@@ -8235,11 +8235,11 @@ msgstr "أدخل سياق SNMP v3 لجميع الأجهزة الجديدة."
 
 #: include/global_settings.php
 msgid "Enter the primary DNS IP Address to utilize for reverse lookups."
-msgstr "أدخل عنوان IP الأساسي لـ DNS لاستخدامه في عمليات البحث العكسي."
+msgstr "أدخل عنوان IP الأساسي ل DNS لاستخدامه في عمليات البحث العكسي."
 
 #: include/global_settings.php
 msgid "Enter the secondary DNS IP Address to utilize for reverse lookups."
-msgstr "أدخل عنوان IP الثانوي لـ DNS لاستخدامه في عمليات البحث العكسي."
+msgstr "أدخل عنوان IP الثانوي ل DNS لاستخدامه في عمليات البحث العكسي."
 
 #: include/global_settings.php lib/clog_webapi.php utilities.php
 msgid "Errors"
@@ -8431,7 +8431,7 @@ msgstr "كيفية توزيع Boost لتحيينات RRD. تبدأ العملي�
 
 #: include/global_settings.php
 msgid "How Often Should Boost Update All RRDs"
-msgstr "كم مرة ينبغي لـ Boost تحيين جميع ملفات RRD"
+msgstr "كم مرة ينبغي ل Boost تحيين جميع ملفات RRD"
 
 #: include/global_settings.php
 msgid "How do you wish fonts to be handled by default?"
@@ -8463,7 +8463,7 @@ msgstr "كم عدد ملفات السجل التي ترغب في الاحتفا�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "كل كم من الوقت تريد تحيين عرض سجل Kadupul."
+msgstr "كل كم من الوقت تريد تحيين عرض سجل Kadupul؟"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8471,7 +8471,7 @@ msgstr "كيف ينبغي أن يدعم Kadupul تواريخ العميل بنا
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "كيف سيتعامل Kadupul مع تسجيل الأحداث."
+msgstr "كيف سيتعامل Kadupul مع تسجيل الأحداث؟"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8515,7 +8515,7 @@ msgstr "إذا تجاوز جدول مخرجات Boost هذا الحجم من ح�
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "إذا تجاوز مستطلِع Boost وقت التشغيل هذا، فسيتم وضع تحذير في سجل Cacti،"
+msgstr "إذا تجاوز مستطلِع Boost وقت التشغيل هذا، فسيتم وضع تحذير في سجل Cacti."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8739,7 +8739,7 @@ msgstr "الحد الأقصى لعدد الصفوف في كل صفحة"
 
 #: include/global_settings.php
 msgid "Memory Limit for Boost and Poller"
-msgstr "حد الذاكرة لـ Boost و Poller"
+msgstr "حد الذاكرة ل Boost و Poller"
 
 #: include/global_settings.php
 msgid "Memory Limit for Data Source Statistics Data Collector"
@@ -8955,7 +8955,7 @@ msgstr "المشرف الأساسي"
 
 #: include/global_settings.php
 msgid "Primary DNS IP Address"
-msgstr "عنوان IP الأساسي لـ DNS"
+msgstr "عنوان IP الأساسي ل DNS"
 
 #: include/global_settings.php
 msgid "Privacy Passphrase (v3)"
@@ -8995,11 +8995,11 @@ msgstr "مهلة RRDChecker"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean"
-msgstr "التنظيف التلقائي لـ RRDfile"
+msgstr "التنظيف التلقائي ل RRDfile"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean Method"
-msgstr "طريقة التنظيف التلقائي لـ RRDfile"
+msgstr "طريقة التنظيف التلقائي ل RRDfile"
 
 #: include/global_settings.php
 msgid "RRDfile Backup Directory"
@@ -9187,7 +9187,7 @@ msgstr "حجم الجلب في SNMP Bulkwalk"
 
 #: include/global_settings.php
 msgid "SNMP Defaults"
-msgstr "الإعدادات الافتراضية لـ SNMP"
+msgstr "الإعدادات الافتراضية ل SNMP"
 
 #: include/global_settings.php
 msgid "SNMP Get OID Limit"
@@ -9227,7 +9227,7 @@ msgstr "تصفية البحث المستخدمة لتحديد موقع المس�
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
-msgstr "عنوان IP الثانوي لـ DNS"
+msgstr "عنوان IP الثانوي ل DNS"
 
 #: include/global_settings.php
 msgid "Security Level"
@@ -9275,7 +9275,7 @@ msgstr "الخادم (الخوادم)"
 
 #: include/global_settings.php
 msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
-msgstr "هل ينبغي لـ Boost تمكين تحيين RRD عند الطلب في Kadupul؟ إذا عطّلته، فلن يسري هذا التغيير إلا بعد دورة الاستطلاع التالية. عندما تكون لديك مجمّعات معطيات بعيدة، يجب أن يكون هذا الإعداد مفعّلاً."
+msgstr "هل ينبغي ل Boost تمكين تحيين RRD عند الطلب في Kadupul؟ إذا عطّلته، فلن يسري هذا التغيير إلا بعد دورة الاستطلاع التالية. عندما تكون لديك مجمّعات معطيات بعيدة، يجب أن يكون هذا الإعداد مفعّلاً."
 
 #: include/global_settings.php
 msgid "Should Data Source Statistics be collected for this Kadupul system?"
@@ -9283,7 +9283,7 @@ msgstr "هل ينبغي جمع إحصائيات مصادر المعطيات لن
 
 #: include/global_settings.php
 msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
-msgstr "هل ينبغي لـ LDAP التحقق من شهادات TLS عند استلامها من طرف العميل؟ يرفض الخياران Demand وHard الخادم الذي لا يتم التحقق من شهادته. بينما يتخطى الخياران Never وAllow هذا الفحص، مما يتيح لأي شخص على مسار الشبكة انتحال صفة الدليل وقراءة كلمات السر المرسلة إليه."
+msgstr "هل ينبغي ل LDAP التحقق من شهادات TLS عند استلامها من طرف العميل؟ يرفض الخياران Demand وHard الخادم الذي لا يتم التحقق من شهادته. بينما يتخطى الخياران Never وAllow هذا الفحص، مما يتيح لأي شخص على مسار الشبكة انتحال صفة الدليل وقراءة كلمات السر المرسلة إليه."
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
@@ -9295,7 +9295,7 @@ msgstr "هل يجب تمكين التخزين المؤقت للصور؟"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "تحديد خياري «يتوفر على مبيانات» و«يتوفر على مصادر معطيات» بشكل افتراضي."
+msgstr "هل يجب تحديد خياري «يتوفر على مبيانات» و«يتوفر على مصادر معطيات» بشكل افتراضي؟"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -9431,7 +9431,7 @@ msgstr "منفذ TCP لبروتوكول LDAPS لاتصالات SSL. القيمة
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
-msgstr "منفذ TCP للاتصالات غير المشفرة بـ SSL بما في ذلك LDAP + TLS. القيمة الافتراضية هي 389."
+msgstr "منفذ TCP للاتصالات غير المشفرة ب SSL بما في ذلك LDAP + TLS. القيمة الافتراضية هي 389."
 
 #: include/global_settings.php
 msgid "TCP port for encrypted communication with the backup proxy."
@@ -9535,7 +9535,7 @@ msgstr "فاصل التاريخ الافتراضي للنظام المراد ا�
 
 #: include/global_settings.php
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
-msgstr "المدة الزمنية، بالثواني، التي سينتظرها خادم الويب المركزي لـ Kadupul للحصول على استجابة من مجمّع المعطيات البعيد لجلب مختلف معلومات الجهاز قبل التخلي عن الطلب. بالنسبة للأجهزة المرتبطة بمجمّعات معطيات غير مجمّع المعطيات المركزي لـ Kadupul، يجب استعمال الوكيل البعيد لجمع معلومات الجهاز."
+msgstr "المدة الزمنية، بالثواني، التي سينتظرها خادم الويب المركزي ل Kadupul للحصول على استجابة من مجمّع المعطيات البعيد لجلب مختلف معلومات الجهاز قبل التخلي عن الطلب. بالنسبة للأجهزة المرتبطة بمجمّعات معطيات غير مجمّع المعطيات المركزي ل Kadupul، يجب استعمال الوكيل البعيد لجمع معلومات الجهاز."
 
 #: include/global_settings.php
 msgid "The color to be shown for business hours"
@@ -9595,7 +9595,7 @@ msgstr "شجرة المبيانات الافتراضية المستخدمة عن
 
 #: include/global_settings.php
 msgid "The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Kadupul's SNMP API natively in your scripts or plugins."
-msgstr "العدد الأقصى الافتراضي لمعرّفات SNMP Get OID المراد إصدارها في كل طلب snmpget. بالنسبة للأجهزة، يُتحكم في هذا الإعداد على مستوى الجهاز. يجب ألا تستعمل هذا الإعداد إلا عند استعمال واجهة برمجة تطبيقات SNMP الخاصة بـ Kadupul مباشرةً في سكربتاتك أو إضافاتك."
+msgstr "العدد الأقصى الافتراضي لمعرّفات SNMP Get OID المراد إصدارها في كل طلب snmpget. بالنسبة للأجهزة، يُتحكم في هذا الإعداد على مستوى الجهاز. يجب ألا تستعمل هذا الإعداد إلا عند استعمال واجهة برمجة تطبيقات SNMP الخاصة ب Kadupul مباشرةً في سكربتاتك أو إضافاتك."
 
 #: include/global_settings.php
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
@@ -9651,7 +9651,7 @@ msgstr "الخط المستعمل لعناصر وحدات المبيان. أدخ
 
 #: include/global_settings.php
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
-msgstr "التكرار الذي سيُشغّل به مجمّع معطيات Kadupul. يمكنك استعمال crontab أو مهمة مجدولة (لنظام windows) أو خدمة systemd الخاصة بـ cactid للتحكم في تشغيل مجمّع معطيات Kadupul. وللحصول على إرشادات حول استعمال خدمة cactid الخفية، راجع ملف README.md في مجلد الخدمة."
+msgstr "التكرار الذي سيُشغّل به مجمّع معطيات Kadupul. يمكنك استعمال crontab أو مهمة مجدولة (لنظام windows) أو خدمة systemd الخاصة ب cactid للتحكم في تشغيل مجمّع معطيات Kadupul. وللحصول على إرشادات حول استعمال خدمة cactid الخفية، راجع ملف README.md في مجلد الخدمة."
 
 #: include/global_settings.php
 msgid "The height of Thumbnail graphs in pixels."
@@ -9667,7 +9667,7 @@ msgstr "الحد الأقصى المسموح به لطول عناوين المب
 
 #: include/global_settings.php
 msgid "The maximum amount of memory for the Kadupul Poller and Boosts Poller"
-msgstr "الحد الأقصى لمقدار الذاكرة لـ Kadupul Poller و Boosts Poller"
+msgstr "الحد الأقصى لمقدار الذاكرة ل Kadupul Poller و Boosts Poller"
 
 #: include/global_settings.php
 msgid "The maximum amount of memory for the Kadupul Poller and Data Source Statistics Poller"
@@ -9795,7 +9795,7 @@ msgstr "المسار إلى الملف التنفيذي Spine."
 
 #: include/global_settings.php
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "المسار إلى ملف إعدادات Spine. افتراضياً، يكون في مجلد العمل الحالي (cwd) لـ Spine، أو في /etc إذا لم يتم تحديده."
+msgstr "المسار إلى ملف إعدادات Spine. افتراضياً، يكون في مجلد العمل الحالي (cwd) ل Spine، أو في /etc إذا لم يتم تحديده."
 
 #: include/global_settings.php
 msgid "The path to the rrdtool binary."
@@ -10036,7 +10036,7 @@ msgstr "يُستخدم عند تنسيق |date_time| على المبيان"
 
 #: include/global_settings.php
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
-msgstr "لتحسين الأداء، يحتاج مُحيّن RRD الخاص بـ Boost إلى معرفة عدد عناصر مصدر المعطيات التي يجب استردادها في تمريرة واحدة. يرجى الحرص على عدم تعيين قيمة مرتفعة جداً لأن ذلك قد يضعف أداء إنشاء المبيانات أثناء التحيينات الكبرى. إذا واجهت بطئاً في إنشاء المبيانات أو الاستطلاع أثناء التحيينات، فقم بتخفيض هذا الرقم. القيمة الافتراضية هي 50000."
+msgstr "لتحسين الأداء، يحتاج مُحيّن RRD الخاص ب Boost إلى معرفة عدد عناصر مصدر المعطيات التي يجب استردادها في تمريرة واحدة. يرجى الحرص على عدم تعيين قيمة مرتفعة جداً لأن ذلك قد يضعف أداء إنشاء المبيانات أثناء التحيينات الكبرى. إذا واجهت بطئاً في إنشاء المبيانات أو الاستطلاع أثناء التحيينات، فقم بتخفيض هذا الرقم. القيمة الافتراضية هي 50000."
 
 #: include/global_settings.php
 msgid "Tree History"
@@ -10092,7 +10092,7 @@ msgstr "قالب المستخدم"
 
 #: include/global_settings.php
 msgid "User defined number of lines for the CLOG to tail when selecting 'All lines'."
-msgstr "عدد الأسطر المحدد من طرف المستخدم لعرضها في سجل Cacti (CLOG) عند اختيار «جميع الأسطر»."
+msgstr "عدد الأسطر المحدد من طرف المستخدم لعرضها في سجل CLOG عند اختيار «جميع الأسطر»."
 
 #: include/global_settings.php
 msgid "Variance Based w/Outliers Removed"
@@ -10152,7 +10152,7 @@ msgstr "عند التحديد، ستتم إعادة توجيه أي محاولا
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "عند إنشاء تقرير جديد، ما نوع الصورة الذي يجب استخدامه للمبيانات المضمنة."
+msgstr "عند إنشاء تقرير جديد، ما نوع الصورة الذي يجب استخدامه للمبيانات المضمنة؟"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10428,12 +10428,12 @@ msgstr "الفرع الناتج"
 #: lib/api_automation.php
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
-msgstr "عنصر القاعدة [تعديل عنصر القاعدة لـ %s: %s]"
+msgstr "عنصر القاعدة [تعديل عنصر القاعدة ل %s: %s]"
 
 #: lib/api_automation.php
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
-msgstr "عنصر القاعدة [عنصر قاعدة جديد لـ %s: %s]"
+msgstr "عنصر القاعدة [عنصر قاعدة جديد ل %s: %s]"
 
 #: lib/api_automation.php
 msgid "Search Pattern"
@@ -10827,7 +10827,7 @@ msgstr "جارٍ التحقق من تغيير حقل الفرز.  لم يتم ا
 
 #: lib/data_query.php
 msgid "Click to show Data Query output for 'index'"
-msgstr "انقر لإظهار مخرجات استعلام المعطيات لـ 'index'"
+msgstr "انقر لإظهار مخرجات استعلام المعطيات ل 'index'"
 
 #: lib/data_query.php
 #, php-format
@@ -10875,7 +10875,7 @@ msgstr "خطأ في تحليل ملف XML إلى مصفوفة."
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
-msgstr "تنفيذ SNMP get لـ %s oids (%s)"
+msgstr "تنفيذ SNMP get ل %s oids (%s)"
 
 #: lib/data_query.php
 #, php-format
@@ -10944,7 +10944,7 @@ msgstr "تصفية قائمة الفهارس @ '%s' عدد الفهارس: %s"
 #: lib/data_query.php
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
-msgstr "تصحيح حقل 'method' الخاطئ لـ '%s' نظراً لتعريف 'rewrite_index' أو 'oid_suffix'"
+msgstr "تصحيح حقل 'method' الخاطئ ل '%s' نظراً لتعريف 'rewrite_index' أو 'oid_suffix'"
 
 #: lib/data_query.php
 #, php-format
@@ -11115,7 +11115,7 @@ msgstr "تم تخطي النتيجة للمعطيات @ '%s' [key='%s', value='%
 #: lib/data_query.php
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
-msgstr "لم يُرجع حقل الفرز أي معطيات لـ OID[%s]، تم التخطي."
+msgstr "لم يُرجع حقل الفرز أي معطيات ل OID[%s]، تم التخطي."
 
 #: lib/data_query.php
 #, php-format
@@ -11214,7 +11214,7 @@ msgstr "لم يتم تعيين مصدر المعطيات كنشط"
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "أرجع مصدر المعطيات نتائج غير صالحة لـ "
+msgstr "أرجع مصدر المعطيات نتائج غير صالحة ل "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -11413,7 +11413,7 @@ msgstr "الإصدار %s %s"
 #: lib/functions.php
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "تحذير: ملف التضمين الأساسي لـ Kadupul %s مفقود. يُرجى تحديد موقع هذا الملف واستبداله"
+msgstr "تحذير: ملف التضمين الأساسي ل Kadupul %s مفقود. يُرجى تحديد موقع هذا الملف واستبداله"
 
 #: lib/functions.php
 #, php-format
@@ -11528,7 +11528,7 @@ msgstr "تلقائي"
 
 #: lib/html.php
 msgid "Begin with"
-msgstr "يبدأ بـ"
+msgstr "يبدأ ب"
 
 #: lib/html.php
 msgid "CSV Export of Graph Data"
@@ -11637,7 +11637,7 @@ msgstr "تشغيل تجريبي لنطاق ملء الفجوات"
 
 #: lib/html.php
 msgid "Dry Run StdDev"
-msgstr "تشغيل تجريبي لـ StdDev"
+msgstr "تشغيل تجريبي ل StdDev"
 
 #: lib/html.php
 msgid "Edit Device"
@@ -11645,7 +11645,7 @@ msgstr "تعديل الجهاز"
 
 #: lib/html.php
 msgid "End with"
-msgstr "ينتهي بـ"
+msgstr "ينتهي ب"
 
 #: lib/html.php
 msgid "Enter a regular expression"
@@ -11709,7 +11709,7 @@ msgstr "Kadupul"
 
 #: lib/html.php
 msgid "Kadupul Home"
-msgstr "الصفحة الرئيسية لـ Kadupul"
+msgstr "الصفحة الرئيسية ل Kadupul"
 
 #: lib/html.php
 msgid "Kadupul Project Page"
@@ -12630,7 +12630,7 @@ msgstr "خطأ"
 
 #: lib/html_utility.php
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "التعبيرات النمطية في Kadupul محدودة بـ 50 حرفًا فقط لأسباب أمنية."
+msgstr "التعبيرات النمطية في Kadupul محدودة ب 50 حرفًا فقط لأسباب أمنية."
 
 #: lib/html_utility.php
 msgid "Kadupul regular expressions cannot include the semicolon character."
@@ -12912,7 +12912,7 @@ msgstr "تأكيد الترقية"
 
 #: lib/installer.php
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
-msgstr "قد يستغرق تحويل الجداول بعض الوقت خاصة على جداول أكبر. سيحدث تحويل هذه الجداول في الخلفية ولكن لن يمنع المثبّت من الاكتمال. قد يؤدي هذا إلى إبطاء بعض الخوادم إذا لم تكن هناك موارد كافية لـ MySQL للتعامل مع التحويل."
+msgstr "قد يستغرق تحويل الجداول بعض الوقت خاصة على جداول أكبر. سيحدث تحويل هذه الجداول في الخلفية ولكن لن يمنع المثبّت من الاكتمال. قد يؤدي هذا إلى إبطاء بعض الخوادم إذا لم تكن هناك موارد كافية ل MySQL للتعامل مع التحويل."
 
 #: lib/installer.php
 #, php-format
@@ -12934,7 +12934,7 @@ msgstr "مسارات وإصدارات الملفات التنفيذية الأس
 
 #: lib/installer.php
 msgid "Cron Interval"
-msgstr "الفاصل الزمني لـ Cron"
+msgstr "الفاصل الزمني ل Cron"
 
 #: lib/installer.php
 msgid "Current"
@@ -13057,7 +13057,7 @@ msgstr "فشل تطبيق تجاوز التنفيذ التلقائي المحد�
 
 #: lib/installer.php
 msgid "Failed to apply specified cron interval"
-msgstr "فشل تطبيق الفاصل الزمني المحدد لـ cron"
+msgstr "فشل تطبيق الفاصل الزمني المحدد ل cron"
 
 #: lib/installer.php
 #, php-format
@@ -13142,7 +13142,7 @@ msgstr "لقد قرأت هذا البيان"
 
 #: lib/installer.php
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
-msgstr "إذا كان SELinux مفعّلاً على خادمك، يمكنك إما تعطيله بشكل دائم، أو تعطيله مؤقتًا ثم إضافة الأذونات المناسبة باستخدام أدوات سطر الأوامر الخاصة بـ SELinux."
+msgstr "إذا كان SELinux مفعّلاً على خادمك، يمكنك إما تعطيله بشكل دائم، أو تعطيله مؤقتًا ثم إضافة الأذونات المناسبة باستخدام أدوات سطر الأوامر الخاصة ب SELinux."
 
 #: lib/installer.php
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
@@ -13230,7 +13230,7 @@ msgstr "إصدار Kadupul"
 
 #: lib/installer.php
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "يمكن لـ Kadupul فحص الشبكة تلقائيًا بمجرد اكتمال التثبيت. سيستخدم نطاق الشبكة أدناه لتحديد نطاق عناوين IP التي يمكن فحصها. تم تحديد مجموعة مسبقة من الخيارات للفحص تتضمن استخدام كل من مجتمعات 'public' و'private'."
+msgstr "يمكن ل Kadupul فحص الشبكة تلقائيًا بمجرد اكتمال التثبيت. سيستخدم نطاق الشبكة أدناه لتحديد نطاق عناوين IP التي يمكن فحصها. تم تحديد مجموعة مسبقة من الخيارات للفحص تتضمن استخدام كل من مجتمعات 'public' و'private'."
 
 #: lib/installer.php
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
@@ -13350,7 +13350,7 @@ msgstr "بمجرد اكتمال التثبيت، يجب ضبط مسار CSRF ع�
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "بمجرد ضبط جميع المتغيرات في ملف config.php، يجب أيضًا منح $rdatabase_username صلاحية الولوج إلى خادم قاعدة بيانات Kadupul الرئيسي. اتبع نفس الإجراء الذي تتبعه مع أي تثبيت آخر لـ Kadupul. يمكنك بعد ذلك الضغط على زر 'اختبار الاتصال'. إذا نجح الاختبار، فستتمكن من المتابعة وإكمال التثبيت."
+msgstr "بمجرد ضبط جميع المتغيرات في ملف config.php، يجب أيضًا منح $rdatabase_username صلاحية الولوج إلى خادم قاعدة بيانات Kadupul الرئيسي. اتبع نفس الإجراء الذي تتبعه مع أي تثبيت آخر ل Kadupul. يمكنك بعد ذلك الضغط على زر 'اختبار الاتصال'. إذا نجح الاختبار، فستتمكن من المتابعة وإكمال التثبيت."
 
 #: lib/installer.php
 msgid "One or more paths appear to be incorrect, unable to proceed"
@@ -13387,7 +13387,7 @@ msgstr "PHP - توصيات (%s)"
 
 #: lib/installer.php
 msgid "PHP Binary"
-msgstr "الملف التنفيذي لـ PHP"
+msgstr "الملف التنفيذي ل PHP"
 
 #: lib/installer.php
 msgid "PHP Recommendations ("
@@ -13427,7 +13427,7 @@ msgstr "يُرجى تحديد قوالب الأجهزة التي ترغب في �
 
 #: lib/installer.php
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
-msgstr "يُرجى تحديد ملف تعريف مصدر المعطيات الافتراضي لاستخدامه لمصادر الاستطلاع. يمثّل هذا الحد الأقصى للمدة الزمنية بين عمليات فحص الأجهزة للحصول على المعطيات، لذا كلما قلّ الفاصل الزمني للاستطلاع زاد العبء على مضيف خادم Kadupul. كذلك، حدد الفاصل الزمني لـ Cron المقصود أو المهيأ الذي ترغب في استخدامه لجمع المعطيات."
+msgstr "يُرجى تحديد ملف تعريف مصدر المعطيات الافتراضي لاستخدامه لمصادر الاستطلاع. يمثّل هذا الحد الأقصى للمدة الزمنية بين عمليات فحص الأجهزة للحصول على المعطيات، لذا كلما قلّ الفاصل الزمني للاستطلاع زاد العبء على مضيف خادم Kadupul. كذلك، حدد الفاصل الزمني ل Cron المقصود أو المهيأ الذي ترغب في استخدامه لجمع المعطيات."
 
 #: lib/installer.php
 msgid "Please select the type of installation"
@@ -13435,7 +13435,7 @@ msgstr "يرجى تحديد نوع التثبيت"
 
 #: lib/installer.php
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
-msgstr "يُرجى تحيين config.php بموقع URI النسبي الصحيح لـ Kadupul (url_path)."
+msgstr "يُرجى تحيين config.php بموقع URI النسبي الصحيح ل Kadupul (url_path)."
 
 #: lib/installer.php
 #, php-format
@@ -13623,7 +13623,7 @@ msgstr "تعذر على برنامج التثبيت المتابعة بسبب خ
 
 #: lib/installer.php
 msgid "The PHP binary location is not valid and must be updated."
-msgstr "موقع الملف التنفيذي لـ PHP غير صالح ويجب تحيينه."
+msgstr "موقع الملف التنفيذي ل PHP غير صالح ويجب تحيينه."
 
 #: lib/installer.php
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
@@ -13696,7 +13696,7 @@ msgstr "تساعد إعدادات ضبط أداء MySQL هذه على تحسين
 
 #: lib/installer.php
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
-msgstr "يجب أن تبقى هذه المجلدات قابلة للقراءة والكتابة بعد التثبيت حتى تتمكن عملية المزامنة عن بُعد في Kadupul من تحيينها عند تغيّر موقع الويب الرئيسي لـ Kadupul"
+msgstr "يجب أن تبقى هذه المجلدات قابلة للقراءة والكتابة بعد التثبيت حتى تتمكن عملية المزامنة عن بُعد في Kadupul من تحيينها عند تغيّر موقع الويب الرئيسي ل Kadupul"
 
 #: lib/installer.php
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
@@ -13742,7 +13742,7 @@ msgstr "للمتابعة، <b>يجب</b> إنشاء قاعدة بيانات جد
 
 #: lib/installer.php
 msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
-msgstr "لتسهيل تحديد طرق إدخال المعطيات في هذه الحالة، وفّرنا سكربت تحقق في دليل CLI الخاص بـ Kadupul يمكن تشغيله بالخيارات التالية:"
+msgstr "لتسهيل تحديد طرق إدخال المعطيات في هذه الحالة، وفّرنا سكربت تحقق في دليل CLI الخاص ب Kadupul يمكن تشغيله بالخيارات التالية:"
 
 #: lib/installer.php
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
@@ -13819,7 +13819,7 @@ msgstr "يجب تغيير قاعدة بيانات Kadupul يدويا للترا�
 
 #: lib/installer.php
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "<b>يجب</b> أيضًا استيراد معطيات المنطقة الزمنية لـ MySQL إلى MySQL ومنح مستخدم Kadupul صلاحية الولوج SELECT إلى جدول mysql.time_zone_name"
+msgstr "<b>يجب</b> أيضًا استيراد معطيات المنطقة الزمنية ل MySQL إلى MySQL ومنح مستخدم Kadupul صلاحية الولوج SELECT إلى جدول mysql.time_zone_name"
 
 #: lib/installer.php
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
@@ -13867,15 +13867,15 @@ msgstr "تحتوي تهيئة Kadupul على المسار النسبي الصح�
 
 #: lib/installer.php
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
-msgstr "يمتلك حساب قاعدة بيانات Kadupul الخاص بك صلاحية الولوج إلى قاعدة بيانات المنطقة الزمنية لـ MySQL، وهذه القاعدة مملوءة بمعطيات المناطق الزمنية العالمية."
+msgstr "يمتلك حساب قاعدة بيانات Kadupul الخاص بك صلاحية الولوج إلى قاعدة بيانات المنطقة الزمنية ل MySQL، وهذه القاعدة مملوءة بمعطيات المناطق الزمنية العالمية."
 
 #: lib/installer.php
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
-msgstr "لا يملك حساب الولوج إلى قاعدة بيانات Kadupul صلاحية الولوج إلى قاعدة بيانات المنطقة الزمنية لـ MySQL. يُرجى منح حساب قاعدة بيانات Kadupul صلاحية الولوج \"select\" إلى جدول \"time_zone_name\" في قاعدة بيانات \"mysql\"، وملء معطيات المنطقة الزمنية لـ MySQL قبل المتابعة."
+msgstr "لا يملك حساب الولوج إلى قاعدة بيانات Kadupul صلاحية الولوج إلى قاعدة بيانات المنطقة الزمنية ل MySQL. يُرجى منح حساب قاعدة بيانات Kadupul صلاحية الولوج \"select\" إلى جدول \"time_zone_name\" في قاعدة بيانات \"mysql\"، وملء معطيات المنطقة الزمنية ل MySQL قبل المتابعة."
 
 #: lib/installer.php
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
-msgstr "قاعدة بيانات المنطقة الزمنية لـ MySQL غير مملوءة. يرجى ملء قاعدة البيانات هذه قبل المتابعة."
+msgstr "قاعدة بيانات المنطقة الزمنية ل MySQL غير مملوءة. يرجى ملء قاعدة البيانات هذه قبل المتابعة."
 
 #: lib/installer.php
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
@@ -14063,12 +14063,12 @@ msgstr "افتراضي"
 #: lib/plugins.php
 #, php-format
 msgid "%s Version %s or above is required for %s. "
-msgstr "%s الإصدار %s أو أحدث مطلوب لـ %s. "
+msgstr "%s الإصدار %s أو أحدث مطلوب ل %s. "
 
 #: lib/plugins.php
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
-msgstr "%s مطلوب لـ %s، وهو غير مثبت. "
+msgstr "%s مطلوب ل %s، وهو غير مثبت. "
 
 #: lib/plugins.php
 msgid "Legacy Plugin"
@@ -14191,7 +14191,7 @@ msgstr "(مخصص)"
 
 #: lib/rrd.php
 msgid "CDP Prep Value (0)"
-msgstr "قيمة الإعداد المسبق لـ CDP (0)"
+msgstr "قيمة الإعداد المسبق ل CDP (0)"
 
 #: lib/rrd.php
 msgid "CDP Unknown Data points (0)"
@@ -14227,7 +14227,7 @@ msgstr "خطأ: ملف RRDfile %s غير قابل للكتابة"
 
 #: lib/rrd.php
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
-msgstr "خطأ: يحتوي المبيان على قيمة لا يمكن لـ RRDtool قبولها."
+msgstr "خطأ: يحتوي المبيان على قيمة لا يمكن ل RRDtool قبولها."
 
 #: lib/rrd.php
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
@@ -14314,7 +14314,7 @@ msgstr "معلومات ملف RRD"
 #: lib/rrd.php
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
-msgstr "يجب أن يكون الحد الأدنى لـ RRD لمصدر المعطيات '%s' هو '%s'"
+msgstr "يجب أن يكون الحد الأدنى ل RRD لمصدر المعطيات '%s' هو '%s'"
 
 #: lib/rrd.php
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
@@ -14330,7 +14330,7 @@ msgstr "أرشيف Round Robin"
 
 #: lib/rrd.php
 msgid "The Graph contains a value RRDtool cannot accept."
-msgstr "يحتوي المبيان على قيمة لا يمكن لـ RRDtool قبولها."
+msgstr "يحتوي المبيان على قيمة لا يمكن ل RRDtool قبولها."
 
 #: lib/rrd.php
 #, php-format
@@ -14350,7 +14350,7 @@ msgstr "عدد الصفوف لمعرّف Kadupul RRA '%s' غير صحيح. عد�
 #: lib/rrd.php
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
-msgstr "قيمة pdp_per_row لـ '%s' غير صالحة لـ RRA '%s'، ويجب أن تكون '%s'. يُرجى النظر في حذفه والسماح لـ Kadupul بإعادة إنشاء ملف RRDfile."
+msgstr "قيمة pdp_per_row ل '%s' غير صالحة ل RRA '%s'، ويجب أن تكون '%s'. يُرجى النظر في حذفه والسماح ل Kadupul بإعادة إنشاء ملف RRDfile."
 
 #: lib/rrd.php
 #, php-format
@@ -14386,7 +14386,7 @@ msgstr "تتطلب تهيئة تخزين RRD الانتباه"
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr "تخزين RRD غير جاهز للولوج المنسّق. فعّل PHP POSIX وهيّئ القيم الرقمية لـ rrd_maintenance_trusted_uids و rrd_maintenance_trusted_gids في include/config.php لكل حساب خدمة ويب ومستطلع. أزل صلاحيات الكتابة للعموم وتحقق من المجلدات العليا للتخزين. راجع docs/testing/spikekill-safety.md قبل الترقية."
+msgstr "تخزين RRD غير جاهز للولوج المنسّق. فعّل PHP POSIX وهيّئ القيم الرقمية ل rrd_maintenance_trusted_uids و rrd_maintenance_trusted_gids في include/config.php لكل حساب خدمة ويب ومستطلع. أزل صلاحيات الكتابة للعموم وتحقق من المجلدات العليا للتخزين. راجع docs/testing/spikekill-safety.md قبل الترقية."
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
@@ -14500,7 +14500,7 @@ msgstr "خطأ فادح: يجب أن يكون عدد القيم الشاذة ا�
 
 #: lib/spikekill.php
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
-msgstr "خطأ فادح: يجب أن يكون الوسيطان outlier-start و outlier-end بتنسيق YYYY-MM-DD HH:MM أو طابعًا زمنيًا لـ unix."
+msgstr "خطأ فادح: يجب أن يكون الوسيطان outlier-start و outlier-end بتنسيق YYYY-MM-DD HH:MM أو طابعًا زمنيًا ل unix."
 
 #: lib/spikekill.php
 #, php-format
@@ -14571,7 +14571,7 @@ msgstr "MinValue"
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
-msgstr "ملاحظة: جارٍ النسخ الاحتياطي لـ '%s' إلى '%s'"
+msgstr "ملاحظة: جارٍ النسخ الاحتياطي ل '%s' إلى '%s'"
 
 #: lib/spikekill.php
 msgid "NOTE: Dryrun requested.  No updates performed"
@@ -14705,7 +14705,7 @@ msgstr "خطأ: فشل التحقق من القائمة البيضاء. تحقق
 #: lib/template.php
 #, php-format
 msgid "Graph Not created for %s due to bad data"
-msgstr "لم يتم إنشاء المبيان لـ %s بسبب معطيات غير صالحة"
+msgstr "لم يتم إنشاء المبيان ل %s بسبب معطيات غير صالحة"
 
 #: lib/template.php
 #, php-format
@@ -14805,7 +14805,7 @@ msgstr "يتحقق أقصى أداء للإدخال/الإخراج عند است
 
 #: lib/utility.php
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
-msgstr "يُعد كل من MySQL 5.6+ وMariaDB 10.0+ إصدارين ممتازين وجيدين جدًا للاختيار. مع ذلك، تأكد من تشغيل أحدث إصدار، إذ يُصلح مشكلة شبكات منخفضة المستوى طويلة الأمد كانت تسبب لـ spine العديد من المشكلات المتعلقة بالموثوقية."
+msgstr "يُعد كل من MySQL 5.6+ وMariaDB 10.0+ إصدارين ممتازين وجيدين جدًا للاختيار. مع ذلك، تأكد من تشغيل أحدث إصدار، إذ يُصلح مشكلة شبكات منخفضة المستوى طويلة الأمد كانت تسبب ل spine العديد من المشكلات المتعلقة بالموثوقية."
 
 #: lib/utility.php
 msgid "Note: Many changes below require a database restart"
@@ -14827,7 +14827,7 @@ msgstr "لا ينبغي للاستعلامات الشاردة أن تتسبب ف
 #: lib/utility.php
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
-msgstr "يعني ضبط هذه القيمة على 2 أنك ستقوم بتفريغ جميع المعاملات كل ثانية بدلًا من إتمامها عند كل تثبيت (commit). وهذا يتيح لـ %s تقليل عدد عمليات الكتابة."
+msgstr "يعني ضبط هذه القيمة على 2 أنك ستقوم بتفريغ جميع المعاملات كل ثانية بدلًا من إتمامها عند كل تثبيت (commit). وهذا يتيح ل %s تقليل عدد عمليات الكتابة."
 
 #: lib/utility.php
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
@@ -14847,7 +14847,7 @@ msgstr "عند تنفيذ الاستعلامات الفرعية، يؤدي تخ�
 
 #: lib/utility.php
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
-msgstr "عند تنفيذ عمليات الربط (joins)، إذا كانت أقل من هذا الحجم فسيتم الاحتفاظ بها في الذاكرة ولن تُكتب أبدًا في ملف مؤقت. ونظرًا لأن هذا التخصيص للذاكرة يتم لكل اتصال، يجب الحرص على عدم زيادته بشكل مفرط. يجب أن يكون مجموع join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + الذاكرة الأساسية لـ MySQL/MariaDB أقل من 80%. إذا كانت التوصية سالبة، يجب تقليل هذه القيمة و/أو sort_buffer_size حتى تتوافق التوصية مع الذاكرة المتاحة."
+msgstr "عند تنفيذ عمليات الربط (joins)، إذا كانت أقل من هذا الحجم فسيتم الاحتفاظ بها في الذاكرة ولن تُكتب أبدًا في ملف مؤقت. ونظرًا لأن هذا التخصيص للذاكرة يتم لكل اتصال، يجب الحرص على عدم زيادته بشكل مفرط. يجب أن يكون مجموع join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + الذاكرة الأساسية ل MySQL/MariaDB أقل من 80%. إذا كانت التوصية سالبة، يجب تقليل هذه القيمة و/أو sort_buffer_size حتى تتوافق التوصية مع الذاكرة المتاحة."
 
 #: lib/utility.php
 #, php-format
@@ -15252,7 +15252,7 @@ msgstr "خطأ: مسار ملف غير صالح."
 
 #: package_import.php
 msgid "File Differences for: "
-msgstr "اختلافات الملف لـ: "
+msgstr "اختلافات الملف ل: "
 
 #: package_import.php
 msgid "Filename"
@@ -15546,7 +15546,7 @@ msgstr "سيؤدي إلغاء تثبيت هذا المكوّن الإضافي إ
 #: poller.php
 #, php-format
 msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
-msgstr "خطأ: مسار الملف التنفيذي لـ PHP: %s غير صالح لمعرّف المستطلع %d. لا يمكن للمستطلع المتابعة!"
+msgstr "خطأ: مسار الملف التنفيذي ل PHP: %s غير صالح لمعرّف المستطلع %d. لا يمكن للمستطلع المتابعة!"
 
 #: poller.php
 #, php-format
@@ -15600,7 +15600,7 @@ msgstr "يتطلب تقرير Kadupul Automation عميل بريد إلكترو�
 
 #: poller_automation.php
 msgid "Kadupul Primary Admin"
-msgstr "المسؤول الرئيسي لـ Kadupul"
+msgstr "المسؤول الرئيسي ل Kadupul"
 
 #: poller_automation.php
 #, php-format
@@ -15936,7 +15936,7 @@ msgstr "عدد عمليات جلب SNMP المرتبطة بهذا المجمع."
 
 #: pollers.php
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "عدد خيوط المعالجة لـ Spine المستخدمة لكل عملية مجمّع معطيات."
+msgstr "عدد خيوط المعالجة ل Spine المستخدمة لكل عملية مجمّع معطيات."
 
 #: pollers.php
 msgid "The number of script calls associated with this Data Collector."
@@ -16120,7 +16120,7 @@ msgstr "المكونات الإضافية المحددة"
 
 #: settings.php
 msgid "Poller Interval must be less than Cron Interval"
-msgstr "يجب أن يكون الفاصل الزمني للمستطلع أقل من الفاصل الزمني لـ Cron"
+msgstr "يجب أن يكون الفاصل الزمني للمستطلع أقل من الفاصل الزمني ل Cron"
 
 #: settings.php
 msgid "Select File(s)"
@@ -17937,7 +17937,7 @@ msgstr "أدوات نظام Kadupul"
 
 #: utilities.php
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
-msgstr "صفحة الدعم الفني لـ Kadupul. يستخدمها المطورون وموظفو الدعم الفني للمساعدة في حل المشكلات في Kadupul. تتضمن فحوصات لمشكلات التهيئة الشائعة."
+msgstr "صفحة الدعم الفني ل Kadupul. يستخدمها المطورون وموظفو الدعم الفني للمساعدة في حل المشكلات في Kadupul. تتضمن فحوصات لمشكلات التهيئة الشائعة."
 
 #: utilities.php
 msgid "Last End Time:"
@@ -17997,7 +17997,7 @@ msgstr "أقصى ذاكرة أساسية ممكنة"
 
 #: utilities.php
 msgid "Max OID"
-msgstr "الحد الأقصى لـ OID"
+msgstr "الحد الأقصى ل OID"
 
 #: utilities.php
 msgid "Max Poller Memory Allowed:"
@@ -18336,7 +18336,7 @@ msgstr "ستتم إعادة إنشاء ذاكرة التخزين المؤقت ل
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
-msgstr "سيتم مسح ذاكرة التخزين المؤقت لـ SNMP وإعادة إنشائها إذا حددت هذا الخيار. لاحظ أن الأمر يتطلب تشغيلًا آخر للمستطلع لاستعادة ذاكرة التخزين المؤقت لـ SNMP بالكامل."
+msgstr "سيتم مسح ذاكرة التخزين المؤقت ل SNMP وإعادة إنشائها إذا حددت هذا الخيار. لاحظ أن الأمر يتطلب تشغيلًا آخر للمستطلع لاستعادة ذاكرة التخزين المؤقت ل SNMP بالكامل."
 
 #: utilities.php
 msgid "The minimum required can vary greatly if there is heavy user Graph viewing activity."
@@ -18561,3 +18561,5 @@ msgstr "VDEFs [جديد]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "لا يمكن حذف VDEFs قيد الاستخدام. يُعرّف الاستخدام بكونه مشارًا إليه من طرف مبيان أو قالب مبيان."
+
+

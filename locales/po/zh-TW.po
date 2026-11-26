@@ -2635,7 +2635,7 @@ msgstr "按一下以僅在即時模式檢視此圖表"
 
 #: graph.php lib/html.php
 msgid "Edit Graph Template"
-msgstr "編輯圖表模板。"
+msgstr "編輯圖表模板"
 
 #: graph.php
 msgid "GRAPH DOES NOT EXIST"
@@ -3255,7 +3255,7 @@ msgstr "這些圖表正在使用以下數據源。"
 
 #: graphs.php
 msgid "The following Data Sources are in use by these Graphs:"
-msgstr "這些圖表正在使用以下數據源。"
+msgstr "這些圖表正在使用以下資料來源："
 
 #: graphs.php
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
@@ -3339,7 +3339,7 @@ msgstr "編輯此裝置"
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "為 ID 為“%s”的數據查詢“%s”解析數據查詢資源 XML 文件時出錯"
+msgstr "剖析資料查詢 '%s'（ID 為 '%s'）的資料查詢資源 XML 檔案時發生錯誤"
 
 #: graphs_new.php
 #, php-format
@@ -3349,7 +3349,7 @@ msgstr "剖析資料查詢 '%s'（ID 為 '%s'）的資料查詢資源 XML 檔案
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "為 ID 為“%s”的數據查詢“%s”解析數據查詢資源 XML 文件時出錯"
+msgstr "剖析資料查詢 '%s'（ID 為 '%s'）的資料查詢資源 XML 檔案時發生錯誤"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -4584,7 +4584,7 @@ msgstr "ICMP Ping"
 
 #: include/global_arrays.php
 msgid "ILO, IPMI, iDrac, etc."
-msgstr "ILO、IPMI、iDrac 等"
+msgstr "ILO、IPMI、iDrac 等。"
 
 #: include/global_arrays.php
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -5057,7 +5057,7 @@ msgstr "葡萄牙文（巴西）"
 
 #: include/global_arrays.php
 msgid "Power Related PDUs/STS, etc."
-msgstr "電源相關（PDU/STS 等）"
+msgstr "電源相關（PDU/STS 等）。"
 
 #: include/global_arrays.php lib/html_filter.php lib/html_graph.php
 #: lib/html_tree.php
@@ -7035,7 +7035,7 @@ msgstr "傳送至指令碼的資料，包含指令碼的完整路徑以及置於
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "從資料來源收集資料的頻率？"
+msgstr "從資料來源收集資料的頻率。"
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7251,7 +7251,7 @@ msgstr "垂直標籤 (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "此裝置關聯的站台。"
+msgstr "此裝置關聯的站台為何？"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8359,7 +8359,7 @@ msgstr "您希望保留多少個日誌檔？使用 0 表示永不移除任何日
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "您希望 Kadupul 日誌顯示多久更新一次。"
+msgstr "您希望 Kadupul 日誌顯示多久更新一次？"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8367,7 +8367,7 @@ msgstr "Kadupul 應如何依據用戶端瀏覽器的時區來支援用戶端日�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul 將如何處理事件記錄。"
+msgstr "Kadupul 將如何處理事件記錄？"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8411,7 +8411,7 @@ msgstr "若 Boost 輸出資料表超過此筆數上限，系統將會進行更�
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "如果 boost poller 超過此執行時間，將在 Cacti 日誌中記錄警告，"
+msgstr "如果 boost poller 超過此執行時間，將在 Cacti 日誌中記錄警告。"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9119,7 +9119,7 @@ msgstr "用於搜索LDAP目錄的搜索庫，例如<i>“dc = win2kdomain，dc =
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>&#39;（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））&#39;</i>或OpenLDAP： <i>&#39;（＆（objectClass） = account）（uid = &lt;username&gt;））&#39;</i> 。 &#39;&lt;username&gt;&#39;將替換為登錄提示符下提供的用戶名。"
+msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>&#39;（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））&#39;</i>或OpenLDAP： <i>&#39;（＆（objectClass） = account）（uid = &lt;username&gt;））&#39;</i> 。 &#39;&lt;username&gt;&#39;將替換為登錄提示符下提供的用戶名。 "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9191,7 +9191,7 @@ msgstr "是否應啟用圖片快取？"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "預設是否應勾選「有圖表」與「有資料來源」。"
+msgstr "預設是否應勾選「有圖表」與「有資料來源」？"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -9603,7 +9603,7 @@ msgstr "電子郵件消息的最大大小，包括所有附件。"
 
 #: include/global_settings.php
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
-msgstr "Kadupul等待腳本完成的最長時間。此超時值以秒為單位"
+msgstr "spine 等待指令碼完成的最長時間。此逾時值以秒為單位，且僅適用於 spine 資料收集器。"
 
 #: include/global_settings.php
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
@@ -10048,7 +10048,7 @@ msgstr "勾選時，任何存取 Kadupul 的嘗試都將重新導向至 HTTPS �
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "建立新報表時，內嵌圖表應使用何種圖片類型。"
+msgstr "建立新報表時，內嵌圖表應使用何種圖片類型？"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10495,7 +10495,7 @@ msgstr "已授予"
 
 #: lib/auth.php
 msgid "Granted By: "
-msgstr "授予者："
+msgstr "授予者： "
 
 #: lib/auth.php
 #, php-format
@@ -11110,7 +11110,7 @@ msgstr "資料來源未設為作用中"
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "資料來源傳回錯誤結果："
+msgstr "資料來源傳回錯誤結果，對象為 "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -11122,7 +11122,7 @@ msgstr "5 次輪詢後偵錯仍未完成"
 
 #: lib/dsdebug.php
 msgid "Failed fields: "
-msgstr "失敗的欄位："
+msgstr "失敗的欄位： "
 
 #: lib/dsdebug.php
 msgid "No issues found"
@@ -12743,7 +12743,7 @@ msgstr "此處顯示設定資料夾權限的範例，但您可能需要依據作
 
 #: lib/installer.php
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "若定序不符，外掛程式建立的資料表在與 Kadupul 核心資料表關聯時可能會發生問題。請執行下列命令，確保您的資料庫已變更為 'utf8mb4_unicode_ci'："
+msgstr "若定序不符，外掛程式建立的資料表在與 Kadupul 核心資料表關聯時可能會發生問題。請執行下列命令，確保您的資料庫已變更為 'utf8mb4_unicode_ci'： "
 
 #: lib/installer.php package_import.php plugins.php
 msgid "Author"
@@ -13254,7 +13254,7 @@ msgstr "一個或多個路徑似乎不正確，無法繼續"
 
 #: lib/installer.php
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
-msgstr "有一個或多個資料表過大，無法在安裝期間轉換。您應使用 cli/convert_tables.php 指令碼執行轉換，然後重新整理此頁面。例如："
+msgstr "有一個或多個資料表過大，無法在安裝期間轉換。您應使用 cli/convert_tables.php 指令碼執行轉換，然後重新整理此頁面。例如： "
 
 #: lib/installer.php
 msgid "Optional"
@@ -13959,12 +13959,12 @@ msgstr "預設"
 #: lib/plugins.php
 #, php-format
 msgid "%s Version %s or above is required for %s. "
-msgstr "%s 版本 %s 或以上為 %s 所需。"
+msgstr "%s 版本 %s 或以上為 %s 所需。 "
 
 #: lib/plugins.php
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
-msgstr "%s 為 %s 所需，但尚未安裝。"
+msgstr "%s 為 %s 所需，但尚未安裝。 "
 
 #: lib/plugins.php
 msgid "Legacy Plugin"
@@ -14158,7 +14158,7 @@ msgstr "資料來源 '%s' 的心跳間隔應為 '%s'"
 #: lib/rrd.php
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "Kadupul RRA '%s' 與 '%s' 具有相同的 CF/steps (%s, %s)"
+msgstr "Kadupul RRA '%s' 的 CF/steps (%s, %s) 與 '%s' 相同"
 
 #: lib/rrd.php
 msgid "Last DS"
@@ -15133,7 +15133,7 @@ msgstr "錯誤：無效的檔案路徑。"
 
 #: package_import.php
 msgid "File Differences for: "
-msgstr "檔案差異："
+msgstr "檔案差異： "
 
 #: package_import.php
 msgid "Filename"
@@ -17704,7 +17704,7 @@ msgstr "可能的最大連線記憶體"
 
 #: utilities.php
 msgid "Max Core Memory Possible"
-msgstr "允許的最大輪詢內存："
+msgstr "最大可用核心記憶體"
 
 #: utilities.php
 msgid "Max OID"
@@ -17724,7 +17724,7 @@ msgstr "最大執行緒數"
 
 #: utilities.php
 msgid "Max Total Memory Possible"
-msgstr "允許的最大輪詢內存："
+msgstr "最大可用總記憶體"
 
 #: utilities.php
 msgid "Maximum Allowed Runtime:"
@@ -17760,7 +17760,7 @@ msgstr "注意：在大型系統上，此命令可能需要數分鐘至數小時
 
 #: utilities.php
 msgid "Name: "
-msgstr "名稱："
+msgstr "名稱： "
 
 #: utilities.php
 msgid "Never Run"
@@ -18043,7 +18043,7 @@ msgstr "Kadupul 日誌會依據系統設定儲存統計資料、錯誤及其他�
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "如果選擇此選項，將重新生成輪詢器緩存。如果在崩潰後遇到問題並且已經運行數據庫修復工具，則僅在發生數據庫崩潰時使用此選項。或者，如果您遇到特定設備的問題，只需重新保存該設備即可重建其輪詢器緩存。還有一個與此命令等效的命令行界面，建議用於大型系統。 <i class=\"deviceDown\">注意：在大型系統上，此命令可能需要幾分鐘到幾小時才能完成，因此不應從Kadupul UI運行。您可以在命令行中運行&#39;php -q cli / rebuild_poller_cache.php --help&#39;以獲取更多信息。</i>"
+msgstr "如果選擇此選項，將重新產生輪詢器快取。請僅在發生資料庫損毀、且在執行資料庫修復工具後仍遇到問題時才使用此選項。或者，若特定裝置發生問題，只需重新儲存該裝置即可重建其輪詢器快取。此外，還有一個與此命令等效的命令列介面，建議用於大型系統。"
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
@@ -18252,3 +18252,5 @@ msgstr "VDEF [新增]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "無法刪除使用中的 VDEF。使用中是指正在被圖表或圖表範本參照。"
+
+

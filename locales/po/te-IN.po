@@ -3359,17 +3359,17 @@ msgstr "ఈ పరికరాన్ని సవరించండి"
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "'%s' ID గల డేటా క్వెరీ '%s' కోసం డేటా క్వెరీ రిసోర్స్ XML ఫైల్‌ను పార్స్ చేయడంలో లోపం"
+msgstr "డేటా క్వెరీ '%s' (ID: '%s') కోసం డేటా క్వెరీ రిసోర్స్ XML ఫైల్‌ను పార్స్ చేయడంలో లోపం"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "'%s' ID గల డేటా క్వెరీ '%s' కోసం డేటా క్వెరీ రిసోర్స్ XML ఫైల్‌ను పార్స్ చేయడంలో లోపం. ఫీల్డ్ పేరు '%s' లో 'direction' ఆట్రిబ్యూట్ లేదు"
+msgstr "డేటా క్వెరీ '%s' (ID: '%s') కోసం డేటా క్వెరీ రిసోర్స్ XML ఫైల్‌ను పార్స్ చేయడంలో లోపం. ఫీల్డ్ పేరు '%s' లో 'direction' ఆట్రిబ్యూట్ లేదు"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "'%s' ID గల డేటా క్వెరీ '%s' కోసం డేటా క్వెరీ రిసోర్స్ XML ఫైల్‌ను పార్స్ చేయడంలో లోపం"
+msgstr "డేటా క్వెరీ '%s' (ID: '%s') కోసం డేటా క్వెరీ రిసోర్స్ XML ఫైల్‌ను పార్స్ చేయడంలో లోపం"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -7055,7 +7055,7 @@ msgstr "స్క్రిప్ట్‌కు పంపబడే డేటా,
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "డేటా మూలం నుండి డేటా సేకరించబడే ఫ్రీక్వెన్సీ?"
+msgstr "డేటా మూలం నుండి డేటా సేకరించబడే ఫ్రీక్వెన్సీ."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "నిలువు లేబుల్ (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "ఈ పరికరం ఏ సైట్‌తో అనుబంధించబడింది."
+msgstr "ఈ పరికరం ఏ సైట్తో అనుబంధించబడింది?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "మీరు ఎన్ని లాగ్ ఫైళ్లను ని�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Kadupul లాగ్ ప్రదర్శన ఎంత తరచుగా నవీకరించబడాలని మీరు కోరుకుంటున్నారు."
+msgstr "Kadupul లాగ్ ప్రదర్శన ఎంత తరచుగా నవీకరించబడాలని మీరు కోరుకుంటున్నారు?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "క్లయింట్ బ్రౌజర్ల టైమ్‌జో�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul ఈవెంట్ లాగింగ్‌ను ఎలా నిర్వహిస్తుంది."
+msgstr "Kadupul ఈవెంట్ లాగింగ్ను ఎలా నిర్వహిస్తుంది?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "రికార్డులలో boost అవుట్‌పుట్ �
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "boost పోలర్ ఈ రన్‌టైమ్‌ను మించిపోతే, cacti లాగ్‌లో హెచ్చరిక ఉంచబడుతుంది,"
+msgstr "boost పోలర్ ఈ రన్టైమ్ను మించిపోతే, cacti లాగ్లో హెచ్చరిక ఉంచబడుతుంది."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "చిత్ర కాషింగ్ ప్రారంభించబ�
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Has Graphs మరియు Has Data Sources డిఫాల్ట్‌గా తనిఖీ చేయబడాలా."
+msgstr "Has Graphs మరియు Has Data Sources డిఫాల్ట్గా తనిఖీ చేయబడాలా?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "తనిఖీ చేసినప్పుడు, అధిక భద�
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "కొత్త నివేదికను సృష్టించేటప్పుడు, ఇన్‌లైన్ గ్రాఫ్‌ల కోసం ఏ చిత్ర రకాన్ని ఉపయోగించాలి."
+msgstr "కొత్త నివేదికను సృష్టించేటప్పుడు, ఇన్లైన్ గ్రాఫ్ల కోసం ఏ చిత్ర రకాన్ని ఉపయోగించాలి?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -11041,7 +11041,7 @@ msgstr "క్రమబద్ధీకరణ ఫీల్డ్ ఫీల్డ�
 #: lib/data_query.php
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
-msgstr "%2$2.4f ప్రతిస్పందనతో బల్క్ వాక్ పరిమాణం %1$d పరీక్షించబడింది."
+msgstr "బల్క్ వాక్ పరిమాణం %d పరీక్షించబడింది, ప్రతిస్పందన %2.4f."
 
 #: lib/data_query.php
 #, php-format
@@ -11130,7 +11130,7 @@ msgstr "డేటా సోర్స్ సక్రియంగా సెట్
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "డేటా సోర్స్ చెడు ఫలితాలను అందించింది: "
+msgstr "డేటా సోర్స్ చెడు ఫలితాలను అందించింది "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -11931,7 +11931,7 @@ msgstr "నిలువు వరుసలు"
 #: lib/html_graph.php
 #, php-format
 msgid "Create %s Graphs from %s"
-msgstr "%s నుండి %s గ్రాఫ్‌లను సృష్టించు"
+msgstr "%s గ్రాఫ్‌లను %s నుండి సృష్టించు"
 
 #: lib/html_graph.php
 #, php-format
@@ -12576,7 +12576,7 @@ msgstr "ధృవీకరణ లోపం"
 #: lib/html_validate.php
 #, php-format
 msgid "Validation error for variable %s with a value of %s.  See backtrace below for more details."
-msgstr "%s విలువతో వేరియబుల్ %s కోసం ధృవీకరణ లోపం. మరిన్ని వివరాల కోసం క్రింది బ్యాక్‌ట్రేస్ చూడండి."
+msgstr "వేరియబుల్ %s (విలువ: %s) కోసం ధృవీకరణ లోపం. మరిన్ని వివరాల కోసం క్రింది బ్యాక్‌ట్రేస్ చూడండి."
 
 #: lib/import.php
 msgid "Damaged"
@@ -13020,7 +13020,7 @@ msgstr "ఫైల్ కనుగొనబడలేదు"
 #: lib/installer.php
 #, php-format
 msgid "Finished %s Process for v%s"
-msgstr "v%s కోసం %s ప్రక్రియ పూర్తయింది"
+msgstr "%s ప్రక్రియ పూర్తయింది (v%s)"
 
 #: lib/installer.php
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
@@ -14168,7 +14168,7 @@ msgstr "డేటా ఫైల్‌ను తెరవడం విఫలమై
 #: lib/rrd.php
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "ఫైల్ RRA '%s' కు '%s' వలె అదే CF/దశలు (%s, %s) ఉన్నాయి"
+msgstr "ఫైల్ RRA '%s' లోని CF/దశలు (%s, %s) '%s' వలె ఒకేలా ఉన్నాయి"
 
 #: lib/rrd.php
 #, php-format
@@ -14821,7 +14821,7 @@ msgstr "ఈ VDEF కోసం ఉపయోగకరమైన పేరు."
 #: link.php
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr "'%s' శీర్షికతో ఉన్న బాహ్య లింక్ ID '%s' చెల్లని URL ను ఇంజెక్ట్ చేయడానికి ప్రయత్నించింది మరియు బ్లాక్ చేయబడింది!"
+msgstr "బాహ్య లింక్ ID '%s' (శీర్షిక: '%s') చెల్లని URL ను ఇంజెక్ట్ చేయడానికి ప్రయత్నించింది మరియు బ్లాక్ చేయబడింది!"
 
 #: links.php
 msgid "Apply Filter"
@@ -15464,7 +15464,7 @@ msgstr "Kadupul సిస్టమ్ నోటిఫికేషన్"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "పోలర్ id %d కోసం గరిష్ట రన్‌టైమ్ %d సెకన్లు మించిపోయింది. నిష్క్రమిస్తోంది."
+msgstr "గరిష్ట రన్‌టైమ్ %d సెకన్లు మించిపోయింది (పోలర్ ID %d కోసం). నిష్క్రమిస్తోంది."
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -18313,3 +18313,5 @@ msgstr "VDEFలు [కొత్తది]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "ఉపయోగంలో ఉన్న VDEFలను తొలగించలేరు. ఉపయోగంలో ఉండటం అంటే గ్రాఫ్ లేదా గ్రాఫ్ టెంప్లేట్ ద్వారా సూచించబడటం."
+
+

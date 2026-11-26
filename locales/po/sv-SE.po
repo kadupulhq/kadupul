@@ -2755,7 +2755,7 @@ msgstr "Klicka på \"Fortsätt\" för att synkronisera dina grafer med följande
 
 #: graph_templates.php
 msgid "Click 'Continue' to perform a Quick Synchronization of your Graphs for the following Graph Template(s). Use this option if your Graphs have Graph Items that do not match your Graph Template.  If this option does not work, use the Full Sync Graphs option, which will take more time to complete."
-msgstr "Klicka på \"Fortsätt\" för att synkronisera dina grafer med följande grafmallar. Den här funktionen är viktig om du har Grafer som finns med flera versioner av en grafmall och vill göra dem alla vanliga i utseende."
+msgstr "Klicka på \"Fortsätt\" för att utföra en snabbsynkronisering av dina grafer för följande grafmall(ar). Använd det här alternativet om dina grafer har grafobjekt som inte matchar din grafmall. Om det här alternativet inte fungerar, använd alternativet Fullständig synkronisering av grafer, som tar längre tid att slutföra."
 
 #: graph_templates.php
 msgid "Click 'Continue' to resize the following Graph Template(s) and Graph(s) to the Height and Width below.  The defaults below are maintained in Settings."
@@ -3027,7 +3027,7 @@ msgstr "Värd-ID"
 
 #: graph_xport.php
 msgid "Nth Percentile"
-msgstr "Nionde percentilen"
+msgstr "N:te percentilen"
 
 #: graph_xport.php
 msgid "Start Date"
@@ -5043,7 +5043,7 @@ msgstr "Tillstånd nekat.  Du har inte behörighet att utföra den begärda åtg
 
 #: include/global_arrays.php
 msgid "Ping"
-msgstr "Notifiera"
+msgstr "Ping"
 
 #: include/global_arrays.php
 msgid "Ping and SNMP Uptime"
@@ -6055,7 +6055,7 @@ msgstr "Tillåt tom inmatning"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Alternativt Y-nät (--alt-y-grid)"
+msgstr "Alternativt Y-rutnät (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6249,7 +6249,7 @@ msgstr "Dash Offset (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "Bindestreck (bindestreck[=på_s[,av_s[,på_s,av_s]...]]])"
+msgstr "Streckad linje (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php
 msgid "Data Retention"
@@ -7053,7 +7053,7 @@ msgstr "De data som skickas till skriptet, vilket inkluderar den fullständiga s
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Hur ofta data kommer att samlas in från datakällan?"
+msgstr "Hur ofta data kommer att samlas in från datakällan."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7269,7 +7269,7 @@ msgstr "Vertikal etikett (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Vilken plats är denna enhet kopplad till."
+msgstr "Vilken plats är denna enhet kopplad till?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7413,7 +7413,7 @@ msgstr "1 försök"
 
 #: include/global_settings.php
 msgid "1 Change"
-msgstr "1 Byte"
+msgstr "1 ändring"
 
 #: include/global_settings.php
 msgid "1 Column"
@@ -8377,7 +8377,7 @@ msgstr "Hur många loggfiler vill du behålla?  Använd 0 om du aldrig vill ta b
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Hur ofta du vill att Kadupul-loggdisplayen ska uppdateras."
+msgstr "Hur ofta vill du att Kadupul-loggdisplayen ska uppdateras?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8385,7 +8385,7 @@ msgstr "Hur ska Kadupul stödja klientdatum baserat på klientens webbläsares t
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Hur kommer Kadupul att hantera händelseloggning."
+msgstr "Hur kommer Kadupul att hantera händelseloggning?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8409,7 +8409,7 @@ msgstr "Om en datakälla för en enhet ingår i en aggregerad graf, visas den gr
 
 #: include/global_settings.php
 msgid "If a user authenticates and selects 'Keep me signed in', an authentication cookie will be created on the user's computer allowing that user to stay logged in.  The authentication cookie expires after 90 days of non-use."
-msgstr "Om en användare autentiserar och väljer \"Håll mig inloggad\" kommer en autentiseringskaka att skapas på användarens dator, så att användaren kan vara inloggad. Autentiseringskakan löper ut efter 90 dagar efter användning."
+msgstr "Om en användare autentiserar sig och väljer \"Håll mig inloggad\" kommer en autentiseringscookie att skapas på användarens dator så att användaren kan förbli inloggad. Autentiseringscookien upphör att gälla efter 90 dagar utan användning."
 
 #: include/global_settings.php
 msgid "If both main and backup proxy are receivable this option allows to spread all requests against RRDtool."
@@ -8429,7 +8429,7 @@ msgstr "Om boost output-tabellen överskrider denna storlek, i poster, kommer en
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Om boost-pollern överskrider denna körtid kommer en varning att placeras i Kadupul-loggen,"
+msgstr "Om boost-pollern överskrider denna körtid kommer en varning att placeras i Kadupul-loggen."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8889,7 +8889,7 @@ msgstr "Protokollversion"
 
 #: include/global_settings.php
 msgid "Protocol Version to connect to the server with."
-msgstr "Protokollversion som servern stöder."
+msgstr "Protokollversion att ansluta till servern med."
 
 #: include/global_settings.php
 msgid "Provided your RRDtool version supports it, you may disable RRDtool advertisement on your Graphs by checking this option."
@@ -8949,7 +8949,7 @@ msgstr "RSA fingeravtryck"
 
 #: include/global_settings.php
 msgid "Re-Index All Device Schedule"
-msgstr "Återinföra alla enhetsscheman"
+msgstr "Schema för omindexering av alla enheter"
 
 #: include/global_settings.php
 msgid "Re-index Method for Data Queries"
@@ -9137,7 +9137,7 @@ msgstr "Sök bas för att söka i LDAP-katalogen, till exempel <i>\"dc = win2kdo
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Sökfilter som ska användas för att hitta användaren i LDAP-katalogen, t.ex. för Windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*)</i> )' eller för OpenLDAP: ' <i>(&amp;(objectClass=account)(uid=&lt;username&amp;gt</i>))'. \"&lt;username&amp;gt\" ersätts med det användarnamn som angavs vid inloggningsprompten. "
+msgstr "Sökfilter som ska användas för att hitta användaren i LDAP-katalogen, t.ex. för Windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> eller för OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>. '&lt;username&gt' ersätts med det användarnamn som angavs vid inloggningsprompten. "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9209,7 +9209,7 @@ msgstr "Bör cachelagring av bilder aktiveras?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Bör alternativen Har grafer och Har datakällor vara markerade som standard."
+msgstr "Bör alternativen Har grafer och Har datakällor vara markerade som standard?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -9345,7 +9345,7 @@ msgstr "TCP-port för LDAPS för SSL-kommunikation. Standard är 636."
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
-msgstr "TCP / UDP-port för icke-SSL-kommunikation."
+msgstr "TCP-port för icke-SSL-kommunikation inklusive LDAP + TLS. Standard är 389."
 
 #: include/global_settings.php
 msgid "TCP port for encrypted communication with the backup proxy."
@@ -9377,7 +9377,7 @@ msgstr "Texten placeras längst ner i mitten av varje graf."
 
 #: include/global_settings.php user_domains.php
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
-msgstr "Syntaxen \"Distinguished Name\", som gäller för både OpenLDAP- och Windows AD-konfigurationer, ger flexibilitet när det gäller att definiera användaridentitet. För OpenLDAP följer formatet den här strukturen: <i>\"uid=&lt;användarnamn&gt;,ou=folk,dc=domän,dc=lokal</i>\". Windows AD tillhandahåller en alternativ syntax: <i>\"&lt;användarnamn&gt;@win2kdomain.local\"</i>, allmänt känt som \"userPrincipalName (UPN)\". I det här sammanhanget representerar \"&lt;användarnamn&gt;\" det specifika användarnamn som anges i inloggningsprompten. Detta är särskilt relevant när du arbetar i läget \"Ingen sökning\" eller \"Kräv gruppmedlemskap\" är aktiverat."
+msgstr "Syntaxen \"Distinguished Name\", som gäller för både OpenLDAP- och Windows AD-konfigurationer, ger flexibilitet när det gäller att definiera användaridentitet. För OpenLDAP följer formatet den här strukturen: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD tillhandahåller en alternativ syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, allmänt känd som \"userPrincipalName (UPN)\". I det här sammanhanget representerar \"&lt;username&gt;\" det specifika användarnamn som anges vid inloggningsprompten. Detta är särskilt relevant när du arbetar i läget \"Ingen sökning\" eller med \"Kräv gruppmedlemskap\" aktiverat."
 
 #: include/global_settings.php
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
@@ -9673,7 +9673,7 @@ msgstr "Antalet samtidiga boost-processer som ska användas för att bearbeta al
 
 #: include/global_settings.php
 msgid "The number of concurrent script server processes to run per spine process.  Settings between 1 and 15 are accepted.  This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector."
-msgstr "Antalet samtidiga skriptserverprocesser som ska köras per spine-process.  Inställningar mellan 1 och 15 accepteras.  Denna parameter är till hjälp om du kör flera trådar och skriptserverskript och gäller endast för datainsamlaren för ryggraden."
+msgstr "Antalet samtidiga skriptserverprocesser som ska köras per Spine-process. Inställningar mellan 1 och 15 accepteras. Denna parameter är till hjälp om du kör flera trådar och skriptserverskript och gäller endast för datainsamlaren Spine."
 
 #: include/global_settings.php
 msgid "The number of consecutive hours that represent the hourly average.  Keep in mind that a setting too high can result in very large memory tables"
@@ -10066,7 +10066,7 @@ msgstr "När den är markerad kommer alla försök att komma åt Kadupul att omd
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "När du skapar en ny rapport, vilken bildtyp ska användas för inline-graferna."
+msgstr "När du skapar en ny rapport, vilken bildtyp ska användas för inline-graferna?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -11724,7 +11724,7 @@ msgstr "Föregående"
 
 #: lib/html.php
 msgid "Quick"
-msgstr "Snabbläge: Lyckad koppling"
+msgstr "Snabb"
 
 #: lib/html.php
 msgid "RRDProxy"
@@ -12110,7 +12110,7 @@ msgstr "Klicka på \"Fortsätt\" för att skicka följande rapport (er) nu."
 
 #: lib/html_reports.php
 msgid "Click 'Continue' to take ownership of the following Report(s)."
-msgstr "Klicka på \"Fortsätt\" för att ta del av följande rapport (er)."
+msgstr "Klicka på \"Fortsätt\" för att ta över ägarskapet för följande rapport(er)."
 
 #: lib/html_reports.php
 msgid "Date/Time moved to the same time Tomorrow"
@@ -14326,7 +14326,7 @@ msgstr "SNMP-kommandot är: %s"
 
 #: lib/spikekill.php
 msgid "Avg"
-msgstr "Gen.sn."
+msgstr "Genomsnitt"
 
 #: lib/spikekill.php
 msgid "CF"
@@ -15138,7 +15138,7 @@ msgstr "Upphovsrätt"
 
 #: package_import.php
 msgid "Device class"
-msgstr "Enhetsregler"
+msgstr "Enhetsklass"
 
 #: package_import.php templates_import.php
 msgid "Differences"
@@ -15525,7 +15525,7 @@ msgstr "Rensa statistik"
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
 msgstr[0] "Rensa statistik för datainsamlare"
-msgstr[1] "Tydlig statistik för datainsamlare"
+msgstr[1] "Rensa statistik för datainsamlare"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
@@ -15802,7 +15802,7 @@ msgstr "Antalet SNMP-meddelanden som är associerade med denna Collector."
 
 #: pollers.php
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "Antalet ryggtrådar som ska användas per datainsamlingsprocess."
+msgstr "Antalet Spine-trådar som ska användas per datainsamlingsprocess."
 
 #: pollers.php
 msgid "The number of script calls associated with this Data Collector."
@@ -16073,8 +16073,8 @@ msgstr[1] "Ta bort platser"
 #: sites.php
 msgid "Duplicate Site"
 msgid_plural "Duplicate Sites"
-msgstr[0] "Duplicerad webbplats"
-msgstr[1] "Duplicera"
+msgstr[0] "Duplicera plats"
+msgstr[1] "Duplicera platser"
 
 #: sites.php
 msgid "Enter some useful information about the Site."
@@ -16648,8 +16648,8 @@ msgstr "Avpublicera"
 #: tree.php
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "Un-publicera Tree"
-msgstr[1] "Un-publicera Trees"
+msgstr[0] "Lås upp träd"
+msgstr[1] "Lås upp träd"
 
 #: tree.php
 msgid "Un-publish Tree"
@@ -17013,7 +17013,7 @@ msgstr "Tillstånd för träd %s"
 
 #: user_admin.php user_group_admin.php
 msgid "Tree Perms"
-msgstr "Permanentning av träd"
+msgstr "Trädbehörigheter"
 
 #: user_admin.php
 msgid "Unavailable"
@@ -17185,7 +17185,7 @@ msgstr "Sökbas för sökning i LDAP-katalogen, t.ex. <i>\"dc=win2kdomain,dc=loc
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Sökfilter som ska användas för att hitta användaren i LDAP-katalogen, t.ex. för Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*</i> ))\" eller för OpenLDAP: <i>\"(&amp;(objectClass=account)(uid=&lt;användarnamn&amp;gt)</i>)\".  \"&lt;användarnamn&amp;gt\" ersätts med det användarnamn som angavs vid inloggningsprompten."
+msgstr "Sökfilter som ska användas för att hitta användaren i LDAP-katalogen, t.ex. för Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> eller för OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>. \"&lt;username&gt\" ersätts med det användarnamn som angavs vid inloggningsprompten."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."
@@ -17335,7 +17335,7 @@ msgstr "Medlemskap"
 
 #: user_group_admin.php
 msgid "New Group"
-msgstr "Ny prisgrupp"
+msgstr "Ny grupp"
 
 #: user_group_admin.php
 msgid "No Matching Group Members Found"
@@ -18138,7 +18138,7 @@ msgstr "Trådar: "
 
 #: utilities.php
 msgid "Timed Out"
-msgstr "Tidsbestämd"
+msgstr "Tidsgräns överskreds"
 
 #: utilities.php
 msgid "Total Boost Records:"
@@ -18311,3 +18311,5 @@ msgstr "VDEF:er [ny]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF:er som är i bruk kan inte raderas. Används definieras som att den refereras av en Graph eller en Graph Template."
+
+

@@ -61,7 +61,7 @@ msgstr "Grafik Agregat yang Diakses Tidak Ada"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
-msgstr "Grafik Agregat tidak Ada"
+msgstr "Grafik Agregat Tidak Ada"
 
 #: aggregate_graphs.php include/global_arrays.php
 msgid "Aggregate Graphs"
@@ -1456,7 +1456,7 @@ msgstr "Warna Tanpa Nama"
 
 #: data_debug.php
 msgid "<not set>"
-msgstr "<tidak diatur>"
+msgstr "<not set>"
 
 #: data_debug.php data_sources.php data_templates.php plugins.php
 msgid "Active"
@@ -3452,7 +3452,7 @@ msgstr "Tambahkan Kueri Data ke Templat Perangkat"
 
 #: host_templates.php
 msgid "Add Graph Template"
-msgstr "Tambah Templat Grafik"
+msgstr "Tambahkan Templat Grafik"
 
 #: host_templates.php
 msgid "Add Graph Template to Device Template"
@@ -7034,7 +7034,7 @@ msgstr "Data yang dikirim ke skrip, yang mencakup jalur lengkap ke skrip dan sum
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Frekuensi pengumpulan data dari Sumber Data?"
+msgstr "Frekuensi pengumpulan data dari Sumber Data."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7250,7 +7250,7 @@ msgstr "Label Vertikal (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Situs mana yang terkait dengan Perangkat ini."
+msgstr "Situs mana yang terkait dengan Perangkat ini?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8358,7 +8358,7 @@ msgstr "Berapa banyak file log yang ingin Anda simpan? Gunakan 0 untuk tidak per
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Seberapa sering Anda ingin tampilan log Kadupul diperbarui."
+msgstr "Seberapa sering Anda ingin tampilan log Kadupul diperbarui?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8366,7 +8366,7 @@ msgstr "Bagaimana seharusnya Kadupul mendukung Tanggal Klien berdasarkan zona wa
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Bagaimana Kadupul akan menangani pencatatan peristiwa."
+msgstr "Bagaimana Kadupul akan menangani pencatatan peristiwa?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8410,7 +8410,7 @@ msgstr "Jika tabel output boost melebihi ukuran ini, dalam rekaman, pembaruan ak
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Jika poller boost melebihi waktu jalan ini, peringatan akan dicatat ke dalam log cacti,"
+msgstr "Jika poller boost melebihi waktu jalan ini, peringatan akan dicatat ke dalam log cacti."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9190,7 +9190,7 @@ msgstr "Haruskah caching gambar diaktifkan?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Haruskah Memiliki Grafik dan Memiliki Sumber Data Dicentang secara Default."
+msgstr "Haruskah Memiliki Grafik dan Memiliki Sumber Data Dicentang secara Default?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10047,7 +10047,7 @@ msgstr "Saat dicentang, setiap upaya untuk mengakses Kadupul akan dialihkan ke H
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Saat membuat laporan baru, jenis gambar apa yang harus digunakan untuk grafik inline."
+msgstr "Saat membuat laporan baru, jenis gambar apa yang harus digunakan untuk grafik inline?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10455,7 +10455,7 @@ msgstr "Akses Ditolak! Login Dinonaktifkan."
 
 #: lib/auth.php
 msgid "Access Denied!  No password provided by user."
-msgstr "Akses Ditolak! Pengguna tidak memberikan kata sandi."
+msgstr "Akses Ditolak! Tidak ada kata sandi yang diberikan oleh pengguna."
 
 #: lib/auth.php
 #, php-format
@@ -12693,7 +12693,7 @@ msgstr "About to import Package #%s '%s'."
 
 #: lib/installer.php
 msgid "Accept GPL License Agreement"
-msgstr "Setujui Perjanjian Lisensi GPL"
+msgstr "Terima Perjanjian Lisensi GPL"
 
 #: lib/installer.php
 msgid "Adding Device to Default Tree"
@@ -12701,7 +12701,7 @@ msgstr "Menambahkan Perangkat ke Pohon Default"
 
 #: lib/installer.php
 msgid "Adding extra snmp settings for automation"
-msgstr "Menambahkan pengaturan snmp tambahan untuk otomatisasi"
+msgstr "Menambahkan pengaturan SNMP tambahan untuk otomatisasi"
 
 #: lib/installer.php
 msgid "Additional Defaults"
@@ -14634,7 +14634,7 @@ msgstr "Batas memori minimal %s"
 
 #: lib/utility.php
 msgid "A valid timezone that matches MySQL and the system"
-msgstr "Zona waktu yang valid yang cocok dengan MySQL dan sistem"
+msgstr "Zona waktu yang valid yang sesuai dengan MySQL dan sistem"
 
 #: lib/utility.php
 #, php-format
@@ -15922,7 +15922,7 @@ msgstr "Total Ukuran [MB]:"
 
 #: settings.php
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
-msgstr "Setelah Anda mengubah Model Izin Grafik, Anda sebaiknya mengaudit izin Grafik Efektif dari Pengguna dan Grup Pengguna Anda untuk memastikan bahwa Anda masih memiliki kontrol yang memadai atas Grafik Anda. CATATAN: Jika Anda ingin membatasi semua Grafik pada Model Izin Grafik Perangkat atau Templat Grafik, Kebijakan Grafik default harus diatur ke 'Tolak'."
+msgstr "Setelah Anda mengubah Model Izin Grafik, Anda harus mengaudit izin Grafik Efektif Pengguna dan Grup Pengguna untuk memastikan Anda masih memiliki kontrol yang memadai atas Grafik Anda. CATATAN: Jika Anda ingin membatasi semua Grafik pada Model Izin Grafik Perangkat atau Templat Grafik, Kebijakan Grafik default harus diatur ke 'Tolak'."
 
 #: settings.php
 msgid "All Templates Selected"
@@ -15995,7 +15995,7 @@ msgstr "Informasi alamat tambahan untuk Situs."
 
 #: sites.php
 msgid "Additional area use for random notes related to this Site."
-msgstr "Area tambahan yang digunakan untuk catatan acak terkait Situs ini."
+msgstr "Area tambahan yang digunakan untuk catatan acak yang terkait dengan Situs ini."
 
 #: sites.php
 msgid "Address Information"
@@ -16003,11 +16003,11 @@ msgstr "Informasi Alamat"
 
 #: sites.php
 msgid "Address1"
-msgstr "Alamat1"
+msgstr "Alamat 1"
 
 #: sites.php
 msgid "Address2"
-msgstr "Alamat2"
+msgstr "Alamat 2"
 
 #: sites.php
 msgid "Alternate Name"
@@ -16395,11 +16395,11 @@ msgstr "Pohon harus dikunci agar dapat diedit."
 
 #: tree.php
 msgid "Add Root Branch"
-msgstr "Tambah Cabang Akar"
+msgstr "Tambahkan Cabang Akar"
 
 #: tree.php
 msgid "Add Tree"
-msgstr "Tambah Pohon"
+msgstr "Tambahkan Pohon"
 
 #: tree.php
 msgid "Alphabetic"
@@ -18251,3 +18251,5 @@ msgstr "VDEF [baru]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF yang sedang digunakan tidak dapat Dihapus. Sedang digunakan berarti dirujuk oleh Grafik atau Templat Grafik."
+
+

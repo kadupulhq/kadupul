@@ -2204,7 +2204,7 @@ msgstr "更改设备"
 #: data_sources.php
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
-msgstr[0] "为这些数据源选择一个新设备，然后单击“继续”"
+msgstr[0] "为这些数据源选择一个新设备，然后单击“继续”。"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -3127,7 +3127,7 @@ msgstr "创建图形: '%s'"
 
 #: graphs.php
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
-msgstr "删除这些图中未被使用的所有数据源."
+msgstr "删除这些图形所引用的且未在其他地方使用的所有数据源。"
 
 #: graphs.php
 msgid "Destination Branch"
@@ -3339,7 +3339,7 @@ msgstr "编辑设备"
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "为 ID 为“%s”的数据查询“%s”解析数据查询资源 XML 文件时出错"
+msgstr "解析数据查询“%s”（ID 为“%s”）的数据查询资源 XML 文件时出错"
 
 #: graphs_new.php
 #, php-format
@@ -3349,7 +3349,7 @@ msgstr "分析数据查询'%s'（id为'%s'）的数据查询资源XML文件时�
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "为 ID 为“%s”的数据查询“%s”解析数据查询资源 XML 文件时出错"
+msgstr "解析数据查询“%s”（ID 为“%s”）的数据查询资源 XML 文件时出错"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -6231,7 +6231,7 @@ msgstr "偏移(Dash-offset = offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "虚线(破折号[=on_s[,off_s[,on_s,off_s]...]])"
+msgstr "虚线 (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php
 msgid "Data Retention"
@@ -7035,7 +7035,7 @@ msgstr "发送到脚本的数据包括脚本和输入源的完整路径 &lt;&gt;
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "数据将从数据源采集的频率?"
+msgstr "从数据源采集数据的频率。"
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7175,7 +7175,7 @@ msgstr "总计"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "单位指数值(--units-exponent)"
+msgstr "单位指数值 (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
@@ -7251,7 +7251,7 @@ msgstr "垂直标签 (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "该设备与哪个站点相关联."
+msgstr "该设备与哪个站点相关联？"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8167,7 +8167,7 @@ msgstr "失败次数"
 
 #: include/global_settings.php
 msgid "Field that will replace the Email taken from LDAP. (on windows: mail)"
-msgstr "将替换从LDAP获取的电子邮件的字段。（在windows上：邮件） "
+msgstr "将替换从LDAP获取的电子邮件的字段。（在windows上：邮件）"
 
 #: include/global_settings.php user_domains.php
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
@@ -8359,7 +8359,7 @@ msgstr "您希望保留多少个日志文件? 0 表示日志永不删除.(取值
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "您希望多久刷新一次Kadupul 日志."
+msgstr "您希望多久更新一次 Kadupul 日志显示？"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8367,7 +8367,7 @@ msgstr "Kadupul 应如何根据客户端浏览器时区支持客户端日期。"
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul 如何处理事件日志."
+msgstr "Kadupul 如何处理事件日志？"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8411,7 +8411,7 @@ msgstr "如果Boost 输出表超出此大小,则记录中将进行更新."
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "如果 boost 轮询器超过此运行时间，将在 cacti 日志中记录一条警告，"
+msgstr "如果 boost 轮询器超过此运行时间，将在 cacti 日志中记录一条警告。"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9119,7 +9119,7 @@ msgstr "用于搜索LDAP目录的搜索库,如 <i>'dc=win2kdomain,dc=local'</i> 
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "用于在LDAP 目录中找到用户的搜索过滤器,例如用于Windows 的: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> 或者用于OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;用户名&gt' 被在登录提示符处提供的用户名替换. "
+msgstr "用于在 LDAP 目录中查找用户的搜索过滤器，例如 Windows：<i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> 或 OpenLDAP：<i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>。'&lt;username&gt' 将被替换为登录提示符处提供的用户名。 "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9191,7 +9191,7 @@ msgstr "是否开启图像缓存?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "如果有图和数据源,默认情况下会被检查."
+msgstr "默认情况下是否应勾选“有图形”和“有数据源”？"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10048,7 +10048,7 @@ msgstr "选中后, Kadupul 的所有访问都将被重定向到HTTPS 以确保�
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "在创建新报告时,应使用哪种图像类型作为嵌入式图形."
+msgstr "在创建新报告时，应使用哪种图像类型作为嵌入式图形？"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -12634,7 +12634,7 @@ msgstr "预览"
 
 #: lib/import.php
 msgid "[preview] "
-msgstr "预览"
+msgstr "预览 "
 
 #: lib/import.php
 msgid "[success]"
@@ -14406,7 +14406,7 @@ msgstr "致命错误：无法备份 '%s'"
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
-msgstr "致命错误：无法从 '%s' 恢复 '%s'"
+msgstr "致命错误：无法将 '%s' 从 '%s' 恢复"
 
 #: lib/spikekill.php
 #, php-format
@@ -14801,7 +14801,7 @@ msgstr "VDEF 的名称."
 #: link.php
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr "标题为 '%s' 的外部链接 ID '%s' 尝试注入无效 URL 并已被阻止！"
+msgstr "外部链接 ID '%s'（标题为 '%s'）尝试注入无效 URL 并已被阻止！"
 
 #: links.php
 msgid "Apply Filter"
@@ -16564,7 +16564,7 @@ msgstr "此树中单个图的总数."
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "此树已被%s锁定在%s 上进行编辑."
+msgstr "此树已于 %s 由 %s 锁定以进行编辑。"
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -18252,3 +18252,5 @@ msgstr "VDEFs[新建]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "正在由图形或图形模板引用的VDEF 不能被删除."
+
+

@@ -3114,7 +3114,7 @@ msgstr "Cofa u-'Qhubeka' ukuyila iGrafu yeDibaniso kwiiGrafu ezikhethiweyo."
 
 #: graphs.php
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
-msgstr "Cofa u-'Qhubeka' ukucima ezi Grafu zilandelayo. Qaphela ukuba ukuba ukhetha ukuCima iMithombo yeDatha, kuphela loo Mithombo yeDatha engasetyenziswa kwenye indawo eya kuCinywa nayo."
+msgstr "Cofa u-'Qhubeka' ukucima ezi Grafu zilandelayo. Qaphela ukuba xa ukhetha ukuCima iMithombo yeDatha, kuphela loo Mithombo yeDatha engasetyenziswa kwenye indawo eya kuCinywa nayo."
 
 #: graphs.php
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
@@ -7055,7 +7055,7 @@ msgstr "Idatha ethunyelwa kwiskripthi, ebandakanya umendo opheleleyo oya kwiskri
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Ixesha eliya kuqokelelwa ngalo idatha kuMthombo weDatha?"
+msgstr "Ixesha eliya kuqokelelwa ngalo idatha kuMthombo weDatha."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "Ilebhile enkqonkqozayo (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Yeyiphi iSayithi enxulumene nesi Sixhobo."
+msgstr "Yeyiphi iSayithi enxulumene nesi Sixhobo?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "Zingaphi iifayile zelog ofuna ukuzigcina? Sebenzisa u-0 ukungaze ususe n
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Ufuna umboniso welog ye-Kadupul uhlaziywe rhoqo kangakanani."
+msgstr "Ufuna umboniso welog ye-Kadupul uhlaziywe rhoqo kangakanani?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "I-Kadupul kufuneka iyixhase njani iMihla yoMthengi ngokusekelwe kummandl
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "I-Kadupul iya kuphatha njani ukurekhodwa kweziganeko."
+msgstr "I-Kadupul iya kuphatha njani ukurekhodwa kweziganeko?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,11 +8431,11 @@ msgstr "Ukuba itafile yemveliso ye-boost idlula obu bungakanani, kwiirekhodi, uh
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Ukuba i-boost poller idlula eli xesha lokusebenza, isilumkiso siya kubekwa kwilog ye-cacti,"
+msgstr "Ukuba i-boost poller idlula eli xesha lokusebenza, isilumkiso siya kubekwa kwilog ye-cacti."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
-msgstr "Ukuba olu lawulo alunanto, ngoko ii-RRDfiles zakho zokuqala ziya kugcinelwa kule ndawo."
+msgstr "Ukuba olu lawulo alukho ze, ngoko ii-RRDfiles zakho zokuqala ziya kugcinelwa kule ndawo."
 
 #: include/global_settings.php
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
@@ -9211,7 +9211,7 @@ msgstr "Ingaba ukugcinwa kwemifanekiso kwi-cache kufuneka kuvulwe?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Ingaba i-Has Graphs ne-Has Data Sources kufuneka zikhethwe ngokungagqibekanga."
+msgstr "Ingaba i-Has Graphs ne-Has Data Sources kufuneka zikhethwe ngokungagqibekanga?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "Xa kukhethiwe, naziphi na iinzame zokufikelela kwi-Kadupul ziya kuthunye
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Xa udala ingxelo entsha, loluphi uhlobo lomfanekiso olufanele lusetyenziselwe iigrafu zangaphakathi."
+msgstr "Xa udala ingxelo entsha, loluphi uhlobo lomfanekiso olufanele lusetyenziselwe iigrafu zangaphakathi?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -11130,7 +11130,7 @@ msgstr "UMthombo weDatha awusetwanga njengoSebenzayo"
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "UMthombo weDatha ubuyise iZiphumo eziMbi ze-"
+msgstr "UMthombo weDatha ubuyise iZiphumo eziMbi ze- "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -12898,7 +12898,7 @@ msgstr "Iprofayili eSisiseko"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "ISakhelo seSixhobo seSixhobo sokuQala se-Kadupul ngu-%s"
+msgstr "ISakhelo seSixhobo kwiSixhobo sokuQala se-Kadupul ngu-%s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13266,7 +13266,7 @@ msgstr "Wakuba ukufaka kugqityiwe indlela ye-CSRF, kufuneka isetelwe ekufundeni 
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "Xa ii-variable zonke zisetiwe kwifayile ye-config.php, kufuneka kwakhona unike u-$rdatabase_username ufikelelo kwiseva engundoqo yesiseko sedatha ye-Kadupul. Landela inkqubo efanayo obuya kuyilandela nakuluphi na olunye ufakelo lwe-Kadupul. Ungaze ucinezele iqhosha le-'Test Connection'. Ukuba uvavanyo luyaphumelela uya kukwazi ukuqhubeka uze ugqibezele ukufaka."
+msgstr "Xa ii-variable zonke zisetiwe kwifayile ye-config.php, kufuneka kwakhona unike u-$rdatabase_username ufikelelo kwiseva engundoqo yesiseko sedatha ye-Kadupul. Landela inkqubo efanayo obuya kuyilandela nakuluphi na olunye ufakelo lwe-Kadupul. Emva koko ungacinezela iqhosha le-'Test Connection'. Ukuba uvavanyo luyaphumelela uya kukwazi ukuqhubeka uze ugqibezele ukufaka."
 
 #: lib/installer.php
 msgid "One or more paths appear to be incorrect, unable to proceed"
@@ -15486,7 +15486,7 @@ msgstr "ISILUMKISO: Umjikelo wokuqokelela we-Kadupul udlule iXesha lokuQokelela 
 #: poller.php
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
-msgstr "ISILUMKISO: Itheyibhile ye-Poller Output ayikho nanto kwi-poller id %d.  Imiba: %d, %s."
+msgstr "ISILUMKISO: Itheyibhile ye-Poller Output ayikho ze kwi-poller id %d.  Imiba: %d, %s."
 
 #: poller.php
 #, php-format
@@ -17709,7 +17709,7 @@ msgstr "Iphepha lenkxaso yobuchwephesha le-Kadupul. Lisetyenziswa ngabaphuhlisi 
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "Ixesha lokuGqibela lokugqibela:"
+msgstr "Ixesha lokuGqibela lokuPhela:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -18313,3 +18313,5 @@ msgstr "Ii-VDEF [entsha]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Ii-VDEF ezisetyenziswayo azinakho ukucinywa. Ukusetyenziswa kuchazwa njengokubhekiswa kwiGrafu okanye kwiTempleyithi yeGrafu."
+
+

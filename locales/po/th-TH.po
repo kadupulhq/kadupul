@@ -3941,7 +3941,7 @@ msgstr "เกี่ยวกับแอปพลิเคชัน"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
-msgstr "เม.ย."
+msgstr "เมษายน"
 
 #: include/global_arrays.php
 msgid "April"
@@ -3966,7 +3966,7 @@ msgstr "รูปภาพ PNG ที่แนบมา"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
-msgstr "ส.ค."
+msgstr "สิงหาคม"
 
 #: include/global_arrays.php
 msgid "August"
@@ -4284,7 +4284,7 @@ msgstr "วัน, หมายเลขเดือน, ปี"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
-msgstr "ธ.ค."
+msgstr "ธันวาคม"
 
 #: include/global_arrays.php
 msgid "December"
@@ -4414,7 +4414,7 @@ msgstr "เกี่ยวกับอาคารสถานที่"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
-msgstr "ก.พ."
+msgstr "กุมภาพันธ์"
 
 #: include/global_arrays.php
 msgid "February"
@@ -4431,7 +4431,7 @@ msgstr "ฝรั่งเศส"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
-msgstr "ศ."
+msgstr "ศุกร์"
 
 #: include/global_arrays.php
 msgid "Friday"
@@ -4648,7 +4648,7 @@ msgstr "อิตาลี"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
-msgstr "ม.ค."
+msgstr "มกราคม"
 
 #: include/global_arrays.php
 msgid "January"
@@ -4661,7 +4661,7 @@ msgstr "ญี่ปุ่น"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
-msgstr "ก.ค."
+msgstr "กรกฎาคม"
 
 #: include/global_arrays.php
 msgid "July"
@@ -4670,7 +4670,7 @@ msgstr "กรกฎาคม"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
-msgstr "มิ.ย."
+msgstr "มิถุนายน"
 
 #: include/global_arrays.php
 msgid "June"
@@ -4852,7 +4852,7 @@ msgstr "เรียงลำดับด้วยตนเอง (ไม่เ�
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
-msgstr "มี.ค."
+msgstr "มีนาคม"
 
 #: include/global_arrays.php
 msgid "March"
@@ -4878,7 +4878,7 @@ msgstr "โมเดิร์น"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
-msgstr "จ."
+msgstr "จันทร์"
 
 #: include/global_arrays.php
 msgid "Monday"
@@ -4967,7 +4967,7 @@ msgstr "ไม่ได้ใช้งาน"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
-msgstr "พ.ย."
+msgstr "พฤศจิกายน"
 
 #: include/global_arrays.php
 msgid "November"
@@ -4984,7 +4984,7 @@ msgstr "การจัดเรียงลำดับแบบตัวเล
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
-msgstr "ต.ค."
+msgstr "ตุลาคม"
 
 #: include/global_arrays.php
 msgid "October"
@@ -5218,7 +5218,7 @@ msgstr "วลีรหัสผ่านการยืนยันตัวต
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
-msgstr "ส."
+msgstr "เสาร์"
 
 #: include/global_arrays.php
 msgid "Saturday"
@@ -5271,7 +5271,7 @@ msgstr "ส่งทันที"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
-msgstr "ก.ย."
+msgstr "กันยายน"
 
 #: include/global_arrays.php
 msgid "September"
@@ -5344,7 +5344,7 @@ msgstr "ไม่ได้ป้อนค่าที่แนะนำ โป�
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
-msgstr "อา."
+msgstr "อาทิตย์"
 
 #: include/global_arrays.php
 msgid "Sunday"
@@ -5445,7 +5445,7 @@ msgstr "ปีนี้"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
-msgstr "พฤ."
+msgstr "พฤหัสบดี"
 
 #: include/global_arrays.php
 msgid "Thursday"
@@ -5494,7 +5494,7 @@ msgstr "ลอง"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
-msgstr "อ."
+msgstr "อังคาร"
 
 #: include/global_arrays.php
 msgid "Tuesday"
@@ -5688,7 +5688,7 @@ msgstr "เกี่ยวกับเว็บเซิร์ฟเวอร์
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
-msgstr "พ."
+msgstr "พุธ"
 
 #: include/global_arrays.php
 msgid "Wednesday"
@@ -5840,7 +5840,7 @@ msgstr "ชั่วโมง"
 
 #: include/global_arrays.php
 msgid "hrs"
-msgstr "ชม."
+msgstr "ชั่วโมง"
 
 #: include/global_arrays.php
 msgid "is empty"
@@ -18251,3 +18251,4 @@ msgstr "VDEF [ใหม่]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "ไม่สามารถลบ VDEF ที่กำลังใช้งานอยู่ได้ 'กำลังใช้งานอยู่' หมายถึงถูกอ้างอิงโดยกราฟหรือเทมเพลตกราฟ"
+

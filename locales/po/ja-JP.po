@@ -619,7 +619,7 @@ msgstr "パスワード検証パス"
 
 #: auth_changepassword.php
 msgid "Password requirements include:"
-msgstr "パスワードの要件は次のとおりです。"
+msgstr "パスワードの要件は次のとおりです:"
 
 #: auth_changepassword.php user_admin.php
 msgid "Passwords Match"
@@ -627,7 +627,7 @@ msgstr "パスワードが一致する"
 
 #: auth_changepassword.php user_admin.php
 msgid "Passwords do Not Match"
-msgstr "パスワードが一致しません。もう一度入力してください。"
+msgstr "パスワードが一致しません"
 
 #: auth_changepassword.php
 msgid "Please enter your current password and your new<br>Kadupul password."
@@ -753,7 +753,7 @@ msgstr "あなたのログインセッションはすべてクリアされまし
 
 #: auth_profile.php
 msgid "An Email Address you can be reached at."
-msgstr "メールアドレス"
+msgstr "連絡可能なメールアドレス。"
 
 #: auth_profile.php
 msgid "Clear Private Data"
@@ -761,7 +761,7 @@ msgstr "個人データの消去"
 
 #: auth_profile.php
 msgid "Clear Private Data including Column sizing."
-msgstr "列のサイズ変更を含む個人データの消去"
+msgstr "列のサイズ変更を含む個人データの消去。"
 
 #: auth_profile.php
 msgid "Clear User Settings"
@@ -1047,15 +1047,15 @@ msgstr "グラフタイプ"
 
 #: automation_graph_rules.php
 msgid "Matching Devices."
-msgstr "マッチングデバイス"
+msgstr "一致するデバイス。"
 
 #: automation_graph_rules.php
 msgid "Matching Objects."
-msgstr "一致するオブジェクト"
+msgstr "一致するオブジェクト。"
 
 #: automation_graph_rules.php
 msgid "Rule Details."
-msgstr "ルールの詳細"
+msgstr "ルールの詳細。"
 
 #: automation_graph_rules.php
 #, php-format
@@ -1526,7 +1526,7 @@ msgstr "データソースデバッグは無効なデータソースIDを受け�
 
 #: data_debug.php
 msgid "Data Source debug started."
-msgstr "データソースのデバッグ"
+msgstr "データソースのデバッグを開始しました。"
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
@@ -2098,7 +2098,7 @@ msgstr "名前"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
-msgstr "名前の形式"
+msgstr "名前の形式:"
 
 #: data_queries.php
 msgid "No Data Queries Found"
@@ -2142,7 +2142,7 @@ msgstr "使用しているテンプレート"
 
 #: data_queries.php
 msgid "The Data Input Method used to collect data for Data Sources associated with this Data Query."
-msgstr "このデータクエリに関連付けられたデータソースのデータを収集するために使用されるデータ入力メソッド"
+msgstr "このデータクエリに関連付けられたデータソースのデータを収集するために使用されるデータ入力メソッド。"
 
 #: data_queries.php
 #, php-format
@@ -2210,7 +2210,7 @@ msgstr "このデータソースが属するデバイスを選択してくださ
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
 msgid_plural "Click 'Continue' to delete the following Data Sources"
-msgstr[0] "次のデータソースを削除するには、[続行]をクリックします。"
+msgstr[0] "次のデータソースを削除するには、[続行]をクリックします"
 
 #: data_sources.php
 msgid "Click 'Continue' to disable the following Data Source."
@@ -2311,7 +2311,7 @@ msgstr[0] "データソースを無効にする"
 
 #: data_sources.php
 msgid "Disable Data Source."
-msgstr "データソースを無効にする"
+msgstr "データソースを無効にする。"
 
 #: data_sources.php
 msgid "Edit Data Template."
@@ -2333,7 +2333,7 @@ msgstr[0] "データソースを有効にする"
 
 #: data_sources.php
 msgid "Enable Data Source."
-msgstr "データソースを有効にする"
+msgstr "データソースを有効にする。"
 
 #: data_sources.php data_templates.php include/global_form.php
 msgid "External"
@@ -2354,7 +2354,7 @@ msgstr "新規"
 
 #: data_sources.php
 msgid "New Device:"
-msgstr "新しい装置"
+msgstr "新規デバイス:"
 
 #: data_sources.php
 msgid "No Aggregates"
@@ -2421,7 +2421,7 @@ msgstr "このデータソースが基づいていたデータテンプレート
 #: data_sources.php
 msgid "The following graph is using these data sources:"
 msgid_plural "The following graphs are using these data sources:"
-msgstr[0] "次のグラフはこれらのデータソースを使用しています。"
+msgstr[0] "次のグラフはこれらのデータソースを使用しています："
 
 #: data_sources.php
 msgid "The frequency that data is collected for this Data Source."
@@ -2632,7 +2632,7 @@ msgstr "クリックしてこのグラフだけをリアルタイムで表示"
 
 #: graph.php lib/html.php
 msgid "Edit Graph Template"
-msgstr "グラフテンプレートを編集します。"
+msgstr "グラフテンプレートを編集"
 
 #: graph.php
 msgid "GRAPH DOES NOT EXIST"
@@ -2680,7 +2680,7 @@ msgstr "Kadupul Pollerはまだ実行されていません。"
 
 #: graph_realtime.php
 msgid " seconds left."
-msgstr "残り秒。"
+msgstr " 残り秒。"
 
 #: graph_realtime.php
 #, php-format
@@ -3252,7 +3252,7 @@ msgstr "以下のデータソースは、これらのグラフによって使用
 
 #: graphs.php
 msgid "The following Data Sources are in use by these Graphs:"
-msgstr "以下のデータソースは、これらのグラフによって使用されています。"
+msgstr "以下のデータソースは、これらのグラフによって使用されています:"
 
 #: graphs.php
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
@@ -3301,7 +3301,7 @@ msgstr "データソース[デバイスなし]"
 
 #: graphs_items.php include/global_arrays.php include/global_form.php
 msgid "Data Template"
-msgstr "このデータテンプレートに名前を与えてください。"
+msgstr "データテンプレート"
 
 #: graphs_items.php
 #, php-format
@@ -3336,17 +3336,17 @@ msgstr "このデバイスを編集"
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "ID '%s'のデータクエリ '%s'のデータクエリリソースXMLファイルの解析中にエラーが発生しました"
+msgstr "データクエリ '%s' (ID '%s') のデータクエリリソースXMLファイルの解析中にエラーが発生しました"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "ID '%s'のデータクエリ'%s'のデータクエリリソースXMLファイルの解析中にエラーが発生しました。フィールド名'%s'に'direction'属性がありません"
+msgstr "データクエリ '%s' (ID '%s') のデータクエリリソースXMLファイルの解析中にエラーが発生しました。フィールド名 '%s' に 'direction' 属性がありません"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "ID '%s'のデータクエリ '%s'のデータクエリリソースXMLファイルの解析中にエラーが発生しました"
+msgstr "データクエリ '%s' (ID '%s') のデータクエリリソースXMLファイルの解析中にエラーが発生しました"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -3428,7 +3428,7 @@ msgstr "このデータクエリは0行を返しました。おそらくこの�
 
 #: graphs_new.php
 msgid "You can run this Data Query in debug mode"
-msgstr "このデータクエリはデバッグモードで実行できます。"
+msgstr "このデータクエリはデバッグモードで実行できます"
 
 #: help.php
 #, php-format
@@ -3438,7 +3438,7 @@ msgstr "ドキュメントページ '%s' にローカルで到達できません
 #: help.php
 #, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "警告：ユーザー：%sのKadupulページ：%sが致命的なエラー%dを生成しました！"
+msgstr "警告: Kadupulページ:%s (ユーザー:%s) で致命的なエラー %d が発生しました！"
 
 #: host_templates.php
 msgid "Add Data Query"
@@ -3549,11 +3549,11 @@ msgstr "デバイステンプレートが見つかりません"
 
 #: host_templates.php
 msgid "No associated data queries."
-msgstr "連想データ照会"
+msgstr "関連付けられたデータクエリはありません。"
 
 #: host_templates.php
 msgid "No associated graph templates."
-msgstr "関連グラフテンプレート"
+msgstr "関連付けられたグラフテンプレートはありません。"
 
 #: host_templates.php
 msgid "Remove Data Input Field"
@@ -3610,7 +3610,7 @@ msgstr "ログインはありません"
 
 #: include/auth.php
 msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
-msgstr "現時点では、インストール/アップグレード権限を持つKadupul管理者だけがログインできます。"
+msgstr "現時点では、インストール/アップグレード権限を持つKadupul管理者だけがログインできます"
 
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
@@ -4387,7 +4387,7 @@ msgstr "毎日"
 
 #: include/global_arrays.php
 msgid "Every polling cycle, a Re-Index will be performed.  Very expensive."
-msgstr "ポーリングサイクルごとに、再インデックスが実行されます。とても高い"
+msgstr "ポーリングサイクルごとに、再インデックスが実行されます。非常に負荷が高いです。"
 
 #: include/global_arrays.php
 msgid "Export Results"
@@ -4581,7 +4581,7 @@ msgstr "ICMP Ping"
 
 #: include/global_arrays.php
 msgid "ILO, IPMI, iDrac, etc."
-msgstr "ILO、IPMI、iDracなど"
+msgstr "ILO、IPMI、iDracなど。"
 
 #: include/global_arrays.php
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -5054,7 +5054,7 @@ msgstr "ポルトガル語 (ブラジル)"
 
 #: include/global_arrays.php
 msgid "Power Related PDUs/STS, etc."
-msgstr "電源関連のPDU/STSなど"
+msgstr "電源関連のPDU/STSなど。"
 
 #: include/global_arrays.php lib/html_filter.php lib/html_graph.php
 #: lib/html_tree.php
@@ -5264,7 +5264,7 @@ msgstr "選択したポーラー間隔"
 
 #: include/global_arrays.php
 msgid "Send Now"
-msgstr "今すぐ送信します。"
+msgstr "今すぐ送信"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -5406,7 +5406,7 @@ msgstr "テキスト"
 
 #: include/global_arrays.php
 msgid "The Kadupul log file must have the extension '.log'"
-msgstr "Kadupulログファイルの拡張子は.logです。"
+msgstr "Kadupulログファイルの拡張子は '.log' である必要があります"
 
 #: include/global_arrays.php
 msgid "The SNMP v3 Authentication Passphrases do not match"
@@ -5794,7 +5794,7 @@ msgstr "成功！"
 
 #: include/global_arrays.php
 msgid "[Warning]"
-msgstr "警告:"
+msgstr "[警告]"
 
 #: include/global_arrays.php
 msgid "begins with"
@@ -6026,7 +6026,7 @@ msgstr "集計レベル"
 
 #: include/global_form.php
 msgid "All subsequent legend line(s) will be aligned as given here.  You may use this command multiple times in a single graph.  This command does not produce tabular layout.<br/><strong>Note: </strong>You may want to insert a &lt;HR&gt; on the preceding graph item.<br/> <strong>Note: </strong>A &lt;HR&gt; on this legend line will obsolete this setting!"
-msgstr "それ以降のすべての凡例行は、ここに示すとおりに配置されます。単一のグラフ内でこのコマンドを複数回使用することができます。このコマンドは表レイアウトを生成しません。 <br/> <strong>注：</strong>前のグラフ項目に&lt;HR&gt;を挿入することをお勧めします。 <br/> <strong>注：</strong>この凡例行の&lt;HR&gt;はこの設定を廃止します。"
+msgstr "それ以降のすべての凡例行は、ここに示すとおりに配置されます。単一のグラフ内でこのコマンドを複数回使用することができます。このコマンドは表レイアウトを生成しません。 <br/> <strong>注：</strong>前のグラフ項目に&lt;HR&gt;を挿入することをお勧めします。 <br/> <strong>注：</strong>この凡例行の&lt;HR&gt;はこの設定を廃止します！"
 
 #: include/global_form.php
 msgid "Allow Empty Input"
@@ -6078,7 +6078,7 @@ msgstr "軸オプション"
 
 #: include/global_form.php
 msgid "Base Value (--base)"
-msgstr "ベース値（--base）"
+msgstr "ベース値 (--base)"
 
 #: include/global_form.php
 msgid "Based upon the Aggregation Level, the Rows, and the Polling Interval the amount of data that will be retained in the RRA"
@@ -6135,7 +6135,7 @@ msgstr "このルールに適用するデータクエリを選択してくださ
 
 #: include/global_form.php
 msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
-msgstr "フックするサブツリー項目を選択してください。 <br>このルールが実行されたときにまだそこにあることを確認してください。"
+msgstr "フックするサブツリー項目を選択してください。<br>このルールが実行されたときにまだ存在していることを確認してください！"
 
 #: include/global_form.php
 msgid "Choose a Tree for the new Tree Items."
@@ -6224,11 +6224,11 @@ msgstr "テンプレートから新規作成"
 
 #: include/global_form.php
 msgid "Dash Offset (dash-offset=offset)"
-msgstr "ダッシュオフセット（ダッシュオフセット=オフセット）"
+msgstr "ダッシュオフセット (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "ダッシュ（ダッシュ[= on_s [、off_s [、on_s、off_s] ...]]））"
+msgstr "ダッシュ (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php
 msgid "Data Retention"
@@ -6333,7 +6333,7 @@ msgstr "カスタム GRPINT 文字列をここに入力します。"
 
 #: include/global_form.php
 msgid "Enter the password for this user twice. Remember that passwords are case sensitive!"
-msgstr "このユーザーのパスワードを2回入力してください。パスワードでは大文字と小文字が区別されます。"
+msgstr "このユーザーのパスワードを2回入力してください。パスワードでは大文字と小文字が区別されます！"
 
 #: include/global_form.php
 msgid "External ID"
@@ -6459,11 +6459,11 @@ msgstr "このアイテムのデータがグラフ上で視覚的にどのよう
 
 #: include/global_form.php
 msgid "How data is represented in the RRA."
-msgstr "RRAにおけるデータの表現方法"
+msgstr "RRAにおけるデータの表現方法。"
 
 #: include/global_form.php
 msgid "How data is to be entered in RRAs."
-msgstr "RRAにデータを入力する方法"
+msgstr "RRAにデータを入力する方法。"
 
 #: include/global_form.php
 msgid "How data is to be represented on the graph."
@@ -6580,7 +6580,7 @@ msgstr "対数スケーリング（--logarithmic）"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
-msgstr "ルールを結合するための論理演算"
+msgstr "ルールを結合するための論理演算。"
 
 #: include/global_form.php user_group_admin.php
 msgid "Login Options"
@@ -6764,7 +6764,7 @@ msgstr "再注文タイプ"
 
 #: include/global_form.php
 msgid "Reordering of Graphs."
-msgstr "グラフの並べ替え"
+msgstr "グラフの並べ替え。"
 
 #: include/global_form.php package_import.php
 msgid "Replace Data Query Suggested Value Patterns"
@@ -6780,7 +6780,7 @@ msgstr "交換パターン"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "右軸（--right-axis &lt;スケール：シフト&gt;）"
+msgstr "右軸 (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
@@ -6884,7 +6884,7 @@ msgstr "配列"
 
 #: include/global_form.php
 msgid "Sequence."
-msgstr "配列"
+msgstr "シーケンス。"
 
 #: include/global_form.php
 msgid "Set any graph specific options here."
@@ -6896,7 +6896,7 @@ msgstr "ユーザーアカウント固有のオプションをここで設定し
 
 #: include/global_form.php
 msgid "Sets the exponent value on the Y-axis for numbers. Note: This option is deprecated and replaced by the --y-grid option.  In this option, Y-axis grid lines appear at each grid step interval.  Labels are placed every label factor lines."
-msgstr "数値のY軸上の指数値を設定します。注：このオプションは推奨されなくなり、 -  y-gridオプションに置き換えられました。このオプションでは、Y軸のグリッド線が各グリッドステップ間隔で表示されます。ラベルはラベルファクタ行ごとに配置されます。"
+msgstr "数値のY軸上の指数値を設定します。注: このオプションは非推奨となり、--y-grid オプションに置き換えられました。このオプションでは、Y軸のグリッド線が各グリッドステップ間隔で表示されます。ラベルはラベルファクタ行ごとに配置されます。"
 
 #: include/global_form.php
 msgid "Shift Data"
@@ -6988,11 +6988,11 @@ msgstr "照合するパターン。"
 
 #: include/global_form.php
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "ツリーヘッダーとして使用するための置換文字列パターン。 <br>最初の一致については、例えば<strong>\\ $ {1}</strong>による一致を参照してください。"
+msgstr "ツリーヘッダーとして使用するための置換文字列パターン。<br>最初の一致については、例えば<strong>\\${1}</strong>のように一致を参照してください！"
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "照合する文字列パターン（正規表現）。 <br> 「/」を囲むことはできませ<strong>ん</strong> 。"
+msgstr "照合する文字列パターン（正規表現）。<br>囲む「/」は指定し<strong>ない</strong>でください！"
 
 #: include/global_form.php package_import.php
 msgid "The Width to be used when importing or updating Graph Templates."
@@ -7012,7 +7012,7 @@ msgstr "まだ既知と見なすことができる未知のデータの量。"
 
 #: include/global_form.php
 msgid "The color to use for the legend."
-msgstr "凡例に使用する色"
+msgstr "凡例に使用する色。"
 
 #: include/global_form.php
 msgid "The dash-offset parameter specifies an offset into the pattern at which the stroke begins."
@@ -7032,7 +7032,7 @@ msgstr "スクリプトに送信されるデータ。スクリプトへの完全
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "データがデータソースから収集される頻度は？"
+msgstr "データソースからデータが収集される頻度。"
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7104,7 +7104,7 @@ msgstr "このカラーテンプレートの名前。"
 
 #: include/global_form.php
 msgid "The name of this Color."
-msgstr "この色の名前"
+msgstr "この色の名前。"
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
@@ -7160,7 +7160,7 @@ msgstr "グラフ内のグラフ領域の幅（ピクセル単位）。この領
 
 #: include/global_form.php
 msgid "Title (--title)"
-msgstr "タイトル（--title）"
+msgstr "タイトル (--title)"
 
 #: include/global_form.php
 msgid "Total Type"
@@ -7176,7 +7176,7 @@ msgstr "単位指数値（--units-exponent）"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
-msgstr "単位グリッド値（--unit/--y-grid）"
+msgstr "単位グリッド値 (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -7192,7 +7192,7 @@ msgstr "上限（--upper-limit）"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
-msgstr "--alt-autoscaleを使用します（両方の制限を受け入れます、RRDtoolのデフォルト）。"
+msgstr "--alt-autoscaleを使用します（両方の制限を受け入れます、RRDtoolのデフォルト）"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (ignoring given limits)"
@@ -7248,11 +7248,11 @@ msgstr "垂直ラベル（--vertical-label）"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "このデバイスはどのサイトに関連付けられていますか。"
+msgstr "このデバイスはどのサイトに関連付けられていますか？"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
-msgstr "このユーザーがログインしたときの対処方法"
+msgstr "このユーザーがログインしたときの対処方法。"
 
 #: include/global_form.php
 msgid "What unit Kadupul should use on the Y-axis. Use 3 to display everything in \"k\" or -6 to display everything in \"u\" (micro)."
@@ -7268,7 +7268,7 @@ msgstr "有効にすると、選択したオートスケールオプションに
 
 #: include/global_form.php
 msgid "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph."
-msgstr "問題のRRAに基づいてグラフを表示するときに、そのグラフに対して表示するデフォルトのタイムスパン"
+msgstr "問題のRRAに基づいてグラフを表示するときに、そのグラフに対して表示するデフォルトのタイムスパン。"
 
 #: include/global_form.php
 msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
@@ -7296,7 +7296,7 @@ msgstr "ホワイトリストチェック"
 
 #: include/global_form.php
 msgid "Width (--width)"
-msgstr "幅（--width）"
+msgstr "幅 (--width)"
 
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
@@ -7308,19 +7308,19 @@ msgstr "[HRULE | VRULE]：グラフ項目の値<br/> [TICK]：目盛りの分数
 
 #: include/global_languages.php
 msgid " G"
-msgstr "G"
+msgstr " G"
 
 #: include/global_languages.php
 msgid " K"
-msgstr "K"
+msgstr " K"
 
 #: include/global_languages.php
 msgid " M"
-msgstr "M"
+msgstr " M"
 
 #: include/global_languages.php
 msgid " T"
-msgstr "・"
+msgstr " ・"
 
 #: include/global_settings.php
 #, php-format
@@ -7736,7 +7736,7 @@ msgstr "Content-Security スクリプトポリシー"
 
 #: include/global_settings.php
 msgid "Controls disabling check for increasing OID while walking OID tree."
-msgstr "OIDツリーを歩いている間、OIDの増加のチェックを無効にする制御"
+msgstr "OIDツリーを歩いている間、OIDの増加のチェックを無効にする制御。"
 
 #: include/global_settings.php
 msgid "Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts."
@@ -7852,7 +7852,7 @@ msgstr "すべての新しいデバイスのデフォルトのpingタイムア�
 
 #: include/global_settings.php
 msgid "Default Ping type for all new Devices.</i>"
-msgstr "すべての新しいデバイスのデフォルトのpingタイプ。"
+msgstr "すべての新しいデバイスのデフォルトのpingタイプ。</i>"
 
 #: include/global_settings.php
 msgid "Default SNMP read community for all new Devices."
@@ -7920,7 +7920,7 @@ msgstr "デフォルト表示モード"
 
 #: include/global_settings.php
 msgid "Default language for this system."
-msgstr "このシステムのデフォルト言語"
+msgstr "このシステムのデフォルト言語。"
 
 #: include/global_settings.php
 msgid "Default number of lines of the Kadupul log file to tail."
@@ -8168,7 +8168,7 @@ msgstr "LDAPから取得したEメールを置き換えるフィールド。 （
 
 #: include/global_settings.php user_domains.php
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
-msgstr "LDAPから取得した、新しいユーザーを作成するときに氏名を置き換えるフィールド。 （Windowsの場合：displayname）"
+msgstr "LDAPから取得した、新しいユーザーを作成するときに氏名を置き換えるフィールド。 （Windowsの場合：displayname） "
 
 #: include/global_settings.php
 msgid "Filter Settings"
@@ -8328,11 +8328,11 @@ msgstr "どの程度の頻度ですべてのRRDを更新する必要があるか
 
 #: include/global_settings.php
 msgid "How do you wish fonts to be handled by default?"
-msgstr "フォントをデフォルトでどのように処理しますか。"
+msgstr "フォントをデフォルトでどのように処理しますか？"
 
 #: include/global_settings.php
 msgid "How do you wish to view Realtime Graphs?"
-msgstr "リアルタイムグラフをどのように表示しますか。"
+msgstr "リアルタイムグラフをどのように表示しますか？"
 
 #: include/global_settings.php
 msgid "How frequently should Daily Stats be updated?"
@@ -8364,7 +8364,7 @@ msgstr "Kadupulは、クライアントブラウザのタイムゾーンに基�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupulはイベントログをどのように処理しますか。"
+msgstr "Kadupulはイベントログをどのように処理しますか？"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8424,7 +8424,7 @@ msgstr "このオプションがチェックされていると、KadupulはSNMP�
 
 #: include/global_settings.php
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
-msgstr "Kadupulのデータコレクタに問題がある場合は、このファイルパスを設定すると、データコレクタの標準エラーがこのファイルにリダイレクトされます。"
+msgstr "Kadupulのデータコレクタに問題がある場合は、このファイルパスを設定すると、データコレクタの標準エラーがこのファイルにリダイレクトされます"
 
 #: include/global_settings.php
 msgid "If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process."
@@ -9436,7 +9436,7 @@ msgstr "営業時間に表示される色"
 
 #: include/global_settings.php
 msgid "The date format to use in Kadupul."
-msgstr "Kadupulで使用する日付フォーマット"
+msgstr "Kadupulで使用する日付フォーマット。"
 
 #: include/global_settings.php
 msgid "The date separator to be used in Kadupul."
@@ -9480,7 +9480,7 @@ msgstr "グラフやその他の時間固有のデータを表示していると
 
 #: include/global_settings.php
 msgid "The default Timespan displayed when viewing Graphs and other time specific data."
-msgstr "グラフやその他の時間固有のデータを表示するときに表示されるデフォルトのタイムスパン"
+msgstr "グラフやその他の時間固有のデータを表示するときに表示されるデフォルトのタイムスパン。"
 
 #: include/global_settings.php
 msgid "The default graph tree to use when displaying graphs in tree mode."
@@ -9600,11 +9600,11 @@ msgstr "すべての添付ファイルを含む電子メールメッセージの
 
 #: include/global_settings.php
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
-msgstr "Kadupulがスクリプトの完了を待つ最大時間。このタイムアウト値は秒単位です"
+msgstr "spineがスクリプトの完了を待つ最大時間。このタイムアウト値は秒単位であり、spineデータコレクタでのみ有効です。"
 
 #: include/global_settings.php
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
-msgstr "データソースが削除された後にKadupulからRRDファイルを削除するために使用される方法"
+msgstr "データソースが削除された後にKadupulからRRDファイルを削除するために使用される方法。"
 
 #: include/global_settings.php
 msgid "The most refused samples one data source may keep queued.  The oldest samples beyond this limit are moved to the poller_output_rejected table immediately."
@@ -9668,7 +9668,7 @@ msgstr "エラーをログに記録してデバイスを停止と報告する前
 
 #: include/global_settings.php
 msgid "The number of polling intervals a Device must remain up before returning Device to an up status and issuing a notice."
-msgstr "デバイスが稼働状態に戻って通知を発行する前に、デバイスが稼働し続けなければならないポーリング間隔の数"
+msgstr "デバイスが稼働状態に戻って通知を発行する前に、デバイスが稼働し続けなければならないポーリング間隔の数。"
 
 #: include/global_settings.php
 msgid "The number of seconds between automatic page refreshes."
@@ -9676,7 +9676,7 @@ msgstr "自動ページ更新の間隔（秒数）。"
 
 #: include/global_settings.php
 msgid "The number of times Kadupul will attempt to ping a Device before marking it as down."
-msgstr "Kadupulがデバイスを停止とマークするまでにpingを試行する回数"
+msgstr "Kadupulがデバイスを停止とマークするまでにpingを試行する回数。"
 
 #: include/global_settings.php
 msgid "The password to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
@@ -9700,7 +9700,7 @@ msgstr "Kadupulログファイルへのパス（空白の場合、デフォル�
 
 #: include/global_settings.php
 msgid "The path to your PHP binary file (may require a php recompile to get this file)."
-msgstr "あなたのPHPバイナリファイルへのパス（このファイルを入手するにはphpの再コンパイルが必要かもしれません）"
+msgstr "PHPバイナリファイルへのパス（このファイルを入手するにはphpの再コンパイルが必要かもしれません）。"
 
 #: include/global_settings.php
 msgid "The path to your snmpbulkwalk binary."
@@ -9812,7 +9812,7 @@ msgstr "これは、Eメールが表示される実際の名前です。"
 
 #: include/global_settings.php
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
-msgstr "これはRRDファイルがアーカイブのために<strong>移動さ</strong>れるディレクトリです。"
+msgstr "これはRRDファイルがアーカイブのために<strong>移動さ</strong>れるディレクトリです"
 
 #: include/global_settings.php
 msgid "This is the hostname/IP of the SMTP Server you will send the Email to. For failover, separate your hosts using a semi-colon."
@@ -9820,7 +9820,7 @@ msgstr "これは、Eメールを送信するSMTPサーバーのホスト名/ IP
 
 #: include/global_settings.php
 msgid "This is the location, on the web server where the RRDfiles and PNG files will be cached.  This cache will be managed by the poller.  Make sure you have the correct read and write permissions on this folder"
-msgstr "これは、RRDファイルとPNGファイルがキャッシュされるWebサーバー上の場所です。このキャッシュはポーラーによって管理されます。このフォルダに正しい読み取りおよび書き込み権限があることを確認してください。"
+msgstr "これは、RRDファイルとPNGファイルがキャッシュされるWebサーバー上の場所です。このキャッシュはポーラーによって管理されます。このフォルダに正しい読み取りおよび書き込み権限があることを確認してください"
 
 #: include/global_settings.php
 msgid "This is the maximum number of days before a password is set to expire."
@@ -9985,7 +9985,7 @@ msgstr "ユーザーテンプレート"
 
 #: include/global_settings.php
 msgid "User defined number of lines for the CLOG to tail when selecting 'All lines'."
-msgstr "「すべての行」を選択したときに、CLOGが調整するためのユーザー定義行数"
+msgstr "「すべての行」を選択したときに、CLOGが末尾から読み込むユーザー定義の行数。"
 
 #: include/global_settings.php
 msgid "Variance Based w/Outliers Removed"
@@ -10021,7 +10021,7 @@ msgstr "ログファイルに送信する詳細レベルのレベル警告：NON
 
 #: include/global_settings.php
 msgid "What time of day should Weekly, Monthly, and Yearly Data be updated?  Format is HH:MM [am/pm]"
-msgstr "毎週、毎月、および毎年のデータを更新する時刻は何時ですか。形式はHH：MM [am / pm]です。"
+msgstr "毎週、毎月、および毎年のデータを更新する時刻は何時ですか？形式はHH:MM [am/pm]です"
 
 #: include/global_settings.php
 msgid "When SpikeKill kills spikes in graphs, it makes a backup of the RRDfile.  How long should these backup files be retained?"
@@ -10045,7 +10045,7 @@ msgstr "チェックすると、Kadupulにアクセスしようとする試み�
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "新しいレポートを作成するときには、インライングラフに使用する画像の種類を指定します。"
+msgstr "新しいレポートを作成するとき、インライングラフにどの画像の種類を使用しますか？"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10105,7 +10105,7 @@ msgstr "構造化RRDパスに使用するディレクトリパターンを選択
 
 #: include/global_settings.php
 msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
-msgstr "初めてグラフページにアクセスしたときにデフォルトで表示されるグラフモードはどれですか。"
+msgstr "初めてグラフページにアクセスしたときにデフォルトで表示するグラフモードはどれですか？"
 
 #: include/global_settings.php
 msgid "Which mail service to use in order to send mail"
@@ -10113,7 +10113,7 @@ msgstr "メールを送信するために使用するメールサービス"
 
 #: include/global_settings.php
 msgid "Which portions of Kadupul display Thumbnails by default."
-msgstr "Kadupulのどの部分にデフォルトでサムネイルが表示されているか"
+msgstr "Kadupulのどの部分にデフォルトでサムネイルが表示されているか。"
 
 #: include/global_settings.php
 msgid "Word Wrap"
@@ -10182,7 +10182,7 @@ msgstr "この値を上書き"
 
 #: lib/api_aggregate.php
 msgid "Press 'Return' to return and select different Graphs"
-msgstr "別のグラフに戻って選択するには、Returnキーを押します。"
+msgstr "別のグラフに戻って選択するには、Returnキーを押します"
 
 #: lib/api_aggregate.php
 msgid "Skip"
@@ -10492,7 +10492,7 @@ msgstr "許可済み"
 
 #: lib/auth.php
 msgid "Granted By: "
-msgstr "許可を与える："
+msgstr "許可を与える： "
 
 #: lib/auth.php
 #, php-format
@@ -10514,7 +10514,7 @@ msgstr "メンバーに限定"
 
 #: lib/auth.php
 msgid "Restricted By: "
-msgstr "メンバーに限定"
+msgstr "制限対象: "
 
 #: lib/auth.php
 #, php-format
@@ -10550,15 +10550,15 @@ msgstr "%s Mバイト"
 
 #: lib/clog_webapi.php
 msgid " - Admin Filter active"
-msgstr "- 管理フィルタがアクティブ"
+msgstr " - 管理フィルタがアクティブ"
 
 #: lib/clog_webapi.php
 msgid " - Admin Unfiltered"
-msgstr "- 管理者フィルタなし"
+msgstr " - 管理者フィルタなし"
 
 #: lib/clog_webapi.php
 msgid " - Admin view"
-msgstr "- 管理者ビュー"
+msgstr " - 管理者ビュー"
 
 #: lib/clog_webapi.php utilities.php
 #, php-format
@@ -10955,7 +10955,7 @@ msgstr "入力フィールド'%s'が見つかりました[ウォーク]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "&lt;direction&gt; input &lt;/direction&gt;または&lt;direction&gt;入出力&lt;/direction&gt;フィールドのみを含める必要があります"
+msgstr "&lt;direction&gt;input&lt;/direction&gt; または &lt;direction&gt;input-output&lt;/direction&gt; フィールドのみを含める必要があります"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field will be updated."
@@ -11063,7 +11063,7 @@ msgstr "%sローカルデータIDの検証が完了しました"
 
 #: lib/data_query.php
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
-msgstr "警告：ソートフィールドの関連付けが変更されました。再マッピングの問題が発生する可能性があります。"
+msgstr "警告：ソートフィールドの関連付けが変更されました。再マッピングの問題が発生する可能性があります！"
 
 #: lib/data_query.php
 msgid "XML file parsed ok."
@@ -11107,7 +11107,7 @@ msgstr "データソースがアクティブに設定されていません"
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "データソースから返された悪い結果"
+msgstr "データソースから返された悪い結果 "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -11119,7 +11119,7 @@ msgstr "5回のポーリング後にデバッグが完了しない"
 
 #: lib/dsdebug.php
 msgid "Failed fields: "
-msgstr "失敗したフィールド"
+msgstr "失敗したフィールド: "
 
 #: lib/dsdebug.php
 msgid "No issues found"
@@ -11272,7 +11272,7 @@ msgstr "ポート"
 
 #: lib/functions.php
 msgid "SMTP error: "
-msgstr "SMTPエラー："
+msgstr "SMTPエラー： "
 
 #: lib/functions.php
 msgid "Security"
@@ -11339,7 +11339,7 @@ msgstr "削除に失敗しました。永続トランザクションのクリー
 
 #: lib/graph_item_choices.php
 msgid "No Device - "
-msgstr "デバイスがありません"
+msgstr "デバイスがありません "
 
 #: lib/graph_item_editor.php
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
@@ -11514,7 +11514,7 @@ msgstr "ダッシュボード"
 
 #: lib/html.php lib/reports.php
 msgid "Data Query:"
-msgstr "データ問合せ"
+msgstr "データクエリ:"
 
 #: lib/html.php
 msgid "Donation & Sponsoring"
@@ -11562,7 +11562,7 @@ msgstr "アクションを実行"
 
 #: lib/html.php
 msgid "Failed to find data to copy!"
-msgstr "コピーするデータが見つかりませんでした。"
+msgstr "コピーするデータが見つかりませんでした！"
 
 #: lib/html.php lib/spikekill.php
 msgid "Float Range"
@@ -11639,7 +11639,7 @@ msgstr "次に"
 #: lib/html.php
 #, php-format
 msgid "No %s Found"
-msgstr "%sが見つかりませんでした。"
+msgstr "%sが見つかりませんでした"
 
 #: lib/html.php
 msgid "No Source"
@@ -11671,7 +11671,7 @@ msgstr "操作成功"
 
 #: lib/html.php
 msgid "Passphrase length meets 8 character minimum"
-msgstr "パスフレーズの長さは最小8文字です。"
+msgstr "パスフレーズの長さが最小8文字の条件を満たしています"
 
 #: lib/html.php
 msgid "Passphrase matches but too short"
@@ -11719,7 +11719,7 @@ msgstr "リモートサーバー"
 
 #: lib/html.php
 msgid "Remove StdDev"
-msgstr "StdDevを削除します。"
+msgstr "StdDevを削除"
 
 #: lib/html.php
 msgid "Report a bug"
@@ -11908,7 +11908,7 @@ msgstr "カラム"
 #: lib/html_graph.php
 #, php-format
 msgid "Create %s Graphs from %s"
-msgstr "%2$s から %1$s グラフを作成"
+msgstr "%s グラフを %s から作成"
 
 #: lib/html_graph.php
 #, php-format
@@ -12191,7 +12191,7 @@ msgstr "グラフ設定"
 
 #: lib/html_reports.php
 msgid "Graph Tree"
-msgstr "このグラフツリーの名前です。"
+msgstr "グラフツリー"
 
 #: lib/html_reports.php
 msgid "Graph Tree Branch"
@@ -12264,7 +12264,7 @@ msgstr "所有者"
 
 #: lib/html_reports.php
 msgid "Please be certain that those Report(s) have successfully been tested first!"
-msgstr "それらのレポートが最初にテストされたことを確認してください。"
+msgstr "それらのレポートが最初に正常にテストされたことを確認してください！"
 
 #: lib/html_reports.php
 msgid "Please separate multiple addresses by comma (,)"
@@ -12330,7 +12330,7 @@ msgstr "フィルタリングに使用するデバイスのグラフテンプレ
 
 #: lib/html_reports.php
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "グラフを指定するデバイスを選択"
+msgstr "デバイスとグラフをフィルタリングするサイトを選択します。"
 
 #: lib/html_reports.php
 msgid "Select a Tree Branch to use for Graphs and Devices.  Devices will be considered as Branches."
@@ -12350,7 +12350,7 @@ msgstr "レポートを送信"
 
 #: lib/html_reports.php
 msgid "Sequence of Item."
-msgstr "項目のシーケンス"
+msgstr "項目のシーケンス。"
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
@@ -12467,7 +12467,7 @@ msgstr "適用"
 
 #: lib/html_tree.php
 msgid "Device Template:"
-msgstr "デバイステンプレート"
+msgstr "デバイステンプレート:"
 
 #: lib/html_tree.php
 msgid "Filter"
@@ -12479,11 +12479,11 @@ msgstr "グラフフィルタ"
 
 #: lib/html_tree.php
 msgid "Graph Template:"
-msgstr "グラフのテンプレート"
+msgstr "グラフテンプレート:"
 
 #: lib/html_tree.php
 msgid "Leaf:"
-msgstr "葉っぱ"
+msgstr "リーフ:"
 
 #: lib/html_tree.php
 msgid "Set/Refresh Filter"
@@ -12507,11 +12507,11 @@ msgstr "バックトラックの制限がなくなりました！"
 
 #: lib/html_utility.php
 msgid "Bad UTF-8 error!"
-msgstr "不正なUTF-8エラーです。"
+msgstr "不正なUTF-8エラーです！"
 
 #: lib/html_utility.php
 msgid "Bad UTF-8 offset error!"
-msgstr "不正なUTF-8オフセットエラーです。"
+msgstr "不正なUTF-8オフセットエラーです！"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
@@ -12544,7 +12544,7 @@ msgstr "正規表現\"%s\"は無効です。エラーは%sです"
 
 #: lib/html_utility.php
 msgid "There was an internal error!"
-msgstr "内部エラーがありました。"
+msgstr "内部エラーがありました！"
 
 #: lib/html_validate.php
 msgid "Validation Error"
@@ -12553,7 +12553,7 @@ msgstr "検証エラー"
 #: lib/html_validate.php
 #, php-format
 msgid "Validation error for variable %s with a value of %s.  See backtrace below for more details."
-msgstr "値%sの変数%sの検証エラー。詳細については、以下のバックトレースを参照してください。"
+msgstr "変数 %s (値: %s) の検証エラー。詳細については、以下のバックトレースを参照してください。"
 
 #: lib/import.php
 msgid "Damaged"
@@ -12581,11 +12581,11 @@ msgstr "Kadupulはテンプレート用に以下のアイテムをインポー�
 
 #: lib/import.php
 msgid "Kadupul would make the following changes if the Package was imported:"
-msgstr "パッケージがインポートされた場合、Kadupulは以下の変更を行います。"
+msgstr "パッケージがインポートされた場合、Kadupulは以下の変更を行います:"
 
 #: lib/import.php
 msgid "Kadupul would make the following changes if the Template was imported:"
-msgstr "テンプレートがインポートされた場合、Kadupulは以下の変更を行います。"
+msgstr "テンプレートがインポートされた場合、Kadupulは以下の変更を行います:"
 
 #: lib/import.php
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
@@ -12631,7 +12631,7 @@ msgstr "プレビュー"
 
 #: lib/import.php
 msgid "[preview] "
-msgstr "プレビュー"
+msgstr "プレビュー "
 
 #: lib/import.php
 msgid "[success]"
@@ -12736,11 +12736,11 @@ msgstr "また、これがアップグレードの場合は、必ず<a href=\"%s
 
 #: lib/installer.php
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
-msgstr "フォルダのアクセス権を設定する方法の例はここに示されています、あなたはあなたのオペレーティングシステム、ユーザーアカウントおよび望ましいアクセス権によってこれを調整する必要があるかもしれません"
+msgstr "フォルダのアクセス権を設定する方法の例はここに示されています、あなたはあなたのオペレーティングシステム、ユーザーアカウントおよび望ましいアクセス権によってこれを調整する必要があるかもしれません。"
 
 #: lib/installer.php
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "照合が一致しない場合、プラグインによって作成されたテーブルにはKadupul Coreテーブルとリンクした問題があるかもしれません。次のコマンドを実行して、データベースが「utf8mb4_unicode_ci」に変更されていることを確認してください。"
+msgstr "照合順序が一致しない場合、プラグインによって作成されたテーブルがKadupul Coreテーブルとリンクする際に問題が発生する可能性があります。次のコマンドを実行して、データベースが 'utf8mb4_unicode_ci' に変更されていることを確認してください: "
 
 #: lib/installer.php package_import.php plugins.php
 msgid "Author"
@@ -12785,7 +12785,7 @@ msgstr "完了"
 
 #: lib/installer.php
 msgid "Configuration Readonly!"
-msgstr "構成は読み取り専用です。"
+msgstr "構成は読み取り専用です！"
 
 #: lib/installer.php
 msgid "Configuration of Poller"
@@ -12896,7 +12896,7 @@ msgstr "<strong>%s</strong> から <strong>%s</strong> へダウングレード"
 
 #: lib/installer.php
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
-msgstr "絶対に必要なときにのみダウングレードを実行してください。"
+msgstr "ダウングレードは絶対に必要な場合にのみ実行すべきであり、実行するとインストールが破損する可能性があります"
 
 #: lib/installer.php
 msgid "ERROR:"
@@ -12997,7 +12997,7 @@ msgstr "ファイルが見つかりません"
 #: lib/installer.php
 #, php-format
 msgid "Finished %s Process for v%s"
-msgstr "V %sの%sプロセスを完了しました"
+msgstr "%s プロセスを完了しました (v%s)"
 
 #: lib/installer.php
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
@@ -13061,7 +13061,7 @@ msgstr "プロファイル'%s'のパッケージ#%s'%s'のインポートに成�
 
 #: lib/installer.php
 msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
-msgstr "問題が発生した場合は、Kadupulで問題が発生する前に、ブラウザのキャッシュをクリアし、ブラウザを閉じてから再度開き（Kadupulがオンになっているタブだけではない）、再試行することを強くお勧めします。"
+msgstr "問題が発生した場合は、Kadupulに問題を報告する前に、ブラウザのキャッシュをクリアし、ブラウザを閉じてから再度開き（Kadupulを開いているタブだけではなく）、再試行することを強くお勧めします"
 
 #: lib/installer.php
 msgid "Input Validation Whitelist Protection"
@@ -13178,7 +13178,7 @@ msgstr "注：データベースキャッシュに一時ファイルを使用す
 
 #: lib/installer.php
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
-msgstr "注：既存のデータは変更されません。また、新しいインストールでは変更されません。"
+msgstr "注：既存のデータは変更されませんが、既存のデータや履歴は新しいインストールでは利用できなくなります"
 
 #: lib/installer.php
 msgid "Network Range"
@@ -13227,11 +13227,11 @@ msgstr "書き込み不可"
 
 #: lib/installer.php
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
-msgstr "Linux / UNIXでは、シェルで「root」として次のコマンドを実行します。"
+msgstr "Linux/UNIXでは、シェルで 'root' として次のコマンドを実行します:"
 
 #: lib/installer.php
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"
-msgstr "Windowsでは、ここの指示に従ってください。 <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>タイムゾーンの説明表</a> 。それが完了したら、次のコマンドを発行してKadupulユーザにテーブルへのアクセス権を付与できます。"
+msgstr "Windowsでは、こちらの<a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>タイムゾーンの説明表</a>の指示に従ってください。それが完了したら、次のコマンドを発行してKadupulユーザーにテーブルへのアクセス権を付与できます:"
 
 #: lib/installer.php
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
@@ -13251,7 +13251,7 @@ msgstr "1つ以上のパスが正しくないように見え、続行できま�
 
 #: lib/installer.php
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
-msgstr "1つ以上のテーブルが大きすぎるため、インストール中に変換できません。 cli / convert_tables.phpスクリプトを使用して変換を実行してから、このページを更新してください。例えば："
+msgstr "1つ以上のテーブルが大きすぎるため、インストール中に変換できません。 cli / convert_tables.phpスクリプトを使用して変換を実行してから、このページを更新してください。例えば： "
 
 #: lib/installer.php
 msgid "Optional"
@@ -13436,7 +13436,7 @@ msgstr "詳細は docs/rrd-path-containment.md を参照してください。"
 
 #: lib/installer.php
 msgid "Select default theme: "
-msgstr "デフォルトのテーマを選択："
+msgstr "デフォルトのテーマを選択： "
 
 #: lib/installer.php
 #, php-format
@@ -13470,7 +13470,7 @@ msgstr "バックグラウンドプロセスを生成中: %s %s"
 #: lib/installer.php
 #, php-format
 msgid "Starting %s Process for v%s"
-msgstr "V %sの%sプロセスを開始"
+msgstr "%s プロセス (v%s) を開始"
 
 #: lib/installer.php
 #, php-format
@@ -13569,7 +13569,7 @@ msgstr "ユーザー'%s'には、読み取り/書き込みを有効にするた�
 
 #: lib/installer.php
 msgid "The variables that must be set in the config.php file include the following:"
-msgstr "config.phpファイルに設定する必要がある変数は次のとおりです。"
+msgstr "config.phpファイルに設定する必要がある変数は次のとおりです:"
 
 #: lib/installer.php
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
@@ -13577,7 +13577,7 @@ msgstr "ホワイトリストの仕組みとして、初めてデータ入力メ
 
 #: lib/installer.php
 msgid "Then run the following within MySQL as an administrator:"
-msgstr "次に、MySQL内で管理者として次のコマンドを実行します。"
+msgstr "次に、MySQL内で管理者として次のコマンドを実行します:"
 
 #: lib/installer.php
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
@@ -13589,7 +13589,7 @@ msgstr "これらのMySQLパフォーマンスチューニング設定は、長�
 
 #: lib/installer.php
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
-msgstr "メインKadupul Webサイトが変更されたときにKadupulリモート同期プロセスがそれらを更新できるように、これらのディレクトリはインストール後も読み書き可能にしておく必要があります。"
+msgstr "メインKadupul Webサイトが変更されたときにKadupulリモート同期プロセスがそれらを更新できるように、これらのディレクトリはインストール後も読み書き可能にしておく必要があります"
 
 #: lib/installer.php
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
@@ -13597,7 +13597,7 @@ msgstr "このエラーは、KadupulデータベースユーザーがKadupulデ�
 
 #: lib/installer.php
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
-msgstr "空のデータベースがあり、cacti.sqlファイルをまだインポートしていない場合に発生することがあります。"
+msgstr "空のデータベースがあり、cacti.sqlファイルをまだインポートしていない場合に発生することがあります"
 
 #: lib/installer.php
 #, php-format
@@ -13631,11 +13631,11 @@ msgstr "このバージョンのKadupul （%s）には有効なバージョン�
 
 #: lib/installer.php
 msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "続行するには、新しいデータベースを作成する<b>必要があり</b>ます。その中に &quot;cacti.sql&quot;をインポートしてください。"
+msgstr "続行するには、新しいデータベースを作成する<b>必要があり</b>ます。その中に\"cacti.sql\"をインポートしてください:"
 
 #: lib/installer.php
 msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
-msgstr "この状態でデータ入力メソッドを識別するために、次のオプションで実行できる検証スクリプトをKadupulのCLIディレクトリに用意しました。"
+msgstr "この状態でデータ入力メソッドを識別しやすくするため、次のオプションで実行できる検証スクリプトをKadupulのCLIディレクトリに用意しました:"
 
 #: lib/installer.php
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
@@ -13647,7 +13647,7 @@ msgstr "アプリケーションのデフォルトを更新できません。"
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "[mysqld]セクションの下で、 &#39;character-set-server&#39;および &#39;collation-server&#39;という名前のエントリを見つけて、次のように設定します。"
+msgstr "[mysqld]セクションの下で、'character-set-server'および'collation-server'という名前のエントリを見つけて、次のように設定します:"
 
 #: lib/installer.php
 msgid "Unexpected path parameter"
@@ -13687,7 +13687,7 @@ msgstr "アップグレード"
 #: lib/installer.php
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
-msgstr "<strong>%s</strong>から</strong>%s<strong>にアップグレード"
+msgstr "<strong>%s</strong> から <strong>%s</strong> にアップグレード"
 
 #: lib/installer.php
 #, php-format
@@ -13708,7 +13708,7 @@ msgstr "Web"
 
 #: lib/installer.php
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
-msgstr "アップグレードされた変更を元に戻すには、Kadupulデータベースを手動で変更する必要があります。 <br/>インストール担当者には、あなたがこれを自動的に行う方法はありません。"
+msgstr "行われたアップグレードの変更を元に戻すには、Kadupulデータベースを手動で変更する必要があります。<br/>インストーラには、これを自動的に行う方法はありません"
 
 #: lib/installer.php
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
@@ -13729,7 +13729,7 @@ msgstr "Kadupul %sを0.6.xデータベースにインストールしようとし
 
 #: lib/installer.php
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
-msgstr "新しいデータベースを作成しましたが、 &#39;cacti.sql&#39;ファイルをまだインポートしていません。コマンドラインで次のコマンドを実行して続行します。"
+msgstr "新しいデータベースを作成しましたが、'cacti.sql'ファイルをまだインポートしていません。コマンドラインで次のコマンドを実行して続行します:"
 
 #: lib/installer.php
 #, php-format
@@ -13784,7 +13784,7 @@ msgstr "データベースのデフォルトの照合順序はUTF8に準拠し�
 
 #: lib/installer.php
 msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
-msgstr "データベースのデフォルト照合は完全なUTF-8に準拠しているようには見えません。"
+msgstr "データベースのデフォルト照合は完全なUTF-8に準拠しているようには見えません。 "
 
 #: lib/installer.php
 msgid "Your server collation appears to be UTF8 compliant"
@@ -13792,7 +13792,7 @@ msgstr "サーバーの照合順序はUTF8に準拠しているようです"
 
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
-msgstr "サーバーの照合順序が完全にUTF8に準拠していないようです。"
+msgstr "サーバーの照合順序が完全にUTF8に準拠していないようです。 "
 
 #: lib/installer.php
 #, php-format
@@ -13846,22 +13846,22 @@ msgstr "プロトコルエラー、一般的な失敗（%s）"
 #: lib/ldap.php
 #, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
-msgstr "プロトコルエラー、バインドできません、サーバー（%s）のLDAP結果： （%s）"
+msgstr "プロトコルエラー、バインドできません。LDAP結果: (%s)、サーバー (%s)"
 
 #: lib/ldap.php
 #, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
-msgstr "プロトコルエラー、サーバー（%s）に紹介オプション（%s）を設定できません"
+msgstr "プロトコルエラー、リフェラルオプション (%s) を設定できません (サーバー: %s)"
 
 #: lib/ldap.php
 #, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
-msgstr "プロトコルエラー、サーバー（%s）にバージョン（%s）を設定できません"
+msgstr "プロトコルエラー、バージョン (%s) をサーバー (%s) に設定できません"
 
 #: lib/ldap.php
 #, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
-msgstr "プロトコルエラー、サーバー（%s）でTLS通信（%s）を開始できません"
+msgstr "プロトコルエラー、TLS通信 (%s) をサーバー (%s) で開始できません"
 
 #: lib/ldap.php
 msgid "Specific DN and Password required"
@@ -13913,7 +13913,7 @@ msgstr "設定によりpingが実行されません。"
 
 #: lib/ping.php
 msgid "Please upgrade to PHP 5.5.4+ for IPv6 support!"
-msgstr "IPv6をサポートするためにPHP 5.5.4以降にアップグレードしてください。"
+msgstr "IPv6をサポートするためにPHP 5.5.4以降にアップグレードしてください！"
 
 #: lib/ping.php
 #, php-format
@@ -13956,12 +13956,12 @@ msgstr "デフォルト"
 #: lib/plugins.php
 #, php-format
 msgid "%s Version %s or above is required for %s. "
-msgstr "%sには%sバージョン%s以上が必要です。"
+msgstr "%s バージョン %s 以上が必要です (対象: %s)。 "
 
 #: lib/plugins.php
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
-msgstr "%sには%sが必要ですが、インストールされていません。"
+msgstr "%s は %s に必要ですが、インストールされていません。 "
 
 #: lib/plugins.php
 msgid "Legacy Plugin"
@@ -14053,7 +14053,7 @@ msgstr "レポートグラフアイテム<i>'%s'</i>の追加に失敗しまし�
 
 #: lib/reports.php
 msgid "Graph Alignment:"
-msgstr "グラフの配置"
+msgstr "グラフの配置:"
 
 #: lib/reports.php
 msgid "Graph Timespan:"
@@ -14067,7 +14067,7 @@ msgstr "レポート'%s'の送信の問題電子メールサブシステムエ�
 #: lib/reports.php
 #, php-format
 msgid "Report '%s' Sent Successfully"
-msgstr "レポート '%s' が正常に送信されました。"
+msgstr "レポート '%s' が正常に送信されました"
 
 #: lib/reports.php
 msgid "Report:"
@@ -14145,7 +14145,7 @@ msgstr "データファイルを開けませんでした。ポーラーはまだ
 #: lib/rrd.php
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "ファイルRRA '%s'は'%s'と同じCF/ステップ（%s、%s）を持っています"
+msgstr "ファイルRRA '%s' のCF/ステップ (%s, %s) は '%s' と同じです"
 
 #: lib/rrd.php
 #, php-format
@@ -14983,7 +14983,7 @@ msgstr "%s通知受信者"
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
 msgid_plural "Click 'Continue' to delete the following Notification Receivers"
-msgstr[0] "次の通知受信者を削除するには、[続行]をクリックしてください。"
+msgstr[0] "次の通知受信者を削除するには、[続行]をクリックしてください"
 
 #: managers.php
 msgid "Click 'Continue' to disable forwarding the following Notification Objects to this Notification Receiver."
@@ -14992,12 +14992,12 @@ msgstr "次の通知オブジェクトをこの通知受信者に転送しない
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable the following Notification Receivers"
-msgstr[0] "次の通知受信者を無効にするには、[続行]をクリックします。"
+msgstr[0] "次の通知受信者を無効にするには、[続行]をクリックします"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable the following Notification Receivers"
-msgstr[0] "次の通知受信者を有効にするには、[続行]をクリックします。"
+msgstr[0] "次の通知受信者を有効にするには、[続行]をクリックします"
 
 #: managers.php
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
@@ -15130,7 +15130,7 @@ msgstr "エラー: 無効なファイルパスです。"
 
 #: package_import.php
 msgid "File Differences for: "
-msgstr "次のファイルの差異："
+msgstr "次のファイルの差異： "
 
 #: package_import.php
 msgid "Filename"
@@ -15343,7 +15343,7 @@ msgstr "プラグインディレクトリ'%s'にsetup.phpがありません"
 
 #: plugins.php
 msgid "Plugin directory is missing!"
-msgstr "プラグインディレクトリがありません。"
+msgstr "プラグインディレクトリがありません！"
 
 #: plugins.php
 #, php-format
@@ -15384,11 +15384,11 @@ msgstr "このプラグインの名前名前はそれが存在するディレク
 
 #: plugins.php
 msgid "The status of this Plugin."
-msgstr "このプラグインのステータス"
+msgstr "このプラグインのステータス。"
 
 #: plugins.php
 msgid "The version of this Plugin."
-msgstr "このプラグインのバージョン"
+msgstr "このプラグインのバージョン。"
 
 #: plugins.php
 msgid "This Plugin requires the following Plugins be installed first."
@@ -15419,7 +15419,7 @@ msgstr "プラグインをアンインストールする"
 
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
-msgstr "このプラグインをアンインストールすると、すべてのプラグインのデータと設定が削除されます。本当にプラグインをアンインストールする場合は、下の[アンインストール]をクリックしてください。それ以外の場合は[キャンセル]をクリックしてください。"
+msgstr "このプラグインをアンインストールすると、すべてのプラグインのデータと設定が削除されます。本当にプラグインをアンインストールする場合は、下の[アンインストール]をクリックしてください。それ以外の場合は[キャンセル]をクリックしてください"
 
 #: poller.php
 #, php-format
@@ -15438,7 +15438,7 @@ msgstr "Kadupul システム通知"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "ポーラーID %dの最大実行時間%d秒を超えました。終了します。"
+msgstr "最大実行時間 %d 秒を超えました (ポーラーID: %d)。終了します。"
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -15455,7 +15455,7 @@ msgstr "警告：%sはポーラーID %dのポーラー間隔と同期してい�
 
 #: poller.php
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "警告: Kadupul ポーリングサイクルがポーラー間隔を超過しました: "
+msgstr "警告: Kadupul ポーリングサイクルがポーラー間隔を超過しました "
 
 #: poller.php
 #, php-format
@@ -15465,12 +15465,12 @@ msgstr "警告：ポーラーID %dのポーラー出力テーブルが空では�
 #: poller.php
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
-msgstr "警告：名前：%sのPollerID ：%sはハートビート状態です"
+msgstr "警告: PollerID:%s (名前:%s) はハートビート状態です"
 
 #: poller.php
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
-msgstr "警告：ポーラーID %dのポーリングサイクルをオーバーランしていると検出された%dプロセスがあります。調査してください。"
+msgstr "警告: %d 個のプロセスがポーラーID %d のポーリングサイクルを超過していると検出されました。調査してください。"
 
 #: poller_automation.php
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -16211,7 +16211,7 @@ msgstr "パスワードは少なくとも %d 文字にする必要がありま�
 
 #: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
 msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "パスワードには、小文字と大文字が混在している必要があります。"
+msgstr "パスワードには、小文字と大文字が混在している必要があります！"
 
 #: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
 msgid "Your password must contain at least 1 numerical character!"
@@ -16219,7 +16219,7 @@ msgstr "あなたのパスワードは少なくとも1つの数字を含まな�
 
 #: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
 msgid "Your password must contain at least 1 special character!"
-msgstr "パスワードには少なくとも1つの特殊文字を含める必要があります。"
+msgstr "パスワードには少なくとも1つの特殊文字を含める必要があります！"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"
@@ -16317,7 +16317,7 @@ msgstr "一部のテンプレートは、正しく機能するためにKadupul�
 
 #: templates_export.php
 msgid "WARNING: Export Errors Encountered. Refresh Browser Window for Details!"
-msgstr "警告：エクスポートエラーが発生しました。詳細についてはブラウザウィンドウを更新してください。"
+msgstr "警告：エクスポートエラーが発生しました。詳細についてはブラウザウィンドウを更新してください！"
 
 #: templates_export.php
 msgid "What would you like to export?"
@@ -16663,11 +16663,11 @@ msgstr "<b>注:</b> システムグラフポリシーは「グラフテンプレ
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "<b>注：</b>システムグラフポリシーは「許容」です。つまり、グラフにアクセスするには、ユーザーはグラフ、デバイス、またはグラフテンプレートの少なくとも1つにアクセスできなければなりません。"
+msgstr "<b>注：</b>システムグラフポリシーは「許容」です。つまり、グラフにアクセスするには、ユーザーはグラフ、デバイス、またはグラフテンプレートの少なくとも1つにアクセスできなければなりません"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<b>注：</b>システムグラフポリシーは「制限的」であり、グラフにアクセスするにはユーザーがグラフまたはデバイスとグラフテンプレートのいずれかにアクセスできる必要があります。"
+msgstr "<b>注：</b>システムグラフポリシーは「制限的」であり、グラフにアクセスするにはユーザーがグラフまたはデバイスとグラフテンプレートのいずれかにアクセスできる必要があります"
 
 #: user_admin.php
 msgid "> 1 Month Ago"
@@ -17107,7 +17107,7 @@ msgstr "このドメインのわかりやすい名前を入力してください
 
 #: user_domains.php
 msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
-msgstr "LDAPから取得したEメールを置き換えるフィールド。 （Windowsの場合：メール）"
+msgstr "LDAPから取得したEメールを置き換えるフィールド。 （Windowsの場合：メール） "
 
 #: user_domains.php
 msgid "If this checkbox is checked, users will be able to log in using this domain."
@@ -17131,7 +17131,7 @@ msgstr "サーバーがサポートするプロトコルのバージョンです
 
 #: user_domains.php
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."
-msgstr "<i>&quot;dc = win2kdomain、dc = local&quot;</i>や<i>&quot;ou = people、dc = domain、dc = local&quot;</i>など、LDAPディレクトリを検索するための検索ベース"
+msgstr "<i>\"dc=win2kdomain,dc=local\"</i>や<i>\"ou=people,dc=domain,dc=local\"</i>など、LDAPディレクトリを検索するための検索ベース。"
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
@@ -17187,7 +17187,7 @@ msgstr[0] "[続行]をクリックして、次のユーザーグループを新�
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
 msgid_plural "Click 'Continue' to delete the following User Groups"
-msgstr[0] "次のユーザーグループを削除するには、[続行]をクリックします。"
+msgstr[0] "次のユーザーグループを削除するには、[続行]をクリックします"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
@@ -17249,7 +17249,7 @@ msgstr "グラフのプレビュー権"
 
 #: user_group_admin.php
 msgid "Group Description"
-msgstr "グループの説明 "
+msgstr "グループの説明"
 
 #: user_group_admin.php
 msgid "Group Member"
@@ -17317,7 +17317,7 @@ msgstr "メンバーを表示"
 
 #: user_group_admin.php
 msgid "Show the Console"
-msgstr "デフォルトでコンソール画面を表示します。"
+msgstr "コンソールを表示"
 
 #: user_group_admin.php
 msgid "Show the Page that the User pointed their browser to"
@@ -17325,7 +17325,7 @@ msgstr "ユーザーが自分のブラウザをポイントしたページを表
 
 #: user_group_admin.php
 msgid "Show the default Graph Screen"
-msgstr "デフォルトでグラフ画面を表示します。"
+msgstr "デフォルトのグラフ画面を表示"
 
 #: user_group_admin.php
 msgid "The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -"
@@ -17337,7 +17337,7 @@ msgstr "コピーされたグループ名は、数値サフィックスを含め
 
 #: user_group_admin.php
 msgid "The name of this Group."
-msgstr "このグループの名前"
+msgstr "このグループの名前。"
 
 #: user_group_admin.php
 msgid "Tree Rights"
@@ -17358,7 +17358,7 @@ msgstr "ユーザーグループ管理 [新規]"
 
 #: user_group_admin.php
 msgid "What to do when a User from this User Group logs in."
-msgstr "このユーザーグループのユーザーがログインしたときの対処方法"
+msgstr "このユーザーグループのユーザーがログインしたときの対処方法。"
 
 #: utilities.php
 #, php-format
@@ -17428,7 +17428,7 @@ msgstr "平均行長"
 
 #: utilities.php
 msgid "Boost On-demand Updating:"
-msgstr "オンデマンドの強化"
+msgstr "Boostオンデマンド更新:"
 
 #: utilities.php
 msgid "Boost Storage Statistics"
@@ -17440,7 +17440,7 @@ msgstr "ブーストユーティリティ"
 
 #: utilities.php
 msgid "Cache Directory:"
-msgstr "キャッシュディレクトリ"
+msgstr "キャッシュディレクトリ:"
 
 #: utilities.php
 msgid "Cached Files Size:"
@@ -17448,7 +17448,7 @@ msgstr "キャッシュファイルサイズ："
 
 #: utilities.php
 msgid "Cached Files:"
-msgstr "キャッシュファイル"
+msgstr "キャッシュファイル:"
 
 #: utilities.php
 msgid "Calculation Formula"
@@ -17489,7 +17489,7 @@ msgstr "並行プロセス"
 
 #: utilities.php
 msgid "Concurrent Processes:"
-msgstr "並行プロセス"
+msgstr "並行プロセス:"
 
 #: utilities.php
 msgid "Configuration Settings"
@@ -17529,7 +17529,7 @@ msgstr "データベース"
 
 #: utilities.php
 msgid "Database Engine:"
-msgstr "データベースエンジン"
+msgstr "データベースエンジン:"
 
 #: utilities.php
 msgid "Database Settings"
@@ -17553,7 +17553,7 @@ msgstr "Kadupul と Spine のバージョンが異なります！"
 
 #: utilities.php
 msgid "Directory Does NOT Exist!"
-msgstr "ディレクトリが存在しません。"
+msgstr "ディレクトリが存在しません！"
 
 #: utilities.php
 msgid "Display Order"
@@ -17583,7 +17583,7 @@ msgstr "エラー：ログを消去できません。書き込み権限があり
 
 #: utilities.php
 msgid "Estimated Maximum Records:"
-msgstr "推定最大レコード数"
+msgstr "推定最大レコード数:"
 
 #: utilities.php
 msgid "Field Value"
@@ -17713,7 +17713,7 @@ msgstr "許可される最大ポーラーメモリ："
 
 #: utilities.php
 msgid "Max Record Length:"
-msgstr "最大レコード長"
+msgstr "最大レコード長:"
 
 #: utilities.php
 msgid "Max Threads"
@@ -17729,7 +17729,7 @@ msgstr "最大許容ランタイム："
 
 #: utilities.php
 msgid "Maximum Records:"
-msgstr "最大レコード数"
+msgstr "最大レコード数:"
 
 #: utilities.php
 msgid "Minimum Connections:"
@@ -17753,11 +17753,11 @@ msgstr "NET-SNMPのバージョン"
 
 #: utilities.php
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
-msgstr "注：大規模なシステムでは、このコマンドの完了に数分から数時間かかる場合があるため、Kadupul UIから実行しないでください。詳細については、コマンドラインで'php - q cli/rebuild_poller_cache.php -- help'を実行するだけです。"
+msgstr "注: 大規模なシステムでは、このコマンドの完了に数分から数時間かかる場合があるため、Kadupul UIから実行しないでください。詳細については、コマンドラインで 'php -q cli/rebuild_poller_cache.php --help' を実行してください。"
 
 #: utilities.php
 msgid "Name: "
-msgstr "名前:"
+msgstr "名前: "
 
 #: utilities.php
 msgid "Never Run"
@@ -17817,7 +17817,7 @@ msgstr "PHPのバージョン"
 
 #: utilities.php
 msgid "PHP Version 5.5.0+ is recommended due to strong password hashing support."
-msgstr "強力なパスワードハッシュサポートのため、PHPバージョン5.5.0以降を推奨"
+msgstr "強力なパスワードハッシュサポートのため、PHPバージョン5.5.0以降を推奨します。"
 
 #: utilities.php
 msgid "PHP uname"
@@ -17854,7 +17854,7 @@ msgstr "プロセス: %d"
 
 #: utilities.php
 msgid "Procs: "
-msgstr "1プロセス"
+msgstr "プロセス: "
 
 #: utilities.php
 msgctxt "Button: delete all table entries"
@@ -17940,7 +17940,7 @@ msgstr "リフレッシュ間隔"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
-msgstr "データソースのデバッグ"
+msgstr "残りのデータソース:"
 
 #: utilities.php
 msgid "Result"
@@ -17952,7 +17952,7 @@ msgstr "実行時設定"
 
 #: utilities.php
 msgid "Running Processes:"
-msgstr "並行プロセス"
+msgstr "実行中のプロセス:"
 
 #: utilities.php
 msgid "SNMP Agent Cache"
@@ -17968,7 +17968,7 @@ msgstr "SNMPエージェントエージェント"
 
 #: utilities.php
 msgid "SNMP Version:"
-msgstr "SNMPバージョン"
+msgstr "SNMPバージョン:"
 
 #: utilities.php
 msgid "Scalar"
@@ -17980,7 +17980,7 @@ msgstr "スクリプト"
 
 #: utilities.php
 msgid "Script Server:"
-msgstr "スクリプトサーバー"
+msgstr "スクリプトサーバー:"
 
 #: utilities.php
 msgid "Script Timeout"
@@ -18019,7 +18019,7 @@ msgstr "成功 - トークン"
 
 #: utilities.php
 msgid "System Memory"
-msgstr "システムメモリ："
+msgstr "システムメモリ"
 
 #: utilities.php
 msgid "TBD"
@@ -18040,7 +18040,7 @@ msgstr "Kadupul Logはシステム設定に応じて統計、エラー、その�
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "このオプションを選択すると、ポーラーキャッシュが再生成されます。クラッシュ後に問題が発生し、データベース修復ツールをすでに実行している場合は、データベースがクラッシュした場合にのみこのオプションを使用してください。あるいは、特定のデバイスに問題がある場合は、そのデバイスを再保存してポーラーキャッシュを再構築するだけです。大規模システムに推奨される、このコマンドと同等のコマンドラインインタフェースもあります。 <i class=\"deviceDown\">注：大規模システムでは、このコマンドが完了するまでに数分から数時間かかることがあるため、Kadupul UIから実行しないでください。詳細については、コマンドラインで &#39;php -q cli / rebuild_poller_cache.php --help&#39;を実行するだけです。</i>"
+msgstr "このオプションを選択すると、ポーラーキャッシュが再生成されます。クラッシュ後に問題が発生し、データベース修復ツールをすでに実行している場合は、データベースがクラッシュした場合にのみこのオプションを使用してください。あるいは、特定のデバイスに問題がある場合は、そのデバイスを再保存してポーラーキャッシュを再構築するだけです。大規模システムに推奨される、このコマンドと同等のコマンドラインインタフェースもあります。"
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
@@ -18076,7 +18076,7 @@ msgstr "この推奨メモリ値は、存在するデータソースの数に基
 
 #: utilities.php
 msgid "Threads: "
-msgstr "スレッド"
+msgstr "スレッド: "
 
 #: utilities.php
 msgid "Timed Out"
@@ -18092,7 +18092,7 @@ msgstr "合計データソース："
 
 #: utilities.php
 msgid "Total Poller Items:"
-msgstr "ポーラーキャッシュアイテム"
+msgstr "合計ポーラーアイテム数:"
 
 #: utilities.php
 #, php-format
@@ -18121,7 +18121,7 @@ msgstr "ユーザーログイン"
 
 #: utilities.php
 msgid "User:"
-msgstr "ユーザー"
+msgstr "ユーザー:"
 
 #: utilities.php
 msgid "Variable Name"
@@ -18249,3 +18249,5 @@ msgstr "VDEF [新規]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "使用中のVDEFは削除できません。使用中は、グラフまたはグラフテンプレートによって参照されていると定義されます。"
+
+

@@ -2043,7 +2043,7 @@ msgstr "संलग्न आलेख हटवा"
 msgid "Delete Data Query"
 msgid_plural "Delete Data Queries"
 msgstr[0] "डेटा क्वेरी हटवा"
-msgstr[1] "डेटा क्वेरी हटवा"
+msgstr[1] "डेटा क्वेरीज हटवा"
 
 #: data_queries.php data_templates.php graph_templates.php graphs.php
 #: host_templates.php include/global_arrays.php
@@ -2054,7 +2054,7 @@ msgstr "डुप्लिकेट करा"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "डेटा क्वेरी डुप्लिकेट करा"
-msgstr[1] "डेटा क्वेरी डुप्लिकेट करा"
+msgstr[1] "डेटा क्वेरीज डुप्लिकेट करा"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
@@ -2212,7 +2212,7 @@ msgstr "डिव्हाइस बदला"
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "या डेटा स्रोतासाठी नवीन डिव्हाइस निवडा आणि 'पुढे जा' वर क्लिक करा."
-msgstr[1] "या डेटा स्रोतांसाठी नवीन डिव्हाइस निवडा आणि 'पुढे जा' वर क्लिक करा."
+msgstr[1] "या डेटा स्रोतांसाठी नवीन डिव्हाइस निवडा आणि 'पुढे जा' वर क्लिक करा"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -3359,17 +3359,17 @@ msgstr "हे डिव्हाइस संपादित करा"
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "ID '%s' असलेल्या डेटा क्वेरी '%s' साठी डेटा क्वेरी संसाधन XML फाइल पार्स करताना त्रुटी"
+msgstr "डेटा क्वेरी '%s' (ID '%s') साठी डेटा क्वेरी संसाधन XML फाइल पार्स करताना त्रुटी"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "ID '%s' असलेल्या डेटा क्वेरी '%s' साठी डेटा क्वेरी संसाधन XML फाइल पार्स करताना त्रुटी. फील्ड नाव '%s' मध्ये 'direction' विशेषता गहाळ आहे"
+msgstr "डेटा क्वेरी '%s' (ID '%s') साठी डेटा क्वेरी संसाधन XML फाइल पार्स करताना त्रुटी. फील्ड नाव '%s' मध्ये 'direction' विशेषता गहाळ आहे"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "ID '%s' असलेल्या डेटा क्वेरी '%s' साठी डेटा क्वेरी संसाधन XML फाइल पार्स करताना त्रुटी"
+msgstr "डेटा क्वेरी '%s' (ID '%s') साठी डेटा क्वेरी संसाधन XML फाइल पार्स करताना त्रुटी"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -7055,7 +7055,7 @@ msgstr "स्क्रिप्टला पाठवला जाणारा 
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "डेटा स्रोतावरून डेटा किती वारंवार गोळा केला जाईल?"
+msgstr "डेटा स्रोतावरून डेटा गोळा करण्याची वारंवारता।"
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "उभे लेबल (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "हे डिव्हाइस कोणत्या साइटशी संबंधित आहे."
+msgstr "हे डिव्हाइस कोणत्या साइटशी संबंधित आहे?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "तुम्हाला किती लॉग फाइल्स ज�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Kadupul लॉग प्रदर्शन किती वेळा अद्यतनित व्हावे असे तुम्हाला वाटते."
+msgstr "Kadupul लॉग प्रदर्शन किती वेळा अद्यतनित व्हावे असे तुम्हाला वाटते?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "क्लायंट ब्राउझरच्या टाइमझ�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul घटना लॉगिंग कसे हाताळेल."
+msgstr "Kadupul घटना लॉगिंग कसे हाताळेल?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "जर boost आउटपुट सारणी नोंदींच्
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "जर boost पोलर या रनटाइमपेक्षा जास्त चालला, तर cacti लॉगमध्ये चेतावणी ठेवली जाईल,"
+msgstr "जर boost पोलर या रनटाइमपेक्षा जास्त चालला, तर cacti लॉगमध्ये चेतावणी ठेवली जाईल।"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "इमेज कॅशिंग सक्षम करावे का?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Has Graphs आणि Has Data Sources हे डीफॉल्टनुसार तपासलेले असावेत का."
+msgstr "Has Graphs आणि Has Data Sources हे डीफॉल्टनुसार तपासलेले असावेत का?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "निवडलेले असताना, उच्च सुरक�
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "नवीन अहवाल तयार करताना, इनलाइन आलेखांसाठी कोणता इमेज प्रकार वापरला जावा."
+msgstr "नवीन अहवाल तयार करताना, इनलाइन आलेखांसाठी कोणता इमेज प्रकार वापरला जावा?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -13075,12 +13075,12 @@ msgstr "जर तुमच्या डिव्हाइसेसना प्
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
-msgstr "प्रोफाइल '%s' अंतर्गत पॅकेज #%s '%s' ची आयात अयशस्वी झाली"
+msgstr "पॅकेज #%s '%s' ची आयात (प्रोफाइल '%s' अंतर्गत) अयशस्वी झाली"
 
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
-msgstr "प्रोफाइल '%s' अंतर्गत पॅकेज #%s '%s' ची आयात यशस्वी झाली"
+msgstr "पॅकेज #%s '%s' ची आयात (प्रोफाइल '%s' अंतर्गत) यशस्वी झाली"
 
 #: lib/installer.php
 msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
@@ -14178,7 +14178,7 @@ msgstr "डेटा स्रोत '%s' साठी हार्टबीट 
 #: lib/rrd.php
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "Kadupul RRA '%s' मध्ये '%s' प्रमाणेच CF/steps (%s, %s) आहेत"
+msgstr "Kadupul RRA '%s' मधील CF/steps (%s, %s) हे '%s' प्रमाणेच आहेत"
 
 #: lib/rrd.php
 msgid "Last DS"
@@ -18313,3 +18313,5 @@ msgstr "VDEFs [नवीन]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "वापरात असलेले VDEFs हटवले जाऊ शकत नाहीत. वापरात असणे म्हणजे आलेख किंवा आलेख टेम्पलेटद्वारे संदर्भित असणे."
+
+

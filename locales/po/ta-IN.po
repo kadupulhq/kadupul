@@ -3359,17 +3359,17 @@ msgstr "இந்தச் சாதனத்தைத் திருத்த�
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "'%s' என்ற ஐடியைக் கொண்ட '%s' தரவு வினவலுக்கான தரவு வினவல் வள XML கோப்பைப் பாகுபடுத்துவதில் பிழை"
+msgstr "தரவு வினவல் '%s' (ஐடி '%s') என்பதற்கான தரவு வினவல் வள XML கோப்பைப் பாகுபடுத்துவதில் பிழை"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "'%s' என்ற ஐடியைக் கொண்ட '%s' தரவு வினவலுக்கான தரவு வினவல் வள XML கோப்பைப் பாகுபடுத்துவதில் பிழை. புலப் பெயர் '%s' இல் 'direction' பண்புக்கூறு இல்லை"
+msgstr "தரவு வினவல் '%s' (ஐடி '%s') என்பதற்கான தரவு வினவல் வள XML கோப்பைப் பாகுபடுத்துவதில் பிழை. புலப் பெயர் '%s' இல் 'direction' பண்புக்கூறு இல்லை"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "'%s' என்ற ஐடியைக் கொண்ட '%s' தரவு வினவலுக்கான தரவு வினவல் வள XML கோப்பைப் பாகுபடுத்துவதில் பிழை"
+msgstr "தரவு வினவல் '%s' (ஐடி '%s') என்பதற்கான தரவு வினவல் வள XML கோப்பைப் பாகுபடுத்துவதில் பிழை"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -7055,7 +7055,7 @@ msgstr "ஸ்கிரிப்டுக்கு அனுப்பப்ப�
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "தரவு மூலத்திலிருந்து தரவு எவ்வளவு அடிக்கடி சேகரிக்கப்படும்?"
+msgstr "தரவு மூலத்திலிருந்து தரவு சேகரிக்கப்படும் அதிர்வெண்."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "செங்குத்து லேபிள் (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "இந்தச் சாதனம் எந்தத் தளத்துடன் தொடர்புடையது."
+msgstr "இந்தச் சாதனம் எந்தத் தளத்துடன் தொடர்புடையது?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "எத்தனை பதிவுக்கோப்புகளைத�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Kadupul பதிவுக் காட்சி எவ்வளவு அடிக்கடி புதுப்பிக்கப்பட வேண்டும் என்று விரும்புகிறீர்கள்."
+msgstr "Kadupul பதிவுக் காட்சி எவ்வளவு அடிக்கடி புதுப்பிக்கப்பட வேண்டும் என்று விரும்புகிறீர்கள்?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "கிளையன்ட் உலாவிகளின் நேர ம
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul நிகழ்வுப் பதிவை எவ்வாறு கையாளும்."
+msgstr "Kadupul நிகழ்வுப் பதிவை எவ்வாறு கையாளும்?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "boost வெளியீட்டு அட்டவணை பதிவ�
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "boost poller இந்த இயக்க நேரத்தை மீறினால், cacti பதிவில் ஒரு எச்சரிக்கை வைக்கப்படும்,"
+msgstr "boost poller இந்த இயக்க நேரத்தை மீறினால், cacti பதிவில் ஒரு எச்சரிக்கை வைக்கப்படும்."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "படத் தற்காலிக சேமிப்பு இயக
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "வரைபடங்கள் உள்ளன மற்றும் தரவு மூலங்கள் உள்ளன என்பவை இயல்புநிலையாகத் தேர்ந்தெடுக்கப்பட்டிருக்க வேண்டுமா."
+msgstr "வரைபடங்கள் உள்ளன மற்றும் தரவு மூலங்கள் உள்ளன என்பவை இயல்புநிலையாகத் தேர்ந்தெடுக்கப்பட்டிருக்க வேண்டுமா?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "தேர்ந்தெடுக்கப்படும்போது
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "புதிய அறிக்கையை உருவாக்கும்போது, உள்வரி வரைபடங்களுக்கு எந்தப் பட வகை பயன்படுத்தப்பட வேண்டும்."
+msgstr "புதிய அறிக்கையை உருவாக்கும்போது, உள்வரி வரைபடங்களுக்கு எந்தப் பட வகை பயன்படுத்தப்பட வேண்டும்?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -13020,7 +13020,7 @@ msgstr "கோப்பு கிடைக்கவில்லை"
 #: lib/installer.php
 #, php-format
 msgid "Finished %s Process for v%s"
-msgstr "v%s க்கான %s செயல்முறை முடிந்தது"
+msgstr "%s செயல்முறை முடிந்தது (v%s)"
 
 #: lib/installer.php
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
@@ -13075,12 +13075,12 @@ msgstr "உங்கள் சாதனங்களுக்கு முதல�
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
-msgstr "'%s' சுயவிவரத்தின் கீழ் தொகுப்பு #%s '%s' இறக்குமதி தோல்வியடைந்தது"
+msgstr "தொகுப்பு #%s '%s' ஐ '%s' சுயவிவரத்தின் கீழ் இறக்குமதி செய்வது தோல்வியடைந்தது"
 
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
-msgstr "'%s' சுயவிவரத்தின் கீழ் தொகுப்பு #%s '%s' இறக்குமதி வெற்றிகரமாக முடிந்தது"
+msgstr "தொகுப்பு #%s '%s' ஐ '%s' சுயவிவரத்தின் கீழ் இறக்குமதி செய்வது வெற்றிகரமாக முடிந்தது"
 
 #: lib/installer.php
 msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
@@ -14168,7 +14168,7 @@ msgstr "தரவுக் கோப்பைத் திறக்க முட
 #: lib/rrd.php
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "கோப்பு RRA '%s' ஆனது '%s' போலவே அதே CF/steps (%s, %s) ஐக் கொண்டுள்ளது"
+msgstr "கோப்பு RRA '%s' ஆனது அதே CF/steps (%s, %s) ஐ '%s' போலவே கொண்டுள்ளது"
 
 #: lib/rrd.php
 #, php-format
@@ -14178,7 +14178,7 @@ msgstr "தரவு மூலம் '%s' க்கான Heartbeat '%s' ஆக 
 #: lib/rrd.php
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "Kadupul RRA '%s' ஆனது '%s' போலவே அதே CF/steps (%s, %s) ஐக் கொண்டுள்ளது"
+msgstr "Kadupul RRA '%s' ஆனது அதே CF/steps (%s, %s) ஐ '%s' போலவே கொண்டுள்ளது"
 
 #: lib/rrd.php
 msgid "Last DS"
@@ -14821,7 +14821,7 @@ msgstr "இந்த VDEF க்குப் பயனுள்ள பெயர�
 #: link.php
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr "'%s' என்ற தலைப்பைக் கொண்ட வெளிப்புற இணைப்பு ஐடி '%s' தவறான URL ஐப் புகுத்த முயற்சித்தது மற்றும் தடுக்கப்பட்டது!"
+msgstr "வெளிப்புற இணைப்பு ஐடி '%s' (தலைப்பு '%s') தவறான URL ஐப் புகுத்த முயற்சித்தது மற்றும் தடுக்கப்பட்டது!"
 
 #: links.php
 msgid "Apply Filter"
@@ -15450,12 +15450,12 @@ msgstr "இந்தச் செருகுநிரலை நிறுவல�
 #: poller.php
 #, php-format
 msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
-msgstr "பிழை: poller ஐடி %2$d க்கு PHP இருமப் பாதை: %1$s தவறானது. Poller தொடர முடியாது!"
+msgstr "பிழை: PHP இருமப் பாதை: %s என்பது poller ஐடி %d க்கு தவறானது. Poller தொடர முடியாது!"
 
 #: poller.php
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
-msgstr "பிழை: poller ஐடி %2$d க்கு spine பாதை: %1$s தவறானது. Poller தொடர முடியாது!"
+msgstr "பிழை: spine பாதை: %s என்பது poller ஐடி %d க்கு தவறானது. Poller தொடர முடியாது!"
 
 #: poller.php
 msgid "Kadupul System Notification"
@@ -15464,7 +15464,7 @@ msgstr "Kadupul கணினி அறிவிப்பு"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "poller ஐடி %d க்கு %d விநாடிகள் என்ற அதிகபட்ச இயக்க நேரம் மீறப்பட்டது. வெளியேறுகிறது."
+msgstr "%d விநாடிகள் என்ற அதிகபட்ச இயக்க நேரம் poller ஐடி %d க்கு மீறப்பட்டது. வெளியேறுகிறது."
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -18313,3 +18313,5 @@ msgstr "VDEF-கள் [புதியது]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "பயன்பாட்டில் உள்ள VDEF-களை நீக்க முடியாது. பயன்பாட்டில் என்பது ஒரு வரைபடம் அல்லது வரைபட வார்ப்புருவால் குறிப்பிடப்படுவது என வரையறுக்கப்படுகிறது."
+
+

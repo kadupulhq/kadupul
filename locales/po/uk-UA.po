@@ -688,7 +688,7 @@ msgstr "Доступ заборонено! Помилка входу."
 
 #: auth_login.php
 msgid "Access Denied!  User account disabled."
-msgstr "Обліковий запис користувача Вимкнено"
+msgstr "Доступ заборонено! Обліковий запис користувача вимкнено."
 
 #: auth_login.php
 msgid "Access Denied! User account locked."
@@ -2677,7 +2677,7 @@ msgstr "Клацніть для перегляду цього Графіку в 
 
 #: graph.php lib/html.php
 msgid "Edit Graph Template"
-msgstr "Редагувати Шаблон Графіків."
+msgstr "Редагувати шаблон графіків"
 
 #: graph.php
 msgid "GRAPH DOES NOT EXIST"
@@ -3333,7 +3333,7 @@ msgstr "Розлочити Графік."
 
 #: graphs_items.php
 msgid "Choose the Data Source to associate with this Graph Item."
-msgstr "Оберіть Джерело Даних для для асоціювання з Елементом Графіку."
+msgstr "Оберіть Джерело Даних для асоціювання з цим Елементом Графіка."
 
 #: graphs_items.php
 #, php-format
@@ -4626,7 +4626,7 @@ msgstr "ICMP Ping"
 
 #: include/global_arrays.php
 msgid "ILO, IPMI, iDrac, etc."
-msgstr "ILO, IPMI, iDrac тощо"
+msgstr "ILO, IPMI, iDrac тощо."
 
 #: include/global_arrays.php
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -5099,7 +5099,7 @@ msgstr "Португальська (Бразилія)"
 
 #: include/global_arrays.php
 msgid "Power Related PDUs/STS, etc."
-msgstr "Пов'язано з живленням (PDU/STS тощо)"
+msgstr "Пов'язано з живленням (PDU/STS тощо)."
 
 #: include/global_arrays.php lib/html_filter.php lib/html_graph.php
 #: lib/html_tree.php
@@ -7293,7 +7293,7 @@ msgstr "Вертикальний підпис (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "З яким майданчиком пов'язаний цей пристрій."
+msgstr "З яким майданчиком пов'язаний цей пристрій?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8401,7 +8401,7 @@ msgstr "Скільки файлів журналу потрібно зберіг
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Як часто оновлювати відображення журналу Kadupul."
+msgstr "Як часто оновлювати відображення журналу Kadupul?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8409,7 +8409,7 @@ msgstr "Як Kadupul має підтримувати дати клієнта в�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Як Kadupul оброблятиме журналювання подій."
+msgstr "Як Kadupul оброблятиме журналювання подій?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8453,7 +8453,7 @@ msgstr "Якщо таблиця виводу Boost перевищить цей �
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Якщо час виконання опитувача Boost перевищить цю тривалість, у журнал Cacti буде записано попередження,"
+msgstr "Якщо час виконання опитувача Boost перевищить цю тривалість, у журнал Cacti буде записано попередження."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9233,7 +9233,7 @@ msgstr "Чи потрібно увімкнути кешування зображ
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Чи мають прапорці «Має графіки» та «Має джерела даних» бути позначені типово."
+msgstr "Чи мають прапорці «Має графіки» та «Має джерела даних» бути позначені типово?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10090,7 +10090,7 @@ msgstr "Якщо позначено, будь-які спроби доступу
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Який тип зображення слід використовувати для вбудованих графіків під час створення нового звіту."
+msgstr "Який тип зображення слід використовувати для вбудованих графіків під час створення нового звіту?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -14001,7 +14001,7 @@ msgstr "типовий"
 #: lib/plugins.php
 #, php-format
 msgid "%s Version %s or above is required for %s. "
-msgstr "Для %s потрібна версія %s %s або вище. "
+msgstr "Версія %s %s або вище потрібна для %s. "
 
 #: lib/plugins.php
 #, php-format
@@ -14208,11 +14208,11 @@ msgstr "Останнє DS"
 
 #: lib/rrd.php
 msgid "Max"
-msgstr "Макс."
+msgstr "Максимум"
 
 #: lib/rrd.php
 msgid "Min"
-msgstr "Мін."
+msgstr "Мінімум"
 
 #: lib/rrd.php
 msgid "Minimal Heartbeat"
@@ -14350,7 +14350,7 @@ msgstr "Команда SNMP: %s"
 
 #: lib/spikekill.php
 msgid "Avg"
-msgstr "Сер."
+msgstr "Середнє"
 
 #: lib/spikekill.php
 msgid "CF"
@@ -15173,7 +15173,7 @@ msgstr "Відмінності"
 
 #: package_import.php
 msgid "Error in Package"
-msgstr "Помилка в запиті даних."
+msgstr "Помилка в пакеті"
 
 #: package_import.php
 msgid "Error: Invalid file path."
@@ -15542,7 +15542,7 @@ msgstr "ПОПЕРЕДЖЕННЯ: виявлено переповнення ча
 
 #: pollers.php
 msgid "Avg/Max"
-msgstr "Сер./Макс."
+msgstr "Середнє/Максимум"
 
 #: pollers.php
 msgid "Clear Statistics"
@@ -17768,7 +17768,7 @@ msgstr "Сторінка технічної підтримки Kadupul. Вико
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "Останній Запуск"
+msgstr "Час останнього завершення:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -18376,3 +18376,5 @@ msgstr "VDEF [новий]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF, які використовуються, не можна видалити. Використанням вважається наявність посилання з графіка або шаблону графіка."
+
+

@@ -3359,17 +3359,17 @@ msgstr "اس ڈیوائس میں ترمیم کریں"
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "ID '%s' والی ڈیٹا کوئری '%s' کے لیے ڈیٹا کوئری ریسورس XML فائل پارس کرنے میں خرابی"
+msgstr "ڈیٹا کوئری '%s' (ID '%s') کے لیے ڈیٹا کوئری ریسورس XML فائل پارس کرنے میں خرابی"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "ID '%s' والی ڈیٹا کوئری '%s' کے لیے ڈیٹا کوئری ریسورس XML فائل پارس کرنے میں خرابی۔ فیلڈ نام '%s' میں 'direction' وصف غائب ہے"
+msgstr "ڈیٹا کوئری '%s' (ID '%s') کے لیے ڈیٹا کوئری ریسورس XML فائل پارس کرنے میں خرابی۔ فیلڈ نام '%s' میں 'direction' وصف غائب ہے"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "'%s' کی ID والی ڈیٹا کوئری '%s' کے لیے ڈیٹا کوئری ریسورس XML فائل پارس کرنے میں خرابی"
+msgstr "ڈیٹا کوئری '%s' (ID '%s') کے لیے ڈیٹا کوئری ریسورس XML فائل پارس کرنے میں خرابی"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -7055,7 +7055,7 @@ msgstr "وہ ڈیٹا جو اسکرپٹ کو بھیجا جاتا ہے، جس م�
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "ڈیٹا سورس سے ڈیٹا اکٹھا کرنے کی تعدد؟"
+msgstr "ڈیٹا سورس سے ڈیٹا اکٹھا کرنے کی تعدد۔"
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "عمودی لیبل (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "یہ ڈیوائس کس سائٹ سے منسلک ہے۔"
+msgstr "یہ ڈیوائس کس سائٹ سے منسلک ہے؟"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "آپ کتنی لاگ فائلیں برقرار رکھنا چاہتے ہ�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "آپ Kadupul لاگ ڈسپلے کو کتنی بار اپ ڈیٹ کرنا چاہتے ہیں۔"
+msgstr "آپ Kadupul لاگ ڈسپلے کو کتنی بار اپ ڈیٹ کرنا چاہتے ہیں؟"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "Kadupul کو کلائنٹ براؤزر کے ٹائم زون کی بنی�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul ایونٹ لاگنگ کو کیسے سنبھالے گا۔"
+msgstr "Kadupul ایونٹ لاگنگ کو کیسے سنبھالے گا؟"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "اگر بوسٹ آؤٹ پٹ ٹیبل ریکارڈز میں اس سائز
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "اگر بوسٹ پولر اس رن ٹائم سے تجاوز کر جائے، تو cacti لاگ میں ایک انتباہ درج کیا جائے گا،"
+msgstr "اگر بوسٹ پولر اس رن ٹائم سے تجاوز کر جائے، تو cacti لاگ میں ایک انتباہ درج کیا جائے گا۔"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "کیا امیج کیشنگ فعال ہونی چاہیے؟"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "کیا Has Graphs اور Has Data Sources کو ڈیفالٹ طور پر چیک کیا جانا چاہیے۔"
+msgstr "کیا Has Graphs اور Has Data Sources کو ڈیفالٹ طور پر چیک کیا جانا چاہیے؟"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "جب چیک کیا جاتا ہے، تو اعلیٰ سکیورٹی کو �
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "نئی رپورٹ بناتے وقت، ان لائن گرافس کے لیے کون سی تصویری قسم استعمال کی جانی چاہیے۔"
+msgstr "نئی رپورٹ بناتے وقت، ان لائن گرافس کے لیے کون سی تصویری قسم استعمال کی جانی چاہیے؟"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -13020,7 +13020,7 @@ msgstr "فائل نہیں ملی"
 #: lib/installer.php
 #, php-format
 msgid "Finished %s Process for v%s"
-msgstr "v%s کے لیے %s کا عمل مکمل ہوا"
+msgstr "%s کا عمل مکمل ہوا (v%s)"
 
 #: lib/installer.php
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
@@ -13075,12 +13075,12 @@ msgstr "اگر آپ کی ڈیوائسز کو پہلے استعمال ہونے و
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
-msgstr "پروفائل '%s' کے تحت پیکج #%s '%s' کی درآمد ناکام ہوگئی"
+msgstr "پیکج #%s '%s' کی درآمد (پروفائل '%s' کے تحت) ناکام ہوگئی"
 
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
-msgstr "پروفائل '%s' کے تحت پیکج #%s '%s' کی درآمد کامیاب رہی"
+msgstr "پیکج #%s '%s' کی درآمد (پروفائل '%s' کے تحت) کامیاب رہی"
 
 #: lib/installer.php
 msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
@@ -13493,7 +13493,7 @@ msgstr "بیک گراؤنڈ پراسیس شروع کیا جا رہا ہے: %s %s
 #: lib/installer.php
 #, php-format
 msgid "Starting %s Process for v%s"
-msgstr "v%s کے لیے %s پراسیس شروع کیا جا رہا ہے"
+msgstr "%s پراسیس شروع کیا جا رہا ہے (v%s)"
 
 #: lib/installer.php
 #, php-format
@@ -14821,7 +14821,7 @@ msgstr "اس VDEF کے لیے ایک مفید نام۔"
 #: link.php
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr "'%s' عنوان والی بیرونی لنک ID '%s' نے ایک غلط URL انجیکٹ کرنے کی کوشش کی اور اسے بلاک کر دیا گیا!"
+msgstr "بیرونی لنک ID '%s' (عنوان '%s') نے ایک غلط URL انجیکٹ کرنے کی کوشش کی اور اسے بلاک کر دیا گیا!"
 
 #: links.php
 msgid "Apply Filter"
@@ -15464,7 +15464,7 @@ msgstr "Kadupul سسٹم نوٹیفکیشن"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "پولر ID %d کے لیے %d سیکنڈ کا زیادہ سے زیادہ رن ٹائم تجاوز کر گیا۔ باہر نکل رہا ہے۔"
+msgstr "%d سیکنڈ کا زیادہ سے زیادہ رن ٹائم پولر ID %d کے لیے تجاوز کر گیا۔ باہر نکل رہا ہے۔"
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -18313,3 +18313,5 @@ msgstr "VDEFs [نیا]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "وہ VDEFs جو استعمال میں ہیں حذف نہیں کیے جا سکتے۔ استعمال میں ہونے کی تعریف کسی گراف یا Graph Template کے ذریعے حوالہ دیے جانے کے طور پر کی گئی ہے۔"
+
+
