@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 20:09-0800\n"
+"POT-Creation-Date: 2026-11-25 16:18-0800\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -113,10 +113,9 @@ msgstr "Στοίχιση"
 msgid "All Items"
 msgstr "Όλα τα Είδη"
 
-#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
-#: data_debug.php data_sources.php graph_templates_items.php graphs.php
-#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php data_debug.php data_sources.php
+#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "Οποιοδήποτε"
@@ -130,21 +129,21 @@ msgid "Associate with Aggregate"
 msgstr "Συνεργάστηκε με το Σύνολο"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graph_view.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php host_templates.php
+#: lib/clog_webapi.php lib/html.php lib/html_form.php lib/html_reports.php
+#: managers.php plugins.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "Ακύρωση"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php user_domains.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php user_domains.php
 msgid "Clear"
 msgstr "Καθαρισμός"
 
@@ -190,11 +189,10 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να τοποθετήσετε τον ακόλουθο συγκεντρωτικό γραφή (α) κάτω από τον κλάδο δέντρων."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php lib/clog_webapi.php
+#: lib/html.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Continue"
 msgstr "Συνέχεια"
 
@@ -211,22 +209,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "Δημιουργία νέου συνόλου από αδρανή"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: include/global_form.php lib/api_automation.php lib/html_reports.php
-#: managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php include/global_form.php
+#: lib/api_automation.php lib/html_reports.php managers.php plugins.php
+#: pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "Προεπιλογή"
 
 #: aggregate_graphs.php aggregate_templates.php automation_networks.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php include/global_settings.php lib/api_automation.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "Διαγραφή"
 
@@ -251,12 +249,12 @@ msgid "Disassociate with Aggregate"
 msgstr "Διαχωρίστε το με το Σύνολο"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php
 msgid "Go"
 msgstr "Πήγαινε"
 
@@ -280,10 +278,10 @@ msgstr "Γραφήματα"
 msgid "Hide Item Details"
 msgstr "Απόκρυψη λεπτομερειών στοιχείου"
 
-#: aggregate_graphs.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
-#: user_admin.php user_group_admin.php
+#: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: lib/api_automation.php pollers.php tree.php user_admin.php
+#: user_group_admin.php
 msgid "ID"
 msgstr "ID"
 
@@ -401,14 +399,13 @@ msgid "Return"
 msgstr "Επιστροφή"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php rrdcleaner.php settings.php
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
+#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "Αναζήτηση"
 
@@ -989,8 +986,8 @@ msgstr "Όνομα SNMP"
 msgid "Select Template"
 msgstr "Επιλογή Πρότυπου"
 
-#: automation_devices.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: data_sources.php data_templates.php lib/api_automation.php
 #: lib/html_reports.php lib/installer.php managers.php package_import.php
 #: plugins.php pollers.php templates_import.php user_admin.php
 #: user_group_admin.php utilities.php
@@ -1140,17 +1137,17 @@ msgstr "Καθημερινά"
 msgid "Data Collector"
 msgstr "Συλλέκτης δεδομένων"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php managers.php plugins.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: managers.php plugins.php pollers.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Disable"
 msgstr "Απενεργοποίηση"
 
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_sources.php data_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_reports.php lib/html_utility.php managers.php
+#: pollers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
@@ -1158,9 +1155,9 @@ msgstr "Απενεργοποιημένο"
 msgid "Discover Now"
 msgstr "Ανακαλύψτε τώρα"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php include/global_settings.php managers.php
-#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: include/global_settings.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Enable"
 msgstr "Ενεργοποίηση"
 
@@ -1267,42 +1264,13 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "Έγινε απόπειρα εκτέλεσης SQL injection στον αυτοματισμό δέντρου"
 
 #: automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "Εφαρμόστε την ενέργεια που ζητήσατε"
-
-#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Είστε βέβαιοι ότι θέλετε να ΔΙΑΓΡΑΨΕΤΕ τον κανόνα '%s';"
 
 #: automation_tree_rules.php
-msgid "At Subtree"
-msgstr "Στο Subtree"
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to delete the following Rule(s)."
-msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να διαγράψετε τους ακόλουθους Κανόνες."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να απενεργοποιήσετε τους ακόλουθους Κανόνες."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
-msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να αντιγράψετε τους ακόλουθους Κανόνες. Μπορείτε να αλλάξετε προαιρετικά τη μορφή τίτλου για τους νέους κανόνες."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Κάντε κλικ στην επιλογή &#39;Συνέχεια&#39; για να ενεργοποιήσετε τους ακόλουθους Κανόνες."
-
-#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "Δημιουργία δέντρων"
-
-#: automation_tree_rules.php data_queries.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
-msgid "Duplicate"
-msgstr "Αντιγραφή"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1313,24 +1281,12 @@ msgid "Graph Grouping Style"
 msgstr "Στυλ ομάδας ομαδοποίησης"
 
 #: automation_tree_rules.php
-msgid "Hook into Tree"
-msgstr "Γαντζώστε στο δέντρο"
-
-#: automation_tree_rules.php
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Καθορίστηκε μη έγκυρο όνομα πεδίου για το στοιχείο κανόνα δέντρου."
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Leaf Item Type"
 msgstr "Τύπος στοιχείου φύλλων"
-
-#: automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "Βεβαιωθείτε ότι αυτοί οι κανόνες έχουν δοκιμαστεί με επιτυχία!"
-
-#: automation_tree_rules.php
-msgid "No Tree Rules Found"
-msgstr "Δεν βρέθηκαν κανάλια δέντρων"
 
 #: automation_tree_rules.php
 msgid "Object Selection Criteria"
@@ -1341,24 +1297,8 @@ msgid "Optional: Sub-Tree Item"
 msgstr "Προαιρετικό: Στοιχείο υπο-δέντρου"
 
 #: automation_tree_rules.php
-msgid "ROOT"
-msgstr "Ρίζα"
-
-#: automation_tree_rules.php
-msgid "Rule Name"
-msgstr "Όνομα Κανόνα"
-
-#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "Αυτή η φόρμα κανόνα δέντρου έχει λήξει. Ανοίξτε ξανά τον κανόνα και χρησιμοποιήστε την τρέχουσα φόρμα του."
-
-#: automation_tree_rules.php
-msgid "This Type"
-msgstr "Αυτός ο τύπος"
-
-#: automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "Μορφή τίτλου:"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1372,18 +1312,6 @@ msgstr "Κριτήρια δημιουργίας δέντρου"
 #, php-format
 msgid "Tree Rule Selection [edit: %s]"
 msgstr "Επιλογή κανόνας δέντρου [επεξεργασία: %s]"
-
-#: automation_tree_rules.php include/global_arrays.php
-msgid "Tree Rules"
-msgstr "Κανόνες δέντρων"
-
-#: automation_tree_rules.php
-msgid "Using Grouping"
-msgstr "Χρησιμοποιώντας Ομαδοποίηση"
-
-#: automation_tree_rules.php
-msgid "rule_name"
-msgstr "Όνομα Κανόνα"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -2117,6 +2045,11 @@ msgid "Delete Data Query"
 msgid_plural "Delete Data Queries"
 msgstr[0] "Διαγραφή δεδομένων"
 msgstr[1] "Διαγραφή δεδομένων"
+
+#: data_queries.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "Αντιγραφή"
 
 #: data_queries.php
 msgid "Duplicate Data Query"
@@ -3360,6 +3293,10 @@ msgstr "Το επιλεγμένο δέντρο δεν είναι διαθέσι�
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "Προς το παρόν δεν υπάρχουν πρότυπα συσσωρευτών για αυτό το πρότυπο γραφήματος. Παρακαλούμε είτε να δημιουργήσετε πρώτα ένα πρότυπο συσσωρευτών για το επιλεγμένο πρότυπο γραφήματος γραφημάτων και να προσπαθήσετε ξανά είτε απλά να δημιουργήσετε ένα αφηρημένο συνολικό γράφημα."
+
+#: graphs.php
+msgid "Title Format"
+msgstr "Μορφή τίτλου:"
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -5559,6 +5496,10 @@ msgstr "Λειτουργία δέντρου"
 #: include/global_arrays.php
 msgid "Tree Rule Items"
 msgstr "Στοιχεία κανόνα δέντρου"
+
+#: include/global_arrays.php
+msgid "Tree Rules"
+msgstr "Κανόνες δέντρων"
 
 #: include/global_arrays.php tree.php user_admin.php user_group_admin.php
 msgid "Trees"

@@ -107,18 +107,18 @@ final class AdministrationListRoutesTest extends TestCase
             self::assertTrue(@$dom->loadHTML($html));
             $xpath = new \DOMXPath($dom);
             self::assertSame(10, $xpath->query('//table[@id="administration-list"]/tbody/tr')->length);
-            $native = in_array($screen, [ListScreen::SnmpOptions, ListScreen::GraphRules], true);
+            $native = in_array($screen, [ListScreen::SnmpOptions, ListScreen::GraphRules, ListScreen::TreeRules], true);
             self::assertSame(count($screen->columns()) + ($native ? 1 : 0), $xpath->query('//table[@id="administration-list"]/thead/tr/th[@scope="col"]')->length);
             self::assertSame($native ? 10 : 0, $xpath->query('//input[@type="checkbox"]')->length);
             self::assertSame(1, $xpath->query('//a[@rel="next"]')->length);
             self::assertStringContainsString('filter=Router', $xpath->query('//a[@rel="next"]')->item(0)->getAttribute('href'));
             self::assertSame(0, $xpath->query('//form[translate(@method,"POST","post")="post"]')->length);
             $links = array_map(static fn(\DOMElement $link): string => $link->getAttribute('href'), iterator_to_array($xpath->query('//a')));
-            if ($screen === ListScreen::GraphRules) {
-                // A graph rule opens its criteria on the PHP page; creation and the bulk actions are Symfony routes.
-                self::assertContains('/automation/graph-rules/new', $links);
-                self::assertContains('/monitor/automation_graph_rules.php?action=edit&id=7', $links);
-                self::assertSame(['/monitor/automation_graph_rules.php?action=edit&id=7'], array_values(array_unique(array_filter($links, static fn(string $link): bool => str_contains($link, $screen->legacyScript())))));
+            if (in_array($screen, [ListScreen::GraphRules, ListScreen::TreeRules], true)) {
+                // A graph or tree rule opens its criteria on the PHP page; creation and the bulk actions are Symfony routes.
+                self::assertContains('/automation/' . $screen->value . '/new', $links);
+                self::assertContains('/monitor/' . $screen->legacyScript() . '?action=edit&id=7', $links);
+                self::assertSame(['/monitor/' . $screen->legacyScript() . '?action=edit&id=7'], array_values(array_unique(array_filter($links, static fn(string $link): bool => str_contains($link, $screen->legacyScript())))));
                 self::assertStringNotContainsString('Bulk actions and advanced filters', $html);
                 continue;
             }
@@ -181,27 +181,29 @@ final class AdministrationListRoutesTest extends TestCase
         // Sorting and paging keep working from inside the selection form.
         self::assertStringStartsWith('/monitor/app.php/automation/snmp-options?', (string) $xpath->query('.//th/a', $form)->item(0)?->attributes?->getNamedItem('href')?->nodeValue);
 
-        $rules = new \DOMDocument();
-        self::assertTrue(@$rules->loadHTML((string) $this->kernel->handle(Request::create('/monitor/app.php/automation/graph-rules?rows=5000', server: $server))->getContent()));
-        $rulesPath = new \DOMXPath($rules);
-        self::assertSame(0, $rulesPath->query('//script[not(@src)] | //@*[starts-with(name(), "on")]')->length);
-        $form = $rulesPath->query('//form[.//table[@id="administration-list"]]')->item(0);
-        self::assertInstanceOf(\DOMElement::class, $form);
-        self::assertSame(['get', '/monitor/app.php/automation/graph-rules/actions/delete'], [strtolower($form->getAttribute('method')), $form->getAttribute('action')]);
-        self::assertSame(0, $rulesPath->query('.//input[@type="hidden"]', $form)->length);
-        $buttons = $rulesPath->query('.//button[@type="submit"]', $form);
-        self::assertSame(['Delete selected', 'Duplicate selected', 'Enable selected', 'Disable selected'], array_map(static fn(\DOMNode $button): string => trim((string) $button->textContent), iterator_to_array($buttons)));
-        self::assertSame(
-            ['', '/monitor/app.php/automation/graph-rules/actions/duplicate', '/monitor/app.php/automation/graph-rules/actions/enable', '/monitor/app.php/automation/graph-rules/actions/disable'],
-            array_map(static fn(\DOMElement $button): string => $button->getAttribute('formaction'), iterator_to_array($buttons))
-        );
-        self::assertSame(5000, $rulesPath->query('.//tbody//input[@type="checkbox"][@name="ids[]"][@value="7"][not(@disabled)]', $form)->length);
-        self::assertSame('Select up to 100 rows at a time.', trim((string) $rulesPath->query('//p[@id="administration-list-selection"]')->item(0)?->textContent));
-        // The name still opens the criteria editor on the PHP page, below the installation path.
-        self::assertSame(5000, $rulesPath->query('//a[@class="linkEditMain"][@href="/monitor/automation_graph_rules.php?action=edit&id=7"]')->length);
-        self::assertSame(1, $rulesPath->query('//a[@href="/monitor/app.php/automation/graph-rules/new"]')->length);
+        foreach (['graph-rules' => 'automation_graph_rules.php', 'tree-rules' => 'automation_tree_rules.php'] as $screen => $script) {
+            $rules = new \DOMDocument();
+            self::assertTrue(@$rules->loadHTML((string) $this->kernel->handle(Request::create('/monitor/app.php/automation/' . $screen . '?rows=5000', server: $server))->getContent()));
+            $rulesPath = new \DOMXPath($rules);
+            self::assertSame(0, $rulesPath->query('//script[not(@src)] | //@*[starts-with(name(), "on")]')->length);
+            $form = $rulesPath->query('//form[.//table[@id="administration-list"]]')->item(0);
+            self::assertInstanceOf(\DOMElement::class, $form);
+            self::assertSame(['get', '/monitor/app.php/automation/' . $screen . '/actions/delete'], [strtolower($form->getAttribute('method')), $form->getAttribute('action')]);
+            self::assertSame(0, $rulesPath->query('.//input[@type="hidden"]', $form)->length);
+            $buttons = $rulesPath->query('.//button[@type="submit"]', $form);
+            self::assertSame(['Delete selected', 'Duplicate selected', 'Enable selected', 'Disable selected'], array_map(static fn(\DOMNode $button): string => trim((string) $button->textContent), iterator_to_array($buttons)));
+            self::assertSame(
+                ['', '/monitor/app.php/automation/' . $screen . '/actions/duplicate', '/monitor/app.php/automation/' . $screen . '/actions/enable', '/monitor/app.php/automation/' . $screen . '/actions/disable'],
+                array_map(static fn(\DOMElement $button): string => $button->getAttribute('formaction'), iterator_to_array($buttons))
+            );
+            self::assertSame(5000, $rulesPath->query('.//tbody//input[@type="checkbox"][@name="ids[]"][@value="7"][not(@disabled)]', $form)->length);
+            self::assertSame('Select up to 100 rows at a time.', trim((string) $rulesPath->query('//p[@id="administration-list-selection"]')->item(0)?->textContent));
+            // The name still opens the criteria editor on the PHP page, below the installation path.
+            self::assertSame(5000, $rulesPath->query('//a[@class="linkEditMain"][@href="/monitor/' . $script . '?action=edit&id=7"]')->length);
+            self::assertSame(1, $rulesPath->query('//a[@href="/monitor/app.php/automation/' . $screen . '/new"]')->length);
+        }
 
-        $other = (string) $this->get(ListScreen::TreeRules)->getContent();
+        $other = (string) $this->get(ListScreen::Networks)->getContent();
         self::assertStringNotContainsString('type="checkbox"', $other);
         self::assertStringNotContainsString('Delete selected', $other);
         self::assertStringContainsString('Changes and advanced filters use the existing administration forms.', $other);
@@ -264,7 +266,7 @@ final class AdministrationListRoutesTest extends TestCase
             $response = $this->kernel->handle($request);
             self::assertSame(200, $response->getStatusCode());
             self::assertSame('fr', $request->getLocale());
-            if (in_array($screen, [ListScreen::SnmpOptions, ListScreen::GraphRules], true)) {
+            if (in_array($screen, [ListScreen::SnmpOptions, ListScreen::GraphRules, ListScreen::TreeRules], true)) {
                 self::assertStringNotContainsString('Actions groupées et filtres avancés', (string) $response->getContent());
                 self::assertStringContainsString('Dupliquer la sélection', (string) $response->getContent());
                 self::assertStringContainsString('Sélectionnez jusqu’à 100 lignes à la fois.', (string) $response->getContent());

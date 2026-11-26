@@ -2342,7 +2342,7 @@ function authenticated_access_adapter(string $root): string
 // complete firewall, request reset and native authentication implementation.
 const NATIVE_SESSION_FIREWALL_SOURCES = [
     'config/bundles.php' => '0432519a4e3cd6030979a2b8b26e8660b46fae9fade5a80c1186a6508cfb920c',
-    'config/packages/framework.yaml' => '53a6b55a70ee3763e89752e496e77ab11309fe1504aeed6db6308a33c7abbb56',
+    'config/packages/framework.yaml' => 'de8c463f0d86b9513973471ad2bacfa963639e1861451d0e9f53b1eb790ac3a7',
     'config/packages/security.yaml' => '089678fa4801a6efa5872f256b282415d9c1bd9fbf99908948b9dae5eabea914',
     'config/routes.yaml' => '2f0f862c7962adc779c325cd4b138d07fc7a9364c0f0f545f7bdc60409918e5e',
     'src/Kernel.php' => '030b9f7a8b0bbd936cde923d58a1a652faeebedb4541de9116f89917325eb14b',
@@ -3091,8 +3091,8 @@ const REVIEWED_FEATURE_ACCESS = [
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
     ],
-    // The tree rule editor shares the reviewed automation realm check; these keys
-    // precede the list page's prefix, which uses AdministrationListAccess.
+    // The tree rule editor and bulk actions share the reviewed automation realm
+    // check; these keys precede the list page's prefix, which uses AdministrationListAccess.
     '/automation/tree-rules/new' => [
         'label' => 'tree rule',
         'realm' => 23,
@@ -3103,6 +3103,15 @@ const REVIEWED_FEATURE_ACCESS = [
         ],
     ],
     '/automation/tree-rules/{id}' => [
+        'label' => 'tree rule',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/tree-rules/actions' => [
         'label' => 'tree rule',
         'realm' => 23,
         'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',

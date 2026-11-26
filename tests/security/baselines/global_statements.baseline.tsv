@@ -6,7 +6,7 @@ auth_profile.php	5	8
 automation_devices.php	4	16
 automation_graph_rules.php	1	1
 automation_networks.php	4	4
-automation_tree_rules.php	4	8
+automation_tree_rules.php	1	3
 bin/legacy-audit-upgrade.php	2	2
 bin/legacy-poller-cache-rebuild.php	5	9
 cactid.php	5	9

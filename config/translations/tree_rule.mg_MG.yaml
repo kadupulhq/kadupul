@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "A useful name for this Rule.": "Anarana ilaina ho an'ity Fitsipika ity."
+"Cancel": "Aoka ihany"
 "Check this box to enable this rule.": "Mariho ity efajoro ity mba handefasana ity fitsipika ity."
 "Choose a Tree for the new Tree Items.": "Misafidiana hazo ho an'ireo singan'ny hazo vaovao."
+"Continue": "Tohizo"
 "Data Query Index": "Tondron'ny fangatahana angona"
 "Device": "Fitaovana"
 "Enable Rule": "Alefaso ny fitsipika"
@@ -15,5 +17,6 @@
 "Optional: Sub-Tree Item": "Safidy: Singan'ny zana-kazo"
 "Save": "Tahirizo"
 "The Item Type that shall be dynamically added to the tree.": "Ny karazana singa izay hampiana ho azy ao amin'ny hazo."
+"Title Format": "Endriky ny lohateny"
 "Tree": "Hazo"
 "Tree Rule Selection [edit: %name%]": "Fifidianana fitsipiky ny hazo [fanovana: %name%]"

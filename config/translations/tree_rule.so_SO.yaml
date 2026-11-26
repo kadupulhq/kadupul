@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "A useful name for this Rule.": "Magac waxtar leh oo loogu talagalay Xeerkan."
+"Cancel": "Jooji"
 "Check this box to enable this rule.": "Calaamadee sanduuqan si aad u hawl-geliso xeerkan."
 "Choose a Tree for the new Tree Items.": "U dooro Geed walxaha Geedka cusub."
+"Continue": "Sii wad"
 "Data Query Index": "Tusaha Weydiinta Xogta"
 "Device": "Qalabka"
 "Enable Rule": "Hawl-geli Xeerka"
@@ -15,5 +17,6 @@
 "Optional: Sub-Tree Item": "Ikhtiyaari: Shayga Geed-hoosaadka"
 "Save": "Kaydi"
 "The Item Type that shall be dynamically added to the tree.": "Nooca Shayga si firfircoon loogu dari doono geedka."
+"Title Format": "Qaabka Cinwaanka"
 "Tree": "Geed"
 "Tree Rule Selection [edit: %name%]": "Xulashada Xeerka Geedka [wax ka beddel: %name%]"

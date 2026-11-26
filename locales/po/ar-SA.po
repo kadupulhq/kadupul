@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-24 20:09-0800\n"
+"POT-Creation-Date: 2026-11-25 16:18-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -113,10 +113,9 @@ msgstr "محاذاة"
 msgid "All Items"
 msgstr "كل العناصر"
 
-#: aggregate_graphs.php automation_devices.php automation_tree_rules.php
-#: data_debug.php data_sources.php graph_templates_items.php graphs.php
-#: graphs_items.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_reports.php managers.php
+#: aggregate_graphs.php automation_devices.php data_debug.php data_sources.php
+#: graph_templates_items.php graphs.php graphs_items.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_reports.php managers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php utilities.php
 msgid "Any"
 msgstr "الجميع"
@@ -130,21 +129,21 @@ msgid "Associate with Aggregate"
 msgstr "مشارك مع التجميع"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graph_view.php
-#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
-#: lib/html_form.php lib/html_reports.php managers.php plugins.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php host_templates.php
+#: lib/clog_webapi.php lib/html.php lib/html_form.php lib/html_reports.php
+#: managers.php plugins.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "إلغاء"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php user_domains.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php user_domains.php
 msgid "Clear"
 msgstr "مسح"
 
@@ -190,11 +189,10 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "انقر فوق &quot;متابعة&quot; لوضع التالي (الإجمالي) Graph (s) تحت فرع شجرة."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_reports.php
-#: managers.php pollers.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php
+#: automation_networks.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graphs.php host_templates.php lib/clog_webapi.php
+#: lib/html.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Continue"
 msgstr "إستمرار"
 
@@ -211,22 +209,22 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "إنشاء تجميع جديد من التجميعات"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: include/global_form.php lib/api_automation.php lib/html_reports.php
-#: managers.php plugins.php pollers.php rrdcleaner.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php include/global_form.php
+#: lib/api_automation.php lib/html_reports.php managers.php plugins.php
+#: pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "الافتراضي"
 
 #: aggregate_graphs.php aggregate_templates.php automation_networks.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: include/global_arrays.php include/global_settings.php lib/api_automation.php
-#: lib/html.php lib/html_form.php lib/html_reports.php managers.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php include/global_arrays.php
+#: include/global_settings.php lib/api_automation.php lib/html.php
+#: lib/html_form.php lib/html_reports.php managers.php pollers.php tree.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Delete"
 msgstr "حذف"
 
@@ -251,12 +249,12 @@ msgid "Disassociate with Aggregate"
 msgstr "فك الارتباط بالتجميع"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php tree.php user_admin.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
+#: user_admin.php
 msgid "Go"
 msgstr "أذهب"
 
@@ -280,10 +278,10 @@ msgstr "الرسوم"
 msgid "Hide Item Details"
 msgstr "إخفاء تفاصيل البند"
 
-#: aggregate_graphs.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php lib/api_automation.php pollers.php tree.php
-#: user_admin.php user_group_admin.php
+#: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: lib/api_automation.php pollers.php tree.php user_admin.php
+#: user_group_admin.php
 msgid "ID"
 msgstr "المعرف"
 
@@ -401,14 +399,13 @@ msgid "Return"
 msgstr "عودة"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graph_view.php graphs.php graphs_new.php host_templates.php
-#: lib/api_automation.php lib/clog_webapi.php lib/html.php lib/html_filter.php
-#: lib/html_graph.php lib/html_reports.php lib/html_tree.php managers.php
-#: plugins.php pollers.php rrdcleaner.php settings.php
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
+#: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "بحث"
 
@@ -989,8 +986,8 @@ msgstr "اسم SNMP"
 msgid "Select Template"
 msgstr "تحديد قالب"
 
-#: automation_devices.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php lib/api_automation.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: data_sources.php data_templates.php lib/api_automation.php
 #: lib/html_reports.php lib/installer.php managers.php package_import.php
 #: plugins.php pollers.php templates_import.php user_admin.php
 #: user_group_admin.php utilities.php
@@ -1140,17 +1137,17 @@ msgstr "يومي"
 msgid "Data Collector"
 msgstr "جامع البيانات"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php managers.php plugins.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: managers.php plugins.php pollers.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Disable"
 msgstr "تعطيل"
 
-#: automation_networks.php automation_tree_rules.php data_debug.php
-#: data_sources.php data_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php lib/html_utility.php managers.php pollers.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: automation_networks.php data_debug.php data_sources.php data_templates.php
+#: include/global_arrays.php include/global_settings.php lib/api_automation.php
+#: lib/html.php lib/html_reports.php lib/html_utility.php managers.php
+#: pollers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Disabled"
 msgstr "معطل"
 
@@ -1158,9 +1155,9 @@ msgstr "معطل"
 msgid "Discover Now"
 msgstr "اكتشف الآن"
 
-#: automation_networks.php automation_tree_rules.php data_sources.php
-#: include/global_arrays.php include/global_settings.php managers.php
-#: plugins.php pollers.php user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: include/global_settings.php managers.php plugins.php pollers.php
+#: user_admin.php user_domains.php user_group_admin.php
 msgid "Enable"
 msgstr "تفعيل"
 
@@ -1267,42 +1264,13 @@ msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr "تمت محاولة تنفيذ حقن SQL في أتمتة الشجرة"
 
 #: automation_tree_rules.php
-msgid "Apply requested action"
-msgstr "تطبيق الإجراء المطلوب"
-
-#: automation_tree_rules.php
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "هل أنت متأكد من أنك تريد حذف القاعدة \"%s\"؟"
 
 #: automation_tree_rules.php
-msgid "At Subtree"
-msgstr "في الشجرة الفرعية"
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to delete the following Rule(s)."
-msgstr "انقر فوق &quot;متابعة&quot; لحذف القاعدة (القواعد) التالية."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "انقر فوق &quot;متابعة&quot; لتعطيل القاعدة (القواعد) التالية."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
-msgstr "انقر فوق &quot;متابعة&quot; لتكرار القاعدة (القواعد) التالية. يمكنك بشكل اختياري تغيير تنسيق العنوان للقواعد الجديدة."
-
-#: automation_tree_rules.php
-msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "انقر فوق &quot;متابعة&quot; لتمكين القاعدة (القواعد) التالية."
-
-#: automation_tree_rules.php
 msgid "Created Trees"
 msgstr "الأشجار التي تم إنشاؤها"
-
-#: automation_tree_rules.php data_queries.php data_templates.php
-#: graph_templates.php graphs.php host_templates.php include/global_arrays.php
-msgid "Duplicate"
-msgstr "تكرار"
 
 #: automation_tree_rules.php
 msgid "Eligible Objects"
@@ -1313,24 +1281,12 @@ msgid "Graph Grouping Style"
 msgstr "نمط تجميع الرسم البياني"
 
 #: automation_tree_rules.php
-msgid "Hook into Tree"
-msgstr "هوك في شجرة"
-
-#: automation_tree_rules.php
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "تم تحديد اسم حقل غير صالح لعنصر قاعدة الشجرة."
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Leaf Item Type"
 msgstr "ورقة نوع البند"
-
-#: automation_tree_rules.php
-msgid "Make sure, that those rules have successfully been tested!"
-msgstr "تأكد من أن هذه القواعد قد تم اختبارها بنجاح!"
-
-#: automation_tree_rules.php
-msgid "No Tree Rules Found"
-msgstr "لم يتم العثور على قواعد شجرة"
 
 #: automation_tree_rules.php
 msgid "Object Selection Criteria"
@@ -1341,24 +1297,8 @@ msgid "Optional: Sub-Tree Item"
 msgstr "اختياري: عنصر شجرة فرعية"
 
 #: automation_tree_rules.php
-msgid "ROOT"
-msgstr "الجذر"
-
-#: automation_tree_rules.php
-msgid "Rule Name"
-msgstr "اسم القاعدة"
-
-#: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr "انتهت صلاحية نموذج قاعدة الشجرة هذا. افتح القاعدة مرة أخرى واستخدم نموذجها الحالي."
-
-#: automation_tree_rules.php
-msgid "This Type"
-msgstr "هذا النوع"
-
-#: automation_tree_rules.php graphs.php
-msgid "Title Format"
-msgstr "شكل العنوان"
 
 #: automation_tree_rules.php include/global_arrays.php include/global_form.php
 msgid "Tree"
@@ -1372,18 +1312,6 @@ msgstr "معايير إنشاء الشجرة"
 #, php-format
 msgid "Tree Rule Selection [edit: %s]"
 msgstr "اختيار قاعدة الشجرة [عدل: %s]"
-
-#: automation_tree_rules.php include/global_arrays.php
-msgid "Tree Rules"
-msgstr "قواعد الشجرة"
-
-#: automation_tree_rules.php
-msgid "Using Grouping"
-msgstr "باستخدام التجميع"
-
-#: automation_tree_rules.php
-msgid "rule_name"
-msgstr "اسم القاعدة"
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -2145,6 +2073,11 @@ msgstr[2] "حذف استعلامَي البيانات"
 msgstr[3] "حذف استعلامات البيانات"
 msgstr[4] "حذف استعلامات البيانات"
 msgstr[5] "حذف استعلامات البيانات"
+
+#: data_queries.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php include/global_arrays.php
+msgid "Duplicate"
+msgstr "تكرار"
 
 #: data_queries.php
 msgid "Duplicate Data Query"
@@ -3444,6 +3377,10 @@ msgstr "الشجرة المحددة غير متاحة."
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "لا يوجد حاليًا أي قوالب مجمعة محددة لهذا القالب الرسم البياني. الرجاء إما إنشاء &quot;قالب تجميع&quot; للنموذج Graphs Graph المحددة وحاول مرة أخرى أو ببساطة قم بتجميع Aggregate Graph."
+
+#: graphs.php
+msgid "Title Format"
+msgstr "شكل العنوان"
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -5643,6 +5580,10 @@ msgstr "وضع شجرة"
 #: include/global_arrays.php
 msgid "Tree Rule Items"
 msgstr "عناصر القاعدة الشجرية"
+
+#: include/global_arrays.php
+msgid "Tree Rules"
+msgstr "قواعد الشجرة"
 
 #: include/global_arrays.php tree.php user_admin.php user_group_admin.php
 msgid "Trees"
