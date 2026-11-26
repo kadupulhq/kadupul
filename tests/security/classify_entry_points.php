@@ -139,7 +139,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
     'src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php' => 'f2fdce34944fc5cd44f4f181b6fefdf2140d71d73a0d45306c2c9646e4375348',
     'include/csrf.php' => '504f215b1c0fd3f671fe34def1b4c9c3653f2e51c03d76b22c63f969e2577268',
-    'config/services.yaml' => '636f4ba014f5244c13e7400e0d1e5c315d616cf97cca14d52b73b6a4f203b2ba',
+    'config/services.yaml' => '6caaf491407db9b7229503db69169c2d55ec65cdcacc797c960d50e7fff3f6af',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -171,9 +171,9 @@ const ASSET_AUTHENTICATION_SOURCES = [
     'src/AssetManagement/Infrastructure/Console/AssetCommand.php' => '0a6d1e5a8765873b494ce45109db28a0e781c2f9b3308b5cb708e4052f2424b1',
     'src/AssetManagement/Application/AssetRegistry.php' => '67bdd6eff21f91c4abe46ef84685cfb27dcad8efa748ff92a5502aa6fdd86400',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
-    'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '382331b44cbc08cbc70f261fd880d32d6a881873fdc141b59249fa16ed51038b',
+    'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '9369368404612619830fdee03d00af6dacd4f55daa2eb8c80d97507c61271a7a',
     'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
-    'config/services.yaml' => '636f4ba014f5244c13e7400e0d1e5c315d616cf97cca14d52b73b6a4f203b2ba',
+    'config/services.yaml' => '6caaf491407db9b7229503db69169c2d55ec65cdcacc797c960d50e7fff3f6af',
 ];
 
 function asset_authentication_review(string $root): ?string
@@ -332,7 +332,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'c2b1a492167bb5e73b4b23ceb9869574f21393f6d6369a662e40d50f2f749944',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '636f4ba014f5244c13e7400e0d1e5c315d616cf97cca14d52b73b6a4f203b2ba',
+    'config/services.yaml' => '6caaf491407db9b7229503db69169c2d55ec65cdcacc797c960d50e7fff3f6af',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
