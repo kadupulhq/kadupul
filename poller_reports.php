@@ -158,6 +158,11 @@ if (cacti_sizeof($reports)) {
 			reports_log('ERROR: Unable to read the owner of report ' . $report['id'] . '.', true, 'REPORTS', POLLER_VERBOSITY_LOW);
 			continue;
 		}
+		if (cacti_sizeof($current_user) && (($current_user['enabled'] ?? '') !== 'on' || ($current_user['locked'] ?? '') === 'on')) {
+			$number_skipped++;
+			reports_log('WARNING: Skipping report ' . $report['id'] . ' because owner account ' . $report['user_id'] . ' is disabled or locked.', true, 'REPORTS', POLLER_VERBOSITY_LOW);
+			continue;
+		}
 		if (isset($report['email'])) {
 			if (generate_report($report, false) === true) {
 				$number_sent++;

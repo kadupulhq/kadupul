@@ -89,6 +89,12 @@ switch (get_request_var('action')) {
         header('Location: tree.php?header=false');
         break;
     case 'edit':
+        if (!isempty_request_var('id')
+            && !cacti_authorize_resource((int) ($_SESSION['sess_user_id'] ?? 0), (int) get_request_var('id'), 'graph_tree')) {
+            raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+            header('Location: tree.php?header=false');
+            exit;
+        }
         top_header();
         tree_edit();
         bottom_footer();
@@ -112,10 +118,18 @@ switch (get_request_var('action')) {
         tree_dnd();
         break;
     case 'lock':
+        if (!cacti_authorize_resource((int) ($_SESSION['sess_user_id'] ?? 0), (int) get_request_var('id'), 'graph_tree')) {
+            http_response_code(403);
+            exit;
+        }
         api_tree_lock(get_request_var('id'), $_SESSION['sess_user_id']);
         tree_edit(true);
         break;
     case 'unlock':
+        if (!cacti_authorize_resource((int) ($_SESSION['sess_user_id'] ?? 0), (int) get_request_var('id'), 'graph_tree')) {
+            http_response_code(403);
+            exit;
+        }
         api_tree_unlock(get_request_var('id'), $_SESSION['sess_user_id']);
         tree_edit(true);
         break;
@@ -135,7 +149,7 @@ switch (get_request_var('action')) {
         api_tree_rename_node(get_request_var('tree_id'), get_request_var('id'), get_nfilter_request_var('text'));
         break;
     case 'get_node':
-        api_tree_get_node(get_request_var('tree_id'), get_request_var('id'));
+        api_tree_get_node(get_request_var('tree_id'), get_request_var('id'), true);
         break;
     case 'get_host_sort':
         get_host_sort_type();
@@ -199,21 +213,38 @@ function tree_check_sequences()
 
 function tree_sort_name_asc()
 {
+    if (!cacti_authorize_is_admin((int) ($_SESSION['sess_user_id'] ?? 0))) {
+        raise_message('tree_idor', __('You do not have permission to reorder all trees.'), MESSAGE_LEVEL_ERROR);
+        return;
+    }
+
     // resequence the list so it has no gaps, alphabetically ascending
     db_execute('SET @seq = 0; UPDATE graph_tree SET sequence = (@seq:=@seq+1) ORDER BY name;');
 }
 
 function tree_sort_name_desc()
 {
+    if (!cacti_authorize_is_admin((int) ($_SESSION['sess_user_id'] ?? 0))) {
+        raise_message('tree_idor', __('You do not have permission to reorder all trees.'), MESSAGE_LEVEL_ERROR);
+        return;
+    }
+
     // resequence the list so it has no gaps, alphabetically ascending
     db_execute('SET @seq = 0; UPDATE graph_tree SET sequence = (@seq:=@seq+1) ORDER BY name DESC;');
 }
 
 function tree_down(): never
 {
-    tree_check_sequences();
+    $tree_id  = get_filter_request_var('id');
+    $actor_id = (int) ($_SESSION['sess_user_id'] ?? 0);
 
-    $tree_id = get_filter_request_var('id');
+    if (!cacti_authorize_resource($actor_id, (int) $tree_id, 'graph_tree')) {
+        raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+        header('Location: tree.php?header=false');
+        exit;
+    }
+
+    tree_check_sequences();
 
     $seq = db_fetch_cell_prepared(
         'SELECT sequence
@@ -223,6 +254,21 @@ function tree_down(): never
     );
 
     $new_seq = $seq + 1;
+
+    if (!cacti_authorize_is_admin($actor_id)) {
+        $adjacent_id = db_fetch_cell_prepared(
+            'SELECT id
+			FROM graph_tree
+			WHERE sequence = ?',
+            array($new_seq)
+        );
+
+        if ($adjacent_id !== false && $adjacent_id !== null && !cacti_authorize_resource($actor_id, (int) $adjacent_id, 'graph_tree')) {
+            raise_message('tree_idor', __('You do not have permission to reorder this tree.'), MESSAGE_LEVEL_ERROR);
+            header('Location: tree.php?header=false');
+            exit;
+        }
+    }
 
     /* update the old tree first */
     db_execute_prepared(
@@ -246,9 +292,16 @@ function tree_down(): never
 
 function tree_up(): never
 {
-    tree_check_sequences();
+    $tree_id  = get_filter_request_var('id');
+    $actor_id = (int) ($_SESSION['sess_user_id'] ?? 0);
 
-    $tree_id = get_filter_request_var('id');
+    if (!cacti_authorize_resource($actor_id, (int) $tree_id, 'graph_tree')) {
+        raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+        header('Location: tree.php?header=false');
+        exit;
+    }
+
+    tree_check_sequences();
 
     $seq = db_fetch_cell_prepared(
         'SELECT sequence
@@ -258,6 +311,21 @@ function tree_up(): never
     );
 
     $new_seq = $seq - 1;
+
+    if (!cacti_authorize_is_admin($actor_id)) {
+        $adjacent_id = db_fetch_cell_prepared(
+            'SELECT id
+			FROM graph_tree
+			WHERE sequence = ?',
+            array($new_seq)
+        );
+
+        if ($adjacent_id !== false && $adjacent_id !== null && !cacti_authorize_resource($actor_id, (int) $adjacent_id, 'graph_tree')) {
+            raise_message('tree_idor', __('You do not have permission to reorder this tree.'), MESSAGE_LEVEL_ERROR);
+            header('Location: tree.php?header=false');
+            exit;
+        }
+    }
 
     /* update the old tree first */
     db_execute_prepared(
@@ -283,12 +351,24 @@ function tree_dnd(): never
 {
     if (isset_request_var('tree_ids') && is_array(get_nfilter_request_var('tree_ids'))) {
         $tids     = get_nfilter_request_var('tree_ids');
-        $sequence = 1;
+        $actor_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+        $valid    = array();
 
         foreach ($tids as $id) {
             $id = str_replace('line', '', $id);
             input_validate_input_number($id);
 
+            if (!cacti_authorize_resource($actor_id, (int) $id, 'graph_tree')) {
+                raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+                header('Location: tree.php?header=false');
+                exit;
+            }
+
+            $valid[] = (int) $id;
+        }
+
+        $sequence = 1;
+        foreach ($valid as $id) {
             db_execute_prepared(
                 'UPDATE graph_tree
 				SET sequence = ?
@@ -321,6 +401,18 @@ function get_host_sort_type()
                 if (isset($parts[0]) && $parts[0] == 'tbranch') {
                     $branch = $parts[1];
                     input_validate_input_number($branch);
+
+                    $tree_id = db_fetch_cell_prepared(
+                        'SELECT graph_tree_id
+						FROM graph_tree_items
+						WHERE id = ?',
+                        array($branch)
+                    );
+
+                    if ($tree_id === false || $tree_id === null
+                        || !cacti_authorize_resource((int) ($_SESSION['sess_user_id'] ?? 0), (int) $tree_id, 'graph_tree')) {
+                        return;
+                    }
 
                     $sort_type = db_fetch_cell_prepared(
                         'SELECT host_grouping_type
@@ -417,6 +509,19 @@ function get_branch_sort_type()
                     $branch = $parts[1];
 
                     input_validate_input_number($branch);
+
+                    $tree_id = db_fetch_cell_prepared(
+                        'SELECT graph_tree_id
+						FROM graph_tree_items
+						WHERE id = ?',
+                        array($branch)
+                    );
+
+                    if ($tree_id === false || $tree_id === null
+                        || !cacti_authorize_resource((int) ($_SESSION['sess_user_id'] ?? 0), (int) $tree_id, 'graph_tree')) {
+                        print '';
+                        break;
+                    }
 
                     $sort_type = db_fetch_cell_prepared(
                         'SELECT sort_children_type
@@ -847,6 +952,16 @@ function tree_edit($partial = false)
     load_current_session_value('type', 'sess_tree_edit_type', '0');
 
     if (!isempty_request_var('id')) {
+        if (!cacti_authorize_resource((int) ($_SESSION['sess_user_id'] ?? 0), (int) get_request_var('id'), 'graph_tree')) {
+            if ($partial) {
+                http_response_code(403);
+                return;
+            }
+            raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+            header('Location: tree.php?header=false');
+            exit;
+        }
+
         $tree = db_fetch_row_prepared(
             'SELECT *
 			FROM graph_tree
@@ -2284,7 +2399,17 @@ function tree()
         $sql_where = '';
     }
 
-    $sql_order = get_order_string();
+    if (!is_realm_allowed(1)) {
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . 't.user_id = ' . (int) ($_SESSION['sess_user_id'] ?? 0);
+    }
+
+    $allowed_sort_columns = array(
+        'name', 'id', 'enabled', 'locked', 'user_id', 'sequence',
+        'last_modified', 'modified_by', 'sites', 'branches', 'hosts', 'graphs'
+    );
+    $sort_column = cacti_validate_sort_column(get_request_var('sort_column'), $allowed_sort_columns, 'sequence');
+    $sort_dir    = strtoupper((string) get_request_var('sort_direction')) === 'DESC' ? 'DESC' : 'ASC';
+    $sql_order   = 'ORDER BY `' . $sort_column . '` ' . $sort_dir;
     $sql_limit = ' LIMIT ' . ($rows * (get_request_var('page') - 1)) . ',' . $rows;
 
     $trees = db_fetch_assoc("SELECT t.*,

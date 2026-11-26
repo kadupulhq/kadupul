@@ -6,6 +6,8 @@
  */
 
 include_once('./include/auth.php');
+
+cacti_require_post_actions(array('actions', 'restart', 'remall', 'arcall'));
 include_once($config['library_path'] . '/functions.php');
 include_once($config['library_path'] . '/rrd.php');
 require_once __DIR__ . '/lib/rrd_maintenance.php';
@@ -21,8 +23,8 @@ $rra_path = $config['rra_path'] . '/';
 set_default_action();
 
 if (isset_request_var('rescan')) {
-    // A rescan rebuilds the RRD file list after the global guard has run.
-    csrf_refuse_cross_site_get();
+    // A rescan rebuilds the RRD file list and requires a CSRF-protected POST.
+    cacti_require_post_request();
     set_request_var('action', 'restart');
 }
 
@@ -435,14 +437,16 @@ function remove_all_rrds()
         return false;
     }
 
+    $action = (string) get_nfilter_request_var('raction');
+    if (!in_array($action, array('1', '3'), true)) {
+        return false;
+    }
 
     /* suppress warnings */
     error_reporting(0);
 
     /* install the rrdclean error handler */
     set_error_handler('rrdclean_error_handler');
-
-    $action = get_nfilter_request_var('raction');
 
     /* add to data_source_purge_action table */
     db_execute_prepared('INSERT INTO data_source_purge_action
@@ -470,6 +474,10 @@ function do_rrd()
         return false;
     }
 
+    $drp_action = (string) get_nfilter_request_var('drp_action');
+    if (!in_array($drp_action, array('1', '3'), true)) {
+        return false;
+    }
 
     /* suppress warnings */
     error_reporting(0);
@@ -479,10 +487,16 @@ function do_rrd()
 
     foreach ($_POST as $var => $val) {
         if (preg_match('/^chk_(.*)$/', $var, $matches)) {
-            /* recreate the file name */
+            $id = filter_var($matches[1], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
+            if ($id === false) {
+                continue;
+            }
+
+            /* recreate the file name — restrict strictly to unused (in_cacti = 0) entries */
             $unused_file = db_fetch_row_prepared('SELECT id, name, local_data_id
 				FROM data_source_purge_temp
-				WHERE id = ?', array($matches[1]));
+				WHERE id = ?
+				AND in_cacti = 0', array($id));
 
             if (!cacti_sizeof($unused_file)) {
                 continue;
@@ -492,12 +506,12 @@ function do_rrd()
             $sql = "INSERT INTO data_source_purge_action
 				(name, local_data_id, action)
 				VALUES(?, ?, ?)
-				ON DUPLICATE KEY UPDATE local_data_id = VALUES(local_data_id)";
+				ON DUPLICATE KEY UPDATE local_data_id = VALUES(local_data_id), action = VALUES(action)";
 
-            db_execute_prepared($sql, array($unused_file['name'], $unused_file['local_data_id'], get_nfilter_request_var('drp_action')));
+            db_execute_prepared($sql, array($unused_file['name'], $unused_file['local_data_id'], $drp_action));
 
             /* drop from data_source_purge table */
-            db_execute_prepared('DELETE FROM data_source_purge_temp WHERE id = ?', array($matches[1]));
+            db_execute_prepared('DELETE FROM data_source_purge_temp WHERE id = ? AND in_cacti = 0', array($id));
         }
     }
 
@@ -599,7 +613,7 @@ function filter()
 				$('#rescan').on('click', function() {
 					$('#text').text('Rebuilding RRDfile Listing');
 					pulsate('#text');
-					$.get('rrdcleaner.php?header=false&rescan=1&clear=1')
+					$.post('rrdcleaner.php', { header: 'false', rescan: '1', clear: '1', __csrf_magic: csrfMagicToken })
 						.done(function(data) {
 							checkForLogout(data);
 
@@ -613,9 +627,12 @@ function filter()
 				});
 
 				$('#arcall').on('click', function() {
+					if (!window.confirm(<?php print json_encode(__('Are you sure you want to archive all unknown RRDfiles?'));?>)) {
+						return;
+					}
 					$('#text').text('Scheduling Archiving of All Unknowns');
 					pulsate('#text');
-					$.get('rrdcleaner.php?header=false&action=arcall&raction=3&clear=1')
+					$.post('rrdcleaner.php', { header: 'false', action: 'arcall', raction: '3', clear: '1', __csrf_magic: csrfMagicToken })
 						.done(function(data) {
 							checkForLogout(data);
 
@@ -629,9 +646,12 @@ function filter()
 				});
 
 				$('#remall').on('click', function() {
+					if (!window.confirm(<?php print json_encode(__('Are you sure you want to delete all unknown RRDfiles?'));?>)) {
+						return;
+					}
 					$('#text').text('Scheduling Purging of All Unknowns');
 					pulsate('#text');
-					$.get('rrdcleaner.php?header=false&action=remall&raction=1&clear=1')
+					$.post('rrdcleaner.php', { header: 'false', action: 'remall', raction: '1', clear: '1', __csrf_magic: csrfMagicToken })
 						.done(function(data) {
 							checkForLogout(data);
 

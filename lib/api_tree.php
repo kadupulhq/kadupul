@@ -18,11 +18,19 @@ function api_tree_lock($tree_id, $user_id = 0, $web = true)
     input_validate_input_number($user_id);
     /* ==================================================== */
 
+    $actor_id = (int) ($user_id > 0 ? $user_id : ($_SESSION['sess_user_id'] ?? 0));
+
+    if (!cacti_authorize_resource($actor_id, (int) $tree_id, 'graph_tree')) {
+        cacti_log("SECURITY: User is not permitted to lock TreeID:'$tree_id', Function api_tree_lock", false, 'AUTH');
+
+        return false;
+    }
+
     db_execute_prepared(
         'UPDATE graph_tree
 		SET `locked` = 1, locked_date = NOW(), last_modified = NOW(), modified_by = ?
 		WHERE id = ?',
-        array($user_id, $tree_id)
+        array($actor_id, $tree_id)
     );
 }
 
@@ -38,11 +46,19 @@ function api_tree_unlock($tree_id, $user_id = 0, $web = true)
     input_validate_input_number($user_id);
     /* ==================================================== */
 
+    $actor_id = (int) ($user_id > 0 ? $user_id : ($_SESSION['sess_user_id'] ?? 0));
+
+    if (!cacti_authorize_resource($actor_id, (int) $tree_id, 'graph_tree')) {
+        cacti_log("SECURITY: User is not permitted to unlock TreeID:'$tree_id', Function api_tree_unlock", false, 'AUTH');
+
+        return false;
+    }
+
     db_execute_prepared(
         'UPDATE graph_tree
 		SET `locked` = 0, last_modified = NOW(), modified_by = ?
 		WHERE id = ?',
-        array($user_id, $tree_id)
+        array($actor_id, $tree_id)
     );
 }
 
@@ -64,6 +80,45 @@ function api_tree_node_access($tree_id, $function)
         cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function $function", false, 'AUTH');
 
         return false;
+    }
+
+    if ($function !== 'place_graph' && function_exists(__NAMESPACE__ . '\\cacti_authorize_resource')) {
+        $actor_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+
+        if (!cacti_authorize_resource($actor_id, (int) $tree_id, 'graph_tree')) {
+            cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function $function", false, 'AUTH');
+
+            return false;
+        }
+
+        $lock_state = db_fetch_row_prepared(
+            'SELECT locked, modified_by
+			FROM graph_tree
+			WHERE id = ?',
+            array((int) $tree_id)
+        );
+
+        if (!cacti_sizeof($lock_state)) {
+            return false;
+        }
+
+        $locked_by_actor = (int) $lock_state['locked'] === 1 && (int) $lock_state['modified_by'] === $actor_id;
+
+        if (in_array($function, array('set_host_sort', 'set_branch_sort'), true)) {
+            $is_admin = (function_exists(__NAMESPACE__ . '\\cacti_authorize_is_admin') && cacti_authorize_is_admin($actor_id))
+                || (function_exists(__NAMESPACE__ . '\\is_realm_allowed') && is_realm_allowed(1, $actor_id));
+            $admin_unlocked = (int) $lock_state['locked'] === 0 && $is_admin;
+
+            if (!$locked_by_actor && !$admin_unlocked) {
+                cacti_log("SECURITY: TreeID:'$tree_id' is not locked for editing by user '$actor_id', Function $function", false, 'AUTH');
+
+                return false;
+            }
+        } elseif (!$locked_by_actor) {
+            cacti_log("SECURITY: TreeID:'$tree_id' is not locked for editing by user '$actor_id', Function $function", false, 'AUTH');
+
+            return false;
+        }
     }
 
     return true;
@@ -792,6 +847,16 @@ function api_tree_get_main($tree_id, $parent = 0)
  * @returns - string of the tree items in html format */
 function api_tree_get_node($tree_id, $node_id, $editing = false)
 {
+    if (!is_numeric($tree_id) || (int) $tree_id <= 0) {
+        return;
+    }
+
+    if (!cacti_authorize_resource((int) ($_SESSION['sess_user_id'] ?? 0), (int) $tree_id, 'graph_tree')) {
+        cacti_log("SECURITY: User is not permitted to view TreeID:'$tree_id' for editing, Function get_node", false, 'AUTH');
+
+        return;
+    }
+
     if ($node_id == '#') {
         $hierarchy = draw_dhtml_tree_level($tree_id, 0, $editing);
     } else {

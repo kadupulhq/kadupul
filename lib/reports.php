@@ -196,6 +196,10 @@ function reports_add_graphs($report_id, $local_graph_id, $timespan, $align)
         raise_message('reports_not_owner');
 
         return false;
+    } elseif (!is_graph_allowed((int) $local_graph_id, (int) $_SESSION['sess_user_id'])) {
+        raise_message('reports_graph_not_found');
+
+        return false;
     } else {
         $sequence = db_fetch_cell_prepared(
             'SELECT MAX(sequence)
@@ -1348,7 +1352,15 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
                 );
             }
 
+            if ($leaf_type == 'host' && !is_device_allowed($leaf['host_id'], $user)) {
+                continue;
+            }
+
             if ($leaf_type == 'graph') {
+                if (!is_graph_allowed($leaf['local_graph_id'], $user)) {
+                    continue;
+                }
+
                 $graph_name = db_fetch_cell_prepared(
                     'SELECT
 					gtg.title_cache AS title
@@ -1436,33 +1448,38 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
                     }
                 }
             } elseif ($leaf_type == 'graph') {
-                $gr_where = '';
-                if ($item['graph_name_regexp'] != '') {
-                    $gr_where .= ' AND title_cache ' . db_qstr_rlike($item['graph_name_regexp']);
-                }
+                if (is_graph_allowed($leaf['local_graph_id'], $user)) {
+                    $gr_where = '';
+                    if ($item['graph_name_regexp'] != '') {
+                        $gr_where .= ' AND title_cache ' . db_qstr_rlike($item['graph_name_regexp']);
+                    }
 
-                $graph = db_fetch_cell("SELECT count(*)
-					FROM graph_templates_graph
-					WHERE local_graph_id=" . $leaf['local_graph_id'] . $gr_where);
+                    $graph = db_fetch_cell_prepared(
+                        'SELECT count(*)
+						FROM graph_templates_graph
+						WHERE local_graph_id = ?' . $gr_where,
+                        array($leaf['local_graph_id'])
+                    );
 
-                /* start graph display */
-                if ($graph > 0) {
-                    if ($title != '') {
-                        $outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
-                        if ($format_ok) {
-                            $outstr .= "\t\t\t<td class='text'>" . PHP_EOL;
-                        } else {
-                            $outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . PHP_EOL;
+                    /* start graph display */
+                    if ($graph > 0) {
+                        if ($title != '') {
+                            $outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
+                            if ($format_ok) {
+                                $outstr .= "\t\t\t<td class='text'>" . PHP_EOL;
+                            } else {
+                                $outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . PHP_EOL;
+                            }
+                            $outstr .= "\t\t\t\t$title" . PHP_EOL;
+                            $outstr .= "\t\t\t</td>" . PHP_EOL;
+                            $outstr .= "\t\t</tr>" . PHP_EOL;
                         }
-                        $outstr .= "\t\t\t\t$title" . PHP_EOL;
-                        $outstr .= "\t\t\t</td>" . PHP_EOL;
-                        $outstr .= "\t\t</tr>" . PHP_EOL;
+
+                        $graph_list = array(array('local_graph_id' => $leaf['local_graph_id'], 'title_cache' => $graph_name));
+
+                        $outstr .= reports_graph_area($graph_list, $report, $item, $timespan, $output, $format_ok, $theme);
                     }
                 }
-
-                $graph_list = array(array('local_graph_id' => $leaf['local_graph_id'], 'title_cache' => $graph_name));
-
-                $outstr .= reports_graph_area($graph_list, $report, $item, $timespan, $output, $format_ok, $theme);
             } elseif ($leaf_type == 'host') {
                 if ($item['tree_cascade'] == 'on') {
                     /* graph template grouping */
@@ -1651,7 +1668,7 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
                         }
                     }
                 } else {
-                    $graphs = db_fetch_assoc('SELECT
+                    $host_graphs = db_fetch_assoc('SELECT
 						gtg.local_graph_id, gtg.title_cache
 						FROM graph_local AS gl
 						INNER JOIN graph_templates_graph AS gtg
@@ -1660,15 +1677,15 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
 						$sql_where
 						ORDER BY gtg.title_cache");
 
-                    if (cacti_sizeof($graphs)) {
-                        foreach ($graphs as $key => $graph) {
+                    if (cacti_sizeof($host_graphs)) {
+                        foreach ($host_graphs as $key => $graph) {
                             if (!is_graph_allowed($graph['local_graph_id'], $user)) {
-                                unset($graphs[$key]);
+                                unset($host_graphs[$key]);
                             }
                         }
                     }
 
-                    if (cacti_sizeof($graphs)) {
+                    if (cacti_sizeof($host_graphs)) {
                         /* start graph display */
                         if ($title != '') {
                             $outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
@@ -1682,7 +1699,7 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
                             $outstr .= "\t\t</tr>" . PHP_EOL;
                         }
 
-                        $outstr .= reports_graph_area($graphs, $report, $item, $timespan, $output, $format_ok, $theme);
+                        $outstr .= reports_graph_area($host_graphs, $report, $item, $timespan, $output, $format_ok, $theme);
                     }
                 }
             }
@@ -1966,7 +1983,7 @@ function reports_poller_bottom()
     include_once($config['base_path'] . '/lib/poller.php');
 
     $command_string = read_config_option('path_php_binary');
-    $extra_args = '-q ' . $config['base_path'] . '/poller_reports.php';
+    $extra_args     = array('-q', $config['base_path'] . '/poller_reports.php');
     exec_background($command_string, $extra_args);
 }
 

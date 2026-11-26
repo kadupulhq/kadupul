@@ -227,6 +227,10 @@ function display_matching_hosts($rule, $rule_type, $url)
         $sql_where .= ($sql_where != '' ? ' AND h.host_template_id=' . get_request_var('host_template_id') : 'WHERE h.host_template_id=' . get_request_var('host_template_id'));
     }
 
+    if (function_exists('get_allowed_management_device_ids_sql')) {
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . 'h.id IN (' . get_allowed_management_device_ids_sql() . ')';
+    }
+
     $host_graphs       = array_rekey(db_fetch_assoc('SELECT host_id, count(*) as graphs FROM graph_local GROUP BY host_id'), 'host_id', 'graphs');
     $host_data_sources = array_rekey(db_fetch_assoc('SELECT host_id, count(*) as data_sources FROM data_local GROUP BY host_id'), 'host_id', 'data_sources');
 
@@ -236,8 +240,6 @@ function display_matching_hosts($rule, $rule_type, $url)
 		FROM host AS h
 		LEFT JOIN host_template AS ht
 		ON (h.host_template_id=ht.id) ';
-
-    $hosts = db_fetch_assoc($sql_query . 'WHERE h.deleted = ""');
 
     /* get the WHERE clause for matching hosts */
     if ($sql_where != '') {
@@ -527,7 +529,14 @@ function display_matching_graphs($rule, $rule_type, $url)
     }
 
     /* get the WHERE clause for matching graphs */
-    $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . build_matching_objects_filter($rule['id'], $rule_type);
+    $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . '(' . build_matching_objects_filter($rule['id'], $rule_type) . ')';
+
+    if (function_exists('get_allowed_management_graph_ids_sql')) {
+        $sql_where .= ' AND gl.id IN (' . get_allowed_management_graph_ids_sql() . ')';
+    }
+    if (function_exists('get_allowed_management_device_ids_sql')) {
+        $sql_where .= ' AND (gl.host_id = 0 OR gl.host_id IN (' . get_allowed_management_device_ids_sql() . '))';
+    }
 
     $total_rows = db_fetch_cell("SELECT COUNT(gtg.id)
 		FROM graph_local AS gl
@@ -1098,14 +1107,19 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
     form_hidden_box('page', '1', '');
 
     /* build magic query, for matching hosts JOIN tables host and host_template */
-    $leaf_type = db_fetch_cell('SELECT leaf_type FROM automation_tree_rules WHERE id=' . $rule_id);
+    $leaf_type = db_fetch_cell('SELECT leaf_type FROM automation_tree_rules WHERE id=' . (int) $rule_id);
+    $allowed_tables = array('host', 'host_template');
     if ($leaf_type == TREE_ITEM_TYPE_HOST) {
         $sql_tables = 'FROM host AS h
 			LEFT JOIN host_template AS ht
 			ON (h.host_template_id = ht.id)';
 
         $sql_where = 'WHERE h.deleted = ""';
+        if (function_exists('get_allowed_management_device_ids_sql')) {
+            $sql_where .= ' AND h.id IN (' . get_allowed_management_device_ids_sql() . ')';
+        }
     } elseif ($leaf_type == TREE_ITEM_TYPE_GRAPH) {
+        $allowed_tables = array('host', 'host_template', 'graph_local', 'graph_templates_graph', 'graph_templates');
         $sql_tables = 'FROM host AS h
 			LEFT JOIN host_template AS ht
 			ON h.host_template_id=ht.id
@@ -1117,6 +1131,12 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 			ON (gl.id=gtg.local_graph_id)';
 
         $sql_where = 'WHERE gtg.local_graph_id>0 AND h.deleted = "" ';
+        if (function_exists('get_allowed_management_graph_ids_sql')) {
+            $sql_where .= ' AND gl.id IN (' . get_allowed_management_graph_ids_sql() . ')';
+        }
+        if (function_exists('get_allowed_management_device_ids_sql')) {
+            $sql_where .= ' AND h.id IN (' . get_allowed_management_device_ids_sql() . ')';
+        }
     }
 
     /* form the 'where' clause for our main sql query */
@@ -1152,7 +1172,7 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
 
     $templates = array();
 
-    if (api_automation_column_exists($item['field'], array('host', 'host_template', 'graph_local', 'graph_templates_graph', 'graph_templates'))) {
+    if (api_automation_column_exists($item['field'], $allowed_tables)) {
         $sql_field = $item['field'] . ' AS source ';
     } else {
         $sql_field = '"SQL Injection" AS source ';
@@ -1250,19 +1270,213 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
     print "</form>\n";
 }
 
-function api_automation_column_exists($column, $tables)
+/**
+ * Host columns carrying SNMP credentials or authentication metadata that must never
+ * be selectable, filterable, or displayed through automation rules.
+ *
+ * @return list<string>
+ */
+function api_automation_sensitive_host_columns(): array
 {
-    $column = str_replace(array('h.', 'ht.', 'gt.', 'gl.', 'gtg.'), array('', '', '', '', ''), $column);
+    return array(
+        'snmp_community',
+        'snmp_username',
+        'snmp_password',
+        'snmp_priv_passphrase',
+        'snmp_auth_protocol',
+        'snmp_priv_protocol',
+        'snmp_context',
+        'snmp_engine_id',
+    );
+}
 
-    if (cacti_sizeof($tables)) {
-        foreach ($tables as $table) {
-            if (db_column_exists($table, $column)) {
-                return true;
-            }
+/**
+ * Explicit allowlist of non-sensitive table aliases and columns permitted in
+ * automation match rules and tree header rules.
+ *
+ * @return array<string, array{alias: string, columns: list<string>}>
+ */
+function api_automation_allowed_table_columns(): array
+{
+    return array(
+        'host' => array(
+            'alias' => 'h',
+            'columns' => array(
+                'id',
+                'poller_id',
+                'site_id',
+                'host_template_id',
+                'description',
+                'hostname',
+                'location',
+                'notes',
+                'external_id',
+                'snmp_version',
+                'snmp_port',
+                'snmp_timeout',
+                'snmp_sysDescr',
+                'snmp_sysObjectID',
+                'snmp_sysUpTimeInstance',
+                'snmp_sysContact',
+                'snmp_sysName',
+                'snmp_sysLocation',
+                'availability_method',
+                'ping_method',
+                'ping_port',
+                'ping_timeout',
+                'ping_retries',
+                'max_oids',
+                'bulk_walk_size',
+                'device_threads',
+                'deleted',
+                'disabled',
+                'status',
+                'status_event_count',
+                'status_fail_date',
+                'status_rec_date',
+                'status_last_error',
+                'min_time',
+                'max_time',
+                'cur_time',
+                'avg_time',
+                'polling_time',
+                'total_polls',
+                'failed_polls',
+                'availability',
+                'last_updated',
+            ),
+        ),
+        'host_template' => array(
+            'alias' => 'ht',
+            'columns' => array('id', 'name', 'class'),
+        ),
+        'graph_templates' => array(
+            'alias' => 'gt',
+            'columns' => array('id', 'name', 'multiple', 'test_source'),
+        ),
+        'graph_templates_graph' => array(
+            'alias' => 'gtg',
+            'columns' => array('title', 'title_cache', 'vertical_label', 'height', 'width'),
+        ),
+        'graph_local' => array(
+            'alias' => 'gl',
+            'columns' => array('id', 'graph_template_id', 'host_id', 'snmp_query_id', 'snmp_query_graph_id', 'snmp_index'),
+        ),
+    );
+}
+
+/** Whether a field name (bare or aliased) references a sensitive host SNMP credential column. */
+function api_automation_is_sensitive_field($field): bool
+{
+    if (!is_string($field) || $field === '') {
+        return false;
+    }
+
+    $sensitive = array_map('strtolower', api_automation_sensitive_host_columns());
+    $parts = explode('.', $field);
+    foreach ($parts as $part) {
+        $normalized = strtolower(trim($part, " \t\n\r\0\x0B`"));
+        if (in_array($normalized, $sensitive, true)) {
+            return true;
+        }
+        $sanitized = strtolower(preg_replace('/[^a-zA-Z0-9_]/', '', $part));
+        if ($sanitized !== '' && in_array($sanitized, $sensitive, true)) {
+            return true;
         }
     }
 
     return false;
+}
+
+/**
+ * Parse an exact "alias.column" automation field against the explicit non-sensitive allowlist.
+ *
+ * @param mixed        $field  Candidate field identifier
+ * @param list<string> $tables Permitted table names for this context
+ *
+ * @return array{table: string, alias: string, column: string}|null
+ */
+function api_automation_resolve_allowed_field($field, array $tables = array('host', 'host_template', 'graph_templates', 'graph_templates_graph', 'graph_local')): ?array
+{
+    if (!is_string($field) || preg_match('/\A([a-z]+)\.([a-zA-Z0-9_]+)\z/', $field, $matches) !== 1) {
+        return null;
+    }
+
+    $alias = $matches[1];
+    $column = $matches[2];
+    if (api_automation_is_sensitive_field($column)) {
+        return null;
+    }
+
+    $catalog = api_automation_allowed_table_columns();
+    foreach ($tables as $table) {
+        if (!isset($catalog[$table])) {
+            continue;
+        }
+        if ($catalog[$table]['alias'] === $alias && in_array($column, $catalog[$table]['columns'], true)) {
+            return array('table' => $table, 'alias' => $alias, 'column' => $column);
+        }
+    }
+
+    return null;
+}
+
+function api_automation_column_exists($column, $tables)
+{
+    if (!is_array($tables) || !cacti_sizeof($tables)) {
+        return false;
+    }
+
+    $resolved = api_automation_resolve_allowed_field($column, $tables);
+    if ($resolved === null) {
+        return false;
+    }
+
+    return db_column_exists($resolved['table'], $resolved['column']);
+}
+
+/**
+ * Validate a graph-creation rule item field against the rule's data query XML input fields
+ * or cached host_snmp_cache field names, rejecting non-exact or sensitive values.
+ */
+function api_automation_is_valid_graph_rule_field($field, int $rule_id): bool
+{
+    if (!is_string($field) || $field === '' || $rule_id < 1) {
+        return false;
+    }
+    if (preg_match('/\A[a-zA-Z0-9_]+\z/', $field) !== 1 || api_automation_is_sensitive_field($field)) {
+        return false;
+    }
+
+    $snmp_query_id = (int) db_fetch_cell_prepared(
+        'SELECT snmp_query_id FROM automation_graph_rules WHERE id = ?',
+        array($rule_id)
+    );
+    if ($snmp_query_id < 1) {
+        return false;
+    }
+
+    if (function_exists('get_data_query_array')) {
+        $xml_array = get_data_query_array($snmp_query_id);
+        if (cacti_sizeof($xml_array) && isset($xml_array['fields']) && is_array($xml_array['fields'])) {
+            foreach ($xml_array['fields'] as $field_name => $field_def) {
+                if ($field_name === $field && isset($field_def['direction']) && ($field_def['direction'] === 'input' || $field_def['direction'] === 'input-output')) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    $exists = db_fetch_cell_prepared(
+        'SELECT field_name
+        FROM host_snmp_cache
+        WHERE snmp_query_id = ?
+        AND field_name = ?
+        LIMIT 1',
+        array($snmp_query_id, $field)
+    );
+
+    return $exists === $field;
 }
 
 function display_match_rule_items($title, $rule_id, $rule_type, $module)
@@ -1719,6 +1933,20 @@ function build_rule_item_filter($automation_rule_items, $prefix = '')
 
             # field name
             if ($automation_rule_item['field'] != '') {
+                if (api_automation_is_sensitive_field($automation_rule_item['field'])) {
+                    /* never evaluate predicates against sensitive credential columns */
+                    $sql_filter .= ' 1 = 0';
+
+                    continue;
+                }
+
+                if ($prefix === '' && api_automation_resolve_allowed_field($automation_rule_item['field']) === null) {
+                    /* match-object predicates must reference an explicit allowlisted table-alias.column */
+                    $sql_filter .= ' 1 = 0';
+
+                    continue;
+                }
+
                 $identifier = automation_quote_field_identifier($automation_rule_item['field']);
 
                 if ($identifier === '') {
@@ -1922,36 +2150,36 @@ function get_query_fields($table, $excluded_fields)
     $function = automation_function_with_pid(__FUNCTION__);
     cacti_log($function . ' called', false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
 
-    $table = trim($table);
+    $table = trim((string) $table);
+    $catalog = api_automation_allowed_table_columns();
+    $new_fields = array();
+
+    if (!isset($catalog[$table])) {
+        cacti_log($function . ' returns: 0', false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
+        return $new_fields;
+    }
+
+    $alias = $catalog[$table]['alias'];
+    $allowed_columns = array_flip($catalog[$table]['columns']);
 
     $sql = 'SHOW COLUMNS FROM ' . $table;
     $fields = array_rekey(db_fetch_assoc($sql), 'Field', 'Type');
-    #print '<pre>'; print_r($fields); print '</pre>';
-    # remove unwanted entries
-    $fields = array_minus($fields, $excluded_fields);
+    # confine strictly to the explicit allowlist for this table
+    $fields = array_intersect_key($fields, $allowed_columns);
+    # remove caller-excluded entries and any sensitive host columns
+    $effective_excluded = is_array($excluded_fields) ? $excluded_fields : array();
+    if ($table === 'host') {
+        $effective_excluded = array_merge($effective_excluded, api_automation_sensitive_host_columns());
+    }
+    $fields = array_minus($fields, $effective_excluded);
 
     # now reformat entries for use with draw_edit_form
     if (cacti_sizeof($fields)) {
         foreach ($fields as $key => $value) {
-            switch ($table) {
-                case 'graph_templates_graph':
-                    $table = 'gtg';
-                    break;
-                case 'host':
-                    $table = 'h';
-                    break;
-                case 'host_template':
-                    $table = 'ht';
-                    break;
-                case 'graph_templates':
-                    $table = 'gt';
-                    break;
-            }
-
             # we want to know later which table was selected
-            $new_key = $table . '.' . $key;
+            $new_key = $alias . '.' . $key;
             # give the user a hint about the data type of the column
-            $new_fields[$new_key] = strtoupper($table) . ': ' . $key . ' - ' . $value;
+            $new_fields[$new_key] = strtoupper($alias) . ': ' . $key . ' - ' . $value;
         }
     }
 
@@ -3060,26 +3288,32 @@ function create_all_header_nodes($item_id, $rule)
         /* get the WHERE clause for matching hosts */
         $sql_filter = build_matching_objects_filter($rule['id'], AUTOMATION_RULE_TYPE_TREE_MATCH);
 
+        $allowed_tables = ($rule['leaf_type'] == TREE_ITEM_TYPE_GRAPH)
+            ? array('host', 'host_template', 'graph_local', 'graph_templates_graph', 'graph_templates')
+            : array('host', 'host_template');
+
         foreach ($tree_items as $tree_item) {
             if ($tree_item['field'] === AUTOMATION_TREE_ITEM_TYPE_STRING) {
                 # for a fixed string, use the given text
                 $sql = '';
                 $target = $automation_tree_header_types[AUTOMATION_TREE_ITEM_TYPE_STRING];
             } else {
-                $sanitized_field = sanitize_sql_column($tree_item['field']);
-                if ($sanitized_field == '') {
-                    $sql_field = 'NULL AS source ';
+                $resolved = api_automation_resolve_allowed_field($tree_item['field'], $allowed_tables);
+                if ($resolved === null) {
+                    $sql = '';
+                    $target = '';
+                    cacti_log($function . ' Refused disallowed tree rule field: ' . json_encode($tree_item['field'], JSON_INVALID_UTF8_SUBSTITUTE), false, 'AUTOM8');
                 } else {
-                    $sql_field = $sanitized_field . ' AS source ';
+                    $sql_field = $resolved['alias'] . '.' . $resolved['column'] . ' AS source ';
+
+                    /* now we build up a new query for counting the rows */
+                    $sql = 'SELECT ' .
+                    $sql_field .
+                    $sql_tables .
+                    $sql_where . ' AND (' . $sql_filter . ')';
+
+                    $target = db_fetch_cell_prepared($sql, array($item_id), '', false);
                 }
-
-                /* now we build up a new query for counting the rows */
-                $sql = 'SELECT ' .
-                $sql_field .
-                $sql_tables .
-                $sql_where . ' AND (' . $sql_filter . ')';
-
-                $target = db_fetch_cell_prepared($sql, array($item_id), '', false);
             }
 
             cacti_log($function . ' Item ' . $item_id . ' - sql: ' . str_replace("\m", '', $sql) . ' matches: ' . $target, false, 'AUTOM8 TRACE', POLLER_VERBOSITY_DEBUG);
@@ -3614,6 +3848,188 @@ function automation_get_valid_mask($range)
     return $mask;
 }
 
+/** Practical per-network discovery address ceiling matching DiscoveryRange::TOTAL_MAX. */
+if (!defined('AUTOMATION_MAX_DISCOVERY_IPS')) {
+    define('AUTOMATION_MAX_DISCOVERY_IPS', 131072);
+}
+
+/**
+ * Whether an IPv4 inclusive range [start_ip, end_ip] is permitted for network discovery.
+ * Refuses unspecified (0.0.0.0/8), loopback (127.0.0.0/8), link-local/metadata (169.254.0.0/16),
+ * multicast (224.0.0.0/4), and reserved/broadcast (240.0.0.0/4) ranges.
+ */
+function automation_ipv4_range_is_allowed(string $start_ip, string $end_ip): bool
+{
+    if (filter_var($start_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false
+        || filter_var($end_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
+        return false;
+    }
+    $start = ip2long($start_ip);
+    $end = ip2long($end_ip);
+    if ($start === false || $end === false || $end < $start) {
+        return false;
+    }
+
+    $blocked = array(
+        array(0x00000000, 0x00FFFFFF),
+        array(0x7F000000, 0x7FFFFFFF),
+        array(0xA9FE0000, 0xA9FEFFFF),
+        array(0xE0000000, 0xEFFFFFFF),
+        array(0xF0000000, 0xFFFFFFFF),
+    );
+    foreach ($blocked as $interval) {
+        if ($start <= $interval[1] && $interval[0] <= $end) {
+            return false;
+        }
+    }
+
+    return filter_var($start_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_RES_RANGE) !== false
+        && filter_var($end_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_RES_RANGE) !== false;
+}
+
+/**
+ * Whether a single IPv4 or IPv6 address is permitted as a discovery target or DNS server.
+ */
+function automation_ip_is_allowed_discovery_target(string $address): bool
+{
+    if (filter_var($address, FILTER_VALIDATE_IP) === false) {
+        return false;
+    }
+    $packed = @inet_pton($address);
+    if ($packed === false) {
+        return false;
+    }
+    if (strlen($packed) === 16) {
+        if ($packed === str_repeat("\0", 15) . "\1" || ord($packed[0]) === 0xFF) {
+            return false;
+        }
+        if (str_starts_with($packed, str_repeat("\0", 10) . "\xff\xff")
+            || str_starts_with($packed, "\x00\x64\xff\x9b" . str_repeat("\0", 8))
+            || (str_starts_with($packed, str_repeat("\0", 12)) && ltrim(substr($packed, 12), "\0") !== '')) {
+            $packed = substr($packed, 12);
+        } elseif (str_starts_with($packed, "\x20\x02")) {
+            $packed = substr($packed, 2, 4);
+        } else {
+            return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_NO_RES_RANGE) !== false;
+        }
+    }
+    $ip = inet_ntop($packed);
+
+    return $ip !== false && automation_ipv4_range_is_allowed($ip, $ip);
+}
+
+/**
+ * Validate a single DNS server entry as a bare IP or hostname (without port suffixes)
+ * and resolve hostnames against the discovery target address policy.
+ *
+ * @return string|false The validated literal IP address to connect to, or false when refused.
+ */
+function automation_resolve_allowed_dns_server(string $server)
+{
+    $server = trim($server);
+    if ($server === '' || preg_match('/[\x00-\x20\x7f\[\]]/', $server) === 1) {
+        return false;
+    }
+
+    if (str_contains($server, ':')) {
+        if (filter_var($server, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
+            return false;
+        }
+
+        return automation_ip_is_allowed_discovery_target($server) ? $server : false;
+    }
+
+    if (filter_var($server, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+        return automation_ip_is_allowed_discovery_target($server) ? $server : false;
+    }
+
+    $normalized = strtolower(rtrim($server, '.'));
+    if ($normalized === 'localhost' || str_ends_with($normalized, '.localhost')) {
+        return false;
+    }
+
+    if (preg_match('/\A(?=.{1,253}\z)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)*[A-Za-z](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.?\z/', $server) !== 1) {
+        return false;
+    }
+
+    $resolved = @gethostbynamel($server);
+    if (!is_array($resolved) || $resolved === array()) {
+        return false;
+    }
+
+    foreach ($resolved as $candidate) {
+        if (automation_ip_is_allowed_discovery_target($candidate)) {
+            return $candidate;
+        }
+    }
+
+    return false;
+}
+
+/** Validate a comma-separated subnet_range string against target policy and AUTOMATION_MAX_DISCOVERY_IPS. */
+function automation_validate_discovery_subnet_range(string $subnet_range): bool
+{
+    $subnet_range = trim($subnet_range);
+    if ($subnet_range === '') {
+        return false;
+    }
+
+    $total = 0;
+    foreach (explode(',', $subnet_range) as $range) {
+        $detail = automation_get_network_info($range);
+        if (!is_array($detail) || !isset($detail['count'], $detail['network'], $detail['broadcast'])) {
+            return false;
+        }
+        if (!automation_ipv4_range_is_allowed($detail['network'], $detail['broadcast'])) {
+            return false;
+        }
+        $total += (int) $detail['count'];
+        if ($total > AUTOMATION_MAX_DISCOVERY_IPS) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/** Validate a space-separated dns_servers string (empty allowed). */
+function automation_validate_dns_servers(string $dns_servers): bool
+{
+    $dns_servers = trim($dns_servers);
+    if ($dns_servers === '') {
+        return true;
+    }
+    if (preg_match('/\A\S+( \S+)*\z/', $dns_servers) !== 1) {
+        return false;
+    }
+    foreach (explode(' ', $dns_servers) as $server) {
+        if (str_contains($server, '[') || str_contains($server, ']')) {
+            return false;
+        }
+        if (str_contains($server, ':')) {
+            if (filter_var($server, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false || !automation_ip_is_allowed_discovery_target($server)) {
+                return false;
+            }
+            continue;
+        }
+        if (filter_var($server, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+            if (!automation_ip_is_allowed_discovery_target($server)) {
+                return false;
+            }
+            continue;
+        }
+        $normalized = strtolower(rtrim($server, '.'));
+        if ($normalized === 'localhost' || str_ends_with($normalized, '.localhost')) {
+            return false;
+        }
+        if (preg_match('/\A(?=.{1,253}\z)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)*[A-Za-z](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.?\z/', $server) !== 1) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function automation_get_network_info($range)
 {
     $network   = false;
@@ -3626,7 +4042,7 @@ function automation_get_network_info($range)
         // 10.1.0.0/24 or 10.1.0.0/255.255.255.0
         $range_parts = explode('/', $range);
 
-        if (!filter_var($range_parts[0], FILTER_VALIDATE_IP)) {
+        if (!filter_var($range_parts[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return false;
         }
 
@@ -3644,7 +4060,7 @@ function automation_get_network_info($range)
     } elseif (strpos($range, '*') !== false && strpos($range, '-') === false) {
         $test = str_replace('*', 0, $range);
 
-        if (!filter_var($test, FILTER_VALIDATE_IP)) {
+        if (!filter_var($test, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return false;
         }
 
@@ -3689,12 +4105,35 @@ function automation_get_network_info($range)
 
         return false;
     } else {
+        if (!filter_var($range, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return false;
+        }
         $network   = automation_get_valid_ip($range);
         $broadcast = automation_get_valid_ip($range);
     }
 
     if ($network !== false && $broadcast !== false) {
-        if (ip2long($network) <= ip2long($broadcast)) {
+        $start_long = ip2long($network);
+        $end_long   = ip2long($broadcast);
+
+        if ($start_long !== false && $end_long !== false && $start_long <= $end_long) {
+            $blocked = array(
+                array(0x00000000, 0x00FFFFFF),
+                array(0x7F000000, 0x7FFFFFFF),
+                array(0xA9FE0000, 0xA9FEFFFF),
+                array(0xE0000000, 0xEFFFFFFF),
+                array(0xF0000000, 0xFFFFFFFF),
+            );
+            foreach ($blocked as $interval) {
+                if ($start_long <= $interval[1] && $interval[0] <= $end_long) {
+                    return false;
+                }
+            }
+            if (filter_var($network, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_RES_RANGE) === false
+                || filter_var($broadcast, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_RES_RANGE) === false) {
+                return false;
+            }
+
             $detail['network']   = $network;
             $detail['broadcast'] = $broadcast;
             $detail['cidr']      = isset($mask['cidr']) ? $mask['cidr'] : false;
@@ -3707,10 +4146,17 @@ function automation_get_network_info($range)
                 $detail['end']   = $network;
             } else {
                 $detail['type']  = isset($mask['cidr']) ? 'subnet' : 'range';
-                $detail['count'] = ip2long($broadcast) - ip2long($network) - 1;
-                $detail['start'] = long2ip(ip2long($network) + 1);
-                $detail['end']   = long2ip(ip2long($broadcast) - 1);
+                $detail['count'] = $end_long - $start_long - 1;
+                $detail['start'] = long2ip($start_long + 1);
+                $detail['end']   = long2ip($end_long - 1);
             }
+
+            $max_ips = defined('AUTOMATION_MAX_DISCOVERY_IPS') ? AUTOMATION_MAX_DISCOVERY_IPS : 131072;
+            if ($detail['count'] > $max_ips) {
+                return false;
+            }
+        } else {
+            return false;
         }
     } else {
         return false;
@@ -3775,6 +4221,7 @@ function automation_get_next_host($start, $total, $count, $range)
 
 function automation_primeIPAddressTable($network_id)
 {
+    $network_id = (int) $network_id;
     $subNets = db_fetch_cell_prepared(
         'SELECT subnet_range
 		FROM automation_networks
@@ -3782,48 +4229,78 @@ function automation_primeIPAddressTable($network_id)
         array($network_id)
     );
 
+    if (!is_string($subNets) || trim($subNets) === '') {
+        return false;
+    }
+
     $subNets    = explode(',', trim($subNets));
-    $total      = 0;
+    $validated  = array();
+    $planned    = 0;
 
-    if (cacti_sizeof($subNets)) {
-        foreach ($subNets as $position => $subNet) {
-            $count = 1;
-            $sql   = array();
-            $subNetTotal = automation_calculate_total_ips($subNet);
-            $total += $subNetTotal;
+    foreach ($subNets as $subNet) {
+        $detail = automation_get_network_info($subNet);
+        if (!is_array($detail) || !isset($detail['count'], $detail['start'], $detail['network'], $detail['broadcast'])) {
+            cacti_log('WARNING: Refusing to prime invalid or disallowed discovery subnet range for Network ID ' . $network_id, false, 'AUTOM8');
+            return false;
+        }
+        if (!automation_ipv4_range_is_allowed($detail['network'], $detail['broadcast'])) {
+            cacti_log('WARNING: Refusing to prime reserved/disallowed discovery subnet range for Network ID ' . $network_id, false, 'AUTOM8');
+            return false;
+        }
+        $planned += (int) $detail['count'];
+        if ($planned > AUTOMATION_MAX_DISCOVERY_IPS) {
+            cacti_log('WARNING: Refusing to prime discovery Network ID ' . $network_id . ' exceeding maximum IP cap of ' . AUTOMATION_MAX_DISCOVERY_IPS, false, 'AUTOM8');
+            return false;
+        }
+        $validated[] = array('range' => $subNet, 'detail' => $detail);
+    }
 
-            $start = automation_calculate_start($subNet);
+    $total = 0;
 
-            if ($start != '') {
-                $sql[] = "('$start', '', $network_id, '0', '0', '0')";
+    foreach ($validated as $entry) {
+        $subNet      = $entry['range'];
+        $subNetTotal = (int) $entry['detail']['count'];
+        $start       = $entry['detail']['start'];
+        $count       = 1;
+        $sql         = array();
+
+        if ($subNetTotal < 1) {
+            continue;
+        }
+
+        if ($start != '' && automation_ip_is_allowed_discovery_target($start)) {
+            $sql[] = '(' . db_qstr($start) . ", '', $network_id, '0', '0', '0')";
+            $total++;
+        }
+
+        while ($count < $subNetTotal && $total < AUTOMATION_MAX_DISCOVERY_IPS) {
+            $ip = automation_get_next_host($start, $subNetTotal, $count, $subNet);
+
+            $count++;
+
+            if ($ip != '' && automation_ip_is_allowed_discovery_target($ip)) {
+                $sql[] = '(' . db_qstr($ip) . ", '', $network_id, '0', '0', '0')";
+                $total++;
             }
 
-            while ($count < $subNetTotal) {
-                $ip = automation_get_next_host($start, $subNetTotal, $count, $subNet);
-
-                $count++;
-
-                if ($ip != '') {
-                    $sql[] = "('$ip', '', $network_id, '0', '0', '0')";
-                }
-
-                if ($count % 1000 == 0) {
-                    db_execute("INSERT INTO automation_ips
-						(ip_address, hostname, network_id, pid, status, thread)
-						VALUES " . implode(',', $sql));
-                    $sql = array();
-                }
-            }
-
-            if (cacti_sizeof($sql)) {
-                db_execute("INSERT INTO automation_ips
+            if (cacti_sizeof($sql) >= 1000) {
+                db_execute('INSERT INTO automation_ips
 					(ip_address, hostname, network_id, pid, status, thread)
-					VALUES " . implode(',', $sql));
+					VALUES ' . implode(',', $sql));
+                $sql = array();
             }
+        }
+
+        if (cacti_sizeof($sql)) {
+            db_execute('INSERT INTO automation_ips
+				(ip_address, hostname, network_id, pid, status, thread)
+				VALUES ' . implode(',', $sql));
         }
     }
 
     automation_debug("A Total of $total IP Addresses Primed\n");
+
+    return $total;
 }
 
 function automation_valid_snmp_device(&$device)
@@ -3980,6 +4457,28 @@ function automation_valid_snmp_device(&$device)
 */
 function automation_get_dns_from_ip($ip, $dns, $timeout = 1000)
 {
+    if (!is_string($ip) || !automation_ip_is_allowed_discovery_target($ip)) {
+        return 'ERROR';
+    }
+
+    $dns_servers = preg_split('/\s+/', trim((string) $dns), -1, PREG_SPLIT_NO_EMPTY);
+    if (!is_array($dns_servers) || $dns_servers === array()) {
+        return $ip;
+    }
+
+    $resolved_dns = false;
+    foreach ($dns_servers as $candidate) {
+        $resolved_dns = automation_resolve_allowed_dns_server($candidate);
+        if ($resolved_dns !== false) {
+            break;
+        }
+    }
+
+    if ($resolved_dns === false) {
+        cacti_log('SECURITY: Refusing automation reverse-DNS lookup to invalid or disallowed DNS server.', false, 'AUTOM8');
+        return $ip;
+    }
+
     /* random transaction number (for routers etc to get the reply back) */
     $data = rand(10, 99);
 
@@ -4015,8 +4514,14 @@ function automation_get_dns_from_ip($ip, $dns, $timeout = 1000)
     /* and the final bit of the request */
     $data .= "\7in-addr\4arpa\0\0\x0C\0\1";
 
-    /* create UDP socket */
-    $handle = @fsockopen("udp://$dns", 53);
+    /* create UDP socket to the validated IP on port 53 (IPv6 wrapped in brackets) */
+    $socket_host = filter_var($resolved_dns, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false
+        ? '[' . $resolved_dns . ']'
+        : $resolved_dns;
+    $handle = @fsockopen("udp://$socket_host", 53);
+    if ($handle === false) {
+        return $ip;
+    }
 
     @stream_set_timeout($handle, floor($timeout / 1000), ($timeout * 1000) % 1000000);
     @stream_set_blocking($handle, 1);

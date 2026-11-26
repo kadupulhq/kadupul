@@ -78,9 +78,7 @@ final readonly class DiscoveryNetworkChange
         if ($settings['name'] === '') {
             throw new DiscoveryNetworkRejected('Enter a name.', [], 'name');
         }
-        if (preg_match('/\A[0-9A-Za-z.:\[\]-]*( [0-9A-Za-z.:\[\]-]+)*\z/', $settings['dns_servers']) !== 1) {
-            throw new DiscoveryNetworkRejected('Enter DNS servers as IP addresses or host names separated by spaces.', [], 'dns_servers');
-        }
+        self::assertDnsServers($settings['dns_servers']);
         $from = $settings['notification_fromemail'];
         if ($from !== '' && filter_var($from, FILTER_VALIDATE_EMAIL) === false) {
             throw new DiscoveryNetworkRejected('Enter a valid email address.', [], 'notification_fromemail');
@@ -195,6 +193,42 @@ final readonly class DiscoveryNetworkChange
         $value = array_values(array_unique($value));
         sort($value);
         return $value;
+    }
+
+    private static function assertDnsServers(string $value): void
+    {
+        if ($value === '') {
+            return;
+        }
+        if (preg_match('/\A\S+( \S+)*\z/', $value) !== 1) {
+            throw new DiscoveryNetworkRejected('Enter DNS servers as IP addresses or host names separated by spaces.', [], 'dns_servers');
+        }
+        foreach (explode(' ', $value) as $server) {
+            if (!self::isAllowedDnsServer($server)) {
+                throw new DiscoveryNetworkRejected('Enter DNS servers as IP addresses or host names separated by spaces.', [], 'dns_servers');
+            }
+        }
+    }
+
+    private static function isAllowedDnsServer(string $server): bool
+    {
+        if ($server === '' || str_contains($server, '[') || str_contains($server, ']')) {
+            return false;
+        }
+        if (str_contains($server, ':')) {
+            // Only bare IPv6 literals may contain colons; host:port and ipv4:port suffixes are refused.
+            return filter_var($server, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false
+                && DiscoveryRange::isAllowedAddress($server);
+        }
+        if (filter_var($server, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+            return DiscoveryRange::isAllowedAddress($server);
+        }
+        $normalized = strtolower(rtrim($server, '.'));
+        if ($normalized === 'localhost' || str_ends_with($normalized, '.localhost')) {
+            return false;
+        }
+        // Require a valid DNS hostname whose final label begins with a letter (excludes numeric/octal/hex IPv4 forms).
+        return preg_match('/\A(?=.{1,253}\z)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)*[A-Za-z](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.?\z/', $server) === 1;
     }
 
     private static function assertStartAt(string $value): void

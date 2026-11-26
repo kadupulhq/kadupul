@@ -9,6 +9,7 @@
 include('./include/auth.php');
 
 cacti_require_post_actions(array('actions'));
+include_once('./lib/api_automation.php');
 include_once('./lib/snmp.php');
 include_once('./lib/poller.php');
 
@@ -113,8 +114,18 @@ function api_networks_discover($network_id, $discover_debug) {
 		WHERE id = ?',
 		array($network_id));
 
+	$network_row = db_fetch_row_prepared('SELECT subnet_range, dns_servers
+		FROM automation_networks
+		WHERE id = ?',
+		array($network_id));
+
 	if ($enabled == 'on') {
-		if (!$running) {
+		if (!cacti_sizeof($network_row)
+			|| !automation_validate_discovery_subnet_range((string) ($network_row['subnet_range'] ?? ''))
+			|| !automation_validate_dns_servers((string) ($network_row['dns_servers'] ?? ''))) {
+			$_SESSION['automation_message'] = __esc('Can Not Perform Discovery for Network \'%s\' due to invalid or disallowed subnet range or DNS servers', $name);
+			raise_message('automation_message');
+		} elseif (!$running) {
 			if ($config['poller_id'] == $poller_id) {
 				$argv = array('-q', read_config_option('path_webroot') . '/poller_automation.php', '--network=' . (int)$network_id, '--force');
 				if ($discover_debug) {

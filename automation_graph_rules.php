@@ -99,34 +99,17 @@ function save()
         $save['operator']  = form_input_validate((isset_request_var('operator') ? get_nfilter_request_var('operator') : ''), 'operator', '^[0-9]+$', true, 3);
         $save['pattern']   = form_input_validate((isset_request_var('pattern') ? get_nfilter_request_var('pattern') : ''), 'pattern', '', true, 3);
 
-        /* Test for SQL injections */
-        $field_name = str_replace(array('ht.', 'h.', 'gt.', 'gtg.'), '', $save['field']);
+        /* Validate exact submitted field against the rule's data query XML input fields or host_snmp_cache */
+        $is_right_bracket = ((int) $save['operation'] === AUTOMATION_OPER_RIGHT_BRACKET && $save['field'] === '');
 
-        $exists = db_fetch_cell_prepared(
-            'SELECT field_name
-			FROM host_snmp_cache
-			WHERE field_name = ?
-			LIMIT 1',
-            array($field_name)
-        );
+        if (!$is_right_bracket && !api_automation_is_valid_graph_rule_field($save['field'], (int) $save['rule_id'])) {
+            raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Graph automation'), MESSAGE_LEVEL_ERROR);
 
-        if (!$exists) {
-            /* check the case where there is no entry in the host_snmp_cache table yet */
-            if ("'$field_name'" != db_qstr($field_name)) {
-                if (!db_column_exists('host', $field_name) &&
-                    !db_column_exists('host_template', $field_name) &&
-                    !db_column_exists('graph_templates', $field_name) &&
-                    !db_column_exists('graph_local', $field_name) &&
-                    !db_column_exists('graph_templates_graph', $field_name)) {
-                    raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Graph automation'), MESSAGE_LEVEL_ERROR);
+            cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Graph Automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
 
-                    cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Graph Automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
+            header('Location: automation_graph_rules.php?header=false&action=item_edit&id=' . get_request_var('id') . '&item_id=' . get_request_var('item_id') . '&rule_type=' . AUTOMATION_RULE_TYPE_GRAPH_ACTION);
 
-                    header('Location: automation_graph_rules.php?header=false&action=edit&id=' . get_request_var('id'));
-
-                    exit;
-                }
-            }
+            exit;
         }
 
         if (!is_error_message()) {
@@ -160,20 +143,15 @@ function save()
         $save['operator']  = form_input_validate((isset_request_var('operator') ? get_nfilter_request_var('operator') : ''), 'operator', '^[0-9]+$', true, 3);
         $save['pattern']   = form_input_validate((isset_request_var('pattern') ? get_nfilter_request_var('pattern') : ''), 'pattern', '', true, 3);
 
-        /* Test for SQL injections */
-        $field_name = str_replace(array('ht.', 'h.', 'gt.', 'gl.', 'gtg.'), '', $save['field']);
-        $field_name = preg_replace('/[^a-zA-Z0-9_]/', '', $field_name);
+        /* Validate exact submitted alias.column against the explicit non-sensitive allowlist */
+        $is_right_bracket = ((int) $save['operation'] === AUTOMATION_OPER_RIGHT_BRACKET && $save['field'] === '');
 
-        if (!db_column_exists('host', $field_name) &&
-            !db_column_exists('host_template', $field_name) &&
-            !db_column_exists('graph_templates', $field_name) &&
-            !db_column_exists('graph_local', $field_name) &&
-            !db_column_exists('graph_templates_graph', $field_name)) {
+        if (!$is_right_bracket && !api_automation_column_exists($save['field'], array('host', 'host_template'))) {
             raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Graph automation'), MESSAGE_LEVEL_ERROR);
 
             cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Graph Automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
 
-            header('Location: automation_graph_rules.php?header=false&action=edit&id=' . get_request_var('id') . '&rule_type=' . AUTOMATION_RULE_TYPE_GRAPH_ACTION);
+            header('Location: automation_graph_rules.php?header=false&action=item_edit&id=' . get_request_var('id') . '&item_id=' . get_request_var('item_id') . '&rule_type=' . AUTOMATION_RULE_TYPE_GRAPH_MATCH);
 
             exit;
         }

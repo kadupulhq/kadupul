@@ -202,6 +202,26 @@ function db_execute_prepared($sql, $params = array(), $db_conn = false)
 
 function reports_item_resequence($report_id) {}
 
+function is_graph_allowed($graph_id, $user_id = 0)
+{
+    return true;
+}
+
+function is_device_allowed($host_id, $user_id = 0)
+{
+    return true;
+}
+
+function is_tree_allowed($tree_id, $user_id = 0, $enabled_only = false)
+{
+    return true;
+}
+
+function is_graph_template_allowed($graph_template_id, $user_id = 0)
+{
+    return true;
+}
+
 function get_reports_page()
 {
     return 'reports_user.php';

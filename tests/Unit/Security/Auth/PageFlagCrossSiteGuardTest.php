@@ -129,13 +129,15 @@ test('an RRD Cleaner rescan by a method other than GET or POST is refused', func
     expect(page_flag_guard_run('rrdcleaner.php', $method, 'rescan=1'))->toBe('STATUS:405');
 })->with(array('HEAD', 'PUT'));
 
-test('the RRD Cleaner page still rescans from its own button', function (string $method, array $headers) {
-    expect(page_flag_guard_run('rrdcleaner.php', $method, 'header=false&rescan=1&clear=1', $headers))
-        ->toBe('DISPATCHED:restartSTATUS:200');
+test('the RRD Cleaner rescan needs a POST with a valid token', function (string $method, string $token, array $headers, string $expected) {
+    expect(page_flag_guard_run('rrdcleaner.php', $method, 'header=false&rescan=1&clear=1', $headers, $token))
+        ->toBe($expected);
 })->with(array(
-    'same-origin XHR' => array('GET', array('HTTP_SEC_FETCH_SITE' => 'same-origin')),
-    'script without headers' => array('GET', array()),
-    'POST' => array('POST', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
+    'cross-site GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'cross-site'), 'STATUS:405'),
+    'same-origin GET' => array('GET', 'missing', array('HTTP_SEC_FETCH_SITE' => 'same-origin'), 'STATUS:405'),
+    'GET without headers' => array('GET', 'missing', array(), 'STATUS:405'),
+    'POST without a token' => array('POST', 'missing', array(), 'STATUS:403'),
+    'POST with a valid token' => array('POST', 'valid', array(), 'DISPATCHED:restartSTATUS:200'),
 ));
 
 test('a cross-site RRD Cleaner listing without a rescan still renders', function () {
@@ -169,6 +171,7 @@ test('a cross-site GET cannot purge the Data Debug checks', function (array $hea
     'foreign Origin' => array(array('HTTP_ORIGIN' => 'https://attacker.example.net')),
     'foreign Referer' => array(array('HTTP_REFERER' => 'https://attacker.example.net/page')),
     'lookalike Referer host' => array(array('HTTP_REFERER' => 'https://kadupul.example.com.attacker.example.net/')),
+    'GET without headers' => array(array()),
 ));
 
 test('a Data Debug purge by a method other than GET or POST is refused', function (string $method) {
@@ -180,7 +183,7 @@ test('the Data Debug Purge button still purges', function (string $method, array
         ->toBe('DISPATCHED:STATUS:200');
 })->with(array(
     'same-origin XHR' => array('GET', array('HTTP_SEC_FETCH_SITE' => 'same-origin')),
-    'script without headers' => array('GET', array()),
+    'same-origin Referer' => array('GET', array('HTTP_REFERER' => 'https://kadupul.example.com/data_debug.php')),
     'POST' => array('POST', array('HTTP_SEC_FETCH_SITE' => 'cross-site')),
 ));
 

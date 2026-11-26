@@ -61,21 +61,30 @@ if (!is_string($translationSource)) {
 }
 eval(test_php_function_source($translationSource, '__esc')); // nosemgrep: php.lang.security.eval-use.eval-use
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no, 3);
+$db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, policy_graphs INTEGER DEFAULT 1, policy_hosts INTEGER DEFAULT 1, policy_graph_templates INTEGER DEFAULT 1, policy_trees INTEGER DEFAULT 1, reset_perms INTEGER NOT NULL DEFAULT 0 CHECK(reset_perms >= 0))');
+$db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, item_id INTEGER, type INTEGER)');
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)');
-$db->exec('CREATE TABLE user_auth_group (id INTEGER, enabled TEXT)');
+$db->exec("CREATE TABLE user_auth_group (id INTEGER, enabled TEXT, name TEXT DEFAULT '', policy_graphs INTEGER DEFAULT 2, policy_hosts INTEGER DEFAULT 2, policy_graph_templates INTEGER DEFAULT 2, policy_trees INTEGER DEFAULT 2)");
 $db->exec('CREATE TABLE user_auth_group_members (user_id INTEGER, group_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)');
+$db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER, type INTEGER)');
 $db->exec('CREATE TABLE reports_items (id INTEGER PRIMARY KEY AUTOINCREMENT, report_id INTEGER, item_type INTEGER, host_template_id INTEGER, site_id INTEGER, host_id INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, timespan INTEGER, align INTEGER, sequence INTEGER, item_text TEXT DEFAULT \'\')');
-$db->exec('CREATE TABLE host (id INTEGER PRIMARY KEY, description TEXT, host_template_id INTEGER, site_id INTEGER)');
-$db->exec('CREATE TABLE graph_local (id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER)');
-$db->exec("INSERT INTO host VALUES (100, 'Router <one>', 3, 4)");
-$db->exec('INSERT INTO graph_local VALUES (200, 100, 6)');
+$db->exec("CREATE TABLE host (id INTEGER PRIMARY KEY, description TEXT, host_template_id INTEGER, site_id INTEGER, deleted TEXT DEFAULT '', disabled TEXT DEFAULT '')");
+$db->exec("CREATE TABLE graph_local (id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER, snmp_query_id INTEGER DEFAULT 0, snmp_index TEXT DEFAULT '')");
+$db->exec('CREATE TABLE graph_templates (id INTEGER PRIMARY KEY, name TEXT)');
+$db->exec('CREATE TABLE graph_templates_graph (local_graph_id INTEGER, title_cache TEXT, width INTEGER, height INTEGER)');
+$db->exec('INSERT INTO user_auth (id, policy_graphs, policy_hosts, policy_graph_templates, policy_trees) VALUES (42, 1, 1, 1, 1), (55, 1, 1, 1, 1)');
+$db->exec("INSERT INTO host (id, description, host_template_id, site_id) VALUES (100, 'Router <one>', 3, 4)");
+$db->exec("INSERT INTO graph_templates VALUES (6, 'Traffic <template>')");
+$db->exec('INSERT INTO graph_local (id, host_id, graph_template_id) VALUES (200, 100, 6)');
+$db->exec("INSERT INTO graph_templates_graph VALUES (200, 'Traffic 10', 400, 100)");
 $db->exec('INSERT INTO reports_items (id, report_id, sequence) VALUES (70, 7, 1), (71, 7, 2), (80, 8, 1)');
 if (isset($scenario['realm'])) {
     $db->prepare('INSERT INTO user_auth_realm VALUES (?, ?)')->execute(array($_SESSION['sess_user_id'], $scenario['realm']));
 }
 if (isset($scenario['group'])) {
-    $db->prepare('INSERT INTO user_auth_group VALUES (5, ?)')->execute(array($scenario['group']));
+    $db->prepare('INSERT INTO user_auth_group (id, enabled) VALUES (5, ?)')->execute(array($scenario['group']));
     $db->prepare('INSERT INTO user_auth_group_members VALUES (?, 5)')->execute(array($_SESSION['sess_user_id']));
     $db->exec('INSERT INTO user_auth_group_realm VALUES (5, 21)');
 }
@@ -217,7 +226,7 @@ if (str_starts_with($operation, 'legacy-')) {
     require $root . '/lib/html_form.php';
     $alignment = array(1 => 'Left', 2 => 'Center');
     $graph_timespans = array(4 => 'Last four hours', 5 => 'Last six hours');
-    $db->exec('INSERT INTO graph_local VALUES (201, 0, 0)');
+    $db->exec('INSERT INTO graph_local (id, host_id, graph_template_id) VALUES (201, 0, 0)');
     foreach (array('tree_id INTEGER DEFAULT 0', 'branch_id INTEGER DEFAULT 0', "tree_cascade TEXT DEFAULT ''", "graph_name_regexp TEXT DEFAULT ''", 'font_size INTEGER DEFAULT 10') as $column) {
         $db->exec('ALTER TABLE reports_items ADD ' . $column);
     }
@@ -238,29 +247,14 @@ function get_graph_title($id)
 }
 if (str_starts_with($operation, 'expand-')) {
     $options += array('auth_method' => 1, 'graph_auth_method' => 1);
-    foreach (array('policy_graphs', 'policy_hosts', 'policy_graph_templates', 'policy_trees') as $field) {
-        $db->exec('ALTER TABLE user_auth_group ADD ' . $field . ' INTEGER DEFAULT 2');
-    }
-    $db->exec("ALTER TABLE user_auth_group ADD name TEXT DEFAULT ''");
-    // Canonical user_auth.reset_perms is unsigned NOT NULL DEFAULT 0;
-    // the real permission-cache guard reads it before graph expansion.
-    $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, policy_graphs INTEGER, policy_hosts INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER, reset_perms INTEGER NOT NULL DEFAULT 0 CHECK(reset_perms >= 0))');
-    $db->exec('CREATE TABLE user_auth_perms(user_id INTEGER,item_id INTEGER,type INTEGER)');
-    $db->exec('CREATE TABLE user_auth_group_perms(group_id INTEGER,item_id INTEGER,type INTEGER)');
     $db->exec('CREATE TABLE host_template(id INTEGER PRIMARY KEY,name TEXT)');
-    $db->exec('INSERT INTO user_auth(id,policy_graphs,policy_hosts,policy_graph_templates,policy_trees) VALUES(42,2,2,2,2)');
+    $db->exec('UPDATE user_auth SET policy_graphs=2,policy_hosts=2,policy_graph_templates=2,policy_trees=2 WHERE id=42');
     $db->exec('INSERT INTO user_auth_perms VALUES(42,200,1),(42,201,1),(42,210,1)');
-    $db->exec("ALTER TABLE host ADD deleted TEXT DEFAULT ''");
-    $db->exec("ALTER TABLE host ADD disabled TEXT DEFAULT ''");
     $db->exec("INSERT INTO host(id,description,host_template_id,site_id) VALUES(101,'Denied host',3,4)");
-    $db->exec('ALTER TABLE graph_local ADD snmp_query_id INTEGER DEFAULT 0');
-    $db->exec("ALTER TABLE graph_local ADD snmp_index TEXT DEFAULT ''");
-    $db->exec('CREATE TABLE graph_templates(id INTEGER PRIMARY KEY,name TEXT)');
     $db->exec('CREATE TABLE snmp_query(id INTEGER PRIMARY KEY,name TEXT)');
-    $db->exec("INSERT INTO graph_templates VALUES(6,'Traffic <template>'),(7,'Denied template')");
+    $db->exec("INSERT INTO graph_templates VALUES(7,'Denied template')");
     $db->exec('INSERT INTO graph_local(id,host_id,graph_template_id) VALUES(201,100,6),(202,100,7),(210,100,6),(211,101,7)');
-    $db->exec('CREATE TABLE graph_templates_graph(local_graph_id INTEGER,title_cache TEXT,width INTEGER,height INTEGER)');
-    $db->exec("INSERT INTO graph_templates_graph VALUES(200,'Traffic 10',400,100),(201,'Traffic 2',400,100),(202,'Forbidden',400,100),(210,'Nested <graph>',400,100),(211,'Other host',400,100)");
+    $db->exec("INSERT INTO graph_templates_graph VALUES(201,'Traffic 2',400,100),(202,'Forbidden',400,100),(210,'Nested <graph>',400,100),(211,'Other host',400,100)");
     $db->exec('CREATE TABLE graph_tree(id INTEGER PRIMARY KEY,name TEXT)');
     $db->exec("INSERT INTO graph_tree VALUES(1,'Network <tree>')");
     $db->exec('CREATE TABLE graph_tree_items(id INTEGER PRIMARY KEY,graph_tree_id INTEGER,parent INTEGER,position INTEGER,title TEXT,host_id INTEGER,local_graph_id INTEGER,host_grouping_type INTEGER)');
@@ -268,7 +262,6 @@ if (str_starts_with($operation, 'expand-')) {
     if (isset($scenario['grouping'])) {
         $db->prepare('UPDATE graph_tree_items SET host_grouping_type = ? WHERE id = 2')->execute(array($scenario['grouping']));
     }
-    $db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no, 3);
     $db->sqliteCreateFunction('REGEXP', static fn($pattern, $subject) => preg_match('~' . str_replace('~', '\\~', $pattern) . '~', $subject), 2);
     require $root . '/lib/time.php';
     require $root . '/lib/html.php';

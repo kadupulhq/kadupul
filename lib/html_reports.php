@@ -433,6 +433,53 @@ function reports_form_save(): never
         $save['font_size']         = (isset_request_var('font_size') ? form_input_validate(get_nfilter_request_var('font_size'), 'font_size', '^[0-9]+$', true, 3) : REPORTS_FONT_SIZE);
 
         if (!is_error_message()) {
+            $user_id = (int) $_SESSION['sess_user_id'];
+
+            if ((int) $save['local_graph_id'] > 0 && !is_graph_allowed((int) $save['local_graph_id'], $user_id)) {
+                raise_message('permission_denied');
+
+                $_SESSION['sess_error_fields']['local_graph_id'] = 'local_graph_id';
+            }
+
+            if ((int) $save['host_id'] > 0 && !is_device_allowed((int) $save['host_id'], $user_id)) {
+                raise_message('permission_denied');
+
+                $_SESSION['sess_error_fields']['host_id'] = 'host_id';
+            }
+
+            if ((int) $save['tree_id'] > 0 && !is_tree_allowed((int) $save['tree_id'], $user_id, true)) {
+                raise_message('permission_denied');
+
+                $_SESSION['sess_error_fields']['tree_id'] = 'tree_id';
+            }
+
+            if ((int) $save['branch_id'] > 0) {
+                $branch = db_fetch_row_prepared(
+                    'SELECT graph_tree_id, host_id, local_graph_id
+                    FROM graph_tree_items
+                    WHERE id = ?',
+                    array((int) $save['branch_id'])
+                );
+
+                if (!cacti_sizeof($branch) ||
+                    (int) $branch['graph_tree_id'] !== (int) $save['tree_id'] ||
+                    !is_tree_allowed((int) $branch['graph_tree_id'], $user_id, true) ||
+                    ((int) $branch['host_id'] > 0 && !is_device_allowed((int) $branch['host_id'], $user_id)) ||
+                    ((int) $branch['local_graph_id'] > 0 && !is_graph_allowed((int) $branch['local_graph_id'], $user_id))) {
+                    raise_message('permission_denied');
+
+                    $_SESSION['sess_error_fields']['branch_id'] = 'branch_id';
+                }
+            }
+
+            if ((int) $save['graph_template_id'] > 0 && !is_graph_template_allowed((int) $save['graph_template_id'], $user_id)) {
+                raise_message('permission_denied');
+
+                $_SESSION['sess_error_fields']['graph_template_id'] = 'graph_template_id';
+            }
+        }
+
+        if (!is_error_message()) {
             $item_id = sql_save($save, 'reports_items');
 
             reports_item_resequence($save['report_id']);
@@ -551,6 +598,10 @@ function reports_form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $matches[1], 'reports')) {
+                continue;
+            }
 
             $reports_list .= '<li>' . html_escape(db_fetch_cell_prepared('SELECT name FROM reports WHERE id = ?', array($matches[1]))) . '</li>';
 
@@ -822,14 +873,22 @@ function reports_item_validate()
             switch ($id) {
                 case 'host_id':
                     if (get_request_var('host_id') != '-1') {
+                        $host_id      = (int) get_request_var('host_id');
+                        $host_allowed = ($host_id > 0 && is_device_allowed($host_id));
+
                         if (get_request_var('local_graph_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT id
-							FROM graph_local
-							WHERE host_id = ?
-							AND id = ?',
-                                array(get_request_var('host_id'), get_request_var('local_graph_id'))
-                            );
+                            $local_graph_id = (int) get_request_var('local_graph_id');
+                            if (!$host_allowed || !is_graph_allowed($local_graph_id)) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT id
+								FROM graph_local
+								WHERE host_id = ?
+								AND id = ?',
+                                    array($host_id, $local_graph_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['local_graph_id'] = true;
@@ -837,13 +896,17 @@ function reports_item_validate()
                         }
 
                         if (get_request_var('host_template_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT id
-							FROM host
-							WHERE host_template_id = ?
-							AND id = ?',
-                                array(get_request_var('host_template_id'), get_request_var('host_id'))
-                            );
+                            if (!$host_allowed) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT id
+								FROM host
+								WHERE host_template_id = ?
+								AND id = ?',
+                                    array(get_request_var('host_template_id'), $host_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['host_template_id'] = true;
@@ -851,13 +914,18 @@ function reports_item_validate()
                         }
 
                         if (get_request_var('graph_template_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT id
-							FROM graph_local
-							WHERE graph_template_id = ?
-							AND id = ?',
-                                array(get_request_var('graph_template_id'), get_request_var('host_id'))
-                            );
+                            $graph_template_id = (int) get_request_var('graph_template_id');
+                            if (!$host_allowed || !is_graph_template_allowed($graph_template_id)) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT id
+								FROM graph_local
+								WHERE graph_template_id = ?
+								AND id = ?',
+                                    array($graph_template_id, $host_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['graph_template_id'] = true;
@@ -865,13 +933,17 @@ function reports_item_validate()
                         }
 
                         if (get_request_var('site_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT id
-							FROM host
-							WHERE site_id = ?
-							AND id = ?',
-                                array(get_request_var('site_id'), get_request_var('host_id'))
-                            );
+                            if (!$host_allowed) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT id
+								FROM host
+								WHERE site_id = ?
+								AND id = ?',
+                                    array(get_request_var('site_id'), $host_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['site_id'] = true;
@@ -883,13 +955,18 @@ function reports_item_validate()
                 case 'site_id':
                     if (get_request_var('site_id') != '-1') {
                         if (get_request_var('host_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT id
-							FROM host
-							WHERE site_id = ?
-							AND id = ?',
-                                array(get_request_var('site_id'), get_request_var('host_id'))
-                            );
+                            $host_id = (int) get_request_var('host_id');
+                            if (!is_device_allowed($host_id)) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT id
+								FROM host
+								WHERE site_id = ?
+								AND id = ?',
+                                    array(get_request_var('site_id'), $host_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['host_id'] = true;
@@ -897,15 +974,20 @@ function reports_item_validate()
                         }
 
                         if (get_request_var('local_graph_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT gl.id
-							FROM graph_local AS gl
-							INNER JOIN host AS h
-							ON gl.host_id = h.id
-							WHERE site_id = ?
-							AND gl.id = ?',
-                                array(get_request_var('site_id'), get_request_var('local_graph_id'))
-                            );
+                            $local_graph_id = (int) get_request_var('local_graph_id');
+                            if (!is_graph_allowed($local_graph_id)) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT gl.id
+								FROM graph_local AS gl
+								INNER JOIN host AS h
+								ON gl.host_id = h.id
+								WHERE site_id = ?
+								AND gl.id = ?',
+                                    array(get_request_var('site_id'), $local_graph_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['local_graph_id'] = true;
@@ -917,15 +999,20 @@ function reports_item_validate()
                 case 'host_template_id':
                     if (get_request_var('host_template_id') != '-1') {
                         if (get_request_var('local_graph_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT gl.id
-							FROM graph_local AS gl
-							INNER JOIN host AS h
-							ON gl.host_id = h.id
-							WHERE host_template_id = ?
-							AND gl.id = ?',
-                                array(get_request_var('host_template_id'), get_request_var('local_graph_id'))
-                            );
+                            $local_graph_id = (int) get_request_var('local_graph_id');
+                            if (!is_graph_allowed($local_graph_id)) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT gl.id
+								FROM graph_local AS gl
+								INNER JOIN host AS h
+								ON gl.host_id = h.id
+								WHERE host_template_id = ?
+								AND gl.id = ?',
+                                    array(get_request_var('host_template_id'), $local_graph_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['local_graph_id'] = true;
@@ -933,13 +1020,18 @@ function reports_item_validate()
                         }
 
                         if (get_request_var('host_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT id
-							FROM host
-							WHERE host_template_id = ?
-							AND id = ?',
-                                array(get_request_var('host_template_id'), get_request_var('host_id'))
-                            );
+                            $host_id = (int) get_request_var('host_id');
+                            if (!is_device_allowed($host_id)) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT id
+								FROM host
+								WHERE host_template_id = ?
+								AND id = ?',
+                                    array(get_request_var('host_template_id'), $host_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['host_id'] = true;
@@ -951,13 +1043,19 @@ function reports_item_validate()
                 case 'graph_template_id':
                     if (get_request_var('graph_template_id') != '-1') {
                         if (get_request_var('local_graph_id') > 0) {
-                            $valid = db_fetch_cell_prepared(
-                                'SELECT id
-							FROM graph_local
-							WHERE graph_template_id = ?
-							AND id = ?',
-                                array(get_request_var('graph_template_id'), get_request_var('local_graph_id'))
-                            );
+                            $graph_template_id = (int) get_request_var('graph_template_id');
+                            $local_graph_id    = (int) get_request_var('local_graph_id');
+                            if (!is_graph_template_allowed($graph_template_id) || !is_graph_allowed($local_graph_id)) {
+                                $valid = false;
+                            } else {
+                                $valid = db_fetch_cell_prepared(
+                                    'SELECT id
+								FROM graph_local
+								WHERE graph_template_id = ?
+								AND id = ?',
+                                    array($graph_template_id, $local_graph_id)
+                                );
+                            }
 
                             if (empty($valid)) {
                                 $reset['local_graph_id'] = true;
@@ -1049,28 +1147,36 @@ function reports_item_edit()
         } else {
             switch ($check) {
                 case 'graph_template_id':
-                    $graph_template_description = db_fetch_cell_prepared(
-                        'SELECT name
-						FROM graph_templates
-						WHERE id = ?',
-                        array($report_item[$check])
-                    );
+                    if (is_graph_template_allowed($report_item[$check])) {
+                        $graph_template_description = db_fetch_cell_prepared(
+                            'SELECT name
+							FROM graph_templates
+							WHERE id = ?',
+                            array($report_item[$check])
+                        );
+                    } else {
+                        $graph_template_description = __('None');
+                    }
 
                     break;
                 case 'host_id':
-                    $host_description = db_fetch_cell_prepared(
-                        'SELECT description
-						FROM host
-						WHERE id = ?',
-                        array($report_item[$check])
-                    );
+                    if (is_device_allowed($report_item[$check])) {
+                        $host_description = db_fetch_cell_prepared(
+                            'SELECT description
+							FROM host
+							WHERE id = ?',
+                            array($report_item[$check])
+                        );
+                    } else {
+                        $host_description = __('None');
+                    }
 
                     break;
             }
         }
     }
 
-    if ($report_item['local_graph_id'] > 0) {
+    if ($report_item['local_graph_id'] > 0 && is_graph_allowed($report_item['local_graph_id'])) {
         $title_cache = db_fetch_cell_prepared(
             'SELECT title_cache
 			FROM graph_templates_graph
@@ -1091,14 +1197,16 @@ function reports_item_edit()
     // Get Branch Information
     // If the tree_id is not set, set the first tree and branch
     $sql_where = '';
-    if ($report_item['tree_id'] > 0) {
-        $sql_where .= ($sql_where != '' ? ' AND ' : '') . 'gt.id=' . $report_item['tree_id'];
+    if ($report_item['tree_id'] > 0 && is_tree_allowed($report_item['tree_id'], 0, true)) {
+        $sql_where .= ($sql_where != '' ? ' AND ' : '') . 'gt.id=' . (int) $report_item['tree_id'];
     } elseif (cacti_sizeof($trees)) {
         foreach ($trees as $id => $name) {
             $report_item['tree_id'] = $id;
-            $sql_where .= ($sql_where != '' ? ' AND ' : '') . 'gt.id=' . $report_item['tree_id'];
+            $sql_where .= ($sql_where != '' ? ' AND ' : '') . 'gt.id=' . (int) $report_item['tree_id'];
             break;
         }
+    } else {
+        $report_item['tree_id'] = 0;
     }
 
     if ($report_item['tree_id'] > 0) {
@@ -1799,7 +1907,11 @@ function display_reports_items($report_id)
         foreach ($items as $item) {
             switch ($item['item_type']) {
                 case REPORTS_ITEM_GRAPH:
-                    $item_details = __('Graph: %s', get_graph_title($item['local_graph_id']));
+                    if ($item['local_graph_id'] > 0 && is_graph_allowed($item['local_graph_id'])) {
+                        $item_details = __('Graph: %s', get_graph_title($item['local_graph_id']));
+                    } else {
+                        $item_details = __('Graph: %s', __('Restricted'));
+                    }
 
                     if ($css == 'on') {
                         $align = __('Using CSS');
@@ -1812,17 +1924,25 @@ function display_reports_items($report_id)
 
                     break;
                 case REPORTS_ITEM_HOST:
-                    $item_details = __('Device: %s', db_fetch_cell_prepared('SELECT description FROM host WHERE id = ?', array($item['host_id'])));
+                    if ($item['host_id'] > 0 && is_device_allowed($item['host_id'])) {
+                        $device_name = db_fetch_cell_prepared('SELECT description FROM host WHERE id = ?', array($item['host_id']));
+                    } else {
+                        $device_name = __('Restricted');
+                    }
+
+                    $item_details = __('Device: %s', $device_name);
 
                     if ($item['graph_template_id'] == -1) {
                         $item_details .= __(', Graph Template: All Templates');
-                    } else {
+                    } elseif ($item['graph_template_id'] > 0 && is_graph_template_allowed($item['graph_template_id'])) {
                         $item_details .= __(', Graph Template: %s', db_fetch_cell_prepared(
                             'SELECT name
 						FROM graph_templates
 						WHERE id = ?',
                             array($item['graph_template_id'])
                         ));
+                    } else {
+                        $item_details .= __(', Graph Template: %s', __('Restricted'));
                     }
 
                     if ($item['graph_name_regexp'] != '') {
@@ -1854,33 +1974,46 @@ function display_reports_items($report_id)
 
                     break;
                 case REPORTS_ITEM_TREE:
-                    if ($item['branch_id'] > 0) {
-                        $branch_details = db_fetch_row_prepared(
-                            'SELECT *
-						FROM graph_tree_items
+                    $tree_allowed = ($item['tree_id'] > 0 && is_tree_allowed($item['tree_id'], 0, true));
+
+                    if ($tree_allowed) {
+                        $tree_name = db_fetch_cell_prepared(
+                            'SELECT name
+						FROM graph_tree
 						WHERE id = ?',
-                            array($item['branch_id'])
+                            array($item['tree_id'])
                         );
                     } else {
-                        $branch_details = array();
+                        $tree_name = __('Restricted');
                     }
-
-                    $tree_name = db_fetch_cell_prepared(
-                        'SELECT name
-					FROM graph_tree
-					WHERE id = ?',
-                        array($item['tree_id'])
-                    );
 
                     $item_details = __('Tree: %s', $tree_name);
                     if ($item['branch_id'] > 0) {
-                        if ($branch_details['host_id'] > 0) {
-                            $description = db_fetch_cell_prepared(
-                                'SELECT description
-							FROM host
-							WHERE id = ?',
-                                array($branch_details['host_id'])
+                        if ($tree_allowed) {
+                            $branch_details = db_fetch_row_prepared(
+                                'SELECT *
+							FROM graph_tree_items
+							WHERE id = ?
+							AND graph_tree_id = ?',
+                                array($item['branch_id'], $item['tree_id'])
                             );
+                        } else {
+                            $branch_details = array();
+                        }
+
+                        if (!cacti_sizeof($branch_details)) {
+                            $item_details .= __(', Branch: %s', __('Restricted'));
+                        } elseif ($branch_details['host_id'] > 0) {
+                            if (is_device_allowed($branch_details['host_id'])) {
+                                $description = db_fetch_cell_prepared(
+                                    'SELECT description
+								FROM host
+								WHERE id = ?',
+                                    array($branch_details['host_id'])
+                                );
+                            } else {
+                                $description = __('Restricted');
+                            }
 
                             $item_details .= __(', Device: %s', $description);
                         } else {
@@ -2243,7 +2376,10 @@ function reports()
 
 function reports_html_account_exists($user_id)
 {
-    return db_fetch_cell_prepared('SELECT id FROM user_auth WHERE id = ?', array($user_id));
+    return db_fetch_cell_prepared(
+        "SELECT id FROM user_auth WHERE id = ? AND enabled = 'on' AND locked != 'on'",
+        array($user_id)
+    );
 }
 
 function reports_html_report_disable($report_id)

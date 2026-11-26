@@ -101,10 +101,14 @@ function automation_tree_rules_form_save()
         $save['operator']  = form_input_validate((isset_request_var('operator') ? get_nfilter_request_var('operator') : ''), 'operator', '^[0-9]+$', true, 3);
         $save['pattern']   = form_input_validate((isset_request_var('pattern') ? get_nfilter_request_var('pattern') : ''), 'pattern', '', true, 3);
 
-        /* Test for SQL injections */
-        $field_name = str_replace(array('ht.', 'h.', 'gt.'), '', $save['field']);
+        /* Validate exact submitted alias.column against the explicit non-sensitive allowlist */
+        $leaf_type = (int) db_fetch_cell_prepared('SELECT leaf_type FROM automation_tree_rules WHERE id = ?', array($save['rule_id']));
+        $allowed_tables = ($leaf_type === TREE_ITEM_TYPE_GRAPH)
+            ? array('host', 'host_template', 'graph_templates', 'graph_templates_graph', 'graph_local')
+            : array('host', 'host_template');
+        $is_right_bracket = ((int) $save['operation'] === AUTOMATION_OPER_RIGHT_BRACKET && $save['field'] === '');
 
-        if (!db_column_exists('host', $field_name) && !db_column_exists('host_template', $field_name) && !db_column_exists('graph_templates', $field_name)) {
+        if (!$is_right_bracket && !api_automation_column_exists($save['field'], $allowed_tables)) {
             raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Tree automation'), MESSAGE_LEVEL_ERROR);
 
             cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Tree automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
@@ -146,14 +150,13 @@ function automation_tree_rules_form_save()
         $save['search_pattern']    = isset_request_var('search_pattern') ? form_input_validate(get_nfilter_request_var('search_pattern'), 'search_pattern', '', false, 3) : '';
         $save['replace_pattern']   = isset_request_var('replace_pattern') ? form_input_validate(get_nfilter_request_var('replace_pattern'), 'replace_pattern', '', true, 3) : '';
 
-        if ($save['field'] != AUTOMATION_TREE_ITEM_TYPE_STRING && $save['field'] != '') {
-            $field_name = str_replace(array('ht.', 'h.', 'gt.', 'gl.', 'gtg.'), '', $save['field']);
-            $field_name = preg_replace('/[^a-zA-Z0-9_]/', '', $field_name);
-            if (!db_column_exists('host', $field_name) &&
-                !db_column_exists('host_template', $field_name) &&
-                !db_column_exists('graph_templates', $field_name) &&
-                !db_column_exists('graph_local', $field_name) &&
-                !db_column_exists('graph_templates_graph', $field_name)) {
+        if ($save['field'] !== '' && (string) $save['field'] !== (string) AUTOMATION_TREE_ITEM_TYPE_STRING) {
+            $leaf_type = (int) db_fetch_cell_prepared('SELECT leaf_type FROM automation_tree_rules WHERE id = ?', array($save['rule_id']));
+            $allowed_tables = ($leaf_type === TREE_ITEM_TYPE_GRAPH)
+                ? array('host', 'host_template', 'graph_templates', 'graph_templates_graph', 'graph_local')
+                : array('host', 'host_template');
+
+            if (!api_automation_column_exists($save['field'], $allowed_tables)) {
                 raise_message('field_invalid', __('Invalid Field Name specified for Tree Rule Item.'), MESSAGE_LEVEL_ERROR);
                 header('Location: automation_tree_rules.php?header=false&action=item_edit&id=' . get_request_var('id') . '&item_id=' . get_request_var('item_id') . '&rule_type=' . AUTOMATION_RULE_TYPE_TREE_ACTION);
                 exit;

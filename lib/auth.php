@@ -754,6 +754,9 @@ function user_disable($user_id)
     /* ==================================================== */
 
     db_execute_prepared("UPDATE user_auth SET enabled = '' WHERE id = ?", array($user_id));
+    if (!function_exists('db_table_exists') || db_table_exists('reports')) {
+        db_execute_prepared("UPDATE reports SET enabled = '' WHERE user_id = ?", array($user_id));
+    }
     cacti_auth_revoke_user_credentials($user_id);
 
     reset_user_perms($user_id);
@@ -1763,6 +1766,10 @@ function is_realm_allowed($realm, $check_user = false)
 function get_allowed_tree_level($tree_id, $parent_id, $editing = false, $user_id = 0)
 {
     if (!auth_valid_user($user_id)) {
+        return array();
+    }
+
+    if (!is_tree_allowed($tree_id, $user_id)) {
         return array();
     }
 

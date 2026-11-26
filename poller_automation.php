@@ -321,7 +321,12 @@ if (!$master && $thread == 0) {
 
     $preexisting_devices = getNetworkDevices($network_id);
 
-    automation_primeIPAddressTable($network_id);
+    $primed = automation_primeIPAddressTable($network_id);
+    if ($primed === false || $primed < 1) {
+        cacti_log(automation_get_pid() . " WARNING: Aborting discovery for Network ID '$network_id' because no permitted IP addresses could be primed.", true, 'AUTOM8');
+        clearTask($network_id, getmypid());
+        exit(1);
+    }
 
     $threads = db_fetch_cell_prepared(
         'SELECT threads
@@ -505,8 +510,9 @@ function discoverDevices($network_id, $thread)
 
             cacti_log(automation_get_pid() . ' NOTE: Found device IP address \'' . $device['ip_address'] . '\' to check', false, 'AUTOM8', POLLER_VERBOSITY_MEDIUM);
 
-            if (!filter_var($device['ip_address'], FILTER_VALIDATE_IP)) {
-                cacti_log(automation_get_pid() . ' WARNING: IP address \'' . $device['ip_address'] . '\' is not a valid IP address.', false, 'AUTOM8');
+            if (!filter_var($device['ip_address'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE)
+                || (\function_exists('automation_ip_is_allowed_discovery_target') && !\automation_ip_is_allowed_discovery_target($device['ip_address']))) {
+                cacti_log(automation_get_pid() . ' WARNING: IP address \'' . $device['ip_address'] . '\' is not a valid or permitted discovery target.', false, 'AUTOM8');
 
                 markIPDone($device['ip_address'], $network_id);
 

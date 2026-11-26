@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'purge'));
 include_once('./lib/api_aggregate.php');
 include_once('./lib/api_automation.php');
 include_once('./lib/api_data_source.php');
@@ -616,7 +616,12 @@ function draw_filter()
 			});
 
 			$('#purge').on('click', function() {
-				loadPageNoHeader('automation_devices.php?header=false&action=purge&network_id='+$('#network').val());
+				loadPageUsingPost('automation_devices.php', {
+					header: 'false',
+					action: 'purge',
+					network: $('#network').val(),
+					__csrf_magic: csrfMagicToken
+				});
 			});
 
 			$('#export').on('click', function() {
@@ -654,7 +659,13 @@ function export_discovery_results()
 
     header('Content-type: application/csv');
     header('Content-Disposition: attachment; filename=discovery_results.csv');
-    print "Host,IP,System Name,System Location,System Contact,System Description,OS,Uptime,SNMP,Status\n";
+
+    $out = fopen('php://output', 'w');
+    if ($out === false) {
+        return;
+    }
+
+    fputcsv($out, array('Host', 'IP', 'System Name', 'System Location', 'System Contact', 'System Description', 'OS', 'Uptime', 'SNMP', 'Status'), ',', '"', '');
 
     if (cacti_sizeof($results)) {
         foreach ($results as $host) {
@@ -665,29 +676,40 @@ function export_discovery_results()
             } else {
                 $uptime = '';
             }
-            foreach ($host as $h => $r) {
-                $host['$h'] = str_replace(',', '', $r);
-            }
-            print ($host['hostname'] == '' ? __('Not Detected') : $host['hostname']) . ',';
-            print $host['ip'] . ',';
-            print export_data($host['sysName']) . ',';
-            print export_data($host['sysLocation']) . ',';
-            print export_data($host['sysContact']) . ',';
-            print export_data($host['sysDescr']) . ',';
-            print export_data($host['os']) . ',';
-            print export_data($uptime) . ',';
-            print ($host['snmp'] == 1 ? __('Up') : __('Down')) . ',';
-            print ($host['up'] == 1 ? __('Up') : __('Down')) . "\n";
+
+            $hostname = ($host['hostname'] == '' ? __('Not Detected') : $host['hostname']);
+            $row = array(
+                export_csv_field($hostname),
+                export_csv_field($host['ip']),
+                export_data($host['sysName']),
+                export_data($host['sysLocation']),
+                export_data($host['sysContact']),
+                export_data($host['sysDescr']),
+                export_data($host['os']),
+                export_data($uptime),
+                export_csv_field($host['snmp'] == 1 ? __('Up') : __('Down')),
+                export_csv_field($host['up'] == 1 ? __('Up') : __('Down')),
+            );
+
+            fputcsv($out, $row, ',', '"', '');
         }
     }
+
+    fclose($out);
 }
 
 function purge_discovery_results(): never
 {
-    get_filter_request_var('network');
+    if (isset($_POST['network'])) {
+        $network = get_filter_request_var('network');
+    } elseif (isset($_POST['network_id'])) {
+        $network = get_filter_request_var('network_id');
+    } else {
+        $network = get_filter_request_var('network');
+    }
 
-    if (get_request_var('network') > 0) {
-        db_execute_prepared('DELETE FROM automation_devices WHERE network_id = ?', array(get_request_var('network')));
+    if ($network > 0) {
+        db_execute_prepared('DELETE FROM automation_devices WHERE network_id = ?', array($network));
     } else {
         db_execute('TRUNCATE TABLE automation_devices');
     }
@@ -706,11 +728,17 @@ function snmp_data($item)
     }
 }
 
+function export_csv_field($item, string $empty = ''): string
+{
+    $value = str_replace(array("\r\n", "\r", "\n"), ' ', (string) $item);
+    if ($value === '') {
+        return $empty;
+    }
+
+    return (string) cacti_csv_safe($value);
+}
+
 function export_data($item)
 {
-    if ($item == '') {
-        return 'N/A';
-    } else {
-        return cacti_csv_safe($item);
-    }
+    return export_csv_field($item, 'N/A');
 }

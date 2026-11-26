@@ -36,11 +36,17 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         }
     }
     $db = PresentationMutationEvidence::database($root, $directory);
+    $db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no, 3);
     PresentationMutationEvidence::createCanonicalTables($db, $root, PresentationReportEvidence::tables());
+    PresentationMutationEvidence::createCanonicalTables($db, $root, array(
+        'user_auth', 'user_auth_perms', 'user_auth_group', 'user_auth_group_members',
+        'user_auth_group_perms', 'settings_user', 'host_template', 'sites',
+    ));
     $insert = static function (string $table, array $row) use ($db): void {
         $columns = array_keys($row);
         $db->prepare('INSERT INTO ' . $table . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', array_fill(0, count($columns), '?')) . ')')->execute(array_values($row));
     };
+    $insert('user_auth', array('id' => 1, 'username' => 'admin', 'enabled' => 'on', 'policy_graphs' => 1, 'policy_hosts' => 1, 'policy_graph_templates' => 1, 'policy_trees' => 1));
     foreach (array(7,8) as $id) {
         $insert('reports', array('id' => $id,'user_id' => 1,'name' => 'Report ' . $id,'cformat' => $case === 'display-css' ? 'on' : '','from_name' => 'Sender','from_email' => 'sender@example.invalid','email' => 'viewer@example.invalid','bcc' => ''));
     }
