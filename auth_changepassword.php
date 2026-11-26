@@ -435,13 +435,13 @@ if ($skip_current) {
 			$('#passconfirm').remove();
 		} else if ($('#password').val().length < minChars) {
 			$('#pass').remove();
-			$('#password').after('<div id="pass" class="password badpassword fa fa-times" title="<?php print __esc('Password Too Short');?>"></div>');
+			$('#password').after('<div id="pass" class="password badpassword fa fa-times" title="' + <?php print json_encode(__esc('Password Too Short'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '"></div>');
 			$('.password').tooltip();
 		} else {
 			$.post('auth_changepassword.php?action=checkpass', { password: $('#password').val(), password_confirm: $('#password_confirm').val(), __csrf_magic: csrfMagicToken } ).done(function(data) {
 				if (data == 'ok') {
 					$('#pass').remove();
-					$('#password').after('<div id="pass" class="password goodpassword fa fa-check" title="<?php print __esc('Password Validation Passes');?>"></div>');
+					$('#password').after('<div id="pass" class="password goodpassword fa fa-check" title="' + <?php print json_encode(__esc('Password Validation Passes'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '"></div>');
 					$('.password').tooltip();
 					checkPasswordConfirm();
 				} else {
@@ -457,11 +457,11 @@ if ($skip_current) {
 		if ($('#password_confirm').val().length > 0) {
 			if ($('#password').val() != $('#password_confirm').val()) {
 				$('#passconfirm').remove();
-				$('#password_confirm').after('<div id="passconfirm" class="passconfirm badpassword fa fa-times" title="<?php print __esc('Passwords do Not Match');?>"></div>');
+				$('#password_confirm').after('<div id="passconfirm" class="passconfirm badpassword fa fa-times" title="' + <?php print json_encode(__esc('Passwords do Not Match'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '"></div>');
 				$('.passconfirm').tooltip();
 			} else {
 				$('#passconfirm').remove();
-				$('#password_confirm').after('<div id="passconfirm" class="passconfirm goodpassword fa fa-check" title="<?php print __esc('Passwords Match');?>"></div>');
+				$('#password_confirm').after('<div id="passconfirm" class="passconfirm goodpassword fa fa-check" title="' + <?php print json_encode(__esc('Passwords Match'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '"></div>');
 				$('.passconfirm').tooltip();
 			}
 		} else {

@@ -1837,12 +1837,12 @@ function user_edit(array &$row_choices)
 				$('#passconfirm').remove();
 			} else if ($('#password').val().length < minChars) {
 				$('#pass').remove();
-				$('#password').after('<span id="pass"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;"><?php print __('Password Too Short')?></span></span>');
+				$('#password').after('<span id="pass"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">' + <?php print json_encode(__esc('Password Too Short'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '</span></span>');
 			} else {
 				$.post('user_admin.php?action=checkpass', { password: $('#password').val(), password_confirm: $('#password_confirm').val(), __csrf_magic: csrfMagicToken } ).done(function(data) {
 					if (data == 'ok') {
 						$('#pass').remove();
-						$('#password').after('<span id="pass"><i class="goodpassword fa fa-check"></i><span style="padding-left:4px;"><?php print __('Password Validation Passes');?></span></span>');
+						$('#password').after('<span id="pass"><i class="goodpassword fa fa-check"></i><span style="padding-left:4px;">' + <?php print json_encode(__esc('Password Validation Passes'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '</span></span>');
 						checkPasswordConfirm();
 					} else {
 						$('#pass').remove();
@@ -1856,10 +1856,10 @@ function user_edit(array &$row_choices)
 			if ($('#password_confirm').val().length > 0) {
 				if ($('#password').val() != $('#password_confirm').val()) {
 					$('#passconfirm').remove();
-					$('#password_confirm').after('<span id="passconfirm"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;"><?php print __('Passwords do Not Match');?></span></span>');
+					$('#password_confirm').after('<span id="passconfirm"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">' + <?php print json_encode(__esc('Passwords do Not Match'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '</span></span>');
 				} else {
 					$('#passconfirm').remove();
-					$('#password_confirm').after('<span id="passconfirm"><i class="goodpassword fa fa-check"></i><span style="padding-left:4px;"><?php print __('Passwords Match');?></span></span>');
+					$('#password_confirm').after('<span id="passconfirm"><i class="goodpassword fa fa-check"></i><span style="padding-left:4px;">' + <?php print json_encode(__esc('Passwords Match'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?> + '</span></span>');
 				}
 			} else {
 				$('#passconfirm').remove();

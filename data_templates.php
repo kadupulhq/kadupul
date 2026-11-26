@@ -1021,10 +1021,10 @@ function template_edit()
 
 		$('.customDataCheckbox').find('input').on('change', function() {
 			if ($(this).prop('checked') == false) {
-				mixedReasonTitle = '<?php print __('Custom Data Warning Message');?>';
-				mixedOnPage      = '<?php print __esc('WARNING: Data Loss can Occur');?>';
+				mixedReasonTitle = <?php print json_encode(__('Custom Data Warning Message'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+				mixedOnPage      = <?php print json_encode(__esc('WARNING: Data Loss can Occur'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 				sessionMessage   = {
-					message: '<?php print __esc('After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs');?>',
+					message: <?php print json_encode(__esc('After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>,
 					level: MESSAGE_LEVEL_MIXED
 				};
 
