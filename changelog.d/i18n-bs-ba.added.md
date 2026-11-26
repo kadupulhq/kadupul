@@ -1,0 +1,1 @@
+- Add gettext and Symfony YAML catalogs for Bosnian (`bs-BA`) for 71 translated locales total (#1499).

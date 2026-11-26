@@ -1,0 +1,80 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'External Links': 'Vanjski linkovi'
+'Add link': 'Dodaj link'
+'Edit link': 'Uredi link'
+'Back to links': 'Nazad na linkove'
+Save: Sačuvaj
+Continue: Nastavi
+Clear: Očisti
+Search: Traži
+Links: Linkovi
+Default: Podrazumijevano
+'Sort direction': 'Smjer sortiranja'
+Sort: Sortiraj
+Ascending: Rastuće
+Descending: Opadajuće
+'Apply Filter': 'Primijeni filter'
+Select: Odaberi
+Actions: Radnje
+Page: Stranica
+Title: Naslov
+Style: Stil
+Enabled: Omogućeno
+Order: Redoslijed
+Edit: Uredi
+'View Page': 'Prikaži stranicu'
+'Yes': Da
+'No': Ne
+'No Pages Found': 'Nema pronađenih stranica'
+'Total links': 'Ukupno linkova'
+Previous: Prethodno
+Next: Sljedeće
+delete: izbriši
+enable: omogući
+disable: onemogući
+up: gore
+down: dolje
+TAB: 'Gornja kartica'
+CONSOLE: Konzola
+FRONT: 'Donja konzola'
+FRONTTOP: 'Gornja konzola'
+sortorder: redoslijed
+contentfile: 'datoteka sadržaja'
+title: naslov
+style: stil
+enabled: omogućeno
+'Tab/Menu Name': 'Naziv kartice/menija'
+'Top Tab': 'Gornja kartica'
+'Console Menu': 'Meni konzole'
+'Bottom of Console Page': 'Dno stranice konzole'
+'Top of Console Page': 'Vrh stranice konzole'
+'Console Menu Section': 'Odjeljak menija konzole'
+'New Console Section': 'Novi odjeljak konzole'
+'New Name Below': 'Novi naziv ispod'
+'Content File/URL': 'Datoteka sadržaja/URL'
+'Web URL Below': 'Web URL ispod'
+'Web URL Location': 'Lokacija web URL-a'
+'Automatic Page Refresh': 'Automatsko osvježavanje stranice'
+Disabled: Onemogućeno
+'Every 10 Seconds': 'Svakih 10 sekundi'
+'Every 15 Seconds': 'Svakih 15 sekundi'
+'Every 20 Seconds': 'Svakih 20 sekundi'
+'Every 30 Seconds': 'Svakih 30 sekundi'
+'Every Minute': 'Svaku minutu'
+'Every 5 Minutes': 'Svakih 5 minuta'
+'Access denied.': 'Pristup odbijen.'
+'Invalid link fields.': 'Neispravna polja linka.'
+'Invalid content URL.': 'Nevažeći URL sadržaja.'
+'Select an installed content file.': 'Odaberite instaliranu datoteku sadržaja.'
+'Invalid console section.': 'Nevažeći odjeljak konzole.'
+'Invalid link list filters.': 'Neispravni filteri spiska linkova.'
+'Invalid link selection.': 'Neispravan izbor linkova.'
+'Link not found.': 'Link nije pronađen.'
+'Link no longer exists.': 'Link više ne postoji.'
+'Links changed since you opened this form. Reload before saving.': 'Linkovi su se promijenili otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'Link operation could not be confirmed. Reload before retrying.': 'Operacija nad linkom nije mogla biti potvrđena. Ponovo učitajte prije ponovnog pokušaja.'
+'This legacy form has expired. Open External Links and submit a new form.': 'Ovaj zastarjeli obrazac je istekao. Otvorite Vanjske linkove i pošaljite novi obrazac.'
+'Open External Links and use its current forms.': 'Otvorite Vanjske linkove i koristite njihove trenutne obrasce.'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'

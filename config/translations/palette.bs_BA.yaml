@@ -1,0 +1,85 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'Access denied.': 'Pristup odbijen.'
+'Add Color': 'Dodaj boju'
+'Back to Colors': 'Natrag na boje'
+'CSV contains a duplicate hex value.': 'CSV sadrži dvostruku hex vrijednost.'
+'CSV contains an invalid row.': 'CSV sadrži neispravan red.'
+'CSV contains invalid quoting.': 'CSV sadrži nevažeće navodnike.'
+'CSV contains no colors.': 'CSV ne sadrži boje.'
+'CSV file': 'CSV datoteka'
+'CSV may contain at most 5000 colors.': 'CSV može sadržavati najviše 5000 boja.'
+'CSV must be valid UTF-8 and no larger than 1 MiB.': 'CSV mora biti važeći UTF-8 i ne veći od 1 MiB.'
+Cancel: Otkaži
+Clear: Očisti
+'Click Continue to delete the following Colors.': 'Kliknite Nastavi za brisanje sljedećih boja.'
+'Color Name': 'Naziv boje'
+'Color changed since you opened this form. Reload before saving.': 'Boja se promijenila otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'Color name must contain at most 40 valid characters.': 'Naziv boje mora sadržavati najviše 40 važećih znakova.'
+'Color not found.': 'Boja nije pronađena.'
+'Color pages': 'Stranice boja'
+'Color preview': 'Pregled boje'
+'Color saved.': 'Boja je sačuvana.'
+'Color templates using': 'Predlošci boja koji koriste'
+Colors: Boje
+'Colors deleted.': 'Boje su izbrisane.'
+'Colors in use by a graph or graph template cannot be deleted.': 'Boje koje koristi grafikon ili šablon grafikona ne mogu se izbrisati.'
+'Colors in use cannot be deleted.': 'Boje koje se koriste ne mogu se izbrisati.'
+'Colors per page': 'Boja po stranici'
+Continue: Nastavi
+Deletable: 'Može se izbrisati'
+'Delete Colors': 'Izbriši boje'
+'Delete outcome is uncertain. Check the Color list before retrying.': 'Ishod brisanja je neizvjestan. Provjerite spisak boja prije ponovnog pokušaja.'
+'Delete selected': 'Izbriši odabrano'
+'Edit Color': 'Uredi boju'
+'Export Colors': 'Izvezi boje'
+Go: Idi
+'Graphs Using': 'Grafovi koji koriste'
+'Has Graphs': 'Ima grafove'
+Hex: Hex
+'Hex must contain 3 or 6 hexadecimal digits.': 'Hex mora sadržavati 3 ili 6 heksadecimalnih znamenki.'
+'Import Colors': 'Uvezi boje'
+'Import failed. Reload before retrying.': 'Uvoz nije uspio. Ponovno učitajte stranicu prije novog pokušaja.'
+'Imported: %inserted% new, %updated% updated, %skipped% skipped.': 'Uvezeno: %inserted% novih, %updated% ažuriranih, %skipped% preskočenih.'
+'Invalid CSV color selection.': 'Nevažeći odabir CSV boja.'
+'Invalid color filter preferences.': 'Nevažeće postavke filtra boja.'
+'Invalid color filters.': 'Nevažeći filtri boja.'
+'Invalid color selection.': 'Nevažeći odabir boja.'
+'Named Color': 'Imenovana boja'
+'Named Colors': 'Imenovane boje'
+'Named colors are read only.': 'Imenovane boje su samo za čitanje.'
+Next: Sljedeće
+'No': Ne
+'No Colors': 'Nema boja'
+'One or more selected Colors no longer exist.': 'Jedna ili više odabranih boja više ne postoji.'
+'Open Colors and use its current forms.': 'Otvorite boje i koristite njihove trenutne obrasce.'
+'Page %page%': 'Stranica %page%'
+Previous: Prethodno
+'Save Color': 'Sačuvaj boju'
+'Save outcome is uncertain. Reload before retrying.': 'Ishod čuvanja je neizvjestan. Ponovo učitajte prije ponovnog pokušaja.'
+Search: Traži
+Select: Odaberi
+'Select %name%': 'Odaberi %name%'
+'Select a valid CSV upload no larger than 1 MiB.': 'Odaberite važeći CSV za učitavanje, ne veći od 1 MiB.'
+'Templates Using': 'Predlošci koji koriste'
+'The selected Colors changed. Reload before continuing.': 'Odabrane boje su se promijenile. Ponovno učitajte stranicu prije nastavka.'
+'This legacy color form has expired. Open Colors and submit a new form.': 'Ovaj zastarjeli obrazac boje je istekao. Otvorite boje i pošaljite novi obrazac.'
+'Unable to authorize Color access.': 'Nije moguće autorizirati pristup boji.'
+'Unable to export colors.': 'Nije moguće izvesti boje.'
+'Unable to load Color. Reload before retrying.': 'Nije moguće učitati boju. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unable to load colors. Reload before retrying.': 'Nije moguće učitati boje. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unable to prepare Color deletion.': 'Nije moguće pripremiti brisanje boje.'
+'Unable to prepare Color form.': 'Nije moguće pripremiti obrazac boje.'
+'Unable to prepare color import.': 'Nije moguće pripremiti uvoz boja.'
+'Unable to read CSV upload.': 'Nije moguće pročitati CSV za učitavanje.'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'
+'Update existing colors': 'Ažuriraj postojeće boje'
+'Yes': Da
+'Default (%count%)': 'Podrazumijevano (%count%)'
+Default: Podrazumijevano
+'A Color with this hex value already exists.': 'Boja s ovom hex vrijednošću već postoji.'
+'CSV requires name and hex columns, with only the supported literal-text marker.': 'CSV zahtijeva kolone name i hex, samo s podržanom oznakom doslovnog teksta.'
+'CSV contains an invalid literal-text marker.': 'CSV sadrži nevažeću oznaku doslovnog teksta.'
+'Use a downloaded Colors CSV or a CSV with name and hex columns.': 'Koristite preuzeti CSV boja ili CSV s kolonama name i hex.'
+'Select up to %count% colors from the first %count% rows. Use %count% rows per page or search to select other colors.': 'Odaberite do %count% boja iz prvih %count% redova. Koristite %count% redova po stranici ili pretragu za odabir drugih boja.'

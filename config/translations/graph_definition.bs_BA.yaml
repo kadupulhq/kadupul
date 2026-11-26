@@ -1,0 +1,97 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'Access denied.': 'Pristup odbijen.'
+Actions: Radnje
+'Add VDEF item': 'Dodaj VDEF stavku'
+Apply: Primijeni
+Ascending: Rastuće
+'Back to VDEF': 'Natrag na VDEF'
+'Back to VDEFs': 'Natrag na VDEF-ove'
+Cancel: Otkaži
+'Choose a valid VDEF function.': 'Odaberite važeću VDEF funkciju.'
+'Choose a valid VDEF item type.': 'Odaberite važeću vrstu VDEF stavke.'
+'Choose a valid special data source.': 'Odaberite važeći poseban izvor podataka.'
+'Confirm deletion of these definitions.': 'Potvrdite brisanje ovih definicija.'
+'Confirm duplication. You can change the title format.': 'Potvrdite dupliciranje. Možete promijeniti format naslova.'
+Continue: Nastavi
+'Continue to remove this item from %name%?': 'Nastaviti s uklanjanjem ove stavke iz %name%?'
+'Create VDEF': 'Kreiraj VDEF'
+'Custom String': 'Prilagođeni niz'
+Deletable: 'Može se izbrisati'
+Delete: Izbriši
+'Delete VDEF item': 'Izbriši VDEF stavku'
+'Delete VDEFs': 'Izbriši VDEF-ove'
+'Delete selected VDEFs': 'Izbriši odabrane VDEF-ove'
+Descending: Opadajuće
+'Duplicate VDEFs': 'Dupliciraj VDEF-ove'
+'Duplicate selected VDEFs': 'Dupliciraj odabrane VDEF-ove'
+'Edit VDEF': 'Uredi VDEF'
+'Edit item': 'Uredi stavku'
+'Enter a VDEF name.': 'Unesite naziv VDEF-a.'
+'Enter a valid VDEF name.': 'Unesite važeći naziv VDEF-a.'
+'Enter a valid custom VDEF value.': 'Unesite važeću prilagođenu VDEF vrijednost.'
+Function: Funkcija
+'Graphs using': 'Grafovi koji koriste'
+'Has graphs': 'Ima grafove'
+'Invalid VDEF action.': 'Nevažeća VDEF radnja.'
+'Invalid VDEF item order.': 'Nevažeći redoslijed VDEF stavki.'
+'Invalid VDEF item selection.': 'Nevažeći odabir VDEF stavke.'
+'Invalid VDEF item type.': 'Nevažeća vrsta VDEF stavke.'
+'Invalid VDEF list options.': 'Neispravne opcije spiska VDEF-ova.'
+'Invalid VDEF selection.': 'Nevažeći odabir VDEF-a.'
+Item: Stavka
+'Item #%number%': 'Stavka #%number%'
+'Item type': 'Vrsta stavke'
+'Item value': 'Vrijednost stavke'
+'Move down': 'Pomakni dolje'
+'Move up': 'Pomakni gore'
+'New item': 'Nova stavka'
+Next: Sljedeće
+'No': Ne
+'No VDEF items.': 'Nema VDEF stavki.'
+'No VDEFs match these filters.': 'Nijedan VDEF ne odgovara ovim filtrima.'
+Order: Redoslijed
+'Page %page% of %pages%': 'Stranica %page% od %pages%'
+Previous: Prethodno
+'Referenced by VDEFs': 'Referencirano u VDEF-ovima'
+Rows: Redovi
+Save: Sačuvaj
+'Save item': 'Sačuvaj stavku'
+'Save item order': 'Sačuvaj redoslijed stavki'
+'Search VDEFs': 'Traži VDEF-ove'
+Select: Odaberi
+'Select %name%': 'Odaberi %name%'
+'Select one or more VDEFs.': 'Odaberite jedan ili više VDEF-ova.'
+'Sort by': 'Sortiraj po'
+'Special Data Source': 'Poseban izvor podataka'
+'Templates using': 'Predlošci koji koriste'
+'The VDEF changed after this form was opened. Reload and try again.': 'VDEF se promijenio nakon otvaranja ovog obrasca. Ponovno učitajte stranicu i pokušajte ponovno.'
+'The VDEF item order is invalid.': 'Redoslijed VDEF stavki je nevažeći.'
+'The VDEF item order is stale or invalid.': 'Redoslijed VDEF stavki je zastario ili je nevažeći.'
+'The VDEF item selection changed. Reload the form.': 'Odabir VDEF stavke se promijenio. Ponovno učitajte obrazac.'
+'The selected VDEFs changed. Reload the confirmation.': 'Odabrani VDEF-ovi su se promijenili. Ponovno učitajte potvrdu.'
+'This legacy VDEF item is read-only. Its stored reference is preserved.': 'Ova zastarjela VDEF stavka je samo za čitanje. Njena pohranjena referenca je sačuvana.'
+'Title format': 'Format naslova'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'
+'VDEF Item': 'VDEF stavka'
+'VDEF Items': 'VDEF stavke'
+'VDEF Preview': 'Pregled VDEF-a'
+'VDEF action failed. Check the VDEF list before retrying.': 'VDEF radnja nije uspjela. Provjerite spisak VDEF-ova prije novog pokušaja.'
+'VDEF item not found.': 'VDEF stavka nije pronađena.'
+'VDEF item removal failed. Check the VDEF before retrying.': 'Uklanjanje VDEF stavke nije uspjelo. Provjerite VDEF prije novog pokušaja.'
+'VDEF item reorder failed. Check the VDEF before retrying.': 'Promjena redoslijeda VDEF stavki nije uspjela. Provjerite VDEF prije novog pokušaja.'
+'VDEF item save failed. Check the VDEF before retrying.': 'Čuvanje VDEF stavke nije uspjelo. Provjerite VDEF prije novog pokušaja.'
+'VDEF name': 'Naziv VDEF-a'
+'VDEF not found.': 'VDEF nije pronađen.'
+'VDEF pages': 'Stranice VDEF-a'
+'VDEF reference': 'VDEF referenca'
+'VDEF save failed. Check the VDEF list before retrying.': 'Čuvanje VDEF-a nije uspjelo. Provjerite spisak VDEF-ova prije novog pokušaja.'
+VDEFs: VDEF-ovi
+'VDEFs [edit: %name%]': 'VDEF-ovi [uređivanje: %name%]'
+'VDEFs [new]': 'VDEF-ovi [novo]'
+'VDEFs in use cannot be deleted.': 'VDEF-ovi koji se koriste ne mogu se izbrisati.'
+Value: Vrijednost
+'Variable definitions and graph usage': 'Definicije varijabli i korištenje u grafovima'
+'Yes': Da
+'Current Graph Item Data Source': 'Izvor podataka trenutne stavke grafa'

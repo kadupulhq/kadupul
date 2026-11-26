@@ -18,7 +18,7 @@ import re
 import subprocess
 import tempfile
 
-COMPATIBILITY_CONTENT_SHA256 = "539fce9124558c6876f3b63fae9c67dfe2a7020dafbb1b67312a7ed3347e31a2"
+COMPATIBILITY_CONTENT_SHA256 = "ed26767069636430d03cd3018efd7a53f76fe4a1595ac23f0e23e1785d4793ed"
 # Legacy gettext is frozen on main: new UI strings belong in Symfony ICU YAML
 # catalogs under config/translations/*.yaml rather than expanding cacti.pot.
 MAX_STATIC_GETTEXT_MESSAGES = 4180

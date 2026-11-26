@@ -81,6 +81,7 @@ final class ConsoleTranslationsTest extends TestCase
         yield 'Egyptian Arabic' => ['ar_EG', 'inventory', 'Devices', [], 'الأجهزة'];
         yield 'Finnish from YAML' => ['fi_FI', 'inventory', 'Devices', [], 'Laitteet'];
         yield 'Filipino from YAML' => ['fil_PH', 'inventory', 'Devices', [], 'Mga Device'];
+        yield 'Bosnian from YAML' => ['bs_BA', 'inventory', 'Devices', [], 'Uređaji'];
         yield 'British English falls back to English' => ['en_GB', 'inventory', 'Devices', [], 'Devices'];
         yield 'unshipped locale stays English' => ['is', 'inventory', 'Devices', [], 'Devices'];
     }
@@ -156,6 +157,8 @@ final class ConsoleTranslationsTest extends TestCase
         yield 'Serbian' => ['sr-RS', 'sr_RS'];
         yield 'Filipino' => ['fil-PH', 'fil_PH'];
         yield 'bare Filipino' => ['fil', 'fil_PH'];
+        yield 'Bosnian' => ['bs-BA', 'bs_BA'];
+        yield 'bare Bosnian' => ['bs', 'bs_BA'];
         yield 'unshipped language' => ['is-IS', null];
         yield 'legacy-listed unshipped language' => ['mk-MK', null];
         yield 'four-letter language' => ['fili-PH', null];

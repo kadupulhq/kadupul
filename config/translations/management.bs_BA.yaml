@@ -1,0 +1,160 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'Access denied.': 'Pristup odbijen.'
+Active: Aktivno
+'Administrator Reports': 'Administratorski izvještaji'
+'Aggregate Graphs': 'Agregirani grafovi'
+'Aggregate Template': 'Šablon agregata'
+'Associated Graphs': 'Povezani grafovi'
+'Associated Items': 'Povezane stavke'
+'Attached GIF Image': 'Priložena GIF slika'
+'Attached JPEG Image': 'Priložena JPEG slika'
+'Attached PNG Image': 'Priložena PNG slika'
+'Attachment Type': 'Vrsta privitka'
+Author: Autor
+'Awaiting Configuration': 'Čeka konfiguraciju'
+'Awaiting Upgrade': 'Čeka nadogradnju'
+CDEF: CDEF
+Clear: Očisti
+'Data Query Graph Mappings': 'Mapiranja grafova upita podataka'
+'Data Query ID': 'ID upita podataka'
+'Data Source': 'Izvor podataka'
+'Data Source Mappings': 'Mapiranja izvora podataka'
+'Data Source Profile': 'Profil izvora podataka'
+'Data Sources': 'Izvori podataka'
+'Data Template': 'Šablon podataka'
+Day(s): Dan(i)
+Description: Opis
+Device: Uređaj
+'Device Template Graphs': 'Grafovi predloška uređaja'
+Directory: Direktorij
+Disabled: Onemogućeno
+'Editing, actions and advanced filters': 'Uređivanje, radnje i napredni filtri'
+Enabled: Omogućeno
+Field: Polje
+Go: Idi
+'Graph Inputs': 'Ulazi grafa'
+'Graph Items': 'Stavke grafa'
+'Graph Mappings': 'Mapiranja grafova'
+'Graph Template': 'Šablon grafikona'
+'Graph Template Inputs': 'Ulazi predloška grafa'
+'Graph Template Items': 'Stavke predloška grafa'
+'Graph Type ID': 'ID vrste grafa'
+Graphs: Grafovi
+Hour(s): Sat(i)
+ID: ID
+'Image Format': 'Format slike'
+Index: Indeks
+'Inline GIF Image': 'Ugrađena GIF slika'
+'Inline GIF Image, LN Style': 'Ugrađena GIF slika, LN stil'
+'Inline JPEG Image': 'Ugrađena JPEG slika'
+'Inline JPEG Image, LN Style': 'Ugrađena JPEG slika, LN stil'
+'Inline PNG Image': 'Ugrađena PNG slika'
+'Inline PNG Image, LN Style': 'Ugrađena PNG slika, LN stil'
+Installed: Instalirano
+Interval: Interval
+'Interval Count': 'Broj intervala'
+'Invalid list filters.': 'Neispravni filteri spiska.'
+'Last Sent (UTC)': 'Zadnje poslano (UTC)'
+'List filters': 'Filteri spiska'
+'List pages': 'Stranice spiska'
+'Local Graph ID': 'ID lokalnog grafa'
+'Member Graphs': 'Grafovi članovi'
+Minute(s): Minuta
+'Month(s), Day of Month': 'Mjesec(i), dan u mjesecu'
+'Month(s), Day of Week': 'Mjesec(i), dan u sedmici'
+'My Reports': 'Moji izvještaji'
+Name: Naziv
+Never: Nikada
+Next: Sljedeće
+'Next Run (UTC)': 'Sljedeće izvođenje (UTC)'
+'No records found.': 'Nema pronađenih zapisa.'
+None: Nema
+'Not Compatible': 'Nije kompatibilno'
+'Not Installed': 'Nije instalirano'
+Offset: Pomak
+'Only reports owned by your account are listed here.': 'Ovdje su navedeni samo izvještaji u vlasništvu vašeg naloga.'
+Owner: Vlasnik
+'Page %page%': 'Stranica %page%'
+'Parent record not found.': 'Nadređeni zapis nije pronađen.'
+Previous: Prethodno
+'RRD Step': 'RRD korak'
+'Recorded Plugins': 'Zabilježeni dodaci'
+'Recorded Status': 'Zabilježeni status'
+'Recorded database metadata only. Plugin discovery, compatibility checks and lifecycle actions remain on the plugin operation page.': 'Zabilježeni su samo metapodaci baze podataka. Otkrivanje dodataka, provjere kompatibilnosti i radnje životnog ciklusa ostaju na stranici operacija dodataka.'
+'Reports without an owner are shown as disabled. Listing does not change their stored state.': 'Izvještaji bez vlasnika prikazuju se kao onemogućeni. Prikazivanje ne mijenja njihovo pohranjeno stanje.'
+Rows: Redovi
+Search: Traži
+Sequence: Slijed
+Size: Veličina
+Status: Status
+'Unable to load this list. Reload before retrying.': 'Nije moguće učitati ovaj spisak. Ponovo učitajte prije ponovnog pokušaja.'
+Unknown: Nepoznato
+Unnamed: Neimenovano
+VDEF: VDEF
+Value: Vrijednost
+Version: Verzija
+'Vertical Label': 'Vertikalna oznaka'
+Week(s): Sedmica(e)
+Year(s): Godina(e)
+'Graph Input Associations': 'Povezanosti ulaza grafa'
+'Query Data Source Mappings': 'Mapiranja izvora podataka upita'
+'Query Graph Suggested Values': 'Predložene vrijednosti grafikona upita'
+'Query Data Suggested Values': 'Predložene vrijednosti podataka upita'
+'Query Device Templates': 'Predlošci uređaja upita'
+'Graph Device Templates': 'Predlošci uređaja grafa'
+'Registered SNMP MIBs': 'Registrovani SNMP MIB-ovi'
+'MIB Objects': 'MIB objekti'
+'MIB Textual Conventions': 'MIB tekstualne konvencije'
+'MIB Notification Attributes': 'Atributi MIB obavijesti'
+'Consolidation ID': 'ID konsolidacije'
+'Template Item Found': 'Stavka predloška pronađena'
+'Data Template ID': 'ID predloška podataka'
+'Template Source Found': 'Izvor predloška pronađen'
+'Suggested Value': 'Predložena vrijednost'
+'Object Type': 'Vrsta objekta'
+Kind: Vrsta
+Access: Pristup
+Notification: Obavijest
+Attribute: Atribut
+Type: Vrsta
+Objects: Objekti
+'Textual Conventions': 'Tekstualne konvencije'
+'Notification Attributes': 'Atributi obavijesti'
+Associations: Povezanosti
+'Graph Suggestions': 'Prijedlozi grafova'
+'Data Suggestions': 'Prijedlozi podataka'
+'Device Templates': 'Predlošci uređaja'
+'Yes': Da
+'No': Ne
+'Graph Data Sources': 'Izvori podataka grafa'
+'Aggregate Member Graphs': 'Grafovi članovi agregata'
+'Data Source Definitions': 'Definicije izvora podataka'
+'Data Source Graphs': 'Grafovi izvora podataka'
+'Report Contents': 'Sadržaj izvještaja'
+'My Report Contents': 'Sadržaj mojih izvještaja'
+'Tree Items': 'Stavke stabla'
+'Collector Devices': 'Uređaji prikupljača'
+'Network Discovery Results': 'Rezultati otkrivanja mreže'
+'Data Source ID': 'ID izvora podataka'
+'Item Type': 'Vrsta stavke'
+'Device ID': 'ID uređaja'
+'Tree ID': 'ID stabla'
+Timespan: 'Vremenski raspon'
+Alignment: Poravnanje
+'Parent Item ID': 'ID nadređene stavke'
+Position: Pozicija
+'Site ID': 'ID lokacije'
+Hostname: 'Naziv hosta'
+'IP Address': 'IP adresa'
+'Operating System': 'Operativni sistem'
+'Known Device': 'Poznati uređaj'
+'Device Up': 'Uređaj dostupan'
+Contents: Sadržaj
+Definitions: Definicije
+'Discovery Results': 'Rezultati otkrivanja'
+'Data Source Type': 'Vrsta izvora podataka'
+Heartbeat: Heartbeat
+Minimum: Minimum
+Maximum: Maksimum

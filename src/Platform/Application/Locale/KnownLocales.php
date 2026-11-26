@@ -33,6 +33,7 @@ final class KnownLocales
         'hy-AM' => ['language' => 'Armenian', 'direction' => 'ltr', 'country' => 'am', 'filename' => 'armenian_armenia'],
         'be-BY' => ['language' => 'Belarusian', 'direction' => 'ltr', 'country' => 'by', 'filename' => 'belarusian_belarus'],
         'bn-BD' => ['language' => 'Bengali', 'direction' => 'ltr', 'country' => 'bd', 'filename' => 'bengali_bangladesh'],
+        'bs-BA' => ['language' => 'Bosnian', 'direction' => 'ltr', 'country' => 'ba', 'filename' => 'bosnian_bosnia_herzegovina'],
         'bg-BG' => ['language' => 'Bulgarian', 'direction' => 'ltr', 'country' => 'bg', 'filename' => 'bulgarian_bulgaria'],
         'ca-ES' => ['language' => 'Catalan', 'direction' => 'ltr', 'country' => 'es', 'filename' => 'catalan_spain'],
         'zh-CN' => ['language' => 'Chinese (China)', 'direction' => 'ltr', 'country' => 'cn', 'filename' => 'chinese_china_simplified'],

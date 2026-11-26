@@ -156,6 +156,7 @@ final class LocaleResolverTest extends TestCase
         yield 'two letters never pick a three-letter language' => ['fi', 'fi-FI'];
         yield 'unknown three-letter language uses two letters' => ['deu', 'de-DE'];
         yield 'legacy Czech spelling' => ['cs-GZ', 'cs-CZ'];
+        yield 'bare Bosnian' => ['bs', 'bs-BA'];
         yield 'case is significant' => ['DE-de', ''];
         yield 'zero' => ['0', ''];
         yield 'path' => ['../../locales/po/ru-RU', ''];
@@ -184,7 +185,7 @@ final class LocaleResolverTest extends TestCase
 
     public function testKnownLocalesAreTheLegacyTableInOrder(): void
     {
-        self::assertCount(81, KnownLocales::ALL);
+        self::assertCount(82, KnownLocales::ALL);
         self::assertSame(['pt-PT', 'pt-BR'], array_values(array_filter(array_keys(KnownLocales::ALL), static fn(string $locale): bool => str_starts_with($locale, 'pt-'))));
         foreach (KnownLocales::ALL as $locale => $properties) {
             self::assertMatchesRegularExpression('/\A[a-z]{2,3}-[A-Z]{2}\z/', $locale);
