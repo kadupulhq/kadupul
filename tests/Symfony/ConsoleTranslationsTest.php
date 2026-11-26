@@ -76,7 +76,7 @@ final class ConsoleTranslationsTest extends TestCase
         yield 'Canadian French falls back to French' => ['fr_CA', 'inventory', 'Cancel', [], 'Annuler'];
         yield 'Canadian French placeholder' => ['fr_CA', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Toutes les 6 heures'];
         yield 'Mexican Spanish partial file' => ['es_MX', 'inventory', 'Devices', [], 'Dispositivos'];
-        yield 'Mexican Spanish untranslated key shows English' => ['es_MX', 'inventory', 'Save site', [], 'Save site'];
+        yield 'Mexican Spanish YAML translates Save site' => ['es_MX', 'inventory', 'Save site', [], 'Guardar sitio'];
         yield 'Malagasy count placeholder' => ['mg_MG', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Isaky ny 6 ora'];
         yield 'Egyptian Arabic' => ['ar_EG', 'inventory', 'Devices', [], 'الأجهزة'];
         yield 'British English falls back to English' => ['en_GB', 'inventory', 'Devices', [], 'Devices'];
