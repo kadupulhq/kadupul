@@ -346,7 +346,7 @@ function data_query_reindex_local($host_id, $snmp_query_id, $query_array) {
 			$local_data = db_fetch_assoc_prepared('SELECT dl.id AS local_data_id, dl.host_id,
 				dl.snmp_query_id, dl.snmp_index, dl.orphan,
 				did.data_input_field_id, did.data_template_data_id,
-				did.value AS query_index, "' . $old_sort_field . '" AS sort_field
+				did.value AS query_index, ? AS sort_field
 				FROM data_local AS dl
 				INNER JOIN data_template_data AS dtd
 				ON dl.id = dtd.local_data_id
@@ -358,7 +358,7 @@ function data_query_reindex_local($host_id, $snmp_query_id, $query_array) {
 				WHERE dif.data_name="index_value"
 				AND dl.snmp_query_id = ?
 				AND dl.host_id = ?',
-				array($snmp_query_id, $host_id));
+				array($old_sort_field, $snmp_query_id, $host_id));
 
 			$previous_types = db_fetch_assoc_prepared('SELECT dl.id AS local_data_id, did.*
 				FROM data_local AS dl
@@ -525,24 +525,43 @@ function data_query_reindex_local($host_id, $snmp_query_id, $query_array) {
 }
 
 function data_query_remove_disabled_items($orphaned_ids) {
+	if (!is_array($orphaned_ids)) {
+		return;
+	}
+
+	$orphaned_ids = array_values(array_filter(array_map('intval', $orphaned_ids), function ($id) {
+		return $id > 0;
+	}));
+
 	if (cacti_sizeof($orphaned_ids)) {
+		$id_list = implode(', ', $orphaned_ids);
+
 		db_execute_prepared('DELETE FROM poller_item
-			WHERE local_data_id IN (' . implode(', ', $orphaned_ids) . ')');
+			WHERE local_data_id IN (' . $id_list . ')');
 
 		db_execute_prepared('DELETE FROM poller_output_boost
-			WHERE local_data_id IN (' . implode(', ', $orphaned_ids) . ')');
+			WHERE local_data_id IN (' . $id_list . ')');
 
 		$archive_tables = array_rekey(
 			db_fetch_assoc('SELECT TABLE_NAME
 				FROM information_schema.TABLES
-				WHERE TABLE_NAME LIKE "poller_output_boost_arch%"'),
+				WHERE TABLE_SCHEMA = SCHEMA()
+				AND TABLE_NAME LIKE "poller_output_boost_arch%"'),
 			'TABLE_NAME', 'TABLE_NAME'
 		);
 
 		if (cacti_sizeof($archive_tables)) {
-			foreach($archive_tables as $table) {
-				db_execute_prepared("DELETE FROM $table
-					WHERE local_data_id IN (" . implode(', ', $orphaned_ids) . ')', false);
+			foreach ($archive_tables as $table) {
+				$valid_table = function_exists('boost_is_valid_archive_table')
+					? boost_is_valid_archive_table($table)
+					: (preg_match('/^poller_output_boost_arch_\d+\z/', (string) $table) === 1);
+
+				if (!$valid_table) {
+					continue;
+				}
+
+				db_execute_prepared('DELETE FROM `' . $table . '`
+					WHERE local_data_id IN (' . $id_list . ')', array(), false);
 			}
 		}
 	}
@@ -1838,6 +1857,9 @@ function data_query_field_list($data_template_data_id) {
 
 	if ((!isset($field['index_type'])) || (!isset($field['index_value'])) || (!isset($field['output_type']))) {
 		return 0;
+	} elseif ($field['output_type'] !== '' && !ctype_digit((string) $field['output_type'])) {
+		cacti_log('WARNING: Invalid non-numeric output_type in data_template_data ID[' . $data_template_data_id . ']', false, 'POLLER');
+		return 0;
 	} else {
 		return $field;
 	}
@@ -2456,22 +2478,29 @@ function get_best_data_query_index_type($host_id, $data_query_id) {
    @arg $script_path - the path on the disk to the script file
    @arg $host_id - the id of the host that this script query belongs to
    @returns - a full path to the script query script containing all arguments */
-function get_script_query_path($args, $script_path, $host_id) {
+function get_script_query_path($args, $script_path, $host_id, $literal_args = array()) {
 	global $config;
 
 	include_once($config['library_path'] . '/variables.php');
+
+	$arg_list = array();
 
 	/* get any extra arguments that need to be passed to the script */
 	if ($args != '') {
 		$parts = preg_split("/[\s,]*\\\"([^\\\"]+)\\\"[\s,]*|" . "[\s,]*'([^']+)'[\s,]*|" . "[\s,]+/", $args, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
-		$extra_arguments = '';
-		foreach ($parts as $index => $part) {
-			$extra_arguments .= ($index > 0 ? ' ':'') . cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id));
+		foreach ($parts as $part) {
+			$arg_list[] = cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id));
 		}
-	} else {
-		$extra_arguments = '';
 	}
+
+	if (is_array($literal_args)) {
+		foreach ($literal_args as $literal_arg) {
+			$arg_list[] = cacti_escapeshellarg((string) $literal_arg);
+		}
+	}
+
+	$extra_arguments = implode(' ', $arg_list);
 
 	/* SECURITY: The base script path MUST be sanitized to prevent RCE from malicious templates */
 	$parsed_script_path = substitute_script_query_path($script_path);

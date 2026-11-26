@@ -596,7 +596,7 @@ function update_reindex_cache($host_id, $data_query_id) {
 					if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
 						$recache_stack[] = "($host_id, $data_query_id, " . POLLER_ACTION_SNMP . ", '=', " . db_qstr($assert_value) . ', ' . db_qstr(($data_query_xml['fields'][$data_query['sort_field']]['source'] == 'index') ? $data_query_xml['oid_index'] . '.' . $index['snmp_index'] : $data_query_xml['fields'][$data_query['sort_field']]['oid'] . '.' . $index['snmp_index']) . ', 1)';
 					} elseif ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
-						$recache_stack[] = '(' . $host_id . ', ' . $data_query_id . ', ' . POLLER_ACTION_SCRIPT . ", '=', " . db_qstr($assert_value) . ', ' . db_qstr(get_script_query_path((isset($data_query_xml['arg_prepend']) ? $data_query_xml['arg_prepend'] . ' ' : '') . $data_query_xml['arg_get'] . ' ' . $data_query_xml['fields'][$data_query['sort_field']]['query_name'] . ' "' . $index['snmp_index'] . '"', $data_query_xml['script_path'], $host_id)) . ', 1)';
+						$recache_stack[] = '(' . $host_id . ', ' . $data_query_id . ', ' . POLLER_ACTION_SCRIPT . ", '=', " . db_qstr($assert_value) . ', ' . db_qstr(get_script_query_path((isset($data_query_xml['arg_prepend']) ? $data_query_xml['arg_prepend'] . ' ' : '') . $data_query_xml['arg_get'] . ' ' . $data_query_xml['fields'][$data_query['sort_field']]['query_name'], $data_query_xml['script_path'], $host_id, array($index['snmp_index']))) . ', 1)';
 					}
 				}
 			}
@@ -1423,7 +1423,11 @@ function update_resource_cache($poller_id = 1) {
 
 		if (cacti_sizeof($plugin_paths)) {
 			foreach ($plugin_paths as $path) {
-				$paths[$path['resource_type']] = array('recursive' => false, 'path' => dirname($mpath . '/' . $path['path']));
+				$resolved_plugin_path = poller_resource_cache_resolve_path($path['path'], $mpath, 'plugins/');
+				if ($resolved_plugin_path === false) {
+					continue;
+				}
+				$paths[$path['resource_type']] = array('recursive' => false, 'path' => dirname($resolved_plugin_path));
 			}
 		}
 
@@ -1620,6 +1624,82 @@ function update_db_from_path($path, $type, $recursive = true) {
 	}
 }
 
+function poller_resource_cache_resolve_path($relative_path, $base_path, $required_prefix = '') {
+	if (!is_string($relative_path) || $relative_path === '' || strpos($relative_path, "\0") !== false) {
+		cacti_log('SECURITY: Rejected invalid resource cache path', false, 'REPLICATE');
+		return false;
+	}
+
+	if ($relative_path[0] === '/' || $relative_path[0] === '\\' || preg_match('/^[A-Za-z]:/', $relative_path)) {
+		cacti_log('SECURITY: Rejected absolute resource cache path', false, 'REPLICATE');
+		return false;
+	}
+
+	$normalized = str_replace('\\', '/', $relative_path);
+	$segments   = explode('/', $normalized);
+	$clean      = array();
+
+	foreach ($segments as $segment) {
+		if ($segment === '' || $segment === '.') {
+			continue;
+		}
+		if ($segment === '..') {
+			cacti_log('SECURITY: Rejected path traversal in resource cache path', false, 'REPLICATE');
+			return false;
+		}
+		$clean[] = $segment;
+	}
+
+	if (!cacti_sizeof($clean)) {
+		return false;
+	}
+
+	$canonical_rel = implode('/', $clean);
+
+	if (strcasecmp($canonical_rel, 'include/config.php') === 0) {
+		cacti_log('SECURITY: Refused resource cache overwrite of include/config.php', false, 'REPLICATE');
+		return false;
+	}
+
+	if ($required_prefix !== '' && strpos($canonical_rel, $required_prefix) !== 0) {
+		cacti_log('SECURITY: Rejected resource cache path outside required prefix', false, 'REPLICATE');
+		return false;
+	}
+
+	$base_real = realpath($base_path);
+	if ($base_real === false) {
+		return false;
+	}
+
+	$candidate = $base_real . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $canonical_rel);
+	$check     = $candidate;
+	while (!file_exists($check) && !is_link($check)) {
+		$parent = dirname($check);
+		if ($parent === $check) {
+			return false;
+		}
+		$check = $parent;
+	}
+
+	if (is_link($candidate)) {
+		cacti_log('SECURITY: Refused symlink target in resource cache replication', false, 'REPLICATE');
+		return false;
+	}
+
+	$resolved_ancestor = realpath($check);
+	if ($resolved_ancestor === false || !cacti_path_is_within($resolved_ancestor, $base_real)) {
+		cacti_log('SECURITY: Rejected resource cache path outside Cacti base path', false, 'REPLICATE');
+		return false;
+	}
+
+	if (!cacti_path_is_within($candidate, $base_real)) {
+		cacti_log('SECURITY: Rejected resource cache target outside Cacti base path', false, 'REPLICATE');
+		return false;
+	}
+
+	return $candidate;
+}
+
 /**
  * resource_cache_out - push the cache from the cacti database to the
  *   remote database.  Check PHP files for errors before placing
@@ -1650,7 +1730,10 @@ function resource_cache_out($type, $path) {
 					continue;
 				}
 
-				$mypath = $config['base_path'] . DIRECTORY_SEPARATOR . $e['path'];
+				$mypath = poller_resource_cache_resolve_path($e['path'], $config['base_path']);
+				if ($mypath === false) {
+					continue;
+				}
 
 				if (file_exists($mypath)) {
 					$md5sum = md5_file($mypath);
@@ -1659,14 +1742,16 @@ function resource_cache_out($type, $path) {
 				}
 
 				if (!is_dir(dirname($mypath))) {
-					$relative_dir = str_replace($config['base_path'], '', dirname($mypath));
-					mkdir('./' . $relative_dir, 0755, true);
+					mkdir(dirname($mypath), 0755, true);
 				}
 
 				if (is_dir(dirname($mypath))) {
-					if ($md5sum != $e['md5sum'] && $e['path'] != 'include/config.php') {
-						// If for some reason, the attributes are empty, assume 0644
-						$attributes = empty($e['attributes']) ? 33188 : $e['attributes'];
+					if ($md5sum != $e['md5sum']) {
+						// If for some reason, the attributes are empty, assume 0644; mask out special and world-writable bits
+						$attributes = empty($e['attributes']) ? 0644 : (((int) $e['attributes']) & 0755);
+						if ($attributes === 0) {
+							$attributes = 0644;
+						}
 
 						$extension = substr(strrchr($e['path'], '.'), 1);
 						$exit      = -1;
@@ -1692,21 +1777,23 @@ function resource_cache_out($type, $path) {
 
 							if ((is_writeable($tmpdir) && !file_exists($tmpfile)) || (file_exists($tmpfile) && is_writable($tmpfile))) {
 								if (file_put_contents($tmpfile, $contents) !== false) {
-									$output = system($php_path . ' -l ' . $tmpfile, $exit);
+									$lint_output = array();
+									$exit        = cacti_exec($php_path, array('-l', $tmpfile), $lint_output);
+									$output      = implode("\n", $lint_output);
 
 									if ($exit == 0) {
 										cacti_log("INFO: Updating '$mypath' from Cache!", false, 'REPLICATE');
 
-										if (is_writable($mypath) || (!file_exists($mypath) && is_writable(dirname($mypath)))) {
+										if (!is_link($mypath) && (is_writable($mypath) || (!file_exists($mypath) && is_writable(dirname($mypath))))) {
 											file_put_contents($mypath, $contents);
 
 											if ($executable) {
-												$attributes = 33261;
+												$attributes = 0755;
 											}
 
 											chmod($mypath, $attributes);
 
-											if (fileperms($mypath) != $attributes) {
+											if ((fileperms($mypath) & 0777) != $attributes) {
 												cacti_log("WARNING: Cache cannot update permissions on '$mypath'", false, 'REPLICATE');
 											}
 										} else {
@@ -1724,7 +1811,7 @@ function resource_cache_out($type, $path) {
 							} else {
 								cacti_log("ERROR: Cache in cannot write to '" . $tmpfile . "', purge this location", false, 'REPLICATE');
 							}
-						} elseif (is_writeable($mypath) || (!file_exists($mypath) && is_writable(dirname($mypath)))) {
+						} elseif (!is_link($mypath) && (is_writeable($mypath) || (!file_exists($mypath) && is_writable(dirname($mypath))))) {
 							cacti_log("INFO: Updating '" . $mypath . "' from Cache!", false, 'REPLICATE');
 
 							file_put_contents($mypath, $contents);
@@ -1732,7 +1819,7 @@ function resource_cache_out($type, $path) {
 							if ($attributes != 0) {
 								chmod($mypath, $attributes);
 
-								if (fileperms($mypath) != $attributes) {
+								if ((fileperms($mypath) & 0777) != $attributes) {
 									cacti_log("WARNING: Cache cannot update permissions on '$mypath'", false, 'REPLICATE');
 								}
 							}

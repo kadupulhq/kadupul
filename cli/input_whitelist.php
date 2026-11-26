@@ -104,18 +104,50 @@ if ($audit) {
 		exit(1);
 	}
 
-	$input = json_decode(file_get_contents($config['input_whitelist']), true);
+	if (!is_readable($config['input_whitelist'])) {
+		print 'ERROR: Data Input Whitelist file \'' . $config['input_whitelist'] . '\' is not readable.' . PHP_EOL;
+		exit(1);
+	}
+
+	$raw_whitelist = file_get_contents($config['input_whitelist']);
+	$input         = ($raw_whitelist !== false) ? json_decode($raw_whitelist, true) : null;
+
+	if (!is_array($input)) {
+		print 'ERROR: Data Input Whitelist file \'' . $config['input_whitelist'] . '\' contains invalid JSON.' . PHP_EOL;
+		exit(1);
+	}
+
+	$id_hash = false;
+	if ($id !== false) {
+		if ($id <= 0) {
+			print 'ERROR: Data Input id \'' . $id . '\' is invalid. Please provide a positive integer.' . PHP_EOL;
+			exit(1);
+		}
+
+		$id_hash = db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id = ?', array($id));
+		if (empty($id_hash)) {
+			print 'ERROR: Data Input id \'' . $id . '\' was not found or has an empty hash.' . PHP_EOL;
+			exit(1);
+		}
+
+		if (!array_key_exists($id_hash, $input)) {
+			print 'ERROR: Data Input id \'' . $id . '\' is not present in the whitelist file.' . PHP_EOL;
+			exit(1);
+		}
+
+		$input = array($id_hash => $input[$id_hash]);
+	}
 
 	$totals = 0;
-	$items = cacti_sizeof($input);
+	$items  = cacti_sizeof($input);
 
 	if ($items) {
 		print 'Data Input Methods Whitelist Verification' . PHP_EOL . PHP_EOL;
 		print '------------------------------------------------------------------------------------------------------------' . PHP_EOL;
 
-		foreach($input as $hash => $input_string) {
+		foreach ($input as $hash => $input_string) {
 			$aud = verify_data_input($hash, $input_string);
-			if ($aud['status'] == true) {
+			if (isset($aud['status']) && $aud['status'] === true) {
 				print 'ID: ' . $aud['id'] . ', Name: ' . $aud['name'] . ', Status: ' . 'Success' . PHP_EOL;
 				print '------------------------------------------------------------------------------------------------------------' . PHP_EOL;
 				print 'Command:   ' . $aud['input_string'] . PHP_EOL . 'Whitelist: ' . $input_string . PHP_EOL;
@@ -132,12 +164,15 @@ if ($audit) {
 
 		if ($totals) {
 			print 'ERROR: ' . $totals . ' audits failed out of a total of ' . $items . ' Data Input Methods' . PHP_EOL;
+			exit(1);
 		} else {
 			print 'SUCCESS: Audits successful for total of ' . $items . ' Data Input Methods' . PHP_EOL;
 		}
 	}
 } elseif ($update) {
-	if (!is_writable(dirname($config['input_whitelist']))) {
+	$whitelist_dir = dirname($config['input_whitelist']);
+
+	if (!is_writable($whitelist_dir)) {
 		print 'ERROR: Data Input whitelist file \'' . $config['input_whitelist'] . '\' not writeable.' . PHP_EOL;
 		exit(1);
 	}
@@ -148,7 +183,7 @@ if ($audit) {
 			exit(1);
 		}
 
-		$id_hash = db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id = ?', [$id]);
+		$id_hash = db_fetch_cell_prepared('SELECT hash FROM data_input WHERE id = ?', array($id));
 
 		if (empty($id_hash)) {
 			print 'ERROR: Data Input id \'' . $id . '\' was not found or has an empty hash.' . PHP_EOL;
@@ -164,7 +199,18 @@ if ($audit) {
 		WHERE input_string != ""');
 
 	if (file_exists($config['input_whitelist'])) {
-		$input_ws = json_decode(file_get_contents($config['input_whitelist']), true);
+		if (!is_readable($config['input_whitelist'])) {
+			print 'ERROR: Existing Data Input whitelist file \'' . $config['input_whitelist'] . '\' is not readable.' . PHP_EOL;
+			exit(1);
+		}
+
+		$raw_existing = file_get_contents($config['input_whitelist']);
+		$input_ws     = ($raw_existing !== false) ? json_decode($raw_existing, true) : null;
+
+		if (!is_array($input_ws)) {
+			print 'ERROR: Existing Data Input whitelist file \'' . $config['input_whitelist'] . '\' contains invalid JSON.' . PHP_EOL;
+			exit(1);
+		}
 	} else {
 		$input_ws = array();
 	}
@@ -175,28 +221,54 @@ if ($audit) {
 		// format data for easier consumption
 		$input = array();
 		foreach ($input_db as $value) {
-			if ($id_hash === false || $id_hash == $value['hash']) {
+			if ($id_hash === false || $id_hash === $value['hash']) {
 				if ($push && isset($input_ws[$value['hash']])) {
-					if ($value['input_string'] != $input_ws[$value['hash']]) {
+					if ($value['input_string'] !== $input_ws[$value['hash']]) {
 						$pushes[$value['id']] = $value['name'];
 					}
 				}
 
 				$input[$value['hash']] = $value['input_string'];
-			} else {
-				if (isset($input_ws[$value['hash']])) {
-					$input[$value['hash']] = $input_ws[$value['hash']];
-				} else {
-					$input[$value['hash']] = $value['input_string'];
-				}
+			} elseif (array_key_exists($value['hash'], $input_ws)) {
+				/* Preserve previously approved entries without auto-approving unrelated DB rows */
+				$input[$value['hash']] = $input_ws[$value['hash']];
 			}
 		}
 
-		file_put_contents($config['input_whitelist'], json_encode($input));
+		$encoded = json_encode($input);
+		if ($encoded === false) {
+			print 'ERROR: Failed to encode Data Input Whitelist JSON.' . PHP_EOL;
+			exit(1);
+		}
+
+		$tmp_whitelist = tempnam($whitelist_dir, 'iwl_');
+		if ($tmp_whitelist === false || file_put_contents($tmp_whitelist, $encoded) === false) {
+			if ($tmp_whitelist !== false && file_exists($tmp_whitelist)) {
+				@unlink($tmp_whitelist);
+			}
+			print 'ERROR: Failed to write temporary Data Input Whitelist file.' . PHP_EOL;
+			exit(1);
+		}
+
+		if (file_exists($config['input_whitelist'])) {
+			$perms = @fileperms($config['input_whitelist']);
+			if ($perms !== false) {
+				@chmod($tmp_whitelist, $perms & 0666);
+			}
+		} else {
+			@chmod($tmp_whitelist, 0644);
+		}
+
+		if (!rename($tmp_whitelist, $config['input_whitelist'])) {
+			@unlink($tmp_whitelist);
+			print 'ERROR: Failed to replace Data Input Whitelist file \'' . $config['input_whitelist'] . '\'.' . PHP_EOL;
+			exit(1);
+		}
+
 		print 'SUCCESS: Data Input Whitelist file \'' . $config['input_whitelist'] . '\' successfully updated.' . PHP_EOL;
 
 		if (cacti_sizeof($pushes)) {
-			foreach($pushes as $data_input_method => $name) {
+			foreach ($pushes as $data_input_method => $name) {
 				print 'NOTE: Pushing Out Data Input Method: ' . $name . ' (' . $data_input_method . ')' . PHP_EOL;
 				push_out_data_input_method($data_input_method);
 			}

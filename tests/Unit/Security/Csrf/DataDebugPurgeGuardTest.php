@@ -76,7 +76,7 @@ function run_guard($method, array $request, array $post = array(), array $server
 }
 
 test('the Purge button still works', function () {
-	expect(run_guard('GET', array('purge' => '1', 'debug' => '-1')))->toBe('pass');
+	expect(run_guard('GET', array('purge' => '1', 'debug' => '-1')))->toBe('405');
 	expect(run_guard('GET', array('purge' => '1'), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass');
 	expect(run_guard('POST', array('purge' => '1'), array('__csrf_magic' => 'token')))->toBe('pass');
 });

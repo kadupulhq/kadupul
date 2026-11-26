@@ -1,22 +1,34 @@
 #!/usr/bin/env perl
 
+use strict;
+use warnings;
+
 delete @ENV{qw(PATH)};
 $ENV{PATH} = '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin';
 
-if ($ARGV[0] eq "") {
-	$log_path = "/var/log/httpd/access_log";
-}else{
+my $log_path;
+if (!defined($ARGV[0]) || $ARGV[0] eq '') {
+	$log_path = '/var/log/httpd/access_log';
+} else {
 	$log_path = $ARGV[0];
 }
 
-# the path is pasted into a shell command, so refuse shell metacharacters
-if ($log_path =~ /[`\$;&|<>\r\n]/) {
+# Strip a single matching pair of outer quotes for legacy Data Source compatibility
+if ($log_path =~ /^"(.*)"\z/s || $log_path =~ /^'(.*)'\z/s) {
+	$log_path = $1;
+}
+
+# Refuse shell metacharacters, NUL bytes, leading hyphens, and path traversal
+if ($log_path =~ /[`\$;&|<>\r\n\0]/ || $log_path =~ /^-/ || $log_path =~ /(?:^|\/)\.\.(?:\/|\z)/) {
 	exit;
 }
 
-open(PROCESS,"wc -l $log_path |");
-$webhits = <PROCESS>;
-close(PROCESS);
-$webhits =~ s/[\s]*([0-9]+).*//;
+# Only read existing regular non-symlink files natively without invoking a shell
+exit if (-l $log_path || ! -f $log_path || ! -r $log_path);
 
-print $1;
+open(my $fh, '<', $log_path) or exit;
+my $count = 0;
+$count++ while (<$fh>);
+close($fh);
+
+print $count;

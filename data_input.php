@@ -72,29 +72,17 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'whitelist_update':
-		/* csrf-magic only validates the token on POST. A GET to this
-		 * action would bypass the token check and let a CSRF gadget
-		 * trigger the worker below. The UI uses loadPageUsingPost
-		 * so a POST is the only legitimate caller. */
-		if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
-			cacti_log('WARNING: Rejected non-POST request to data_input.php?action=whitelist_update', false, 'AUTH');
+		/* Whitelist updates must only be approved out-of-band via the CLI utility so
+		 * the web application cannot self-approve modified Data Input commands. */
+		csrf_require_post(true);
 
-			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('id'));
-			exit;
-		}
+		cacti_log('WARNING: Rejected web-initiated whitelist update in data_input.php; run cli/input_whitelist.php from the command line instead', false, 'AUTH');
+		raise_message('whitelist_cli_only', __('Data Input Whitelist updates cannot be performed from the web interface. Run cli/input_whitelist.php --audit and --update from the command line.'), MESSAGE_LEVEL_ERROR);
 
-		$id = get_filter_request_var('id');
+		header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('id'));
+		exit;
 
-		$output = array();
-		$status = cacti_exec(read_config_option('path_php_binary'), array(
-			'-q', $config['base_path'] . '/cli/input_whitelist.php',
-			'--update', '--push', '--id=' . (int) $id
-		), $output, null);
-
-		$level = $status === 0 ? MESSAGE_LEVEL_INFO : MESSAGE_LEVEL_ERROR;
-		raise_message('whitelist_updated', html_escape(implode("\n", $output)), $level);
-
-		/* fall through */
+		break;
 	case 'edit':
 		top_header();
 		data_edit();
@@ -121,6 +109,13 @@ function form_save() {
 		/* ==================================================== */
 
 		$save['id']           = get_nfilter_request_var('id');
+		if ((int) $save['id'] > 0 && empty(get_nonsystem_data_input($save['id']))) {
+			cacti_log('SECURITY: Rejected attempt to modify system Data Input Method ID[' . (int) $save['id'] . ']', false, 'AUTH');
+			raise_message('data_input_system', __('System Data Input Methods cannot be modified.'), MESSAGE_LEVEL_ERROR);
+			header('Location: data_input.php?header=false');
+			exit;
+		}
+
 		$save['hash']         = get_hash_data_input(get_nfilter_request_var('id'));
 		$save['name']         = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
 		$save['input_string'] = form_input_validate(get_nfilter_request_var('input_string'), 'input_string', '', true, 3);
@@ -174,6 +169,27 @@ function form_save() {
 		$save['id']            = get_request_var('id');
 		$save['hash']          = get_hash_data_input(get_nfilter_request_var('id'), 'data_input_field');
 		$save['data_input_id'] = get_request_var('data_input_id');
+
+		if (empty(get_nonsystem_data_input($save['data_input_id']))) {
+			cacti_log('SECURITY: Rejected attempt to modify fields of system Data Input Method ID[' . (int) $save['data_input_id'] . ']', false, 'AUTH');
+			raise_message('data_input_system', __('System Data Input Methods cannot be modified.'), MESSAGE_LEVEL_ERROR);
+			header('Location: data_input.php?header=false');
+			exit;
+		}
+
+		if ((int) $save['id'] > 0) {
+			$existing_field_owner = db_fetch_cell_prepared('SELECT data_input_id
+				FROM data_input_fields
+				WHERE id = ?',
+				array($save['id']));
+
+			if ($existing_field_owner === false || (int) $existing_field_owner !== (int) $save['data_input_id']) {
+				cacti_log('SECURITY: Rejected cross-object data_input_field ID[' . (int) $save['id'] . ']', false, 'AUTH');
+				raise_message(2);
+				header('Location: data_input.php?header=false&action=edit&id=' . (int) $save['data_input_id']);
+				exit;
+			}
+		}
 		$save['name']          = form_input_validate(get_nfilter_request_var('fname'), 'fname', '', false, 3);
 		$save['data_name']     = form_input_validate(get_nfilter_request_var('data_name'), 'data_name', '', false, 3);
 		$save['input_output']  = get_nfilter_request_var('input_output');
@@ -703,16 +719,8 @@ function data_edit() {
 				$fields_data_input_edit['whitelist_verification']['value'] = __('White List Verification Succeeded.');
 			} elseif ($aud == false) {
 				$fields_data_input_edit['whitelist_verification']['value'] = __('White List Verification Failed.  Run CLI script input_whitelist.php to correct.');
-
-				if (is_writable(dirname($config['input_whitelist'])) && (!file_exists($config['input_whitelist']) || is_writable($config['input_whitelist']))) {
-					$whitelist_issues = true;
-				}
 			} elseif ($aud == '-1') {
 				$fields_data_input_edit['whitelist_verification']['value'] = __('Input String does not exist in White List.  Run CLI script input_whitelist.php to correct.');
-
-				if (is_writable(dirname($config['input_whitelist'])) && (!file_exists($config['input_whitelist']) || is_writable($config['input_whitelist']))) {
-					$whitelist_issues = true;
-				}
 			}
 		}
 	}

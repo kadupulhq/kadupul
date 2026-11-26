@@ -133,6 +133,27 @@ function form_save() {
 		$save['host_id']          = get_filter_request_var('host_id');
 		$save['data_template_id'] = get_filter_request_var('data_template_id');
 
+		if ($save['host_id'] > 0 && !is_device_allowed($save['host_id'])) {
+			cacti_log('SECURITY: Rejected unauthorized host_id in data_sources.php', false, 'AUTH');
+			raise_message('permission_denied', __('You do not have permission to access this device.'), MESSAGE_LEVEL_ERROR);
+			header('Location: data_sources.php?header=false');
+			exit;
+		}
+
+		if ($save['id'] > 0) {
+			$existing_host_id = db_fetch_cell_prepared('SELECT host_id
+				FROM data_local
+				WHERE id = ?',
+				array($save['id']));
+
+			if ($existing_host_id === false || ($existing_host_id > 0 && !is_device_allowed($existing_host_id))) {
+				cacti_log('SECURITY: Rejected unauthorized local_data_id in data_sources.php', false, 'AUTH');
+				raise_message('permission_denied', __('You do not have permission to access this data source.'), MESSAGE_LEVEL_ERROR);
+				header('Location: data_sources.php?header=false');
+				exit;
+			}
+		}
+
 		$local_data_id = sql_save($save, 'data_local');
 
 		change_data_template($local_data_id, get_request_var('data_template_id'));
@@ -156,8 +177,24 @@ function form_save() {
 
 	if ((isset_request_var('save_component_data')) && (!is_error_message())) {
 		/* ================= input validation ================= */
-		get_filter_request_var('data_template_data_id');
+		$data_template_data_id = get_filter_request_var('data_template_data_id');
 		/* ==================================================== */
+
+		$dtd_owner = db_fetch_row_prepared('SELECT dtd.id, dtd.local_data_id, dtd.data_template_id,
+			dtd.local_data_template_data_id, dl.host_id
+			FROM data_template_data AS dtd
+			INNER JOIN data_local AS dl
+			ON dtd.local_data_id = dl.id
+			WHERE dtd.id = ?
+			AND dtd.local_data_id > 0',
+			array($data_template_data_id));
+
+		if (!cacti_sizeof($dtd_owner) || ($dtd_owner['host_id'] > 0 && !is_device_allowed($dtd_owner['host_id']))) {
+			cacti_log('SECURITY: Rejected cross-object or unauthorized data_template_data_id in data_sources.php', false, 'AUTH');
+			raise_message('permission_denied', __('You do not have permission to modify this data source.'), MESSAGE_LEVEL_ERROR);
+			header('Location: data_sources.php?header=false');
+			exit;
+		}
 
 		/* ok, first pull out all 'input' values so we know how much to save */
 		$input_fields = db_fetch_assoc_prepared("SELECT dtd.data_input_id, dl.host_id, dif.id, dif.input_output,
@@ -168,46 +205,58 @@ function form_save() {
 			LEFT JOIN data_local AS dl
 			ON dtd.local_data_id = dl.id
 			WHERE dtd.id = ?
+			AND dtd.local_data_id > 0
 			AND dif.input_output='in'",
-			array(get_request_var('data_template_data_id')));
+			array($data_template_data_id));
 
 		if (cacti_sizeof($input_fields)) {
 			foreach ($input_fields as $input_field) {
 				if (isset_request_var('value_' . $input_field['id'])) {
+					if (!empty($dtd_owner['host_id']) && $input_field['type_code'] != '' && preg_match('/^(?:' . VALID_HOST_FIELDS . ')$/i', $input_field['type_code'])) {
+						continue;
+					}
+
 					/* save the data into the 'data_input_data' table */
 					$form_value = get_nfilter_request_var('value_' . $input_field['id']);
 
-					/* we shouldn't enforce rules on fields the user cannot see (ie. templated ones) */
-					$data_template_id = db_fetch_cell_prepared('SELECT local_data_template_data_id
-						FROM data_template_data
-						WHERE id = ?',
-						array(get_request_var('data_template_data_id'))
-					);
+					/* enforce template lock on fields the user cannot edit */
+					$data_template_id = (int) $dtd_owner['local_data_template_data_id'];
 
-					$is_templated = db_fetch_cell_prepared('SELECT t_value
-						FROM data_input_data
-						WHERE data_input_field_id = ?
-						AND data_template_data_id = ?',
-						array($input_field['id'], $data_template_id)
-					);
+					if (!empty($dtd_owner['data_template_id']) && $data_template_id > 0) {
+						$is_templated = db_fetch_cell_prepared('SELECT t_value
+							FROM data_input_data
+							WHERE data_input_field_id = ?
+							AND data_template_data_id = ?',
+							array($input_field['id'], $data_template_id)
+						);
 
-					if ($is_templated == '') {
+						if ($is_templated != 'on') {
+							continue;
+						}
+					} else {
+						$is_templated = 'on';
+					}
+
+					if ($input_field['allow_nulls'] == 'on') {
 						$allow_nulls = true;
-					} elseif ($input_field['allow_nulls'] == 'on') {
-						$allow_nulls = true;
-					} elseif (empty($input_field['allow_nulls'])) {
+					} else {
 						$allow_nulls = false;
 					}
 
+					$regexp_match = $input_field['regexp_match'];
+					if ($input_field['type_code'] == 'output_type') {
+						$regexp_match = '^[0-9]+$';
+					}
+
 					/* run regexp match on input string */
-					$form_value = form_input_validate($form_value, 'value_' . $input_field['id'], $input_field['regexp_match'], $allow_nulls, 3);
+					$form_value = form_input_validate($form_value, 'value_' . $input_field['id'], $regexp_match, $allow_nulls, 3);
 
 					if (!is_error_message()) {
 						db_execute_prepared("REPLACE INTO data_input_data
 							(data_input_field_id, data_template_data_id, t_value, value)
 							VALUES
 							(?, ?, '', ?)",
-							array($input_field['id'], get_request_var('data_template_data_id'), $form_value)
+							array($input_field['id'], $data_template_data_id, $form_value)
 						);
 					}
 				}
@@ -230,7 +279,42 @@ function form_save() {
 		$save1['data_template_id'] = get_filter_request_var('data_template_id');
 		$save1['host_id']          = get_filter_request_var('host_id');
 
+		if ($save1['host_id'] > 0 && !is_device_allowed($save1['host_id'])) {
+			cacti_log('SECURITY: Rejected unauthorized host_id in data_sources.php', false, 'AUTH');
+			raise_message('permission_denied', __('You do not have permission to access this device.'), MESSAGE_LEVEL_ERROR);
+			header('Location: data_sources.php?header=false');
+			exit;
+		}
+
+		if ($save1['id'] > 0) {
+			$existing_host_id = db_fetch_cell_prepared('SELECT host_id
+				FROM data_local
+				WHERE id = ?',
+				array($save1['id']));
+
+			if ($existing_host_id === false || ($existing_host_id > 0 && !is_device_allowed($existing_host_id))) {
+				cacti_log('SECURITY: Rejected unauthorized local_data_id in data_sources.php', false, 'AUTH');
+				raise_message('permission_denied', __('You do not have permission to modify this data source.'), MESSAGE_LEVEL_ERROR);
+				header('Location: data_sources.php?header=false');
+				exit;
+			}
+		}
+
 		$save2['id']                          = get_filter_request_var('data_template_data_id');
+
+		if ($save2['id'] > 0) {
+			$existing_dtd_local = db_fetch_cell_prepared('SELECT local_data_id
+				FROM data_template_data
+				WHERE id = ?',
+				array($save2['id']));
+
+			if ($existing_dtd_local === false || (int) $existing_dtd_local <= 0 || (int) $existing_dtd_local !== (int) $save1['id']) {
+				cacti_log('SECURITY: Rejected cross-object data_template_data_id in data_sources.php', false, 'AUTH');
+				raise_message(2);
+				header('Location: data_sources.php?header=false');
+				exit;
+			}
+		}
 		$save2['local_data_template_data_id'] = get_filter_request_var('local_data_template_data_id');
 		$save2['data_template_id']            = get_filter_request_var('data_template_id');
 		$save2['data_input_id']               = form_input_validate(get_request_var('data_input_id'), 'data_input_id', '^[0-9]+$', true, 3);
@@ -274,7 +358,21 @@ function form_save() {
 				/* if no template was set before the save, there will be only one data source item to save;
 				otherwise there might be >1 */
 				if (isempty_request_var('_data_template_id')) {
-					$rrds[0]['id'] = get_nfilter_request_var('current_rrd');
+					$current_rrd = get_filter_request_var('current_rrd');
+					if ($current_rrd > 0) {
+						$rrd_owner = db_fetch_cell_prepared('SELECT local_data_id
+							FROM data_template_rrd
+							WHERE id = ?',
+							array($current_rrd));
+
+						if ($rrd_owner === false || (int) $rrd_owner <= 0 || (int) $rrd_owner !== (int) $local_data_id) {
+							cacti_log('SECURITY: Rejected cross-object current_rrd in data_sources.php', false, 'AUTH');
+							raise_message(2);
+							header('Location: data_sources.php?header=false');
+							exit;
+						}
+					}
+					$rrds[0]['id'] = $current_rrd;
 				} else {
 					$rrds = db_fetch_assoc_prepared('SELECT id
 						FROM data_template_rrd

@@ -1661,6 +1661,11 @@ function xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_as_new, 
 
 				$save['value'] = xml_character_decode($item_array['value']);
 
+				if ($type_code == 'output_type' && $save['value'] !== '' && !ctype_digit((string) $save['value'])) {
+					cacti_log('Import Warning: Invalid non-numeric output_type value ignored during import', false, 'IMPORT');
+					$save['value'] = '';
+				}
+
 				if (!empty($save['data_input_field_id'])) {
 					sql_save($save, 'data_input_data', array('data_template_data_id', 'data_input_field_id'), false);
 				} else {

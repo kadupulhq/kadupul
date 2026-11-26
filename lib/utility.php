@@ -241,15 +241,22 @@ function update_poller_cache($data_source, $commit = false) {
 			($data_input['type_id'] == DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER)){
 			$field = data_query_field_list($data_input['data_template_data_id']);
 
-			$params = array();
-			if (cacti_sizeof($field) && $field['output_type'] != '') {
-				$output_type_sql = ' AND sqgr.snmp_query_graph_id = ' . $field['output_type'];
+			$params = array(
+				$data_input['data_template_id'],
+				$data_source['id']
+			);
+
+			if (cacti_sizeof($field) && isset($field['output_type']) && $field['output_type'] !== '') {
+				if (ctype_digit((string) $field['output_type'])) {
+					$output_type_sql = ' AND sqgr.snmp_query_graph_id = ?';
+					$params[] = (int) $field['output_type'];
+				} else {
+					cacti_log('WARNING: Invalid non-numeric output_type ignored for Data Source[' . $data_source['id'] . ']', false, 'POLLER');
+					$output_type_sql = ' AND 1 = 0';
+				}
 			} else {
 				$output_type_sql = '';
 			}
-
-			$params[] = $data_input['data_template_id'];
-			$params[] = $data_source['id'];
 
 			$outputs = db_fetch_assoc_prepared('SELECT DISTINCT ' . SQL_NO_CACHE . "
 				sqgr.snmp_field_name, dtr.id AS data_template_rrd_id
@@ -555,10 +562,10 @@ function update_poller_cache($data_source, $commit = false) {
 									$prepend = $script_queries['arg_prepend'];
 								}
 
-								$script_path = get_script_query_path(trim($prepend . ' ' . $script_queries['arg_get'] . ' ' . $identifier . ' "' . $data_source['snmp_index'] . '"'), $script_queries['script_path'] . ' ' . $script_queries['script_function'], $data_source['host_id']);
+								$script_path = get_script_query_path(trim($prepend . ' ' . $script_queries['arg_get'] . ' ' . $identifier), $script_queries['script_path'] . ' ' . $script_queries['script_function'], $data_source['host_id'], array($data_source['snmp_index']));
 							} else {
 								$action = POLLER_ACTION_SCRIPT;
-								$script_path = get_script_query_path(trim((isset($script_queries['arg_prepend']) ? $script_queries['arg_prepend'] : '') . ' ' . $script_queries['arg_get'] . ' ' . $identifier . ' "' . $data_source['snmp_index'] . '"'), $script_queries['script_path'], $data_source['host_id']);
+								$script_path = get_script_query_path(trim((isset($script_queries['arg_prepend']) ? $script_queries['arg_prepend'] : '') . ' ' . $script_queries['arg_get'] . ' ' . $identifier), $script_queries['script_path'], $data_source['host_id'], array($data_source['snmp_index']));
 							}
 						}
 

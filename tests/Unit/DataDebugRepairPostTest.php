@@ -42,6 +42,7 @@ const MESSAGE_LEVEL_ERROR = 3;
 function get_request_var($name) { return $GLOBALS['argv'][1]; }
 function get_filter_request_var($name) { return 7; }
 function csrf_require_post($strict = false) { echo 'method-check:'; if ($GLOBALS['argv'][2] === 'refuse') { exit(0); } }
+function debug_data_source_allowed($id) { return $GLOBALS['argv'][2] !== 'deny'; }
 function __($text) { return $text; }
 function dsdebug_run_repair($id) { echo 'repair:'; return true; }
 function debug_delete($items) { echo 'reset:'; }
@@ -49,7 +50,7 @@ function debug_rerun($items) { echo 'rerun:'; }
 function raise_message($id, $text, $level) { echo 'message:'; }
 function header($value) { echo 'redirect'; }
 PHP;
-	$process = proc_open(array(PHP_BINARY, '-r', $program . substr($source, 0, $end), $action, $refuse ? 'refuse' : 'allow'),
+	$process = proc_open(array(PHP_BINARY, '-r', $program . substr($source, 0, $end), $action, $refuse === 'deny' ? 'deny' : ($refuse ? 'refuse' : 'allow')),
 		array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
 	expect(is_resource($process))->toBeTrue();
 	$output = stream_get_contents($pipes[1]);

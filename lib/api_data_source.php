@@ -579,10 +579,18 @@ function api_reapply_suggested_data_source_data($local_data_id) {
 		array($snmp_query_graph_id, $data_local['data_template_id']));
 
 	$matches = array();
+	$allowed_dtd_columns = array('name', 'rrd_step', 'active');
+	$allowed_dtr_columns = array('rrd_maximum', 'rrd_minimum', 'rrd_heartbeat', 'data_source_name', 'data_source_type_id');
 
 	if (cacti_sizeof($svs)) {
 		foreach ($svs as $sv) {
-			$sv['text'] = trim($sv['text']);
+			$sv['text']       = trim((string) $sv['text']);
+			$sv['field_name'] = trim((string) $sv['field_name']);
+
+			if (preg_match('/[\r\n\0]/', $sv['text']) === 1) {
+				cacti_log('WARNING: Rejected suggested value containing control characters for Data Template ID ' . $data_local['data_template_id'], false, 'POLLER');
+				continue;
+			}
 
 			if (($sv['text'] == '|query_ifSpeed|' || $sv['text'] == '|query_ifHighSpeed|') && $sv['field_name'] == 'rrd_maximum') {
 				$subs_string = api_data_source_get_interface_speed($data_local);
@@ -595,20 +603,46 @@ function api_reapply_suggested_data_source_data($local_data_id) {
 
 			/* if there are no '|query' characters, all of the substitutions were successful */
 			if (strpos($subs_string, '|query') === false) {
-				if (in_array($sv['field_name'], $matches)) {
+				if (in_array($sv['field_name'], $matches, true)) {
 					continue;
 				}
 
-				if (db_column_exists('data_template_data', $sv['field_name'])) {
+				if (in_array($sv['field_name'], $allowed_dtd_columns, true)) {
+					$valid = true;
+					if ($sv['field_name'] === 'rrd_step' && !ctype_digit((string) $sv['text'])) {
+						$valid = false;
+					} elseif ($sv['field_name'] === 'active' && !in_array($sv['text'], array('', 'on'), true)) {
+						$valid = false;
+					}
+
+					if (!$valid) {
+						cacti_log('WARNING: Rejected invalid suggested value for column ' . $sv['field_name'] . ' on Data Template ID ' . $data_local['data_template_id'], false, 'POLLER');
+						continue;
+					}
+
 					$matches[] = $sv['field_name'];
 					db_execute_prepared('UPDATE data_template_data
-						SET ' . $sv['field_name'] . ' = ?
+						SET `' . $sv['field_name'] . '` = ?
 						WHERE local_data_id = ?',
 						array($sv['text'], $local_data_id));
-				} elseif (db_column_exists('data_template_rrd', $sv['field_name'])) {
+				} elseif (in_array($sv['field_name'], $allowed_dtr_columns, true)) {
+					$valid = true;
+					if (($sv['field_name'] === 'rrd_heartbeat' || $sv['field_name'] === 'data_source_type_id') && !ctype_digit((string) $sv['text'])) {
+						$valid = false;
+					} elseif (($sv['field_name'] === 'rrd_maximum' || $sv['field_name'] === 'rrd_minimum') && preg_match('/^(?:(?:-?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+)(?:[eE][+\-]?[0-9]+)?)|U|\|query_ifSpeed\||\|query_ifHighSpeed\|)\z/', (string) $sv['text']) !== 1) {
+						$valid = false;
+					} elseif ($sv['field_name'] === 'data_source_name' && preg_match('/^[a-zA-Z0-9_-]{1,19}\z/', (string) $sv['text']) !== 1) {
+						$valid = false;
+					}
+
+					if (!$valid) {
+						cacti_log('WARNING: Rejected invalid suggested value for column ' . $sv['field_name'] . ' on Data Template ID ' . $data_local['data_template_id'], false, 'POLLER');
+						continue;
+					}
+
 					$matches[] = $sv['field_name'];
 					db_execute_prepared('UPDATE data_template_rrd
-						SET ' . $sv['field_name'] . ' = ?
+						SET `' . $sv['field_name'] . '` = ?
 						WHERE local_data_id = ?',
 						array($sv['text'], $local_data_id));
 				} else {

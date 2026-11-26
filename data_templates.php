@@ -115,6 +115,20 @@ function form_save() {
 		$save2['local_data_template_data_id'] = 0;
 		$save2['local_data_id'] = 0;
 
+		if ($save2['id'] > 0) {
+			$existing_dtd = db_fetch_row_prepared('SELECT id, data_template_id, local_data_id
+				FROM data_template_data
+				WHERE id = ?',
+				array($save2['id']));
+
+			if (!cacti_sizeof($existing_dtd) || (int) $existing_dtd['local_data_id'] !== 0 || (int) $existing_dtd['data_template_id'] !== (int) $save1['id']) {
+				cacti_log('SECURITY: Rejected cross-object data_template_data_id in data_templates.php', false, 'AUTH');
+				raise_message(2);
+				header('Location: data_templates.php?header=false&action=template_edit&id=' . (int) $save1['id']);
+				exit;
+			}
+		}
+
 		$save2['data_input_id'] = form_input_validate(get_request_var('data_input_id'), 'data_input_id', '^[0-9]+$', true, 3);
 		$save2['t_name']        = form_input_validate((isset_request_var('t_name') ? get_nfilter_request_var('t_name') : ''), 't_name', '', true, 3);
 		$save2['name']          = form_input_validate(get_nfilter_request_var('name'), 'name', '', (isset_request_var('t_name') ? true : false), 3);
@@ -141,6 +155,20 @@ function form_save() {
 		$save3['hash']                  = get_hash_data_template(get_request_var('data_template_rrd_id'), 'data_template_item');
 		$save3['local_data_template_rrd_id'] = 0;
 		$save3['local_data_id']         = 0;
+
+		if ($save3['id'] > 0) {
+			$existing_dtr = db_fetch_row_prepared('SELECT id, data_template_id, local_data_id
+				FROM data_template_rrd
+				WHERE id = ?',
+				array($save3['id']));
+
+			if (!cacti_sizeof($existing_dtr) || (int) $existing_dtr['local_data_id'] !== 0 || (int) $existing_dtr['data_template_id'] !== (int) $save1['id']) {
+				cacti_log('SECURITY: Rejected cross-object data_template_rrd_id in data_templates.php', false, 'AUTH');
+				raise_message(2);
+				header('Location: data_templates.php?header=false&action=template_edit&id=' . (int) $save1['id']);
+				exit;
+			}
+		}
 
 		$save3['t_rrd_maximum']         = form_input_validate((isset_request_var('t_rrd_maximum') ? get_nfilter_request_var('t_rrd_maximum') : ''), 't_rrd_maximum', '', true, 3);
 

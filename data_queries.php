@@ -331,7 +331,27 @@ function form_save() {
 				return;
 			}
 
-			$sequence = get_sequence(0, 'sequence', 'snmp_query_graph_rrd_sv', 'snmp_query_graph_id = ' . get_request_var('id')  . ' AND data_template_id = ' . $svds_id . " AND field_name = " . db_qstr(get_nfilter_request_var('svds_field')));
+			$svds_field = trim(get_nfilter_request_var('svds_field'));
+			$svds_text  = trim(get_nfilter_request_var('svds_text'));
+
+			$allowed_svds_fields = array(
+				'name',
+				'rrd_step',
+				'active',
+				'rrd_maximum',
+				'rrd_minimum',
+				'rrd_heartbeat',
+				'data_source_name',
+				'data_source_type_id'
+			);
+
+			if (!in_array($svds_field, $allowed_svds_fields, true) || preg_match('/[\r\n\0]/', $svds_text) === 1) {
+				raise_message('svds_invalid', __('Invalid Data Source Suggested Value field name or value.'), MESSAGE_LEVEL_ERROR);
+				header('Location: data_queries.php?header=false&action=item_edit' . $header . '&id=' . get_request_var('id') . '&snmp_query_id=' . get_request_var('snmp_query_id'));
+				return;
+			}
+
+			$sequence = get_sequence(0, 'sequence', 'snmp_query_graph_rrd_sv', 'snmp_query_graph_id = ' . get_request_var('id')  . ' AND data_template_id = ' . $svds_id . ' AND field_name = ' . db_qstr($svds_field));
 
 			$hash = get_hash_data_query(0, 'data_query_sv_data_source');
 
@@ -343,8 +363,8 @@ function form_save() {
 					get_request_var('id'),
 					$svds_id,
 					$sequence,
-					get_nfilter_request_var('svds_field'),
-					get_nfilter_request_var('svds_text')
+					$svds_field,
+					$svds_text
 				)
 			);
 

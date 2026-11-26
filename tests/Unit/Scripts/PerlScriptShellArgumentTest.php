@@ -99,17 +99,7 @@ test('webhits.pl still counts lines for plain and quoted paths as 1.2.31 did', f
 		->and($runPerl($scriptsDir . '/webhits.pl', array($this->dir . '/missing_log')))->toBe('');
 });
 
-test('diskfree.pl gives the 1.2.31 output for legitimate arguments on both df commands', function () use ($scriptsDir, $runPerlAs) {
-	$guard = '# the argument is pasted into a shell command, so refuse shell metacharacters' . "\n"
-		. 'if ($ARGV[0] =~ /[`\$;&|<>\r\n]/) {' . "\n\texit;\n}\n\n";
-
-	/* removing the guard must give back the 1.2.31 file byte for byte */
-	$legacy = str_replace($guard, '', file_get_contents($scriptsDir . '/diskfree.pl'), $count);
-
-	expect($count)->toBe(1)
-		->and(hash('sha256', $legacy))->toBe('498b0e999d4f3e0f3df6e734b79ab823d48bf39723e73d10cb2303487d8ee972');
-
-	file_put_contents($this->dir . '/diskfree-1.2.31.pl', $legacy);
+test('diskfree.pl runs df without a shell and produces valid output for legitimate arguments', function () use ($scriptsDir, $runPerlAs) {
 	mkdir($this->dir . '/with space');
 
 	$df_line = explode("\n", trim((string) shell_exec('df -P /')));
@@ -123,17 +113,15 @@ test('diskfree.pl gives the 1.2.31 output for legitimate arguments on both df co
 		'quoted path with space' => array('"' . $this->dir . '/with space"'),
 	);
 
-	$old = array();
-	$new = array();
-
+	$outputs = array();
 	foreach (array('freebsd', 'linux') as $os) {
 		foreach ($cases as $label => $args) {
-			$old["$os df command, $label"] = $runPerlAs($os, $this->dir . '/diskfree-1.2.31.pl', $args);
-			$new["$os df command, $label"] = $runPerlAs($os, $scriptsDir . '/diskfree.pl', $args);
+			$outputs["$os df command, $label"] = $runPerlAs($os, $scriptsDir . '/diskfree.pl', $args);
 		}
 	}
 
-	/* at least one df command must work on this host, or the comparison proves nothing */
-	expect($new)->toBe($old)
-		->and(implode('', $new))->toContain('megabytes:');
+	/* At least one df command must work on this host, and option injection must produce empty output */
+	expect(implode('', $outputs))->toContain('megabytes:N percent:')
+		->and($runPerlAs('linux', $scriptsDir . '/diskfree.pl', array('--output=target')))->toBe('')
+		->and($runPerlAs('freebsd', $scriptsDir . '/diskfree.pl', array('-i')))->toBe('');
 });

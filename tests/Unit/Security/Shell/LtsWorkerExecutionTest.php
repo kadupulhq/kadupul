@@ -47,9 +47,9 @@ function db_execute_prepared($sql, $params) {
     if ($sql !== 'DO RELEASE_LOCK(?)' || $params !== array('host.reindex.7')) throw new RuntimeException('Wrong release');
     echo '|released';
 }
+function cacti_log($message, ...$args) {}
 function raise_message($id, $message, $level) {
     if (strpos($message, '<script>') !== false) throw new RuntimeException('Unescaped worker output');
-    if ($GLOBALS['controller'] === 'data_input.php' && strpos($message, '&lt;script&gt;') === false) throw new RuntimeException('Lost output');
     $GLOBALS['events'][] = $level === MESSAGE_LEVEL_ERROR ? 'error' : ($level === MESSAGE_LEVEL_WARN ? 'busy' : 'success');
 }
 function top_header() { exit; }
@@ -85,6 +85,5 @@ PHP;
 	'host success' => array('host.php', 0, false, array('lock', 'exec', 'count', 'success')),
 	'host failure' => array('host.php', 7, false, array('lock', 'exec', 'error')),
 	'host busy' => array('host.php', 0, true, array('lock', 'busy')),
-	'whitelist success' => array('data_input.php', 0, false, array('exec', 'success')),
-	'whitelist failure' => array('data_input.php', 7, false, array('exec', 'error')),
+	'whitelist web refused' => array('data_input.php', 0, false, array('error')),
 ));

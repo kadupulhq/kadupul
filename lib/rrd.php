@@ -4545,16 +4545,23 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 					$info['ds'][$data_source_name]['seen'] = true;
 				}
 
+				$safe_ds_name = (preg_match('/^[a-zA-Z0-9_-]{1,19}\z/', (string) $data_source_name) === 1);
+				$quoted_file  = cacti_escapeshellarg($info['filename']);
+
 				/* check the data source type */
 				if ($data_source['type'] != $info['ds'][$data_source_name]['type']) {
 					$diff['ds'][$data_source_name]['type'] = __("Type for Data Source '%s' should be '%s'", $data_source_name, $data_source['type']);
-					$diff['tune'][] = $info['filename'] . ' ' . '--data-source-type ' . $data_source_name . ':' . $data_source['type'];
+					if ($safe_ds_name && in_array($data_source['type'], array('GAUGE', 'COUNTER', 'DERIVE', 'ABSOLUTE', 'DCOUNTER', 'DDERIVE'), true)) {
+						$diff['tune'][] = $quoted_file . ' --data-source-type ' . $data_source_name . ':' . $data_source['type'];
+					}
 				}
 
 				/* check the minimal heartbeat */
 				if ($data_source['minimal_heartbeat'] != $info['ds'][$data_source_name]['minimal_heartbeat']) {
 					$diff['ds'][$data_source_name]['minimal_heartbeat'] = __("Heartbeat for Data Source '%s' should be '%s'", $data_source_name, $data_source['minimal_heartbeat']);
-					$diff['tune'][] = $info['filename'] . ' ' . '--heartbeat ' . $data_source_name . ':' . $data_source['minimal_heartbeat'];
+					if ($safe_ds_name && ctype_digit((string) $data_source['minimal_heartbeat'])) {
+						$diff['tune'][] = $quoted_file . ' --heartbeat ' . $data_source_name . ':' . $data_source['minimal_heartbeat'];
+					}
 				}
 
 				/* check the minimums and maximums and correct for legacy behavior */
@@ -4566,7 +4573,9 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 
 				if ($data_source['min'] != $info['ds'][$data_source_name]['min']) {
 					$diff['ds'][$data_source_name]['min'] = __("RRD minimum for Data Source '%s' should be '%s'", $data_source_name, $data_source['min']);
-					$diff['tune'][] = $info['filename'] . ' ' . '--minimum ' . $data_source_name . ':' . $data_source['min'];
+					if ($safe_ds_name && preg_match('/^(?:(?:-?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+)(?:[eE][+\-]?[0-9]+)?)|U)\z/', (string) $data_source['min']) === 1) {
+						$diff['tune'][] = $quoted_file . ' --minimum ' . $data_source_name . ':' . $data_source['min'];
+					}
 				}
 			}
 		}

@@ -180,33 +180,44 @@ function dsdebug_poller_bottom() {
 
 				$real_path = str_replace('<path_rra>', $config['rra_path'], $dtd['data_source_path']);
 
-				// rrd_folder_writable
-				$info['rrd_folder_writable'] = (is_resource_writable(dirname($real_path) . '/') ? 1 : 0);
-
-				// rrd_exists
-				$info['rrd_exists'] = (file_exists($real_path) ? 1 : 0);
-
-				// rrd_writable
-				$info['rrd_writable'] = (is_resource_writable($real_path) ? 1 : 0);
-
-				// active
-				$info['active'] = $dtd['active'];
-				// owner
-				if ($config['cacti_server_os'] == 'win32') {
-					$info['owner'] = '<unable to determine on windows>';
+				if (function_exists('rrd_check_containment') && !rrd_check_containment($real_path)) {
+					$c['issue'][] = __('RRDfile path is outside the allowed RRA directory');
+					$info['rrd_folder_writable'] = 0;
+					$info['rrd_exists']          = 0;
+					$info['rrd_writable']        = 0;
+					$info['active']              = $dtd['active'];
+					$info['owner']               = '';
+					$info['runas_poller']        = get_running_user();
+					$info['convert_name']        = (strpos('|', get_data_source_title($c['datasource'])) === false ? 1 : 0);
 				} else {
-					$o = posix_getpwuid(fileowner($real_path));
-					$o = $o['name'];
-					$g = posix_getgrgid(filegroup($real_path));
-					$g = $g['name'];
-					$info['owner'] =  $o . ':' . $g;
+					// rrd_folder_writable
+					$info['rrd_folder_writable'] = (is_resource_writable(dirname($real_path) . '/') ? 1 : 0);
+
+					// rrd_exists
+					$info['rrd_exists'] = (file_exists($real_path) ? 1 : 0);
+
+					// rrd_writable
+					$info['rrd_writable'] = (is_resource_writable($real_path) ? 1 : 0);
+
+					// active
+					$info['active'] = $dtd['active'];
+					// owner
+					if ($config['cacti_server_os'] == 'win32') {
+						$info['owner'] = '<unable to determine on windows>';
+					} else {
+						$o = posix_getpwuid(fileowner($real_path));
+						$o = is_array($o) && isset($o['name']) ? $o['name'] : '';
+						$g = posix_getgrgid(filegroup($real_path));
+						$g = is_array($g) && isset($g['name']) ? $g['name'] : '';
+						$info['owner'] =  $o . ':' . $g;
+					}
+
+					// poller_runas
+					$info['runas_poller'] = get_running_user();
+
+					// convert_name
+					$info['convert_name'] = (strpos('|', get_data_source_title($c['datasource'])) === false ? 1 : 0);
 				}
-
-				// poller_runas
-				$info['runas_poller'] = get_running_user();
-
-				// convert_name
-				$info['convert_name'] = (strpos('|', get_data_source_title($c['datasource'])) === false ? 1 : 0);
 
 				// last_result  (processed by hook)
 				if (is_array($info['last_result']) && !empty($info['last_result']) && $info['valid_data'] == '') {
@@ -343,15 +354,53 @@ function dsdebug_run_repair($id) {
 		if (isset($check['info']['rrd_match_array']['tune'])) {
 			$path = get_data_source_path($id, true);
 
+			if (function_exists('rrd_check_containment') && !rrd_check_containment($path)) {
+				cacti_log("SECURITY: RRDfile Repair Command Refused for DS[$id] because path is outside the allowed RRA directory", false, 'DSDEBUG');
+				return false;
+			}
+
 			if (is_writeable($path)) {
 				$rrdtool_path = read_config_option('path_rrdtool');
 				$failures = 0;
 				$failure_data = '';
+				$quoted_path = function_exists('cacti_escapeshellarg') ? cacti_escapeshellarg($path) : escapeshellarg($path);
 
-				foreach($check['info']['rrd_match_array']['tune'] AS $options) {
-					$command    = $rrdtool_path . ' tune ' . $options;
+				foreach ($check['info']['rrd_match_array']['tune'] as $options) {
+					if (!is_string($options) || preg_match('/[\r\n\0]/', $options) === 1) {
+						cacti_log("SECURITY: Rejected malformed RRDfile repair option for DS[$id]", false, 'DSDEBUG');
+						$failures++;
+						continue;
+					}
 
-					$output = rrdtool_execute('tune ' . $options, false, RRDTOOL_OUTPUT_RETURN_STDERR);
+					if (!preg_match('/\s(--data-source-type|--heartbeat|--minimum|--maximum)\s+([a-zA-Z0-9_-]{1,19}):([A-Za-z0-9._+-]+)\z/', trim($options), $m)) {
+						cacti_log("SECURITY: Rejected disallowed RRDfile repair option for DS[$id]", false, 'DSDEBUG');
+						$failures++;
+						continue;
+					}
+
+					$flag    = $m[1];
+					$ds_name = $m[2];
+					$ds_val  = $m[3];
+					$valid   = false;
+
+					if ($flag === '--data-source-type') {
+						$valid = in_array($ds_val, array('GAUGE', 'COUNTER', 'DERIVE', 'ABSOLUTE', 'DCOUNTER', 'DDERIVE'), true);
+					} elseif ($flag === '--heartbeat') {
+						$valid = ctype_digit($ds_val);
+					} else {
+						$valid = preg_match('/^(?:(?:-?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+)(?:[eE][+\-]?[0-9]+)?)|U)\z/', $ds_val) === 1;
+					}
+
+					if (!$valid) {
+						cacti_log("SECURITY: Rejected invalid RRDfile repair value for DS[$id]", false, 'DSDEBUG');
+						$failures++;
+						continue;
+					}
+
+					$safe_options = $quoted_path . ' ' . $flag . ' ' . $ds_name . ':' . $ds_val;
+					$command      = $rrdtool_path . ' tune ' . $safe_options;
+
+					$output = rrdtool_execute('tune ' . $safe_options, false, RRDTOOL_OUTPUT_RETURN_STDERR);
 
 					if ($output === '') {
 						cacti_log("RRDfile repair command succeeded for DS[$id] Command[$command]", false, 'DSDEBUG');

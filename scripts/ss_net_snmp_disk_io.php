@@ -94,26 +94,38 @@ function ss_net_snmp_disk_io($host_id_or_hostname = '') {
 		$host_id = $host_id_or_hostname;
 	}
 
-	$tmpdir = sys_get_temp_dir();
+	$host_id = (int) $host_id;
+	$uid     = function_exists('posix_geteuid') ? posix_geteuid() : getmyuid();
+
+	if (isset($config['base_path']) && is_dir($config['base_path'] . '/cache') && is_writable($config['base_path'] . '/cache')) {
+		$state_root = $config['base_path'] . '/cache/net-snmp-devio';
+	} else {
+		$state_root = sys_get_temp_dir() . '/cacti-net-snmp-devio-' . $uid;
+	}
 
 	if ($environ != 'realtime') {
-		$tmpdir = $tmpdir . '/cacti/net-snmp-devio';
+		$tmpdir  = $state_root . '/poller';
 		$tmpfile = $host_id . '_io';
 	} else {
-		$tmpdir = $tmpdir . '/cacti-rt/net-snmp-devio';
-		$tmpfile = $host_id . '_' . $poller_id . '_io_rt';
+		$tmpdir  = $state_root . '/realtime';
+		$tmpfile = $host_id . '_' . (int) $poller_id . '_io_rt';
 	}
 
 	if (!is_dir($tmpdir)) {
-		mkdir($tmpdir, 0777, true);
+		@mkdir($tmpdir, 0700, true);
 	}
 
-	$previous = array();
-	$found    = false;
+	$state_dir_ok = is_dir($tmpdir) && !is_link($tmpdir) && (!function_exists('posix_geteuid') || @fileowner($tmpdir) === $uid);
+	$state_path   = $tmpdir . '/' . $tmpfile;
+	$previous     = array();
+	$found        = false;
 
-	if (file_exists("$tmpdir/$tmpfile")) {
-		$previous = json_decode(file_get_contents("$tmpdir/$tmpfile"), true);
-		$found = true;
+	if ($state_dir_ok && is_file($state_path) && !is_link($state_path)) {
+		$decoded = json_decode(file_get_contents($state_path), true);
+		if (is_array($decoded)) {
+			$previous = $decoded;
+			$found    = true;
+		}
 	}
 
 	$indexes = array();
@@ -247,7 +259,9 @@ function ss_net_snmp_disk_io($host_id_or_hostname = '') {
 		}
 
 		$data = json_encode($current);
-		file_put_contents("$tmpdir/$tmpfile", $data);
+		if ($state_dir_ok && !is_link($state_path)) {
+			file_put_contents($state_path, $data);
+		}
 	}
 
 	if ($found) {
