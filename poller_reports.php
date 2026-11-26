@@ -156,9 +156,14 @@ if (cacti_sizeof($reports)) {
 	foreach ($reports as $report) {
 		reports_log('Reports processing report: ' . $report['name'], true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
 		$current_user = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = ?', array($report['user_id']));
+		if (!cacti_sizeof($current_user) || (isset($current_user['enabled']) && $current_user['enabled'] !== 'on') || (isset($current_user['locked']) && $current_user['locked'] === 'on')) {
+			reports_log('Reports skipping report for missing, disabled, or locked account: ' . $report['name'], true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
+			continue;
+		}
 		if (isset($report['email'])) {
-			generate_report($report, false);
-			$number_sent++;
+			if (generate_report($report, false) !== false) {
+				$number_sent++;
+			}
 		}
 	}
 

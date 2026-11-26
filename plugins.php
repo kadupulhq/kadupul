@@ -48,8 +48,6 @@ $pluginslist = retrieve_plugin_list();
 
 /* Check to see if we are installing, etc... */
 $modes = array(
-	'installold',
-	'uninstallold',
 	'install',
 	'uninstall',
 	'disable',
@@ -61,13 +59,13 @@ $modes = array(
 	'movedown'
 );
 
-if (isset_request_var('mode') && in_array(get_nfilter_request_var('mode'), $modes) && isset_request_var('id')) {
+if (isset_request_var('mode') && in_array(get_nfilter_request_var('mode'), $modes, true) && isset_request_var('id')) {
 	get_filter_request_var('id', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9 _]+)$/')));
 
 	$mode = get_nfilter_request_var('mode');
 	$id   = sanitize_search_string(get_request_var('id'));
 	if ($mode !== 'check') {
-		csrf_require_post();
+		csrf_require_post(true);
 	}
 
 	if (isset_request_var('header')) {
@@ -438,9 +436,9 @@ function update_show_current () {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	function applyFilter() {
 		strURL  = 'plugins.php?header=false';
-		strURL += '&filter='+$('#filter').val();
-		strURL += '&rows='+$('#rows').val();
-		strURL += '&state='+$('#state').val();
+		strURL += '&filter='+encodeURIComponent($('#filter').val());
+		strURL += '&rows='+encodeURIComponent($('#rows').val());
+		strURL += '&state='+encodeURIComponent($('#state').val());
 		loadPageNoHeader(strURL);
 	}
 
@@ -569,8 +567,11 @@ function update_show_current () {
 		FROM $table
 		$sql_where");
 
+	$rows = max(1, (int) $rows);
+	$page = max(1, (int) get_request_var('page'));
+
 	$sql_order = get_order_string(array('directory', 'name', 'status', 'author', 'requires', 'version', 'id'));
-	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+	$sql_limit = ' LIMIT ' . ($rows * ($page - 1)) . ',' . $rows;
 
 	$sql_order = str_replace('`version` ', 'INET_ATON(`version`) ', $sql_order);
 	$sql_order = str_replace('version ', 'version+0 ', $sql_order);
@@ -584,7 +585,7 @@ function update_show_current () {
 
 	$plugins = db_fetch_assoc($sql);
 
-	$nav = html_nav_bar('plugins.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 8, __('Plugins'), 'page', 'main');
+	$nav = html_nav_bar('plugins.php?filter=' . rawurlencode(get_request_var('filter')), MAX_DISPLAY_PAGES, $page, $rows, $total_rows, 8, __('Plugins'), 'page', 'main');
 
 	form_start('plugins.php', 'chk');
 
@@ -742,7 +743,12 @@ function format_plugin_row($plugin, $last_plugin, $include_ordering, $table) {
 
 	$row = plugin_actions($plugin, $table);
 
-	$row .= "<td><a href='" . html_escape($plugin['webpage']) . "' target='_blank' rel='noopener'>" . filter_value($plugin['infoname'], get_request_var('filter')) . '</a></td>';
+	$webpage = isset($plugin['webpage']) ? trim((string) $plugin['webpage']) : '';
+	if ($webpage !== '' && preg_match('/^https?:\/\//i', $webpage)) {
+		$row .= "<td><a href='" . html_escape($webpage) . "' target='_blank' rel='noopener noreferrer'>" . filter_value($plugin['infoname'], get_request_var('filter')) . '</a></td>';
+	} else {
+		$row .= '<td>' . filter_value($plugin['infoname'], get_request_var('filter')) . '</td>';
+	}
 
 	$row .= "<td class='nowrap'>" . filter_value($plugin['name'], get_request_var('filter')) . "</td>\n";
 
@@ -783,9 +789,9 @@ function format_plugin_row($plugin, $last_plugin, $include_ordering, $table) {
 		$requires = $plugin['requires'];
 	}
 
-	$row .= "<td class='nowrap'>" . $plugin['author'] . "</td>\n";
-	$row .= "<td class='nowrap'>" . $requires . "</td>\n";
-	$row .= "<td class='right'>"  . $plugin['version'] . "</td>\n";
+	$row .= "<td class='nowrap'>" . html_escape($plugin['author']) . "</td>\n";
+	$row .= "<td class='nowrap'>" . html_escape($requires) . "</td>\n";
+	$row .= "<td class='right'>"  . html_escape($plugin['version']) . "</td>\n";
 
 	if ($include_ordering) {
 		$row .= "<td class='nowrap right'>";
@@ -814,10 +820,15 @@ function format_plugin_row($plugin, $last_plugin, $include_ordering, $table) {
 }
 
 function plugin_required_for_others($plugin, $table) {
-	$required_for_others = db_fetch_cell("SELECT GROUP_CONCAT(directory)
-		FROM $table
-		WHERE requires LIKE '%" . $plugin['directory'] . "%'
-		AND status IN (1,4)");
+	if (!preg_match('/^[a-zA-Z0-9_]+\z/', (string) $table)) {
+		return false;
+	}
+
+	$required_for_others = db_fetch_cell_prepared("SELECT GROUP_CONCAT(directory)
+		FROM `$table`
+		WHERE requires LIKE ?
+		AND status IN (1,4)",
+		array('%' . addcslashes((string) $plugin['directory'], '%_\\') . '%'));
 
 	if ($required_for_others) {
 		$parts = explode(',', $required_for_others);
@@ -886,12 +897,12 @@ function plugin_actions($plugin, $table) {
 
 			break;
 		default: // Old PIA
-			$path = $config['base_path'] . '/plugins/' . $plugin['directory'];
+			$path = cacti_plugin_path($plugin['directory']);
 			$directory  = $plugin['name'];
 
-			if (!file_exists("$path/setup.php")) {
+			if ($path === false || !file_exists($path . '/setup.php')) {
 				$link .= "<a class='pierror' href='#' title='" . __esc('Plugin directory \'%s\' is missing setup.php', $plugin['directory']) . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
-			} elseif (!file_exists("$path/INFO")) {
+			} elseif (!file_exists($path . '/INFO')) {
 				$link .= "<a class='pierror' href='#' title='" . __esc('Plugin is lacking an INFO file') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
 			} elseif (in_array($directory, $plugins_integrated)) {
 				$link .= "<a class='pierror' href='#' title='" . __esc('Plugin is integrated into Cacti core') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";

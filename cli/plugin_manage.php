@@ -132,7 +132,9 @@ if (cacti_sizeof($plugins)) {
 		if ($install) {
 			$installed = false;
 
-			if (is_dir($config['base_path'] . '/plugins/' . $plugin)) {
+			$plugin_dir = cacti_plugin_path($plugin);
+
+			if ($plugin_dir !== false && is_dir($plugin_dir)) {
 				print "NOTE: Plugin directory for Plugin $plugin exists" . PHP_EOL;
 
 				if (!api_plugin_installed($plugin)) {

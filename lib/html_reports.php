@@ -2319,6 +2319,10 @@ function reports_html_account_exists($user_id) {
 	return db_fetch_cell_prepared('SELECT id FROM user_auth WHERE id = ?', array($user_id));
 }
 
+function reports_html_account_active($user_id) {
+	return (bool) db_fetch_cell_prepared('SELECT id FROM user_auth WHERE id = ? AND enabled = "on" AND (locked IS NULL OR locked != "on")', array($user_id));
+}
+
 function reports_html_report_disable($report_id) {
 	db_execute_prepared('UPDATE reports SET enabled="" WHERE id = ?', array($report_id));
 }

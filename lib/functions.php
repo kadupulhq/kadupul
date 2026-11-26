@@ -9744,9 +9744,10 @@ function cacti_plugin_path($plugin, $relative = '') {
 		return false;
 	}
 
-	$plugin_base = realpath($config['base_path'] . '/plugins/' . $plugin);
+	$plugins_root = realpath($config['base_path'] . '/plugins');
+	$plugin_base  = realpath($config['base_path'] . '/plugins/' . $plugin);
 
-	if ($plugin_base === false) {
+	if ($plugins_root === false || $plugin_base === false || !cacti_path_is_within($plugin_base, $plugins_root)) {
 		return false;
 	}
 

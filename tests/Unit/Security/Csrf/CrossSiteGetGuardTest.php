@@ -275,7 +275,7 @@ test('the fallback compares the server name, not the Host header the client sent
 test('plugins.php sends every mode except check through csrf_require_post', function () {
 	$plugins = file_get_contents(dirname(__DIR__, 4) . '/plugins.php');
 
-	expect($plugins)->toMatch("/if \\(\\\$mode !== 'check'\\) \\{\\s+csrf_require_post\\(\\);/");
+	expect($plugins)->toMatch("/if \\(\\\$mode !== 'check'\\) \\{\\s+csrf_require_post\\((?:true)?\\);/");
 });
 
 /**

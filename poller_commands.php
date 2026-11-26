@@ -95,7 +95,12 @@ if (cacti_sizeof($parms)) {
 				break;
 			case '--child':
 			case '-c':
-				$host_id = $value;
+				if (!ctype_digit((string) $value) || (int) $value <= 0) {
+					print "ERROR: Invalid child host_id: ($value)" . PHP_EOL . PHP_EOL;
+					display_help();
+					exit(1);
+				}
+				$host_id = (int) $value;
 				$type    = 'child';
 				break;
 			case '-t':
@@ -287,6 +292,13 @@ function commands_master_handler($forcerun, &$hosts, $threads) {
 	commands_debug("There are " . cacti_sizeof($hosts) . " to reindex");
 
 	foreach($hosts as $id) {
+		if (!ctype_digit((string) $id) || (int) $id <= 0) {
+			cacti_log('ERROR: Ignoring invalid poller_command host_id: ' . cacti_log_safe_value($id), true, 'SECURITY');
+			continue;
+		}
+
+		$id = (int) $id;
+
 		/* run the daily stats */
 		commands_debug("Launching Host ID $id");
 		commands_launch_child($id);
@@ -334,15 +346,30 @@ function commands_master_handler($forcerun, &$hosts, $threads) {
  * @return (void)
  */
 function commands_launch_child($host_id) {
-	global $config, $seebug;
+	global $config, $debug;
 
+	if (!ctype_digit((string) $host_id) || (int) $host_id <= 0) {
+		cacti_log('ERROR: Refusing to launch poller_commands child for invalid host_id: ' . cacti_log_safe_value($host_id), false, 'SECURITY');
+		return;
+	}
+
+	$host_id    = (int) $host_id;
 	$php_binary = read_config_option('path_php_binary');
 
-	commands_debug(sprintf('Launching Commands Process Number %s for Type %s', $host_id, 'child'));
+	commands_debug(sprintf('Launching Commands Process Number %d for Type %s', $host_id, 'child'));
 
-	cacti_log(sprintf('NOTE: Launching Commands Process Number %s for Type %s', $host_id, 'child'), false, 'CLEANUP', POLLER_VERBOSITY_MEDIUM);
+	cacti_log(sprintf('NOTE: Launching Commands Process Number %d for Type %s', $host_id, 'child'), false, 'CLEANUP', POLLER_VERBOSITY_MEDIUM);
 
-	exec_background($php_binary, $config['base_path'] . "/poller_commands.php --child=$host_id" . ($seebug ? ' --debug':''));
+	$args = array(
+		$config['base_path'] . '/poller_commands.php',
+		'--child=' . $host_id,
+	);
+
+	if ($debug) {
+		$args[] = '--debug';
+	}
+
+	exec_background_process($php_binary, $args);
 }
 
 /**

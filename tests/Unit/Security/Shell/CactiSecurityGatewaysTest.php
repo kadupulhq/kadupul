@@ -23,8 +23,8 @@ test('cacti_exec is defined and rejects empty binary', function () use ($functio
 test('cacti_exec uses proc_open with argv array to bypass the shell', function () use ($functionsSource) {
 	$body = test_php_function_source($functionsSource, 'cacti_exec');
 
-	/* argv array passed directly — no shell, no escaping needed */
-	expect($body)->toContain('proc_open($argv, $descriptors, $pipes)');
+	/* argv array passed directly with bypass_shell - no shell, no escaping needed */
+	expect($body)->toContain("proc_open(\$argv, \$descriptors, \$pipes, null, null, array('bypass_shell' => true))");
 	expect($body)->toContain('array_merge(array($binary), array_values($args))');
 });
 

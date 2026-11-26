@@ -212,6 +212,7 @@ if ($create) {
 	}
 
 	$all_keys = array_unique(array_merge(array_keys($file_array),array_keys($verify_array)));
+	$failed   = false;
 
 	foreach ($all_keys as $filename) {
 		$hash_read = sprintf("%32s","Missing");
@@ -224,7 +225,8 @@ if ($create) {
 			$hash_file = $verify_array[$filename];
 		}
 
-		if ($hash_read != $hash_file) {
+		if (!hash_equals((string) $hash_file, (string) $hash_read)) {
+			$failed = true;
 			if ($quiet) {
 				fail(EXIT_MD5ERR);
 			}
@@ -236,6 +238,10 @@ if ($create) {
 			}
 		}
 	}
+
+	if ($failed) {
+		exit(EXIT_MD5ERR);
+	}
 }
 
 function dirToArray($dir,$base,$ignore) {
@@ -243,12 +249,17 @@ function dirToArray($dir,$base,$ignore) {
 
 	$result = array();
 
-	$fulldir = $base;
+	$base_real = realpath($base);
+	if ($base_real === false) {
+		return $result;
+	}
+
+	$fulldir = $base_real;
 	if (isset($dir) && strlen($dir)) {
 		$fulldir .= DIRECTORY_SEPARATOR.$dir;
 	}
 	$fulldir = realpath($fulldir);
-	if (strpos($fulldir,$base) !== false) {
+	if ($fulldir !== false && cacti_path_is_within($fulldir, $base_real)) {
 		if (is_dir($fulldir)) {
 			$cdir = scandir($fulldir);
 		} else {
@@ -262,13 +273,17 @@ function dirToArray($dir,$base,$ignore) {
 		$dir_list = array();
 		foreach ($cdir as $key => $value) {
 			$fullpath = $fulldir.DIRECTORY_SEPARATOR.$value;
-			$partpath = substr($fullpath,strlen($base));
+			$partpath = substr($fullpath,strlen($base_real));
 
 			if (preg_match($ignore,$partpath)==0) {
 				if (is_dir($fullpath)) {
 					$dir_list[] = $partpath;
 				} else {
-					$md5_sum = @md5_file($fullpath);
+					$real_item = realpath($fullpath);
+					if ($real_item === false || !cacti_path_is_within($real_item, $base_real)) {
+						continue;
+					}
+					$md5_sum = @md5_file($real_item);
 					if (!$quiet && $debug) {
 						print "[$md5_sum] $value\n";
 					}

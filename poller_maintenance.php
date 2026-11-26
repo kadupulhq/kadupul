@@ -362,17 +362,34 @@ function realtime_purge_cache() {
 	/* remove all Realtime files over than 2 hours */
 	if (read_config_option('realtime_cache_path') != '') {
 		$cache_path = read_config_option('realtime_cache_path');
+		$cache_real = realpath($cache_path);
 
-		if (is_dir($cache_path) && is_writeable($cache_path)) {
-			foreach (new DirectoryIterator($cache_path) as $fileInfo) {
-				if ($fileInfo->isDot()) {
+		if ($cache_real !== false && is_dir($cache_real) && !is_link($cache_path) && is_writeable($cache_real)) {
+			foreach (new DirectoryIterator($cache_real) as $fileInfo) {
+				if ($fileInfo->isDot() || $fileInfo->isLink() || !$fileInfo->isFile()) {
 					continue;
 				}
 
-				// only remove .png and .rrd files
-				if ((substr($fileInfo->getFilename(), -4, 4) == '.png') || (substr($fileInfo->getFilename(), -4, 4) == '.rrd')) {
-					if ((time() - $fileInfo->getMTime()) >= 7200) {
-						unlink($fileInfo->getRealPath());
+				$filename = $fileInfo->getFilename();
+				$ext      = strtolower(substr($filename, -4));
+
+				// only remove regular .png and .rrd files inside the canonical cache directory
+				if ($ext === '.png' || $ext === '.rrd') {
+					$pathname = $fileInfo->getPathname();
+
+					if (function_exists('cacti_path_is_within') && !cacti_path_is_within($pathname, $cache_real)) {
+						cacti_log('WARNING: Realtime cache purge refused path outside cache directory: ' . cacti_log_safe_value($pathname), true, 'SECURITY');
+						continue;
+					}
+
+					$stat = @lstat($pathname);
+
+					if ($stat === false || ($stat['mode'] & 0170000) !== 0100000) {
+						continue;
+					}
+
+					if ((time() - $stat['mtime']) >= 7200) {
+						@unlink($pathname);
 					}
 				}
 			}
@@ -438,32 +455,57 @@ function logrotate_file_rotate($name, $log, $date) {
 	}
 
 	clearstatcache();
-	if (!file_exists($log)) {
+	$stat = @lstat($log);
+	if ($stat === false) {
 		cacti_log('Cacti Log Rotation - Skipped missing ' . $name . ' Log : ' . $log, true, 'MAINT');
 		return 0;
 	}
 
+	if (is_link($log) || ($stat['mode'] & 0170000) !== 0100000) {
+		cacti_log('Cacti Log Rotation - SECURITY: Refusing to rotate non-regular or symlinked ' . $name . ' Log : ' . $log, true, 'SECURITY');
+		return 0;
+	}
+
 	if (is_writable(dirname($log) . '/') && is_writable($log)) {
-		$perms = octdec(substr(decoct( fileperms($log) ), 2));
-		$owner = fileowner($log);
-		$group = filegroup($log);
+		$perms = $stat['mode'] & 0777;
+		$owner = $stat['uid'];
+		$group = $stat['gid'];
 
 		if ($owner !== false) {
 			$ext = $date->format('Ymd');
 
-			if (file_exists($log . '-' . $ext)) {
+			if (file_exists($log . '-' . $ext) || is_link($log . '-' . $ext)) {
 				$ext_inc = 1;
-				while (file_exists($log . '-' . $ext . '-' . $ext_inc) && $ext_inc < 99) {
+				while ((file_exists($log . '-' . $ext . '-' . $ext_inc) || is_link($log . '-' . $ext . '-' . $ext_inc)) && $ext_inc < 99) {
 					$ext_inc++;
 				}
 				$ext = $ext . '-' . $ext_inc;
 			}
 
-			if (rename($log, $log . '-' . $ext)) {
-				touch($log);
-				chown($log, $owner);
-				chgrp($log, $group);
-				chmod($log, $perms);
+			$rotated_log = $log . '-' . $ext;
+			if (is_link($rotated_log)) {
+				cacti_log('Cacti Log Rotation - SECURITY: Refusing to overwrite symlinked target ' . $rotated_log, true, 'SECURITY');
+				return 0;
+			}
+
+			if (rename($log, $rotated_log)) {
+				$fh = @fopen($log, 'xb');
+				if ($fh !== false) {
+					$fstat = @fstat($fh);
+					$lstat = @lstat($log);
+
+					if ($fstat !== false && $lstat !== false && $fstat['dev'] === $lstat['dev'] && $fstat['ino'] === $lstat['ino'] && ($lstat['mode'] & 0170000) === 0100000) {
+						@chown($log, $owner);
+						@chgrp($log, $group);
+						@chmod($log, $perms);
+					} else {
+						cacti_log('Cacti Log Rotation - SECURITY: Newly created ' . $name . ' Log identity changed during rotation: ' . basename($log), true, 'SECURITY');
+					}
+
+					fclose($fh);
+				} else {
+					cacti_log('Cacti Log Rotation - WARNING: Could not exclusively create new ' . $name . ' Log : ' . basename($log), true, 'MAINT');
+				}
 				cacti_log('Cacti Log Rotation - Created ' . $name . ' Log : ' . basename($log) . '-' . $ext, true, 'MAINT');
 				return 1;
 			} else {
@@ -675,7 +717,11 @@ function remove_files($file_array, &$skipped = null) {
 					/* files outside the RRA path are still removed as in 1.2.31, but not through a .. segment */
 					if (!rrd_check_path($real_file)) {
 						cacti_log('WARNING: RRDfile Maintenance will not remove ' . cacti_log_safe_value($real_file) . ' as the path has a .. segment!', true, 'MAINT');
-					} elseif (file_exists($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
+					} elseif (function_exists('rrd_check_containment') && !rrd_check_containment($real_file)) {
+						cacti_log('WARNING: RRDfile Maintenance will not remove ' . cacti_log_safe_value($real_file) . ' outside the RRA directory!', true, 'SECURITY');
+					} elseif (is_link($real_file)) {
+						cacti_log('WARNING: RRDfile Maintenance will not remove symlinked file ' . cacti_log_safe_value($real_file) . '!', true, 'SECURITY');
+					} elseif (is_file($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
 						if (unlink($real_file)) {
 							maint_debug('Deleted: ' . $real_file);
 							$purged++;
@@ -698,11 +744,29 @@ function remove_files($file_array, &$skipped = null) {
 						break;
 					}
 
-					if (!is_dir($target_dir)) {
-						rrdclean_create_path($target_dir);
+					if (function_exists('rrd_check_containment') && !rrd_check_containment($real_file)) {
+						cacti_log('WARNING: RRDfile Maintenance will not move ' . cacti_log_safe_value($real_file) . ' outside the RRA directory!', true, 'SECURITY');
+
+						break;
 					}
 
-					if (file_exists($real_file)) {
+					if (is_link($real_file) || is_link($rrd_archive) || is_link($target_dir) || is_link($target_file)) {
+						cacti_log('WARNING: RRDfile Maintenance will not archive symlinked path ' . cacti_log_safe_value($real_file) . '!', true, 'SECURITY');
+
+						break;
+					}
+
+					if (strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) !== 'rrd') {
+						cacti_log('WARNING: RRDfile Maintenance will not archive non-RRD file ' . cacti_log_safe_value($real_file) . '!', true, 'SECURITY');
+
+						break;
+					}
+
+					if (is_file($real_file)) {
+						if (!is_dir($target_dir)) {
+							rrdclean_create_path($target_dir);
+						}
+
 						if (rename($real_file, $target_file)) {
 							maint_debug("Moved: $real_file to: $target_file");
 							$archived++;

@@ -421,6 +421,11 @@ function generate_report($report, $force = false) {
 		return false;
 	}
 
+	if (!reports_html_account_active($report['user_id'])) {
+		reports_log('Reports skipping report for disabled or locked account, report_id: ' . (int) $report['id'], false, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
+		return false;
+	}
+
 	$theme = 'classic';
 
 	$body = reports_generate_html($report['id'], REPORTS_OUTPUT_EMAIL, $theme);

@@ -23,7 +23,7 @@ test('state-mutating routes explicitly require POST', function () {
 	}
 
 	$plugins = file_get_contents($base . '/plugins.php');
-	expect($plugins)->toMatch("/if \\(\\\$mode !== 'check'\\) \\{\\s+csrf_require_post\\(\\);/");
+	expect($plugins)->toMatch("/if \\(\\\$mode !== 'check'\\) \\{\\s+csrf_require_post\\((?:true)?\\);/");
 });
 
 test('csrf-magic fallback cookie sets httponly flag', function () use ($csrfPath) {
