@@ -15,7 +15,9 @@ final class RrdWindowsCoverageRegistration
         'tests/Unit/Core/Rrd/RrdWindowsOneShotTest.php',
         'lib/rrd.php', 'lib/graph_fonts.php', 'include/global_constants.php',
         'src/Graphing/Infrastructure/Rrd/WindowsOneShotRrdtool.php',
+        'src/Graphing/Infrastructure/Rrd/RrdLocaleEnvironment.php',
         'src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php',
+        'src/Platform/Application/Locale/KnownLocales.php',
         'composer.lock', 'tests/composer.lock',
     ];
     public const HITS = [

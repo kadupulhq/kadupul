@@ -1,0 +1,1 @@
+- Wire the active validated user locale into `LC_TIME` for RRDtool and Rondi child processes while unsetting `LC_ALL` and pinning `LC_NUMERIC=C` so localized graph time axes work without breaking numeric parsing (#1499).

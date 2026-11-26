@@ -40,9 +40,10 @@ final class RrdtoolProcess
 
     /**
      * @param list<string> $arguments
+     * @param list<string>|null $allowedTimeLocales
      * @throws StorageRejected when rrdtool cannot be started or overruns its deadline
      */
-    public function run(array $arguments): RrdtoolResult
+    public function run(array $arguments, ?string $timeLocale = null, ?array $allowedTimeLocales = null): RrdtoolResult
     {
         foreach ($arguments as $argument) {
             if (str_contains($argument, "\0")) {
@@ -60,10 +61,13 @@ final class RrdtoolProcess
         // Keys set to false are removed, so rrdtool's output format and time
         // zone do not depend on the caller's environment.
         $environment = array_map(static fn(): bool => false, getenv() + $_ENV);
+        $localeEnvironment = $timeLocale === null
+            ? ['LC_ALL' => 'C']
+            : RrdLocaleEnvironment::processOverrides($timeLocale, $allowedTimeLocales);
         $process = new Process(
             [$this->binary, ...$arguments],
             null,
-            ['PATH' => '/usr/bin:/bin', 'LC_ALL' => 'C', 'TZ' => 'UTC'] + $environment,
+            ['PATH' => '/usr/bin:/bin', 'TZ' => 'UTC'] + $localeEnvironment + $environment,
             null,
             $this->timeoutSeconds,
         );

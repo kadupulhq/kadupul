@@ -14,7 +14,9 @@ final class RrdOneShotCoverageRegistration
         'tests/Fixtures/rrd-process-coverage.php', 'tests/Fixtures/rrd-oneshot-close-delay.php',
         'tests/Unit/Core/Rrd/RrdOneShotIoTest.php', 'lib/rrd.php', 'lib/rrd_maintenance.php',
         'src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php',
+        'src/Graphing/Infrastructure/Rrd/RrdLocaleEnvironment.php',
         'src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php',
+        'src/Platform/Application/Locale/KnownLocales.php',
         'include/global_constants.php', 'composer.lock', 'tests/composer.lock',
     ];
     public const HITS = ['lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php', 'src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php'];

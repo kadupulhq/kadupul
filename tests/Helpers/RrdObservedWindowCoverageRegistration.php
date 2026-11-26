@@ -21,7 +21,9 @@ final class RrdObservedWindowCoverageRegistration
         'src/Graphing/Infrastructure/Rrd/PipeEncoder.php',
         'src/Graphing/Infrastructure/Rrd/UnrepresentableArgument.php',
         'src/Graphing/Infrastructure/Rrd/GraphItemConsolidationResolver.php',
+        'src/Graphing/Infrastructure/Rrd/RrdLocaleEnvironment.php',
         'src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php',
+        'src/Platform/Application/Locale/KnownLocales.php',
         'src/Platform/Application/Port/Clock.php',
         'composer.lock', 'tests/composer.lock',
     ];
