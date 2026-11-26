@@ -5647,10 +5647,9 @@ function cacti_escapeshellarg($string, $quote = true) {
 		 * on windows, command injection requires to close any open quotation first
 		 * so we have to escape any quotation here
 		 */
-		/* Double backslashes that precede a double quote or the closing quote so
-		 * trailing backslashes cannot escape the closing quote on Windows. */
+		/* Escape backslashes preceding a double quote so embedded quotes
+		 * cannot close the argument early on Windows. */
 		$string = preg_replace('/(\\\\*)"/', '$1$1\\"', $string);
-		$string = preg_replace('/(\\\\+)\z/', '$1$1', $string);
 
 		/* ... before we add our own quotation */
 		if ($quote) {
@@ -7552,8 +7551,9 @@ function is_ipaddress($ip_address = '') {
 
 	/* Allow RFC 4007 IPv6 Scope ID (Zone Index) strictly on IPv6 addresses
 	   with a bounded, safe zone identifier (e.g. fe80::1%eth0). */
-	if (str_contains($ip_address, '%')) {
-		$parts = explode('%', $ip_address, 2);
+	$clean_ip = $ip_address;
+	if (str_contains($clean_ip, '%')) {
+		$parts = explode('%', $clean_ip, 2);
 		if ($parts[0] === '' || !isset($parts[1]) || preg_match('/^[A-Za-z0-9_.-]{1,64}\z/', $parts[1]) !== 1) {
 			return false;
 		}

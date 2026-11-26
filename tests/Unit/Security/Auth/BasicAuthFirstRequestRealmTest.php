@@ -81,12 +81,19 @@ test('the first Web Basic request is denied where the second request is denied',
 	expect($first)->toBe($second);
 });
 
-test('a guest page stays open to a Web Basic user without its realm on every request', function () {
+test('a Web Basic user without the realm is denied a guest-enabled page on every request', function () {
 	list($first, $second) = web_basic_first_and_second('alice', 'graph_view.php');
 
 	expect($first)->toBe($second)
-		->and($first['continued'])->toBeTrue()
+		->and($first['denied'])->toBeTrue()
+		->and($first['continued'])->toBeFalse()
 		->and($first['user'])->toBe('42');
+
+	list($allowed_first, $allowed_second) = web_basic_first_and_second('alice', 'graph_view.php', array(array(42, 7)));
+
+	expect($allowed_first)->toBe($allowed_second)
+		->and($allowed_first['continued'])->toBeTrue()
+		->and($allowed_first['user'])->toBe('42');
 });
 
 test('a Web Basic sign-in as the guest account ends as its second request does', function () {

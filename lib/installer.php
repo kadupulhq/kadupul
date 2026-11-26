@@ -841,7 +841,7 @@ class Installer implements JsonSerializable {
 					if ($blank && empty($path)) {
 						// allow this
 					} else {
-						if (!is_string($path) || !is_valid_pathname($path)) {
+						if (!is_string($path) || preg_match('/[\x00-\x1f\x7f]/', $path) === 1 || preg_match('#(?:^|[\\\\/])\.\.(?:[\\\\/]|\z)#', $path) === 1 || str_starts_with(ltrim($path), '-')) {
 							$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Invalid path specified'));
 							$should_set = false;
 						} elseif ($check == 'writable') {
@@ -869,7 +869,7 @@ class Installer implements JsonSerializable {
 								$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Invalid executable name'));
 								$should_set = false;
 							} else {
-								$should_set = (!empty($path) && is_file($path)) || $optional;
+								$should_set = (!empty($path) && file_exists($path)) || $optional;
 								if (!$should_set) {
 									$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('File not found'));
 								}

@@ -414,12 +414,10 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	return $info_array;
 }
 
-if (!function_exists('import_escape_markup')) {
-	function import_escape_markup($text) {
-		return preg_replace_callback('/<span style="background-color:#([0-9A-Fa-f]{6})">\1<\/span>|</', function ($match) {
-			return $match[0] === '<' ? '&lt;' : $match[0];
-		}, (string) $text);
-	}
+function import_package_escape_markup($text) {
+	return preg_replace_callback('/<span style="background-color:#([0-9A-Fa-f]{0,8})">\1<\/span>|</', function ($match) {
+		return $match[0] === '<' ? '&lt;' : $match[0];
+	}, (string) $text);
 }
 
 function is_cacti_public_key($public_key) {
@@ -3330,7 +3328,7 @@ function import_display_results($import_debug_info, $filestatus, $web = false, $
 				if (isset($vals['differences'])) {
 					print '<ul class="monoSpace">' . PHP_EOL;
 					foreach($vals['differences'] as $diff) {
-						print '<li>' . import_escape_markup($diff) . '</li>' . PHP_EOL;
+						print '<li>' . import_package_escape_markup($diff) . '</li>' . PHP_EOL;
 					}
 					print '</ul>' . PHP_EOL;
 				}

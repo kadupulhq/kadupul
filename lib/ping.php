@@ -780,8 +780,9 @@ class Net_Ping
 
 		/* Allow RFC 4007 IPv6 Scope ID (Zone Index) strictly on IPv6 addresses
 		   with a bounded, safe zone identifier (e.g. fe80::1%eth0). */
-		if (strpos($ip_address, '%') !== false) {
-			$parts = explode('%', $ip_address, 2);
+		$clean_ip = $ip_address;
+		if (strpos($clean_ip, '%') !== false) {
+			$parts = explode('%', $clean_ip, 2);
 			if ($parts[0] === '' || !isset($parts[1]) || preg_match('/^[A-Za-z0-9_.-]{1,64}\z/', $parts[1]) !== 1) {
 				return false;
 			}

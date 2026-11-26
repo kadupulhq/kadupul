@@ -113,7 +113,7 @@ test('GHSA-g9c7: cacti_exec spawns the binary with a discrete argv array, not a 
 	$body  = substr($functionsSource, $start, $end - $start);
 
 	expect($body)->toContain('$argv = array_merge(array($binary), array_values($args));');
-	expect($body)->toContain('$process = proc_open($argv, $descriptors, $pipes);');
+	expect($body)->toContain("\$process = proc_open(\$argv, \$descriptors, \$pipes, null, null, array('bypass_shell' => true));");
 	expect(substr_count($body, 'proc_open('))->toBe(1);
 	expect($body)->not->toMatch('/\b(shell_exec|exec|system|passthru|popen)\s*\(/');
 });

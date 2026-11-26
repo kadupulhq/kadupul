@@ -118,6 +118,13 @@ function get_request_var($name, $default = '') {
 function set_default_action($default = '') {
 }
 
+function read_config_option($name, $force = false) {
+	return $name === 'auth_method' ? '1' : '';
+}
+
+function check_reset_no_authentication($auth_method) {
+}
+
 function validate_redirect_url($url = '', $default = 'index.php') {
 	return $default;
 }

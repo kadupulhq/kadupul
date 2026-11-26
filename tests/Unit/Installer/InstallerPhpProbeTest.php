@@ -39,7 +39,7 @@ test('installer PHP probe preserves argv and rejects failed probes', function ($
 	global $config;
 	$previous = $config ?? null;
 	$config = array('base_path' => '/installation path;literal');
-	$binary = '/operator selected/php;literal';
+	$binary = '/operator selected;literal/php';
 	$GLOBALS['probe'] = array(
 		'status' => $status, 'correct' => $correct, 'exists' => $exists,
 		'calls' => array(), 'saved' => array()

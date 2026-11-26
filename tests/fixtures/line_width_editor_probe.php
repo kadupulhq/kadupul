@@ -13,7 +13,7 @@ require $root . '/include/global_constants.php';
 $request = ['save_component_item' => 1, 'sequence' => 1, 'graph_type_id' => $argv[2],
     'graph_template_item_id' => $argv[4] === 'existing' ? 7 : 0, 'graph_template_id' => 1,
     'local_graph_id' => 2, 'local_graph_template_item_id' => 0, 'task_item_id' => 0,
-    '_task_item_id' => 0, 'line_width' => $argv[3], 'alpha' => 255,
+    '_task_item_id' => 0, 'line_width' => $argv[3], 'alpha' => 'FF',
     'color_id' => 0, 'cdef_id' => 0, 'vdef_id' => 0, 'consolidation_function_id' => 1,
     'gprint_id' => 0, 'textalign' => '', 'text_format' => '', 'value' => '', 'hard_return' => ''];
 $graph_item_types = [4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 20 => 'LINE:STACK'];
@@ -30,10 +30,17 @@ function get_request_var($name) { return get_nfilter_request_var($name); }
 function isset_request_var($name) { global $request; return isset($request[$name]); }
 function set_request_var($name, $value) { global $request; $request[$name] = $value; }
 function read_config_option($name) { return ''; }
+function cacti_log(...$arguments) {}
 function raise_message($message) { global $messages; $messages[] = $message; }
 function is_error_message() { return !empty($_SESSION['sess_error_fields']); }
 function get_hash_graph_template(...$arguments) { return 'existing-template-hash'; }
-function db_fetch_cell_prepared(...$arguments) { return 0; }
+function db_fetch_cell_prepared(...$arguments) {
+    $sql = $arguments[0] ?? '';
+    if (strpos($sql, 'FROM graph_templates') !== false || strpos($sql, 'FROM graph_local') !== false) {
+        return 1;
+    }
+    return 0;
+}
 function db_fetch_assoc_prepared(...$arguments) { return []; }
 function array_rekey(...$arguments) { return []; }
 function push_out_graph_item(...$arguments) {}

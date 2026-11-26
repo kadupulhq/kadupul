@@ -116,6 +116,11 @@ function exec_background($filename, $args = '', $redirect_args = '', $log_args =
     $GLOBALS['snmpagent_disabled_traps'][] = $args;
 }
 
+function exec_background_process($filename, array $args = array(), $log_args = null)
+{
+    $GLOBALS['snmpagent_disabled_traps'][] = implode(' ', $args);
+}
+
 /**
  * Returns the source of one top-level function, found by brace matching.
  */
@@ -143,6 +148,10 @@ function snmpagent_function_source(string $source, string $name): string
     }
 
     return substr($source, $start, $i - $start);
+}
+
+if (!defined(__NAMESPACE__ . '\\POLLER_VERBOSITY_DEBUG')) {
+    define(__NAMESPACE__ . '\\POLLER_VERBOSITY_DEBUG', 5);
 }
 
 if (!function_exists(__NAMESPACE__ . '\\snmpagent_notification')) {

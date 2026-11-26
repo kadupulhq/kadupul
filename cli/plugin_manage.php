@@ -132,7 +132,13 @@ if (cacti_sizeof($plugins)) {
 		if ($install) {
 			$installed = false;
 
-			$plugin_dir = cacti_plugin_path($plugin);
+			if (function_exists('cacti_plugin_path')) {
+				$plugin_dir = cacti_plugin_path($plugin);
+			} elseif (function_exists('api_plugin_resolve_path')) {
+				$plugin_dir = api_plugin_resolve_path($plugin);
+			} else {
+				$plugin_dir = (preg_match('/^[A-Za-z0-9_-]+\z/', (string) $plugin) === 1) ? realpath($config['base_path'] . '/plugins/' . $plugin) : false;
+			}
 
 			if ($plugin_dir !== false && is_dir($plugin_dir)) {
 				print "NOTE: Plugin directory for Plugin $plugin exists" . PHP_EOL;

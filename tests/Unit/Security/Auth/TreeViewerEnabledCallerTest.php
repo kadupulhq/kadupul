@@ -74,11 +74,16 @@ function tree_viewer_caller_arguments() : array {
 
 test('viewer paths ask for an enabled tree and editor paths keep the permission check alone', function () {
 	expect(tree_viewer_caller_arguments())->toBe(array(
-		'auth_profile.php' => array('$value'),
-		'graph_view.php'   => array('$tree_id, 0, true'),
-		'graphs.php'       => array('$tree_id'),
-		'lib/api_tree.php' => array('$tree_id', '$tree_id', '$tree_id', '$tree_id', '$tree_id'),
-		'lib/auth.php'     => array('$h[\'tree_id\'], 0, true'),
-		'lib/reports.php'  => array('$item[\'tree_id\'], $report[\'user_id\'], true'),
+		'aggregate_graphs.php' => array('(int)$tree_id'),
+		'auth_profile.php'     => array('$value'),
+		'graph_view.php'       => array('$tree_id, 0, true', '$tree_id, 0, true'),
+		'graphs.php'           => array('$tree_id'),
+		'host.php'             => array('(int)$tree_id'),
+		'lib/api_tree.php'     => array('$tree_id', '$tree_id', '$tree_id', '$tree_id', '$tree_id', '$tree_id, 0, true', '$tree_id, 0, true', '$tree_id, 0, true', '(int)$tree_id'),
+		'lib/auth.php'         => array('$tree_id, $user_id, true', '$h[\'tree_id\'], $user_id, true'),
+		'lib/functions.php'    => array('$tree_id, 0, true', '(int)$leaf[\'graph_tree_id\'], 0, true', '$tree_id, 0, true'),
+		'lib/html_reports.php' => array('(int)$save[\'tree_id\']', '$item[\'tree_id\']'),
+		'lib/html_tree.php'    => array('$tree_id, 0, true'),
+		'lib/reports.php'      => array('$item[\'tree_id\'], $report[\'user_id\'], true'),
 	));
 });

@@ -330,10 +330,48 @@ function api_plugin_hook_is_remote_collect($hook, $plugin, $required_capabilitie
 	return false;
 }
 
+function api_plugin_resolve_path($plugin, $relative = '') {
+	global $config;
+
+	if (function_exists('cacti_plugin_path')) {
+		return cacti_plugin_path($plugin, $relative);
+	}
+
+	$plugin = (string) $plugin;
+	if ($plugin === '' || !preg_match('/^[A-Za-z0-9_-]+$/', $plugin)) {
+		return false;
+	}
+
+	$plugins_root = realpath($config['base_path'] . '/plugins');
+	$plugin_base  = realpath($config['base_path'] . '/plugins/' . $plugin);
+
+	if ($plugins_root === false || $plugin_base === false) {
+		return false;
+	}
+
+	$root_prefix = rtrim($plugins_root, '/\\') . DIRECTORY_SEPARATOR;
+	if ($plugin_base !== $plugins_root && strpos($plugin_base, $root_prefix) !== 0) {
+		return false;
+	}
+
+	if ($relative === '') {
+		return $plugin_base;
+	}
+
+	$target = realpath($plugin_base . DIRECTORY_SEPARATOR . ltrim((string) $relative, '/\\'));
+	$base_prefix = rtrim($plugin_base, '/\\') . DIRECTORY_SEPARATOR;
+
+	if ($target === false || strpos($target, $base_prefix) !== 0) {
+		return false;
+	}
+
+	return $target;
+}
+
 function api_plugin_get_dependencies($plugin) {
 	global $config;
 
-	$file = cacti_plugin_path($plugin, 'INFO');
+	$file = api_plugin_resolve_path($plugin, 'INFO');
 
 	$returndeps = array();
 
@@ -397,7 +435,7 @@ function api_plugin_remote_capabilities($plugin) {
 		return 'online_view:1 online_mgmt:1 offline_view:1 offline_mgmt:1 remote_collect:1';
 	}
 
-	$file = cacti_plugin_path($plugin, 'INFO');
+	$file = api_plugin_resolve_path($plugin, 'INFO');
 
 	if (!isset($info_data[$plugin])) {
 		if ($file !== false && is_file($file)) {
@@ -1097,8 +1135,12 @@ function api_plugin_register_realm($plugin, $file, $display, $admin = true) {
 	$sql_params = array($plugin);
 
 	foreach ($safe_files as $tfile) {
-		$sql_parts[]  = 'FIND_IN_SET(?, file) > 0';
+		$escaped      = addcslashes($tfile, '%_\\');
+		$sql_parts[]  = '(file = ? OR file LIKE ? OR file LIKE ? OR file LIKE ?)';
 		$sql_params[] = $tfile;
+		$sql_params[] = $escaped . ',%';
+		$sql_params[] = '%,' . $escaped . ',%';
+		$sql_params[] = '%,' . $escaped;
 	}
 
 	$sql_where = '(' . implode(' OR ', $sql_parts) . ')';
@@ -1291,7 +1333,7 @@ function plugin_compatibility_version($info) {
 function plugin_is_compatible($plugin) {
 	global $config;
 
-	$info_path = cacti_plugin_path($plugin, 'INFO');
+	$info_path = api_plugin_resolve_path($plugin, 'INFO');
 	$info      = ($info_path !== false) ? plugin_load_info_file($info_path) : false;
 	if ($info === false) {
 		return array('compat' => false, 'requires' => __('Legacy Plugin'));

@@ -713,7 +713,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				foreach($detail['vals'] as $package => $diffs) {
 					if (isset($diffs['differences'])) {
 						foreach($diffs['differences'] as $item) {
-							$diff_array[$item] = $item;
+							$diff_array[$item] = import_package_escape_markup($item);
 						}
 					}
 
@@ -725,7 +725,9 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				}
 
 				if (cacti_sizeof($diff_array)) {
-					$diff_details .= __('Differences') . '<br>' . implode('<br>', array_map('import_escape_markup', $diff_array));
+					/* $diff_array entries are pre-escaped via import_package_escape_markup()
+					 * above so color swatches survive without double-escaping. */
+					$diff_details .= __('Differences') . '<br>' . implode('<br>', $diff_array);
 				}
 
 				if (cacti_sizeof($orphan_array)) {

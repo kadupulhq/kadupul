@@ -161,9 +161,8 @@ if (cacti_sizeof($reports)) {
 			continue;
 		}
 		if (isset($report['email'])) {
-			if (generate_report($report, false) !== false) {
-				$number_sent++;
-			}
+			generate_report($report, false);
+			$number_sent++;
 		}
 	}
 

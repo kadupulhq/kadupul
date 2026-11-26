@@ -157,7 +157,10 @@ if (is_array($xport_array) && isset($xport_array['meta']['start'])) {
 			/* RFC 4180 CSV quoting so a column name carrying a double-quote
 			 * or newline (often from SNMP-sourced ifAlias/ifDescr) cannot
 			 * break the CSV shape downstream. */
-			$header .= ',"' . $csv_cell($legend) . '"';
+			if (function_exists('cacti_csv_safe')) {
+				$legend = cacti_csv_safe((string) $legend);
+			}
+			$header .= ',"' . str_replace(array("\r", "\n", '"'), array(' ', ' ', '""'), $legend) . '"';
 		}
 		$output .= $header . "\n";
 	} else {

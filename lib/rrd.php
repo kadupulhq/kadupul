@@ -589,6 +589,14 @@ function rrdtool_execute() {
 	$rejection = null;
 
 	$args = func_get_args();
+	$raw_command = $args[0] ?? '';
+	if (is_string($raw_command)) {
+		$folded_command = str_replace("\\\n", ' ', $raw_command);
+		if (preg_match('/[\r\n\0]/', $folded_command)) {
+			cacti_log('ERROR: Rejected RRDtool command containing embedded control characters.', false, $args[4] ?? 'WEBLOG');
+			return false;
+		}
+	}
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_execute' : '__rrd_execute';
 
@@ -865,12 +873,6 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 
 	// Fold continuation lines before sending a single IPC command.
 	$command_line = str_replace("\\\n", ' ', $command_line);
-
-	if (preg_match('/[\r\n\0]/', $command_line)) {
-		cacti_log('ERROR: Rejected RRDtool command containing embedded control characters.', false, $logopt);
-
-		return false;
-	}
 
 	$owned =& rrd_acknowledged_pipes();
 	if (is_resource($rrdtool_pipe) && isset($owned[(int) $rrdtool_pipe])) {
@@ -4546,7 +4548,14 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 				}
 
 				$safe_ds_name = (preg_match('/^[a-zA-Z0-9_-]{1,19}\z/', (string) $data_source_name) === 1);
-				$quoted_file  = cacti_escapeshellarg($info['filename']);
+				$tune_file    = (string) $info['filename'];
+				if (preg_match('/^[A-Za-z0-9_\/.:\\\\-]+\z/', $tune_file) === 1) {
+					$quoted_file = $tune_file;
+				} elseif (function_exists('cacti_escapeshellarg')) {
+					$quoted_file = cacti_escapeshellarg($tune_file);
+				} else {
+					$quoted_file = escapeshellarg($tune_file);
+				}
 
 				/* check the data source type */
 				if ($data_source['type'] != $info['ds'][$data_source_name]['type']) {

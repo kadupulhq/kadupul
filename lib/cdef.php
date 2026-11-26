@@ -45,7 +45,11 @@ function get_cdef_item_name($cdef_item_id) 	{
      string. this name will be resolved recursively if necessary
    @arg $cdef_id - the id of the cdef to resolve
    @returns - a text-based representation of the cdef */
-function get_cdef($cdef_id, array $visited = array()) {
+function get_cdef($cdef_id) {
+	return get_cdef_recursive($cdef_id, array());
+}
+
+function get_cdef_recursive($cdef_id, array $visited = array()) {
 	$cdef_id = (int) $cdef_id;
 	if ($cdef_id <= 0 || isset($visited[$cdef_id])) {
 		return '';
@@ -64,7 +68,7 @@ function get_cdef($cdef_id, array $visited = array()) {
 			}
 			if ($cdef_item['type'] == 5) {
 				$current_cdef_id = (int) $cdef_item['value'];
-				$cdef_string .= get_cdef($current_cdef_id, $visited);
+				$cdef_string .= get_cdef_recursive($current_cdef_id, $visited);
 			} else {
 				$cdef_string .= get_cdef_item_name($cdef_item['id']);
 			}

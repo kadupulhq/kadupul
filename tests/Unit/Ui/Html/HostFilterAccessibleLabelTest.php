@@ -14,6 +14,7 @@ function get_selected_theme() { return State::$theme; }
 function read_config_option($name) { return State::$autocomplete; }
 function isset_request_var($name) { return false; }
 function get_allowed_devices($where) { return array(array('id' => 7, 'description' => 'Device seven')); }
+function is_device_allowed($host_id = 0) { return true; }
 function cacti_sizeof($value) { return count($value); }
 function __($value) { return $value; }
 function strip_domain($value) { return $value; }
