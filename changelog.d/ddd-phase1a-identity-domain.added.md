@@ -1,0 +1,1 @@
+- Add Phase 1a `IdentityAccess` domain models, visibility and lockout policies, directory/local/password/revocation use cases, Doctrine DBAL adapters, `symfony/ldap`, `symfony/rate-limiter`, and `symfony/validator` integration, Security voters, 100% `declare(strict_types=1)` across `src/IdentityAccess/`, and burn down 61 PHPStan baseline entries.
