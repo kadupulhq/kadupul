@@ -393,8 +393,8 @@ if ($skip_current) {
 			$('#pass').remove();
 			$('#password').after('<div id="pass" class="password badpassword fa fa-times" title="' + <?php
 				print json_encode(
-					__esc('Password Too Short'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				    __esc('Password Too Short'),
+				    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 				); ?> + '"></div>');
 			$('.password').tooltip();
 		} else {
@@ -403,8 +403,8 @@ if ($skip_current) {
 					$('#pass').remove();
 					$('#password').after('<div id="pass" class="password goodpassword fa fa-check" title="' + <?php
 						print json_encode(
-							__esc('Password Validation Passes'),
-							JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+						    __esc('Password Validation Passes'),
+						    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 						); ?> + '"></div>');
 					$('.password').tooltip();
 					checkPasswordConfirm();
@@ -423,16 +423,16 @@ if ($skip_current) {
 				$('#passconfirm').remove();
 				$('#password_confirm').after('<div id="passconfirm" class="passconfirm badpassword fa fa-times" title="' + <?php
 					print json_encode(
-						__esc('Passwords do Not Match'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __esc('Passwords do Not Match'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?> + '"></div>');
 				$('.passconfirm').tooltip();
 			} else {
 				$('#passconfirm').remove();
 				$('#password_confirm').after('<div id="passconfirm" class="passconfirm goodpassword fa fa-check" title="' + <?php
 					print json_encode(
-						__esc('Passwords Match'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __esc('Passwords Match'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?> + '"></div>');
 				$('.passconfirm').tooltip();
 			}

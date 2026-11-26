@@ -822,8 +822,8 @@ function network_edit() {
 			selectedList: 7,
 			noneSelectedText: <?php
 				print json_encode(
-					__('Select the days(s) of the week'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				    __('Select the days(s) of the week'),
+				    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 				); ?>,
 			header: false,
 			height: 54,
@@ -836,8 +836,8 @@ function network_edit() {
 			selectedList: 7,
 			noneSelectedText: <?php
 				print json_encode(
-					__('Select the month(s) of the year'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				    __('Select the month(s) of the year'),
+				    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 				); ?>,
 			header: false,
 			height: 82,
@@ -850,8 +850,8 @@ function network_edit() {
 			selectedList: 15,
 			noneSelectedText: <?php
 				print json_encode(
-					__('Select the day(s) of the month'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				    __('Select the day(s) of the month'),
+				    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 				); ?>,
 			header: false,
 			height: 162,
@@ -864,8 +864,8 @@ function network_edit() {
 			selectedList: 4,
 			noneSelectedText: <?php
 				print json_encode(
-					__('Select the week(s) of the month'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				    __('Select the week(s) of the month'),
+				    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 				); ?>,
 			header: false,
 			height: 28,
@@ -878,8 +878,8 @@ function network_edit() {
 			selectedList: 7,
 			noneSelectedText: <?php
 				print json_encode(
-					__('Select the day(s) of the week'),
-					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+				    __('Select the day(s) of the week'),
+				    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 				); ?>,
 			header: false,
 			height: 54,
@@ -979,21 +979,21 @@ function network_edit() {
 				var html = $(this).html();
 				html = html.replace(<?php
 					print json_encode(
-						__('every X Weeks'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X Weeks'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>, <?php
 					print json_encode(
-						__('every X Days'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X Days'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>);
 				html = html.replace(<?php
 					print json_encode(
-						__('every X.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X.'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>, <?php
 					print json_encode(
-						__('every X Days.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X Days.'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>);
 				$(this).html(html);
 			});
@@ -1012,21 +1012,21 @@ function network_edit() {
 				var html = $(this).html();
 				html = html.replace(<?php
 					print json_encode(
-						__('every X Days'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X Days'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>, <?php
 					print json_encode(
-						__('every X Weeks'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X Weeks'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>);
 				html = html.replace(<?php
 					print json_encode(
-						__('every X.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X.'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>, <?php
 					print json_encode(
-						__('every X Weeks.'),
-						JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+					    __('every X Weeks.'),
+					    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 					); ?>);
 				$(this).html(html);
 			});
