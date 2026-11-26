@@ -392,13 +392,18 @@ function form_actions() {
 			} elseif (get_request_var('drp_action') == '7') { // sync to device template
 				api_device_sync_device_templates($selected_items);
 			} elseif (get_request_var('drp_action') == '8') { // place device on report
-				if (!reports_add_devices(get_filter_request_var('report_id'), $selected_items, get_filter_request_var('timespan'), get_filter_request_var('align'))) {
-					$name = db_fetch_cell_prepared('SELECT name
-						FROM reports
-						WHERE id = ?',
-						array(get_request_var('report_id')));
+				$report_id = get_filter_request_var('report_id');
+				if (!reports_add_devices($report_id, $selected_items, get_filter_request_var('timespan'), get_filter_request_var('align'))) {
+					if (cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports')) {
+						$name = db_fetch_cell_prepared('SELECT name
+							FROM reports
+							WHERE id = ?',
+							array($report_id));
 
-					raise_message('reports_add_error', __('Unable to add some Devices to Report \'%s\'', $name), MESSAGE_LEVEL_WARN);
+						raise_message('reports_add_error', __esc('Unable to add some Devices to Report \'%s\'', $name), MESSAGE_LEVEL_WARN);
+					} else {
+						raise_message('reports_add_error', __('Unable to add Devices to the selected Report.'), MESSAGE_LEVEL_WARN);
+					}
 				}
 			} elseif (get_request_var('drp_action') == '1') { // delete
 				if (!isset_request_var('delete_type')) {
@@ -680,24 +685,28 @@ function host_export() {
 	header('Content-Disposition: attachment; filename=cacti-devices-' . time() . '.csv');
 
 	if (cacti_sizeof($hosts)) {
-		$columns = array_keys($hosts[0]);
+		$excluded_columns = array('snmp_community', 'snmp_password', 'snmp_priv_passphrase');
+		$columns = array();
+		foreach (array_keys($hosts[0]) as $col) {
+			if (in_array($col, $excluded_columns, true) || (function_exists('cacti_is_sensitive_key') && cacti_is_sensitive_key($col))) {
+				continue;
+			}
+			$columns[] = $col;
+		}
 
 		fputcsv($stdout, $columns, ',', '"', '\\');
 
-		foreach($hosts as $h) {
-			foreach(array_keys($h) as $hc) {
-				if ($h[$hc] != '' && (strpos($h[$hc], "\n") !== false || strpos($h[$hc], "\r") !== false)) {
-					$h[$hc] = str_replace(array("\n", "\r"), ' ', $h[$hc]);
+		foreach ($hosts as $h) {
+			$row = array();
+			foreach ($columns as $hc) {
+				$val = isset($h[$hc]) ? (string) $h[$hc] : '';
+				if ($val !== '' && (strpos($val, "\n") !== false || strpos($val, "\r") !== false)) {
+					$val = str_replace(array("\n", "\r"), ' ', $val);
 				}
+				$row[] = cacti_csv_safe($val);
 			}
 
-			foreach ($h as &$field) {
-				$field = cacti_csv_safe($field);
-			}
-
-			unset($field);
-
-			fputcsv($stdout, $h, ',', '"', '\\');
+			fputcsv($stdout, $row, ',', '"', '\\');
 		}
 	}
 

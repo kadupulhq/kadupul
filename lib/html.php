@@ -2611,10 +2611,18 @@ function html_spikekill_actions() {
 
 			break;
 		case 'spikesave':
-			switch(get_nfilter_request_var('setting')) {
+			csrf_require_post(true);
+
+			$guest_user_id = (int) get_guest_account();
+			if (!is_realm_allowed(1043) || empty($_SESSION['sess_user_id']) || ($guest_user_id > 0 && (int) $_SESSION['sess_user_id'] === $guest_user_id)) {
+				http_response_code(403);
+				exit;
+			}
+
+			switch (get_nfilter_request_var('setting')) {
 				case 'ravgnan':
 					$id = get_nfilter_request_var('id');
-					switch($id) {
+					switch ($id) {
 						case 'avg':
 						case 'last':
 						case 'nan':
@@ -2624,16 +2632,28 @@ function html_spikekill_actions() {
 
 					break;
 				case 'rstddev':
-					set_user_setting('spikekill_deviations', get_filter_request_var('id'));
+					$val = (int) get_filter_request_var('id');
+					if ($val >= 1 && $val <= 10) {
+						set_user_setting('spikekill_deviations', $val);
+					}
 					break;
 				case 'rvarout':
-					set_user_setting('spikekill_outliers', get_filter_request_var('id'));
+					$val = (int) get_filter_request_var('id');
+					if ($val >= 1 && $val <= 10) {
+						set_user_setting('spikekill_outliers', $val);
+					}
 					break;
 				case 'rvarpct':
-					set_user_setting('spikekill_percent', get_filter_request_var('id'));
+					$val = (int) get_filter_request_var('id');
+					if ($val >= 1 && $val <= 1000) {
+						set_user_setting('spikekill_percent', $val);
+					}
 					break;
 				case 'rkills':
-					set_user_setting('spikekill_number', get_filter_request_var('id'));
+					$val = (int) get_filter_request_var('id');
+					if ($val >= 1 && $val <= 20) {
+						set_user_setting('spikekill_number', $val);
+					}
 					break;
 			}
 
@@ -2808,8 +2828,12 @@ function html_spikekill_js() {
 			$(this).find('i:first').addClass('fa fa-check');
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
-			strURL = '?action=spikesave&setting=ravgnan&id='+$(this).attr('id').replace('method_','');
-			$.get(strURL)
+			$.post(window.location.pathname, {
+				action: 'spikesave',
+				setting: 'ravgnan',
+				id: $(this).attr('id').replace('method_', ''),
+				__csrf_magic: csrfMagicToken
+			})
 				.fail(function(data) {
 					getPresentHTTPError(data);
 				});
@@ -2820,8 +2844,12 @@ function html_spikekill_js() {
 			$(this).find('i:first').addClass('fa fa-check');
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
-			strURL = '?action=spikesave&setting=rkills&id='+$(this).attr('id').replace('kills_','');
-			$.get(strURL)
+			$.post(window.location.pathname, {
+				action: 'spikesave',
+				setting: 'rkills',
+				id: $(this).attr('id').replace('kills_', ''),
+				__csrf_magic: csrfMagicToken
+			})
 				.fail(function(data) {
 					getPresentHTTPError(data);
 				});
@@ -2832,8 +2860,12 @@ function html_spikekill_js() {
 			$(this).find('i:first').addClass('fa fa-check');
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
-			strURL = '?action=spikesave&setting=rstddev&id='+$(this).attr('id').replace('stddev_','');
-			$.get(strURL)
+			$.post(window.location.pathname, {
+				action: 'spikesave',
+				setting: 'rstddev',
+				id: $(this).attr('id').replace('stddev_', ''),
+				__csrf_magic: csrfMagicToken
+			})
 				.fail(function(data) {
 					getPresentHTTPError(data);
 				});

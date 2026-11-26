@@ -104,6 +104,16 @@ function db_connect_real($device, $user, $pass, $db_name, $db_type = 'mysql', $p
 	$flags[PDO::ATTR_TIMEOUT] = 2;
 	$flags[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
+	if (!is_string($db_name) || preg_match('/^[A-Za-z0-9_$-]{1,64}\z/', $db_name) !== 1) {
+		return false;
+	}
+
+	if (!is_string($device) || $device === '' || preg_match('/[;\r\n\0]/', $device) === 1) {
+		return false;
+	}
+
+	$port = (int) $port;
+
 	while ($i <= $retries) {
 		try {
 			if (strpos($device, '/') !== false && filetype($device) == 'socket') {

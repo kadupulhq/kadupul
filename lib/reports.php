@@ -1274,7 +1274,7 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
 					array($leaf_id));
 			}
 
-			if ($leaf_type == 'graph') {
+			if ($leaf_type == 'graph' && is_graph_allowed($leaf['local_graph_id'], $user)) {
 				$graph_name = db_fetch_cell_prepared('SELECT
 					gtg.title_cache AS title
 					FROM graph_templates_graph AS gtg
@@ -1360,33 +1360,36 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
 					}
 				}
 			} elseif ($leaf_type == 'graph') {
-				$gr_where = '';
-				if ($item['graph_name_regexp'] != '') {
-					$gr_where .= ' AND title_cache ' . db_qstr_rlike($item['graph_name_regexp']);
-				}
+				if (is_graph_allowed($leaf['local_graph_id'], $user)) {
+					$gr_where = '';
+					if ($item['graph_name_regexp'] != '') {
+						$gr_where .= ' AND title_cache ' . db_qstr_rlike($item['graph_name_regexp']);
+					}
 
-				$graph = db_fetch_cell("SELECT count(*)
-					FROM graph_templates_graph
-					WHERE local_graph_id=" . $leaf['local_graph_id'] . $gr_where);
+					$graph = db_fetch_cell_prepared('SELECT count(*)
+						FROM graph_templates_graph
+						WHERE local_graph_id = ?' . $gr_where,
+						array($leaf['local_graph_id']));
 
-				/* start graph display */
-				if ($graph > 0) {
-					if ($title != '') {
-						$outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
-						if ($format_ok) {
-							$outstr .= "\t\t\t<td class='text'>" . PHP_EOL;
-						} else {
-							$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . PHP_EOL;
+					/* start graph display */
+					if ($graph > 0) {
+						if ($title != '') {
+							$outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
+							if ($format_ok) {
+								$outstr .= "\t\t\t<td class='text'>" . PHP_EOL;
+							} else {
+								$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . PHP_EOL;
+							}
+							$outstr .= "\t\t\t\t$title" . PHP_EOL;
+							$outstr .= "\t\t\t</td>" . PHP_EOL;
+							$outstr .= "\t\t</tr>" . PHP_EOL;
 						}
-						$outstr .= "\t\t\t\t$title" . PHP_EOL;
-						$outstr .= "\t\t\t</td>" . PHP_EOL;
-						$outstr .= "\t\t</tr>" . PHP_EOL;
+
+						$graph_list = array(array('local_graph_id' => $leaf['local_graph_id'], 'title_cache' => $graph_name));
+
+						$outstr .= reports_graph_area($graph_list, $report, $item, $timespan, $output, $format_ok, $theme);
 					}
 				}
-
-				$graph_list = array(array('local_graph_id' => $leaf['local_graph_id'], 'title_cache' => $graph_name));
-
-				$outstr .= reports_graph_area($graph_list, $report, $item, $timespan, $output, $format_ok, $theme);
 			} elseif ($leaf_type == 'host') {
 				if ($item['tree_cascade'] == 'on') {
 					/* graph template grouping */
@@ -1532,11 +1535,11 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
 
 									$outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
 									if ($format_ok) {
-										$outstr .= "\t\t\t<td class='text'>" . __('Data Query:') . ' ' . $data_query['name'] . PHP_EOL;
+										$outstr .= "\t\t\t<td class='text'>" . __('Data Query:') . ' ' . html_escape($data_query['name']) . PHP_EOL;
 										$outstr .= "\t\t\t</td>" . PHP_EOL;
 										$outstr .= "\t\t</tr>" . PHP_EOL;
 									} else {
-										$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . __('Data Query:') . ' ' . $data_query['name'] . PHP_EOL;
+										$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . __('Data Query:') . ' ' . html_escape($data_query['name']) . PHP_EOL;
 										$outstr .= "\t\t\t</td>" . PHP_EOL;
 										$outstr .= "\t\t</tr>" . PHP_EOL;
 									}
@@ -1714,34 +1717,24 @@ function reports_graph_area($graphs, &$report, $item, $timespan, $output, $forma
  * @return string			- the jpeg image as a stream
  */
 function png2jpeg ($png_data) {
-	global $config;
+	$ImageData = '';
 
 	if ($png_data != '') {
-		$fn = '/tmp/' . time() . '.png';
-
-		/* write rrdtool's png file to scratch dir */
-		$f = fopen($fn, 'wb');
-		fwrite($f, $png_data);
-		fclose($f);
-
-		/* create php-gd image object from file */
-		$im = imagecreatefrompng($fn);
-		if (!$im) {								/* check for errors */
-			$im = ImageCreate (150, 30);		/* create an empty image */
-			$bgc = ImageColorAllocate ($im, 255, 255, 255);
-			$tc  = ImageColorAllocate ($im, 0, 0, 0);
-			ImageFilledRectangle ($im, 0, 0, 150, 30, $bgc);
-			/* print error message */
-			ImageString($im, 1, 5, 5, "Error while opening: $fn", $tc);
+		$im = @imagecreatefromstring($png_data);
+		if (!$im) {
+			$im  = imagecreate(150, 30);
+			$bgc = imagecolorallocate($im, 255, 255, 255);
+			$tc  = imagecolorallocate($im, 0, 0, 0);
+			imagefilledrectangle($im, 0, 0, 150, 30, $bgc);
+			imagestring($im, 1, 5, 5, 'Error decoding image', $tc);
 		}
 
-        ob_start(); // start a new output buffer to capture jpeg image stream
-		imagejpeg($im);	// output to buffer
-		$ImageData = ob_get_contents(); // fetch image from buffer
-		$ImageDataLength = ob_get_length();
-		ob_end_clean(); // stop this output buffer
+		ob_start();
+		imagejpeg($im);
+		$ImageData = ob_get_contents();
+		ob_end_clean();
 
-		unlink($fn); // delete scratch file
+		imagedestroy($im);
 	}
 
 	return $ImageData;
@@ -1754,34 +1747,24 @@ function png2jpeg ($png_data) {
  * @return string			- the gif image as a stream
  */
 function png2gif ($png_data) {
-	global $config;
+	$ImageData = '';
 
 	if ($png_data != '') {
-		$fn = '/tmp/' . time() . '.png';
-
-		/* write rrdtool's png file to scratch dir */
-		$f = fopen($fn, 'wb');
-		fwrite($f, $png_data);
-		fclose($f);
-
-		/* create php-gd image object from file */
-		$im = imagecreatefrompng($fn);
-		if (!$im) {								/* check for errors */
-			$im = ImageCreate (150, 30);		/* create an empty image */
-			$bgc = ImageColorAllocate ($im, 255, 255, 255);
-			$tc  = ImageColorAllocate ($im, 0, 0, 0);
-			ImageFilledRectangle ($im, 0, 0, 150, 30, $bgc);
-			/* print error message */
-			ImageString($im, 1, 5, 5, "Error while opening: $fn", $tc);
+		$im = @imagecreatefromstring($png_data);
+		if (!$im) {
+			$im  = imagecreate(150, 30);
+			$bgc = imagecolorallocate($im, 255, 255, 255);
+			$tc  = imagecolorallocate($im, 0, 0, 0);
+			imagefilledrectangle($im, 0, 0, 150, 30, $bgc);
+			imagestring($im, 1, 5, 5, 'Error decoding image', $tc);
 		}
 
-        ob_start(); // start a new output buffer to capture gif image stream
-		imagegif($im);	// output to buffer
-		$ImageData = ob_get_contents(); // fetch image from buffer
-		$ImageDataLength = ob_get_length();
-		ob_end_clean(); // stop this output buffer
+		ob_start();
+		imagegif($im);
+		$ImageData = ob_get_contents();
+		ob_end_clean();
 
-		unlink($fn); // delete scratch file
+		imagedestroy($im);
 	}
 
 	return $ImageData;

@@ -31,6 +31,13 @@ final class SolarisPing
     public array $host = ['hostname' => '192.0.2.10'];
     public int $timeout = 400;
     public int $retries = 3;
+
+    protected function exec_ping_argv(array $argv, $merge_stderr = false)
+    {
+        $GLOBALS['ping_solaris_commands'][] = $argv;
+
+        return '';
+    }
 }
 
 function solaris_branch_statement(): string
@@ -54,10 +61,12 @@ test('the SunOS ICMP branch bounds the probe count and asks for statistics', fun
     /* eval() runs one statement read from lib/ping.php in this repository,
      * never external input. */
     $run = \Closure::bind(function () use ($statement) {
+        $target_host = $this->host['hostname'];
+        $retries_str = (string) ((int) $this->retries);
         eval('namespace ' . __NAMESPACE__ . '; ' . $statement); // nosemgrep: php.lang.security.eval-use.eval-use
     }, new SolarisPing(), SolarisPing::class);
 
     $run();
 
-    expect($GLOBALS['ping_solaris_commands'])->toBe(["ping -s '192.0.2.10' 56 3"]);
+    expect($GLOBALS['ping_solaris_commands'])->toBe([['ping', '-s', '192.0.2.10', '56', '3']]);
 });

@@ -173,6 +173,38 @@ function is_reports_admin() {
 	return ($_SESSION['sess_user_id'] == 1);
 }
 
+function is_graph_allowed($local_graph_id, $user = 0) {
+	if (isset($GLOBALS['ro_denied_graphs'])) {
+		return !in_array((int) $local_graph_id, $GLOBALS['ro_denied_graphs'], true);
+	}
+
+	return true;
+}
+
+function is_device_allowed($host_id, $user = 0) {
+	if (isset($GLOBALS['ro_denied_devices'])) {
+		return !in_array((int) $host_id, $GLOBALS['ro_denied_devices'], true);
+	}
+
+	return true;
+}
+
+function is_graph_template_allowed($graph_template_id, $user = 0) {
+	if (isset($GLOBALS['ro_denied_templates'])) {
+		return !in_array((int) $graph_template_id, $GLOBALS['ro_denied_templates'], true);
+	}
+
+	return true;
+}
+
+function is_tree_allowed($tree_id, $user = 0) {
+	if (isset($GLOBALS['ro_denied_trees'])) {
+		return !in_array((int) $tree_id, $GLOBALS['ro_denied_trees'], true);
+	}
+
+	return true;
+}
+
 function db_fetch_cell_prepared($sql, $params = array()) {
 	$sql = preg_replace('/\s+/', ' ', $sql);
 
@@ -328,8 +360,12 @@ beforeEach(function () {
 	$GLOBALS['ro_messages'] = array();
 	$GLOBALS['ro_saved']    = array();
 	$GLOBALS['ro_headers']  = array();
-	$GLOBALS['ro_moves']    = array();
-	$GLOBALS['ro_loaded']   = array();
+	$GLOBALS['ro_moves']            = array();
+	$GLOBALS['ro_loaded']           = array();
+	$GLOBALS['ro_denied_graphs']    = array();
+	$GLOBALS['ro_denied_devices']   = array();
+	$GLOBALS['ro_denied_templates'] = array();
+	$GLOBALS['ro_denied_trees']     = array();
 
 	$_SESSION = array('sess_user_id' => 5);
 });
@@ -488,4 +524,14 @@ test('a report admin cannot add, move or open an item under a report that does n
 	expect($GLOBALS['ro_moves'])->toBe(array());
 	expect($GLOBALS['ro_loaded'])->toBe(array());
 	expect($GLOBALS['ro_messages'])->toBe(array('permission_denied', 'permission_denied'));
+});
+
+test('item save refuses unauthorized graph, device, template, or tree ids', function () {
+	$GLOBALS['ro_denied_graphs'] = array(12);
+	$GLOBALS['ro_request']       = item_request('7', '');
+
+	reports_form_save();
+
+	expect($GLOBALS['ro_saved'])->toBe(array());
+	expect($GLOBALS['ro_messages'])->toContain('permission_denied');
 });

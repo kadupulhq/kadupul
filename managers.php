@@ -726,21 +726,6 @@ function manager_logs($id, $header_label) {
 		loadPageNoHeader(strURL);
 	}
 
-	function showTooltip(e, div, title, desc) {
-		div.style.display = 'inline';
-		div.style.position = 'fixed';
-		div.style.backgroundColor = '#EFFCF0';
-		div.style.border = 'solid 1px grey';
-		div.style.padding = '10px';
-		div.innerHTML = '<b>' + title + '</b><div style="padding-left:10px; padding-right:5px;"><pre>' + desc + '</pre></div>';
-		div.style.left = e.clientX + 15 + 'px';
-		div.style.top = e.clientY + 15 + 'px';
-	}
-
-	function hideTooltip(div) {
-		div.style.display = 'none';
-	}
-
 	function highlightStatus(selectID) {
 		if ($('#status_' + selectID).val() == 'ON') {
 			$('#status_' + selectID).css('background-color', 'LawnGreen');
@@ -750,6 +735,12 @@ function manager_logs($id, $header_label) {
 	}
 
 	$(function() {
+		$('.tooltip').tooltip({
+			track: true,
+			position: { collision: 'flipfit' },
+			content: function() { return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize($(this).attr('title')) : $(this).attr('title'); }
+		});
+
 		$('#severity').on('change', function() {
 			applyFilter();
 		});
@@ -880,14 +871,8 @@ function manager_logs($id, $header_label) {
 			print "<td class='nowrap'>" . date('Y/m/d H:i:s', $item['time']) . '</td>';
 
 			if ($item['description']) {
-				$description = '';
-				$lines = preg_split('/\r\n|\r|\n/', $item['description']);
-
-				foreach ($lines as $line) {
-					$description .= html_escape(trim($line)) . '<br>';
-				}
-
-				print '<td><a href="#" onMouseOut="hideTooltip(snmpagentTooltip)" onMouseMove="showTooltip(event, snmpagentTooltip, \'' . html_escape($item['notification']) . '\', \'' . $description . '\')">' . html_escape($item['notification']) . '</a></td>';
+				$tooltip_html = '<div class="header">' . html_escape($item['notification']) . '</div><div class="content preformatted">' . html_escape($item['description']) . '</div>';
+				print '<td><a href="#" class="tooltip" title="' . html_escape($tooltip_html) . '">' . html_escape($item['notification']) . '</a></td>';
 			} else {
 				print '<td>' . html_escape($item['notification']) . '</td>';
 			}
@@ -937,7 +922,7 @@ function form_save() {
 		default:
 			$save['id']                       = get_request_var('id');
 			$save['description']              = form_input_validate(trim(get_nfilter_request_var('description')), 'description', '', false, 3);
-			$save['hostname']                 = form_input_validate(trim(get_nfilter_request_var('hostname')), 'hostname', '', false, 3);
+			$save['hostname']                 = form_input_validate(trim(get_nfilter_request_var('hostname')), 'hostname', '^[^-\s\x00-\x1f][^\s\x00-\x1f]*$', false, 3);
 			$save['disabled']                 = form_input_validate(get_nfilter_request_var('disabled'), 'disabled', '^on$', true, 3);
 			$save['max_log_size']             = get_nfilter_request_var('max_log_size');
 
@@ -947,9 +932,9 @@ function form_save() {
 			if ($save['snmp_version'] == 3) {
 				$save['snmp_username']        = form_input_validate(get_nfilter_request_var('snmp_username'), 'snmp_username', '', true, 3);
 				$save['snmp_password']        = form_input_validate(get_nfilter_request_var('snmp_password'), 'snmp_password', '', true, 3);
-				$save['snmp_auth_protocol']   = form_input_validate(get_nfilter_request_var('snmp_auth_protocol'), 'snmp_auth_protocol', "^\[None\]|MD5|SHA|SHA224|SHA256|SHA392|SHA512$", true, 3);
+				$save['snmp_auth_protocol']   = form_input_validate(get_nfilter_request_var('snmp_auth_protocol'), 'snmp_auth_protocol', '^(\[None\]|MD5|SHA|SHA224|SHA256|SHA384|SHA512)$', true, 3);
 				$save['snmp_priv_passphrase'] = form_input_validate(get_nfilter_request_var('snmp_priv_passphrase'), 'snmp_priv_passphrase', '', true, 3);
-				$save['snmp_priv_protocol']   = form_input_validate(get_nfilter_request_var('snmp_priv_protocol'), 'snmp_priv_protocol', "^\[None\]|DES|AES|AES128|AES192|AES192C|AES256|AES256C$", true, 3);
+				$save['snmp_priv_protocol']   = form_input_validate(get_nfilter_request_var('snmp_priv_protocol'), 'snmp_priv_protocol', '^(\[None\]|DES|AES|AES128|AES192|AES192C|AES256|AES256C)$', true, 3);
 				$save['snmp_engine_id']       = form_input_validate(get_request_var_post('snmp_engine_id'), 'snmp_engine_id', '', false, 3);
 			} else {
 				$save['snmp_username']        = '';

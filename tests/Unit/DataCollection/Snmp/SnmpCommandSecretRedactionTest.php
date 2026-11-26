@@ -74,25 +74,17 @@ function debug_log_insert($type, $text)
     $GLOBALS['snmp_redaction_debug_log'][] = $text;
 }
 
-function exec($command, &$output = null, &$result_code = null)
+function cacti_snmp_exec_argv($binary, array $argv, &$output_lines)
 {
-    $GLOBALS['snmp_redaction_exec'][] = $command;
-    $output = array();
-    $result_code = 0;
+    $GLOBALS['snmp_redaction_exec'][] = array_merge(array($binary), $argv);
+    $output_lines = array();
 
-    return '';
+    return 0;
 }
 
 function file_exists($path)
 {
     return $GLOBALS['snmp_redaction_bulkwalk'];
-}
-
-function exec_into_array($command)
-{
-    $GLOBALS['snmp_redaction_exec'][] = $command;
-
-    return array();
 }
 
 /**
@@ -126,7 +118,7 @@ function snmp_redaction_function_source(string $source, string $name): string
 
 $snmpRedactionSources = [
     'lib/functions.php' => ['cacti_redact_snmp_command'],
-    'lib/snmp.php'      => ['cacti_snmp_get', 'cacti_snmp_get_raw', 'cacti_snmp_getnext', 'cacti_snmp_walk', 'cacti_get_snmpv3_auth', 'snmp_format_target', 'snmp_escape_string', 'snmp_exec_prefix'],
+    'lib/snmp.php'      => ['cacti_snmp_get', 'cacti_snmp_get_raw', 'cacti_snmp_getnext', 'cacti_snmp_walk', 'cacti_get_snmpv3_auth', 'cacti_get_snmpv3_auth_argv', 'snmp_format_target', 'snmp_format_target_raw', 'snmp_escape_string', 'snmp_exec_prefix'],
 ];
 
 /* eval() runs only function source read from this repository, never
@@ -178,20 +170,23 @@ test('the SNMP debug log never carries the community or v3 passphrases', functio
     }
 })->with('snmp binary calls');
 
-test('the shell execs net-snmp so no sh -c parent keeps the secrets in argv', function (string $function, array $args) {
+test('binary net-snmp calls invoke executables directly via argv with option terminator', function (string $function, array $args) {
     call_user_func_array(__NAMESPACE__ . '\\' . $function, $args);
 
-    foreach ($GLOBALS['snmp_redaction_exec'] as $command) {
-        expect($command)->toStartWith('exec /usr/bin/snmp');
+    foreach ($GLOBALS['snmp_redaction_exec'] as $argv) {
+        expect($argv)->toBeArray()
+            ->and($argv[0])->toStartWith('/usr/bin/snmp')
+            ->and($argv)->toContain('--');
     }
 })->with('snmp binary calls');
 
-test('cmd.exe commands carry no exec prefix', function () {
+test('windows binary SNMP calls use shellless argv without shell wrapper', function () {
     $GLOBALS['config']['cacti_server_os'] = 'win32';
 
     cacti_snmp_get('192.0.2.1', 'Comm-S3cret', '.1.3.6.1.2.1.1.1.0', 2);
 
-    expect($GLOBALS['snmp_redaction_exec'][0])->toStartWith('/usr/bin/snmpget ');
+    expect($GLOBALS['snmp_redaction_exec'][0][0])->toBe('/usr/bin/snmpget')
+        ->and($GLOBALS['snmp_redaction_exec'][0])->toContain('--');
 });
 
 test('the snmpwalk fallback debug log is redacted when snmpbulkwalk is absent', function () {
@@ -199,7 +194,7 @@ test('the snmpwalk fallback debug log is redacted when snmpbulkwalk is absent', 
 
     cacti_snmp_walk('192.0.2.1', 'Comm-S3cret', '.1.3.6.1.2.1.1', 2);
 
-    expect($GLOBALS['snmp_redaction_exec'][0])->toContain('/usr/bin/snmpwalk ');
+    expect($GLOBALS['snmp_redaction_exec'][0][0])->toBe('/usr/bin/snmpwalk');
     expect($GLOBALS['snmp_redaction_debug_log'][0])->toContain('-c [REDACTED]');
     expect($GLOBALS['snmp_redaction_debug_log'][0])->not->toContain('S3cret');
 });

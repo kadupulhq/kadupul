@@ -1956,8 +1956,27 @@ function poller_connect_to_remote($poller_id) {
 			return false;
 		}
 
-		if ($cinfo['dbhost'] == 'localhost' || $cinfo['dbhost'] == '127.0.0.1') {
+		$dbhost = trim((string) $cinfo['dbhost']);
+		$lower  = strtolower(rtrim($dbhost, '.'));
+		if ($lower === '' || $lower === 'localhost' || strpos($dbhost, '/') !== false || strpos($dbhost, '\\') !== false ||
+			preg_match('/^[A-Za-z0-9_$-]{1,64}\z/', (string) $cinfo['dbdefault']) !== 1) {
 			return false;
+		}
+
+		if (filter_var($dbhost, FILTER_VALIDATE_IP) !== false) {
+			$packed = @inet_pton($dbhost);
+			if ($packed === false) {
+				return false;
+			}
+			if (strlen($packed) === 4) {
+				$b0 = ord($packed[0]);
+				$b1 = ord($packed[1]);
+				if ($b0 === 127 || $b0 === 0 || ($b0 === 169 && $b1 === 254)) {
+					return false;
+				}
+			} elseif ($packed === str_repeat("\0", 16) || $packed === str_repeat("\0", 15) . "\1" || (ord($packed[0]) === 0xfe && (ord($packed[1]) & 0xc0) === 0x80)) {
+				return false;
+			}
 		}
 
 		$rcnn_id = db_connect_real(

@@ -46,13 +46,9 @@ test('GHSA-43gj-mcpx-24m9: cacti_log calls use raw hostname (not html_escape)', 
 	);
 });
 
-test('GHSA-43gj-mcpx-24m9: shell command invocations do not use html_escape on hostname', function () use ($pingSource) {
-	// Shell execution paths must use cacti_escapeshellarg (shell-safe),
-	// never html_escape (HTML-safe only).  Mixing the two would either
-	// double-encode or leave the shell boundary unprotected.
-	$shellLines = preg_grep('/shell_exec\(/', explode("\n", $pingSource));
-	foreach ($shellLines as $line) {
-		expect($line)->not->toContain('html_escape');
-		expect($line)->toContain('cacti_escapeshellarg');
-	}
+test('GHSA-43gj-mcpx-24m9: ping invocations use shellless argv without html_escape on hostname', function () use ($pingSource) {
+	// Ping invocations must never invoke shell_exec or pass html_escape()
+	// output as a process argument.
+	expect($pingSource)->not->toContain('shell_exec(')
+		->and($pingSource)->toContain("array('bypass_shell' => true)");
 });

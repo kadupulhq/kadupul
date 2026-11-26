@@ -5622,8 +5622,8 @@ function cacti_escapeshellarg($string, $quote = true) {
 		return $string;
 	}
 
-	/* remove any carriage returns or line feeds from the argument */
-	$string = str_replace(array("\n", "\r"), array('', ''), $string);
+	/* remove any NUL bytes, carriage returns, or line feeds from the argument */
+	$string = str_replace(array("\0", "\n", "\r"), array('', '', ''), $string);
 
 	/*
 	 * we must use an apostrophe to escape community names under Unix in case the user uses
@@ -5647,9 +5647,10 @@ function cacti_escapeshellarg($string, $quote = true) {
 		 * on windows, command injection requires to close any open quotation first
 		 * so we have to escape any quotation here
 		 */
-		if (substr_count($string, CACTI_ESCAPE_CHARACTER)) {
-			$string = str_replace(CACTI_ESCAPE_CHARACTER, '\\' . CACTI_ESCAPE_CHARACTER, $string);
-		}
+		/* Double backslashes that precede a double quote or the closing quote so
+		 * trailing backslashes cannot escape the closing quote on Windows. */
+		$string = preg_replace('/(\\\\*)"/', '$1$1\\"', $string);
+		$string = preg_replace('/(\\\\+)\z/', '$1$1', $string);
 
 		/* ... before we add our own quotation */
 		if ($quote) {
@@ -7545,26 +7546,32 @@ if (isset($config['cacti_server_os']) && $config['cacti_server_os'] == 'win32' &
 }
 
 function is_ipaddress($ip_address = '') {
-	/* Strip IPv6 Scope ID (Zone Index) for validation, as
-	   filter_var rejects valid link-local addresses like fe80::1%eth0 */
-	$clean_ip = $ip_address;
-	if (str_contains($clean_ip, '%')) {
-		$parts = explode('%', $clean_ip, 2);
-		$clean_ip = $parts[0];
+	if (!is_string($ip_address) || $ip_address === '') {
+		return false;
+	}
+
+	/* Allow RFC 4007 IPv6 Scope ID (Zone Index) strictly on IPv6 addresses
+	   with a bounded, safe zone identifier (e.g. fe80::1%eth0). */
+	if (str_contains($ip_address, '%')) {
+		$parts = explode('%', $ip_address, 2);
+		if ($parts[0] === '' || !isset($parts[1]) || preg_match('/^[A-Za-z0-9_.-]{1,64}\z/', $parts[1]) !== 1) {
+			return false;
+		}
+
+		if (function_exists('filter_var')) {
+			return filter_var($parts[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
+		}
+
+		$packed = @inet_pton($parts[0]);
+		return $packed !== false && strlen($packed) === 16;
 	}
 
 	/* check for ipv4/v6 */
 	if (function_exists('filter_var')) {
-		if (filter_var($clean_ip, FILTER_VALIDATE_IP) !== false) {
-			return true;
-		} else {
-			return false;
-		}
-	} elseif (@inet_pton($clean_ip) !== false) {
-		return true;
-	} else {
-		return false;
+		return filter_var($ip_address, FILTER_VALIDATE_IP) !== false;
 	}
+
+	return @inet_pton($ip_address) !== false;
 }
 
 /**
@@ -8509,7 +8516,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 		2 => array('pipe', 'w'),
 	);
 
-	$process = proc_open($argv, $descriptors, $pipes);
+	$process = proc_open($argv, $descriptors, $pipes, null, null, array('bypass_shell' => true));
 
 	if (!is_resource($process)) {
 		cacti_log('ERROR: cacti_exec() failed to spawn: ' . $binary, false, 'SYSTEM');

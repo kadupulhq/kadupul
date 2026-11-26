@@ -290,7 +290,7 @@ function form_save() {
 		// Common data
 		$save['id']       = get_filter_request_var('id');
 		$save['name']     = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
-		$save['hostname'] = form_input_validate(get_nfilter_request_var('hostname'), 'hostname', '', false, 3);
+		$save['hostname'] = form_input_validate(trim(get_nfilter_request_var('hostname')), 'hostname', '^[^-\s\x00-\x1f][^\s\x00-\x1f]*$', false, 3);
 		$save['timezone'] = form_input_validate(get_nfilter_request_var('timezone'), 'timezone', '', false, 3);
 		$save['notes']    = form_input_validate(get_nfilter_request_var('notes'), 'notes', '', true, 3);
 
@@ -302,16 +302,28 @@ function form_save() {
 			$save['sync_interval'] = form_input_validate(get_nfilter_request_var('sync_interval'), 'sync_interval', '^[0-9]+$', false, 3);
 
 			// Database settings
-			$save['dbdefault']     = form_input_validate(get_nfilter_request_var('dbdefault'), 'dbdefault', '', true, 3);
-			$save['dbhost']        = form_input_validate(get_nfilter_request_var('dbhost'),    'dbhost',    '', true, 3);
+			$save['dbdefault']     = form_input_validate(trim(get_nfilter_request_var('dbdefault')), 'dbdefault', '^[A-Za-z0-9_$-]{1,64}$', true, 3);
+			$save['dbhost']        = form_input_validate(trim(get_nfilter_request_var('dbhost')),    'dbhost',    '', true, 3);
 			$save['dbuser']        = form_input_validate(get_nfilter_request_var('dbuser'),    'dbuser',    '', true, 3);
 			$save['dbpass']        = form_input_validate(get_nfilter_request_var('dbpass'),    'dbpass',    '', true, 3);
-			$save['dbport']        = form_input_validate(get_nfilter_request_var('dbport'),    'dbport',    '^[0-9]+$', true, 3);
+			$save['dbport']        = form_input_validate(trim(get_nfilter_request_var('dbport')),    'dbport',    '^[0-9]+$', true, 3);
 			$save['dbretries']     = form_input_validate(get_nfilter_request_var('dbretries'), 'dbretries', '^[0-9]+$', true, 3);
 			$save['dbssl']         = isset_request_var('dbssl') ? 'on':'';
-			$save['dbsslkey']      = form_input_validate(get_nfilter_request_var('dbsslkey'),  'dbsslkey',  '', true, 3);
-			$save['dbsslcert']     = form_input_validate(get_nfilter_request_var('dbsslcert'), 'dbsslcert', '', true, 3);
-			$save['dbsslca']       = form_input_validate(get_nfilter_request_var('dbsslca'),   'dbsslca',   '', true, 3);
+			$save['dbsslkey']      = form_input_validate(trim(get_nfilter_request_var('dbsslkey')),  'dbsslkey',  '', true, 3);
+			$save['dbsslcert']     = form_input_validate(trim(get_nfilter_request_var('dbsslcert')), 'dbsslcert', '', true, 3);
+			$save['dbsslca']       = form_input_validate(trim(get_nfilter_request_var('dbsslca')),   'dbsslca',   '', true, 3);
+
+			if (!empty($save['dbhost']) && !pollers_valid_db_endpoint($save['dbhost'], (string) ($save['dbport'] !== '' ? $save['dbport'] : '3306'))) {
+				raise_message('poller_dbhost', __('Invalid Remote Database Hostname or Port.'), MESSAGE_LEVEL_ERROR);
+				$_SESSION['sess_error_fields']['dbhost'] = 'dbhost';
+			}
+
+			foreach (array('dbsslkey', 'dbsslcert', 'dbsslca') as $ssl_field) {
+				if ($save[$ssl_field] !== '' && !pollers_valid_ssl_path($save[$ssl_field])) {
+					raise_message('poller_ssl_path', __('Invalid SSL certificate or key path.'), MESSAGE_LEVEL_ERROR);
+					$_SESSION['sess_error_fields'][$ssl_field] = $ssl_field;
+				}
+			}
 		}
 
 		if (!is_ipaddress($save['hostname']) && !str_contains($save['hostname'], '.')) {
@@ -325,16 +337,16 @@ function form_save() {
 			$error = true;
 		}
 
-		if (isset($save['dbhost'])) {
+		if (isset($save['dbhost']) && $save['dbhost'] !== '') {
 			if (poller_check_duplicate_poller_id($save['id'], $save['dbhost'], 'dbhost')) {
-				raise_message('dupe_dbhost', __esc('You have already used this database hostname \'%s\'.  Please enter a non-duplicate database hostname.', $save['hostname']), MESSAGE_LEVEL_ERROR);
+				raise_message('dupe_dbhost', __esc('You have already used this database hostname \'%s\'.  Please enter a non-duplicate database hostname.', $save['dbhost']), MESSAGE_LEVEL_ERROR);
 				$error = true;
 			}
 		}
 
-		if (isset($save['dbhost']) && $save['dbhost'] == 'localhost' && $save['id'] > 1) {
+		if (isset($save['dbhost']) && strtolower($save['dbhost']) == 'localhost' && $save['id'] != 1) {
 			raise_message('poller_dbhost');
-		} elseif ($save['id'] > 1 && poller_host_duplicate($save['id'], $save['dbhost'])) {
+		} elseif ($save['id'] != 1 && isset($save['dbhost']) && $save['dbhost'] !== '' && poller_host_duplicate($save['id'], $save['dbhost'])) {
 			raise_message('poller_nodupe');
 		} elseif (!is_error_message() && $error == false) {
 			$poller_id = sql_save($save, 'poller');
@@ -351,8 +363,12 @@ function form_save() {
 }
 
 function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
-	$ip_addresses  = array();
-	$ip_hostnames  = array();
+	if (!in_array($column, array('hostname', 'dbhost'), true)) {
+		return false;
+	}
+
+	$ip_addresses = array();
+	$ip_hostnames = array();
 
 	if (is_ipaddress($hostname)) {
 		$address = @gethostbyaddr($hostname);
@@ -375,7 +391,7 @@ function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
 		$ip_hostnames[$hostname] = $hostname;
 
 		if (cacti_sizeof($addresses)) {
-			foreach($addresses as $address) {
+			foreach ($addresses as $address) {
 				if (isset($address['target'])) {
 					$ip_hostnames[$address['host']] = $address['host'];
 				}
@@ -390,7 +406,7 @@ function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
 			}
 		}
 	} else {
-		$ip_hostname[$hostname] = $hostname;
+		$ip_hostnames[$hostname] = $hostname;
 
 		$address = @gethostbyname($hostname);
 
@@ -399,24 +415,29 @@ function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
 		}
 	}
 
+	$params     = array((int) $poller_id);
 	$sql_where1 = '';
 	if (cacti_sizeof($ip_addresses)) {
-		$sql_where1 = "$column IN ('" . implode("','", $ip_addresses) . "')";
+		$placeholders = implode(', ', array_fill(0, cacti_sizeof($ip_addresses), '?'));
+		$sql_where1   = "`$column` IN ($placeholders)";
+		foreach ($ip_addresses as $addr) {
+			$params[] = $addr;
+		}
 	}
 
 	$sql_where2 = '';
 	if (cacti_sizeof($ip_hostnames)) {
-		foreach($ip_hostnames as $host) {
-			$parts = explode('.', $host);
-			$sql_where2 .= ($sql_where2 != '' ? ' OR ':' (') .
-				"($column = " . db_qstr($parts[0]) .
-				" OR $column = " . db_qstr($host) . ")";
+		foreach ($ip_hostnames as $host) {
+			$parts       = explode('.', $host);
+			$sql_where2 .= ($sql_where2 != '' ? ' OR ' : ' (') . "(`$column` = ? OR `$column` = ?)";
+			$params[]    = $parts[0];
+			$params[]    = $host;
 		}
 		$sql_where2 .= ')';
 	}
 
 	if ($sql_where1 != '' || $sql_where2 != '') {
-		$sql_where = ' AND (' . $sql_where1 . ($sql_where1 != '' && $sql_where2 != '' ? ' OR ':'') . $sql_where2 . ')';
+		$sql_where = ' AND (' . $sql_where1 . ($sql_where1 != '' && $sql_where2 != '' ? ' OR ' : '') . $sql_where2 . ')';
 	} else {
 		$sql_where = '';
 	}
@@ -425,7 +446,7 @@ function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
 		FROM poller
 		WHERE id != ?
 		$sql_where",
-		array($poller_id));
+		$params);
 
 	if (empty($duplicate)) {
 		return false;
@@ -854,6 +875,18 @@ function test_database_connection($poller = array()) {
 			return false;
 		}
 
+		if (!is_string($poller['dbdefault']) || preg_match('/^[A-Za-z0-9_$-]{1,64}\z/', $poller['dbdefault']) !== 1) {
+			print __('Invalid Database Name');
+			return false;
+		}
+
+		foreach (array('dbsslkey', 'dbsslcert', 'dbsslca') as $ssl_field) {
+			if ($poller[$ssl_field] !== '' && function_exists('pollers_valid_ssl_path') && !pollers_valid_ssl_path($poller[$ssl_field])) {
+				print __('Invalid SSL Path');
+				return false;
+			}
+		}
+
 		$poller['dbretries'] = min(max((int) $poller['dbretries'], 0), 3);
 	}
 
@@ -879,8 +912,29 @@ function test_database_connection($poller = array()) {
     }
 }
 
+function pollers_valid_ssl_path($path) {
+	if (!is_string($path) || $path === '' || strpos($path, "\0") !== false) {
+		return false;
+	}
+
+	if (preg_match('#(?:^|[/\\\\])\.\.(?:[/\\\\]|\z)#', $path) === 1) {
+		return false;
+	}
+
+	if (is_link($path) || !is_file($path) || !is_readable($path)) {
+		return false;
+	}
+
+	return true;
+}
+
 function pollers_valid_db_endpoint($host, $port) {
 	if (!is_string($host) || $host === '' || strlen($host) > 100) {
+		return false;
+	}
+
+	$lower = strtolower(rtrim($host, '.'));
+	if ($lower === 'localhost' || strpos($host, '/') !== false || strpos($host, '\\') !== false) {
 		return false;
 	}
 
@@ -890,7 +944,30 @@ function pollers_valid_db_endpoint($host, $port) {
 	   still fails, and an optional trailing dot keeps absolute names. */
 	$label = '[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?';
 
-	if (filter_var($host, FILTER_VALIDATE_IP) === false && !preg_match('/^' . $label . '(?:\\.' . $label . ')*\\.?$/D', $host)) {
+	if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+		$packed = @inet_pton($host);
+		if ($packed === false) {
+			return false;
+		}
+		if (strlen($packed) === 4) {
+			$b0 = ord($packed[0]);
+			$b1 = ord($packed[1]);
+			/* Reject loopback (127.0.0.0/8), unspecified (0.0.0.0/8), and link-local/IMDS (169.254.0.0/16) */
+			if ($b0 === 127 || $b0 === 0 || ($b0 === 169 && $b1 === 254)) {
+				return false;
+			}
+		} else {
+			/* Reject IPv6 unspecified (::), loopback (::1), and link-local (fe80::/10) */
+			if ($packed === str_repeat("\0", 16) || $packed === str_repeat("\0", 15) . "\1") {
+				return false;
+			}
+			$b0 = ord($packed[0]);
+			$b1 = ord($packed[1]);
+			if ($b0 === 0xfe && ($b1 & 0xc0) === 0x80) {
+				return false;
+			}
+		}
+	} elseif (!preg_match('/^' . $label . '(?:\\.' . $label . ')*\\.?$/D', $host)) {
 		return false;
 	}
 

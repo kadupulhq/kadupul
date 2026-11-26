@@ -167,38 +167,42 @@ class Net_Ping
 			 * but this field has already been verified.
 			 * The other fields are numerical fields only and thus
 			 * not vulnerable for command injection */
+			$timeout_sec = (string) ((int) ceil($this->timeout / 1000));
+			$retries_str = (string) ((int) $this->retries);
+			$target_host = $this->host['hostname'];
+
 			if (substr_count(strtolower(PHP_OS), 'sun')) {
 				/* 'ping host' waits 20s by default and prints no round-trip line.
 				 * '-s host 56 count' stops after count probes and prints min/avg/max;
 				 * Solaris has no timeout operand in this form. */
-				$result = shell_exec('ping -s ' . cacti_escapeshellarg($this->host['hostname']) . ' 56 ' . (int) $this->retries);
+				$result = $this->exec_ping_argv(array('ping', '-s', $target_host, '56', $retries_str));
 			} elseif (substr_count(strtolower(PHP_OS), 'hpux')) {
-				$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+				$result = $this->exec_ping_argv(array('ping', '-m', $timeout_sec, '-n', $retries_str, $target_host));
 			} elseif (substr_count(strtolower(PHP_OS), 'mac')) {
-				$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+				$result = $this->exec_ping_argv(array('ping', '-t', $timeout_sec, '-c', $retries_str, $target_host));
 			} elseif (substr_count(strtolower(PHP_OS), 'freebsd')) {
 				if (strpos($host_ip, ':') !== false) {
-					$result = shell_exec('ping6 -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+					$result = $this->exec_ping_argv(array('ping6', '-t', $timeout_sec, '-c', $retries_str, $target_host));
 				} else {
-					$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+					$result = $this->exec_ping_argv(array('ping', '-t', $timeout_sec, '-c', $retries_str, $target_host));
 				}
 			} elseif (substr_count(strtolower(PHP_OS), 'darwin')) {
-				$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+				$result = $this->exec_ping_argv(array('ping', '-t', $timeout_sec, '-c', $retries_str, $target_host));
 			} elseif (substr_count(strtolower(PHP_OS), 'bsd')) {
-				$result = shell_exec('ping -w ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+				$result = $this->exec_ping_argv(array('ping', '-w', $timeout_sec, '-c', $retries_str, $target_host));
 			} elseif (substr_count(strtolower(PHP_OS), 'aix')) {
-				$result = shell_exec('ping -i ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+				$result = $this->exec_ping_argv(array('ping', '-i', $timeout_sec, '-c', $retries_str, $target_host));
 			} elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				$result = shell_exec('chcp 437 && ping -w ' . $this->timeout . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
+				$result = $this->exec_ping_argv(array('ping', '-w', (string) ((int) $this->timeout), '-n', $retries_str, $target_host));
 			} else {
 				/* please know, that when running SELinux, httpd will throw
 				 * ping: cap_set_proc: Permission denied
 				 * as it now tries to open an ICMP socket and fails
 				 * $result will be empty, then. */
 				if (strpos($host_ip, ':') !== false) {
-					$result = shell_exec('ping -6 -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
+					$result = $this->exec_ping_argv(array('ping', '-6', '-W', $timeout_sec, '-c', $retries_str, '-p', $pattern, '--', $target_host));
 				} else {
-					$result = shell_exec('ping -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']) . ' 2>&1');
+					$result = $this->exec_ping_argv(array('ping', '-W', $timeout_sec, '-c', $retries_str, '-p', $pattern, '--', $target_host), true);
 
 					if (strpos($result, 'unknown host') !== false || strpos($result, 'Address family') !== false) {
 						if (file_exists('/usr/bin/ping6')) {
@@ -209,7 +213,7 @@ class Net_Ping
 							$ping_path = '/bin/ping6';
 						}
 
-						$result = shell_exec($ping_path . ' -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
+						$result = $this->exec_ping_argv(array($ping_path, '-W', $timeout_sec, '-c', $retries_str, '-p', $pattern, '--', $target_host));
 					}
 				}
 			}
@@ -743,27 +747,59 @@ class Net_Ping
 		}
 	} /* end_ping */
 
+	protected function exec_ping_argv(array $argv, $merge_stderr = false) {
+		$descriptors = array(
+			0 => array('pipe', 'r'),
+			1 => array('pipe', 'w'),
+			2 => array('pipe', 'w')
+		);
+
+		$process = @proc_open($argv, $descriptors, $pipes, null, null, array('bypass_shell' => true));
+		if (!is_resource($process)) {
+			return '';
+		}
+
+		fclose($pipes[0]);
+		$stdout = stream_get_contents($pipes[1]);
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[1]);
+		fclose($pipes[2]);
+		proc_close($process);
+
+		if ($merge_stderr && $stderr !== false && $stderr !== '') {
+			return (string) $stdout . $stderr;
+		}
+
+		return (string) $stdout;
+	}
+
 	public function is_ipaddress($ip_address = '') {
-		/* Strip IPv6 Scope ID (Zone Index) for validation, as
-		   filter_var rejects valid link-local addresses like fe80::1%eth0 */
-		$clean_ip = $ip_address;
-		if (strpos($clean_ip, '%') !== false) {
-			$parts = explode('%', $clean_ip, 2);
-			$clean_ip = $parts[0];
+		if (!is_string($ip_address) || $ip_address === '') {
+			return false;
+		}
+
+		/* Allow RFC 4007 IPv6 Scope ID (Zone Index) strictly on IPv6 addresses
+		   with a bounded, safe zone identifier (e.g. fe80::1%eth0). */
+		if (strpos($ip_address, '%') !== false) {
+			$parts = explode('%', $ip_address, 2);
+			if ($parts[0] === '' || !isset($parts[1]) || preg_match('/^[A-Za-z0-9_.-]{1,64}\z/', $parts[1]) !== 1) {
+				return false;
+			}
+
+			if (function_exists('filter_var')) {
+				return filter_var($parts[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
+			}
+
+			$packed = @inet_pton($parts[0]);
+			return $packed !== false && strlen($packed) === 16;
 		}
 
 		/* check for ipv4/v6 */
 		if (function_exists('filter_var')) {
-			if (filter_var($clean_ip, FILTER_VALIDATE_IP) !== false) {
-				return true;
-			} else {
-				return false;
-			}
-		} elseif (@inet_pton($clean_ip) !== false) {
-			return true;
-		} else {
-			return false;
+			return filter_var($ip_address, FILTER_VALIDATE_IP) !== false;
 		}
+
+		return @inet_pton($ip_address) !== false;
 	}
 
 	public function strip_ip_address($ip_address) {

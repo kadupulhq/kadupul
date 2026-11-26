@@ -105,10 +105,11 @@ test('the spawn log masks secrets for a snmptrap wrapper the caller names', func
         ->and($GLOBALS['exec_background_logs'][0])->not->toContain('S3cret');
 });
 
-test('snmpagent passes the redacted arguments to the spawn log', function () {
+test('snmpagent uses shellless exec_background_process and logs redacted arguments', function () {
     $source = file_get_contents(__DIR__ . '/../../../../lib/snmpagent.php');
 
-    expect($source)->toContain("exec_background(cacti_escapeshellcmd(\$path_snmptrap), \$args, '', cacti_redact_snmp_command(\$args));");
+    expect($source)->toContain('exec_background_process($path_snmptrap, $argv);')
+        ->and($source)->toContain('cacti_redact_snmp_command($args)');
 });
 
 test('the spawn log leaves other commands untouched', function () {

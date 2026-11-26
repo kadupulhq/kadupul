@@ -25,6 +25,8 @@
 include('./include/auth.php');
 include_once($config['base_path'] . '/lib/spikekill.php');
 
+csrf_require_post(true);
+
 $debug = false;
 
 if (isset_request_var('method')) {
@@ -42,12 +44,21 @@ if (isset_request_var('method')) {
 }
 
 if (is_realm_allowed(1043)) {
+	$local_graph_id = get_filter_request_var('local_graph_id');
+
+	if ($local_graph_id <= 0 || !is_graph_allowed($local_graph_id)) {
+		http_response_code(403);
+		header('Content-Type: application/json');
+		print json_encode(array('results' => __('FATAL: Access Denied to requested Graph.')));
+		exit;
+	}
+
 	$local_data_ids = db_fetch_assoc_prepared('SELECT DISTINCT data_template_rrd.local_data_id
 		FROM graph_templates_item
 		LEFT JOIN data_template_rrd
 		ON graph_templates_item.task_item_id=data_template_rrd.id
 		WHERE graph_templates_item.local_graph_id = ?',
-		array(get_filter_request_var('local_graph_id')));
+		array($local_graph_id));
 
 	$results = '';
 	if (cacti_sizeof($local_data_ids)) {

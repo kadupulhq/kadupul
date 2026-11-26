@@ -414,32 +414,59 @@ function api_device_change_options($device_ids, $post) {
 	$poller_ids      = array();
 	$raised          = array();
 
+	$non_updatable_methods = array('header', 'spacer', 'hidden', 'hidden_zero', 'other');
+	$non_updatable_fields  = array('id', 'deleted', 'status', 'status_event_count', 'status_fail_date', 'status_rec_date', 'status_last_error', 'min_time', 'max_time', 'cur_time', 'avg_time', 'polling_time', 'total_polls', 'failed_polls', 'availability');
+	$int_fields            = array('poller_id', 'site_id', 'host_template_id', 'snmp_version', 'snmp_port', 'snmp_timeout', 'availability_method', 'ping_method', 'ping_port', 'ping_timeout', 'ping_retries', 'max_oids', 'device_threads');
+
 	foreach ($device_ids as $device_id) {
 		foreach ($fields_host_edit as $field_name => $field_array) {
 			if (isset($post["t_$field_name"])) {
+				if (!api_device_change_field_match($field_name) || in_array($field_name, $non_updatable_fields, true)) {
+					continue;
+				}
+				if (isset($field_array['method']) && in_array($field_array['method'], $non_updatable_methods, true)) {
+					continue;
+				}
+				if (!preg_match('/^[a-zA-Z0-9_]+\z/', $field_name) || !db_column_exists('host', $field_name)) {
+					continue;
+				}
+
+				$field_value = get_nfilter_request_var($field_name);
+				if (in_array($field_name, $int_fields, true) && !preg_match('/^[0-9]+\z/', (string) $field_value)) {
+					continue;
+				} elseif ($field_name === 'hostname' && preg_match('/^[^-\s\x00-\x1f][^\s\x00-\x1f]*\z/', trim((string) $field_value)) !== 1) {
+					continue;
+				} elseif ($field_name === 'snmp_auth_protocol' && preg_match('/^(?:\[None\]|MD5|SHA|SHA224|SHA256|SHA384|SHA512)\z/', (string) $field_value) !== 1) {
+					continue;
+				} elseif ($field_name === 'snmp_priv_protocol' && preg_match('/^(?:\[None\]|DES|AES|AES128|AES192|AES192C|AES256|AES256C)\z/', (string) $field_value) !== 1) {
+					continue;
+				} elseif ($field_name === 'disabled' && !in_array((string) $field_value, array('', 'on'), true)) {
+					continue;
+				}
+
 				if ($field_name == 'poller_id') {
 					$old_poller = db_fetch_cell_prepared('SELECT poller_id
 						FROM host
 						WHERE id = ?',
 						array($device_id));
 
-					if ($old_poller > 1 && $old_poller != get_nfilter_request_var($field_name)) {
-						$previous_poller = get_nfilter_request_var($field_name);
+					if ($old_poller > 1 && $old_poller != $field_value) {
+						$previous_poller = $field_value;
 
 						api_device_purge_from_remote($device_id, $old_poller);
 					}
 
 					// Update the local device and replicate
-					if ($old_poller !=  get_nfilter_request_var($field_name) && get_nfilter_request_var($field_name) > 1) {
-						api_device_replicate_out($device_id, get_nfilter_request_var($field_name));
+					if ($old_poller != $field_value && $field_value > 1) {
+						api_device_replicate_out($device_id, $field_value);
 					}
 				}
 
 				db_execute_prepared("UPDATE host
-					SET $field_name = ?
+					SET `$field_name` = ?
 					WHERE id = ?
 					AND deleted = ''",
-					array(get_nfilter_request_var($field_name), $device_id));
+					array($field_value, $device_id));
 
 				if (!isset($poller_ids[$device_id])) {
 					$poller_ids[$device_id] = db_fetch_cell_prepared('SELECT poller_id FROM host WHERE id = ?', array($device_id));
@@ -451,10 +478,10 @@ function api_device_change_options($device_ids, $post) {
 					if (remote_poller_up($poller_id)) {
 						if (($rcnn_id = poller_push_to_remote_db_connect($device_id)) !== false) {
 							db_execute_prepared("UPDATE host
-								SET $field_name = ?
+								SET `$field_name` = ?
 								WHERE id = ?
 								AND deleted = ''",
-								array(get_nfilter_request_var($field_name), $device_id), true, $rcnn_id);
+								array($field_value, $device_id), true, $rcnn_id);
 						} elseif (!isset($raised[$poller_id])) {
 							raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 							$raised[$poller_id] = true;
@@ -466,7 +493,7 @@ function api_device_change_options($device_ids, $post) {
 				}
 
 				if ($field_name == 'host_template_id') {
-					api_device_update_host_template($device_id, get_nfilter_request_var($field_name));
+					api_device_update_host_template($device_id, $field_value);
 				}
 			}
 		}
@@ -977,7 +1004,7 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	$save['external_id']          = form_input_validate($external_id, 'external_id', '', true, 3);
 
 	$save['description']          = form_input_validate($description, 'description', '', false, 3);
-	$save['hostname']             = form_input_validate(trim($hostname), 'hostname', '', false, 3);
+	$save['hostname']             = form_input_validate(trim($hostname), 'hostname', '^[^-\s\x00-\x1f][^\s\x00-\x1f]*$', false, 3);
 	$save['notes']                = form_input_validate($notes, 'notes', '', true, 3);
 	$save['location']             = form_input_validate($location, 'location', '', true, 3);
 
@@ -987,9 +1014,9 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	if ($save['snmp_version'] == 3) {
 		$save['snmp_username']        = form_input_validate($snmp_username, 'snmp_username', '', true, 3);
 		$save['snmp_password']        = form_input_validate($snmp_password, 'snmp_password', '', true, 3);
-		$save['snmp_auth_protocol']   = form_input_validate($snmp_auth_protocol, 'snmp_auth_protocol', "^\[None\]|MD5|SHA|SHA224|SHA256|SHA392|SHA512$", true, 3);
+		$save['snmp_auth_protocol']   = form_input_validate($snmp_auth_protocol, 'snmp_auth_protocol', '^(\[None\]|MD5|SHA|SHA224|SHA256|SHA384|SHA512)$', true, 3);
 		$save['snmp_priv_passphrase'] = form_input_validate($snmp_priv_passphrase, 'snmp_priv_passphrase', '', true, 3);
-		$save['snmp_priv_protocol']   = form_input_validate($snmp_priv_protocol, 'snmp_priv_protocol', "^\[None\]|DES|AES|AES128|AES192|AES192C|AES256|AES256C$", true, 3);
+		$save['snmp_priv_protocol']   = form_input_validate($snmp_priv_protocol, 'snmp_priv_protocol', '^(\[None\]|DES|AES|AES128|AES192|AES192C|AES256|AES256C)$', true, 3);
 		$save['snmp_context']         = form_input_validate($snmp_context, 'snmp_context', '', true, 3);
 		$save['snmp_engine_id']       = form_input_validate($snmp_engine_id, 'snmp_engine_id', '', true, 3);
 
@@ -1519,7 +1546,20 @@ function api_device_ping_device($device_id, $from_remote = false) {
 		$results = call_remote_data_collector($host['poller_id'], $url);
 
 		if ($results != '') {
-			print $results;
+			/* Strip scripts/tags outside safe text formatting returned by remote_agent.php */
+			$sanitized = preg_replace('/<script\b[^>]*>.*?<\/script>/is', '', (string) $results);
+			$sanitized = strip_tags($sanitized, '<br><span><strong><b><em><i>');
+			$sanitized = preg_replace_callback('/<(span|strong|b|em|i|br)\b([^>]*)>/i', function ($m) {
+				$tag = strtolower($m[1]);
+				if ($tag === 'br') {
+					return '<br>';
+				}
+				if ($tag === 'span' && preg_match('/\bclass=([\'"])([a-zA-Z0-9 _-]+)\1/', $m[2], $cm)) {
+					return '<span class="' . html_escape($cm[2]) . '">';
+				}
+				return '<' . $tag . '>';
+			}, $sanitized);
+			print $sanitized;
 		} else {
 			print __('ERROR: Failed to connect to remote collector.');
 		}
@@ -1551,7 +1591,7 @@ function api_device_ping_device($device_id, $from_remote = false) {
 			if ($session === false || $snmp_error != '') {
 				print "<span class='hostDown'>" . __('Session') . ' ' . __('SNMP error');
 				if ($snmp_error != '') {
-					print " - $snmp_error";
+					print ' - ' . html_escape($snmp_error);
 				}
 				print '</span>';
 			} else {
@@ -1559,7 +1599,7 @@ function api_device_ping_device($device_id, $from_remote = false) {
 				if ($snmp_system === false || $snmp_system == 'U' || $snmp_error != '') {
 					print "<span class='hostDown'>" . __('System') . ' ' . __('SNMP error');
 					if ($snmp_error != '') {
-						print " - $snmp_error";
+						print ' - ' . html_escape($snmp_error);
 					}
 					print '</span>';
 				} else {
@@ -1580,7 +1620,7 @@ function api_device_ping_device($device_id, $from_remote = false) {
 
 						print "<span class='hostDown'>" . __('Host') . ' ' .  __('SNMP error');
 						if ($snmp_error != '') {
-							print " - $snmp_error";
+							print ' - ' . html_escape($snmp_error);
 						}
 						print '</span>';
 					} else {

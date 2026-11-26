@@ -934,39 +934,91 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 
 			$log_notification_varbinds  = '';
 			$snmp_notification_varbinds = '';
+			$varbind_argv               = array();
 
-			foreach($notification_managers as $notification_manager) {
-				if (!$snmp_notification_varbinds) {
-					foreach($registered_var_binds as $name => $attributes ) {
-						$snmp_notification_varbinds .= ' ' . cacti_escapeshellarg($attributes['oid']) . ' ' . $smi2netsnmp_datatypes[strtolower($attributes['type'])] . ' ' . cacti_escapeshellarg($varbinds[$name]);
+			foreach ($notification_managers as $notification_manager) {
+				if (!cacti_sizeof($varbind_argv) && cacti_sizeof($registered_var_binds)) {
+					foreach ($registered_var_binds as $name => $attributes) {
+						$datatype = $smi2netsnmp_datatypes[strtolower($attributes['type'])];
+						$varbind_argv[] = (string) $attributes['oid'];
+						$varbind_argv[] = (string) $datatype;
+						$varbind_argv[] = (string) $varbinds[$name];
+
+						$snmp_notification_varbinds .= ' ' . cacti_escapeshellarg($attributes['oid']) . ' ' . $datatype . ' ' . cacti_escapeshellarg($varbinds[$name]);
 						$log_notification_varbinds .= $name . ":\"" . str_replace('"', "'", $varbinds[$name]) . "\" ";
 					}
 				}
 
-				if ($notification_manager['snmp_version'] == 1 ) {
-					$args = ' -v 1 -c ' . cacti_escapeshellarg($notification_manager['snmp_community']) . ' ' . cacti_escapeshellarg($notification_manager['hostname'] . ':' . $notification_manager['snmp_port']) . ' ' . cacti_escapeshellarg($enterprise_oid) . ' "" 6 ' . cacti_escapeshellarg($specific_trap_number) . ' ""' . $snmp_notification_varbinds;
-				}else if ($notification_manager['snmp_version'] == 2 ) {
-					$args = ' -v 2c -c ' . cacti_escapeshellarg($notification_manager['snmp_community']) . ( ($notification_manager['snmp_message_type'] == 2 )? ' -Ci ' : '' )  . ' ' . cacti_escapeshellarg($notification_manager['hostname'] . ':' . $notification_manager['snmp_port']) . ' "" ' . cacti_escapeshellarg($enterprise_oid) . $snmp_notification_varbinds;
-				}else if ($notification_manager['snmp_version'] == 3 ) {
+				$target = $notification_manager['hostname'] . ':' . (int) $notification_manager['snmp_port'];
+				$argv   = array();
+				$args   = '';
 
-					if ( $overwrite && isset($overwrite['snmp_engine_id']) && $overwrite['snmp_engine_id'] ) {
+				if ($notification_manager['snmp_version'] == 1) {
+					$argv = array_merge(
+						array('-v', '1', '-c', (string) $notification_manager['snmp_community'], '--', $target, (string) $enterprise_oid, '', '6', (string) $specific_trap_number, ''),
+						$varbind_argv
+					);
+					$args = ' -v 1 -c ' . cacti_escapeshellarg($notification_manager['snmp_community']) . ' -- ' . cacti_escapeshellarg($target) . ' ' . cacti_escapeshellarg($enterprise_oid) . ' "" 6 ' . cacti_escapeshellarg($specific_trap_number) . ' ""' . $snmp_notification_varbinds;
+				} elseif ($notification_manager['snmp_version'] == 2) {
+					$argv = array('-v', '2c', '-c', (string) $notification_manager['snmp_community']);
+					if ($notification_manager['snmp_message_type'] == 2) {
+						$argv[] = '-Ci';
+					}
+					$argv = array_merge($argv, array('--', $target, '', (string) $enterprise_oid), $varbind_argv);
+					$args = ' -v 2c -c ' . cacti_escapeshellarg($notification_manager['snmp_community']) . (($notification_manager['snmp_message_type'] == 2) ? ' -Ci ' : '') . ' -- ' . cacti_escapeshellarg($target) . ' "" ' . cacti_escapeshellarg($enterprise_oid) . $snmp_notification_varbinds;
+				} elseif ($notification_manager['snmp_version'] == 3) {
+					global $snmp_auth_protocols, $snmp_priv_protocols;
+
+					if ($overwrite && isset($overwrite['snmp_engine_id']) && $overwrite['snmp_engine_id']) {
 						$notification_manager['snmp_engine_id'] = $overwrite['snmp_engine_id'];
 					}
 
-					$args = ' -v 3 -e ' . cacti_escapeshellarg($notification_manager['snmp_engine_id']) . (($notification_manager['snmp_message_type'] == 2 )? ' -Ci ' : '' ) .  ' -u ' . cacti_escapeshellarg($notification_manager['snmp_username']);
+					$auth_proto = isset($snmp_auth_protocols[$notification_manager['snmp_auth_protocol']])
+						? $notification_manager['snmp_auth_protocol']
+						: '[None]';
+					$priv_proto = isset($snmp_priv_protocols[$notification_manager['snmp_priv_protocol']])
+						? $notification_manager['snmp_priv_protocol']
+						: '[None]';
 
-					if ( $notification_manager['snmp_password'] && $notification_manager['snmp_priv_passphrase']) {
+					$argv = array('-v', '3', '-e', (string) $notification_manager['snmp_engine_id']);
+					if ($notification_manager['snmp_message_type'] == 2) {
+						$argv[] = '-Ci';
+					}
+					$argv[] = '-u';
+					$argv[] = (string) $notification_manager['snmp_username'];
+
+					$args = ' -v 3 -e ' . cacti_escapeshellarg($notification_manager['snmp_engine_id']) . (($notification_manager['snmp_message_type'] == 2) ? ' -Ci ' : '') . ' -u ' . cacti_escapeshellarg($notification_manager['snmp_username']);
+
+					if ($notification_manager['snmp_password'] && $notification_manager['snmp_priv_passphrase']) {
 						$snmp_security_level = 'authPriv';
-					} elseif ( $notification_manager['snmp_password'] && !$notification_manager['snmp_priv_passphrase']) {
+					} elseif ($notification_manager['snmp_password'] && !$notification_manager['snmp_priv_passphrase']) {
 						$snmp_security_level = 'authNoPriv';
 					} else {
 						$snmp_security_level = 'noAuthNoPriv';
 					}
-					$args .= ' -l ' . $snmp_security_level . (($snmp_security_level != 'noAuthNoPriv') ? ' -a ' . cacti_escapeshellarg($notification_manager['snmp_auth_protocol']) . ' -A ' . cacti_escapeshellarg($notification_manager['snmp_password']) : '' ) . (($snmp_security_level == 'authPriv')? ' -x ' . cacti_escapeshellarg($notification_manager['snmp_priv_protocol']) . ' -X ' . cacti_escapeshellarg($notification_manager['snmp_priv_passphrase']) : '')  . ' ' . cacti_escapeshellarg($notification_manager['hostname'] . ':' . $notification_manager['snmp_port']) . ' "" ' . cacti_escapeshellarg($enterprise_oid) . $snmp_notification_varbinds;
+
+					$argv[] = '-l';
+					$argv[] = $snmp_security_level;
+					if ($snmp_security_level != 'noAuthNoPriv') {
+						$argv[] = '-a';
+						$argv[] = (string) $auth_proto;
+						$argv[] = '-A';
+						$argv[] = (string) $notification_manager['snmp_password'];
+					}
+					if ($snmp_security_level == 'authPriv') {
+						$argv[] = '-x';
+						$argv[] = (string) $priv_proto;
+						$argv[] = '-X';
+						$argv[] = (string) $notification_manager['snmp_priv_passphrase'];
+					}
+					$argv = array_merge($argv, array('--', $target, '', (string) $enterprise_oid), $varbind_argv);
+
+					$args .= ' -l ' . $snmp_security_level . (($snmp_security_level != 'noAuthNoPriv') ? ' -a ' . cacti_escapeshellarg($auth_proto) . ' -A ' . cacti_escapeshellarg($notification_manager['snmp_password']) : '') . (($snmp_security_level == 'authPriv') ? ' -x ' . cacti_escapeshellarg($priv_proto) . ' -X ' . cacti_escapeshellarg($notification_manager['snmp_priv_passphrase']) : '') . ' -- ' . cacti_escapeshellarg($target) . ' "" ' . cacti_escapeshellarg($enterprise_oid) . $snmp_notification_varbinds;
 				}
 
-				/* execute net-snmp to generate this notification in the background */
-				exec_background(cacti_escapeshellcmd($path_snmptrap), $args, '', cacti_redact_snmp_command($args));
+				/* execute net-snmp directly without a shell to generate this notification in the background */
+				cacti_log('DEBUG: Executing snmptrap: ' . $path_snmptrap . ' ' . cacti_redact_snmp_command($args), false, 'SNMPAGENT', POLLER_VERBOSITY_DEBUG);
+				exec_background_process($path_snmptrap, $argv);
 
 				/* insert a new entry into the notification log for that SNMP receiver */
 				$save = array();

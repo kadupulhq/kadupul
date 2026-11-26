@@ -801,9 +801,13 @@ function rrdcheck_rrdtool_init() {
 		putenv('RRD_DEFAULT_FONT=' . read_config_option('path_rrdtool_default_font'));
 	}
 
-	$command = read_config_option('path_rrdtool') . ' - ';
+	$rrdtool_path = (string) read_config_option('path_rrdtool');
+	if ($rrdtool_path === '' || !is_file($rrdtool_path) || !is_executable($rrdtool_path)) {
+		cacti_log('ERROR: Invalid or non-executable RRDtool binary configured for rrdcheck', false, 'RRDCHECK');
+		return array(false, array());
+	}
 
-	$process = proc_open($command, $fds, $pipes);
+	$process = proc_open(array($rrdtool_path, '-'), $fds, $pipes, null, null, array('bypass_shell' => true));
 
 	/* make stdin/stdout/stderr non-blocking */
 	stream_set_blocking($pipes[0], 0);

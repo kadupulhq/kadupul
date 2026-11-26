@@ -179,6 +179,22 @@ function is_error_message() {
 	return (isset($_SESSION['sess_error_fields']) && count($_SESSION['sess_error_fields']));
 }
 
+function is_graph_allowed($local_graph_id, $user = 0) {
+	return true;
+}
+
+function is_device_allowed($host_id, $user = 0) {
+	return true;
+}
+
+function is_graph_template_allowed($graph_template_id, $user = 0) {
+	return true;
+}
+
+function is_tree_allowed($tree_id, $user = 0) {
+	return true;
+}
+
 function sql_save($save, $table_name) {
 	$GLOBALS['rg_saved'][] = $table_name;
 

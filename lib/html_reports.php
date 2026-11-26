@@ -429,6 +429,22 @@ function reports_form_save(): never {
 		$save['font_size']         = (isset_request_var('font_size') ? form_input_validate(get_nfilter_request_var('font_size'), 'font_size', '^[0-9]+$', true, 3) : REPORTS_FONT_SIZE);
 
 		if (!is_error_message()) {
+			if ((int) $save['local_graph_id'] > 0 && !is_graph_allowed((int) $save['local_graph_id'])) {
+				raise_message('permission_denied');
+				$_SESSION['sess_error_fields']['local_graph_id'] = 'local_graph_id';
+			} elseif ((int) $save['host_id'] > 0 && !is_device_allowed((int) $save['host_id'])) {
+				raise_message('permission_denied');
+				$_SESSION['sess_error_fields']['host_id'] = 'host_id';
+			} elseif ((int) $save['graph_template_id'] > 0 && !is_graph_template_allowed((int) $save['graph_template_id'])) {
+				raise_message('permission_denied');
+				$_SESSION['sess_error_fields']['graph_template_id'] = 'graph_template_id';
+			} elseif ((int) $save['tree_id'] > 0 && !is_tree_allowed((int) $save['tree_id'])) {
+				raise_message('permission_denied');
+				$_SESSION['sess_error_fields']['tree_id'] = 'tree_id';
+			}
+		}
+
+		if (!is_error_message()) {
 			$item_id = sql_save($save, 'reports_items');
 
 			reports_item_resequence($save['report_id']);
@@ -547,6 +563,10 @@ function reports_form_actions() {
 			/* ================= input validation ================= */
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */
+
+			if (!cacti_authorize_resource($_SESSION['sess_user_id'], $matches[1], 'reports')) {
+				continue;
+			}
 
 			$reports_list .= '<li>' . html_escape(db_fetch_cell_prepared('SELECT name FROM reports WHERE id = ?', array($matches[1]))) . '</li>';
 
@@ -802,6 +822,21 @@ function reports_item_validate() {
 
 	$reset = array();
 
+	if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+		$reset['host_id'] = true;
+		set_request_var('host_id', -1);
+	}
+
+	if (get_request_var('local_graph_id') > 0 && !is_graph_allowed(get_request_var('local_graph_id'))) {
+		$reset['local_graph_id'] = true;
+		set_request_var('local_graph_id', 0);
+	}
+
+	if (get_request_var('graph_template_id') > 0 && !is_graph_template_allowed(get_request_var('graph_template_id'))) {
+		$reset['graph_template_id'] = true;
+		set_request_var('graph_template_id', -1);
+	}
+
 	if (cacti_sizeof($changed)) {
 		foreach($changed as $id => $value) {
 			switch($id) {
@@ -1013,17 +1048,25 @@ function reports_item_edit() {
 		} else {
 			switch($check) {
 				case 'graph_template_id':
-					$graph_template_description = db_fetch_cell_prepared('SELECT name
-						FROM graph_templates
-						WHERE id = ?',
-						array($report_item[$check]));
+					if (is_graph_template_allowed($report_item[$check])) {
+						$graph_template_description = db_fetch_cell_prepared('SELECT name
+							FROM graph_templates
+							WHERE id = ?',
+							array($report_item[$check]));
+					} else {
+						$graph_template_description = __('Access Denied');
+					}
 
 					break;
 				case 'host_id':
-					$host_description = db_fetch_cell_prepared('SELECT description
-						FROM host
-						WHERE id = ?',
-						array($report_item[$check]));
+					if (is_device_allowed($report_item[$check])) {
+						$host_description = db_fetch_cell_prepared('SELECT description
+							FROM host
+							WHERE id = ?',
+							array($report_item[$check]));
+					} else {
+						$host_description = __('Access Denied');
+					}
 
 					break;
 			}
@@ -1031,10 +1074,14 @@ function reports_item_edit() {
 	}
 
 	if ($report_item['local_graph_id'] > 0) {
-		$title_cache = db_fetch_cell_prepared('SELECT title_cache
-			FROM graph_templates_graph
-			WHERE local_graph_id = ?',
-			array($report_item['local_graph_id']));
+		if (is_graph_allowed($report_item['local_graph_id'])) {
+			$title_cache = db_fetch_cell_prepared('SELECT title_cache
+				FROM graph_templates_graph
+				WHERE local_graph_id = ?',
+				array($report_item['local_graph_id']));
+		} else {
+			$title_cache = __('Access Denied');
+		}
 	} else {
 		$title_cache = __('None');
 	}
@@ -1772,15 +1819,21 @@ function display_reports_items($report_id) {
 
 				break;
 			case REPORTS_ITEM_HOST:
-				$item_details = __('Device: %s', db_fetch_cell_prepared('SELECT description FROM host WHERE id = ?', array($item['host_id'])));
+				if (is_device_allowed($item['host_id'])) {
+					$item_details = __('Device: %s', db_fetch_cell_prepared('SELECT description FROM host WHERE id = ?', array($item['host_id'])));
+				} else {
+					$item_details = __('Device: %s', __('Access Denied'));
+				}
 
 				if ($item['graph_template_id'] == -1) {
 					$item_details .= __(', Graph Template: All Templates');
-				} else {
+				} elseif (is_graph_template_allowed($item['graph_template_id'])) {
 					$item_details .= __(', Graph Template: %s', db_fetch_cell_prepared('SELECT name
 						FROM graph_templates
 						WHERE id = ?',
 						array($item['graph_template_id'])));
+				} else {
+					$item_details .= __(', Graph Template: %s', __('Access Denied'));
 				}
 
 				if ($item['graph_name_regexp'] != '') {
@@ -1812,38 +1865,47 @@ function display_reports_items($report_id) {
 
 				break;
 			case REPORTS_ITEM_TREE:
-				if ($item['branch_id'] > 0) {
-					$branch_details = db_fetch_row_prepared('SELECT *
-						FROM graph_tree_items
-						WHERE id = ?',
-						array($item['branch_id']));
-				} else {
-					$branch_details = array();
-				}
-
-				$tree_name = db_fetch_cell_prepared('SELECT name
-					FROM graph_tree
-					WHERE id = ?',
-					array($item['tree_id']));
-
-				$item_details = __('Tree: %s', $tree_name);
-				if ($item['branch_id'] > 0) {
-					if ($branch_details['host_id'] > 0) {
-						$description = db_fetch_cell_prepared('SELECT description
-							FROM host
-							WHERE id = ?',
-							array($branch_details['host_id']));
-
-						$item_details .= __(', Device: %s', $description);
+				if (is_tree_allowed($item['tree_id'])) {
+					if ($item['branch_id'] > 0) {
+						$branch_details = db_fetch_row_prepared('SELECT *
+							FROM graph_tree_items
+							WHERE id = ?
+							AND graph_tree_id = ?',
+							array($item['branch_id'], $item['tree_id']));
 					} else {
-						$item_details .= __(', Branch: %s', $branch_details['title']);
+						$branch_details = array();
+					}
 
-						if ($item['tree_cascade'] == 'on') {
-							$item_details .= ' ' . __('(All Branches)');
+					$tree_name = db_fetch_cell_prepared('SELECT name
+						FROM graph_tree
+						WHERE id = ?',
+						array($item['tree_id']));
+
+					$item_details = __('Tree: %s', $tree_name);
+					if ($item['branch_id'] > 0 && cacti_sizeof($branch_details)) {
+						if ($branch_details['host_id'] > 0) {
+							if (is_device_allowed($branch_details['host_id'])) {
+								$description = db_fetch_cell_prepared('SELECT description
+									FROM host
+									WHERE id = ?',
+									array($branch_details['host_id']));
+							} else {
+								$description = __('Access Denied');
+							}
+
+							$item_details .= __(', Device: %s', $description);
 						} else {
-							$item_details .= ' ' . __('(Current Branch)');
+							$item_details .= __(', Branch: %s', $branch_details['title']);
+
+							if ($item['tree_cascade'] == 'on') {
+								$item_details .= ' ' . __('(All Branches)');
+							} else {
+								$item_details .= ' ' . __('(Current Branch)');
+							}
 						}
 					}
+				} else {
+					$item_details = __('Tree: %s', __('Access Denied'));
 				}
 
 				if ($item['graph_name_regexp'] != '') {
