@@ -7,3 +7,7 @@ framework:
             cache.plugin_console_menu:
                 adapter: cache.adapter.filesystem
                 default_lifetime: 300
+            # Per-node login rate limiter storage under var/ (ADR 0010 Decision 6).
+            cache.login_rate_limiter:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 3600

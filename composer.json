@@ -52,6 +52,7 @@
         "symfony/http-client": "7.4.*",
         "symfony/http-foundation": "7.4.*",
         "symfony/http-kernel": "7.4.*",
+        "symfony/ldap": "7.4.*",
         "symfony/lock": "7.4.*",
         "symfony/mailer": "7.4.*",
         "symfony/messenger": "7.4.*",
@@ -59,6 +60,7 @@
         "symfony/options-resolver": "7.4.*",
         "symfony/password-hasher": "7.4.*",
         "symfony/process": "7.4.*",
+        "symfony/rate-limiter": "7.4.*",
         "symfony/routing": "7.4.*",
         "symfony/scheduler": "7.4.*",
         "symfony/security-bundle": "7.4.*",
@@ -68,6 +70,7 @@
         "symfony/translation": "7.4.*",
         "symfony/translation-contracts": "^3.7",
         "symfony/twig-bundle": "7.4.*",
+        "symfony/validator": "7.4.*",
         "symfony/workflow": "7.4.*",
         "symfony/yaml": "7.4.*",
         "twig/twig": "^3.29"
