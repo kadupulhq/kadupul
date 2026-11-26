@@ -1262,23 +1262,31 @@ function cacti_build_https_redirect_url(string $server_name, string $request_uri
  *
  * @return bool|string Returns true if the regular expression is valid, otherwise returns an error message string.
  */
-function validate_is_regex($regex): bool|string
+function validate_is_regex($regex, $max_length = 50): bool|string
 {
     if ($regex == '') {
         return true;
     }
 
+    if (!is_string($regex) || str_contains($regex, "\0")) {
+        return __('Invalid regular expression.');
+    }
+
     /**
      * Prevent exploits from encoded Regular expressions that can cause
      * injections in MariaDB and MySQL.  We do this by limiting the
-     * length of the regular expression to 50 bytes or less.
+     * length of the regular expression to 50 bytes or less by default.
      */
-    if (strlen($regex) > 50) {
+    if (strlen($regex) > $max_length) {
         return __('Kadupul regular expressions are limited to 50 characters only for security reasons.');
     }
 
     if (str_contains($regex, ';')) {
         return __('Kadupul regular expressions cannot include the semicolon character.');
+    }
+
+    if (str_contains($regex, '(?C')) {
+        return __('Invalid regular expression.');
     }
 
     $warning = null;

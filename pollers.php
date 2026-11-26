@@ -7,8 +7,9 @@
 
 require('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'ping'));
 require_once($config['base_path'] . '/lib/poller.php');
+require_once(__DIR__ . '/src/Platform/Domain/IpAddressPolicy.php');
 
 /* performing a full sync can take a lot of memory and time */
 ini_set('memory_limit', '-1');
@@ -125,7 +126,7 @@ $fields_poller_edit = array(
 		'description' => __('The name of the remote database.'),
 		'value' => '|arg1:dbdefault|',
 		'size' => '20',
-		'default' => $database_default,
+		'default' => '',
 		'max_length' => '20'
 	),
 	'dbuser' => array(
@@ -134,7 +135,7 @@ $fields_poller_edit = array(
 		'description' => __('The user name to use to connect to the remote database.'),
 		'value' => '|arg1:dbuser|',
 		'size' => '20',
-		'default' => $database_username,
+		'default' => '',
 		'max_length' => '20'
 	),
 	'dbpass' => array(
@@ -143,7 +144,7 @@ $fields_poller_edit = array(
 		'description' => __('The user password to use to connect to the remote database.'),
 		'value' => '|arg1:dbpass|',
 		'size' => '40',
-		'default' => $database_password,
+		'default' => '',
 		'max_length' => '64'
 	),
 	'dbport' => array(
@@ -152,7 +153,7 @@ $fields_poller_edit = array(
 		'description' => __('The TCP port to use to connect to the remote database.'),
 		'value' => '|arg1:dbport|',
 		'size' => '5',
-		'default' => $database_port,
+		'default' => '',
 		'max_length' => '5'
 	),
 	'dbretries' => array(
@@ -161,7 +162,7 @@ $fields_poller_edit = array(
 		'description' => __('The number of times to attempt to retry to connect to the remote database.'),
 		'value' => '|arg1:dbretries|',
 		'size' => '5',
-		'default' => $database_retries,
+		'default' => '',
 		'max_length' => '5'
 	),
 	'dbssl' => array(
@@ -169,7 +170,7 @@ $fields_poller_edit = array(
 		'friendly_name' => __('Remote Database SSL'),
 		'description' => __('If the remote database uses SSL to connect, check the checkbox below.'),
 		'value' => '|arg1:dbssl|',
-		'default' => $database_ssl ? 'on':''
+		'default' => ''
 	),
 	'dbsslkey' => array(
 		'method' => 'textbox',
@@ -177,7 +178,7 @@ $fields_poller_edit = array(
 		'description' => __('The file holding the SSL Key to use to connect to the remote database.'),
 		'value' => '|arg1:dbsslkey|',
 		'size' => '50',
-		'default' => $database_ssl_key,
+		'default' => '',
 		'max_length' => '255'
 	),
 	'dbsslcert' => array(
@@ -186,7 +187,7 @@ $fields_poller_edit = array(
 		'description' => __('The file holding the SSL Certificate to use to connect to the remote database.'),
 		'value' => '|arg1:dbsslcert|',
 		'size' => '50',
-		'default' => $database_ssl_cert,
+		'default' => '',
 		'max_length' => '255'
 	),
 	'dbsslca' => array(
@@ -195,7 +196,7 @@ $fields_poller_edit = array(
 		'description' => __('The file holding the SSL Certificate Authority to use to connect to the remote database.  This is an optional parameter that can be required by the database provider if they have started SSL using the --ssl-mode=VERIFY_CA option.'),
 		'value' => '|arg1:dbsslca|',
 		'size' => '50',
-		'default' => $database_ssl_ca,
+		'default' => '',
 		'max_length' => '255'
 	),
 	'id' => array(
@@ -258,6 +259,47 @@ switch (get_request_var('action')) {
     The Save Function
    -------------------------- */
 
+function poller_validate_remote_host($host) {
+	if (!is_string($host)) {
+		return false;
+	}
+
+	$trimmed = trim($host);
+	if (!\Kadupul\Platform\Domain\IpAddressPolicy::isSafeRemoteHostSyntax($trimmed)) {
+		return false;
+	}
+
+	if (\Kadupul\Platform\Domain\IpAddressPolicy::isValidIpAddress($trimmed)) {
+		return !\Kadupul\Platform\Domain\IpAddressPolicy::isLoopbackOrReservedIp($trimmed);
+	}
+
+	$resolved_ips = array();
+	$records = @dns_get_record($trimmed, DNS_A | DNS_AAAA);
+	if (is_array($records)) {
+		foreach ($records as $record) {
+			if (!empty($record['ip'])) {
+				$resolved_ips[] = $record['ip'];
+			}
+			if (!empty($record['ipv6'])) {
+				$resolved_ips[] = $record['ipv6'];
+			}
+		}
+	}
+
+	$ipv4s = @gethostbynamel($trimmed);
+	if (is_array($ipv4s)) {
+		$resolved_ips = array_merge($resolved_ips, $ipv4s);
+	}
+
+	foreach (array_unique($resolved_ips) as $ip) {
+		if (\Kadupul\Platform\Domain\IpAddressPolicy::isLoopbackOrReservedIp($ip)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 function form_save() {
 	if (isset_request_var('save_component_poller')) {
 
@@ -272,20 +314,61 @@ function form_save() {
 		$save['processes'] = form_input_validate(get_nfilter_request_var('processes'), 'processes', '^[0-9]+$', false, 3);
 		$save['threads']   = form_input_validate(get_nfilter_request_var('threads'), 'threads', '^[0-9]+$', false, 3);
 
-		if ($save['id'] != 1) {
+		$error = false;
+		$poller_id_int = (int) $save['id'];
+
+		if ($poller_id_int !== 1) {
 			$save['sync_interval'] = form_input_validate(get_nfilter_request_var('sync_interval'), 'sync_interval', '^[0-9]+$', false, 3);
 
 			// Database settings
 			$save['dbdefault']     = form_input_validate(get_nfilter_request_var('dbdefault'), 'dbdefault', '', true, 3);
 			$save['dbhost']        = form_input_validate(get_nfilter_request_var('dbhost'),    'dbhost',    '', true, 3);
 			$save['dbuser']        = form_input_validate(get_nfilter_request_var('dbuser'),    'dbuser',    '', true, 3);
-			$save['dbpass']        = form_input_validate(get_nfilter_request_var('dbpass'),    'dbpass',    '', true, 3);
+			$submitted_pass        = form_input_validate(get_nfilter_request_var('dbpass'),    'dbpass',    '', true, 3);
+			if ($submitted_pass !== '' && isset_request_var('dbpass_confirm') && $submitted_pass !== get_nfilter_request_var('dbpass_confirm')) {
+				raise_message(4);
+				$error = true;
+			} elseif ($submitted_pass === '' && $poller_id_int > 1) {
+				$existing_pass = db_fetch_cell_prepared('SELECT dbpass FROM poller WHERE id = ?', array($poller_id_int));
+				$save['dbpass'] = is_string($existing_pass) ? $existing_pass : '';
+			} else {
+				$save['dbpass'] = $submitted_pass;
+			}
 			$save['dbport']        = form_input_validate(get_nfilter_request_var('dbport'),    'dbport',    '^[0-9]+$', true, 3);
 			$save['dbretries']     = form_input_validate(get_nfilter_request_var('dbretries'), 'dbretries', '^[0-9]+$', true, 3);
 			$save['dbssl']         = isset_request_var('dbssl') ? 'on':'';
 			$save['dbsslkey']      = form_input_validate(get_nfilter_request_var('dbsslkey'),  'dbsslkey',  '', true, 3);
 			$save['dbsslcert']     = form_input_validate(get_nfilter_request_var('dbsslcert'), 'dbsslcert', '', true, 3);
 			$save['dbsslca']       = form_input_validate(get_nfilter_request_var('dbsslca'),   'dbsslca',   '', true, 3);
+
+			if (!poller_validate_remote_host($save['hostname'])) {
+				raise_message('poller_hostname_invalid', __('Invalid remote Data Collector hostname. Loopback, link-local, reserved, and socket targets are not permitted.'), MESSAGE_LEVEL_ERROR);
+				$error = true;
+			}
+
+			if ($save['dbhost'] !== '' && !poller_validate_remote_host($save['dbhost'])) {
+				raise_message('poller_dbhost');
+				$error = true;
+			}
+
+			if ($save['dbport'] !== '' && filter_var($save['dbport'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 65535))) === false) {
+				raise_message('poller_dbport_invalid', __('Remote Database Port must be between 1 and 65535.'), MESSAGE_LEVEL_ERROR);
+				$error = true;
+			}
+
+			if ($save['dbretries'] !== '' && filter_var($save['dbretries'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 0, 'max_range' => 5))) === false) {
+				raise_message('poller_dbretries_invalid', __('Remote Database Retries must be between 0 and 5.'), MESSAGE_LEVEL_ERROR);
+				$error = true;
+			}
+		} else {
+			$trimmed_host = trim((string) $save['hostname']);
+			if ($trimmed_host === '' || preg_match('/[\x00-\x1f\x7f\s;\/\\\\]/', $trimmed_host) === 1
+				|| str_starts_with($trimmed_host, '-')
+				|| (!\Kadupul\Platform\Domain\IpAddressPolicy::isValidIpAddress($trimmed_host)
+					&& filter_var($trimmed_host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)) {
+				raise_message('poller_hostname_invalid', __('Invalid Data Collector hostname.'), MESSAGE_LEVEL_ERROR);
+				$error = true;
+			}
 		}
 
 		if (!is_ipaddress($save['hostname']) && !str_contains($save['hostname'], '.')) {
@@ -293,22 +376,19 @@ function form_save() {
 		}
 
 		// Check for duplicate hostname
-		$error = false;
-		if (poller_check_duplicate_poller_id($save['id'], $save['hostname'], 'hostname')) {
+		if (!$error && poller_check_duplicate_poller_id($save['id'], $save['hostname'], 'hostname')) {
 			raise_message('dupe_hostname', __esc('You have already used this hostname \'%s\'.  Please enter a non-duplicate hostname.', $save['hostname']), MESSAGE_LEVEL_ERROR);
 			$error = true;
 		}
 
-		if (isset($save['dbhost'])) {
+		if (!$error && isset($save['dbhost']) && $save['dbhost'] !== '') {
 			if (poller_check_duplicate_poller_id($save['id'], $save['dbhost'], 'dbhost')) {
-				raise_message('dupe_dbhost', __esc('You have already used this database hostname \'%s\'.  Please enter a non-duplicate database hostname.', $save['hostname']), MESSAGE_LEVEL_ERROR);
+				raise_message('dupe_dbhost', __esc('You have already used this database hostname \'%s\'.  Please enter a non-duplicate database hostname.', $save['dbhost']), MESSAGE_LEVEL_ERROR);
 				$error = true;
 			}
 		}
 
-		if (isset($save['dbhost']) && $save['dbhost'] == 'localhost' && $save['id'] > 1) {
-			raise_message('poller_dbhost');
-		} elseif ($save['id'] > 1 && poller_host_duplicate($save['id'], $save['dbhost'])) {
+		if (!$error && $poller_id_int !== 1 && !empty($save['dbhost']) && poller_host_duplicate($save['id'], $save['dbhost'])) {
 			raise_message('poller_nodupe');
 		} elseif (!is_error_message() && $error == false) {
 			$poller_id = sql_save($save, 'poller');
@@ -325,6 +405,14 @@ function form_save() {
 }
 
 function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
+	if (!in_array($column, array('hostname', 'dbhost'), true)) {
+		return false;
+	}
+
+	if (!is_string($hostname) || trim($hostname) === '') {
+		return false;
+	}
+
 	$ip_addresses  = array();
 	$ip_hostnames  = array();
 
@@ -364,7 +452,7 @@ function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
 			}
 		}
 	} else {
-		$ip_hostname[$hostname] = $hostname;
+		$ip_hostnames[$hostname] = $hostname;
 
 		$address = @gethostbyname($hostname);
 
@@ -373,33 +461,38 @@ function poller_check_duplicate_poller_id($poller_id, $hostname, $column) {
 		}
 	}
 
-	$sql_where1 = '';
+	$params = array((int) $poller_id);
+	$conditions = array();
+
 	if (cacti_sizeof($ip_addresses)) {
-		$sql_where1 = "$column IN ('" . implode("','", $ip_addresses) . "')";
+		$ip_values = array_values($ip_addresses);
+		$placeholders = implode(',', array_fill(0, count($ip_values), '?'));
+		$conditions[] = "`$column` IN ($placeholders)";
+		$params = array_merge($params, $ip_values);
 	}
 
-	$sql_where2 = '';
 	if (cacti_sizeof($ip_hostnames)) {
+		$host_conditions = array();
 		foreach($ip_hostnames as $host) {
 			$parts = explode('.', $host);
-			$sql_where2 .= ($sql_where2 != '' ? ' OR ':' (') .
-				"($column = " . db_qstr($parts[0]) .
-				" OR $column = " . db_qstr($host) . ")";
+			$host_conditions[] = "(`$column` = ? OR `$column` = ?)";
+			$params[] = $parts[0];
+			$params[] = $host;
 		}
-		$sql_where2 .= ')';
+		$conditions[] = '(' . implode(' OR ', $host_conditions) . ')';
 	}
 
-	if ($sql_where1 != '' || $sql_where2 != '') {
-		$sql_where = ' AND (' . $sql_where1 . ($sql_where1 != '' && $sql_where2 != '' ? ' OR ':'') . $sql_where2 . ')';
-	} else {
-		$sql_where = '';
+	if (!cacti_sizeof($conditions)) {
+		return false;
 	}
+
+	$sql_where = ' AND (' . implode(' OR ', $conditions) . ')';
 
 	$duplicate = db_fetch_cell_prepared("SELECT id
 		FROM poller
 		WHERE id != ?
 		$sql_where",
-		array($poller_id));
+		$params);
 
 	if (empty($duplicate)) {
 		return false;
@@ -433,20 +526,32 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { // delete
-				db_execute('DELETE FROM poller WHERE ' . array_to_sql_or($selected_items, 'id'));
-				db_execute('UPDATE host SET poller_id=1 WHERE deleted="" AND ' . array_to_sql_or($selected_items, 'poller_id'));
-				db_execute('UPDATE automation_networks SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
-				db_execute('UPDATE automation_processes SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
-				db_execute('UPDATE poller_command SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
-				db_execute('UPDATE poller_item SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
-				db_execute('UPDATE poller_output_realtime SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
-				db_execute('UPDATE poller_time SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
+				$selected_items = array_values(array_filter(array_map('intval', $selected_items), static function ($id) {
+					return $id > 1;
+				}));
 
-				cacti_log('NOTE: The poller(s) with the id(s): ' . implode(',', $selected_items) . ' deleted by user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+				if (cacti_sizeof($selected_items)) {
+					db_execute('DELETE FROM poller WHERE ' . array_to_sql_or($selected_items, 'id'));
+					db_execute('UPDATE host SET poller_id=1 WHERE deleted="" AND ' . array_to_sql_or($selected_items, 'poller_id'));
+					db_execute('UPDATE automation_networks SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
+					db_execute('UPDATE automation_processes SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
+					db_execute('UPDATE poller_command SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
+					db_execute('UPDATE poller_item SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
+					db_execute('UPDATE poller_output_realtime SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
+					db_execute('UPDATE poller_time SET poller_id=1 WHERE ' . array_to_sql_or($selected_items, 'poller_id'));
+
+					cacti_log('NOTE: The poller(s) with the id(s): ' . implode(',', $selected_items) . ' deleted by user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+				}
 			} elseif (get_request_var('drp_action') == '2') { // disable
-				db_execute('UPDATE poller SET disabled="on" WHERE ' . array_to_sql_or($selected_items, 'id'));
+				$selected_items = array_values(array_filter(array_map('intval', $selected_items), static function ($id) {
+					return $id > 1;
+				}));
 
-				cacti_log('NOTE: The poller(s) with the id(s): ' . implode(',', $selected_items) . ' disabled by user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+				if (cacti_sizeof($selected_items)) {
+					db_execute('UPDATE poller SET disabled="on" WHERE ' . array_to_sql_or($selected_items, 'id'));
+
+					cacti_log('NOTE: The poller(s) with the id(s): ' . implode(',', $selected_items) . ' disabled by user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+				}
 			} elseif (get_request_var('drp_action') == '3') { // enable
 				db_execute('UPDATE poller SET disabled="" WHERE ' . array_to_sql_or($selected_items, 'id'));
 
@@ -523,6 +628,10 @@ function form_actions() {
 			/* ================= input validation ================= */
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */
+
+			if ((int) $matches[1] === 1 && in_array(get_nfilter_request_var('drp_action'), array('1', '2', '4'), true)) {
+				continue;
+			}
 
 			$pollers .= '<li>' . html_escape(db_fetch_cell_prepared('SELECT name FROM poller WHERE id = ?', array($matches[1]))) . '</li>';
 			$poller_array[$i] = $matches[1];
@@ -648,6 +757,11 @@ function poller_edit() {
 			unset($fields_poller_edit['dbsslkey']);
 			unset($fields_poller_edit['dbsslcert']);
 			unset($fields_poller_edit['dbsslca']);
+		} else {
+			if (!empty($poller['dbpass'])) {
+				$fields_poller_edit['dbpass']['placeholder'] = __('Leave blank to keep existing password');
+			}
+			$poller['dbpass'] = '';
 		}
 
 		if ($poller['timezone'] == '') {
@@ -779,24 +893,66 @@ function test_database_connection($poller = array()) {
 			} elseif (isset_request_var($field)) {
 				$poller[$field] = get_nfilter_request_var($field);
 			} else {
-				print 'ERROR: DB Connection Column ' . $field . ' Missing';
+				print 'ERROR: DB Connection Column ' . html_escape($field) . ' Missing';
+				return false;
+			}
+		}
+	}
+
+	if (!poller_validate_remote_host((string) ($poller['dbhost'] ?? ''))) {
+		print __('Connection Failed');
+		return false;
+	}
+
+	$dbdefault = (string) ($poller['dbdefault'] ?? '');
+	if ($dbdefault === '' || preg_match('/[;\x00-\x1f\x7f]/', $dbdefault) === 1) {
+		print __('Connection Failed');
+		return false;
+	}
+
+	$dbport = ($poller['dbport'] === '' || $poller['dbport'] === null) ? 3306 : filter_var($poller['dbport'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 65535)));
+	if ($dbport === false) {
+		print __('Connection Failed');
+		return false;
+	}
+
+	$dbretries = ($poller['dbretries'] === '' || $poller['dbretries'] === null) ? 1 : filter_var($poller['dbretries'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 0, 'max_range' => 5)));
+	if ($dbretries === false) {
+		$dbretries = 1;
+	}
+
+	$dbssl = ($poller['dbssl'] === 'on' || $poller['dbssl'] === true || $poller['dbssl'] === 1 || $poller['dbssl'] === '1');
+	$dbsslca = (string) ($poller['dbsslca'] ?? '');
+	$dbsslkey = (string) ($poller['dbsslkey'] ?? '');
+	$dbsslcert = (string) ($poller['dbsslcert'] ?? '');
+
+	if ($dbssl) {
+		if ($dbsslca === '' || !is_valid_pathname($dbsslca) || str_contains($dbsslca, '..') || is_link($dbsslca) || !is_file($dbsslca) || !is_readable($dbsslca)) {
+			print __('Connection Failed');
+			return false;
+		}
+		foreach (array($dbsslkey, $dbsslcert) as $tls_file) {
+			if ($tls_file !== '' && (!is_valid_pathname($tls_file) || str_contains($tls_file, '..') || is_link($tls_file) || !is_file($tls_file) || !is_readable($tls_file))) {
+				print __('Connection Failed');
 				return false;
 			}
 		}
 	}
 
 	$connection = db_connect_real(
-		$poller['dbhost'],
-		$poller['dbuser'],
-		$poller['dbpass'],
-		$poller['dbdefault'],
-		$poller['dbtype'],
-		$poller['dbport'],
-		$poller['dbretries'],
-		$poller['dbssl'],
-		$poller['dbsslkey'],
-		$poller['dbsslcert'],
-		$poller['dbsslca']
+		trim((string) $poller['dbhost']),
+		(string) ($poller['dbuser'] ?? ''),
+		(string) ($poller['dbpass'] ?? ''),
+		$dbdefault,
+		'mysql',
+		(int) $dbport,
+		(int) $dbretries,
+		$dbssl,
+		$dbsslkey,
+		$dbsslcert,
+		$dbsslca,
+		false,
+		false
 	);
 
     if (is_object($connection)) {

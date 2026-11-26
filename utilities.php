@@ -214,9 +214,36 @@ function utilities_view_tech()
 
         $out_array = array();
 
+        if (!class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::class, false)) {
+            require_once __DIR__ . '/src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+        }
+        \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(__DIR__);
+
+        $run_probe = static function (array $argv, bool $include_stderr = false): array {
+            try {
+                $process = new \Symfony\Component\Process\Process($argv);
+                $process->setTimeout(5);
+                $process->run();
+                $output = $process->getOutput();
+                if ($include_stderr) {
+                    $stderr = $process->getErrorOutput();
+                    $output = trim($output . ($output !== '' && $stderr !== '' ? "\n" : '') . $stderr);
+                }
+                if ($output === '') {
+                    return array();
+                }
+
+                return preg_split('/\r?\n/', trim($output)) ?: array();
+            } catch (\Throwable) {
+                return array();
+            }
+        };
+
         if ($storage_location == 0) {
-            if ((file_exists(read_config_option('path_rrdtool'))) && ((function_exists('is_executable')) && (is_executable(read_config_option('path_rrdtool'))))) {
-                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
+            $rrdtool_bin = (string) read_config_option('path_rrdtool');
+            if ($rrdtool_bin !== '' && file_exists($rrdtool_bin) && function_exists('is_executable') && is_executable($rrdtool_bin)
+                && (!function_exists('cacti_is_allowed_binary_path') || cacti_is_allowed_binary_path($rrdtool_bin, 'path_rrdtool'))) {
+                $out_array = $run_probe(array($rrdtool_bin));
             }
         } else {
             $rrdtool_pipe = rrd_init();
@@ -233,8 +260,11 @@ function utilities_view_tech()
         }
 
         /* Get SNMP cli version */
-        if ((file_exists(read_config_option('path_snmpget'))) && ((function_exists('is_executable')) && (is_executable(read_config_option('path_snmpget'))))) {
-            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
+        $snmpget_bin = (string) read_config_option('path_snmpget');
+        if ($snmpget_bin !== '' && file_exists($snmpget_bin) && function_exists('is_executable') && is_executable($snmpget_bin)
+            && (!function_exists('cacti_is_allowed_binary_path') || cacti_is_allowed_binary_path($snmpget_bin, 'path_snmpget'))) {
+            $snmp_lines = $run_probe(array($snmpget_bin, '-V'), true);
+            $snmp_version = html_escape(implode("\n", $snmp_lines));
         } else {
             $snmp_version = "<span class='deviceDown'>" . __('NET-SNMP Not Installed or its paths are not set.  Please install if you wish to monitor SNMP enabled devices.') . "</span>";
         }
@@ -252,9 +282,10 @@ function utilities_view_tech()
 
         /* Get spine version */
         $spine_version = 'Unknown';
-        if ((file_exists(read_config_option('path_spine'))) && ((function_exists('is_executable')) && (is_executable(read_config_option('path_spine'))))) {
-            $out_array = array();
-            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
+        $spine_bin = (string) read_config_option('path_spine');
+        if ($spine_bin !== '' && file_exists($spine_bin) && function_exists('is_executable') && is_executable($spine_bin)
+            && (!function_exists('cacti_is_allowed_binary_path') || cacti_is_allowed_binary_path($spine_bin, 'path_spine'))) {
+            $out_array = $run_probe(array($spine_bin, '--version'));
             if (cacti_sizeof($out_array) > 0) {
                 $spine_version = $out_array[0];
             }
@@ -275,12 +306,12 @@ function utilities_view_tech()
 
         form_alternate_row();
         print '<td>' . __('Kadupul OS') . '</td>';
-        print '<td>' . $config['cacti_server_os'] . '</td>';
+        print '<td>' . html_escape($config['cacti_server_os']) . '</td>';
         form_end_row();
 
         form_alternate_row();
         print '<td>' . __('RSA Fingerprint') . '</td>';
-        print '<td>' . read_config_option('rsa_fingerprint') . '</td>';
+        print '<td>' . html_escape((string) read_config_option('rsa_fingerprint')) . '</td>';
         form_end_row();
 
         form_alternate_row();
@@ -290,12 +321,12 @@ function utilities_view_tech()
 
         form_alternate_row();
         print '<td>' . __('RRDtool Version') . ' ' . __('Configured') . '</td>';
-        print '<td>' . get_rrdtool_version() . "+</td>";
+        print '<td>' . html_escape((string) get_rrdtool_version()) . "+</td>";
         form_end_row();
 
         form_alternate_row();
         print '<td>' . __('RRDtool Version') . ' ' . __('Found') . '</td>';
-        print '<td>' . $rrdtool_release . '</td>';
+        print '<td>' . html_escape((string) $rrdtool_release) . '</td>';
         form_end_row();
 
         if (!empty($rrdtool_errors)) {
@@ -341,14 +372,14 @@ function utilities_view_tech()
 
         form_alternate_row();
         print '<td>' . __('Interval') . '</td>';
-        print '<td>' . read_config_option('poller_interval') . '</td>';
+        print '<td>' . html_escape((string) read_config_option('poller_interval')) . '</td>';
         if (file_exists(read_config_option('path_spine')) && $poller_options[read_config_option('poller_type')] == 'spine') {
-            $type = $spine_version;
+            $type = html_escape($spine_version);
             if (!strpos($spine_version, CACTI_VERSION)) {
                 $type .= '<span class="textError"> (' . __('Different versions of Kadupul and Spine!') . ')</span>';
             }
         } else {
-            $type = $poller_options[read_config_option('poller_type')];
+            $type = html_escape((string) ($poller_options[read_config_option('poller_type')] ?? ''));
         }
         form_end_row();
 
@@ -373,19 +404,21 @@ function utilities_view_tech()
         print '</td>';
         form_end_row();
 
-        $processes = db_fetch_cell('SELECT
-			GROUP_CONCAT(
-				CONCAT("' . __('Name: ') . '", name, ", ' . __('Procs: ') . '", processes) SEPARATOR "<br>"
-			) AS poller
+        $active_pollers = db_fetch_assoc('SELECT name, processes, threads
 			FROM poller
 			WHERE disabled=""');
 
-        $threads = db_fetch_cell('SELECT
-			GROUP_CONCAT(
-				CONCAT("' . __('Name: ') . '", name, ", ' . __('Threads: ') . '", threads) SEPARATOR "<br>"
-			) AS poller
-			FROM poller
-			WHERE disabled=""');
+        $process_lines = array();
+        $thread_lines  = array();
+        if (cacti_sizeof($active_pollers)) {
+            foreach ($active_pollers as $active_poller) {
+                $escaped_name = html_escape((string) ($active_poller['name'] ?? ''));
+                $process_lines[] = html_escape(__('Name: ')) . $escaped_name . ', ' . html_escape(__('Procs: ')) . (int) ($active_poller['processes'] ?? 0);
+                $thread_lines[]  = html_escape(__('Name: ')) . $escaped_name . ', ' . html_escape(__('Threads: ')) . (int) ($active_poller['threads'] ?? 0);
+            }
+        }
+        $processes = implode('<br>', $process_lines);
+        $threads   = implode('<br>', $thread_lines);
 
         form_alternate_row();
         print '<td>' . __('Concurrent Processes') . '</td>';
@@ -397,11 +430,11 @@ function utilities_view_tech()
         print '<td>' . $threads . '</td>';
         form_end_row();
 
-        $script_servers = read_config_option('php_servers');
+        $script_servers = (int) read_config_option('php_servers');
 
         form_alternate_row();
         print '<td>' . __('PHP Servers') . '</td>';
-        print '<td>' . html_escape($script_servers) . '</td>';
+        print '<td>' . html_escape((string) $script_servers) . '</td>';
         form_end_row();
 
         if ($config['poller_id'] == 1) {
@@ -427,10 +460,13 @@ function utilities_view_tech()
             $max_local_connections = 0;
         }
 
-        $total_dc_threads = db_fetch_cell("SELECT
-			SUM((processes * threads) + (processes * $script_servers)) AS threads
+        $total_dc_threads = db_fetch_cell_prepared(
+            "SELECT
+			SUM((processes * threads) + (processes * ?)) AS threads
 			FROM poller
-			WHERE disabled = ''");
+			WHERE disabled = ''",
+            array((int) $script_servers)
+        );
 
         $recommend_mc = $total_dc_threads + 100;
 
@@ -801,11 +837,29 @@ function utilities_view_tech()
 
         foreach ($status as $s) {
             form_alternate_row();
-            print '<td>' . $s['Variable_name'] . '</td>';
-            print '<td>' . (is_numeric($s['Value']) ? number_format_i18n($s['Value']) : $s['Value']) . '</td>';
+            print '<td>' . html_escape((string) $s['Variable_name']) . '</td>';
+            print '<td>' . html_escape((string) (is_numeric($s['Value']) ? number_format_i18n($s['Value']) : $s['Value'])) . '</td>';
             form_end_row();
         }
     } elseif (get_request_var('tab') == 'dbsettings') {
+        $allowed_db_settings = array(
+            'version', 'version_comment', 'character_set_server', 'collation_server',
+            'max_connections', 'max_allowed_packet', 'wait_timeout', 'interactive_timeout',
+            'connect_timeout', 'net_read_timeout', 'net_write_timeout', 'sql_mode',
+            'transaction_isolation', 'tx_isolation', 'autocommit', 'time_zone', 'system_time_zone',
+            'innodb_buffer_pool_size', 'innodb_buffer_pool_instances', 'innodb_log_buffer_size',
+            'innodb_log_file_size', 'innodb_redo_log_capacity', 'innodb_flush_log_at_trx_commit',
+            'innodb_flush_method', 'innodb_file_per_table', 'innodb_doublewrite',
+            'innodb_read_io_threads', 'innodb_write_io_threads', 'innodb_io_capacity',
+            'innodb_io_capacity_max', 'innodb_lock_wait_timeout', 'innodb_deadlock_detect',
+            'innodb_strict_mode', 'innodb_stats_on_metadata', 'innodb_stats_persistent',
+            'innodb_adaptive_hash_index', 'innodb_autoinc_lock_mode',
+            'key_buffer_size', 'query_cache_size', 'query_cache_type', 'tmp_table_size',
+            'max_heap_table_size', 'sort_buffer_size', 'read_buffer_size', 'read_rnd_buffer_size',
+            'join_buffer_size', 'thread_stack', 'thread_cache_size', 'table_open_cache',
+            'table_definition_cache', 'binlog_cache_size', 'log_bin', 'binlog_format',
+            'sync_binlog', 'performance_schema', 'lower_case_table_names', 'max_execution_time',
+        );
         $status = db_fetch_assoc('show global variables');
 
         print "<table id='tables' class='cactiTable' style='width:100%'>";
@@ -817,13 +871,16 @@ function utilities_view_tech()
         print '</thead>';
 
         foreach ($status as $s) {
-            form_alternate_row();
-            print '<td>' . $s['Variable_name'] . '</td>';
-
-            if (strlen($s['Value']) > 70) {
-                $s['Value'] = str_replace(',', ', ', $s['Value']);
+            if (!in_array(strtolower((string) $s['Variable_name']), $allowed_db_settings, true)) {
+                continue;
             }
-            print '<td>' . (is_numeric($s['Value']) ? number_format_i18n($s['Value']) : $s['Value']) . '</td>';
+            form_alternate_row();
+            print '<td>' . html_escape((string) $s['Variable_name']) . '</td>';
+
+            if (strlen((string) $s['Value']) > 70) {
+                $s['Value'] = str_replace(',', ', ', (string) $s['Value']);
+            }
+            print '<td>' . html_escape((string) (is_numeric($s['Value']) ? number_format_i18n($s['Value']) : $s['Value'])) . '</td>';
             form_end_row();
         }
     } elseif (get_request_var('tab') == 'changelog') {
@@ -832,10 +889,10 @@ function utilities_view_tech()
         foreach ($changelog as $s) {
             if (strlen(trim($s)) && stripos($s, 'CHANGELOG') === false) {
                 if (strpos($s, '-') === false) {
-                    html_section_header(__('Version %s', $s), 2);
+                    html_section_header(__('Version %s', html_escape($s)), 2);
                 } else {
                     form_alternate_row();
-                    print '<td>' . $s . '</td>';
+                    print '<td>' . html_escape($s) . '</td>';
                     form_end_row();
                 }
             }
@@ -874,15 +931,15 @@ function utilities_view_tech()
             print '</thead>';
             foreach ($tables as $table) {
                 form_alternate_row();
-                print '<td>' . $table['TABLE_NAME'] . '</td>';
-                print '<td>' . $table['ENGINE'] . '</td>';
+                print '<td>' . html_escape((string) $table['TABLE_NAME']) . '</td>';
+                print '<td>' . html_escape((string) $table['ENGINE']) . '</td>';
                 print '<td class="right">' . number_format_i18n($table['TABLE_ROWS']) . '</td>';
                 print '<td class="right">' . number_format_i18n($table['AVG_ROW_LENGTH']) . '</td>';
                 print '<td class="right">' . number_format_i18n($table['DATA_LENGTH']) . '</td>';
                 print '<td class="right">' . number_format_i18n($table['INDEX_LENGTH']) . '</td>';
-                print '<td>' . $table['TABLE_COLLATION'] . '</td>';
-                print '<td>' . $table['ROW_FORMAT'] . '</td>';
-                print '<td>' . $table['TABLE_COMMENT'] . '</td>';
+                print '<td>' . html_escape((string) $table['TABLE_COLLATION']) . '</td>';
+                print '<td>' . html_escape((string) $table['ROW_FORMAT']) . '</td>';
+                print '<td>' . html_escape((string) $table['TABLE_COMMENT']) . '</td>';
                 form_end_row();
             }
 
@@ -894,15 +951,29 @@ function utilities_view_tech()
 
         form_end_row();
     } else {
-        $php_info = utilities_php_modules();
-
         html_section_header(__('PHP Module Information'), 2);
-        $php_info = str_replace(
-            array('width="600"', 'th colspan="2"', ','),
-            array('', 'th class="subHeaderColumn"', ', '),
-            $php_info
+        print "<tr><td colspan='2'><table id='tables' class='cactiTable' style='width:100%'><thead><tr class='tableHeader'><th class='tableSubHeaderColumn'>" . __('Name') . "</th><th class='tableSubHeaderColumn'>" . __('Value') . "</th></tr></thead><tbody>";
+        $php_summary = array(
+            'PHP Version' => PHP_VERSION,
+            'PHP SAPI' => PHP_SAPI,
+            'Operating System' => PHP_OS_FAMILY,
         );
-        print "<tr><td colspan='2'>" . $php_info . '</td></tr>';
+        foreach (array('memory_limit', 'max_execution_time', 'max_input_vars', 'post_max_size', 'upload_max_filesize', 'date.timezone', 'default_charset', 'display_errors', 'log_errors', 'opcache.enable', 'opcache.memory_consumption', 'session.save_handler') as $ini_name) {
+            $php_summary[$ini_name] = (string) ini_get($ini_name);
+        }
+        foreach ($php_summary as $name => $value) {
+            form_alternate_row();
+            print '<td>' . html_escape($name) . '</td><td>' . html_escape($value) . '</td>';
+            form_end_row();
+        }
+        $loaded_extensions = get_loaded_extensions();
+        sort($loaded_extensions, SORT_NATURAL | SORT_FLAG_CASE);
+        foreach ($loaded_extensions as $ext) {
+            form_alternate_row();
+            print '<td>' . html_escape($ext) . '</td><td>' . html_escape((string) (phpversion($ext) ?: __('Installed'))) . '</td>';
+            form_end_row();
+        }
+        print '</tbody></table></td></tr>';
     }
 
     html_end_box();
@@ -1139,13 +1210,21 @@ function utilities_view_user_log()
 
     $total_rows = get_total_row_data($_SESSION['sess_user_id'], "SELECT COUNT(*) FROM user_auth AS ua RIGHT JOIN user_log AS ul ON ua.username=ul.username AND ua.id=ul.user_id $sql_where", $params);
 
+    $user_log_sort_column = cacti_validate_sort_column(
+        get_request_var('sort_column'),
+        array('username', 'full_name', 'realm', 'time', 'result', 'ip'),
+        'time'
+    );
+    $user_log_sort_dir = strtoupper((string) get_request_var('sort_direction')) === 'ASC' ? 'ASC' : 'DESC';
+    $user_log_order = 'ORDER BY ' . cacti_build_sort_fragment($user_log_sort_column, $user_log_sort_dir);
+
     $user_log_sql = "SELECT ul.username, ua.full_name, ua.realm,
 		ul.time, ul.result, ul.ip
 		FROM user_auth AS ua
 		RIGHT JOIN user_log AS ul
 		ON ua.username=ul.username AND ua.id=ul.user_id
 		$sql_where
-		" . get_order_string() . "
+		$user_log_order
 		LIMIT " . ($rows * (get_request_var('page') - 1)) . ',' . $rows;
 
     $user_log = db_fetch_assoc_prepared($user_log_sql, $params);
@@ -2251,12 +2330,13 @@ function utilities_view_poller_cache()
 
     $total_rows = get_total_row_data($_SESSION['sess_user_id'], $sql, $params, 'poller_item');
 
-    $order_string = get_order_string();
-    if ($order_string == '') {
-        $order_string = 'ORDER BY action ASC';
-    } else {
-        $order_string .= ', action ASC';
-    }
+    $poller_sort_column = cacti_validate_sort_column(
+        get_request_var('sort_column'),
+        array('dtd.name_cache', 'h.description'),
+        'dtd.name_cache'
+    );
+    $poller_sort_dir = strtoupper((string) get_request_var('sort_direction')) === 'DESC' ? 'DESC' : 'ASC';
+    $order_string = 'ORDER BY ' . cacti_build_sort_fragment($poller_sort_column, $poller_sort_dir) . ', action ASC';
 
     $poller_sql = "SELECT pi.*, dtd.name_cache, h.description, h.id AS host_id
 		FROM poller_item AS pi
@@ -2307,18 +2387,18 @@ function utilities_view_poller_cache()
             if ($item['action'] == 0) {
                 if ($item['snmp_version'] != 3) {
                     $details =
-                        __('SNMP Version:') . ' ' . $item['snmp_version'] . ', ' .
-                        __('Community:') . ' ' . html_escape($item['snmp_community']) . ', ' .
+                        __('SNMP Version:') . ' ' . html_escape((string) $item['snmp_version']) . ', ' .
+                        __('Community:') . ' ' . __('Redacted') . ', ' .
                         __('OID:') . ' ' . filter_value($item['arg1'], get_request_var('filter'));
                 } else {
                     $details =
-                        __('SNMP Version:') . ' ' . $item['snmp_version'] . ', ' .
+                        __('SNMP Version:') . ' ' . html_escape((string) $item['snmp_version']) . ', ' .
                         __('User:') . ' ' . html_escape($item['snmp_username']) . ', ' . __('OID:') . ' ' . html_escape($item['arg1']);
                 }
             } elseif ($item['action'] == 1) {
-                $details = __('Script:') . ' ' . filter_value($item['arg1'], get_request_var('filter'));
+                $details = __('Script:') . ' ' . __('Redacted');
             } else {
-                $details = __('Script Server:') . ' ' . filter_value($item['arg1'], get_request_var('filter'));
+                $details = __('Script Server:') . ' ' . __('Redacted');
             }
 
             print $details;
@@ -3008,7 +3088,7 @@ function boost_display_run_status()
         print '<td>' . __('Image Caching Status:') . '</td><td>' . ($boost_cache == '' ? __('Disabled') : __('Enabled')) . '</td>';
 
         form_alternate_row();
-        print '<td>' . __('Cache Directory:') . '</td><td>' . $cache_directory . '</td>';
+        print '<td>' . __('Cache Directory:') . '</td><td>' . html_escape((string) $cache_directory) . '</td>';
 
         form_alternate_row();
         print '<td>' . __('Cached Files:') . '</td><td>' . $cache_files . '</td>';

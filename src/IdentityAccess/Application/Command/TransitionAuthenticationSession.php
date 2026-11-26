@@ -28,6 +28,11 @@ final readonly class TransitionAuthenticationSession
             return false;
         }
 
+        if ($reason === 'guest' && ($userId <= 1 || $userId !== $this->accounts->guestId() || ($account['is_admin'] ?? false) === true)) {
+            $this->session->logBlocked($userId, $reason);
+            return false;
+        }
+
         if ($reason === 'cookie_restore' && (!is_array($restored) || ($restored['user_id'] ?? null) !== $userId
             || !is_string($restored['generation'] ?? null)
             || !hash_equals($this->accounts->credentialGeneration($userId, $account['password']), $restored['generation']))) {

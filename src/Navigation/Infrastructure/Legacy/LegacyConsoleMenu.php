@@ -53,7 +53,7 @@ final class LegacyConsoleMenu
             'app.php/alerting/incidents' => ['Alert Incidents', 30],
         ],
         'Data Collection' => [
-            'pollers.php' => ['Data Collectors', 3],
+            'pollers.php' => ['Data Collectors', 15],
             'data_queries.php' => ['Data Queries', 13],
             'data_input.php' => ['Data Input Methods', 2],
         ],
@@ -105,7 +105,7 @@ final class LegacyConsoleMenu
             'app.php/inventory/devices' => ['Devices', 3],
         ],
         'Data Collection' => [
-            'pollers.php' => ['Data Collectors', 3],
+            'pollers.php' => ['Data Collectors', 15],
         ],
         'Configuration' => [
             'settings.php' => ['Settings', 15],

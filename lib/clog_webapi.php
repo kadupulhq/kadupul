@@ -229,7 +229,7 @@ function clog_view_logfile()
 					loadPageUsingPost(location.pathname, {
 						purge_continue: 1,
 						header: 'false',
-						filename: '" . basename($logfile) . "',
+						filename: " . json_encode(basename($logfile), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",
 						__csrf_magic: csrfMagicToken
 					});
 				});
@@ -259,14 +259,8 @@ function clog_view_logfile()
     $total_rows      = 0;
     $number_of_lines = get_request_var('tail_lines') < 0 ? read_config_option('max_display_rows') : get_request_var('tail_lines');
 
-    $logcontents = tail_file($logfile, $number_of_lines, get_request_var('message_type'), get_request_var('rfilter'), $page_nr, $total_rows, get_request_var('matches'));
-
-    if (get_request_var('reverse') == 1) {
-        $logcontents = array_reverse($logcontents);
-    }
-
     if (!$clogAdmin) {
-        $exclude_regex = read_config_option('clog_exclude', true);
+        $exclude_regex = (string) read_config_option('clog_exclude', true);
         if ($exclude_regex != '') {
             $ad_filter = __(' - Admin Filter active');
         } else {
@@ -275,6 +269,44 @@ function clog_view_logfile()
     } else {
         $ad_filter = __(' - Admin view');
         $exclude_regex = '';
+    }
+
+    $compiled_exclude = null;
+    $exclude_invalid = false;
+    if ($exclude_regex !== '' && !$clogAdmin) {
+        if (!class_exists(\Kadupul\Platform\Domain\BoundedRegexPattern::class, false)) {
+            require_once dirname(__DIR__) . '/src/Platform/Domain/BoundedRegexPattern.php';
+        }
+        $compiled_exclude = \Kadupul\Platform\Domain\BoundedRegexPattern::compile(
+            $exclude_regex,
+            'i',
+            \Kadupul\Platform\Domain\BoundedRegexPattern::MAX_LENGTH
+        );
+        if ($compiled_exclude === null || validate_is_regex($exclude_regex, \Kadupul\Platform\Domain\BoundedRegexPattern::MAX_LENGTH) !== true) {
+            cacti_log('Kadupul Log Exclude Regex "' . $exclude_regex . '" is Invalid.  Update your Exclude Regex to be valid!');
+            $exclude_reported = true;
+            $exclude_invalid = true;
+        }
+    }
+
+    if ($exclude_invalid) {
+        $logcontents = array();
+        $total_rows = 0;
+    } else {
+        $logcontents = tail_file(
+            $logfile,
+            $number_of_lines,
+            get_request_var('message_type'),
+            get_request_var('rfilter'),
+            $page_nr,
+            $total_rows,
+            get_request_var('matches'),
+            $exclude_regex
+        );
+    }
+
+    if (get_request_var('reverse') == 1) {
+        $logcontents = array_reverse($logcontents);
     }
 
     if (get_request_var('message_type') > 0 || get_request_var('rfilter') != '') {
@@ -298,33 +330,18 @@ function clog_view_logfile()
 
     $linecolor = false;
 
-    $hosts = db_fetch_assoc('SELECT id, description
-		FROM host
-		WHERE disabled = ""
-		AND deleted = ""');
-
-    $hostDescriptions = array();
-    foreach ($hosts as $host) {
-        $hostDescriptions[$host['id']] = html_escape($host['description']);
-    }
-
     $regex_array = clog_get_regex_array();
     foreach ($logcontents as $item) {
+        /* defense-in-depth exclusion check on raw line before HTML rewriting */
+        if ($exclude_regex !== '' && !$clogAdmin) {
+            if ($compiled_exclude === null || \Kadupul\Platform\Domain\BoundedRegexPattern::matches($compiled_exclude, $item)) {
+                continue;
+            }
+        }
+
         $new_item = html_escape($item);
 
         $new_item = preg_replace_callback($regex_array['complete'], 'clog_regex_parser', $new_item);
-
-        /* respect the exclusion filter */
-        if ($exclude_regex != '' && !$clogAdmin) {
-            if (validate_is_regex($exclude_regex)) {
-                if (preg_match($exclude_regex, $new_item)) {
-                    continue;
-                }
-            } elseif (!$exclude_reported) {
-                cacti_log('Kadupul Log Exclude Regex "' . $exclude_regex . '" is Invalid.  Update your Exclude Regex to be valid!');
-                $exclude_reported = true;
-            }
-        }
 
         /* get the background color */
         if (strpos($new_item, 'ERROR') !== false || strpos($new_item, 'FATAL') !== false) {
@@ -495,7 +512,7 @@ function filter($clogAdmin, $selectedFile)
 
     if (cacti_sizeof($logFileArray)) {
         foreach ($logFileArray as $logFile) {
-            print "<option value='" . $logFile . "'";
+            print "<option value='" . html_escape($logFile) . "'";
 
             if ($selectedFile == $logFile) {
                 print ' selected';
@@ -506,7 +523,7 @@ function filter($clogAdmin, $selectedFile)
             $logDate = cacti_count($logParts) < 2 ? '' : $logParts[1] . (isset($logParts[2]) ? '-' . $logParts[2] : '');
             $logName = $logParts[0];
 
-            print '>' . $logName . ($logDate != '' ? ' [' . substr($logDate, 4) . ']' : '') . "</option>\n";
+            print '>' . html_escape($logName . ($logDate != '' ? ' [' . substr($logDate, 4) . ']' : '')) . "</option>\n";
         }
     }
     ?>
@@ -733,6 +750,11 @@ function clog_regex_parser($matches)
     return $result;
 }
 
+function clog_viewer_is_admin(): bool
+{
+    return !function_exists('clog_admin') || (bool) clog_admin();
+}
+
 function clog_regex_device($matches)
 {
     global $config;
@@ -743,6 +765,7 @@ function clog_regex_device($matches)
         $host_cache[0] = __('System Device');
     }
 
+    $is_admin = clog_viewer_is_admin();
     $result = $matches[0];
 
     $dev_ids = explode(',', str_replace(' ', '', $matches[2]));
@@ -750,6 +773,11 @@ function clog_regex_device($matches)
         $result = '';
 
         foreach ($dev_ids as $id) {
+            if ($id != 0 && !$is_admin && (!function_exists('is_device_allowed') || !is_device_allowed((int) $id))) {
+                $result .= $matches[1] . html_escape((string) $id) . $matches[3];
+                continue;
+            }
+
             if (!isset($host_cache[$id])) {
                 $host_cache[$id] = db_fetch_cell_prepared(
                     'SELECT description
@@ -776,6 +804,7 @@ function clog_regex_datasource($matches)
 
     static $gr_cache = null;
 
+    $is_admin = clog_viewer_is_admin();
     $result = $matches[0];
 
     $ds_ids = explode(',', str_replace(' ', '', $matches[2]));
@@ -784,8 +813,17 @@ function clog_regex_datasource($matches)
         $result     = '';
         $graph_rows = array();
         $ds_ids     = array_unique($ds_ids);
+        $allowed_ds_ids = array();
 
         foreach ($ds_ids as $ds) {
+            $ds_allowed = $is_admin;
+            if (!$ds_allowed) {
+                $ds_host_id = db_fetch_cell_prepared('SELECT host_id FROM data_local WHERE id = ?', array((int) $ds));
+                if ($ds_host_id !== false && (int) $ds_host_id > 0 && function_exists('is_device_allowed') && is_device_allowed((int) $ds_host_id)) {
+                    $ds_allowed = true;
+                }
+            }
+
             if (!isset($gr_cache[$ds])) {
                 $gr_cache[$ds] = array_rekey(
                     db_fetch_assoc_prepared(
@@ -803,12 +841,25 @@ function clog_regex_datasource($matches)
                 );
             }
 
-            $graph_rows = array_merge($graph_rows, $gr_cache[$ds]);
+            if ($is_admin) {
+                $graph_rows = array_merge($graph_rows, $gr_cache[$ds]);
+                $allowed_ds_ids[$ds] = true;
+            } else {
+                foreach ($gr_cache[$ds] as $graph_id) {
+                    if (function_exists('is_graph_allowed') && is_graph_allowed((int) $graph_id)) {
+                        $graph_rows[] = $graph_id;
+                        $ds_allowed = true;
+                    }
+                }
+                if ($ds_allowed) {
+                    $allowed_ds_ids[$ds] = true;
+                }
+            }
         }
 
         $graph_results = '';
         if (cacti_sizeof($graph_rows)) {
-            $graph_ids = implode(',', $graph_rows);
+            $graph_ids = implode(',', array_unique($graph_rows));
             $graph_array = array(0 => '', 1 => ' Graphs[', 2 => $graph_ids, 3 => ']');
 
             $graph_results = clog_regex_graphs($graph_array);
@@ -817,12 +868,18 @@ function clog_regex_datasource($matches)
         $result .= $matches[1];
         $i       = 0;
 
-        $ds_titles = clog_get_datasource_titles($ds_ids);
+        $ds_titles = cacti_sizeof($allowed_ds_ids) ? clog_get_datasource_titles(array_keys($allowed_ds_ids)) : array();
         if (!isset($ds_titles)) {
             $ds_titles = array();
         }
 
         foreach ($ds_ids as $ds_id) {
+            if (!isset($allowed_ds_ids[$ds_id])) {
+                $result .= ($i == 0 ? '' : ', ') . html_escape((string) $ds_id);
+                $i++;
+                continue;
+            }
+
             $ds_title = $ds_id;
             if (array_key_exists($ds_id, $ds_titles)) {
                 $ds_title = $ds_titles[$ds_id];
@@ -841,6 +898,10 @@ function clog_regex_datasource($matches)
 function clog_regex_datainput($matches)
 {
     global $config;
+
+    if (!clog_viewer_is_admin() && (!function_exists('is_realm_allowed') || !is_realm_allowed(2))) {
+        return $matches[0];
+    }
 
     $result = $matches[0];
 
@@ -866,6 +927,10 @@ function clog_regex_datainput($matches)
 function clog_regex_poller($matches)
 {
     global $config;
+
+    if (!clog_viewer_is_admin() && (!function_exists('is_realm_allowed') || !is_realm_allowed(15))) {
+        return $matches[0];
+    }
 
     static $poller_cache = null;
 
@@ -896,6 +961,10 @@ function clog_regex_poller($matches)
 function clog_regex_dataquery($matches)
 {
     global $config;
+
+    if (!clog_viewer_is_admin() && (!function_exists('is_realm_allowed') || !is_realm_allowed(13))) {
+        return $matches[0];
+    }
 
     static $query_cache = null;
 
@@ -948,18 +1017,33 @@ function clog_regex_graphs($matches)
 
     static $graph_cache = null;
 
+    $is_admin = clog_viewer_is_admin();
     $result = $matches[0];
 
     $graph_ids = explode(',', str_replace(' ', '', $matches[2]));
 
     if (cacti_sizeof($graph_ids)) {
+        $allowed_ids = array();
+        $denied_ids = array();
+        foreach ($graph_ids as $id) {
+            if ($is_admin || (function_exists('is_graph_allowed') && is_graph_allowed((int) $id))) {
+                $allowed_ids[] = $id;
+            } else {
+                $denied_ids[] = $id;
+            }
+        }
+
+        if (!cacti_sizeof($allowed_ids)) {
+            return $matches[1] . html_escape(implode(', ', $denied_ids)) . $matches[3];
+        }
+
         $result = '';
         $graph_add = $config['url_path'] . 'graph_view.php?page=1&style=selective&action=preview&graph_add=';
 
         $title = '';
         $i     = 0;
 
-        foreach ($graph_ids as $id) {
+        foreach ($allowed_ids as $id) {
             if (!isset($graph_cache[$id])) {
                 $graph_cache[$id] = db_fetch_cell_prepared(
                     'SELECT title_cache AS title
@@ -973,13 +1057,17 @@ function clog_regex_graphs($matches)
         $result .= $matches[1] . "<a href='";
 
         $i = 0;
-        foreach ($graph_ids as $id) {
+        foreach ($allowed_ids as $id) {
             $graph_add .= ($i > 0 ? '%2C' : '') . $id;
             $title     .= ($title != '' ? ', ' : '') . html_escape((isset($graph_cache[$id]) ? html_escape($graph_cache[$id]) : $id));
             $i++;
         }
 
-        $result .= html_escape($graph_add) . '\'>' . $title . '</a>' . $matches[3];
+        $result .= html_escape($graph_add) . '\'>' . $title . '</a>';
+        if (cacti_sizeof($denied_ids)) {
+            $result .= ', ' . html_escape(implode(', ', $denied_ids));
+        }
+        $result .= $matches[3];
     }
 
     return $result;
@@ -988,6 +1076,10 @@ function clog_regex_graphs($matches)
 function clog_regex_graphtemplates($matches)
 {
     global $config;
+
+    if (!clog_viewer_is_admin() && (!function_exists('is_realm_allowed') || !is_realm_allowed(10))) {
+        return $matches[0];
+    }
 
     static $templates_cache = null;
 
@@ -1021,6 +1113,8 @@ function clog_regex_users($matches)
 
     static $users_cache = null;
 
+    $is_admin = clog_viewer_is_admin() || (function_exists('is_realm_allowed') && is_realm_allowed(1));
+    $acting_user_id = isset($_SESSION['sess_user_id']) ? (int) $_SESSION['sess_user_id'] : 0;
     $result = $matches[0];
 
     $user_ids = explode(',', str_replace(' ', '', $matches[2]));
@@ -1029,6 +1123,9 @@ function clog_regex_users($matches)
         $result = '';
 
         foreach ($user_ids as $id) {
+            if (!$is_admin && (int) $id !== $acting_user_id) {
+                continue;
+            }
             if (!isset($users_cache[$id])) {
                 $users_cache[$id] = db_fetch_cell_prepared(
                     'SELECT username
@@ -1042,10 +1139,10 @@ function clog_regex_users($matches)
         foreach ($user_ids as $id) {
             $result .= $matches[1];
 
-            if (isset($users_cache[$id])) {
+            if (($is_admin || (int) $id === $acting_user_id) && isset($users_cache[$id])) {
                 $result .= '<a href=\'' . html_escape($config['url_path'] . 'user_admin.php?action=user_edit&tab=general&id=' . $id) . '\'>' . html_escape($users_cache[$id]) . '</a>';
             } else {
-                $result .= $id;
+                $result .= html_escape((string) $id);
             }
 
             $result .= $matches[3];
@@ -1058,6 +1155,10 @@ function clog_regex_users($matches)
 function clog_regex_rule($matches)
 {
     global $config;
+
+    if (!clog_viewer_is_admin() && (!function_exists('is_realm_allowed') || !is_realm_allowed(23))) {
+        return $matches[0];
+    }
 
     static $rules_cache = null;
 

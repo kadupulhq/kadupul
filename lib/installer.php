@@ -976,7 +976,11 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
                             $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Resource is not writable'));
                         }
                     } elseif ($check == 'file_exists') {
-                        $should_set = (!empty($path) && file_exists($path)) || $optional;
+                        if (empty($path)) {
+                            $should_set = (bool) $optional;
+                        } else {
+                            $should_set = file_exists($path);
+                        }
                         if (!$should_set) {
                             $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('File not found'));
                         }
@@ -994,6 +998,19 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
                             $should_set = false;
                         } else {
                             $path = $canonicalPath;
+                        }
+                    } elseif ($should_set && !empty($path) && (
+                        ($this->paths[$name]['file_type'] ?? '') === 'binary'
+                        || in_array($name, array('path_rrdtool', 'path_snmpwalk', 'path_snmpget', 'path_snmpbulkwalk', 'path_snmpgetnext', 'path_snmptrap', 'path_spine', 'settings_sendmail_path'), true)
+                    )) {
+                        if (!function_exists('cacti_is_allowed_binary_path') || !cacti_is_allowed_binary_path($path, $name)) {
+                            $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Binary path is not in an allowed system directory'));
+                            $should_set = false;
+                        } else {
+                            $canonicalPath = realpath($path);
+                            if ($canonicalPath !== false) {
+                                $path = $canonicalPath;
+                            }
                         }
                     }
 

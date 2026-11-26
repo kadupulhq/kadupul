@@ -19,6 +19,7 @@ switch (get_request_var('action')) {
     case 'save':
         $errors = array();
         $inserts = array();
+        $validated_user_template = null;
 
         $font_method = isset_request_var('font_method') ? get_nfilter_request_var('font_method') : read_config_option('font_method');
 
@@ -64,9 +65,18 @@ switch (get_request_var('action')) {
                     }
                 }
             } elseif ($field_array['method'] == 'dirpath') {
-                if (get_nfilter_request_var($field_name) != '' && !is_dir(get_nfilter_request_var($field_name))) {
+                $dir_value = get_nfilter_request_var($field_name);
+                $dir_valid = ($dir_value == '' || is_dir($dir_value));
+                if ($dir_valid && $field_name === 'realtime_cache_path' && $dir_value != '') {
+                    if (function_exists('cacti_is_allowed_realtime_cache_path')) {
+                        $dir_valid = cacti_is_allowed_realtime_cache_path($dir_value);
+                    } else {
+                        $dir_valid = !is_link($dir_value) && is_valid_pathname($dir_value);
+                    }
+                }
+                if (!$dir_valid) {
                     $_SESSION['sess_error_fields'][$field_name] = $field_name;
-                    $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                    $_SESSION['sess_field_values'][$field_name] = $dir_value;
                     $errors[8] = 8;
                 } else {
                     if (get_request_var('tab') == 'path' && is_remote_path_setting($field_name)) {
@@ -74,27 +84,28 @@ switch (get_request_var('action')) {
                             'REPLACE INTO settings
 						(name, value)
 						VALUES (?, ?)',
-                            array($field_name, get_nfilter_request_var($field_name)),
+                            array($field_name, $dir_value),
                             true,
                             $local_db_cnn_id
                         );
                     } else {
-                        $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr(get_nfilter_request_var($field_name)) . ')';
+                        $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr($dir_value) . ')';
                         db_execute_prepared(
                             'REPLACE INTO settings
 						(name, value)
 						VALUES (?, ?)',
-                            array($field_name, get_nfilter_request_var($field_name))
+                            array($field_name, $dir_value)
                         );
                     }
                 }
             } elseif ($field_array['method'] == 'filepath') {
-                if (isset($field_array['file_type']) &&
-                    $field_array['file_type'] == 'binary' &&
-                    get_nfilter_request_var($field_name) != '' &&
-                    file_exists(get_nfilter_request_var($field_name)) === false) {
+                $file_value = get_nfilter_request_var($field_name);
+                $is_binary_field = (isset($field_array['file_type']) && $field_array['file_type'] == 'binary');
+                if ($is_binary_field && $file_value != ''
+                    && (file_exists($file_value) === false
+                        || (function_exists('cacti_is_allowed_binary_path') && !cacti_is_allowed_binary_path($file_value, $field_name)))) {
                     $_SESSION['sess_error_fields'][$field_name] = $field_name;
-                    $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                    $_SESSION['sess_field_values'][$field_name] = $file_value;
                     $errors[36] = 36;
                 } else {
                     $continue = true;
@@ -102,23 +113,23 @@ switch (get_request_var('action')) {
                     // Boost writes its debug log to this path, so a blank value turns
                     // it off and any other value must name a .log file (GHSA-m6wx-f538-m6q3).
                     if ($field_name == 'path_cactilog' || $field_name == 'path_stderrlog'
-                        || ($field_name == 'path_boost_log' && get_nfilter_request_var($field_name) != '')) {
-                        $extension = pathinfo(get_nfilter_request_var($field_name), PATHINFO_EXTENSION);
+                        || ($field_name == 'path_boost_log' && $file_value != '')) {
+                        $extension = pathinfo($file_value, PATHINFO_EXTENSION);
 
                         if ($extension != 'log') {
                             $_SESSION['sess_error_fields'][$field_name] = $field_name;
-                            $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                            $_SESSION['sess_field_values'][$field_name] = $file_value;
                             $errors[9] = 9;
                             $continue = false;
                         }
                     }
 
-                    // The Boost log keeps the path name check other file paths get.
-                    if ($continue && $field_name != 'path_cactilog' && $field_name != 'path_stderrlog'
-                        && get_nfilter_request_var($field_name) != '' && !is_valid_pathname(get_nfilter_request_var($field_name))) {
+                    // Enforce valid pathname characters across all filepath settings including logs.
+                    if ($continue && $file_value != '' && !is_valid_pathname($file_value)) {
                         $_SESSION['sess_error_fields'][$field_name] = $field_name;
-                        $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                        $_SESSION['sess_field_values'][$field_name] = $file_value;
                         $errors[36] = 36;
+                        $continue = false;
                     }
 
                     if ($continue) {
@@ -127,17 +138,17 @@ switch (get_request_var('action')) {
                                 'REPLACE INTO settings
 							(name, value)
 							VALUES (?, ?)',
-                                array($field_name, get_nfilter_request_var($field_name)),
+                                array($field_name, $file_value),
                                 true,
                                 $local_db_cnn_id
                             );
                         } else {
-                            $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr(get_nfilter_request_var($field_name)) . ')';
+                            $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr($file_value) . ')';
                             db_execute_prepared(
                                 'REPLACE INTO settings
 							(name, value)
 							VALUES (?, ?)',
-                                array($field_name, get_nfilter_request_var($field_name))
+                                array($field_name, $file_value)
                             );
                         }
                     }
@@ -145,7 +156,6 @@ switch (get_request_var('action')) {
             } elseif ($field_array['method'] == 'textbox_password') {
                 if (get_nfilter_request_var($field_name) != get_nfilter_request_var($field_name . '_confirm')) {
                     $_SESSION['sess_error_fields'][$field_name] = $field_name;
-                    $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
                     $errors[4] = 4;
                     break;
                 } elseif (!isempty_request_var($field_name)) {
@@ -198,39 +208,87 @@ switch (get_request_var('action')) {
                     );
                 }
             } elseif (isset_request_var($field_name)) {
+                $submitted_value = get_nfilter_request_var($field_name);
                 // Theme mode hides the font rows but still posts their stored values, so a
                 // font removed from this server since it was saved must not block the save.
                 $hidden_font = $field_array['method'] == 'font' && $font_method == 1
-                    && get_nfilter_request_var($field_name) === (string) read_config_option($field_name, true);
+                    && $submitted_value === (string) read_config_option($field_name, true);
 
                 if (($field_array['method'] == 'textbox' || $field_array['method'] == 'font' || $field_array['method'] == 'drop_sql') && isset($field_array['filter']) && !$hidden_font) {
                     if (isset($field_array['options'])) {
-                        $value = filter_var(get_nfilter_request_var($field_name), $field_array['filter'], $field_array['options']);
+                        $value = filter_var($submitted_value, $field_array['filter'], $field_array['options']);
                     } else {
-                        $value = filter_var(get_nfilter_request_var($field_name), $field_array['filter']);
+                        $value = filter_var($submitted_value, $field_array['filter']);
                     }
                     if ($value === false) {
                         $_SESSION['sess_error_fields'][$field_name] = $field_name;
-                        $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                        $_SESSION['sess_field_values'][$field_name] = $submitted_value;
                         $errors[3] = 3;
                         continue;
                     }
                 }
-                if (is_array(get_nfilter_request_var($field_name))) {
-                    $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr(implode(',', get_nfilter_request_var($field_name))) . ')';
+
+                if ($field_name === 'clog_exclude' && is_string($submitted_value) && $submitted_value !== '') {
+                    if (!class_exists(\Kadupul\Platform\Domain\BoundedRegexPattern::class, false)) {
+                        require_once __DIR__ . '/src/Platform/Domain/BoundedRegexPattern.php';
+                    }
+                    if (\Kadupul\Platform\Domain\BoundedRegexPattern::compile($submitted_value, 'i', \Kadupul\Platform\Domain\BoundedRegexPattern::MAX_LENGTH) === null) {
+                        $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                        $_SESSION['sess_field_values'][$field_name] = $submitted_value;
+                        $errors[3] = 3;
+                        continue;
+                    }
+                }
+
+                if ($field_name === 'guest_user' || $field_name === 'user_template') {
+                    if (!is_scalar($submitted_value) || ($submitted_value !== '' && $submitted_value !== '0' && (!ctype_digit((string) $submitted_value) || (int) $submitted_value <= 0))) {
+                        $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                        $errors[3] = 3;
+                        continue;
+                    }
+                    $candidate_id = (int) $submitted_value;
+                    if ($candidate_id > 0) {
+                        $current_admin_id = (int) read_config_option('admin_user');
+                        $submitted_admin_id = isset_request_var('admin_user') ? (int) get_nfilter_request_var('admin_user') : 0;
+                        $acting_user_id = isset($_SESSION['sess_user_id']) ? (int) $_SESSION['sess_user_id'] : 0;
+                        $eligible_row = db_fetch_cell_prepared(
+                            'SELECT id FROM user_auth WHERE id = ? AND realm = 0',
+                            array($candidate_id)
+                        );
+                        $has_admin_realms = function_exists('cacti_user_has_admin_realms')
+                            ? cacti_user_has_admin_realms($candidate_id)
+                            : false;
+                        if ($candidate_id <= 1
+                            || $candidate_id === $current_admin_id
+                            || ($submitted_admin_id > 0 && $candidate_id === $submitted_admin_id)
+                            || ($acting_user_id > 0 && $candidate_id === $acting_user_id)
+                            || (int) $eligible_row !== $candidate_id
+                            || $has_admin_realms) {
+                            $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                            $errors[3] = 3;
+                            continue;
+                        }
+                        if ($field_name === 'user_template') {
+                            $validated_user_template = $candidate_id;
+                        }
+                    }
+                }
+
+                if (is_array($submitted_value)) {
+                    $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr(implode(',', $submitted_value)) . ')';
                     db_execute_prepared(
                         'REPLACE INTO settings
 					(name, value)
 					VALUES (?, ?)',
-                        array($field_name, implode(',', get_nfilter_request_var($field_name)))
+                        array($field_name, implode(',', $submitted_value))
                     );
                 } else {
-                    $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr(get_nfilter_request_var($field_name)) . ')';
+                    $inserts[] = '(' . db_qstr($field_name) . ', ' . db_qstr($submitted_value) . ')';
                     db_execute_prepared(
                         'REPLACE INTO settings
 					(name, value)
 					VALUES (?, ?)',
-                        array($field_name, get_nfilter_request_var($field_name))
+                        array($field_name, $submitted_value)
                     );
                 }
             }
@@ -258,13 +316,13 @@ switch (get_request_var('action')) {
             }
         }
 
-        // Disable template user from being able to login
-        if (isset_request_var('user_template')) {
+        // Disable validated non-admin template user from logging in (authentication tab only)
+        if (get_request_var('tab') == 'authentication' && $validated_user_template !== null && $validated_user_template > 1) {
             db_execute_prepared(
                 'UPDATE user_auth
 			SET enabled=""
 			WHERE id = ?',
-                array(get_nfilter_request_var('user_template'))
+                array($validated_user_template)
             );
         }
 
@@ -444,7 +502,12 @@ switch (get_request_var('action')) {
                             $form_array[$field_name]['items'][$sub_field_name]['form_id'] = 1;
                         }
 
-                        if ($current_tab == 'path' && is_remote_path_setting($field_name)) {
+                        if (($sub_field_array['method'] ?? '') === 'textbox_password') {
+                            $form_array[$field_name]['items'][$sub_field_name]['value'] = '';
+                            if (!isset($form_array[$field_name]['items'][$sub_field_name]['placeholder']) || $form_array[$field_name]['items'][$sub_field_name]['placeholder'] === '') {
+                                $form_array[$field_name]['items'][$sub_field_name]['placeholder'] = '********';
+                            }
+                        } elseif ($current_tab == 'path' && is_remote_path_setting($field_name)) {
                             $form_array[$field_name]['items'][$sub_field_name]['value'] = db_fetch_cell_prepared(
                                 'SELECT value
 							FROM settings
@@ -474,7 +537,12 @@ switch (get_request_var('action')) {
                         $form_array[$field_name]['form_id'] = 1;
                     }
 
-                    if ($current_tab == 'path' && is_remote_path_setting($field_name)) {
+                    if (($field_array['method'] ?? '') === 'textbox_password') {
+                        $form_array[$field_name]['value'] = '';
+                        if (!isset($form_array[$field_name]['placeholder']) || $form_array[$field_name]['placeholder'] === '') {
+                            $form_array[$field_name]['placeholder'] = '********';
+                        }
+                    } elseif ($current_tab == 'path' && is_remote_path_setting($field_name)) {
                         $form_array[$field_name]['value'] = db_fetch_cell_prepared(
                             'SELECT value
 						FROM settings

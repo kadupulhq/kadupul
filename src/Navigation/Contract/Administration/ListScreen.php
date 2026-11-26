@@ -66,7 +66,7 @@ enum ListScreen: string
             self::UserGroups => 1,
             self::UserDomains => 1,
             self::DiscoveredDevices => 23,
-            self::Collectors => 3,
+            self::Collectors => 15,
             self::Trees => 4,
             self::RrdCandidates => 15,
             self::SnmpObjects => 15,

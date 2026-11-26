@@ -1725,7 +1725,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
  * @param $total_rows   - (int) the total number of rows in the logfile
  * @param $matches      - (bool) match or does not match the filter
  */
-function tail_file($file_name, $number_of_lines, $message_type = -1, $filter = '', &$page_nr = 1, &$total_rows = 0, $matches = true)
+function tail_file($file_name, $number_of_lines, $message_type = -1, $filter = '', &$page_nr = 1, &$total_rows = 0, $matches = true, $exclude_regex = '')
 {
     if (!file_exists($file_name)) {
         touch($file_name);
@@ -1736,17 +1736,57 @@ function tail_file($file_name, $number_of_lines, $message_type = -1, $filter = '
         return array(__('Error %s is not readable', $file_name));
     }
 
-    $filter = strtolower($filter);
+    if (!class_exists(\Kadupul\Platform\Domain\BoundedRegexPattern::class, false)) {
+        require_once dirname(__DIR__) . '/src/Platform/Domain/BoundedRegexPattern.php';
+    }
 
-    $fp = fopen($file_name, 'r');
+    $compiled_exclude = null;
+    if (is_string($exclude_regex) && $exclude_regex !== '') {
+        $compiled_exclude = \Kadupul\Platform\Domain\BoundedRegexPattern::compile(
+            $exclude_regex,
+            'i',
+            \Kadupul\Platform\Domain\BoundedRegexPattern::MAX_LENGTH
+        );
+        if ($compiled_exclude === null) {
+            if (function_exists('cacti_log')) {
+                cacti_log('Kadupul Log Exclude Regex "' . $exclude_regex . '" is Invalid.  Update your Exclude Regex to be valid!');
+            }
+            $total_rows = 0;
 
-    /* Count all lines in the logfile */
-    $total_rows = 0;
-    while (($line = fgets($fp)) !== false) {
-        if (determine_display_log_entry($message_type, $line, $filter, $matches)) {
-            ++$total_rows;
+            return array();
         }
     }
+
+    $filter = strtolower((string) $filter);
+    $compiled_filter = null;
+    if ($filter !== '' && validate_is_regex($filter) === true) {
+        $compiled_filter = \Kadupul\Platform\Domain\BoundedRegexPattern::compile($filter, 'i');
+    }
+
+    $fp = fopen($file_name, 'r');
+    if ($fp === false) {
+        $total_rows = 0;
+
+        return array();
+    }
+
+    /* Single pass: enforce admin exclude_regex on raw lines BEFORE rfilter and row counting */
+    $match_offsets = array();
+    while (true) {
+        $offset = ftell($fp);
+        $line = fgets($fp);
+        if ($line === false) {
+            break;
+        }
+        if ($compiled_exclude !== null && \Kadupul\Platform\Domain\BoundedRegexPattern::matches($compiled_exclude, $line)) {
+            continue;
+        }
+        if (determine_display_log_entry($message_type, $line, $filter, $matches, $compiled_filter) !== false) {
+            $match_offsets[] = $offset;
+        }
+    }
+
+    $total_rows = count($match_offsets);
 
     // Reset the page count to 1 if the number of lines is exceeded
     if (($page_nr - 1) * $number_of_lines > $total_rows) {
@@ -1754,37 +1794,27 @@ function tail_file($file_name, $number_of_lines, $message_type = -1, $filter = '
         $page_nr = 1;
     }
 
-    /* rewind file pointer, to start all over */
-    rewind($fp);
-
     $start = $total_rows - ($page_nr * $number_of_lines);
     $end   = $start + $number_of_lines;
 
     if ($start < 0) {
         $start = 0;
     }
+    if ($end > $total_rows) {
+        $end = $total_rows;
+    }
 
     force_session_data();
 
-    /* load up the lines into an array */
+    /* Load only the requested page by seeking directly to matched byte offsets */
     $file_array = array();
-    $i = 0;
-    while (($line = fgets($fp)) !== false) {
-        $display = determine_display_log_entry($message_type, $line, $filter, $matches);
-
-        if ($display === false) {
-            continue;
+    for ($idx = $start; $idx < $end; $idx++) {
+        if (fseek($fp, $match_offsets[$idx]) === 0) {
+            $line = fgets($fp);
+            if ($line !== false) {
+                $file_array[$idx + 1] = $line;
+            }
         }
-        if ($i < $start) {
-            ++$i;
-            continue;
-        }
-        if ($i >= $end) {
-            break;
-        }
-
-        ++$i;
-        $file_array[$i] = $line;
     }
 
     fclose($fp);
@@ -1799,10 +1829,11 @@ function tail_file($file_name, $number_of_lines, $message_type = -1, $filter = '
  * @param $line
  * @param $filter
  * @param $matches
+ * @param string|null $compiled_filter Pre-compiled bounded regex pattern
  *
  * @return - should the entry be displayed
  */
-function determine_display_log_entry($message_type, $line, $filter, $matches = true)
+function determine_display_log_entry($message_type, $line, $filter, $matches = true, $compiled_filter = null)
 {
     static $thold_enabled = null;
 
@@ -1908,18 +1939,25 @@ function determine_display_log_entry($message_type, $line, $filter, $matches = t
 
     /* match any lines that match the search string */
     if ($display === true && $filter != '') {
+        if ($compiled_filter === null && validate_is_regex($filter) === true) {
+            if (!class_exists(\Kadupul\Platform\Domain\BoundedRegexPattern::class, false)) {
+                require_once dirname(__DIR__) . '/src/Platform/Domain/BoundedRegexPattern.php';
+            }
+            $compiled_filter = \Kadupul\Platform\Domain\BoundedRegexPattern::compile((string) $filter, 'i');
+        }
+
         if ($matches) {
-            if (validate_is_regex($filter) && preg_match('/' . $filter . '/i', $line)) {
+            if ($compiled_filter !== null && \Kadupul\Platform\Domain\BoundedRegexPattern::matches($compiled_filter, $line)) {
                 return $line;
             } elseif (stripos($line, $filter) !== false) {
                 return $line;
             }
         } else {
-            if (validate_is_regex($filter)) {
-                if (!preg_match('/' . $filter . '/i', $line)) {
+            if ($compiled_filter !== null) {
+                if (!\Kadupul\Platform\Domain\BoundedRegexPattern::matches($compiled_filter, $line)) {
                     return $line;
                 }
-            } elseif (!stripos($line, $filter) !== false) {
+            } elseif (stripos($line, $filter) === false) {
                 return $line;
             }
         }
@@ -6220,7 +6258,7 @@ function email_test()
     } elseif ($how == 1) {
         $mail     = __('Sendmail') . '<br><b>' . __('Sendmail Path') . '</b>: ';
         $sendmail = read_config_option('settings_sendmail_path');
-        $mail    .= $sendmail;
+        $mail    .= html_escape($sendmail);
     } elseif ($how == 2) {
         print __('Method: SMTP') . '<br>';
 
@@ -6233,14 +6271,14 @@ function email_test()
         $smtp_secure   = read_config_option('settings_smtp_secure');
         $smtp_timeout  = read_config_option('settings_smtp_timeout');
 
-        $mail .= "<b>" . __('Device') . "</b>: $smtp_host<br>";
-        $mail .= "<b>" . __('Port') . "</b>: $smtp_port<br>";
+        $mail .= "<b>" . __('Device') . "</b>: " . html_escape($smtp_host) . "<br>";
+        $mail .= "<b>" . __('Port') . "</b>: " . html_escape($smtp_port) . "<br>";
 
         if ($smtp_username != '' && $smtp_password != '') {
             $mail .= '<b>' . __('Authentication') . '</b>: true<br>';
-            $mail .= '<b>' . __('Username') . "</b>: $smtp_username<br>";
+            $mail .= '<b>' . __('Username') . "</b>: " . html_escape($smtp_username) . "<br>";
             $mail .= '<b>' . __('Password') . '</b>: (' . __('Not Shown for Security Reasons') . ')<br>';
-            $mail .= '<b>' . __('Security') . "</b>: $smtp_secure<br>";
+            $mail .= '<b>' . __('Security') . "</b>: " . html_escape($smtp_secure) . "<br>";
         } else {
             $mail .= '<b>' . __('Authentication') . '</b>: false<br>';
         }
@@ -6248,10 +6286,10 @@ function email_test()
         if (read_config_option('settings_ping_mail') == 0) {
             $ping_results = ping_mail_server($smtp_host, $smtp_port, $smtp_username, $smtp_password, $smtp_timeout, $smtp_secure);
 
-            print __('Ping Results:') . ' ' . ($ping_results == 1 ? __('Success') : $ping_results) . '<br>';
+            print __('Ping Results:') . ' ' . ($ping_results == 1 ? __('Success') : html_escape((string) $ping_results)) . '<br>';
 
             if ($ping_results != 1) {
-                $mail .= '<b>' . __('Ping Results') . '</b>: ' . $ping_results . '<br>';
+                $mail .= '<b>' . __('Ping Results') . '</b>: ' . html_escape((string) $ping_results) . '<br>';
             } else {
                 $mail .= '<b>' . __('Ping Results') . '</b>: ' . __('Success') . '<br>';
             }
@@ -6282,7 +6320,7 @@ function email_test()
     }
 
     print "<center><table><tr><td>";
-    print "<table><tr><td>$errors</td><tr></table></table></center>";
+    print "<table><tr><td>" . html_escape((string) $errors) . "</td><tr></table></table></center>";
 }
 
 /**
@@ -7266,26 +7304,258 @@ if (isset($config['cacti_server_os']) && $config['cacti_server_os'] == 'win32' &
 
 function is_ipaddress($ip_address = '')
 {
-    /* Strip IPv6 Scope ID (Zone Index) for validation, as
-       filter_var rejects valid link-local addresses like fe80::1%eth0 */
+    if (!is_string($ip_address) || $ip_address === '') {
+        return false;
+    }
+
+    if (!class_exists(\Kadupul\Platform\Domain\IpAddressPolicy::class, false)) {
+        require_once dirname(__DIR__) . '/src/Platform/Domain/IpAddressPolicy.php';
+    }
+
+    /* Validate IPv6-only Zone Index strictly via IpAddressPolicy */
     $clean_ip = $ip_address;
     if (str_contains($clean_ip, '%')) {
         $parts = explode('%', $clean_ip, 2);
         $clean_ip = $parts[0];
     }
 
-    /* check for ipv4/v6 */
-    if (function_exists('filter_var')) {
-        if (filter_var($clean_ip, FILTER_VALIDATE_IP) !== false) {
-            return true;
-        } else {
-            return false;
-        }
-    } elseif (@inet_pton($clean_ip) !== false) {
-        return true;
-    } else {
+    return \Kadupul\Platform\Domain\IpAddressPolicy::isValidIpAddress($ip_address);
+}
+
+/**
+ * Determine whether a user holds any administrative realm directly or via an enabled group.
+ *
+ * @param int $user_id Target user ID
+ *
+ * @return bool
+ */
+function cacti_user_has_admin_realms(int $user_id): bool
+{
+    if ($user_id <= 0) {
         return false;
     }
+
+    $admin_realms = array(1, 8, 15, 18, 26);
+    $placeholders = implode(',', array_fill(0, count($admin_realms), '?'));
+
+    $direct = db_fetch_cell_prepared(
+        "SELECT COUNT(*)
+        FROM user_auth_realm
+        WHERE user_id = ?
+        AND realm_id IN ($placeholders)",
+        array_merge(array($user_id), $admin_realms)
+    );
+
+    if ((int) $direct > 0) {
+        return true;
+    }
+
+    if (function_exists('db_table_exists')
+        && db_table_exists('user_auth_group_realm')
+        && db_table_exists('user_auth_group')
+        && db_table_exists('user_auth_group_members')) {
+        $group = db_fetch_cell_prepared(
+            "SELECT COUNT(*)
+            FROM user_auth_group_realm AS uagr
+            INNER JOIN user_auth_group_members AS uagm
+            ON uagr.group_id = uagm.group_id
+            INNER JOIN user_auth_group AS uag
+            ON uag.id = uagr.group_id
+            WHERE uag.enabled = 'on'
+            AND uagm.user_id = ?
+            AND uagr.realm_id IN ($placeholders)",
+            array_merge(array($user_id), $admin_realms)
+        );
+
+        if ((int) $group > 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Enforce server-side allowlist validation for executable binary path settings.
+ *
+ * @param string $path         Submitted executable path
+ * @param string $setting_name Setting key (e.g. path_php_binary, path_rrdtool)
+ *
+ * @return bool
+ */
+function cacti_is_allowed_binary_path(string $path, string $setting_name = ''): bool
+{
+    if ($path === '' || str_contains($path, "\0") || preg_match('/[\x00-\x1f\x7f]/', $path) === 1) {
+        return false;
+    }
+
+    if (!preg_match('/\A(?:\/|[A-Za-z]:[\/\\\\])/', $path) || str_contains($path, '..') || !is_valid_pathname($path)) {
+        return false;
+    }
+
+    $canonical = realpath($path);
+    if ($canonical === false || !is_file($canonical)) {
+        return false;
+    }
+
+    if (PHP_OS_FAMILY !== 'Windows' && !is_executable($canonical)) {
+        return false;
+    }
+
+    if ($setting_name === 'path_php_binary') {
+        $allowed_php = $GLOBALS['installer_allowed_php_binaries'] ?? null;
+        if (is_array($allowed_php)) {
+            foreach ($allowed_php as $candidate) {
+                if (!is_string($candidate) || $candidate === '' || str_contains($candidate, "\0")) {
+                    continue;
+                }
+                $trusted = realpath($candidate);
+                if ($trusted !== false && $trusted === $canonical) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        $runtime_php = realpath(PHP_BINARY);
+        if ($runtime_php !== false && $runtime_php === $canonical) {
+            return true;
+        }
+    }
+
+    $configured_allowed = $GLOBALS['config']['allowed_binary_paths'] ?? null;
+    if (is_array($configured_allowed)) {
+        foreach ($configured_allowed as $entry) {
+            if (!is_string($entry) || $entry === '' || str_contains($entry, "\0")) {
+                continue;
+            }
+            $trusted = realpath($entry);
+            if ($trusted === false) {
+                continue;
+            }
+            if (is_file($trusted) && $trusted === $canonical) {
+                return true;
+            }
+            if (is_dir($trusted)) {
+                $prefix = rtrim($trusted, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                if (str_starts_with($canonical, $prefix)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    $standard_dirs = array(
+        '/usr/bin',
+        '/usr/local/bin',
+        '/opt/homebrew/bin',
+        '/opt/homebrew/Cellar',
+        '/opt/local/bin',
+        '/bin',
+        '/usr/sbin',
+        '/usr/local/sbin',
+        '/sbin',
+        '/usr/local/spine/bin',
+        '/usr/spine/bin',
+    );
+
+    $canonical_dir = dirname($canonical);
+    foreach ($standard_dirs as $dir) {
+        $resolved_dir = realpath($dir);
+        if ($resolved_dir === false) {
+            continue;
+        }
+        if ($canonical_dir === $resolved_dir) {
+            return true;
+        }
+        if ($dir === '/opt/homebrew/Cellar' && str_starts_with($canonical_dir, rtrim($resolved_dir, '/') . '/')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Validate realtime_cache_path to reject symlinks, system roots, and world-writable directories.
+ *
+ * @param string $path Candidate cache directory path
+ *
+ * @return bool
+ */
+function cacti_is_allowed_realtime_cache_path(string $path): bool
+{
+    if ($path === '' || str_contains($path, "\0") || preg_match('/[\x00-\x1f\x7f]/', $path) === 1) {
+        return false;
+    }
+
+    if (!preg_match('/\A(?:\/|[A-Za-z]:[\/\\\\])/', $path) || str_contains($path, '..') || !is_valid_pathname($path)) {
+        return false;
+    }
+
+    clearstatcache(true, $path);
+    if (is_link($path) || !is_dir($path) || !is_writable($path)) {
+        return false;
+    }
+
+    $real = realpath($path);
+    if ($real === false || !is_dir($real)) {
+        return false;
+    }
+
+    $forbidden = array('/', '/tmp', '/var/tmp', '/dev/shm', '/etc', '/var', '/usr', '/bin', '/sbin');
+    $sys_tmp = realpath(sys_get_temp_dir());
+    if ($sys_tmp !== false) {
+        $forbidden[] = $sys_tmp;
+    }
+    foreach ($forbidden as $blocked) {
+        $blocked_real = realpath($blocked) ?: $blocked;
+        if ($real === $blocked_real) {
+            return false;
+        }
+    }
+
+    $stat = @lstat($real);
+    if ($stat === false || ($stat['mode'] & 0170000) !== 0040000) {
+        return false;
+    }
+
+    if (DIRECTORY_SEPARATOR === '/' && ($stat['mode'] & 0002) !== 0) {
+        return false;
+    }
+
+    $allowed_roots = array();
+    if (!empty($GLOBALS['config']['base_path']) && is_string($GLOBALS['config']['base_path'])) {
+        $allowed_roots[] = $GLOBALS['config']['base_path'];
+    }
+    if (!empty($GLOBALS['config']['rra_path']) && is_string($GLOBALS['config']['rra_path'])) {
+        $allowed_roots[] = $GLOBALS['config']['rra_path'];
+    }
+    if (!empty($GLOBALS['config']['realtime_cache_allowed_roots']) && is_array($GLOBALS['config']['realtime_cache_allowed_roots'])) {
+        foreach ($GLOBALS['config']['realtime_cache_allowed_roots'] as $root) {
+            if (is_string($root) && $root !== '') {
+                $allowed_roots[] = $root;
+            }
+        }
+    }
+
+    foreach ($allowed_roots as $root) {
+        $resolved_root = realpath($root);
+        if ($resolved_root === false) {
+            continue;
+        }
+        $prefix = rtrim($resolved_root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if ($real === $resolved_root || str_starts_with($real, $prefix)) {
+            return true;
+        }
+    }
+
+    if (function_exists('rrd_maintenance_directory_is_trusted')) {
+        return rrd_maintenance_directory_is_trusted($real);
+    }
+
+    return false;
 }
 
 /**

@@ -150,6 +150,14 @@ if ($auth_method != 0) {
         /* find guest user */
         if (!empty($guest_user_id)) {
             if (empty($_SESSION['sess_user_id'])) {
+                if ((int) $guest_user_id <= 1
+                    || (int) $guest_user_id === (int) read_config_option('admin_user')
+                    || (function_exists('cacti_user_has_admin_realms') && cacti_user_has_admin_realms((int) $guest_user_id))) {
+                    cacti_log('SECURITY: Refused guest session transition for administrative account ID ' . (int) $guest_user_id, false, 'AUTH');
+                    http_response_code(403);
+                    exit;
+                }
+
                 if (!cacti_auth_transition((int) $guest_user_id, 'guest')) {
                     http_response_code(403);
                     exit;

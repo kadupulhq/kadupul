@@ -34,7 +34,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         self::assertCount(in_array($view, array('agent', 'event'), true) ? 2 : 1, $xpath->query('//script'));
         self::assertSame('utility-fixture', $xpath->query('//script')->item(0)->getAttribute('nonce'));
         if ($view === 'poller') {
-            foreach (array('Alpha DS & <script>' => 'public & <script>', 'Beta DS' => 'v3 & <script>', 'Gamma DS' => 'script & <script>', 'Delta DS' => 'server & <script>') as $source => $detail) {
+            foreach (array('Alpha DS & <script>' => 'Community: Redacted', 'Beta DS' => 'v3 & <script>', 'Gamma DS' => 'Script: Redacted', 'Delta DS' => 'Script Server: Redacted') as $source => $detail) {
                 if (in_array($source, $expected, true)) {
                     $matching = $xpath->query('//tr[td[1]/a]/td[3]');
                     self::assertStringContainsString($detail, $matching->item(array_search($source, $expected, true))->textContent);

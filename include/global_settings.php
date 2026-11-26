@@ -1361,6 +1361,8 @@ $settings = array(
             'description' => __('The number of concurrent script server processes to run per spine process.  Settings between 1 and 15 are accepted.  This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector.'),
             'method' => 'textbox',
             'default' => '1',
+            'filter' => FILTER_VALIDATE_INT,
+            'options' => array('options' => array('min_range' => 1, 'max_range' => 15)),
             'max_length' => '10',
             'size' => '5'
         ),
@@ -1570,6 +1572,8 @@ $settings = array(
             'method' => 'drop_sql',
             'none_value' => __('No User'),
             'sql' => 'SELECT id AS id, username AS name FROM user_auth WHERE realm = 0 AND id NOT IN (' . $admin_account . ') ORDER BY username',
+            'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => array('options' => array('regexp' => '/^[0-9]{0,10}$/D')),
             'default' => '0'
         ),
         'user_template' => array(
@@ -1578,6 +1582,8 @@ $settings = array(
             'method' => 'drop_sql',
             'none_value' => __('No User'),
             'sql' => 'SELECT id AS id, username AS name FROM user_auth WHERE realm = 0 AND id NOT IN (' . $admin_account . ') ORDER BY username',
+            'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => array('options' => array('regexp' => '/^[0-9]{0,10}$/D')),
             'default' => '0'
         ),
         'basic_header' => array(

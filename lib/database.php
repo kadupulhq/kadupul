@@ -71,7 +71,8 @@ function db_connect_real(
     $db_ssl_key = '',
     $db_ssl_cert = '',
     $db_ssl_ca = '',
-    $persist = false
+    $persist = false,
+    $cache = true
 ) {
 
     global $database_total_queries, $config;
@@ -80,16 +81,103 @@ function db_connect_real(
 
     $database_total_queries = 0;
 
+    if (!is_string($db_type) || $db_type !== 'mysql') {
+        return false;
+    }
+
+    if (!is_string($device) || trim($device) === '' || preg_match('/[;\x00-\x1f\x7f]/', $device) === 1) {
+        return false;
+    }
+
+    if (!is_string($db_name) || preg_match('/[;\x00-\x1f\x7f]/', $db_name) === 1) {
+        return false;
+    }
+
+    if ($port === '' || $port === null) {
+        $port = 3306;
+    } else {
+        $validated_port = filter_var($port, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 65535)));
+        if ($validated_port === false) {
+            return false;
+        }
+        $port = (int) $validated_port;
+    }
+
+    $validated_retries = filter_var($retries, FILTER_VALIDATE_INT);
+    if ($validated_retries === false || $validated_retries < 0) {
+        $retries = 0;
+    } elseif ($validated_retries > 5) {
+        $retries = 5;
+    } else {
+        $retries = (int) $validated_retries;
+    }
+
+    $ssl_enabled = ($db_ssl && $db_ssl !== 'off' && $db_ssl !== 'false');
+
     $i = 0;
-    if (\Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::hasSession("$device:$port:$db_name")) {
-        if (!empty($config['DEBUG_SQL_CONNECT'])) {
-            error_log(sprintf('NOTE: Connect using cached connection %s:%s/%s.', $device, $port, $db_name));
+    $base_session_key = "$device:$port:$db_name";
+    $cred_fingerprint = hash(
+        'sha256',
+        (string) $user . "\0" . (string) $pass . "\0" . ($ssl_enabled ? '1' : '0') . "\0"
+            . (string) $db_ssl_ca . "\0" . (string) $db_ssl_cert . "\0" . (string) $db_ssl_key
+    );
+    $session_key = $base_session_key;
+
+    if ($cache && \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::hasSession($base_session_key)) {
+        $cached_cnn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::session($base_session_key);
+        $cached_meta = null;
+        if (is_object($cached_cnn)) {
+            $all_settings = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::settings();
+            if (is_array($all_settings) && isset($all_settings[spl_object_hash($cached_cnn)])) {
+                $cached_meta = $all_settings[spl_object_hash($cached_cnn)];
+            }
         }
 
-        return \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::session("$device:$port:$db_name");
+        $meta_matches = true;
+        if (is_array($cached_meta)) {
+            $cached_ssl = !empty($cached_meta['database_ssl'])
+                && $cached_meta['database_ssl'] !== 'off'
+                && $cached_meta['database_ssl'] !== 'false';
+            $meta_matches = hash_equals((string) ($cached_meta['database_username'] ?? ''), (string) $user)
+                && hash_equals((string) ($cached_meta['database_password'] ?? ''), (string) $pass)
+                && $cached_ssl === $ssl_enabled
+                && (string) ($cached_meta['database_ssl_ca'] ?? '') === (string) $db_ssl_ca
+                && (string) ($cached_meta['database_ssl_cert'] ?? '') === (string) $db_ssl_cert
+                && (string) ($cached_meta['database_ssl_key'] ?? '') === (string) $db_ssl_key;
+        }
+
+        if ($meta_matches) {
+            if (!empty($config['DEBUG_SQL_CONNECT'])) {
+                error_log(sprintf('NOTE: Connect using cached connection %s:%s/%s.', $device, $port, $db_name));
+            }
+
+            return $cached_cnn;
+        }
+
+        $session_key = $base_session_key . ':' . $cred_fingerprint;
+        if (\Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::hasSession($session_key)) {
+            return \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::session($session_key);
+        }
     }
 
     $odevice = $device;
+
+    $use_unix_socket = false;
+    if (str_contains($device, '/')) {
+        $configured_hosts = array_filter(
+            array(
+                $GLOBALS['database_hostname'] ?? null,
+                $GLOBALS['rdatabase_hostname'] ?? null,
+                $config['database_hostname'] ?? null,
+            ),
+            'is_string'
+        );
+        if (!$cache || !str_starts_with($device, '/') || !in_array($device, $configured_hosts, true)
+            || is_link($device) || @filetype($device) !== 'socket') {
+            return false;
+        }
+        $use_unix_socket = true;
+    }
 
     $flags = array();
     if ($db_type == 'mysql') {
@@ -97,7 +185,7 @@ function db_connect_real(
          * Using 'localhost' will force unix sockets mode, which breaks when
          * attempting to use mysql on a different port
          */
-        if ($device == 'localhost' && $port != '3306') {
+        if ($device == 'localhost' && $port != 3306) {
             $device = '127.0.0.1';
         }
 
@@ -115,22 +203,36 @@ function db_connect_real(
             return false;
         }
 
-        if (isset($database_persist) && $database_persist == true || $persist) {
+        if ($cache && (isset($database_persist) && $database_persist == true || $persist)) {
             $flags[PDO::ATTR_PERSISTENT] = true;
         }
 
         $flags[PDO::MYSQL_ATTR_FOUND_ROWS] = true;
-        if ($db_ssl) {
-            if ($db_ssl_ca != '') {
-                if (file_exists($db_ssl_ca)) {
-                    $flags[PDO::MYSQL_ATTR_SSL_CA] = $db_ssl_ca;
-                }
+        if (defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+            $flags[PDO::MYSQL_ATTR_MULTI_STATEMENTS] = false;
+        }
+
+        if ($ssl_enabled) {
+            if (!is_string($db_ssl_ca) || $db_ssl_ca === '' || str_contains($db_ssl_ca, "\0")
+                || !is_file($db_ssl_ca) || !is_readable($db_ssl_ca)) {
+                return false;
             }
-            if ($db_ssl_key != '' && $db_ssl_cert != '') {
-                if (file_exists($db_ssl_key) && file_exists($db_ssl_cert)) {
-                    $flags[PDO::MYSQL_ATTR_SSL_KEY]  = $db_ssl_key;
-                    $flags[PDO::MYSQL_ATTR_SSL_CERT] = $db_ssl_cert;
+
+            $flags[PDO::MYSQL_ATTR_SSL_CA] = $db_ssl_ca;
+            if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
+                $flags[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+            }
+
+            if ($db_ssl_key != '' || $db_ssl_cert != '') {
+                if (!is_string($db_ssl_key) || !is_string($db_ssl_cert)
+                    || $db_ssl_key === '' || $db_ssl_cert === ''
+                    || str_contains($db_ssl_key, "\0") || str_contains($db_ssl_cert, "\0")
+                    || !is_file($db_ssl_key) || !is_readable($db_ssl_key)
+                    || !is_file($db_ssl_cert) || !is_readable($db_ssl_cert)) {
+                    return false;
                 }
+                $flags[PDO::MYSQL_ATTR_SSL_KEY]  = $db_ssl_key;
+                $flags[PDO::MYSQL_ATTR_SSL_CERT] = $db_ssl_cert;
             }
         }
     }
@@ -141,7 +243,7 @@ function db_connect_real(
 
     while ($i <= $retries) {
         try {
-            if (str_contains($device, '/') && filetype($device) == 'socket') {
+            if ($use_unix_socket) {
                 $cnn_id = new PDO("$db_type:unix_socket=$device;dbname=$db_name;charset=utf8", $user, $pass, $flags);
             } else {
                 $cnn_id = new PDO("$db_type:host=$device;port=$port;dbname=$db_name;charset=utf8", $user, $pass, $flags);
@@ -162,21 +264,23 @@ function db_connect_real(
                 'NO_AUTO_VALUE_ON_ZERO'
             );
 
-            \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::remember("$odevice:$port:$db_name", $cnn_id, array(
-                'database_conn'     => $cnn_id,
-                'database_hostname' => $device,
-                'database_username' => $user,
-                'database_password' => $pass,
-                'database_default'  => $db_name,
-                'database_type'     => $db_type,
-                'database_port'     => $port,
-                'database_retries'  => $retries,
-                'database_ssl'      => $db_ssl,
-                'database_ssl_key'  => $db_ssl_key,
-                'database_ssl_cert' => $db_ssl_cert,
-                'database_ssl_ca'   => $db_ssl_ca,
-                'database_persist'  => $persist,
-            ));
+            if ($cache) {
+                \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::remember($session_key, $cnn_id, array(
+                    'database_conn'     => $cnn_id,
+                    'database_hostname' => $device,
+                    'database_username' => $user,
+                    'database_password' => $pass,
+                    'database_default'  => $db_name,
+                    'database_type'     => $db_type,
+                    'database_port'     => $port,
+                    'database_retries'  => $retries,
+                    'database_ssl'      => $db_ssl,
+                    'database_ssl_key'  => $db_ssl_key,
+                    'database_ssl_cert' => $db_ssl_cert,
+                    'database_ssl_ca'   => $db_ssl_ca,
+                    'database_persist'  => $persist,
+                ));
+            }
 
             $ver = db_get_global_variable('version', $cnn_id);
 
@@ -198,7 +302,7 @@ function db_connect_real(
             }
 
             // Get rid of bad modes
-            $modes = explode(',', db_fetch_cell('SELECT @@sql_mode', '', false));
+            $modes = explode(',', (string) db_fetch_cell('SELECT @@sql_mode', '', false, $cnn_id));
             $new_modes = array();
 
             foreach ($modes as $mode) {
@@ -218,22 +322,23 @@ function db_connect_real(
 
             $sql_mode = implode(',', $new_modes);
 
-            db_execute_prepared('SET SESSION sql_mode = ?', array($sql_mode), false);
+            db_execute_prepared('SET SESSION sql_mode = ?', array($sql_mode), false, $cnn_id);
 
-            if (db_column_exists('poller', 'timezone')) {
+            if ($cache && db_column_exists('poller', 'timezone')) {
                 $timezone = db_fetch_cell_prepared(
                     'SELECT timezone
 					FROM poller
 					WHERE id = ?',
                     array($config['poller_id']),
-                    false
+                    false,
+                    $cnn_id
                 );
             } else {
                 $timezone = '';
             }
 
             if ($timezone != '') {
-                db_execute_prepared('SET SESSION time_zone = ?', array($timezone), false);
+                db_execute_prepared('SET SESSION time_zone = ?', array($timezone), false, $cnn_id);
             }
 
             if (!empty($config['DEBUG_READ_CONFIG_OPTION'])) {
@@ -2744,18 +2849,18 @@ function db_dump_data($database = '', $tables = '', $credentials = array(), $out
 {
     global $database_default, $database_username, $database_password;
 
-    $database    = ($database == '') ? $database_default : $database;
-    $output_file = ($output_file === false) ? '/tmp/cacti.dump.sql' : $output_file;
+    $database      = ($database == '') ? $database_default : $database;
+    $output_handle = db_dump_open_output_file($output_file);
+    if (!is_resource($output_handle)) {
+        cacti_log('ERROR: Refused unsafe or missing dump output file', false, 'DBCALL');
 
-    /* Extract username and password from credentials array or globals */
+        return false;
+    }
+
     $username = isset($credentials['user']) ? $credentials['user'] : $database_username;
     $password = isset($credentials['password']) ? $credentials['password'] : $database_password;
 
-    /* Use mariadb-dump if available to avoid deprecation warnings on MariaDB */
-    $dump_binary = 'mysqldump';
-    if (file_exists('/usr/bin/mariadb-dump') || file_exists('/usr/local/bin/mariadb-dump')) {
-        $dump_binary = 'mariadb-dump';
-    }
+    $dump_binary = (file_exists('/usr/bin/mariadb-dump') || file_exists('/usr/local/bin/mariadb-dump')) ? 'mariadb-dump' : 'mysqldump';
 
     $command = array(
         $dump_binary,
@@ -2765,7 +2870,6 @@ function db_dump_data($database = '', $tables = '', $credentials = array(), $out
         $database
     );
 
-    /* Safely parse and append table names */
     if (trim($tables) != '') {
         $table_arr = is_array($tables) ? $tables : explode(' ', trim($tables));
 
@@ -2781,13 +2885,11 @@ function db_dump_data($database = '', $tables = '', $credentials = array(), $out
     );
 
     $descriptors = array(
-        1 => array('file', $output_file, 'w'),
+        1 => $output_handle,
         2 => array('pipe', 'w')
     );
 
-    /* Construct safe shell arguments using cacti_escapeshellarg */
     $cmd_string = '';
-
     foreach ($command as $arg) {
         $cmd_string .= cacti_escapeshellarg($arg) . ' ';
     }
@@ -2795,6 +2897,7 @@ function db_dump_data($database = '', $tables = '', $credentials = array(), $out
     $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 
     if (!is_resource($process)) {
+        fclose($output_handle);
         cacti_log("ERROR: Failed to initialize mysqldump process for database '$database'", false, 'DBCALL');
 
         return 1;
@@ -2802,12 +2905,72 @@ function db_dump_data($database = '', $tables = '', $credentials = array(), $out
 
     fclose($pipes[2]);
     $retval = proc_close($process);
+    fclose($output_handle);
 
     if ($retval !== 0) {
         cacti_log("ERROR: mysqldump failed with exit code $retval for database '$database'", false, 'DBCALL');
     }
 
     return $retval;
+}
+
+/**
+ * Safely open a database dump destination without following symlinks and enforce 0600 permissions.
+ *
+ * @param mixed $output_file Destination path
+ *
+ * @return resource|false
+ */
+function db_dump_open_output_file($output_file)
+{
+    if (!is_string($output_file) || trim($output_file) === '' || str_contains($output_file, "\0")) {
+        return false;
+    }
+
+    $dir = dirname($output_file);
+    clearstatcache(true, $dir);
+    clearstatcache(true, $output_file);
+
+    if (!is_dir($dir) || is_link($dir) || is_link($output_file)) {
+        return false;
+    }
+
+    if (!file_exists($output_file)) {
+        $handle = @fopen($output_file, 'xb');
+        if (!is_resource($handle)) {
+            return false;
+        }
+        @chmod($output_file, 0600);
+
+        return $handle;
+    }
+
+    if (!is_file($output_file)) {
+        return false;
+    }
+
+    $lstat = @lstat($output_file);
+    if ($lstat === false || ($lstat['mode'] & 0170000) !== 0100000) {
+        return false;
+    }
+
+    $handle = @fopen($output_file, 'cb');
+    if (!is_resource($handle)) {
+        return false;
+    }
+
+    $fstat = @fstat($handle);
+    if ($fstat === false || $fstat['dev'] !== $lstat['dev'] || $fstat['ino'] !== $lstat['ino']
+        || ($fstat['mode'] & 0170000) !== 0100000) {
+        fclose($handle);
+
+        return false;
+    }
+
+    @ftruncate($handle, 0);
+    @chmod($output_file, 0600);
+
+    return $handle;
 }
 
 /**
