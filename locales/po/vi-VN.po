@@ -6227,7 +6227,7 @@ msgstr "Tạo mới từ mẫu"
 
 #: include/global_form.php
 msgid "Dash Offset (dash-offset=offset)"
-msgstr "Dash Offset (dash-offset = offset)"
+msgstr "Độ lệch nét đứt (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"

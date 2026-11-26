@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Automatizācijas veidne mainījās kopš šīs formas atvēršanas. Pirms saglabāšanas pārlādējiet."
 "The automation template order changed since you opened this page. Reload before moving.": "Automatizācijas veidņu secība mainījās kopš šīs lapas atvēršanas. Pirms pārvietošanas pārlādējiet."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Maksimālais mēģinājumu skaits sasniegt ierīci, izmantojot SNMP lasīšanas virkni, pirms atteikšanās."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Maksimālais milisekunžu skaits, ko Cacti gaidīs uz SNMP atbildi (nedarbojas ar php-snmp atbalstu)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Maksimālais milisekunžu skaits, ko Kadupul gaidīs uz SNMP atbildi (nedarbojas ar php-snmp atbalstu)."
 "The name can be at most 100 characters.": "Nosaukums drīkst saturēt ne vairāk kā 100 rakstzīmes."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Šīs SNMP opciju kopas veidlapas derīgums ir beidzies. Atveriet SNMP opciju kopu vēlreiz un izmantojiet tās pašreizējo veidlapu."

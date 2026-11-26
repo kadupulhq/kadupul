@@ -6294,7 +6294,7 @@ msgstr "Смещение штриха (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "Тире (тире [=on_s[,off_s[,on_s,off_s]...]]))))"
+msgstr "Тире (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php
 msgid "Data Retention"

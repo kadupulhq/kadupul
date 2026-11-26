@@ -6269,11 +6269,11 @@ msgstr "Utwórz nowy z szablonu"
 
 #: include/global_form.php
 msgid "Dash Offset (dash-offset=offset)"
-msgstr "Dash Offset (offset kreski = offset)"
+msgstr "Przesunięcie kreski (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "Kreski (kreski (kreski[=on_s[,off_s[,on_s,off_s]....]])"
+msgstr "Kreski (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php
 msgid "Data Retention"

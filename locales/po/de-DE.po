@@ -6260,7 +6260,7 @@ msgstr "Neue aus Vorlage erstellen"
 
 #: include/global_form.php
 msgid "Dash Offset (dash-offset=offset)"
-msgstr "Strich-Abstand (dash-offset=Abstand)"
+msgstr "Strich-Abstand (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"

@@ -19,15 +19,66 @@ import subprocess
 import tempfile
 
 COMPATIBILITY_CONTENT_SHA256 = "241909acf069b916e2fb4c9ee0ab342fe9f3b8f4da492eb6f10eb839c7a11947"
+# Legacy gettext is frozen on main: new UI strings belong in Symfony ICU YAML
+# catalogs under config/translations/*.yaml rather than expanding cacti.pot.
+MAX_STATIC_GETTEXT_MESSAGES = 4180
 # Catalogs record file-only references so moving lines never rewrites them.
 LINE_REFERENCE = re.compile(r":\d+$")
 # "Label (--option ...)" labels name an RRDtool option that must stay verbatim.
 OPTION_LABEL = re.compile(r"^.*\S \((--[^()&]+?)[ =]?(?:&lt;.*)?\)$")
+# Literal RRDtool option syntax snippets that must remain verbatim in translations.
+RRD_SYNTAX_TOKENS = (
+    "(dash-offset=offset)",
+    "(dashes[=on_s[,off_s[,on_s,off_s]...]])",
+)
 # An entity split by inserted whitespace, such as "&gt ;" or "& #160;", is shown literally.
-SPLIT_ENTITY = re.compile(r"&(?:lt|gt|amp|quot) ;|& #\d+;")
+SPLIT_ENTITY = re.compile(r"&(?:lt|gt|amp|quot|apos|nbsp) ;|& #\d+;")
+# Unclosed HTML tag fragments ("<b" at end of string or "<b<i").
+UNCLOSED_HTML_TAG = re.compile(r"<[A-Za-z][^<>]*(?=<|$)")
+BALANCED_HTML_TAGS = ("b", "i", "strong", "em", "u", "a", "code", "span", "p", "div", "li", "ul", "ol")
+# Printf conversion specifiers (prose "%" and escaped "%%" are ignored).
+PRINTF_SPEC = re.compile(r"%(?:(\d+)\$)?[-+0# ]?(?:\d+|\*)?(?:\.(?:\d+|\*))?[hlL]?([diouxXeEfFgGaAcspn])")
+# Forbidden invisible/formatting characters (ZWNJ U+200C, ZWJ U+200D, RLM U+200F are allowed).
+FORBIDDEN_INVISIBLE = re.compile(r"[\u200B\uFEFF\u0640\u00AD\u200E]")
+DOUBLE_SENTENCE_PUNCT = re.compile(r"([?!\uFF1F\uFF01][.\u3002])\s*$")
+SENTENCE_END_PUNCT = re.compile(r"[.!?。？！۔።։।]\s*$")
+BRAND_CACTI = re.compile(r"(?<![A-Za-z0-9_])cacti(?![A-Za-z0-9_])", re.IGNORECASE)
+LOCALE_CODE = re.compile(r"[a-z]{2}-[A-Z]{2}")
+SCRIPT_NAME = re.compile(r"[A-Z][A-Za-z_]+")
+# Thai prose does not use trailing periods.
+END_STOP_EXEMPT_LOCALES = frozenset(("th-TH",))
 RETIRED_MESSAGES = frozenset(("Access Denied!  LDAP Error: %s",
                              "Access Denied!  LDAP Search Error: %s",
                              "LDAP Search Error: %s"))
+
+
+def validate_manifest(manifest: object) -> list[str]:
+    """Validate locales/catalogs.json structure and return declared translated locales."""
+    if not isinstance(manifest, dict):
+        raise ValueError("Invalid shipped gettext locale manifest")
+    declared = manifest.get("translated_locales")
+    if (manifest.get("source_fallback") != "en-US" or not isinstance(declared, list)
+            or not declared or any(not isinstance(locale, str) or not LOCALE_CODE.fullmatch(locale) for locale in declared)
+            or len(declared) != len(set(declared)) or "en-US" in declared):
+        raise ValueError("Invalid shipped gettext locale manifest")
+    declared_set = set(declared)
+    sparse = manifest.get("sparse_yaml_overrides")
+    if sparse is not None:
+        if (not isinstance(sparse, list)
+                or any(not isinstance(locale, str) or not LOCALE_CODE.fullmatch(locale) for locale in sparse)
+                or len(sparse) != len(set(sparse))
+                or not set(sparse).issubset(declared_set)):
+            raise ValueError("Invalid sparse_yaml_overrides in locale manifest")
+    scripts = manifest.get("scripts")
+    if scripts is not None:
+        if not isinstance(scripts, dict):
+            raise ValueError("Invalid scripts mapping in locale manifest")
+        for locale, script_list in scripts.items():
+            if (locale not in declared_set or not isinstance(script_list, list) or not script_list
+                    or any(not isinstance(s, str) or not SCRIPT_NAME.fullmatch(s) for s in script_list)
+                    or len(script_list) != len(set(script_list))):
+                raise ValueError(f"Invalid scripts entry for {locale!r} in locale manifest")
+    return declared
 
 
 def compatibility(path: Path) -> dict[tuple[str, str, str], dict]:
@@ -92,32 +143,128 @@ def entries(text: str) -> dict[tuple[str, str, str], dict[str, str]]:
     return result
 
 
-def translation_defects(message: dict[str, str]) -> list[str]:
+def _printf_signature(text: str) -> list[tuple[int | None, str]]:
+    cleaned = text.replace("%%", "")
+    return [(int(m.group(1)) if m.group(1) else None, m.group(2)) for m in PRINTF_SPEC.finditer(cleaned)]
+
+
+def _printf_defect(source: str, value: str) -> str | None:
+    expected = _printf_signature(source)
+    actual = _printf_signature(value)
+    if len(expected) != len(actual):
+        return f"printf specifier count mismatch (expected {len(expected)}, got {len(actual)})"
+    if not expected:
+        return None
+    expected_types = [conv for _, conv in expected]
+    if any(pos is not None for pos, _ in actual):
+        if any(pos is None for pos, _ in actual):
+            return "mixes positional and sequential printf specifiers"
+        seen_positions = set()
+        for pos, conv in actual:
+            assert pos is not None
+            if pos < 1 or pos > len(expected_types):
+                return f"positional printf specifier %{pos}${conv} out of range"
+            if expected_types[pos - 1] != conv:
+                return f"printf specifier %{pos}${conv} type mismatch (expected {expected_types[pos - 1]})"
+            seen_positions.add(pos)
+        if len(seen_positions) != len(expected_types):
+            return "duplicate or omitted positional printf specifier"
+    else:
+        actual_types = [conv for _, conv in actual]
+        if actual_types != expected_types:
+            return f"printf specifier type/order mismatch (expected {expected_types}, got {actual_types})"
+    return None
+
+
+def _html_tag_defect(source: str, value: str) -> str | None:
+    if UNCLOSED_HTML_TAG.search(value) and not UNCLOSED_HTML_TAG.search(source):
+        return "has an unclosed HTML tag"
+    for tag in BALANCED_HTML_TAGS:
+        src_open = len(re.findall(rf"<{tag}(?:\s[^<>]*?)?>", source, re.IGNORECASE))
+        src_close = len(re.findall(rf"</{tag}\s*>", source, re.IGNORECASE))
+        val_open = len(re.findall(rf"<{tag}(?:\s[^<>]*?)?>", value, re.IGNORECASE))
+        val_close = len(re.findall(rf"</{tag}\s*>", value, re.IGNORECASE))
+        if src_open == src_close and val_open != val_close:
+            return f"has unbalanced <{tag}> HTML tags ({val_open} open vs {val_close} close)"
+    return None
+
+
+def translation_defects(message: dict[str, str], *, locale: str | None = None, is_historical: bool = False) -> list[str]:
     """Defects a translation shows against its English source without reading the language."""
     defects = []
-    option = OPTION_LABEL.match(message["msgid"])
+    msgid = message["msgid"]
+    msgid_plural = message.get("msgid_plural", "")
+    flags = {flag.strip() for flag in message.get("flags", "").split(",") if flag.strip()}
+    check_printf = "php-format" in flags or "c-format" in flags
+    option = OPTION_LABEL.match(msgid)
+
+    if msgid_plural:
+        plural_fields = sorted(field for field in message if field.startswith("msgstr["))
+        if plural_fields and any(not message[field].strip() for field in plural_fields):
+            defects.append("has an empty plural translation form")
+
     for field, value in message.items():
         if not field.startswith("msgstr") or not value:
             continue
-        source = message.get("msgid_plural", message["msgid"]) if field not in ("msgstr", "msgstr[0]") else message["msgid"]
-        ending = value.rstrip()[-2:]
-        if ending in ("?.", "!.") and not source.rstrip().endswith(ending):
-            defects.append(f"{field} ends with {ending!r}, the source does not")
+        source = msgid_plural if (msgid_plural and field not in ("msgstr", "msgstr[0]")) else msgid
+
+        double_match = DOUBLE_SENTENCE_PUNCT.search(value)
+        if double_match and not source.rstrip().endswith(double_match.group(1)):
+            defects.append(f"{field} ends with {double_match.group(1)!r}, the source does not")
+
         if option and option.group(1) not in value:
             defects.append(f"{field} drops the RRDtool option {option.group(1)}")
+
+        for token in RRD_SYNTAX_TOKENS:
+            if token in source and token not in value:
+                defects.append(f"{field} alters the RRDtool syntax {token}")
+
+        if "cacti.sql" in source and "cacti.sql" not in value:
+            defects.append(f"{field} alters the schema filename cacti.sql")
+
         if SPLIT_ENTITY.search(value) and not SPLIT_ENTITY.search(source):
             defects.append(f"{field} splits an HTML entity with whitespace")
+
+        tag_issue = _html_tag_defect(source, value)
+        if tag_issue:
+            defects.append(f"{field} {tag_issue}")
+
+        if BRAND_CACTI.search(value) and not BRAND_CACTI.search(source):
+            defects.append(f"{field} introduces unexpected 'Cacti' brand absent from source")
+
+        if check_printf:
+            printf_issue = _printf_defect(source, value)
+            if printf_issue:
+                defects.append(f"{field} {printf_issue}")
+
+        if not is_historical:
+            invis = FORBIDDEN_INVISIBLE.search(value)
+            if invis and not FORBIDDEN_INVISIBLE.search(source):
+                defects.append(f"{field} contains forbidden invisible/kashida character U+{ord(invis.group(0)):04X}")
+
+            if (locale not in END_STOP_EXEMPT_LOCALES
+                    and source.rstrip().endswith(".")
+                    and not source.rstrip().endswith("...")
+                    and len(source.split()) >= 4
+                    and not SENTENCE_END_PUNCT.search(value)):
+                defects.append(f"{field} drops sentence-ending punctuation from source")
+
     return defects
+
+
+def check_legacy_gettext_ceiling(static_count: int, ceiling: int = MAX_STATIC_GETTEXT_MESSAGES) -> None:
+    """Prevent new UI strings from growing the legacy gettext surface on main."""
+    if static_count > ceiling:
+        raise ValueError(
+            f"Legacy gettext catalog grew to {static_count} static messages (ceiling {ceiling}); "
+            "add new UI strings to Symfony ICU YAML catalogs under config/translations/*.yaml instead"
+        )
 
 
 def verify(source: Path, catalogs: Path) -> None:
     historical = compatibility(source / "locales/historical-compatibility.json")
     manifest = json.loads((source / "locales/catalogs.json").read_text())
-    declared = manifest["translated_locales"]
-    if (manifest["source_fallback"] != "en-US" or not isinstance(declared, list)
-            or not declared or any(not isinstance(locale, str) or not re.fullmatch(r"[a-z]{2}-[A-Z]{2}", locale) for locale in declared)
-            or len(declared) != len(set(declared)) or "en-US" in declared):
-        raise ValueError("Invalid shipped gettext locale manifest")
+    declared = validate_manifest(manifest)
     expected_locales = set(declared)
     if ({path.stem for path in (catalogs / "po").glob("*.po")} != expected_locales
             or {path.stem for path in (catalogs / "LC_MESSAGES").glob("*.mo")} != expected_locales):
@@ -147,6 +294,7 @@ def verify(source: Path, catalogs: Path) -> None:
                     message["references"] = " ".join(sorted(set(message["references"].split()) | set(expected[key]["references"].split())))
                     message["flags"] = ",".join(sorted(set(message["flags"].split(",")) | set(expected[key]["flags"].split(","))))
                 expected[key] = message
+        check_legacy_gettext_ceiling(len(expected))
         actual = entries((catalogs / "po/cacti.pot").read_text())
         required = set(expected) | set(historical)
         if any(key[1] in RETIRED_MESSAGES for key in actual) or any(key[1] in RETIRED_MESSAGES for key in expected):
@@ -172,7 +320,7 @@ def verify(source: Path, catalogs: Path) -> None:
                 if translated[key]["flags"] != ",".join(item["translations"][po.stem]["flags"]):
                     raise ValueError("Reviewed historical translation flags differ: " + po.name)
             for key, message in translated.items():
-                defects = translation_defects(message)
+                defects = translation_defects(message, locale=po.stem, is_historical=(key in historical))
                 if defects:
                     raise ValueError(f"Translation defect in {po.name} {key[1]!r}: " + "; ".join(defects))
             compiled = Path(temporary) / (po.stem + ".mo")

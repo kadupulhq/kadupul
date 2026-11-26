@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Samfurin sarrafa kai tsaye ya canja tun lokacin da ka buɗe wannan fom ɗin. Sake lodawa kafin ajiyewa."
 "The automation template order changed since you opened this page. Reload before moving.": "Jerin samfurin sarrafa kai tsaye ya canja tun lokacin da ka buɗe wannan shafin. Sake lodawa kafin motsawa."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Mafi girman adadin yunƙuri don isa ga na'ura ta hanyar kalmar karanta SNMP kafin haƙura."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Mafi girman adadin milliseconds da Cacti zai jira don amsar SNMP (ba ya aiki tare da tallafin php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Mafi girman adadin milliseconds da Kadupul zai jira don amsar SNMP (ba ya aiki tare da tallafin php-snmp)."
 "The name can be at most 100 characters.": "Sunan ba zai iya wuce haruffa 100 ba."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Wannan fom ɗin Saitin Zaɓin SNMP ya ƙare. Sake buɗe Saitin Zaɓin SNMP kuma yi amfani da fom ɗinsa na yanzu."

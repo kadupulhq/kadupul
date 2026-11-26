@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Шаблонът за автоматизация е променен, откакто отворихте този формуляр. Презаредете, преди да запазите."
 "The automation template order changed since you opened this page. Reload before moving.": "Редът на шаблоните за автоматизация е променен, откакто отворихте тази страница. Презаредете, преди да премествате."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Максималният брой опити за достигане до устройство чрез SNMP readstring преди отказването."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Максималният брой милисекунди, който Cacti ще изчака за SNMP отговор (не работи с поддръжка на php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Максималният брой милисекунди, който Kadupul ще изчака за SNMP отговор (не работи с поддръжка на php-snmp)."
 "The name can be at most 100 characters.": "Името може да бъде най-много 100 знака."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Този формуляр за набор от SNMP опции е изтекъл. Отворете набора от SNMP опции отново и използвайте текущия му формуляр."

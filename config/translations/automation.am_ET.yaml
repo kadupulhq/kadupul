@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "ይህን ቅጽ ከከፈቱ በኋላ የራስ-ሰር አብነቱ ተለውጧል። ከማስቀመጥዎ በፊት እንደገና ይጫኑ።"
 "The automation template order changed since you opened this page. Reload before moving.": "ይህን ገጽ ከከፈቱ በኋላ የራስ-ሰር አብነት ቅደም ተከተሉ ተለውጧል። ከማንቀሳቀስዎ በፊት እንደገና ይጫኑ።"
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "ተስፋ ከመቁረጥ በፊት በSNMP የንባብ ሕብረቁምፊ ወደ መሣሪያ ለመድረስ የሚደረጉ ከፍተኛ የሙከራዎች ብዛት።"
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Cacti ለSNMP ምላሽ የሚጠብቀው ከፍተኛ የሚሊሰከንዶች ብዛት (ከphp-snmp ድጋፍ ጋር አይሰራም)።"
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Kadupul ለSNMP ምላሽ የሚጠብቀው ከፍተኛ የሚሊሰከንዶች ብዛት (ከphp-snmp ድጋፍ ጋር አይሰራም)።"
 "The name can be at most 100 characters.": "ስሙ ከ100 ቁምፊዎች መብለጥ የለበትም።"
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "ይህ የSNMP አማራጭ ስብስብ ቅጽ ጊዜው አልፎበታል። የSNMP አማራጭ ስብስቡን እንደገና ይክፈቱ እና የአሁኑን ቅጽ ይጠቀሙ።"
