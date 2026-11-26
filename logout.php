@@ -115,7 +115,6 @@ if (!$logoutEnded || in_array($logoutAction, ['timeout', 'disabled', 'remote'], 
                 'token' => csrf_get_tokens(),
                 'label' => __('Logout'),
             ],
-            defined('CACTI_LOCALE') ? CACTI_LOCALE : 'en-US',
         ),
     );
 } else {

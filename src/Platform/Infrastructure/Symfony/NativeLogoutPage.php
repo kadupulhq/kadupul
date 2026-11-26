@@ -30,6 +30,5 @@ final readonly class NativeLogoutPage
         public string $nonce,
         public array $policies,
         public ?array $confirmation = null,
-        public string $locale = 'en-US',
     ) {}
 }

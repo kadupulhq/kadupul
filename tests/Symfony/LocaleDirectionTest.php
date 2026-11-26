@@ -12,7 +12,6 @@ namespace Kadupul\Tests;
 use Kadupul\IdentityAccess\Infrastructure\Symfony\LoginPageRenderer;
 use Kadupul\Kernel;
 use Kadupul\Platform\Infrastructure\Symfony\LocaleDirection;
-use Kadupul\Platform\Infrastructure\Symfony\NativeLogoutPage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
@@ -59,17 +58,6 @@ final class LocaleDirectionTest extends TestCase
             self::assertInstanceOf(LoginPageRenderer::class, $login);
             self::assertStringContainsString("<html lang='ar-SA' dir='rtl'>", $login->begin(new Markup('ar-SA', 'UTF-8')));
             self::assertStringContainsString("<html lang='fr-FR'>", $login->begin(new Markup('fr-FR', 'UTF-8')));
-
-            $logoutRtl = $twig->render('platform/logout_message.html.twig', [
-                'page' => new NativeLogoutPage('', '', 'msg', 'prompt', 'heading', '1.0', '2026', 'nonce', [], null, 'he-IL'),
-            ]);
-            self::assertStringContainsString('<html lang="he-IL" dir="rtl">', $logoutRtl);
-
-            $logoutDefault = $twig->render('platform/logout_message.html.twig', [
-                'page' => new NativeLogoutPage('', '', 'msg', 'prompt', 'heading', '1.0', '2026', 'nonce', []),
-            ]);
-            self::assertStringContainsString('<html lang="en-US">', $logoutDefault);
-            self::assertStringNotContainsString('dir="rtl"', $logoutDefault);
         } finally {
             $kernel->shutdown();
         }
