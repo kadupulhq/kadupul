@@ -891,7 +891,7 @@ msgstr "Veuillez entrer votre mot de passe courant et votre nouveau<br>mot de pa
 
 #: auth_changepassword.php:346
 msgid "Please enter your new Cacti password."
-msgstr "Veuillez entrer votre mot de passe actuel et votre nouveau mot de passe <br>Cacti."
+msgstr "Veuillez saisir votre nouveau mot de passe Cacti."
 
 #: auth_changepassword.php:354 auth_login.php:346 auth_login.php:349
 #: include/global_settings.php:1875 lib/functions.php:6435
@@ -1256,7 +1256,7 @@ msgstr "Pas enregistré"
 
 #: automation_devices.php:337 host.php:2045
 msgid "No Devices Found"
-msgstr "Aucun périphérique n&apos;a été trouvé"
+msgstr "Aucun périphérique n'a été trouvé"
 
 #: automation_devices.php:488
 msgid "Discovery Filters"
@@ -4867,7 +4867,7 @@ msgstr "Filtres de prévisualisation graphique"
 
 #: graph_view.php:419
 msgid "[ Custom Graph List Applied - Filtering from List ]"
-msgstr "Liste graphique personnalisée appliquée - Filtrage à partir d'une liste ]"
+msgstr "[ Liste graphique personnalisée appliquée - Filtrage à partir d'une liste ]"
 
 #: graph_view.php:520
 msgid "YOU DO NOT HAVE RIGHTS FOR LIST VIEW"
@@ -4879,7 +4879,7 @@ msgstr "Filtres d'affichage des listes de graphiques"
 
 #: graph_view.php:647
 msgid "[ Custom Graph List Applied - Filter FROM List ]"
-msgstr "Liste graphique personnalisée appliquée - Filtre de la liste ]"
+msgstr "[ Liste graphique personnalisée appliquée - Filtre de la liste ]"
 
 #: graph_view.php:669 graph_view.php:916
 msgid "View"
@@ -7685,7 +7685,7 @@ msgstr "n'est pas vide"
 
 #: include/global_arrays.php:1787
 msgid "matches regular expression"
-msgstr "correspond à l&apos;expression rationnelle"
+msgstr "correspond à l'expression rationnelle"
 
 #: include/global_arrays.php:1788
 msgid "does not match regular expression"
@@ -9674,7 +9674,7 @@ msgstr "Chemin de l'exécutable snmpwalk"
 
 #: include/global_settings.php:128
 msgid "The path to your snmpwalk binary."
-msgstr "Chemin de l'exécutable  snmpwalk."
+msgstr "Chemin de l'exécutable snmpwalk."
 
 #: include/global_settings.php:134
 msgid "snmpget Binary Path"
@@ -10783,7 +10783,7 @@ msgstr "Nombre maximal de jours pour afficher les heures ouvrables"
 
 #: include/global_settings.php:1200
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé&nbsp;: 62 jours"
+msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé : 62 jours"
 
 #: include/global_settings.php:1215
 msgid "Data Collection Enabled"
@@ -11626,7 +11626,7 @@ msgstr "Le mot de passe à utiliser pour s'authentifier lors d'un envoi via SMTP
 
 #: include/global_settings.php:2037
 msgid "SMTP Security"
-msgstr "SMTP  Sécurité"
+msgstr "SMTP Sécurité"
 
 #: include/global_settings.php:2038
 msgid "The encryption method to use for the Email."
@@ -12553,7 +12553,7 @@ msgstr "Initialisation"
 #: install/install.php:114
 #, php-format
 msgid "Please wait while the installation system for Cacti Version %s initializes. You must have JavaScript enabled for this to work."
-msgstr "Veuillez patienter pendant que le système d'installation de Cacti Version %s s'initialise.  JavaScript doit être activé pour que cela fonctionne."
+msgstr "Veuillez patienter pendant que le système d'installation de Cacti Version %s s'initialise. JavaScript doit être activé pour que cela fonctionne."
 
 #: install/install.php:118
 msgid "FATAL: We are unable to continue with this installation. In order to install Cacti, PHP must be at version 5.4 or later."
@@ -12808,7 +12808,7 @@ msgstr "Système:"
 
 #: lib/api_device.php:1595 lib/api_device.php:1603
 msgid "Uptime:"
-msgstr "Temps d&apos;activation&#160;:"
+msgstr "Temps d'activation :"
 
 #: lib/api_device.php:1606
 msgid "Hostname:"
@@ -15776,7 +15776,7 @@ msgstr "Votre collation de serveur ne semble PAS être entièrement compatible U
 
 #: lib/installer.php:2723
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "Dans la section[mysqld], localisez les entrées nommées'character&#8209;set&#8209;server' et'collation&#8209;server' et réglez-les comme suit :"
+msgstr "Dans la section[mysqld], localisez les entrées nommées'character-set-server' et'collation-server' et réglez-les comme suit :"
 
 #: lib/installer.php:2730
 msgid "Database Collation"
@@ -19975,7 +19975,7 @@ msgstr "Mémoire totale maximale possible"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Réduisez la mémoire MySQL/MariaDB à moins de 80% of de mémoire système.  Conservez une mémoire cache supplémentaire pour les fichiers RRD si la base de données est sur le même système que les fichiers RRD.  Voir les Totaux de base et de clients ci-dessous pour une explication de la méthode de calcul."
+msgstr "Réduisez la mémoire MySQL/MariaDB à moins de 80% de la mémoire système.  Conservez une mémoire cache supplémentaire pour les fichiers RRD si la base de données est sur le même système que les fichiers RRD.  Voir les Totaux de base et de clients ci-dessous pour une explication de la méthode de calcul."
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"
@@ -20498,12 +20498,12 @@ msgstr "Processus: %d"
 #: utilities.php:2953
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant&nbsp;: %s (dses), CurrentRuntime&nbsp;: %s (secs), PrevRuntime&nbsp;: %s (secs), PrevProcessed&nbsp;: %10s (ds lignes)"
+msgstr "Statut : <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant : %s (dses), CurrentRuntime : %s (secs), PrevRuntime : %s (secs), PrevProcessed : %10s (ds lignes)"
 
 #: utilities.php:2955
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime&nbsp;: %s (secondes), PrevProcessed&nbsp;: %10s (lignes ds)"
+msgstr "Statut : <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime : %s (secondes), PrevProcessed : %10s (lignes ds)"
 
 #: utilities.php:2961
 msgid "Run Time Configuration"

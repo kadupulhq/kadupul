@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
 #: about.php:29 include/global_arrays.php:2655 lib/html.php:2901
@@ -144,7 +144,7 @@ msgstr "एग्रीगेट ग्राफ़ आइटम सहेजन
 
 #: aggregate_graphs.php:355
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
-msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: aggregate_graphs.php:360 aggregate_graphs.php:433 aggregate_graphs.php:458
 #: aggregate_graphs.php:487 aggregate_graphs.php:500 aggregate_graphs.php:509
@@ -232,7 +232,7 @@ msgstr "चयनित एग्रीगेट ग्राफ़ एक स�
 
 #: aggregate_graphs.php:391
 msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
-msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ़ को माइग्रेट करने के लिए, उन्हें केवल एक ग्राफ़ टेम्प्लेट का उपयोग करना चाहिए। कृपया &#39;रिटर्न&#39; दबाएं और फिर केवल एग्रीगेट ग्राफ़ चुनें जो उसी ग्राफ़ टेम्पलेट का उपयोग करें।"
+msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ़ को माइग्रेट करने के लिए, उन्हें केवल एक ग्राफ़ टेम्प्लेट का उपयोग करना चाहिए। कृपया 'रिटर्न' दबाएं और फिर केवल एग्रीगेट ग्राफ़ चुनें जो उसी ग्राफ़ टेम्पलेट का उपयोग करें।"
 
 #: aggregate_graphs.php:396 aggregate_graphs.php:444 aggregate_graphs.php:490
 #: auth_changepassword.php:372 auth_profile.php:572 automation_networks.php:425
@@ -254,7 +254,7 @@ msgstr "नीचे दिए गए एग्रीगेट ग्राफ�
 
 #: aggregate_graphs.php:417
 msgid "Click 'Continue' and the following Aggregate Graph(s) will be migrated to use the Aggregate Template that you choose below."
-msgstr "&#39;जारी रखें&#39; पर क्लिक करें और नीचे दिए गए एग्रीगेट टेम्पलेट का उपयोग करने के लिए निम्नलिखित एग्रीगेट ग्राफ (s) माइग्रेट किए जाएंगे।"
+msgstr "'जारी रखें' पर क्लिक करें और नीचे दिए गए एग्रीगेट टेम्पलेट का उपयोग करने के लिए निम्नलिखित एग्रीगेट ग्राफ (s) माइग्रेट किए जाएंगे।"
 
 #: aggregate_graphs.php:423
 msgid "Aggregate Template:"
@@ -267,15 +267,15 @@ msgstr "वर्तमान में चयनित लिगेसी स�
 #: aggregate_graphs.php:438
 #, php-format
 msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, first create an Aggregate Template for the Graph Template '%s'."
-msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ को माइग्रेट करने के लिए, पहले ग्राफ टेम्पलेट &#39; %s&#39; के लिए एग्रीगेट टेम्पलेट बनाएं।"
+msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ को माइग्रेट करने के लिए, पहले ग्राफ टेम्पलेट ' %s' के लिए एग्रीगेट टेम्पलेट बनाएं।"
 
 #: aggregate_graphs.php:439
 msgid "Please press 'Return' to continue."
-msgstr "जारी रखने के लिए कृपया &#39;वापसी&#39; दबाएँ।"
+msgstr "जारी रखने के लिए कृपया 'वापसी' दबाएँ।"
 
 #: aggregate_graphs.php:450
 msgid "Click 'Continue' to combine the following Aggregate Graph(s) into a single Aggregate Graph."
-msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को एक एकल ग्राफ में संयोजित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को एक एकल ग्राफ में संयोजित करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: aggregate_graphs.php:455
 msgid "Aggregate Name:"
@@ -287,7 +287,7 @@ msgstr "न्यू एग्रीगेट"
 
 #: aggregate_graphs.php:471 graphs.php:1346 host.php:589
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
-msgstr "नीचे दी गई रिपोर्ट में चयनित ग्राफ़ जोड़ने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "नीचे दी गई रिपोर्ट में चयनित ग्राफ़ जोड़ने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: aggregate_graphs.php:475 graph_view.php:888 graphs.php:1350 host.php:593
 #: lib/html_reports.php:36 lib/html_reports.php:2141
@@ -313,7 +313,7 @@ msgstr "वर्तमान में आपके पास कोई रि�
 
 #: aggregate_graphs.php:495
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को एक एकल ग्राफ में संयोजित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को एक एकल ग्राफ में संयोजित करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: aggregate_graphs.php:500
 msgid "Convert to normal Graph(s)"
@@ -321,7 +321,7 @@ msgstr "सामान्य ग्राफ़ (ग्राफ़्स) म�
 
 #: aggregate_graphs.php:504
 msgid "Click 'Continue' to associate the following Graph(s) with the Aggregate Graph."
-msgstr "निम्नलिखित ग्राफ (ओं) को एग्रीगेट ग्राफ के साथ जोड़ने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित ग्राफ (ओं) को एग्रीगेट ग्राफ के साथ जोड़ने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: aggregate_graphs.php:509
 msgid "Associate Graph(s)"
@@ -337,7 +337,7 @@ msgstr "डिस-एसोसिएट ग्राफ़"
 
 #: aggregate_graphs.php:522
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
-msgstr "ट्री शाखा के तहत निम्नलिखित एग्रीगेट ग्राफ (ओं) को रखने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "ट्री शाखा के तहत निम्नलिखित एग्रीगेट ग्राफ (ओं) को रखने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: aggregate_graphs.php:524 host.php:559
 msgid "Destination Branch:"
@@ -764,7 +764,7 @@ msgstr "एग्रीगेट टेम्पलेट नहीं मिल
 
 #: aggregate_templates.php:320
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
-msgstr "निम्नलिखित एग्रीगेट ग्राफ टेम्पलेट (ओं) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित एग्रीगेट ग्राफ टेम्पलेट (ओं) को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: aggregate_templates.php:325
 msgid "Delete Color Template(s)"
@@ -1155,7 +1155,7 @@ msgstr "कैक्टि ऑटोमेशन डेटाबेस से �
 
 #: automation_devices.php:203
 msgid "Click 'Continue' to add the following Discovered device(s)."
-msgstr "निम्नलिखित डिस्कवर डिवाइस को जोड़ने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित डिस्कवर डिवाइस को जोड़ने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_devices.php:209 pollers.php:1073
 msgid "Pollers"
@@ -1343,11 +1343,11 @@ msgstr "ग्राफ़ स्वचालन में SQL इंजेक�
 
 #: automation_graph_rules.php:317
 msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "निम्नलिखित ग्राफ़ नियमों को हटाने के लिए &#39;जारी रखें&#39; दबाएँ।"
+msgstr "निम्नलिखित ग्राफ़ नियमों को हटाने के लिए 'जारी रखें' दबाएँ।"
 
 #: automation_graph_rules.php:324
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "निम्नलिखित नियम (ओं) की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नए ग्राफ नियमों के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
+msgstr "निम्नलिखित नियम (ओं) की नकल करने के लिए 'जारी रखें' पर क्लिक करें। आप नए ग्राफ नियमों के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
 
 #: automation_graph_rules.php:326 automation_tree_rules.php:302 graphs.php:1011
 #: graphs.php:1022
@@ -1360,7 +1360,7 @@ msgstr "नियम का नाम"
 
 #: automation_graph_rules.php:332 automation_tree_rules.php:308
 msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "निम्नलिखित नियम को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित नियम को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_graph_rules.php:334 automation_tree_rules.php:310
 msgid "Make sure, that those rules have successfully been tested!"
@@ -1368,7 +1368,7 @@ msgstr "सुनिश्चित करें, कि उन नियमो�
 
 #: automation_graph_rules.php:340 automation_tree_rules.php:316
 msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "निम्नलिखित नियम (ओं) को निष्क्रिय करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित नियम (ओं) को निष्क्रिय करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_graph_rules.php:351 automation_tree_rules.php:327
 msgid "Apply requested action"
@@ -1381,7 +1381,7 @@ msgstr "क्या आप सुनिश्चित हैं?"
 #: automation_graph_rules.php:487
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
-msgstr "क्या आप वाकई &#39; %s&#39; नियम को हटाना चाहते हैं?"
+msgstr "क्या आप वाकई ' %s' नियम को हटाना चाहते हैं?"
 
 #: automation_graph_rules.php:602
 #, php-format
@@ -1500,12 +1500,12 @@ msgstr "डिस्कवरी रद्द करें"
 #: automation_networks.php:150
 #, php-format
 msgid "Can Not Restart Discovery for Discovery in Progress for Network '%s'"
-msgstr "नेटवर्क &#39; %s&#39; के लिए प्रगति में खोज के लिए डिस्कवरी को पुनः आरंभ नहीं कर सकता"
+msgstr "नेटवर्क ' %s' के लिए प्रगति में खोज के लिए डिस्कवरी को पुनः आरंभ नहीं कर सकता"
 
 #: automation_networks.php:154
 #, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
-msgstr "विकलांग नेटवर्क &#39; %s&#39; के लिए डिस्कवरी का प्रदर्शन नहीं कर सकता"
+msgstr "विकलांग नेटवर्क ' %s' के लिए डिस्कवरी का प्रदर्शन नहीं कर सकता"
 
 #: automation_networks.php:221
 #, php-format
@@ -1525,23 +1525,23 @@ msgstr "त्रुटि: आपको महीने, सप्ताह क
 #: automation_networks.php:250
 #, php-format
 msgid "ERROR: Network '%s' is Invalid."
-msgstr "त्रुटि: नेटवर्क &#39; %s&#39; अमान्य है।"
+msgstr "त्रुटि: नेटवर्क ' %s' अमान्य है।"
 
 #: automation_networks.php:369
 msgid "Click 'Continue' to delete the following Network(s)."
-msgstr "निम्न नेटवर्क को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न नेटवर्क को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_networks.php:376
 msgid "Click 'Continue' to enable the following Network(s)."
-msgstr "निम्न नेटवर्क को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न नेटवर्क को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_networks.php:383
 msgid "Click 'Continue' to disable the following Network(s)."
-msgstr "निम्नलिखित नेटवर्क को निष्क्रिय करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित नेटवर्क को निष्क्रिय करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_networks.php:390
 msgid "Click 'Continue' to discover the following Network(s)."
-msgstr "निम्नलिखित नेटवर्क को खोजने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित नेटवर्क को खोजने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_networks.php:393
 msgid "Run discover in debug mode"
@@ -1549,7 +1549,7 @@ msgstr "डिबग मोड में खोज चलाएँ"
 
 #: automation_networks.php:399
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
-msgstr "नेटवर्क डिस्कवरी को रद्द करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "नेटवर्क डिस्कवरी को रद्द करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_networks.php:439 data_input.php:686 include/global_arrays.php:528
 msgid "SNMP Get"
@@ -2200,11 +2200,11 @@ msgstr "फ़िल्टर्ड साफ़ करें"
 
 #: automation_snmp.php:235
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
-msgstr "निम्नलिखित SNMP विकल्प (s) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित SNMP विकल्प (s) को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_snmp.php:242
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
-msgstr "निम्नलिखित SNMP विकल्पों की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए SNMP विकल्प के लिए शीर्षक प्रारूप बदल सकते हैं।"
+msgstr "निम्नलिखित SNMP विकल्पों की नकल करने के लिए 'जारी रखें' पर क्लिक करें। आप वैकल्पिक रूप से नए SNMP विकल्प के लिए शीर्षक प्रारूप बदल सकते हैं।"
 
 #: automation_snmp.php:244
 msgid "Name Format"
@@ -2224,7 +2224,7 @@ msgstr "स्वचालन आइटम मौजूद नहीं है�
 
 #: automation_snmp.php:367
 msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "निम्न SNMP विकल्प आइटम को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न SNMP विकल्प आइटम को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_snmp.php:368
 msgid "SNMP Option:"
@@ -2506,11 +2506,11 @@ msgstr "ट्री नियम आइटम के लिए अमान्�
 
 #: automation_tree_rules.php:293
 msgid "Click 'Continue' to delete the following Rule(s)."
-msgstr "निम्नलिखित नियम को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित नियम को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: automation_tree_rules.php:300
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
-msgstr "निम्नलिखित नियम (ओं) की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नए नियमों के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
+msgstr "निम्नलिखित नियम (ओं) की नकल करने के लिए 'जारी रखें' पर क्लिक करें। आप नए नियमों के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
 
 #: automation_tree_rules.php:455
 msgid "Created Trees"
@@ -2519,7 +2519,7 @@ msgstr "बनाए गए पेड़"
 #: automation_tree_rules.php:549
 #, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
-msgstr "क्या आप वाकई &#39; %s&#39; नियम को हटाना चाहते हैं?"
+msgstr "क्या आप वाकई ' %s' नियम को हटाना चाहते हैं?"
 
 #: automation_tree_rules.php:624
 msgid "Eligible Objects"
@@ -2553,7 +2553,7 @@ msgstr "चेतावनी:"
 
 #: automation_tree_rules.php:802
 msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "आप पत्ती के प्रकार को &quot;डिवाइस&quot; में बदल रहे हैं जो ग्राफ़-आधारित ऑब्जेक्ट मिलान / निर्माण का समर्थन नहीं करता है।"
+msgstr "आप पत्ती के प्रकार को \"डिवाइस\" में बदल रहे हैं जो ग्राफ़-आधारित ऑब्जेक्ट मिलान / निर्माण का समर्थन नहीं करता है।"
 
 #: automation_tree_rules.php:803
 msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
@@ -2619,8 +2619,8 @@ msgstr "एक या अधिक CDEF उपयोग में हैं औ�
 #: cdef.php:302
 msgid "Click 'Continue' to delete the following CDEF."
 msgid_plural "Click 'Continue' to delete all following CDEFs."
-msgstr[0] "निम्न CDEF को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "सभी निम्नलिखित CDEF को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्न CDEF को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "सभी निम्नलिखित CDEF को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: cdef.php:307
 msgid "Delete CDEF"
@@ -2631,8 +2631,8 @@ msgstr[1] "CDEFs हटाएं"
 #: cdef.php:311
 msgid "Click 'Continue' to duplicate the following CDEF. You can optionally change the title format for the new CDEF."
 msgid_plural "Click 'Continue' to duplicate the following CDEFs. You can optionally change the title format for the new CDEFs."
-msgstr[0] "निम्नलिखित CDEF की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए CDEF के लिए शीर्षक प्रारूप बदल सकते हैं।"
-msgstr[1] "निम्नलिखित CDEFs की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए CDEFs के लिए शीर्षक प्रारूप बदल सकते हैं।"
+msgstr[0] "निम्नलिखित CDEF की नकल करने के लिए 'जारी रखें' पर क्लिक करें। आप वैकल्पिक रूप से नए CDEF के लिए शीर्षक प्रारूप बदल सकते हैं।"
+msgstr[1] "निम्नलिखित CDEFs की नकल करने के लिए 'जारी रखें' पर क्लिक करें। आप वैकल्पिक रूप से नए CDEFs के लिए शीर्षक प्रारूप बदल सकते हैं।"
 
 #: cdef.php:313 color_templates.php:249 data_source_profiles.php:392
 #: data_templates.php:522 graph_templates.php:417 host_templates.php:286
@@ -2648,7 +2648,7 @@ msgstr[1] "डुप्लिकेट CDEFs"
 
 #: cdef.php:373
 msgid "Click 'Continue' to delete the following CDEF Item."
-msgstr "निम्न CDEF आइटम को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न CDEF आइटम को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: cdef.php:374
 #, php-format
@@ -2759,8 +2759,8 @@ msgstr "रंग"
 #: color.php:253
 msgid "Click 'Continue' to delete the following Color"
 msgid_plural "Click 'Continue' to delete the following Colors"
-msgstr[0] "निम्न रंग को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-msgstr[1] "निम्न रंग हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
+msgstr[0] "निम्न रंग को हटाने के लिए 'जारी रखें' पर क्लिक करें"
+msgstr[1] "निम्न रंग हटाने के लिए 'जारी रखें' पर क्लिक करें"
 
 #: color.php:258
 msgid "Delete Color"
@@ -2914,8 +2914,8 @@ msgstr "कोई आइटम नहीं"
 #: color_templates.php:238
 msgid "Click 'Continue' to delete the following Color Template"
 msgid_plural "Click 'Continue' to delete following Color Templates"
-msgstr[0] "निम्न रंग टेम्पलेट को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-msgstr[1] "कलर टेम्प्लेट को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
+msgstr[0] "निम्न रंग टेम्पलेट को हटाने के लिए 'जारी रखें' पर क्लिक करें"
+msgstr[1] "कलर टेम्प्लेट को हटाने के लिए 'जारी रखें' पर क्लिक करें"
 
 #: color_templates.php:243
 msgid "Delete Color Template"
@@ -2926,8 +2926,8 @@ msgstr[1] "रंग टेम्पलेट हटाएँ"
 #: color_templates.php:247
 msgid "Click 'Continue' to duplicate the following Color Template. You can optionally change the title format for the new color template."
 msgid_plural "Click 'Continue' to duplicate following Color Templates. You can optionally change the title format for the new color templates."
-msgstr[0] "निम्न रंग टेम्पलेट को डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नए रंग टेम्पलेट के लिए वैकल्पिक रूप से शीर्षक प्रारूप को बदल सकते हैं।"
-msgstr[1] "कलर टेम्प्लेट के बाद डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नए रंग टेम्प्लेट के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
+msgstr[0] "निम्न रंग टेम्पलेट को डुप्लिकेट करने के लिए 'जारी रखें' पर क्लिक करें। आप नए रंग टेम्पलेट के लिए वैकल्पिक रूप से शीर्षक प्रारूप को बदल सकते हैं।"
+msgstr[1] "कलर टेम्प्लेट के बाद डुप्लिकेट करने के लिए 'जारी रखें' पर क्लिक करें। आप नए रंग टेम्प्लेट के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
 
 #: color_templates.php:255
 msgid "Duplicate Color Template"
@@ -3002,7 +3002,7 @@ msgstr "रंग टेम्पलेट या आइटम नहीं म�
 
 #: color_templates_items.php:292
 msgid "Click 'Continue' to delete the following Color Template Color."
-msgstr "निम्न रंग टेम्पलेट रंग को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न रंग टेम्पलेट रंग को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: color_templates_items.php:293
 msgid "Color Name:"
@@ -3379,12 +3379,12 @@ msgstr "अंतर्निहित या उपयोग में आ र�
 #: data_input.php:336
 msgid "Click 'Continue' to delete the following Data Input Method"
 msgid_plural "Click 'Continue' to delete the following Data Input Method"
-msgstr[0] "निम्न डेटा इनपुट विधि को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-msgstr[1] "निम्न डेटा इनपुट विधि को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
+msgstr[0] "निम्न डेटा इनपुट विधि को हटाने के लिए 'जारी रखें' पर क्लिक करें"
+msgstr[1] "निम्न डेटा इनपुट विधि को हटाने के लिए 'जारी रखें' पर क्लिक करें"
 
 #: data_input.php:343
 msgid "Click 'Continue' to duplicate the following Data Input Method(s). You can optionally change the title format for the new Data Input Method(s)."
-msgstr "निम्न डेटा इनपुट विधि (ओं) की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा इनपुट मेथड के लिए शीर्षक प्रारूप को बदल सकते हैं।"
+msgstr "निम्न डेटा इनपुट विधि (ओं) की नकल करने के लिए 'जारी रखें' पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा इनपुट मेथड के लिए शीर्षक प्रारूप को बदल सकते हैं।"
 
 #: data_input.php:345
 msgid "Input Name:"
@@ -3398,7 +3398,7 @@ msgstr[1] "डेटा इनपुट मेथड हटाएं"
 
 #: data_input.php:444
 msgid "Click 'Continue' to delete the following Data Input Field."
-msgstr "निम्न डेटा इनपुट फ़ील्ड को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न डेटा इनपुट फ़ील्ड को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_input.php:445
 #, php-format
@@ -3575,8 +3575,8 @@ msgstr "कोई डेटा इनपुट विधियाँ नही�
 #: data_queries.php:425
 msgid "Click 'Continue' to Delete the following Data Query."
 msgid_plural "Click 'Continue' to Delete following Data Queries."
-msgstr[0] "निम्न डेटा क्वेरी को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "डेटा क्वेरी के बाद हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्न डेटा क्वेरी को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "डेटा क्वेरी के बाद हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_queries.php:430
 msgid "Delete Data Query"
@@ -3606,7 +3606,7 @@ msgstr "आइटम इस डेटा क्वेरी से संबं�
 
 #: data_queries.php:678
 msgid "Click 'Continue' to delete the following Data Query Graph Association."
-msgstr "निम्न डेटा क्वेरी ग्राफ़ एसोसिएशन को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न डेटा क्वेरी ग्राफ़ एसोसिएशन को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_queries.php:679
 #, php-format
@@ -3787,8 +3787,8 @@ msgstr "डेटा स्रोतों द्वारा उपयोग �
 #: data_source_profiles.php:381
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
-msgstr[0] "निम्न डेटा स्रोत प्रोफ़ाइल को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-msgstr[1] "डेटा स्रोत प्रोफ़ाइलों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
+msgstr[0] "निम्न डेटा स्रोत प्रोफ़ाइल को हटाने के लिए 'जारी रखें' पर क्लिक करें"
+msgstr[1] "डेटा स्रोत प्रोफ़ाइलों को हटाने के लिए 'जारी रखें' पर क्लिक करें"
 
 #: data_source_profiles.php:386
 msgid "Delete Data Source Profile"
@@ -3822,7 +3822,7 @@ msgstr "डेटा स्रोत प्रोफ़ाइल को डु�
 
 #: data_source_profiles.php:540
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
-msgstr "निम्न डेटा स्रोत प्रोफ़ाइल RRA को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न डेटा स्रोत प्रोफ़ाइल RRA को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_source_profiles.php:541
 #, php-format
@@ -4054,8 +4054,8 @@ msgstr "जब 'RRDfiles को RRA निर्देशिका तक सी
 #: data_sources.php:527
 msgid "Click 'Continue' to delete the following Data Source"
 msgid_plural "Click 'Continue' to delete following Data Sources"
-msgstr[0] "निम्न डेटा स्रोत को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-msgstr[1] "निम्नलिखित डेटा स्रोत को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
+msgstr[0] "निम्न डेटा स्रोत को हटाने के लिए 'जारी रखें' पर क्लिक करें"
+msgstr[1] "निम्नलिखित डेटा स्रोत को हटाने के लिए 'जारी रखें' पर क्लिक करें"
 
 #: data_sources.php:531
 msgid "The following graph is using these data sources:"
@@ -4090,7 +4090,7 @@ msgstr[1] "डेटा स्रोत हटाएं"
 #: data_sources.php:553
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
-msgstr[0] "इस डेटा स्रोत के लिए एक नया उपकरण चुनें और &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "इस डेटा स्रोत के लिए एक नया उपकरण चुनें और 'जारी रखें' पर क्लिक करें।"
 msgstr[1] "इन डेटा स्रोतों के लिए एक नया उपकरण चुनें और 'जारी रखें' पर क्लिक करें"
 
 #: data_sources.php:555
@@ -4100,8 +4100,8 @@ msgstr "नया यंत्र:"
 #: data_sources.php:565
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
-msgstr[0] "निम्न डेटा स्रोत को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "सभी निम्न डेटा स्रोतों को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्न डेटा स्रोत को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "सभी निम्न डेटा स्रोतों को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_sources.php:570
 msgid "Enable Data Source"
@@ -4112,8 +4112,8 @@ msgstr[1] "डेटा स्रोत सक्षम करें"
 #: data_sources.php:574
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
-msgstr[0] "निम्न डेटा स्रोत को अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "सभी निम्न डेटा स्रोतों को अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्न डेटा स्रोत को अक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "सभी निम्न डेटा स्रोतों को अक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_sources.php:579
 msgid "Disable Data Source"
@@ -4124,8 +4124,8 @@ msgstr[1] "डेटा स्रोतों को अक्षम करे�
 #: data_sources.php:583
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
-msgstr[0] "निम्नलिखित डेटा स्रोत पर सुझाए गए नाम को फिर से लागू करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "सभी डेटा स्रोतों के बाद सुझाए गए नामों को फिर से लागू करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्नलिखित डेटा स्रोत पर सुझाए गए नाम को फिर से लागू करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "सभी डेटा स्रोतों के बाद सुझाए गए नामों को फिर से लागू करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_sources.php:588
 msgid "Reapply Suggested Naming to Data Source"
@@ -4358,7 +4358,7 @@ msgstr "किसी डेटा स्रोत द्वारा उपय�
 
 #: data_templates.php:511
 msgid "Click 'Continue' to delete the following Data Template(s).  Any data sources attached to these templates will become individual Data Source(s) and all Templating benefits will be removed."
-msgstr "निम्न डेटा टेम्पलेट (ओं) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। इन टेम्प्लेट से जुड़े कोई भी डेटा स्रोत व्यक्तिगत डेटा स्रोत बन जाएंगे और सभी टेंपलेटिंग लाभ हटा दिए जाएंगे।"
+msgstr "निम्न डेटा टेम्पलेट (ओं) को हटाने के लिए 'जारी रखें' पर क्लिक करें। इन टेम्प्लेट से जुड़े कोई भी डेटा स्रोत व्यक्तिगत डेटा स्रोत बन जाएंगे और सभी टेंपलेटिंग लाभ हटा दिए जाएंगे।"
 
 #: data_templates.php:516
 msgid "Delete Data Template(s)"
@@ -4366,7 +4366,7 @@ msgstr "डेटा टेम्प्लेट हटाएं"
 
 #: data_templates.php:520
 msgid "Click 'Continue' to duplicate the following Data Template(s). You can optionally change the title format for the new Data Template(s)."
-msgstr "निम्न डेटा टेम्पलेट (ओं) को डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा टेम्प्लेट के लिए शीर्षक प्रारूप बदल सकते हैं।"
+msgstr "निम्न डेटा टेम्पलेट (ओं) को डुप्लिकेट करने के लिए 'जारी रखें' पर क्लिक करें। आप वैकल्पिक रूप से नए डेटा टेम्प्लेट के लिए शीर्षक प्रारूप बदल सकते हैं।"
 
 #: data_templates.php:522
 msgid "template_title"
@@ -4378,7 +4378,7 @@ msgstr "डुप्लिकेट डेटा टेम्प्लेट"
 
 #: data_templates.php:530
 msgid "Click 'Continue' to change the default Data Source Profile for the following Data Template(s)."
-msgstr "निम्न डेटा टेम्पलेट के लिए डिफ़ॉल्ट डेटा स्रोत प्रोफ़ाइल को बदलने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न डेटा टेम्पलेट के लिए डिफ़ॉल्ट डेटा स्रोत प्रोफ़ाइल को बदलने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: data_templates.php:532
 msgid "New Data Source Profile"
@@ -4501,7 +4501,7 @@ msgstr "किसी ग्राफ़ या ग्राफ़ टेम्�
 
 #: gprint_presets.php:219
 msgid "Click 'Continue' to delete the following GPRINT Preset(s)."
-msgstr "फोलिंग जीपीआरनेट प्रीसेट (ओं) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "फोलिंग जीपीआरनेट प्रीसेट (ओं) को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: gprint_presets.php:224
 msgid "Delete GPRINT Preset(s)"
@@ -4685,7 +4685,7 @@ msgstr "ग्राफ़ टेम्पलेट '%s' के समन्व�
 
 #: graph_templates.php:406
 msgid "Click 'Continue' to delete the following Graph Template(s).  Any Graph(s) associated with the Template(s) will become individual Graph(s)."
-msgstr "निम्नलिखित ग्राफ टेम्पलेट (ओं) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। टेम्प्लेट (ओं) से जुड़ा कोई भी ग्राफ़ व्यक्तिगत ग्राफ़ बन जाएगा।"
+msgstr "निम्नलिखित ग्राफ टेम्पलेट (ओं) को हटाने के लिए 'जारी रखें' पर क्लिक करें। टेम्प्लेट (ओं) से जुड़ा कोई भी ग्राफ़ व्यक्तिगत ग्राफ़ बन जाएगा।"
 
 #: graph_templates.php:411
 msgid "Delete Graph Template(s)"
@@ -4693,7 +4693,7 @@ msgstr "ग्राफ़ टेम्पलेट हटाएं"
 
 #: graph_templates.php:415
 msgid "Click 'Continue' to duplicate the following Graph Template(s). You can optionally change the title format for the new Graph Template(s)."
-msgstr "निम्न ग्राफ़ टेम्पलेट (ओं) को डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नए ग्राफ टेम्प्लेट के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
+msgstr "निम्न ग्राफ़ टेम्पलेट (ओं) को डुप्लिकेट करने के लिए 'जारी रखें' पर क्लिक करें। आप नए ग्राफ टेम्प्लेट के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
 
 #: graph_templates.php:421
 msgid "Duplicate Graph Template(s)"
@@ -4701,7 +4701,7 @@ msgstr "डुप्लिकेट ग्राफ़ टेम्पलेट"
 
 #: graph_templates.php:425
 msgid "Click 'Continue' to resize the following Graph Template(s) and Graph(s) to the Height and Width below.  The defaults below are maintained in Settings."
-msgstr "नीचे दिए गए ऊँचाई और चौड़ाई के लिए निम्न ग्राफ़ टेम्पलेट (ओं) और ग्राफ़ (ओं) को आकार देने के लिए &#39;जारी रखें&#39; पर क्लिक करें। नीचे की सेटिंग में डिफॉल्ट को बनाए रखा गया है।"
+msgstr "नीचे दिए गए ऊँचाई और चौड़ाई के लिए निम्न ग्राफ़ टेम्पलेट (ओं) और ग्राफ़ (ओं) को आकार देने के लिए 'जारी रखें' पर क्लिक करें। नीचे की सेटिंग में डिफॉल्ट को बनाए रखा गया है।"
 
 #: graph_templates.php:434 lib/html_reports.php:117
 msgid "Graph Height"
@@ -4721,7 +4721,7 @@ msgstr "चयनित ग्राफ़ टेम्पलेट (आका�
 
 #: graph_templates.php:447
 msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
-msgstr "निम्नलिखित ग्राफ़ टेम्पलेट (ओं) के साथ अपने रेखांकन को सिंक्रनाइज़ करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। यह फ़ंक्शन महत्वपूर्ण है यदि आपके पास ग्राफ़ हैं जो एक ग्राफ़ टेम्पलेट के कई संस्करणों के साथ मौजूद हैं और उन्हें उपस्थिति में सभी सामान्य बनाने की इच्छा रखते हैं।"
+msgstr "निम्नलिखित ग्राफ़ टेम्पलेट (ओं) के साथ अपने रेखांकन को सिंक्रनाइज़ करने के लिए 'जारी रखें' पर क्लिक करें। यह फ़ंक्शन महत्वपूर्ण है यदि आपके पास ग्राफ़ हैं जो एक ग्राफ़ टेम्पलेट के कई संस्करणों के साथ मौजूद हैं और उन्हें उपस्थिति में सभी सामान्य बनाने की इच्छा रखते हैं।"
 
 #: graph_templates.php:452 graph_templates.php:461
 msgid "Synchronize Graphs to Graph Template(s)"
@@ -4920,7 +4920,7 @@ msgstr "ग्राफ नाम"
 
 #: graph_view.php:801 graph_view.php:829 graphs.php:2347
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
-msgstr "इस ग्राफ का शीर्षक। आम तौर पर प्रोग्राम ग्राफ ग्राफ परिभाषा या सामान्य नामकरण नियमों से उत्पन्न होता है। शीर्षक की अधिकतम लंबाई सेटिंग्स-&gt; दृश्य के तहत नियंत्रित की जाती है।"
+msgstr "इस ग्राफ का शीर्षक। आम तौर पर प्रोग्राम ग्राफ ग्राफ परिभाषा या सामान्य नामकरण नियमों से उत्पन्न होता है। शीर्षक की अधिकतम लंबाई सेटिंग्स-> दृश्य के तहत नियंत्रित की जाती है।"
 
 #: graph_view.php:806
 msgid "The device for this Graph."
@@ -5064,7 +5064,7 @@ msgstr "आपके पास इस ट्री को संशोधित 
 
 #: graphs.php:956
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
-msgstr "निम्नलिखित ग्राफ़ को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें कि यदि आप डेटा स्रोत हटाना चाहते हैं, तो केवल वे डेटा स्रोत जिनका उपयोग कहीं और नहीं किया गया है, उन्हें भी हटा दिया जाएगा।"
+msgstr "निम्नलिखित ग्राफ़ को हटाने के लिए 'जारी रखें' पर क्लिक करें। ध्यान दें कि यदि आप डेटा स्रोत हटाना चाहते हैं, तो केवल वे डेटा स्रोत जिनका उपयोग कहीं और नहीं किया गया है, उन्हें भी हटा दिया जाएगा।"
 
 #: graphs.php:960
 msgid "The following Data Source(s) are in use by these Graph(s)."
@@ -5080,7 +5080,7 @@ msgstr "डेटा स्रोत को छोड़ दें।"
 
 #: graphs.php:993
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
-msgstr "एक ग्राफ़ टेम्प्लेट चुनें और निम्न ग्राफ़ (एस) के लिए ग्राफ़ टेम्पलेट को बदलने के लिए &#39;जारी रखें&#39; पर क्लिक करें। कृपया ध्यान दें, केवल संगत ग्राफ़ टेम्प्लेट प्रदर्शित किए जाएंगे। संगत की पहचान समरूप डेटा स्रोत वाले लोगों द्वारा की जाती है।"
+msgstr "एक ग्राफ़ टेम्प्लेट चुनें और निम्न ग्राफ़ (एस) के लिए ग्राफ़ टेम्पलेट को बदलने के लिए 'जारी रखें' पर क्लिक करें। कृपया ध्यान दें, केवल संगत ग्राफ़ टेम्प्लेट प्रदर्शित किए जाएंगे। संगत की पहचान समरूप डेटा स्रोत वाले लोगों द्वारा की जाती है।"
 
 #: graphs.php:995 graphs_new.php:542
 msgid "New Graph Template"
@@ -5088,7 +5088,7 @@ msgstr "नया ग्राफ टेम्पलेट"
 
 #: graphs.php:1009
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
-msgstr "निम्नलिखित ग्राफ़ (एस) को डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए ग्राफ़ (एस) के लिए शीर्षक प्रारूप को बदल सकते हैं।"
+msgstr "निम्नलिखित ग्राफ़ (एस) को डुप्लिकेट करने के लिए 'जारी रखें' पर क्लिक करें। आप वैकल्पिक रूप से नए ग्राफ़ (एस) के लिए शीर्षक प्रारूप को बदल सकते हैं।"
 
 #: graphs.php:1012
 msgid "<graph_title> (1)"
@@ -5100,7 +5100,7 @@ msgstr "डुप्लिकेट ग्राफ़"
 
 #: graphs.php:1020
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
-msgstr "निम्नलिखित ग्राफ (एस) को ग्राफ टेम्पलेट (एस) में बदलने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नए ग्राफ टेम्प्लेट के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
+msgstr "निम्नलिखित ग्राफ (एस) को ग्राफ टेम्पलेट (एस) में बदलने के लिए 'जारी रखें' पर क्लिक करें। आप नए ग्राफ टेम्प्लेट के लिए शीर्षक प्रारूप को वैकल्पिक रूप से बदल सकते हैं।"
 
 #: graphs.php:1023
 msgid "<graph_title> Template"
@@ -5108,7 +5108,7 @@ msgstr "<graph_title> खाका"
 
 #: graphs.php:1034
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
-msgstr "नीचे दिए गए ट्री ब्रांच के तहत निम्नलिखित ग्राफ़ (ओं) को रखने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "नीचे दिए गए ट्री ब्रांच के तहत निम्नलिखित ग्राफ़ (ओं) को रखने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: graphs.php:1036
 msgid "Destination Branch"
@@ -5116,7 +5116,7 @@ msgstr "गंतव्य शाखा"
 
 #: graphs.php:1049
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
-msgstr "इन ग्राफ़ के लिए एक नया उपकरण चुनें और &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "इन ग्राफ़ के लिए एक नया उपकरण चुनें और 'जारी रखें' पर क्लिक करें।"
 
 #: graphs.php:1051 include/global_arrays.php:1006
 msgid "New Device"
@@ -5128,7 +5128,7 @@ msgstr "बदलें ग्राफ (ओं) एसोसिएटेड ड
 
 #: graphs.php:1063
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
-msgstr "निम्नलिखित ग्राफ (नों) के लिए सुझाए गए नामकरण को पुनः लागू करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित ग्राफ (नों) के लिए सुझाए गए नामकरण को पुनः लागू करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: graphs.php:1068
 msgid "Reapply Suggested Naming to Graph(s)"
@@ -5136,7 +5136,7 @@ msgstr "फिर से सुझाए गए नामकरण ग्रा�
 
 #: graphs.php:1084
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
-msgstr "चयनित ग्राफ़ (ओं) से एक एग्रीगेट ग्राफ़ बनाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "चयनित ग्राफ़ (ओं) से एक एग्रीगेट ग्राफ़ बनाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: graphs.php:1093
 msgid "The following Data Sources are in use by these Graphs:"
@@ -5148,7 +5148,7 @@ msgstr "कृपया पुष्टि करें"
 
 #: graphs.php:1290
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
-msgstr "अपने एग्रीगेट ग्राफ को बनाने के लिए &#39;जारी रखें&#39; का उपयोग करने और दबाने के लिए एग्रीगेट टेम्पलेट का चयन करें। अन्यथा लौटने के लिए &#39;रद्द करें&#39; दबाएँ।"
+msgstr "अपने एग्रीगेट ग्राफ को बनाने के लिए 'जारी रखें' का उपयोग करने और दबाने के लिए एग्रीगेट टेम्पलेट का चयन करें। अन्यथा लौटने के लिए 'रद्द करें' दबाएँ।"
 
 #: graphs.php:1315
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
@@ -5160,7 +5160,7 @@ msgstr "वापस जाने और अलग-अलग ग्राफ़ 
 
 #: graphs.php:1328
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
-msgstr "निम्नलिखित ग्राफ़ में स्वचालन नियम लागू करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित ग्राफ़ में स्वचालन नियम लागू करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: graphs.php:1418
 msgid "Graph Items [new]"
@@ -5491,7 +5491,7 @@ msgstr "रिपोर्ट '%s' में कुछ डिवाइस जो
 
 #: host.php:460
 msgid "Click 'Continue' to enable the following Device(s)."
-msgstr "निम्नलिखित डिवाइस को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित डिवाइस को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: host.php:465
 msgid "Enable Device(s)"
@@ -5499,7 +5499,7 @@ msgstr "उपकरण सक्षम करें"
 
 #: host.php:469
 msgid "Click 'Continue' to disable the following Device(s)."
-msgstr "निम्नलिखित डिवाइस को निष्क्रिय करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित डिवाइस को निष्क्रिय करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: host.php:474
 msgid "Disable Device(s)"
@@ -5507,7 +5507,7 @@ msgstr "डिवाइस अक्षम करें"
 
 #: host.php:478
 msgid "Click 'Continue' to change the Device options below for multiple Device(s).  Please check the box next to the fields you want to update, and then fill in the new value."
-msgstr "एकाधिक डिवाइस (उपकरण) के लिए नीचे दिए गए डिवाइस विकल्पों को बदलने के लिए &#39;जारी रखें&#39; पर क्लिक करें। कृपया उन फ़ील्ड के बगल में स्थित बॉक्स को चेक करें जिन्हें आप अपडेट करना चाहते हैं, और फिर नए मूल्य को भरें।"
+msgstr "एकाधिक डिवाइस (उपकरण) के लिए नीचे दिए गए डिवाइस विकल्पों को बदलने के लिए 'जारी रखें' पर क्लिक करें। कृपया उन फ़ील्ड के बगल में स्थित बॉक्स को चेक करें जिन्हें आप अपडेट करना चाहते हैं, और फिर नए मूल्य को भरें।"
 
 #: host.php:498
 msgid "Update this Field"
@@ -5527,7 +5527,7 @@ msgstr "डिवाइस पर स्पष्ट आंकड़े"
 
 #: host.php:534
 msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
-msgstr "उनके डिवाइस टेम्पलेट के लिए निम्न डिवाइस (ओं) को सिंक्रनाइज़ करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "उनके डिवाइस टेम्पलेट के लिए निम्न डिवाइस (ओं) को सिंक्रनाइज़ करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: host.php:539
 msgid "Synchronize Device(s)"
@@ -5535,7 +5535,7 @@ msgstr "उपकरण सिंक्रनाइज़ करें"
 
 #: host.php:543
 msgid "Click 'Continue' to delete the following Device(s)."
-msgstr "निम्न डिवाइस (ओं) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न डिवाइस (ओं) को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: host.php:546
 msgid "Leave all Graph(s) and Data Source(s) untouched.  Data Source(s) will be disabled however."
@@ -5547,7 +5547,7 @@ msgstr "सभी संबंधित ग्राफ़ (एस) और ड�
 
 #: host.php:557
 msgid "Click 'Continue' to place the following Device(s) under the branch selected below."
-msgstr "नीचे दिए गए शाखा के तहत निम्नलिखित डिवाइस (ओं) को रखने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "नीचे दिए गए शाखा के तहत निम्नलिखित डिवाइस (ओं) को रखने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: host.php:567
 msgid "Place Device(s) on Tree"
@@ -5555,7 +5555,7 @@ msgstr "ट्री पर डिवाइस (ओं) को रखें"
 
 #: host.php:571
 msgid "Click 'Continue' to apply Automation Rules to the following Devices(s)."
-msgstr "निम्न डिवाइसों पर स्वचालन नियम लागू करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न डिवाइसों पर स्वचालन नियम लागू करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: host.php:576
 msgid "Run Automation on Device(s)"
@@ -5781,7 +5781,7 @@ msgstr "इस डिवाइस से उत्पन्न कुल डे�
 
 #: host.php:1614
 msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
-msgstr "पिंग परिणामों के आधार पर डिवाइस की निगरानी स्थिति। यदि यह डिवाइस एक विशेष प्रकार का डिवाइस है, तो होस्टनाम &quot;लोकलहोस्ट&quot; का उपयोग करके, या उपलब्धता की जांच नहीं करने के लिए सेटिंग के कारण, यह हमेशा ऊपर रहेगा। Cmd.php डेटा कलेक्टर का उपयोग करते समय, बिना ग्राफ़ वाला एक उपकरण, डेटा कलेक्टर द्वारा पिंग नहीं किया जाता है और &quot;अज्ञात&quot; स्थिति में रहेगा।"
+msgstr "पिंग परिणामों के आधार पर डिवाइस की निगरानी स्थिति। यदि यह डिवाइस एक विशेष प्रकार का डिवाइस है, तो होस्टनाम \"लोकलहोस्ट\" का उपयोग करके, या उपलब्धता की जांच नहीं करने के लिए सेटिंग के कारण, यह हमेशा ऊपर रहेगा। Cmd.php डेटा कलेक्टर का उपयोग करते समय, बिना ग्राफ़ वाला एक उपकरण, डेटा कलेक्टर द्वारा पिंग नहीं किया जाता है और \"अज्ञात\" स्थिति में रहेगा।"
 
 #: host.php:1617
 msgid "In State"
@@ -5863,7 +5863,7 @@ msgstr "उपकरण टेम्पलेट हटाएं"
 
 #: host_templates.php:284
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
-msgstr "निम्न डिवाइस टेम्पलेट (ओं) को डुप्लिकेट करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। वैकल्पिक रूप से नए डिवाइस टेम्प्लेट के लिए शीर्षक बदलें।"
+msgstr "निम्न डिवाइस टेम्पलेट (ओं) को डुप्लिकेट करने के लिए 'जारी रखें' पर क्लिक करें। वैकल्पिक रूप से नए डिवाइस टेम्प्लेट के लिए शीर्षक बदलें।"
 
 #: host_templates.php:294
 msgid "Duplicate Device Template(s)"
@@ -5871,7 +5871,7 @@ msgstr "डुप्लिकेट डिवाइस टेम्प्ले�
 
 #: host_templates.php:298
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
-msgstr "चयनित डिवाइस टेम्पलेट (ओं) से जुड़े उपकरणों को सिंक्रनाइज़ करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें कि डिवाइस टेम्पलेट पर मैप किए गए डिवाइस की संख्या के आधार पर इस क्रिया में कुछ समय लग सकता है।"
+msgstr "चयनित डिवाइस टेम्पलेट (ओं) से जुड़े उपकरणों को सिंक्रनाइज़ करने के लिए 'जारी रखें' पर क्लिक करें। ध्यान दें कि डिवाइस टेम्पलेट पर मैप किए गए डिवाइस की संख्या के आधार पर इस क्रिया में कुछ समय लग सकता है।"
 
 #: host_templates.php:305
 msgid "Sync Devices to Device Template(s)"
@@ -5892,7 +5892,7 @@ msgstr "ग्राफ टेम्पलेट का नाम: %s"
 
 #: host_templates.php:471
 msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "निम्न डेटा क्वेरी को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें डिवाइस टेम्पलेट से अलग कर दिया जाएगा।"
+msgstr "निम्न डेटा क्वेरी को हटाने के लिए 'जारी रखें' पर क्लिक करें डिवाइस टेम्पलेट से अलग कर दिया जाएगा।"
 
 #: host_templates.php:472
 #, php-format
@@ -6078,7 +6078,7 @@ msgstr "हाइलाइट की गई निर्देशिका म�
 
 #: include/global_arrays.php:178
 msgid "The Cacti log file must have the extension '.log'"
-msgstr "Cacti लॉग फ़ाइल में एक्सटेंशन होना चाहिए &#39;.log&#39;"
+msgstr "Cacti लॉग फ़ाइल में एक्सटेंशन होना चाहिए '.log'"
 
 #: include/global_arrays.php:181
 msgid "Data Input for method does not appear to be whitelisted."
@@ -6322,7 +6322,7 @@ msgstr "रिमोट डेटा कलेक्टर को सहेज�
 
 #: include/global_arrays.php:361
 msgid "Your Remote Database Hostname must be something other than 'localhost' for each Remote Data Collector."
-msgstr "आपका रिमोट डेटाबेस होस्टनाम प्रत्येक दूरस्थ डेटा कलेक्टर के लिए &#39;लोकलहोस्ट&#39; के अलावा कुछ होना चाहिए।"
+msgstr "आपका रिमोट डेटाबेस होस्टनाम प्रत्येक दूरस्थ डेटा कलेक्टर के लिए 'लोकलहोस्ट' के अलावा कुछ होना चाहिए।"
 
 #: include/global_arrays.php:364
 msgid "Path variables on this page were only saved locally."
@@ -6487,11 +6487,11 @@ msgstr "केंद्र"
 
 #: include/global_arrays.php:608
 msgid "Top -> Down"
-msgstr "शीर्ष -&gt; नीचे"
+msgstr "शीर्ष -> नीचे"
 
 #: include/global_arrays.php:609
 msgid "Bottom -> Up"
-msgstr "निचला -&gt; ऊपर"
+msgstr "निचला -> ऊपर"
 
 #: include/global_arrays.php:613 tree.php:1869
 msgid "Numeric"
@@ -7550,7 +7550,7 @@ msgstr "माह, सप्ताह का दिन"
 
 #: include/global_arrays.php:1734
 msgid "Year(s)"
-msgstr "वर्षों)"
+msgstr "वर्ष"
 
 #: include/global_arrays.php:1738
 msgid "Keep Graph Types"
@@ -8566,7 +8566,7 @@ msgstr "RRDfile के अंदर डेटा के इस टुकड़�
 
 #: include/global_form.php:630
 msgid "Minimum Value (\"U\" for No Minimum)"
-msgstr "न्यूनतम मूल्य (बिना न्यूनतम के &quot;यू&quot;)"
+msgstr "न्यूनतम मूल्य (बिना न्यूनतम के \"यू\")"
 
 #: include/global_form.php:635
 msgid "The minimum value of data that is allowed to be collected."
@@ -8574,7 +8574,7 @@ msgstr "डेटा का न्यूनतम मूल्य जिसे �
 
 #: include/global_form.php:638
 msgid "Maximum Value (\"U\" for No Maximum)"
-msgstr "अधिकतम मूल्य (अधिकतम नहीं के लिए &quot;यू&quot;)"
+msgstr "अधिकतम मूल्य (अधिकतम नहीं के लिए \"यू\")"
 
 #: include/global_form.php:643
 msgid "The maximum value of data that is allowed to be collected."
@@ -8590,7 +8590,7 @@ msgstr "RRA में डेटा का प्रतिनिधित्व �
 
 #: include/global_form.php:658
 msgid "The maximum amount of time that can pass before data is entered as 'unknown'. (Usually 2x300=600)"
-msgstr "डेटा से पहले गुजरने वाले अधिकतम समय को &#39;अज्ञात&#39; के रूप में दर्ज किया जा सकता है। (आमतौर पर 2x300 = 600)"
+msgstr "डेटा से पहले गुजरने वाले अधिकतम समय को 'अज्ञात' के रूप में दर्ज किया जा सकता है। (आमतौर पर 2x300 = 600)"
 
 #: include/global_form.php:664 lib/html_utility.php:341
 msgid "Not Selected"
@@ -8766,7 +8766,7 @@ msgstr "यूनिट एक्सपोनेंट वैल्यू (--uni
 
 #: include/global_form.php:848
 msgid "What unit Cacti should use on the Y-axis. Use 3 to display everything in \"k\" or -6 to display everything in \"u\" (micro)."
-msgstr "Y- अक्ष पर Cacti को किस इकाई का उपयोग करना चाहिए। &quot;के&quot; या -6 में &quot;यू&quot; (माइक्रो) में सब कुछ प्रदर्शित करने के लिए 3 का उपयोग करें।"
+msgstr "Y- अक्ष पर Cacti को किस इकाई का उपयोग करना चाहिए। \"के\" या -6 में \"यू\" (माइक्रो) में सब कुछ प्रदर्शित करने के लिए 3 का उपयोग करें।"
 
 #: include/global_form.php:852
 msgid "Unit Length (--units-length &lt;length&gt;)"
@@ -8955,7 +8955,7 @@ msgstr "GPRINT प्रकार"
 
 #: include/global_form.php:1044
 msgid "If this graph item is a GPRINT, you can optionally choose another format here. You can define additional types under \"GPRINT Presets\"."
-msgstr "यदि यह ग्राफ़ आइटम एक GPRINT है, तो आप वैकल्पिक रूप से यहां एक और प्रारूप चुन सकते हैं। आप &quot;GPRINT प्रीसेट&quot; के तहत अतिरिक्त प्रकारों को परिभाषित कर सकते हैं।"
+msgstr "यदि यह ग्राफ़ आइटम एक GPRINT है, तो आप वैकल्पिक रूप से यहां एक और प्रारूप चुन सकते हैं। आप \"GPRINT प्रीसेट\" के तहत अतिरिक्त प्रकारों को परिभाषित कर सकते हैं।"
 
 #: include/global_form.php:1047
 msgid "Text Alignment (TEXTALIGN)"
@@ -9360,7 +9360,7 @@ msgstr "SNMP संदेश प्रकार"
 
 #: include/global_form.php:1798
 msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "एसएनएमपी जाल हमेशा अनजाने में होते हैं। स्वीकार किए गए एसएनएमपी नोटिफिकेशन को भेजने के लिए, औपचारिक रूप से &quot;INFORMS&quot;, SNMPv2 या उससे ऊपर की आवश्यकता होगी।"
+msgstr "एसएनएमपी जाल हमेशा अनजाने में होते हैं। स्वीकार किए गए एसएनएमपी नोटिफिकेशन को भेजने के लिए, औपचारिक रूप से \"INFORMS\", SNMPv2 या उससे ऊपर की आवश्यकता होगी।"
 
 #: include/global_form.php:1831
 msgid "The new Title of the aggregated Graph."
@@ -9398,7 +9398,7 @@ msgstr "योग"
 #: include/global_form.php:1862 include/global_form.php:1948
 #: include/global_form.php:2053
 msgid "Please check those Items that shall be totaled in the \"Total\" column, when selecting any totaling option here."
-msgstr "कृपया उन वस्तुओं की जाँच करें जिन्हें &quot;कुल&quot; कॉलम में रखा गया है, जब यहाँ किसी भी कुल विकल्प का चयन किया गया हो।"
+msgstr "कृपया उन वस्तुओं की जाँच करें जिन्हें \"कुल\" कॉलम में रखा गया है, जब यहाँ किसी भी कुल विकल्प का चयन किया गया हो।"
 
 #: include/global_form.php:1869 include/global_form.php:1956
 #: include/global_form.php:2061
@@ -9575,11 +9575,11 @@ msgstr "परिवर्तन का प्रचार करें"
 
 #: include/global_form.php:2339
 msgid "Propagate all options on this form (except for 'Title') to all child 'Header' items."
-msgstr "इस फॉर्म के सभी विकल्प (&#39;शीर्षक&#39; को छोड़कर) सभी बच्चे को &#39;हेडर&#39; आइटम में प्रोपेगेट करें।"
+msgstr "इस फॉर्म के सभी विकल्प ('शीर्षक' को छोड़कर) सभी बच्चे को 'हेडर' आइटम में प्रोपेगेट करें।"
 
 #: include/global_form.php:2347
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "स्ट्रिंग पैटर्न (नियमित अभिव्यक्ति) के खिलाफ मैच करने के लिए। <br> संलग्न करना &#39;/&#39; प्रदान <strong>नहीं</strong> किया जाना चाहिए!"
+msgstr "स्ट्रिंग पैटर्न (नियमित अभिव्यक्ति) के खिलाफ मैच करने के लिए। <br> संलग्न करना '/' प्रदान <strong>नहीं</strong> किया जाना चाहिए!"
 
 #: include/global_form.php:2354
 msgid "Replacement Pattern"
@@ -9911,7 +9911,7 @@ msgstr "भाषा समर्थन"
 
 #: include/global_settings.php:352
 msgid "Choose 'enabled' to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "कैक्टि के स्थानीयकरण की अनुमति देने के लिए &#39;सक्षम&#39; चुनें। सख्त मोड के लिए आवश्यक है कि आपके सिस्टम में इंस्टॉल किए जा रहे सभी प्लगइन्स द्वारा समर्थित भाषा का भी समर्थन किया जाएगा। यदि यह तथ्य नहीं है तो सब कुछ अंग्रेजी में प्रदर्शित किया जाएगा।"
+msgstr "कैक्टि के स्थानीयकरण की अनुमति देने के लिए 'सक्षम' चुनें। सख्त मोड के लिए आवश्यक है कि आपके सिस्टम में इंस्टॉल किए जा रहे सभी प्लगइन्स द्वारा समर्थित भाषा का भी समर्थन किया जाएगा। यदि यह तथ्य नहीं है तो सब कुछ अंग्रेजी में प्रदर्शित किया जाएगा।"
 
 #: include/global_settings.php:358
 msgid "Language"
@@ -9927,7 +9927,7 @@ msgstr "ऑटो भाषा का पता लगाने"
 
 #: include/global_settings.php:366
 msgid "Allow to automatically determine the 'default' language of the user and provide it at login time if that language is supported by Cacti. If disabled, the default language will be in force until the user elects another language."
-msgstr "उपयोगकर्ता की &#39;डिफ़ॉल्ट&#39; भाषा को स्वचालित रूप से निर्धारित करने की अनुमति दें और लॉगिन समय पर प्रदान करें यदि वह भाषा कैक्टि द्वारा समर्थित है। यदि अक्षम है, तो डिफ़ॉल्ट भाषा लागू होगी जब तक कि उपयोगकर्ता किसी अन्य भाषा का चुनाव नहीं करता।"
+msgstr "उपयोगकर्ता की 'डिफ़ॉल्ट' भाषा को स्वचालित रूप से निर्धारित करने की अनुमति दें और लॉगिन समय पर प्रदान करें यदि वह भाषा कैक्टि द्वारा समर्थित है। यदि अक्षम है, तो डिफ़ॉल्ट भाषा लागू होगी जब तक कि उपयोगकर्ता किसी अन्य भाषा का चुनाव नहीं करता।"
 
 #: include/global_settings.php:375
 msgid "Preferred Language Processor"
@@ -10405,7 +10405,7 @@ msgstr "सभी नए डिवाइस के लिए डिफ़ॉल�
 
 #: include/global_settings.php:826
 msgid "Default Ping Port for all new Devices.  With TCP, Cacti will attempt to Syn the port.  With UDP, Cacti requires either a successful connection, or a 'port not reachable' error to determine if the Device is up or not."
-msgstr "सभी नए उपकरणों के लिए डिफ़ॉल्ट पिंग पोर्ट। TCP के साथ, Cacti पोर्ट को Syn करने का प्रयास करेगा। यूडीपी के साथ, कैक्टि को या तो एक सफल कनेक्शन की आवश्यकता होती है, या डिवाइस पोर्ट है या नहीं यह निर्धारित करने के लिए एक &#39;पोर्ट नहीं पहुंच पा रहा&#39; त्रुटि।"
+msgstr "सभी नए उपकरणों के लिए डिफ़ॉल्ट पिंग पोर्ट। TCP के साथ, Cacti पोर्ट को Syn करने का प्रयास करेगा। यूडीपी के साथ, कैक्टि को या तो एक सफल कनेक्शन की आवश्यकता होती है, या डिवाइस पोर्ट है या नहीं यह निर्धारित करने के लिए एक 'पोर्ट नहीं पहुंच पा रहा' त्रुटि।"
 
 #: include/global_settings.php:834
 msgid "Default Ping Timeout value in milli-seconds for all new Devices.  The timeout values to use for Device SNMP, ICMP, UDP and TCP pinging.  ICMP Pings will be rounded up to the nearest second.  TCP and UDP connection timeouts on Windows are controlled by the operating system, and are therefore not recommended on Windows."
@@ -10566,7 +10566,7 @@ msgstr "प्रति पृष्ठ पंक्तियों की अ�
 
 #: include/global_settings.php:994
 msgid "User defined number of lines for the CLOG to tail when selecting 'All lines'."
-msgstr "&#39;ऑल लाइन्स&#39; का चयन करते समय उपयोगकर्ता सीएलओजी को पूंछ के लिए लाइनों की संख्या निर्धारित करता है।"
+msgstr "'ऑल लाइन्स' का चयन करते समय उपयोगकर्ता सीएलओजी को पूंछ के लिए लाइनों की संख्या निर्धारित करता है।"
 
 #: include/global_settings.php:1001
 msgid "Log Tail Refresh"
@@ -11130,7 +11130,7 @@ msgstr "अतिथि उपयेागकर्ता"
 
 #: include/global_settings.php:1547
 msgid "The name of the guest user for viewing graphs; is 'No User' by default."
-msgstr "रेखांकन देखने के लिए अतिथि उपयोगकर्ता का नाम; डिफ़ॉल्ट रूप से &#39;नो यूजर&#39; है।"
+msgstr "रेखांकन देखने के लिए अतिथि उपयोगकर्ता का नाम; डिफ़ॉल्ट रूप से 'नो यूजर' है।"
 
 #: include/global_settings.php:1554 user_domains.php:429
 msgid "User Template"
@@ -11138,7 +11138,7 @@ msgstr "उपयोगकर्ता टेम्पलेट"
 
 #: include/global_settings.php:1555
 msgid "The name of the user that Cacti will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
-msgstr "उपयोगकर्ता का नाम जिसे कैक्टी नए वेब बेसिक और एलडीएपी उपयोगकर्ताओं के लिए टेम्पलेट के रूप में उपयोग करेगा; डिफ़ॉल्ट रूप से &#39;अतिथि&#39; है। यह उपयोगकर्ता खाता चयनित होने पर लॉगिंग से अक्षम हो जाएगा।"
+msgstr "उपयोगकर्ता का नाम जिसे कैक्टी नए वेब बेसिक और एलडीएपी उपयोगकर्ताओं के लिए टेम्पलेट के रूप में उपयोग करेगा; डिफ़ॉल्ट रूप से 'अतिथि' है। यह उपयोगकर्ता खाता चयनित होने पर लॉगिंग से अक्षम हो जाएगा।"
 
 #: include/global_settings.php:1562
 msgid "Basic Authentication Settings"
@@ -11467,7 +11467,7 @@ msgstr "आधार खोजें"
 
 #: include/global_settings.php:1884
 msgid "Search base for searching the LDAP directory, such as <i>'dc=win2kdomain,dc=local'</i> or <i>'ou=people,dc=domain,dc=local'</i>."
-msgstr "LDAP निर्देशिका को खोजने के लिए खोज आधार, जैसे <i>&#39;dc = win2kdomain, dc = local&#39;</i> या <i>&#39;ou = people, dc = domain, dc = local&#39;</i> ।"
+msgstr "LDAP निर्देशिका को खोजने के लिए खोज आधार, जैसे <i>'dc = win2kdomain, dc = local'</i> या <i>'ou = people, dc = domain, dc = local'</i> ।"
 
 #: include/global_settings.php:1889 user_domains.php:561
 msgid "Search Filter"
@@ -11531,7 +11531,7 @@ msgstr "प्राथमिक व्यवस्थापक मुद्द�
 
 #: include/global_settings.php:1943
 msgid "In cases where the Cacti server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator's Cacti user account is specified under the Authentication tab on Cacti's settings page. It defaults to the 'admin' account."
-msgstr "ऐसे मामलों में जहां कैक्टि सर्वर समस्याओं का सामना कर रहा है, क्या प्राथमिक प्रशासक को ईमेल द्वारा सूचित किया जाना चाहिए? प्राथमिक प्रशासक का Cacti उपयोगकर्ता खाता Cacti के सेटिंग पृष्ठ पर प्रमाणीकरण टैब के अंतर्गत निर्दिष्ट किया गया है। यह &#39;व्यवस्थापक&#39; खाते में चूक करता है।"
+msgstr "ऐसे मामलों में जहां कैक्टि सर्वर समस्याओं का सामना कर रहा है, क्या प्राथमिक प्रशासक को ईमेल द्वारा सूचित किया जाना चाहिए? प्राथमिक प्रशासक का Cacti उपयोगकर्ता खाता Cacti के सेटिंग पृष्ठ पर प्रमाणीकरण टैब के अंतर्गत निर्दिष्ट किया गया है। यह 'व्यवस्थापक' खाते में चूक करता है।"
 
 #: include/global_settings.php:1948
 msgid "Test Email"
@@ -11775,7 +11775,7 @@ msgstr "अधिकतम तर्क लंबाई"
 
 #: include/global_settings.php:2185
 msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
-msgstr "जब बढ़ावा RRDtool को अपडेट कमांड भेजता है, तो यह ऑपरेटिंग सिस्टम अधिकतम तर्क लंबाई से अधिक नहीं होना चाहिए। यह ऑपरेटिंग सिस्टम और कर्नेल स्तर से भिन्न होता है। उदाहरण के लिए: विंडोज 2000 &lt;= 2048, फ्रीबीएसडी &lt;= 65535, लिनक्स 2.6.22-- &lt;= 131072, लिनक्स 2.6.23 ++ असीमित"
+msgstr "जब बढ़ावा RRDtool को अपडेट कमांड भेजता है, तो यह ऑपरेटिंग सिस्टम अधिकतम तर्क लंबाई से अधिक नहीं होना चाहिए। यह ऑपरेटिंग सिस्टम और कर्नेल स्तर से भिन्न होता है। उदाहरण के लिए: विंडोज 2000 <= 2048, फ्रीबीएसडी <= 65535, लिनक्स 2.6.22-- <= 131072, लिनक्स 2.6.23 ++ असीमित"
 
 #: include/global_settings.php:2192
 msgid "Memory Limit for Boost and Poller"
@@ -12032,7 +12032,7 @@ msgstr "निष्कासन विधि"
 
 #: include/global_settings.php:2472
 msgid "There are two removal methods.  The first, Standard Deviation, will remove any sample that is X number of standard deviations away from the average of samples.  The second method, Variance, will remove any sample that is X% more than the Variance average.  The Variance method takes into account a certain number of 'outliers'.  Those are exceptional samples, like the spike, that need to be excluded from the Variance Average calculation."
-msgstr "हटाने के दो तरीके हैं। पहला, मानक विचलन, किसी भी नमूने को निकाल देगा जो नमूनों के औसत से दूर एक्स मानक विचलन की संख्या है। दूसरी विधि, वैरिंस, किसी भी नमूने को निकाल देगी जो कि वियरेन्स औसत से X% अधिक है। वेरिएंस विधि एक निश्चित संख्या में &#39;आउटलेर्स&#39; को ध्यान में रखती है। वे असाधारण नमूने हैं, स्पाइक की तरह, जिन्हें वैरियनस औसत गणना से बाहर रखा जाना चाहिए।"
+msgstr "हटाने के दो तरीके हैं। पहला, मानक विचलन, किसी भी नमूने को निकाल देगा जो नमूनों के औसत से दूर एक्स मानक विचलन की संख्या है। दूसरी विधि, वैरिंस, किसी भी नमूने को निकाल देगी जो कि वियरेन्स औसत से X% अधिक है। वेरिएंस विधि एक निश्चित संख्या में 'आउटलेर्स' को ध्यान में रखती है। वे असाधारण नमूने हैं, स्पाइक की तरह, जिन्हें वैरियनस औसत गणना से बाहर रखा जाना चाहिए।"
 
 #: include/global_settings.php:2476
 msgid "Standard Deviation"
@@ -12048,7 +12048,7 @@ msgstr "प्रतिस्थापन विधि"
 
 #: include/global_settings.php:2482
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
-msgstr "तीन प्रतिस्थापन तरीके हैं। पहली विधि स्पाइक को प्रश्न में डेटा स्रोत के औसत से बदल देती है। दूसरी विधि स्पाइक को &#39;NaN&#39; से बदल देती है। अंतिम स्पाइक को अंतिम ज्ञात अच्छे मान के साथ बदलता है।"
+msgstr "तीन प्रतिस्थापन तरीके हैं। पहली विधि स्पाइक को प्रश्न में डेटा स्रोत के औसत से बदल देती है। दूसरी विधि स्पाइक को 'NaN' से बदल देती है। अंतिम स्पाइक को अंतिम ज्ञात अच्छे मान के साथ बदलता है।"
 
 #: include/global_settings.php:2486 lib/html.php:2665
 msgid "Average"
@@ -12161,7 +12161,7 @@ msgstr "आधार समय"
 
 #: include/global_settings.php:2605
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
-msgstr "स्पाइक हटाने के लिए आधार समय घटित होता है। उदाहरण के लिए, यदि आप &#39;12: 00am &#39;का उपयोग करते हैं और आप प्रति दिन एक बार चुनते हैं, तो बैच निकालना हर दिन लगभग आधी रात को शुरू होगा।"
+msgstr "स्पाइक हटाने के लिए आधार समय घटित होता है। उदाहरण के लिए, यदि आप '12: 00am 'का उपयोग करते हैं और आप प्रति दिन एक बार चुनते हैं, तो बैच निकालना हर दिन लगभग आधी रात को शुरू होगा।"
 
 #: include/global_settings.php:2612
 msgid "Graph Templates to Spike Kill"
@@ -12293,7 +12293,7 @@ msgstr "ग्राफ़ को भविष्य में विस्त�
 
 #: include/global_settings.php:2744
 msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
-msgstr "ग्राफ़ प्रदर्शित करते समय, ग्राफ़ तिथियों को &#39;भविष्य तक&#39; विस्तारित करने की अनुमति दें"
+msgstr "ग्राफ़ प्रदर्शित करते समय, ग्राफ़ तिथियों को 'भविष्य तक' विस्तारित करने की अनुमति दें"
 
 #: include/global_settings.php:2749
 msgid "First Day of the Week"
@@ -12522,7 +12522,7 @@ msgstr "<strong>नोट:</strong> आप एक रिमोट डेटा �
 
 #: index.php:94
 msgid "<strong>NOTE:</strong> None of the Core Cacti Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
-msgstr "<strong>नोट:</strong> कोई भी कोर कैक्टि प्लगइन्स, आज तक, रिमोट डेटा कलेक्टरों के साथ काम करने के लिए फिर से डिज़ाइन नहीं किया गया है। इसलिए, प्लगइन्स जैसे मैकट्रैक, और एचएमआईबी, जिन्हें इस समय रिमोट डेटा कलेक्टरों के साथ काम नहीं करने की आवश्यकता होगी। हालाँकि, Thold जैसे प्लगइन्स इतने लंबे समय तक काम करेंगे जब रिमोट डेटा कलेक्टर <b>&#39;ऑनलाइन&#39;</b> मोड में होगा।"
+msgstr "<strong>नोट:</strong> कोई भी कोर कैक्टि प्लगइन्स, आज तक, रिमोट डेटा कलेक्टरों के साथ काम करने के लिए फिर से डिज़ाइन नहीं किया गया है। इसलिए, प्लगइन्स जैसे मैकट्रैक, और एचएमआईबी, जिन्हें इस समय रिमोट डेटा कलेक्टरों के साथ काम नहीं करने की आवश्यकता होगी। हालाँकि, Thold जैसे प्लगइन्स इतने लंबे समय तक काम करेंगे जब रिमोट डेटा कलेक्टर <b>'ऑनलाइन'</b> मोड में होगा।"
 
 #: install/functions.php:620
 #, php-format
@@ -12590,7 +12590,7 @@ msgstr "नीचे दिए गए एग्रीगेट ग्राफ�
 
 #: lib/api_aggregate.php:1768 lib/api_aggregate.php:1787
 msgid "Press 'Return' to return and select different Graphs"
-msgstr "अलग-अलग रेखांकन चुनने के लिए &#39;रिटर्न&#39; दबाएँ"
+msgstr "अलग-अलग रेखांकन चुनने के लिए 'रिटर्न' दबाएँ"
 
 #: lib/api_aggregate.php:1786
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
@@ -12982,7 +12982,7 @@ msgstr "%s - WEBUI नोट: वेब प्रबंधन इंटरफ़
 
 #: lib/clog_webapi.php:257
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Cacti and Syslog, the log information will remain in Syslog."
-msgstr "लॉग फ़ाइल को शुद्ध करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। <br><br><br> नोट: यदि लॉगिंग Cacti और Syslog दोनों पर सेट है, तो लॉग जानकारी Syslog में रहेगी।"
+msgstr "लॉग फ़ाइल को शुद्ध करने के लिए 'जारी रखें' पर क्लिक करें। <br><br><br> नोट: यदि लॉगिंग Cacti और Syslog दोनों पर सेट है, तो लॉग जानकारी Syslog में रहेगी।"
 
 #: lib/clog_webapi.php:263 utilities.php:1489
 msgid "Purge Log"
@@ -13115,12 +13115,12 @@ msgstr "डेटा क्वेरी चलाना [ %s]।"
 #: lib/data_query.php:120
 #, php-format
 msgid "Found Type = '%s' [%s]."
-msgstr "मिला प्रकार = &#39; %s&#39; [ %s]।"
+msgstr "मिला प्रकार = ' %s' [ %s]।"
 
 #: lib/data_query.php:142
 #, php-format
 msgid "Unknown Type = '%s'."
-msgstr "अज्ञात प्रकार = &#39; %s&#39;।"
+msgstr "अज्ञात प्रकार = ' %s'।"
 
 #: lib/data_query.php:164
 #, php-format
@@ -13195,7 +13195,7 @@ msgstr "सॉर्ट फ़ील्ड परिवर्तन के ल�
 #: lib/data_query.php:558
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
-msgstr "नए सॉर्ट फ़ील्ड का पता लगाया: &#39; %s&#39; पुराना सॉर्ट फ़ील्ड &#39; %s&#39;"
+msgstr "नए सॉर्ट फ़ील्ड का पता लगाया: ' %s' पुराना सॉर्ट फ़ील्ड ' %s'"
 
 #: lib/data_query.php:575
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
@@ -13208,12 +13208,12 @@ msgstr "नए सॉर्ट फ़ील्ड को मान्य कि�
 #: lib/data_query.php:696
 #, php-format
 msgid "Could not find data query XML file at '%s'"
-msgstr "&#39; %s&#39; पर डेटा क्वेरी XML फ़ाइल नहीं मिल सकी"
+msgstr "' %s' पर डेटा क्वेरी XML फ़ाइल नहीं मिल सकी"
 
 #: lib/data_query.php:700
 #, php-format
 msgid "Found data query XML file at '%s'"
-msgstr "&#39; %s&#39; पर डेटा क्वेरी XML फ़ाइल मिली"
+msgstr "' %s' पर डेटा क्वेरी XML फ़ाइल मिली"
 
 #: lib/data_query.php:723 lib/data_query.php:911 lib/data_query.php:2501
 msgid "Error parsing XML file into an array."
@@ -13243,7 +13243,7 @@ msgstr "&lt;arg_num_indexes&gt; XML फ़ाइल में मौजूद �
 #: lib/data_query.php:757
 #, php-format
 msgid "Executing script for num of indexes '%s'"
-msgstr "अनुक्रमित &#39; %s&#39; की संख्या के लिए निष्पादित स्क्रिप्ट"
+msgstr "अनुक्रमित ' %s' की संख्या के लिए निष्पादित स्क्रिप्ट"
 
 #: lib/data_query.php:760
 #, php-format
@@ -13252,11 +13252,11 @@ msgstr "अनुक्रमित की संख्या: %s"
 
 #: lib/data_query.php:764
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
-msgstr "XML फ़ाइल में &lt;arg_num_indexes&gt; अनुपलब्ध, &#39;इंडेक्स काउंट चेंजेड&#39; समर्थित नहीं है"
+msgstr "XML फ़ाइल में &lt;arg_num_indexes&gt; अनुपलब्ध, 'इंडेक्स काउंट चेंजेड' समर्थित नहीं है"
 
 #: lib/data_query.php:766
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
-msgstr "&lt;arg_num_indexes&gt; XML फ़ाइल में लापता, arg_index प्रविष्टियों की गणना करके &#39;सूचकांक गणना बदली गई&#39;"
+msgstr "&lt;arg_num_indexes&gt; XML फ़ाइल में लापता, arg_index प्रविष्टियों की गणना करके 'सूचकांक गणना बदली गई'"
 
 #: lib/data_query.php:777
 msgid "ERROR: Data Query returned no indexes."
@@ -13265,11 +13265,11 @@ msgstr "त्रुटि: डेटा क्वेरी ने कोई अ
 #: lib/data_query.php:781
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
-msgstr "अनुक्रमणिका &#39; %s&#39; की सूची के लिए निष्पादित स्क्रिप्ट, अनुक्रमणिका गणना: %s"
+msgstr "अनुक्रमणिका ' %s' की सूची के लिए निष्पादित स्क्रिप्ट, अनुक्रमणिका गणना: %s"
 
 #: lib/data_query.php:783
 msgid "Click to show Data Query output for 'index'"
-msgstr "&#39;सूचकांक&#39; के लिए डेटा क्वेरी आउटपुट दिखाने के लिए क्लिक करें"
+msgstr "'सूचकांक' के लिए डेटा क्वेरी आउटपुट दिखाने के लिए क्लिक करें"
 
 #: lib/data_query.php:786
 #, php-format
@@ -13279,7 +13279,7 @@ msgstr "पाया सूचकांक: %s"
 #: lib/data_query.php:801 lib/data_query.php:1303
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
-msgstr "फ़ील्ड &#39; %s&#39; के लिए डेटा क्वेरी आउटपुट दिखाने के लिए क्लिक करें"
+msgstr "फ़ील्ड ' %s' के लिए डेटा क्वेरी आउटपुट दिखाने के लिए क्लिक करें"
 
 #: lib/data_query.php:807
 #, php-format
@@ -13289,12 +13289,12 @@ msgstr "छांटें फ़ील्ड ने फ़ील्ड ना�
 #: lib/data_query.php:809
 #, php-format
 msgid "Executing script query '%s'"
-msgstr "निष्पादित स्क्रिप्ट क्वेरी &#39; %s&#39;"
+msgstr "निष्पादित स्क्रिप्ट क्वेरी ' %s'"
 
 #: lib/data_query.php:820 lib/data_query.php:827
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
-msgstr "मिली वस्तु [ %s = &#39; %s&#39;] सूचकांक: %s"
+msgstr "मिली वस्तु [ %s = ' %s'] सूचकांक: %s"
 
 #: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
@@ -13336,16 +13336,16 @@ msgstr "बल्क वॉक साइज़ %d पर नियत है।"
 #: lib/data_query.php:997
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
-msgstr "एसएनएमपी प्राप्त करने वाले अनुक्रमणिका @ &#39; %s&#39; सूचकांक की संख्या के लिए मिलता है: सूचकांक गणना: %s"
+msgstr "एसएनएमपी प्राप्त करने वाले अनुक्रमणिका @ ' %s' सूचकांक की संख्या के लिए मिलता है: सूचकांक गणना: %s"
 
 #: lib/data_query.php:999
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
-msgstr "&lt;oid_num_indexes&gt; XML फ़ाइल में गुम, oid_index प्रविष्टियों की गणना करके &#39;इंडेक्स काउंट चेंजेड&#39; का अनुकरण किया गया"
+msgstr "&lt;oid_num_indexes&gt; XML फ़ाइल में गुम, oid_index प्रविष्टियों की गणना करके 'इंडेक्स काउंट चेंजेड' का अनुकरण किया गया"
 
 #: lib/data_query.php:1002
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
-msgstr "अनुक्रमणिका @ &#39; %s&#39; सूचकांक की सूची के लिए SNMP पैदल चलना: %s"
+msgstr "अनुक्रमणिका @ ' %s' सूचकांक की सूची के लिए SNMP पैदल चलना: %s"
 
 #: lib/data_query.php:1006
 msgid "No SNMP data returned"
@@ -13354,62 +13354,62 @@ msgstr "कोई SNMP डेटा वापस नहीं आया"
 #: lib/data_query.php:1011
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
-msgstr "OID में पाया गया सूचकांक: &#39; %s&#39; मूल्य: &#39; %s&#39;"
+msgstr "OID में पाया गया सूचकांक: ' %s' मूल्य: ' %s'"
 
 #: lib/data_query.php:1042
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
-msgstr "अनुक्रमित @ &#39; %s&#39; सूचकांक की फ़िल्टरिंग सूची: %s"
+msgstr "अनुक्रमित @ ' %s' सूचकांक की फ़िल्टरिंग सूची: %s"
 
 #: lib/data_query.php:1046
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
-msgstr "फ़िल्टर सूचकांक OID में पाया गया: &#39; %s&#39; मान: &#39; %s&#39;"
+msgstr "फ़िल्टर सूचकांक OID में पाया गया: ' %s' मान: ' %s'"
 
 #: lib/data_query.php:1062
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
-msgstr "अनुक्रमित @ &#39; %s&#39; सूचकांक की फ़िल्टरिंग सूची: %s"
+msgstr "अनुक्रमित @ ' %s' सूचकांक की फ़िल्टरिंग सूची: %s"
 
 #: lib/data_query.php:1066
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
-msgstr "फ़िल्टर सूचकांक OID में पाया गया: &#39; %s&#39; मान: &#39; %s&#39;"
+msgstr "फ़िल्टर सूचकांक OID में पाया गया: ' %s' मान: ' %s'"
 
 #: lib/data_query.php:1086
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
-msgstr "&#39;Rewrite_index&#39; या &#39;oid_suffix&#39; के बाद से &#39; %s&#39; के लिए गलत &#39;विधि&#39; फ़ील्ड को परिभाषित किया गया है"
+msgstr "'Rewrite_index' या 'oid_suffix' के बाद से ' %s' के लिए गलत 'विधि' फ़ील्ड को परिभाषित किया गया है"
 
 #: lib/data_query.php:1093
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
-msgstr "क्षेत्र &#39; %s&#39; [मूल्य = &#39; %s&#39;] के लिए सूचकांक डेटा सम्मिलित करना]"
+msgstr "क्षेत्र ' %s' [मूल्य = ' %s'] के लिए सूचकांक डेटा सम्मिलित करना"
 
 #: lib/data_query.php:1098
 #, php-format
 msgid "Located input field '%s' [get]"
-msgstr "स्थित इनपुट फ़ील्ड &#39; %s&#39; [प्राप्त करें]"
+msgstr "स्थित इनपुट फ़ील्ड ' %s' [प्राप्त करें]"
 
 #: lib/data_query.php:1107
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
-msgstr "मिला OID पुनर्लेखन नियम: &#39;s / %s / %s /&#39;"
+msgstr "मिला OID पुनर्लेखन नियम: 's / %s / %s /'"
 
 #: lib/data_query.php:1118
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
-msgstr "OID_rewrite OID में: &#39; %s&#39; नया OID: &#39; %s&#39;"
+msgstr "OID_rewrite OID में: ' %s' नया OID: ' %s'"
 
 #: lib/data_query.php:1139
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
-msgstr "एसएनएमपी प्राप्त करने के लिए डेटा @ &#39; %s&#39; [मूल्य = &#39; %s&#39;] मिलता है"
+msgstr "एसएनएमपी प्राप्त करने के लिए डेटा @ ' %s' [मूल्य = ' %s'] मिलता है"
 
 #: lib/data_query.php:1150
 #, php-format
 msgid "Field '%s' %s"
-msgstr "फ़ील्ड &#39; %s&#39; %s"
+msgstr "फ़ील्ड ' %s' %s"
 
 #: lib/data_query.php:1211
 #, php-format
@@ -13424,7 +13424,7 @@ msgstr "सॉर्ट फ़ील्ड ने OID[%s] के लिए क�
 #: lib/data_query.php:1241
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
-msgstr "डेटा के लिए परिणाम मिले @ &#39; %s&#39; [मूल्य = &#39; %s&#39;]"
+msgstr "डेटा के लिए परिणाम मिले @ ' %s' [मूल्य = ' %s']"
 
 #: lib/data_query.php:1249
 #, php-format
@@ -13434,7 +13434,7 @@ msgstr "डेटा @ '%s' के लिए परिणाम सेट कि
 #: lib/data_query.php:1253
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
-msgstr "डेटा @ &#39; %s&#39; [कुंजी = &#39; %s&#39;, मान = &#39; %s&#39;]"
+msgstr "डेटा @ ' %s' [कुंजी = ' %s', मान = ' %s']"
 
 #: lib/data_query.php:1267
 #, php-format
@@ -13449,12 +13449,12 @@ msgstr "डेटा @ '%s' के लिए SNMP get निष्पादि�
 #: lib/data_query.php:1305
 #, php-format
 msgid "Located input field '%s' [walk]"
-msgstr "स्थित इनपुट फ़ील्ड &#39; %s&#39; [चलना]"
+msgstr "स्थित इनपुट फ़ील्ड ' %s' [चलना]"
 
 #: lib/data_query.php:1342
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
-msgstr "डेटा @ &#39; %s&#39; के लिए SNMP चलना"
+msgstr "डेटा @ ' %s' के लिए SNMP चलना"
 
 #: lib/data_query.php:1361 lib/data_query.php:1419 lib/data_query.php:1468
 #: lib/data_query.php:1519
@@ -13465,22 +13465,22 @@ msgstr "VALUE_INDEX_PARSE में कोई सूचकांक[%s] नह�
 #: lib/data_query.php:1402
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
-msgstr "मिली वस्तु [ %s = &#39; %s&#39;] सूचकांक: %s [ %s से]"
+msgstr "मिली वस्तु [ %s = ' %s'] सूचकांक: %s [ %s से]"
 
 #: lib/data_query.php:1444
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
-msgstr "मिला OCTET STRING &#39; %s&#39; डिकोड किया गया मान: &#39; %s&#39;"
+msgstr "मिला OCTET STRING ' %s' डिकोड किया गया मान: ' %s'"
 
 #: lib/data_query.php:1450 lib/data_query.php:1499
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
-msgstr "मिला आइटम [ %s = &#39; %s&#39;] सूचकांक: %s [regexp oid पार्स से]"
+msgstr "मिला आइटम [ %s = ' %s'] सूचकांक: %s [regexp oid पार्स से]"
 
 #: lib/data_query.php:1527
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
-msgstr "पाया गया आइटम [ %s = &#39; %s&#39;] सूचकांक: %s [regexp oid वैल्यू पार्स से]"
+msgstr "पाया गया आइटम [ %s = ' %s'] सूचकांक: %s [regexp oid वैल्यू पार्स से]"
 
 #: lib/data_query.php:1753
 #, php-format
@@ -13494,7 +13494,7 @@ msgstr "अनुवाद मानचित्र का विश्लेष
 #: lib/data_query.php:1790
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
-msgstr "OID_rewrite OID में: &#39; %s&#39; नया OID: &#39; %s&#39;"
+msgstr "OID_rewrite OID में: ' %s' नया OID: ' %s'"
 
 #: lib/data_query.php:1895
 msgid "Update graph data query cache complete"
@@ -14416,7 +14416,7 @@ msgstr "प्रारूप फ़ाइल का उपयोग करन�
 
 #: lib/html_reports.php:68
 msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
-msgstr "उपयोग करने के लिए कस्टम HTML आवरण और सीएसएस फ़ाइल चुनें। इस फ़ाइल में HTML और CSS दोनों शामिल हैं जो आपकी रिपोर्ट के आसपास हैं। यदि इसमें बस CSS से अधिक है, तो आपको एक विशेष स्थान रखने की आवश्यकता है <REPORT> फ़ाइल के अंदर टैग। इस प्रारूप टैग को रिपोर्ट सामग्री द्वारा बदल दिया जाएगा। ये फाइलें &#39;फॉर्मेट&#39; डायरेक्टरी में स्थित हैं।"
+msgstr "उपयोग करने के लिए कस्टम HTML आवरण और सीएसएस फ़ाइल चुनें। इस फ़ाइल में HTML और CSS दोनों शामिल हैं जो आपकी रिपोर्ट के आसपास हैं। यदि इसमें बस CSS से अधिक है, तो आपको एक विशेष स्थान रखने की आवश्यकता है <REPORT> फ़ाइल के अंदर टैग। इस प्रारूप टैग को रिपोर्ट सामग्री द्वारा बदल दिया जाएगा। ये फाइलें 'फॉर्मेट' डायरेक्टरी में स्थित हैं।"
 
 #: lib/html_reports.php:73
 msgid "Default Text Font Size"
@@ -14488,7 +14488,7 @@ msgstr "ऊपर दिए गए Mailtime के सापेक्ष एक 
 
 #: lib/html_reports.php:148
 msgid "e.g. 'Week(s)' represents a weekly Reporting Interval."
-msgstr "उदाहरण के लिए &#39;वीक (एस)&#39; एक साप्ताहिक रिपोर्टिंग अंतराल का प्रतिनिधित्व करता है।"
+msgstr "उदाहरण के लिए 'वीक (एस)' एक साप्ताहिक रिपोर्टिंग अंतराल का प्रतिनिधित्व करता है।"
 
 #: lib/html_reports.php:155
 msgid "Interval Frequency"
@@ -14500,7 +14500,7 @@ msgstr "ऊपर दिए गए रिपोर्ट अंतराल क�
 
 #: lib/html_reports.php:157
 msgid "e.g. If the Report Interval is 'Month(s)', then '2' indicates Every '2 Month(s) from the next Mailtime.' Lastly, if using the Month(s) Report Intervals, the 'Day of Week' and the 'Day of Month' are both calculated based upon the Mailtime you specify above."
-msgstr "उदाहरण के लिए यदि रिपोर्ट अंतराल &#39;महीना (ओं)&#39; है, तो &#39;2&#39; अगली बार से हर &#39;2 महीना (ओं) को इंगित करता है।&#39; अंत में, यदि मासिक (एस) रिपोर्ट अंतराल का उपयोग करते हैं, तो &#39;सप्ताह का दिन&#39; और &#39;महीना का दिन&#39; दोनों की गणना उस मेलटाइम के आधार पर की जाती है जिसे आप ऊपर निर्दिष्ट करते हैं।"
+msgstr "उदाहरण के लिए यदि रिपोर्ट अंतराल 'महीना (ओं)' है, तो '2' अगली बार से हर '2 महीना (ओं) को इंगित करता है।' अंत में, यदि मासिक (एस) रिपोर्ट अंतराल का उपयोग करते हैं, तो 'सप्ताह का दिन' और 'महीना का दिन' दोनों की गणना उस मेलटाइम के आधार पर की जाती है जिसे आप ऊपर निर्दिष्ट करते हैं।"
 
 #: lib/html_reports.php:165
 msgid "Email Sender/Receiver Details"
@@ -14560,19 +14560,19 @@ msgstr "प्रेषक ईमेल पता आपका अपना ई-
 
 #: lib/html_reports.php:575
 msgid "Click 'Continue' to delete the following Report(s)."
-msgstr "निम्नलिखित रिपोर्ट को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित रिपोर्ट को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: lib/html_reports.php:582
 msgid "Click 'Continue' to take ownership of the following Report(s)."
-msgstr "निम्नलिखित रिपोर्ट (ओं) का स्वामित्व लेने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित रिपोर्ट (ओं) का स्वामित्व लेने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: lib/html_reports.php:589
 msgid "Click 'Continue' to duplicate the following Report(s).  You may optionally change the title for the new Reports"
-msgstr "निम्नलिखित रिपोर्ट (ओं) की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप नई रिपोर्ट के लिए शीर्षक को वैकल्पिक रूप से बदल सकते हैं"
+msgstr "निम्नलिखित रिपोर्ट (ओं) की नकल करने के लिए 'जारी रखें' पर क्लिक करें। आप नई रिपोर्ट के लिए शीर्षक को वैकल्पिक रूप से बदल सकते हैं"
 
 #: lib/html_reports.php:601
 msgid "Click 'Continue' to enable the following Report(s)."
-msgstr "निम्नलिखित रिपोर्ट को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित रिपोर्ट को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: lib/html_reports.php:603
 msgid "Please be certain that those Report(s) have successfully been tested first!"
@@ -14580,26 +14580,26 @@ msgstr "कृपया निश्चित रहें कि उन रि�
 
 #: lib/html_reports.php:609
 msgid "Click 'Continue' to disable the following Reports."
-msgstr "निम्नलिखित रिपोर्ट को अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित रिपोर्ट को अक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: lib/html_reports.php:616
 msgid "Click 'Continue' to send the following Report(s) now."
-msgstr "अब निम्नलिखित रिपोर्ट भेजने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "अब निम्नलिखित रिपोर्ट भेजने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: lib/html_reports.php:672
 #, php-format
 msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
-msgstr "रिपोर्ट &#39; %s&#39; भेजने में असमर्थ। कृपया गंतव्य ई-मेल पते निर्धारित करें"
+msgstr "रिपोर्ट ' %s' भेजने में असमर्थ। कृपया गंतव्य ई-मेल पते निर्धारित करें"
 
 #: lib/html_reports.php:674
 #, php-format
 msgid "Unable to send Report '%s'.  Please set an e-mail subject"
-msgstr "रिपोर्ट &#39; %s&#39; भेजने में असमर्थ। कृपया एक ई-मेल विषय सेट करें"
+msgstr "रिपोर्ट ' %s' भेजने में असमर्थ। कृपया एक ई-मेल विषय सेट करें"
 
 #: lib/html_reports.php:676
 #, php-format
 msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
-msgstr "रिपोर्ट &#39; %s&#39; भेजने में असमर्थ। कृपया नाम से एक ई-मेल सेट करें"
+msgstr "रिपोर्ट ' %s' भेजने में असमर्थ। कृपया नाम से एक ई-मेल सेट करें"
 
 #: lib/html_reports.php:1076
 msgid "Item Type to be added."
@@ -14896,7 +14896,7 @@ msgstr "चुनिंदा"
 #: lib/html_utility.php:556 lib/html_utility.php:775
 #, php-format
 msgid "The regular expression \"%s\" is not valid. Error is %s"
-msgstr "खोज शब्द &quot; %s&quot; मान्य नहीं है। त्रुटि %s है"
+msgstr "खोज शब्द \" %s\" मान्य नहीं है। त्रुटि %s है"
 
 #: lib/html_utility.php:1390
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
@@ -15185,7 +15185,7 @@ msgstr "आप 0.6.x डेटाबेस पर Cacti %s को स्था�
 
 #: lib/installer.php:1685
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "सक्षम जारी रखने के लिए, आप इसे में एक नया डेटाबेस, आयात &quot;cacti.sql&quot; बनाना <b>होगा</b> होने के लिए:"
+msgstr "सक्षम जारी रखने के लिए, आप इसे में एक नया डेटाबेस, आयात \"cacti.sql\" बनाना <b>होगा</b> होने के लिए:"
 
 #: lib/installer.php:1687
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
@@ -15197,7 +15197,7 @@ msgstr "नोट: आपका मौजूदा डेटा संशोध�
 
 #: lib/installer.php:1695
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
-msgstr "आपने एक नया डेटाबेस बनाया है, लेकिन अभी तक &#39;cacti.sql&#39; फ़ाइल आयात नहीं की है। कमांड लाइन पर, जारी रखने के लिए निम्नलिखित पर अमल करें:"
+msgstr "आपने एक नया डेटाबेस बनाया है, लेकिन अभी तक 'cacti.sql' फ़ाइल आयात नहीं की है। कमांड लाइन पर, जारी रखने के लिए निम्नलिखित पर अमल करें:"
 
 #: lib/installer.php:1697
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
@@ -15209,7 +15209,7 @@ msgstr "आपको MySQL में MySQL समयक्षेत्र जा
 
 #: lib/installer.php:1701
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
-msgstr "Linux / UNIX पर, शेल में &#39;रूट&#39; के रूप में निम्नलिखित चलाएँ:"
+msgstr "Linux / UNIX पर, शेल में 'रूट' के रूप में निम्नलिखित चलाएँ:"
 
 #: lib/installer.php:1704
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Cacti user access to the tables:"
@@ -15230,7 +15230,7 @@ msgstr "प्रारंभ"
 #: lib/installer.php:1742 lib/installer.php:2166 lib/installer.php:2176
 #: lib/installer.php:2818
 msgid "Upgrade"
-msgstr "अपग्रेड  करो"
+msgstr "अपग्रेड करो"
 
 #: lib/installer.php:1744 lib/installer.php:2822
 msgid "Downgrade"
@@ -15261,7 +15261,7 @@ msgstr "सुनिश्चित करें कि आपने जार�
 #: lib/installer.php:1855
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
-msgstr "यह प्रक्रिया आपको संस्करण &#39; %s&#39; से अपग्रेड करने के चरणों के माध्यम से मार्गदर्शन करेगी। "
+msgstr "यह प्रक्रिया आपको संस्करण ' %s' से अपग्रेड करने के चरणों के माध्यम से मार्गदर्शन करेगी। "
 
 #: lib/installer.php:1856
 #, php-format
@@ -15404,7 +15404,7 @@ msgstr "आपका MySQL TimeZone डेटाबेस आबाद नही
 
 #: lib/installer.php:2119
 msgid "Your Cacti database login account does not have access to the MySQL TimeZone database.  Please provide the Cacti database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
-msgstr "आपके Cacti डेटाबेस लॉगिन खाते की MySQL TimeZone डेटाबेस तक पहुँच नहीं है। कृपया &quot;mysql&quot; डेटाबेस में &quot;time_zone_name&quot; तालिका में कैक्टि डेटाबेस खाता &quot;चुनें&quot; एक्सेस प्रदान करें, और आगे बढ़ने से पहले MySQL के टाइमज़ोन जानकारी को पॉप्युलेट करें।"
+msgstr "आपके Cacti डेटाबेस लॉगिन खाते की MySQL TimeZone डेटाबेस तक पहुँच नहीं है। कृपया \"mysql\" डेटाबेस में \"time_zone_name\" तालिका में कैक्टि डेटाबेस खाता \"चुनें\" एक्सेस प्रदान करें, और आगे बढ़ने से पहले MySQL के टाइमज़ोन जानकारी को पॉप्युलेट करें।"
 
 #: lib/installer.php:2124
 msgid "Your Cacti database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
@@ -15543,7 +15543,7 @@ msgstr "इंस्टॉलर स्वतः एक $poller_id असाइ�
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "एक बार चर सभी config.php फ़ाइल में सेट हो जाने के बाद, आपको मुख्य कैक्टि डेटाबेस सर्वर में $rdatabase_username एक्सेस भी देना होगा। उसी प्रक्रिया का पालन करें जो आप किसी अन्य कैक्टि स्थापित के साथ करेंगे। फिर आप &#39;टेस्ट कनेक्शन&#39; बटन दबा सकते हैं। यदि परीक्षण सफल होता है, तो आप इंस्टॉल को पूरा करने में सक्षम होंगे।"
+msgstr "एक बार चर सभी config.php फ़ाइल में सेट हो जाने के बाद, आपको मुख्य कैक्टि डेटाबेस सर्वर में $rdatabase_username एक्सेस भी देना होगा। उसी प्रक्रिया का पालन करें जो आप किसी अन्य कैक्टि स्थापित के साथ करेंगे। फिर आप 'टेस्ट कनेक्शन' बटन दबा सकते हैं। यदि परीक्षण सफल होता है, तो आप इंस्टॉल को पूरा करने में सक्षम होंगे।"
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -15551,7 +15551,7 @@ msgstr "स्थापना के बाद अतिरिक्त कद�
 
 #: lib/installer.php:2304
 msgid "It is essential that the Central Cacti server can communicate via MySQL to each remote Cacti database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
-msgstr "यह आवश्यक है कि केंद्रीय Cacti सर्वर MySQL के माध्यम से प्रत्येक दूरस्थ Cacti डेटाबेस सर्वर से संवाद कर सकता है। एक बार इंस्टॉल पूरा होने के बाद, आपको दूरस्थ डेटा कलेक्टर को संपादित करना होगा और यह सुनिश्चित करना होगा कि सेटिंग्स सही हैं। आप दूरस्थ डेटा संग्राहक का संपादन करते समय &#39;टेस्ट कनेक्शन&#39; का उपयोग करके सत्यापित कर सकते हैं।"
+msgstr "यह आवश्यक है कि केंद्रीय Cacti सर्वर MySQL के माध्यम से प्रत्येक दूरस्थ Cacti डेटाबेस सर्वर से संवाद कर सकता है। एक बार इंस्टॉल पूरा होने के बाद, आपको दूरस्थ डेटा कलेक्टर को संपादित करना होगा और यह सुनिश्चित करना होगा कि सेटिंग्स सही हैं। आप दूरस्थ डेटा संग्राहक का संपादन करते समय 'टेस्ट कनेक्शन' का उपयोग करके सत्यापित कर सकते हैं।"
 
 #: lib/installer.php:2317
 msgid "Critical Binary Locations and Versions"
@@ -15571,7 +15571,7 @@ msgstr "निर्देशिका अनुमति जाँच"
 
 #: lib/installer.php:2399
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
-msgstr "कृपया सुनिश्चित करें कि आगे बढ़ने से पहले नीचे दी गई निर्देशिका अनुमति सही है। इंस्टॉल के दौरान, इन निर्देशिकाओं को वेब सर्वर उपयोगकर्ता के स्वामित्व की आवश्यकता होती है। इंस्टॉलर को डिवाइस टेम्पलेट पैकेज स्थापित करने की अनुमति देने के लिए इन अनुमति परिवर्तनों की आवश्यकता होती है जिसमें XML और स्क्रिप्ट फाइलें शामिल होती हैं जिन्हें इन निर्देशिकाओं में रखा जाएगा। यदि आप संकुल को स्थापित करने के लिए नहीं चुनते हैं, तो एक &#39;install_package.php&#39; क्ली स्क्रिप्ट है जो कि कमांड लाइन से अधिष्ठापन पूरा होने के बाद इस्तेमाल किया जा सकता है।"
+msgstr "कृपया सुनिश्चित करें कि आगे बढ़ने से पहले नीचे दी गई निर्देशिका अनुमति सही है। इंस्टॉल के दौरान, इन निर्देशिकाओं को वेब सर्वर उपयोगकर्ता के स्वामित्व की आवश्यकता होती है। इंस्टॉलर को डिवाइस टेम्पलेट पैकेज स्थापित करने की अनुमति देने के लिए इन अनुमति परिवर्तनों की आवश्यकता होती है जिसमें XML और स्क्रिप्ट फाइलें शामिल होती हैं जिन्हें इन निर्देशिकाओं में रखा जाएगा। यदि आप संकुल को स्थापित करने के लिए नहीं चुनते हैं, तो एक 'install_package.php' क्ली स्क्रिप्ट है जो कि कमांड लाइन से अधिष्ठापन पूरा होने के बाद इस्तेमाल किया जा सकता है।"
 
 #: lib/installer.php:2402
 msgid "After the install is complete, you can make some of these directories read only to increase security."
@@ -15617,7 +15617,7 @@ msgstr "यदि आपके सर्वर पर SELinux सक्षम �
 #: lib/installer.php:2508
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
-msgstr "उपयोगकर्ता &#39; %s&#39; को पढ़ने / लिखने में सक्षम करने के लिए MODIFY अनुमति होनी चाहिए।"
+msgstr "उपयोगकर्ता ' %s' को पढ़ने / लिखने में सक्षम करने के लिए MODIFY अनुमति होनी चाहिए।"
 
 #: lib/installer.php:2517
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
@@ -15697,7 +15697,7 @@ msgstr "डिफ़ॉल्ट स्वचालन नेटवर्क"
 
 #: lib/installer.php:2601
 msgid "Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "एक बार इंस्टॉलेशन पूरा हो जाने पर कैक्टि अपने आप नेटवर्क को स्कैन कर सकता है। यह स्कैन किए जा सकने वाले IPs की श्रेणी का पता लगाने के लिए नीचे दी गई नेटवर्क श्रेणी का उपयोग करेगा। विकल्प के एक पूर्वनिर्धारित सेट को स्कैनिंग के लिए परिभाषित किया गया है जिसमें &#39;सार्वजनिक&#39; और &#39;निजी&#39; दोनों समुदायों का उपयोग करना शामिल है।"
+msgstr "एक बार इंस्टॉलेशन पूरा हो जाने पर कैक्टि अपने आप नेटवर्क को स्कैन कर सकता है। यह स्कैन किए जा सकने वाले IPs की श्रेणी का पता लगाने के लिए नीचे दी गई नेटवर्क श्रेणी का उपयोग करेगा। विकल्प के एक पूर्वनिर्धारित सेट को स्कैनिंग के लिए परिभाषित किया गया है जिसमें 'सार्वजनिक' और 'निजी' दोनों समुदायों का उपयोग करना शामिल है।"
 
 #: lib/installer.php:2602
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -15765,7 +15765,7 @@ msgstr "होम पेज"
 
 #: lib/installer.php:2704
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Cacti.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
-msgstr "डिवाइस टेम्प्लेट आपको कैक्टि के भीतर डेटा के एक विशाल वर्गीकरण की निगरानी और ग्राफ़ करने की अनुमति देते हैं। इच्छित डिवाइस टेम्पलेट का चयन करने के बाद, &#39;समाप्त करें&#39; दबाएँ और इंस्टॉलेशन पूरा हो जाएगा। कृपया इस चरण पर धैर्य रखें, क्योंकि डिवाइस टेम्प्लेट के आयात में कुछ मिनट लग सकते हैं।"
+msgstr "डिवाइस टेम्प्लेट आपको कैक्टि के भीतर डेटा के एक विशाल वर्गीकरण की निगरानी और ग्राफ़ करने की अनुमति देते हैं। इच्छित डिवाइस टेम्पलेट का चयन करने के बाद, 'समाप्त करें' दबाएँ और इंस्टॉलेशन पूरा हो जाएगा। कृपया इस चरण पर धैर्य रखें, क्योंकि डिवाइस टेम्प्लेट के आयात में कुछ मिनट लग सकते हैं।"
 
 #: lib/installer.php:2712
 msgid "Server Collation"
@@ -15797,7 +15797,7 @@ msgstr "आपका डेटाबेस डिफ़ॉल्ट टकरा
 
 #: lib/installer.php:2739
 msgid "Any tables created by plugins may have issues linked against Cacti Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "अगर तालमेल का मिलान नहीं होता है, तो प्लगइन्स द्वारा बनाई गई किसी भी तालिका में कैक्टि कोर तालिकाओं के खिलाफ जुड़े मुद्दे हो सकते हैं। कृपया सुनिश्चित करें कि आपका डेटाबेस निम्नलिखित को चलाकर &#39;utf8mb4_unicode_ci&#39; में बदल गया है: "
+msgstr "अगर तालमेल का मिलान नहीं होता है, तो प्लगइन्स द्वारा बनाई गई किसी भी तालिका में कैक्टि कोर तालिकाओं के खिलाफ जुड़े मुद्दे हो सकते हैं। कृपया सुनिश्चित करें कि आपका डेटाबेस निम्नलिखित को चलाकर 'utf8mb4_unicode_ci' में बदल गया है: "
 
 #: lib/installer.php:2746
 msgid "Table Setup"
@@ -15875,7 +15875,7 @@ msgstr "आपका कैक्टि सर्वर लगभग तैय�
 #: lib/installer.php:2839
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
-msgstr "&#39; %s&#39; दबाएं और फिर अपने डिवाइस टेम्पलेट का चयन करने के बाद स्थापना प्रक्रिया को पूरा करने के लिए &#39; %s&#39; पर क्लिक करें।"
+msgstr "' %s' दबाएं और फिर अपने डिवाइस टेम्पलेट का चयन करने के बाद स्थापना प्रक्रिया को पूरा करने के लिए ' %s' पर क्लिक करें।"
 
 #: lib/installer.php:2855
 #, php-format
@@ -16358,7 +16358,7 @@ msgstr "प्लगइन INFO में एक मान्य compat सं�
 #: lib/plugins.php:1237 lib/plugins.php:1240
 #, php-format
 msgid "Requires: Cacti >= %s"
-msgstr "आवश्यकता है: कैक्टि&gt; = %s"
+msgstr "आवश्यकता है: कैक्टि >= %s"
 
 #: lib/plugins.php:1262
 msgid "Not Stated"
@@ -16423,17 +16423,17 @@ msgstr "ग्राफ संरेखण:"
 #: lib/reports.php:1962
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
-msgstr "रिपोर्ट किया गया ग्राफ़ आइटम &#39; <i> %s</i> &#39;"
+msgstr "रिपोर्ट किया गया ग्राफ़ आइटम ' <i> %s</i> '"
 
 #: lib/reports.php:1964
 #, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
-msgstr "रिपोर्ट ग्राफ़ आइटम &#39; <i> %s</i> &#39; पहले से ही मौजूद है जोड़ने में विफल"
+msgstr "रिपोर्ट ग्राफ़ आइटम ' <i> %s</i> ' पहले से ही मौजूद है जोड़ने में विफल"
 
 #: lib/reports.php:1967
 #, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
-msgstr "छोड़ी गई रिपोर्ट ग्राफ की वस्तु &#39; <i> %s</i> &#39; पहले से ही मौजूद है"
+msgstr "छोड़ी गई रिपोर्ट ग्राफ की वस्तु ' <i> %s</i> ' पहले से ही मौजूद है"
 
 #: lib/rrd.php:3016
 #, php-format
@@ -16448,32 +16448,32 @@ msgstr "आवश्यक RRDfile स्टेप आकार '%s' है, ल
 #: lib/rrd.php:4542
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
-msgstr "डेटा स्रोत &#39; %s&#39; के लिए टाइप &#39; %s&#39; होना चाहिए"
+msgstr "डेटा स्रोत ' %s' के लिए टाइप ' %s' होना चाहिए"
 
 #: lib/rrd.php:4548
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
-msgstr "डेटा स्रोत &#39; %s&#39; के लिए दिल की धड़कन &#39; %s&#39; होनी चाहिए"
+msgstr "डेटा स्रोत ' %s' के लिए दिल की धड़कन ' %s' होनी चाहिए"
 
 #: lib/rrd.php:4560
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
-msgstr "डेटा स्रोत &#39; %s&#39; के लिए RRD न्यूनतम &#39; %s&#39; होना चाहिए"
+msgstr "डेटा स्रोत ' %s' के लिए RRD न्यूनतम ' %s' होना चाहिए"
 
 #: lib/rrd.php:4569
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
-msgstr "Cacti की परिभाषा में डीएस &#39; %s&#39; गायब है"
+msgstr "Cacti की परिभाषा में डीएस ' %s' गायब है"
 
 #: lib/rrd.php:4583 lib/rrd.php:4584
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "Cacti RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) हैं"
+msgstr "Cacti RRA ' %s' में ' %s' के समान CF / चरण ( %s, %s) हैं"
 
 #: lib/rrd.php:4597 lib/rrd.php:4598
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "फ़ाइल RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) है"
+msgstr "फ़ाइल RRA ' %s' में ' %s' के समान CF / चरण ( %s, %s) है"
 
 #: lib/rrd.php:4630
 #, php-format
@@ -16483,7 +16483,7 @@ msgstr "'%s' का pdp_per_row RRA '%s' के लिए अमान्य ह
 #: lib/rrd.php:4634
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
-msgstr "Cacti RRA आईडी &#39; %s&#39; के लिए XFF &#39; %s&#39; होना चाहिए"
+msgstr "Cacti RRA आईडी ' %s' के लिए XFF ' %s' होना चाहिए"
 
 #: lib/rrd.php:4638
 #, php-format
@@ -16493,7 +16493,7 @@ msgstr "Cacti RRA ID '%s' के लिए पंक्तियों की �
 #: lib/rrd.php:4655
 #, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
-msgstr "आरआरडीएफाइल में आरआरए &#39; %s&#39; गायब है"
+msgstr "आरआरडीएफाइल में आरआरए ' %s' गायब है"
 
 #: lib/rrd.php:4663
 #, php-format
@@ -17158,7 +17158,7 @@ msgstr "आपकी सामग्री फ़ाइल एक मान्�
 
 #: links.php:197
 msgid "Click 'Continue' to Enable the following Page(s)."
-msgstr "निम्न पृष्ठ को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न पृष्ठ को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: links.php:202
 msgid "Enable Page(s)"
@@ -17174,7 +17174,7 @@ msgstr "पृष्ठ अक्षम करें"
 
 #: links.php:215
 msgid "Click 'Continue' to Delete the following Page(s)."
-msgstr "निम्न पृष्ठ को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्न पृष्ठ को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: links.php:220
 msgid "Delete Page(s)"
@@ -17429,14 +17429,14 @@ msgstr[1] "निम्नलिखित अधिसूचना प्रा�
 #: managers.php:1127
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable following Notification Receiver"
-msgstr[0] "निम्नलिखित अधिसूचना प्राप्तकर्ता को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-msgstr[1] "अधिसूचना प्राप्तकर्ता को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
+msgstr[0] "निम्नलिखित अधिसूचना प्राप्तकर्ता को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें"
+msgstr[1] "अधिसूचना प्राप्तकर्ता को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें"
 
 #: managers.php:1129
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable following Notification Receiver"
-msgstr[0] "निम्न अधिसूचना प्राप्तकर्ता को अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-msgstr[1] "अधिसूचना प्राप्तकर्ता के बाद अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
+msgstr[0] "निम्न अधिसूचना प्राप्तकर्ता को अक्षम करने के लिए 'जारी रखें' पर क्लिक करें"
+msgstr[1] "अधिसूचना प्राप्तकर्ता के बाद अक्षम करने के लिए 'जारी रखें' पर क्लिक करें"
 
 #: managers.php:1139
 #, php-format
@@ -17445,7 +17445,7 @@ msgstr "%s अधिसूचना प्राप्त करता है"
 
 #: managers.php:1197
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
-msgstr "इस अधिसूचना प्राप्तकर्ता को निम्नलिखित अधिसूचना वस्तुओं को अग्रेषित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "इस अधिसूचना प्राप्तकर्ता को निम्नलिखित अधिसूचना वस्तुओं को अग्रेषित करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: managers.php:1198
 msgid "Click 'Continue' to disable forwarding the following Notification Objects to this Notification Receiver."
@@ -17641,7 +17641,7 @@ msgstr "कॉन्फ़िगरेशन समस्याएँ"
 
 #: plugins.php:600
 msgid "Actions available include 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
-msgstr "उपलब्ध कार्यों में &#39;इंस्टॉल&#39;, &#39;सक्रिय&#39;, &#39;अक्षम&#39;, &#39;सक्षम&#39;, &#39;अनइंस्टॉल&#39; शामिल हैं।"
+msgstr "उपलब्ध कार्यों में 'इंस्टॉल', 'सक्रिय', 'अक्षम', 'सक्षम', 'अनइंस्टॉल' शामिल हैं।"
 
 #: plugins.php:603
 msgid "Plugin Name"
@@ -17697,7 +17697,7 @@ msgstr "कोई प्लगइन्स नहीं मिला"
 
 #: plugins.php:683
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
-msgstr "इस प्लगइन को अनइंस्टॉल करने से सभी प्लगइन डेटा और सेटिंग्स को हटा दिया जाएगा। यदि आप वास्तव में प्लगइन की स्थापना रद्द करना चाहते हैं, तो नीचे &#39;स्थापना रद्द करें&#39; पर क्लिक करें। अन्यथा &#39;रद्द करें&#39; पर क्लिक करें"
+msgstr "इस प्लगइन को अनइंस्टॉल करने से सभी प्लगइन डेटा और सेटिंग्स को हटा दिया जाएगा। यदि आप वास्तव में प्लगइन की स्थापना रद्द करना चाहते हैं, तो नीचे 'स्थापना रद्द करें' पर क्लिक करें। अन्यथा 'रद्द करें' पर क्लिक करें"
 
 #: plugins.php:684
 msgid "Are you sure you want to Uninstall?"
@@ -17757,12 +17757,12 @@ msgstr "प्लगइन निर्देशिका में रिक्
 #: plugins.php:885
 #, php-format
 msgid "Plugin directory is not correct.  Should be '%s' but is '%s'"
-msgstr "प्लगिन निर्देशिका सही नहीं है। &#39; %s&#39; होना चाहिए, लेकिन &#39; %s&#39; है"
+msgstr "प्लगिन निर्देशिका सही नहीं है। ' %s' होना चाहिए, लेकिन ' %s' है"
 
 #: plugins.php:893
 #, php-format
 msgid "Plugin directory '%s' is missing setup.php"
-msgstr "प्लगिन निर्देशिका &#39; %s&#39; में सेटअप नहीं है"
+msgstr "प्लगिन निर्देशिका ' %s' में सेटअप नहीं है"
 
 #: plugins.php:895
 msgid "Plugin is lacking an INFO file"
@@ -18004,8 +18004,8 @@ msgstr "डेटा कलेक्टर सांख्यिकी साफ
 #: pollers.php:576
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Cacti Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Cacti Data Collector."
-msgstr[0] "निम्नलिखित डेटा कलेक्टर को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें, सभी उपकरणों को इस डेटा कलेक्टर से अलग कर दिया जाएगा और मुख्य कैक्टि डेटा कलेक्टर में वापस मैप किया जाएगा।"
-msgstr[1] "सभी डेटा कलेक्टरों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें, सभी डिवाइसों को इन डेटा कलेक्टरों से अलग कर दिया जाएगा और मुख्य कैक्टि डेटा कलेक्टर को वापस भेज दिया जाएगा।"
+msgstr[0] "निम्नलिखित डेटा कलेक्टर को हटाने के लिए 'जारी रखें' पर क्लिक करें। ध्यान दें, सभी उपकरणों को इस डेटा कलेक्टर से अलग कर दिया जाएगा और मुख्य कैक्टि डेटा कलेक्टर में वापस मैप किया जाएगा।"
+msgstr[1] "सभी डेटा कलेक्टरों को हटाने के लिए 'जारी रखें' पर क्लिक करें। ध्यान दें, सभी डिवाइसों को इन डेटा कलेक्टरों से अलग कर दिया जाएगा और मुख्य कैक्टि डेटा कलेक्टर को वापस भेज दिया जाएगा।"
 
 #: pollers.php:581
 msgid "Delete Data Collector"
@@ -18016,8 +18016,8 @@ msgstr[1] "डेटा कलेक्टर को हटा दें"
 #: pollers.php:585
 msgid "Click 'Continue' to disable the following Data Collector."
 msgid_plural "Click 'Continue' to disable the following Data Collectors."
-msgstr[0] "निम्नलिखित डेटा कलेक्टर को निष्क्रिय करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "निम्न डेटा संग्राहक को अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्नलिखित डेटा कलेक्टर को निष्क्रिय करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "निम्न डेटा संग्राहक को अक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: pollers.php:590
 msgid "Disable Data Collector"
@@ -18028,8 +18028,8 @@ msgstr[1] "डेटा संग्राहक अक्षम करें"
 #: pollers.php:594
 msgid "Click 'Continue' to enable the following Data Collector."
 msgid_plural "Click 'Continue' to enable the following Data Collectors."
-msgstr[0] "निम्नलिखित डेटा कलेक्टर को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "निम्नलिखित डेटा कलेक्टरों को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्नलिखित डेटा कलेक्टर को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "निम्नलिखित डेटा कलेक्टरों को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: pollers.php:599 pollers.php:608
 msgid "Enable Data Collector"
@@ -18040,8 +18040,8 @@ msgstr[1] "डेटा संग्राहक सक्षम करें"
 #: pollers.php:603
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
 msgid_plural "Click 'Continue' to Synchronize the Remote Data Collectors for Offline Operation."
-msgstr[0] "ऑफ़लाइन ऑपरेशन के लिए दूरस्थ डेटा संग्राहक को सिंक्रनाइज़ करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "ऑफ़लाइन ऑपरेशन के लिए दूरस्थ डेटा कलेक्टरों को सिंक्रनाइज़ करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "ऑफ़लाइन ऑपरेशन के लिए दूरस्थ डेटा संग्राहक को सिंक्रनाइज़ करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "ऑफ़लाइन ऑपरेशन के लिए दूरस्थ डेटा कलेक्टरों को सिंक्रनाइज़ करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: pollers.php:612
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
@@ -18392,7 +18392,7 @@ msgstr "प्लगइन्स चयनित"
 
 #: settings.php:614
 msgid "Select File(s)"
-msgstr "फ़ाइलें चुनें)"
+msgstr "फ़ाइलें चुनें"
 
 #: settings.php:616
 msgid "Files Selected"
@@ -18586,8 +18586,8 @@ msgstr "एक बार में %d से अधिक साइटों क
 #: sites.php:466
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
 msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
-msgstr[0] "निम्नलिखित साइट को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें, सभी उपकरण इस साइट से अलग कर दिए जाएंगे।"
-msgstr[1] "सभी निम्नलिखित साइटों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें। ध्यान दें, सभी उपकरण इस साइट से अलग कर दिए जाएंगे।"
+msgstr[0] "निम्नलिखित साइट को हटाने के लिए 'जारी रखें' पर क्लिक करें। ध्यान दें, सभी उपकरण इस साइट से अलग कर दिए जाएंगे।"
+msgstr[1] "सभी निम्नलिखित साइटों को हटाने के लिए 'जारी रखें' पर क्लिक करें। ध्यान दें, सभी उपकरण इस साइट से अलग कर दिए जाएंगे।"
 
 #: sites.php:471
 msgid "Delete Site"
@@ -18650,7 +18650,7 @@ msgstr "कोई साइट नहीं मिली"
 #: spikekill.php:38
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
-msgstr "FATAL: स्पाइक किल विधि &#39; %s&#39; अमान्य है"
+msgstr "FATAL: स्पाइक किल विधि ' %s' अमान्य है"
 
 #: spikekill.php:116
 msgid "FATAL: Spike Kill Not Allowed"
@@ -18833,8 +18833,8 @@ msgstr "संख्यावाचक"
 #: tree.php:845
 msgid "Click 'Continue' to delete the following Tree."
 msgid_plural "Click 'Continue' to delete following Trees."
-msgstr[0] "निम्नलिखित ट्री को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "निम्नलिखित पेड़ों को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्नलिखित ट्री को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "निम्नलिखित पेड़ों को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: tree.php:850
 msgid "Delete Tree"
@@ -18845,8 +18845,8 @@ msgstr[1] "पेड़ हटाएं"
 #: tree.php:854
 msgid "Click 'Continue' to publish the following Tree."
 msgid_plural "Click 'Continue' to publish following Trees."
-msgstr[0] "निम्नलिखित ट्री प्रकाशित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "निम्नलिखित पेड़ों को प्रकाशित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्नलिखित ट्री प्रकाशित करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "निम्नलिखित पेड़ों को प्रकाशित करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: tree.php:859
 msgid "Publish Tree"
@@ -19057,7 +19057,7 @@ msgstr "आपको वर्तमान लॉगिन खाते या �
 
 #: user_admin.php:390
 msgid "Click 'Continue' to delete the selected User(s)."
-msgstr "चयनित उपयोगकर्ता को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "चयनित उपयोगकर्ता को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_admin.php:395
 msgid "Delete User(s)"
@@ -19065,7 +19065,7 @@ msgstr "उपयोगकर्ता हटाएं"
 
 #: user_admin.php:405
 msgid "Click 'Continue' to copy the selected User to a new User below."
-msgstr "नीचे दिए गए उपयोगकर्ता को एक नए उपयोगकर्ता की प्रतिलिपि बनाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "नीचे दिए गए उपयोगकर्ता को एक नए उपयोगकर्ता की प्रतिलिपि बनाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_admin.php:410
 msgid "Template Username:"
@@ -19089,7 +19089,7 @@ msgstr "उपयोगकर्ता की प्रतिलिपि बन
 
 #: user_admin.php:441
 msgid "Click 'Continue' to enable the selected User(s)."
-msgstr "चयनित उपयोगकर्ता को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "चयनित उपयोगकर्ता को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_admin.php:446
 msgid "Enable User(s)"
@@ -19097,7 +19097,7 @@ msgstr "उपयोगकर्ता सक्षम करें"
 
 #: user_admin.php:452
 msgid "Click 'Continue' to disable the selected User(s)."
-msgstr "चयनित उपयोगकर्ता को अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "चयनित उपयोगकर्ता को अक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_admin.php:457
 msgid "Disable User(s)"
@@ -19105,7 +19105,7 @@ msgstr "उपयोगकर्ता अक्षम करें"
 
 #: user_admin.php:465
 msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
-msgstr "चयनित टेम्पलेट उपयोगकर्ता सेटिंग्स और अनुमतियों के साथ उपयोगकर्ता (ओं) की सेटिंग्स को अधिलेखित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। मूल उपयोगकर्ता पूर्ण नाम, पासवर्ड, दायरे और सक्षम स्थिति को बनाए रखा जाएगा, अन्य सभी फ़ील्ड टेम्पलेट उपयोगकर्ता से अधिलेखित हो जाएंगे।"
+msgstr "चयनित टेम्पलेट उपयोगकर्ता सेटिंग्स और अनुमतियों के साथ उपयोगकर्ता (ओं) की सेटिंग्स को अधिलेखित करने के लिए 'जारी रखें' पर क्लिक करें। मूल उपयोगकर्ता पूर्ण नाम, पासवर्ड, दायरे और सक्षम स्थिति को बनाए रखा जाएगा, अन्य सभी फ़ील्ड टेम्पलेट उपयोगकर्ता से अधिलेखित हो जाएंगे।"
 
 #: user_admin.php:469
 msgid "Template User:"
@@ -19125,11 +19125,11 @@ msgstr "अस्वीकृत किया"
 
 #: user_admin.php:835 user_group_admin.php:899
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति &#39;अनुमेय&#39; है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए कम से कम एक ग्राफ़, डिवाइस या ग्राफ़ टेम्पलेट तक पहुँच प्राप्त करनी चाहिए"
+msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति 'अनुमेय' है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए कम से कम एक ग्राफ़, डिवाइस या ग्राफ़ टेम्पलेट तक पहुँच प्राप्त करनी चाहिए"
 
 #: user_admin.php:837 user_group_admin.php:901
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति &#39;प्रतिबंधात्मक&#39; है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए ग्राफ़ या डिवाइस और ग्राफ़ टेम्पलेट दोनों की पहुँच होनी चाहिए"
+msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति 'प्रतिबंधात्मक' है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए ग्राफ़ या डिवाइस और ग्राफ़ टेम्पलेट दोनों की पहुँच होनी चाहिए"
 
 #: user_admin.php:839 user_group_admin.php:903
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
@@ -19474,8 +19474,8 @@ msgstr[1] "उपयोगकर्ता डोमेन हटाएं"
 #: user_domains.php:312
 msgid "Click 'Continue' to disable the following User Domain."
 msgid_plural "Click 'Continue' to disable following User Domains."
-msgstr[0] "निम्नलिखित उपयोगकर्ता डोमेन को निष्क्रिय करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "उपयोगकर्ता डोमेन के बाद अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्नलिखित उपयोगकर्ता डोमेन को निष्क्रिय करने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "उपयोगकर्ता डोमेन के बाद अक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_domains.php:317
 msgid "Disable User Domain"
@@ -19485,7 +19485,7 @@ msgstr[1] "उपयोगकर्ता डोमेन अक्षम कर
 
 #: user_domains.php:321
 msgid "Click 'Continue' to enable the following User Domain."
-msgstr "निम्नलिखित उपयोगकर्ता डोमेन को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित उपयोगकर्ता डोमेन को सक्षम करने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_domains.php:326
 msgid "Enabled User Domain"
@@ -19495,7 +19495,7 @@ msgstr[1] "उपयोगकर्ता डोमेन सक्षम कर
 
 #: user_domains.php:330
 msgid "Click 'Continue' to make the following the following User Domain the default one."
-msgstr "निम्नलिखित उपयोगकर्ता डोमेन को डिफ़ॉल्ट बनाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित उपयोगकर्ता डोमेन को डिफ़ॉल्ट बनाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_domains.php:335
 msgid "Make Selected Domain Default"
@@ -19556,7 +19556,7 @@ msgstr "मोड जो कैक्टि एलडीएपी सर्व�
 
 #: user_domains.php:555
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."
-msgstr "LDAP निर्देशिका को खोजने के लिए खोज आधार, जैसे <i>&quot;dc = win2kdomain, dc = local&quot;</i> या <i>&quot;ou = people, dc = domain, dc = local&quot;</i> ।"
+msgstr "LDAP निर्देशिका को खोजने के लिए खोज आधार, जैसे <i>\"dc = win2kdomain, dc = local\"</i> या <i>\"ou = people, dc = domain, dc = local\"</i> ।"
 
 #: user_domains.php:562
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
@@ -19697,8 +19697,8 @@ msgstr[1] "उपयोगकर्ता समूह हटाएं"
 #: user_group_admin.php:567
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
-msgstr[0] "एक नए उपयोगकर्ता समूह के लिए निम्नलिखित उपयोगकर्ता समूह की प्रतिलिपि बनाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "नए उपयोगकर्ता समूहों के लिए उपयोगकर्ता समूहों की प्रतिलिपि बनाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "एक नए उपयोगकर्ता समूह के लिए निम्नलिखित उपयोगकर्ता समूह की प्रतिलिपि बनाने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "नए उपयोगकर्ता समूहों के लिए उपयोगकर्ता समूहों की प्रतिलिपि बनाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: user_group_admin.php:573
 msgid "Group Prefix:"
@@ -19853,7 +19853,7 @@ msgstr "त्रुटि: स्थापित RRDtool संस्करण 
 #: utilities.php:285
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "ERROR: RRDtool 1.2.x + GIF छवियों के प्रारूप का समर्थन नहीं करता है, लेकिन %d &quot;ग्राफ़ (ओं) और / या टेम्पलेट्स में GIF को छवि प्रारूप के रूप में सेट किया गया है।"
+msgstr "ERROR: RRDtool 1.2.x + GIF छवियों के प्रारूप का समर्थन नहीं करता है, लेकिन %d \"ग्राफ़ (ओं) और / या टेम्पलेट्स में GIF को छवि प्रारूप के रूप में सेट किया गया है।"
 
 #: utilities.php:298
 msgid "General Information"
@@ -20032,7 +20032,7 @@ msgstr "इंस्टॉल किया गया। <span class=\"deviceDown
 
 #: utilities.php:816
 msgid "You've set memory limit to 'unlimited'."
-msgstr "आपने स्मृति सीमा को &#39;असीमित&#39; पर सेट किया है।"
+msgstr "आपने स्मृति सीमा को 'असीमित' पर सेट किया है।"
 
 #: utilities.php:818
 #, php-format
@@ -20594,8 +20594,8 @@ msgstr "VDEF नहीं मिला।"
 #: vdef.php:274
 msgid "Click 'Continue' to delete the following VDEF."
 msgid_plural "Click 'Continue' to delete following VDEFs."
-msgstr[0] "निम्नलिखित VDEF को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-msgstr[1] "VDEFs को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr[0] "निम्नलिखित VDEF को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
+msgstr[1] "VDEFs को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: vdef.php:279
 msgid "Delete VDEF"
@@ -20621,7 +20621,7 @@ msgstr "VDEF या VDEF आइटम नहीं मिला।"
 
 #: vdef.php:352
 msgid "Click 'Continue' to delete the following VDEF's."
-msgstr "निम्नलिखित VDEF को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
+msgstr "निम्नलिखित VDEF को हटाने के लिए 'जारी रखें' पर क्लिक करें।"
 
 #: vdef.php:353
 #, php-format

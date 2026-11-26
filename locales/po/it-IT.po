@@ -7690,7 +7690,7 @@ msgstr "non è vuoto"
 
 #: include/global_arrays.php:1787
 msgid "matches regular expression"
-msgstr "verifica l&apos; espressione regolare"
+msgstr "verifica l' espressione regolare"
 
 #: include/global_arrays.php:1788
 msgid "does not match regular expression"
@@ -9815,7 +9815,7 @@ msgstr "Archivio"
 
 #: include/global_settings.php:264
 msgid "Archive directory"
-msgstr "Directory dell&#39;archivio"
+msgstr "Directory dell'archivio"
 
 #: include/global_settings.php:265
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
@@ -11475,7 +11475,7 @@ msgstr "Filtro di ricerca"
 
 #: include/global_settings.php:1890
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Filtro di ricerca da utilizzare per localizzare l'utente nella directory LDAP, ad esempio per le finestre: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*)))'</i> o per OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt)))'</i>.  &lt;username&gt' è sostituito dal nome utente che è stato fornito al momento del login. "
+msgstr "Filtro di ricerca da utilizzare per localizzare l'utente nella directory LDAP, ad esempio per le finestre: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> o per OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' è sostituito dal nome utente che è stato fornito al momento del login. "
 
 #: include/global_settings.php:1895 user_domains.php:568
 msgid "Search Distinguished Name (DN)"
@@ -12558,7 +12558,7 @@ msgstr "Inizializzando"
 #: install/install.php:114
 #, php-format
 msgid "Please wait while the installation system for Cacti Version %s initializes. You must have JavaScript enabled for this to work."
-msgstr "Attendere mentre il sistema di installazione della versione Cacti %s si inizializza.  Devi avere JavaScript abilitato perché questo funzioni."
+msgstr "Attendere mentre il sistema di installazione della versione Cacti %s si inizializza. Devi avere JavaScript abilitato perché questo funzioni."
 
 #: install/install.php:118
 msgid "FATAL: We are unable to continue with this installation. In order to install Cacti, PHP must be at version 5.4 or later."
@@ -13419,7 +13419,7 @@ msgstr "Esecuzione di SNMP ottenere per %s oids (%s)"
 #: lib/data_query.php:1237 lib/data_query.php:1329 lib/data_query.php:1337
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
-msgstr "Ordina campo restituito non dati.  Non è possibile continuare Re-Index per OID[%s]."
+msgstr "Ordina campo restituito non dati. Non è possibile continuare Re-Index per OID[%s]."
 
 #: lib/data_query.php:1241
 #, php-format
@@ -15781,7 +15781,7 @@ msgstr "Il tuo ordinamento del server NON sembra essere completamente conforme a
 
 #: lib/installer.php:2723
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "Nella sezione [mysqld], individuare le voci denominate 'character&#8209;set&#8209;server' e 'collation&#8209;server' e impostarle come segue:"
+msgstr "Nella sezione [mysqld], individuare le voci denominate 'character-set-server' e 'collation-server' e impostarle come segue:"
 
 #: lib/installer.php:2730
 msgid "Database Collation"
@@ -19560,7 +19560,7 @@ msgstr "Cerca nella base di ricerca nella directory LDAP, come <i>\"dc=win2kdoma
 
 #: user_domains.php:562
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Filtro di ricerca da utilizzare per localizzare l'utente nella directory LDAP, ad esempio per le finestre: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*)))\"</i> o per OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt)))</i>.  \"&lt;username&gt\" è sostituito dal nome utente che è stato fornito al momento del login."
+msgstr "Filtro di ricerca da utilizzare per localizzare l'utente nella directory LDAP, ad esempio per le finestre: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> o per OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))</i>.  \"&lt;username&gt\" è sostituito dal nome utente che è stato fornito al momento del login."
 
 #: user_domains.php:593
 msgid "eMail"
@@ -20256,7 +20256,7 @@ msgstr "Ricostruire Cache Poller Cache"
 
 #: utilities.php:2376
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "La Poller Cache verrà rigenerata se si seleziona questa opzione. Utilizzare questa opzione solo in caso di arresto anomalo del database se si verificano problemi dopo l'arresto anomalo e si sono già stati eseguiti gli strumenti di riparazione del database.  In alternativa, se si verificano problemi con un dispositivo specifico, è sufficiente salvare nuovamente il dispositivo per ricostruire la cache Poller.  C'è anche un'interfaccia a riga di comando equivalente a questo comando che è raccomandato per sistemi di grandi dimensioni.  <i class=\"deviceDown\">NOTA: Nei sistemi di grandi dimensioni, questo comando può richiedere diversi minuti o ore per essere completato e quindi non dovrebbe essere eseguito dall'interfaccia utente Cacti.  Puoi semplicemente eseguire 'php -q cli/rebuild_poller_cache.php --help' nella riga di comando per maggiori informazioni.</i>."
+msgstr "La Poller Cache verrà rigenerata se si seleziona questa opzione. Utilizzare questa opzione solo in caso di arresto anomalo del database se si verificano problemi dopo l'arresto anomalo e si sono già stati eseguiti gli strumenti di riparazione del database.  In alternativa, se si verificano problemi con un dispositivo specifico, è sufficiente salvare nuovamente il dispositivo per ricostruire la cache Poller.  C'è anche un'interfaccia a riga di comando equivalente a questo comando che è raccomandato per sistemi di grandi dimensioni."
 
 #: utilities.php:2378
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Cacti UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."

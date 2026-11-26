@@ -9904,7 +9904,7 @@ msgstr "Cacti 包括對多個備用語言翻譯處理器的支持。默認使用
 
 #: include/global_settings.php:382
 msgid "Client TimeZone Support"
-msgstr "MySQL  -  TimeZone支持"
+msgstr "MySQL - TimeZone支持"
 
 #: include/global_settings.php:383
 msgid "How should Cacti support Client Dates based upon the Client browsers timezone."
@@ -9968,7 +9968,7 @@ msgstr "圖表權限方式"
 
 #: include/global_settings.php:437
 msgid "There are four methods for determining a User's Graph Permissions.  The first is 'Permissive'.  Under the 'Permissive' setting, a User only needs access to either the Graph, Device or Graph Template to gain access to the Graphs that apply to them.  Under 'Restrictive', the User must have access to the Graph, the Device, and the Graph Template to gain access to the Graph.  These first two methods have scalability problems for very large installs.  So, two additional options are available.  They are 'Device Based', which means if you have access to the Device, you get access to it's Graphs.  And lastly 'Graph Template Based', which means if you have access to the 'Graph Template' you get access to all Device Graphs of that Template."
-msgstr "有兩種方法可用於確定用戶的圖形權限。第一個是&#39;寬容&#39;。在“允許”設置下，用戶只需訪問圖形，設備或圖形模板即可訪問適用於它們的圖形。在“限制性”下，用戶必須能夠訪問圖表，設備和圖表模板才能訪問圖表。"
+msgstr "有兩種方法可用於確定用戶的圖形權限。第一個是'寬容'。在“允許”設置下，用戶只需訪問圖形，設備或圖形模板即可訪問適用於它們的圖形。在“限制性”下，用戶必須能夠訪問圖表，設備和圖表模板才能訪問圖表。"
 
 #: include/global_settings.php:441
 msgid "Permissive"
@@ -11440,7 +11440,7 @@ msgstr "搜尋篩選器"
 
 #: include/global_settings.php:1890
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>&#39;（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））&#39;</i>或OpenLDAP： <i>&#39;（＆（objectClass） = account）（uid = &lt;username&gt;））&#39;</i> 。 &#39;&lt;username&gt;&#39;將替換為登錄提示符下提供的用戶名。 "
+msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>'（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））'</i>或OpenLDAP： <i>'（＆（objectClass） = account）（uid = &lt;username&gt;））'</i> 。 '&lt;username&gt;'將替換為登錄提示符下提供的用戶名。 "
 
 #: include/global_settings.php:1895 user_domains.php:568
 msgid "Search Distinguished Name (DN)"
@@ -12154,7 +12154,7 @@ msgstr "首次造訪圖表頁面時，您希望預設顯示哪一種圖表模式
 
 #: include/global_settings.php:2645
 msgid "TimeZone Support"
-msgstr "MySQL  -  TimeZone支持"
+msgstr "MySQL - TimeZone支持"
 
 #: include/global_settings.php:2646
 msgid "How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented."

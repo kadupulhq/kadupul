@@ -896,7 +896,7 @@ msgstr "Voer alstublieft uw huidige en uw nieuwe<br>Cacti wachtwoord in."
 
 #: auth_changepassword.php:346
 msgid "Please enter your new Cacti password."
-msgstr "Voer alstublieft uw huidige en uw nieuwe<br>Cacti wachtwoord in."
+msgstr "Voer alstublieft uw nieuwe Cacti wachtwoord in."
 
 #: auth_changepassword.php:354 auth_login.php:346 auth_login.php:349
 #: include/global_settings.php:1875 lib/functions.php:6435
@@ -4100,8 +4100,8 @@ msgstr "Nieuw apparaat:"
 #: data_sources.php:565
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
-msgstr[0] "Klik op  Volgende' om de volgende data bron te activeren."
-msgstr[1] "Klik op  Volgende' om de volgende data bronnen te activeren."
+msgstr[0] "Klik op Volgende' om de volgende data bron te activeren."
+msgstr[1] "Klik op Volgende' om de volgende data bronnen te activeren."
 
 #: data_sources.php:570
 msgid "Enable Data Source"
@@ -12558,7 +12558,7 @@ msgstr "Initialiseren"
 #: install/install.php:114
 #, php-format
 msgid "Please wait while the installation system for Cacti Version %s initializes. You must have JavaScript enabled for this to work."
-msgstr "Even geduld a.u.b. terwijl het installatiesysteem voor Cacti versie %s initialiseert.  U moet JavaScript ingeschakeld hebben om dit te laten werken."
+msgstr "Even geduld a.u.b. terwijl het installatiesysteem voor Cacti versie %s initialiseert. U moet JavaScript ingeschakeld hebben om dit te laten werken."
 
 #: install/install.php:118
 msgid "FATAL: We are unable to continue with this installation. In order to install Cacti, PHP must be at version 5.4 or later."
@@ -15781,7 +15781,7 @@ msgstr "Uw servercollation lijkt NIET volledig compatibel te zijn met UTF8. "
 
 #: lib/installer.php:2723
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "Onder de sectie [mysqld] kunt u de vermeldingen 'character&#8209;set&#8209;server' en 'collation&#8209;server' vinden en als volgt instellen:"
+msgstr "Onder de sectie [mysqld] kunt u de vermeldingen 'character-set-server' en 'collation-server' vinden en als volgt instellen:"
 
 #: lib/installer.php:2730
 msgid "Database Collation"
@@ -19980,7 +19980,7 @@ msgstr "Maximaal mogelijk totaalgeheugen"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Verminder het MySQL/MariaDB-geheugen tot minder dan 80% of systeemgeheugen.  Bewaar extra cachegeheugen voor RRD-bestanden als de database zich op hetzelfde systeem bevindt als de RRD-bestanden.  Zie Kern- en klanttotalen hieronder voor uitleg van de berekeningsmethode."
+msgstr "Verminder het MySQL/MariaDB-geheugen tot minder dan 80% van het systeemgeheugen.  Bewaar extra cachegeheugen voor RRD-bestanden als de database zich op hetzelfde systeem bevindt als de RRD-bestanden.  Zie Kern- en klanttotalen hieronder voor uitleg van de berekeningsmethode."
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"

@@ -8687,7 +8687,7 @@ msgstr "Opciones de Auto escala"
 
 #: include/global_form.php:775
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "Utilizar <br> --alt-autoscale para escalar al mínimo y máximo absoluto  <br> --alt-autoscale-max para escalar al valor máximo, usando un límite inferior dado  <br> --alt-autoscale-min para escalar al valor mínimo, usando un límite superior dado<br> --alt-autoscale (con límites) para escalar usando ambos límites (por defecto para RRDtool)<br>"
+msgstr "Utilizar <br> --alt-autoscale para escalar al mínimo y máximo absoluto <br> --alt-autoscale-max para escalar al valor máximo, usando un límite inferior dado <br> --alt-autoscale-min para escalar al valor mínimo, usando un límite superior dado<br> --alt-autoscale (con límites) para escalar usando ambos límites (por defecto para RRDtool)<br>"
 
 #: include/global_form.php:779
 msgid "Use --alt-autoscale (ignoring given limits)"
@@ -8924,7 +8924,7 @@ msgstr "Función CDEF"
 
 #: include/global_form.php:1015
 msgid "A CDEF (math) function to apply to this item on the graph or legend."
-msgstr "Una función (matemática) CDEF  para aplicar a este item en el gráfico o leyenda."
+msgstr "Una función (matemática) CDEF para aplicar a este item en el gráfico o leyenda."
 
 #: include/global_form.php:1018
 msgid "VDEF Function"
@@ -8932,7 +8932,7 @@ msgstr "Función VDEF"
 
 #: include/global_form.php:1023
 msgid "A VDEF (math) function to apply to this item on the graph legend."
-msgstr "Una función (matemática) VDEF  para aplicar a este item en la leyenda del gráfico."
+msgstr "Una función (matemática) VDEF para aplicar a este item en la leyenda del gráfico."
 
 #: include/global_form.php:1026
 msgid "Shift Data"
@@ -9540,7 +9540,7 @@ msgstr "Tipo de item de hoja"
 
 #: include/global_form.php:2282
 msgid "The Item Type that shall be dynamically added to the tree."
-msgstr "El tipo de item que se añadirá dinámicamente al  árbol."
+msgstr "El tipo de item que se añadirá dinámicamente al árbol."
 
 #: include/global_form.php:2289
 msgid "Graph Grouping Style"
@@ -9576,7 +9576,7 @@ msgstr "Propagar todas las opciones en este formulario (excepto para \"Título\"
 
 #: include/global_form.php:2347
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "El patrón de texto  (Expresión regular) con el cual coincidir.<br>Encerrando '/' <strong>NO</strong> debe proporcionarse!"
+msgstr "El patrón de texto (Expresión regular) con el cual coincidir.<br>Encerrando '/' <strong>NO</strong> debe proporcionarse!"
 
 #: include/global_form.php:2354
 msgid "Replacement Pattern"
@@ -10709,7 +10709,7 @@ msgstr "Tamaño de fuente del Eje"
 
 #: include/global_settings.php:1129 include/global_settings.php:2913
 msgid "The size of the font used for Graph Axis"
-msgstr "El tamaño de la fuente  usada para los Ejes de gráficos"
+msgstr "El tamaño de la fuente usada para los Ejes de gráficos"
 
 #: include/global_settings.php:1136
 msgid "Axis Font Setting"
@@ -12482,7 +12482,7 @@ msgstr "Ahora estás conectado a <a href=\"%s\"><b>Cacti</b></a>. Puedes seguir 
 #: index.php:71
 #, php-format
 msgid "<a href=\"%s\">Create devices</a> for network"
-msgstr "<a href=\"%s\">Crear dispositivos</a> de  red"
+msgstr "<a href=\"%s\">Crear dispositivos</a> de red"
 
 #: index.php:72
 #, php-format
@@ -13417,7 +13417,7 @@ msgstr "Ejecutando SNMP get para %s oids (%s)"
 #: lib/data_query.php:1237 lib/data_query.php:1329 lib/data_query.php:1337
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
-msgstr "El campo Sort devuelve no los datos.  No se puede continuar con el Re-Index para OID[%s]."
+msgstr "El campo Sort devuelve no los datos. No se puede continuar con el Re-Index para OID[%s]."
 
 #: lib/data_query.php:1241
 #, php-format
@@ -13427,7 +13427,7 @@ msgstr "Resultados encontrados para datos @ '%s' [valor='%s']"
 #: lib/data_query.php:1249
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
-msgstr "Ajustando resultado para datos @ '%s' [[clave='%s', valor='%s']"
+msgstr "Ajustando resultado para datos @ '%s' [clave='%s', valor='%s']"
 
 #: lib/data_query.php:1253
 #, php-format
@@ -13811,7 +13811,7 @@ msgstr "Siguiente"
 #: lib/html.php:740
 #, php-format
 msgid "%d to %d of %s [ %s ]"
-msgstr "%d a  %d de %s [ %s ]"
+msgstr "%d a %d de %s [ %s ]"
 
 #: lib/html.php:750
 #, php-format
@@ -16998,7 +16998,7 @@ msgstr "Si utiliza el acelerador de rendimiento (Performance Booster) de Cacti y
 
 #: lib/utility.php:1255
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
-msgstr "Cuando se ejecutan sub consultas, teniendo una tabla temporal de  gran tamaño, conserva esas tablas temporales en memoria."
+msgstr "Cuando se ejecutan sub consultas, teniendo una tabla temporal de gran tamaño, conserva esas tablas temporales en memoria."
 
 #: lib/utility.php:1261 lib/utility.php:1267
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
@@ -19696,8 +19696,8 @@ msgstr[1] "Eliminar Grupos de Usuarios"
 #: user_group_admin.php:567
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
-msgstr[0] "Haga click en \"Continuar\" para copiar  el siguiente grupo de usuarios a un nuevo grupo de usuarios."
-msgstr[1] "Haga click en \"Continuar\" para copiar  los siguientes grupos de usuarios a nuevos grupos de usuarios."
+msgstr[0] "Haga click en \"Continuar\" para copiar el siguiente grupo de usuarios a un nuevo grupo de usuarios."
+msgstr[1] "Haga click en \"Continuar\" para copiar los siguientes grupos de usuarios a nuevos grupos de usuarios."
 
 #: user_group_admin.php:573
 msgid "Group Prefix:"
@@ -19979,7 +19979,7 @@ msgstr "Memoria total máxima posible"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Reduzca la memoria MySQL/MariaDB a menos de 80% of de memoria del sistema.  Conserve la memoria caché adicional para los archivos RRD si la base de datos está en el mismo sistema que los archivos RRD.  Consulte los totales principales y del cliente a continuación para obtener una explicación del método de cálculo."
+msgstr "Reduzca la memoria MySQL/MariaDB a menos de 80% de memoria del sistema.  Conserve la memoria caché adicional para los archivos RRD si la base de datos está en el mismo sistema que los archivos RRD.  Consulte los totales principales y del cliente a continuación para obtener una explicación del método de cálculo."
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"
@@ -20463,7 +20463,7 @@ msgstr "%d Segundos"
 #: utilities.php:2862
 #, php-format
 msgid "%0.2f percent of update frequency)"
-msgstr "%0.2f  porciento de frecuencia de actualización)"
+msgstr "%0.2f porciento de frecuencia de actualización)"
 
 #: utilities.php:2870
 msgid "RRD Updates:"
