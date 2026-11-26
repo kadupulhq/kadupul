@@ -964,28 +964,35 @@ function get_order_string()
         $request_column = '';
     }
 
-    if (!str_contains((string) $request_column, '(') && !str_contains((string) $request_column, '`')) {
+    $column = validate_sort_column($sort_column !== '' ? $sort_column : $request_column, $page);
+    if ($column === '' && $request_column !== '' && $request_column !== $sort_column) {
+        $column = validate_sort_column($request_column, $page);
+    }
+
+    if ($column === '') {
+        return '';
+    }
+
+    $sort_column = cacti_normalize_sort_column($column);
+    if ($sort_column !== '') {
+        return cacti_build_sort_fragment($sort_column, $sort_dir) !== ''
+            ? 'ORDER BY ' . cacti_build_sort_fragment($sort_column, $sort_dir)
+            : '';
+    }
+
+    if (!str_contains((string) $column, '(') && !str_contains((string) $column, '`')) {
         $del = '`';
     } else {
         $del = '';
     }
 
-    if ($sort_column != '') {
-        return cacti_build_sort_fragment($sort_column, $sort_dir) !== ''
-            ? 'ORDER BY ' . cacti_build_sort_fragment($sort_column, $sort_dir)
-            : '';
-    } else {
-        $column    = validate_sort_column($request_column, $page);
-        $direction_raw = get_nfilter_request_var('sort_direction');
-        if (!is_scalar($direction_raw)) $direction_raw = '';
-        $direction = (strtoupper((string) $direction_raw) == 'DESC' ? 'DESC' : 'ASC');
-
-        if ($column == '') {
-            return '';
-        }
-
-        return 'ORDER BY ' . $del . implode($del . '.' . $del, explode('.', $column)) . $del . ' ' . $direction;
+    $direction_raw = get_nfilter_request_var('sort_direction');
+    if (!is_scalar($direction_raw)) {
+        $direction_raw = '';
     }
+    $direction = (strtoupper((string) $direction_raw) == 'DESC' ? 'DESC' : 'ASC');
+
+    return 'ORDER BY ' . $del . implode($del . '.' . $del, explode('.', $column)) . $del . ' ' . $direction;
 }
 
 /**
@@ -994,19 +1001,21 @@ function get_order_string()
  * @param string $column - the column to validate
  * @param string $page - the page identifier
  *
- * @return string - the validated/sanitized column
+ * @return string - the validated column, or empty string when not allowlisted
  */
 function validate_sort_column($column, $page)
 {
-    if (isset($_SESSION['valid_sort_columns'][$page])) {
+    if (!is_string($column) || $column === '') {
+        return '';
+    }
+
+    if (isset($_SESSION['valid_sort_columns'][$page]) && is_array($_SESSION['valid_sort_columns'][$page])) {
         if (in_array($column, $_SESSION['valid_sort_columns'][$page], true)) {
             return $column;
-        } else {
-            return '';
         }
     }
 
-    return sanitize_sql_column($column);
+    return '';
 }
 
 function remove_column_from_order_string($column)
@@ -1051,17 +1060,30 @@ function get_order_string_page($increment = true)
  */
 function validate_redirect_url($url = '', $default = 'index.php')
 {
-    if ($url === '') {
+    if (!is_string($url) || $url === '') {
         return $default;
     }
 
     $url = trim($url);
+
+    // Decode iteratively in a bounded loop before any validation so multi-encoded
+    // schemes, hosts, or traversal sequences cannot materialize after checks.
+    for ($decode_pass = 0; $decode_pass < 10; $decode_pass++) {
+        $decoded = urldecode($url);
+        if ($decoded === $url) {
+            break;
+        }
+        $url = $decoded;
+    }
+    if (urldecode($url) !== $url) {
+        return $default;
+    }
+
     $url = str_replace('\\', '/', $url);
 
-    // Decode the url to make it readable if encoded
-    if (is_urlencoded($url)) {
-        $url = urldecode($url);
-        $url = str_replace('\\', '/', $url);
+    // reject control characters (CR, LF, NUL, tabs, etc.)
+    if (preg_match('/[\x00-\x1f\x7f]/', $url)) {
+        return $default;
     }
 
     // reject URLs with protocol schemes (external redirects, javascript:, data:)
@@ -1153,7 +1175,12 @@ function validate_redirect_url($url = '', $default = 'index.php')
     }
     // A redirect destination owns its action and must not inherit the source request's action.
     $safe = sanitize_uri($ref_path . ($ref_query !== null ? '?' . $ref_query : ''), false);
-    if ($safe === '' || str_starts_with($safe, '//')) {
+    if ($safe === ''
+        || str_starts_with($safe, '//')
+        || str_contains($safe, '\\')
+        || str_contains($safe, '..')
+        || preg_match('/[\x00-\x1f\x7f]/', $safe)
+        || preg_match('/\A[a-z][a-z0-9+.-]*:/i', $safe)) {
         return $default;
     }
 

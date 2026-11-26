@@ -24,22 +24,31 @@ final class SecurityHeaders implements EventSubscriberInterface
         $headers->set('X-Content-Type-Options', 'nosniff');
         $headers->set('X-Frame-Options', 'DENY');
         $headers->set('Referrer-Policy', 'same-origin');
+        $headers->set('Cross-Origin-Opener-Policy', 'same-origin');
+        $headers->set('Cross-Origin-Resource-Policy', 'same-origin');
+        $headers->set('Permissions-Policy', 'camera=(), geolocation=(), interest-cohort=(), microphone=(), payment=(), usb=()');
+        if (!$headers->hasCacheControlDirective('public')
+            && !$headers->hasCacheControlDirective('max-age')
+            && !$headers->hasCacheControlDirective('s-maxage')
+            && !$headers->hasCacheControlDirective('no-store')) {
+            $headers->set('Cache-Control', 'no-store, private');
+        }
         if ($event->getRequest()->attributes->get('_route') !== 'platform_installer' || !$headers->has('Content-Security-Policy')) {
             $headers->set('Content-Security-Policy', "default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
         }
         if ($event->getResponse() instanceof ConsoleHomeResponse && $event->getResponse()->compatibilityPolicies !== []) {
             // The native extension adapter provides the same operator-selected
             // policy as the old console. Other Symfony pages remain strict.
-            $headers->remove('Content-Security-Policy');
+            if (array_key_exists('Content-Security-Policy', $event->getResponse()->compatibilityPolicies)) {
+                $headers->remove('Content-Security-Policy');
+            }
             $headers->set('X-Frame-Options', 'SAMEORIGIN');
-            $headers->set('Cross-Origin-Opener-Policy', 'same-origin');
-            $headers->set('Cross-Origin-Resource-Policy', 'same-origin');
             foreach ($event->getResponse()->compatibilityPolicies as $name => $value) {
                 $headers->set($name, $value);
             }
         }
         if ($event->getRequest()->isSecure()) {
-            $headers->set('Strict-Transport-Security', 'max-age=31536000');
+            $headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
     }
 }

@@ -156,7 +156,9 @@ final class ConsoleExtensionRuntime
                 continue;
             }
             if (preg_match('/^((((ht|f)tp(s?))\:\/\/){1}\S+)/i', $page['contentfile'])) {
-                print '<iframe class="content" src="' . \html_escape($page['contentfile']) . '" frameborder="0"></iframe>';
+                if (filter_var($page['contentfile'], FILTER_VALIDATE_URL) !== false) {
+                    print '<iframe class="content" src="' . \html_escape($page['contentfile']) . '" sandbox="allow-scripts allow-popups allow-forms" frameborder="0"></iframe>';
+                }
             } else {
                 print '<div id="content">';
                 $file = $config['base_path'] . '/include/content/' . $page['contentfile'];

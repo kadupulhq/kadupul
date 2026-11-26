@@ -4323,7 +4323,7 @@ function draw_navigation_text($type = 'url')
     $current_page    = get_current_page();
 
     if (!isempty_request_var('action')) {
-        get_filter_request_var('action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([-a-zA-Z0-9_\s]+)$/')));
+        get_filter_request_var('action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/\A[a-zA-Z0-9_ -]+\z/D')));
     }
 
     $current_action = (isset_request_var('action') ? get_request_var('action') : '');
@@ -5144,10 +5144,6 @@ function sanitize_uri($uri, bool $preserve_graph_action = true)
         '', '',
         ''
     );
-
-    if (is_urlencoded($uri)) {
-        $uri = urldecode($uri);
-    }
 
     if ($preserve_graph_action && strpos($uri, 'graph_view.php') !== false) {
         if (strpos($uri, 'action=') === false) {

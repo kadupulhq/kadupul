@@ -239,9 +239,16 @@ class CactiSecureHeaders {
 			}
 		}
 
+		if ($mode === 'nonce-report') {
+			return [
+				'Content-Security-Policy' => self::buildCspPolicy('', '', $alternates),
+				'Content-Security-Policy-Report-Only' => self::buildCspPolicy('nonce-report', $nonce, $alternates, $report_uri),
+			];
+		}
+
 		$csp = self::buildCspPolicy($mode, $nonce, $alternates, $report_uri);
 
-		return [$mode === 'nonce-report' ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy' => $csp];
+		return ['Content-Security-Policy' => $csp];
 	}
 
 	/**

@@ -25,10 +25,11 @@ if (is_array($header)) {
 }
 
 $page = db_fetch_row_prepared(
-    'SELECT
+    "SELECT
 	id, title, style, contentfile, enabled, refresh
 	FROM external_links AS el
-	WHERE id = ?',
+	WHERE id = ?
+	AND enabled = 'on'",
     array(get_filter_request_var('id'))
 );
 
@@ -68,10 +69,11 @@ if (!cacti_sizeof($page)) {
         } else {
             print '<div id="content">';
 
-            $basepath = $config['base_path'] . '/include/content';
-            $file     = realpath($basepath . '/' . $page['contentfile']);
+            $basepath  = $config['base_path'] . '/include/content';
+            $candidate = $basepath . '/' . $page['contentfile'];
+            $file      = realpath($candidate);
 
-            if ($file !== false && substr($file, 0, strlen($basepath)) == $basepath) {
+            if ($file !== false && !is_link($candidate) && is_file($file) && cacti_path_is_within($candidate, $basepath)) {
                 include_once($file);
             } else {
                 print '<h1>The file \'' . html_escape($page['contentfile']) . '\' does not exist!!</h1>';

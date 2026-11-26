@@ -918,7 +918,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 			WHERE id = ?',
 			array($host_group_data_array[1]));
 
-		$host_group_data_name = '<strong>' . __('Graph Template:') . '</strong> ' . (empty($host_group_data_array[1]) ? __('Non Query Based') : html_escape($name)) . '-> ' . (empty($host_group_data_array[2]) ? __('Template Based') : get_formatted_data_query_index($leaf['host_id'], $host_group_data_array[1], $host_group_data_array[2]));
+		$host_group_data_name = '<strong>' . __('Graph Template:') . '</strong> ' . (empty($host_group_data_array[1]) ? __('Non Query Based') : html_escape($name)) . '-> ' . (empty($host_group_data_array[2]) ? __('Template Based') : html_escape(get_formatted_data_query_index($leaf['host_id'], $host_group_data_array[1], $host_group_data_array[2])));
 		$data_query_id    = $host_group_data_array[1];
 		$data_query_index = $host_group_data_array[2];
 	}
@@ -1220,8 +1220,11 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 			showButtonPanel: false
 		});
 
-		var navBar = "<div id='navBar' class='navBar'><?php print draw_navigation_text();?></div>";
+		var navBar = <?php print json_encode("<div id='navBar' class='navBar'>" . draw_navigation_text() . '</div>', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 		if (navBar != '') {
+			if (typeof DOMPurify !== 'undefined') {
+				navBar = DOMPurify.sanitize(navBar, { USE_PROFILES: { html: true } });
+			}
 			$('#navBar').replaceWith(navBar);
 		}
 

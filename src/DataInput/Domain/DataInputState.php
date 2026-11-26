@@ -46,6 +46,9 @@ final class DataInputState
         foreach (['name' => 200, 'data_name' => 50, 'type_code' => 40, 'regexp_match' => 200] as $key => $length) {
             $result[$key] = self::text($data[$key] ?? '', $length, in_array($key, ['name', 'data_name'], true));
         }
+        if (preg_match('/\A[A-Za-z0-9_]+\z/D', $result['data_name']) !== 1) {
+            throw new \InvalidArgumentException('Invalid data input field.');
+        }
         if (!in_array($data['input_output'] ?? null, ['in', 'out'], true)) {
             throw new \InvalidArgumentException('Invalid data input field.');
         }

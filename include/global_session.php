@@ -117,16 +117,16 @@ if (read_config_option('auth_method') == 2) {
 
 ?>
 <script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var cactiVersion='<?php print $config['cacti_version'];?>';
-	var cactiNonce='<?php print CactiSecureHeaders::getNonce();?>';
-	var cactiServerOS='<?php print $config['cacti_server_os'];?>';
-	var cactiAction='<?php print get_filter_request_var('action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([-a-zA-Z0-9_\s]+)$/')));?>';
-	var theme='<?php print get_selected_theme();?>';
+	var cactiVersion=<?php print json_encode((string) $config['cacti_version'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+	var cactiNonce=<?php print json_encode((string) CactiSecureHeaders::getNonce(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+	var cactiServerOS=<?php print json_encode((string) $config['cacti_server_os'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+	var cactiAction=<?php print json_encode((string) get_filter_request_var('action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/\A[a-zA-Z0-9_ -]+\z/D'))), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+	var theme=<?php print json_encode((string) get_selected_theme(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 	var refreshIsLogout=<?php print $refreshIsLogout;?>;
-	var refreshPage='<?php print $myrefresh['page'];?>';
-	var refreshMSeconds=<?php print $myrefresh['seconds'] * 1000;?>;
-	var urlPath='<?php print $config['url_path'];?>';
+	var refreshPage='<?php print html_escape($myrefresh['page']);?>';
+	var refreshMSeconds=<?php print (int) $myrefresh['seconds'] * 1000;?>;
+	var urlPath=<?php print json_encode((string) $config['url_path'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 	var previousPage='';
 	var sessionMessage=<?php print display_output_messages(false);?>;
-	var csrfMagicToken='<?php print csrf_get_tokens();?>';
+	var csrfMagicToken=<?php print json_encode((string) csrf_get_tokens(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 </script>

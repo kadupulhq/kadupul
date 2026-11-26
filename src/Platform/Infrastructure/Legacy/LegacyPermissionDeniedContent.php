@@ -12,6 +12,7 @@ namespace Kadupul\Platform\Infrastructure\Legacy;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\Platform\Application\Port\PermissionDeniedContent;
 use Kadupul\Platform\Application\ReadModel\PermissionDenied;
+use Kadupul\Platform\Domain\RedirectTarget;
 
 final readonly class LegacyPermissionDeniedContent implements PermissionDeniedContent
 {
@@ -27,9 +28,8 @@ final readonly class LegacyPermissionDeniedContent implements PermissionDeniedCo
         $returnTo = $result['return_to'] ?? null;
         // validate_redirect_url() already refused foreign and scripted targets.
         // Recheck its output shape before it becomes an href.
-        if ($returnTo !== null && (!is_string($returnTo) || $returnTo === '' || strlen($returnTo) > 8192
-            || str_starts_with($returnTo, '//') || preg_match('/[\x00-\x1f\x7f]/', $returnTo) === 1
-            || preg_match('/\A[a-z][a-z0-9+.-]*:/i', $returnTo) === 1)) {
+        if ($returnTo !== null && (!is_string($returnTo) || strlen($returnTo) > 8192
+            || !RedirectTarget::isSafePostSanitization($returnTo))) {
             throw new \RuntimeException('Invalid permission denied return location.');
         }
         foreach (['version', 'copyright'] as $key) {
