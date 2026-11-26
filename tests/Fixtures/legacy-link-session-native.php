@@ -171,8 +171,8 @@ if ($storage === 'database') {
 }
 $cookie = '9,0,' . str_repeat('a', 64);
 if ($stage === 'init') {
-    $schema = "CREATE TABLE user_auth(id INTEGER PRIMARY KEY,username TEXT,enabled TEXT,locked TEXT,must_change_password TEXT,password TEXT,realm INTEGER,reset_perms INTEGER NOT NULL DEFAULT 0 CHECK(reset_perms BETWEEN 0 AND 4294967295));
-        INSERT INTO user_auth VALUES(9,'viewer','on','','','current-hash',0,0);
+    $schema = "CREATE TABLE user_auth(id INTEGER PRIMARY KEY,username TEXT,enabled TEXT,locked TEXT,must_change_password TEXT,password_change TEXT DEFAULT '',password TEXT,realm INTEGER,reset_perms INTEGER NOT NULL DEFAULT 0 CHECK(reset_perms BETWEEN 0 AND 4294967295));
+        INSERT INTO user_auth (id,username,enabled,locked,must_change_password,password,realm,reset_perms) VALUES(9,'viewer','on','','','current-hash',0,0);
         CREATE TABLE settings(name TEXT PRIMARY KEY,value TEXT); INSERT INTO settings VALUES('auth_method','1'),('guest_user','0');
         CREATE TABLE settings_user(user_id INTEGER,name TEXT,value TEXT,PRIMARY KEY(user_id,name));
         CREATE TABLE user_auth_realm(user_id INTEGER,realm_id INTEGER,PRIMARY KEY(user_id,realm_id));

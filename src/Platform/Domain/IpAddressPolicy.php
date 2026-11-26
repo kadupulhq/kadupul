@@ -82,10 +82,12 @@ final readonly class IpAddressPolicy
         }
 
         // IPv6 ::, ::1, fe80::/10, ff00::/8, and IPv4-mapped loopback/link-local/unspecified
-        $unpacked = array_values(unpack('C16', $packed) ?: []);
-        if (count($unpacked) !== 16) {
+        $raw = unpack('C16', $packed);
+        if ($raw === false || count($raw) !== 16) {
             return true;
         }
+        /** @var list<int> $unpacked */
+        $unpacked = array_values(array_map(static fn(mixed $byte): int => is_int($byte) ? $byte : 0, $raw));
 
         $allZero = true;
         for ($i = 0; $i < 15; $i++) {

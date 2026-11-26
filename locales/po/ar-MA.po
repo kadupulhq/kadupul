@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Arabic (Morocco) Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-24 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Arabic (Morocco)\n"
@@ -452,6 +452,10 @@ msgstr "لا يبدو أن المبيانات التجميعية المحددة 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "تمثل المبيانات التجميعية المحددة عناصر من أكثر من قالب مبيان واحد."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "الشجرة المحددة غير متاحة."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3368,10 +3372,6 @@ msgstr "معرف قاعدة المعطيات الداخلي لهذا المبي�
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "الجهاز المحدد غير متاح."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "الشجرة المحددة غير متاحة."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10615,7 +10615,7 @@ msgstr "المبيان:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "فشل الولوج إلى Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "مقيد"
 
@@ -13195,7 +13195,7 @@ msgstr "خيارات التثبيت:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "بدأ التثبيت في %s، واكتمل في %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "مثبّت"
 
@@ -15218,10 +15218,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "يجب عليك تحديد كائن إشعار واحد على الأقل."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "الوثوق تلقائيًا في الموقّع"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "التغييرات / الاختلافات"
@@ -15257,10 +15253,6 @@ msgstr "اختلافات الملف ل: "
 #: package_import.php
 msgid "Filename"
 msgstr "اسم الملف"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "في حال التحديد، سيثق Kadupul تلقائيًا في الموقّع لهذه الحزمة ولأي حزم مستقبلية من هذا المؤلف."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15356,10 +15348,6 @@ msgstr "فشل تنزيل الحزمة أو التحقق من صحتها"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "تعذر إنشاء ملف الحزمة المؤقت."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "لم تمنح الثقة لمؤلف هذه الحزمة. إذا كنت ترغب في الاستيراد، فحدد خانة الاختيار \"الوثوق تلقائيًا بالمؤلف\""
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18561,5 +18549,3 @@ msgstr "VDEFs [جديد]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "لا يمكن حذف VDEFs قيد الاستخدام. يُعرّف الاستخدام بكونه مشارًا إليه من طرف مبيان أو قالب مبيان."
-
-

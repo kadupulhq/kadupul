@@ -224,11 +224,12 @@ if (!file_exists($rrdtool)) {
 	}
 }
 
-$response = shell_exec($rrdtool);
+$version_result = rrd_maintenance_run_command(array($rrdtool), null, rrd_maintenance_command_timeout());
+$response       = $version_result['exit'] !== false ? $version_result['stdout'] : '';
 
 if (strlen($response)) {
 	$response_array = explode(' ', $response);
-	print 'NOTE: Using ' . $response_array[0] . ' Version ' . $response_array[1] . PHP_EOL;
+	print 'NOTE: Using ' . $response_array[0] . ' Version ' . ($response_array[1] ?? '') . PHP_EOL;
 } else {
 	print 'FATAL: RRDTool not found in configuration or path.' . PHP_EOL . 'Please insure RRDTool can be found using one of these methods!' . PHP_EOL;
 
@@ -435,19 +436,37 @@ function getOldRRDValue(&$old_flat, $dsnum, $cf, $time) {
 	global $use_db, $db;
 
 	if ($use_db) {
-		$stmt = $db->prepare("SELECT *
+		$stmt = $db->prepare('SELECT value
 			FROM dsData
-			WHERE dsid = $dsnum
-			AND cf = '$cf'
-			AND timestamp <= $time
+			WHERE dsid = :dsid
+			AND cf = :cf
+			AND timestamp <= :timestamp
 			ORDER BY timestamp DESC
-			LIMIT 1");
+			LIMIT 1');
+
+		if ($stmt === false) {
+			return 'NaN';
+		}
+
+		$stmt->bindValue(':dsid', (int) $dsnum, SQLITE3_INTEGER);
+		$stmt->bindValue(':cf', (string) $cf, SQLITE3_TEXT);
+		$stmt->bindValue(':timestamp', (int) $time, SQLITE3_INTEGER);
 
 		$result = $stmt->execute();
 
-		while ($row = $result->fetchArray()) {
-			return $row['value'];
+		if ($result !== false) {
+			while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+				$value = $row['value'];
+				$result->finalize();
+				$stmt->close();
+
+				return $value;
+			}
+
+			$result->finalize();
 		}
+
+		$stmt->close();
 
 		return 'NaN';
 	} else {
@@ -979,40 +998,30 @@ function createTable() {
 function loadTable($db, &$records) {
 	$db->exec('BEGIN TRANSACTION');
 
-	$sql = '';
+	$stmt = $db->prepare('INSERT INTO dsData (dsid, cf, timestamp, value) VALUES (:dsid, :cf, :timestamp, :value)');
+	if ($stmt === false) {
+		$db->exec('ROLLBACK TRANSACTION');
+
+		return;
+	}
 
 	foreach ($records as $dsid => $cfdata) {
 		if (is_numeric($dsid)) {
 			foreach ($cfdata as $cf => $timedata) {
-				$i = 0;
-
 				foreach ($timedata as $timestamp => $value) {
-					$sql .= ($sql != '' ? ', ' : '') . '(' . $dsid . ',"' . $cf . '",' . $timestamp . ', ' . $value . ')';
-					$i++;
-
-					if ($i > 50) {
-						if ($sql != '') {
-							$db->exec("INSERT INTO dsData
-								(dsid, cf, timestamp, value)
-								VALUES $sql");
-						}
-
-						$sql = '';
-						$i   = 0;
-					}
+					$stmt->reset();
+					$stmt->clear();
+					$stmt->bindValue(':dsid', (int) $dsid, SQLITE3_INTEGER);
+					$stmt->bindValue(':cf', (string) $cf, SQLITE3_TEXT);
+					$stmt->bindValue(':timestamp', (int) $timestamp, SQLITE3_INTEGER);
+					$stmt->bindValue(':value', (float) $value, SQLITE3_FLOAT);
+					$stmt->execute();
 				}
-
-				if ($sql != '') {
-					$db->exec("INSERT INTO dsData
-						(dsid, cf, timestamp, value)
-						VALUES $sql");
-				}
-
-				$sql = '';
 			}
 		}
 	}
 
+	$stmt->close();
 	$db->exec('COMMIT TRANSACTION');
 }
 

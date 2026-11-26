@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -450,6 +450,10 @@ msgstr "Избраните обобщени графики представля�
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Избраните обобщени графики представляват елементи от повече от един графичен шаблон."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Избраното дърво не е налично."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3282,10 +3286,6 @@ msgstr "ID на вътрешната база данни за тази граф�
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Избраното устройство не е налично."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Избраното дърво не е налично."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10529,7 +10529,7 @@ msgstr "Графика:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Неуспешно влизане в Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Ограничена"
 
@@ -13109,7 +13109,7 @@ msgstr "Опции за инсталиране:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Инсталацията е стартирана на %s, завършена на %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Инсталирано"
 
@@ -15120,10 +15120,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "Трябва да изберете поне един обект за уведомяване."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Автоматично доверие на подписващия"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Промени/Разлики"
@@ -15159,10 +15155,6 @@ msgstr "Разлики във файловете за: "
 #: package_import.php
 msgid "Filename"
 msgstr "Име на файл"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Ако е поставена отметка, Kadupul автоматично ще се довери на подписващия за този и всички бъдещи пакети от този автор."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15258,10 +15250,6 @@ msgstr "Неуспешно изтегляне или валидиране на �
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Неуспешно създаване на временен пакетен файл."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Не сте се доверили на този автор на пакета.  Ако искате да импортирате, поставете отметка в квадратчето Автоматично доверие на автора"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18311,5 +18299,3 @@ msgstr "VDEFs [нов]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF, които се използват, не могат да бъдат изтрити. В употреба се дефинира като рефериран от графичен или графичен шаблон."
-
-

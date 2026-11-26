@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Amharic Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Amharic\n"
@@ -452,6 +452,10 @@ msgstr "የተመረጡት ጥምር ግራፎች ምንም ተዛማጅ የጥ�
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "የተመረጡት ጥምር ግራፎች ከአንድ በላይ የግራፍ አብነት የመጡ ንጥረ ነገሮችን ይወክላሉ።"
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "የተመረጠው ዛፍ አይገኝም።"
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "ለዚህ ግራፍ ውስጣዊ የውሂብ ጎታ መለያ። ራስ
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "የተመረጠው መሣሪያ አይገኝም።"
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "የተመረጠው ዛፍ አይገኝም።"
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "ግራፍ:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "የKadupul መግቢያ ውድቀት"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "የተገደበ"
 
@@ -13111,7 +13111,7 @@ msgstr "የመጫኛ አማራጮች:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "መጫኑ በ%s ተጀምሯል፣ በ%s ተጠናቋል"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "ተጭኗል"
 
@@ -15122,10 +15122,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "ቢያንስ አንድ የማሳወቂያ ነገር መምረጥ አለብዎት።"
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "ፈራሚውን በራስ-ሰር እመን"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "ለውጦች/ልዩነቶች"
@@ -15161,10 +15157,6 @@ msgstr "የፋይል ልዩነቶች ለ: "
 #: package_import.php
 msgid "Filename"
 msgstr "የፋይል ስም"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "ከተመረጠ Kadupul ለዚህ እና በዚያ ደራሲ ለሚቀርቡ ማናቸውም የወደፊት ጥቅሎች ፈራሚውን በራስ-ሰር ያምናል።"
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "የጥቅል ማውረድ ወይም ማረጋገጫ አልተሳካም"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "ጊዜያዊ የጥቅል ፋይል መፍጠር አልተቻለም።"
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "ይህን የጥቅል ደራሲ አላመኑትም። ማስመጣት ከፈለጉ፣ በራስ-ሰር ደራሲን እመን የሚለውን አመልካች ሳጥን ምልክት ያድርጉ"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "VDEFs [አዲስ]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "በጥቅም ላይ ያሉ VDEFs ሊሰረዙ አይችሉም። በጥቅም ላይ ማለት በግራፍ ወይም በግራፍ አብነት የተጠቀሰ ማለት ነው።"
-
-

@@ -109,7 +109,6 @@ $plugins = db_fetch_assoc('SELECT `directory`
 if ($plugins && cacti_sizeof($plugins)) {
 	$lang_names   = [$cacti_locale, $lang2locale[$cacti_locale]['filename']];
 	$plugins_base = $config['base_path'] . '/plugins';
-	$plugins_root = realpath($plugins_base);
 
 	foreach ($plugins as $plugin) {
 		$plugin = (string) ($plugin['directory'] ?? '');
@@ -118,18 +117,7 @@ if ($plugins && cacti_sizeof($plugins)) {
 			continue;
 		}
 
-		$plugin_dir = $plugins_base . '/' . $plugin;
-		if (function_exists('cacti_path_is_within')) {
-			if (!cacti_path_is_within($plugin_dir, $plugins_base)) {
-				continue;
-			}
-			$resolved_plugin_dir = realpath($plugin_dir);
-		} else {
-			$resolved_plugin_dir = realpath($plugin_dir);
-			if ($plugins_root === false || $resolved_plugin_dir === false || !str_starts_with($resolved_plugin_dir, $plugins_root . '/')) {
-				continue;
-			}
-		}
+		$resolved_plugin_dir = realpath($plugins_base . '/' . $plugin);
 
 		if ($resolved_plugin_dir === false || !is_dir($resolved_plugin_dir)) {
 			continue;
@@ -137,15 +125,9 @@ if ($plugins && cacti_sizeof($plugins)) {
 
 		$path2catalogue = get_mo_language_file($lang_names, null, $resolved_plugin_dir);
 		if (!empty($path2catalogue) && file_exists($path2catalogue)) {
-			if (function_exists('cacti_path_is_within')) {
-				if (!cacti_path_is_within($path2catalogue, $resolved_plugin_dir)) {
-					continue;
-				}
-			} else {
-				$resolved_catalogue = realpath($path2catalogue);
-				if ($resolved_catalogue === false || !str_starts_with($resolved_catalogue, $resolved_plugin_dir . '/')) {
-					continue;
-				}
+			$resolved_catalogue = realpath($path2catalogue);
+			if ($resolved_catalogue === false || !str_starts_with($resolved_catalogue, $resolved_plugin_dir . '/')) {
+				continue;
 			}
 
 			$cacti_textdomains[$plugin]['path2catalogue'] = $path2catalogue;

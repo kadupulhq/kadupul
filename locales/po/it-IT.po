@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -453,6 +453,10 @@ msgstr "I grafici aggregati selezionati non sembrano avere alcun modello aggrega
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "I Grafici Aggregati selezionati rappresentano elementi di più di un Template grafico."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "L'albero selezionato non è disponibile."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3285,10 +3289,6 @@ msgstr "L'ID del database interno per questo grafico.  Utile quando si esegue l'
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Il dispositivo selezionato non è disponibile."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "L'albero selezionato non è disponibile."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10532,7 +10532,7 @@ msgstr "Grafico:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Errore di accesso a Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Limitato"
 
@@ -13112,7 +13112,7 @@ msgstr "Opzioni di installazione:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "L'installazione è stata avviata a %s, completata a %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Installato"
 
@@ -15123,10 +15123,6 @@ msgstr "Varbind"
 msgid "You must select at least one notification object."
 msgstr "È necessario selezionare almeno un oggetto di notifica."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Considera automaticamente attendibile il firmatario"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Modifiche/Differenze"
@@ -15162,10 +15158,6 @@ msgstr "Differenze file per: "
 #: package_import.php
 msgid "Filename"
 msgstr "Nome file"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Se selezionato, Kadupul si fiderà automaticamente del Firmatario per questo e per eventuali Pacchetti futuri di quell' autore."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15261,10 +15253,6 @@ msgstr "Il download o la convalida del pacchetto non sono riusciti"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Impossibile creare il file di pacchetto temporaneo."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Non ti sei fidato di questo autore del pacchetto.  Se si desidera importare, selezionare la casella di controllo Considera automaticamente attendibile l'autore"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18314,5 +18302,3 @@ msgstr "VDEFs [nuovo]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "I VDEF in uso non possono essere cancellati. In uso è definito come riferimento da un grafico o da un modello grafico."
-
-

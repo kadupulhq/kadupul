@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -450,6 +450,10 @@ msgstr "選択した集約グラフには、一致する集約テンプレート
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "選択した集約グラフは、複数のグラフテンプレートの要素を表します。"
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "選択されたツリーは利用できません。"
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3261,10 +3265,6 @@ msgstr "このグラフの内部データベースID。自動化またはデバ�
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "選択されたデバイスは利用できません。"
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "選択されたツリーは利用できません。"
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10508,7 +10508,7 @@ msgstr "グラフ： （%s%s秒）"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul ログイン失敗"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "メンバーに限定"
 
@@ -13088,7 +13088,7 @@ msgstr "インストールオプション："
 msgid "Installation was started at %s, completed at %s"
 msgstr "インストールは%sに開始され、%sに完了しました"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "インストール済み"
 
@@ -15096,10 +15096,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "少なくとも1つの通知オブジェクトを選択する必要があります。"
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "署名者を自動的に信頼する"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "変更/差分"
@@ -15135,10 +15131,6 @@ msgstr "次のファイルの差異： "
 #: package_import.php
 msgid "Filename"
 msgstr "ファイル名"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "チェックすると、Kadupulは自動的に署名者を信頼し、これとその作成者による将来のパッケージを信頼します。"
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15234,10 +15226,6 @@ msgstr "パッケージのダウンロードまたは検証に失敗しました
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "一時パッケージファイルを作成できません。"
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "このパッケージ作成者を信頼していません。インポートする場合は、作成者を自動的に信頼するチェックボックスをオンにします"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18249,5 +18237,3 @@ msgstr "VDEF [新規]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "使用中のVDEFは削除できません。使用中は、グラフまたはグラフテンプレートによって参照されていると定義されます。"
-
-

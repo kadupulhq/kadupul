@@ -428,11 +428,12 @@ PHP;
         $dir = $this->makeTempDir('s10-04-i18n');
         mkdir($dir . '/locales/LC_MESSAGES', 0700, true);
         mkdir($dir . '/plugins/good_plugin/locales/LC_MESSAGES', 0700, true);
+        mkdir($dir . '/plugins/escape_mo/locales/LC_MESSAGES', 0700, true);
         mkdir($dir . '/outside/locales/LC_MESSAGES', 0700, true);
         file_put_contents($dir . '/locales/LC_MESSAGES/fr-FR.mo', 'mo-core');
         file_put_contents($dir . '/plugins/good_plugin/locales/LC_MESSAGES/fr-FR.mo', 'mo-good');
         file_put_contents($dir . '/outside/locales/LC_MESSAGES/fr-FR.mo', 'mo-outside');
-        symlink($dir . '/outside', $dir . '/plugins/escape_link');
+        symlink($dir . '/outside/locales/LC_MESSAGES/fr-FR.mo', $dir . '/plugins/escape_mo/locales/LC_MESSAGES/fr-FR.mo');
 
         $code = <<<'PHP'
 $root = $argv[1];
@@ -475,7 +476,7 @@ function db_fetch_assoc($sql) {
     return [
         ['directory' => '../outside'],
         ['directory' => 'good_plugin/../../outside'],
-        ['directory' => 'escape_link'],
+        ['directory' => 'escape_mo'],
         ['directory' => 'good_plugin'],
     ];
 }

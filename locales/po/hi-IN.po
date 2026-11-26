@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -453,6 +453,10 @@ msgstr "चयनित एग्रीगेट ग्राफ़ के ल�
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "चयनित एग्रीगेट ग्राफ़ एक से अधिक ग्राफ़ टेम्पलेट से तत्वों का प्रतिनिधित्व करते हैं।"
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "चयनित ट्री उपलब्ध नहीं है।"
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3285,10 +3289,6 @@ msgstr "इस ग्राफ के लिए आंतरिक डेटा�
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "चयनित डिवाइस उपलब्ध नहीं है।"
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "चयनित ट्री उपलब्ध नहीं है।"
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10532,7 +10532,7 @@ msgstr "ग्राफ़:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul लॉगिन विफलता"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "प्रतिबंधत"
 
@@ -13112,7 +13112,7 @@ msgstr "संस्थापन विकल्प:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "%s पर संस्थापन आरंभ किया गया था, %s पर पूरा हुआ"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "इंस्‍टॉल हो गया"
 
@@ -15123,10 +15123,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "आपको कम से कम एक अधिसूचना ऑब्जेक्ट का चयन करना होगा।"
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "हस्ताक्षरकर्ता पर स्वचालित रूप से विश्वास करें"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "परिवर्तन/अंतर"
@@ -15162,10 +15158,6 @@ msgstr "इसके लिए फ़ाइल अंतर: "
 #: package_import.php
 msgid "Filename"
 msgstr "फ़ाइलनाम"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "यदि चेक किया गया है, तो Kadupul इस और उस लेखक के किसी भी भविष्य के पैकेज के लिए स्वचालित रूप से हस्ताक्षरकर्ता पर विश्वास करेगा।"
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15261,10 +15253,6 @@ msgstr "पैकेज डाउनलोड या सत्यापन व�
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "अस्थायी पैकेज फ़ाइल बनाने में असमर्थ।"
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "आपने इस पैकेज लेखक पर भरोसा नहीं किया है।  अगर आप इम्पोर्ट करना चाहते हैं, तो ऑटोमैटिकली ट्रस्ट ऑथर चेकबॉक्स पर जाएँ"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18314,5 +18302,3 @@ msgstr "VDEFs [नया]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF जो उपयोग में हैं उन्हें हटाया नहीं जा सकता है। उपयोग में एक ग्राफ या एक ग्राफ टेम्पलेट द्वारा संदर्भित के रूप में परिभाषित किया गया है।"
-
-

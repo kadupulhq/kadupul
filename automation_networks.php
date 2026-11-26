@@ -123,7 +123,7 @@ function api_networks_discover($network_id, $discover_debug) {
 		if (!cacti_sizeof($network_row)
 			|| !automation_validate_discovery_subnet_range((string) ($network_row['subnet_range'] ?? ''))
 			|| !automation_validate_dns_servers((string) ($network_row['dns_servers'] ?? ''))) {
-			$_SESSION['automation_message'] = __esc('Can Not Perform Discovery for Network \'%s\' due to invalid or disallowed subnet range or DNS servers', $name);
+			$_SESSION['automation_message'] = html_escape(sprintf("Can Not Perform Discovery for Network '%s' due to invalid or disallowed subnet range or DNS servers", $name));
 			raise_message('automation_message');
 		} elseif (!$running) {
 			if ($config['poller_id'] == $poller_id) {

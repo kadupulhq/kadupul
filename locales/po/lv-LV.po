@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -453,6 +453,10 @@ msgstr "Šķiet, ka atlasītajiem apkopotajiem grafikiem nav nevienas atbilstoš
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Atlasītie apkopotie grafiki attēlo elementus no vairāk nekā vienas diagrammas veidnes."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Atlasītais koks nav pieejams."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3306,10 +3310,6 @@ msgstr "Šī grafika iekšējā datu bāzes ID. Noderīgs, veicot automatizāci
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Atlasītā ierīce nav pieejama."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Atlasītais koks nav pieejams."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10553,7 +10553,7 @@ msgstr "Grafiks:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul pieteikšanās kļūda"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Ierobežots"
 
@@ -13133,7 +13133,7 @@ msgstr "Uzstādīšanas iespējas:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Instalēšana tika sākta plkst. %s, pabeigta plkst. %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Uzstādīts"
 
@@ -15147,10 +15147,6 @@ msgstr "Varbind vienumi"
 msgid "You must select at least one notification object."
 msgstr "Jums ir jāatlasa vismaz viens paziņojumu objekts."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Automātiski uzticēties parakstītājam"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Izmaiņas/atšķirības"
@@ -15186,10 +15182,6 @@ msgstr "Failu atšķirības: "
 #: package_import.php
 msgid "Filename"
 msgstr "Faila nosaukums"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Ja šī opcija ir atzīmēta, Kadupul automātiski uzticēs parakstītājam šo un visas turpmākās šī autora pakotnes."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15285,10 +15277,6 @@ msgstr "Pakotnes lejupielāde vai validācija neizdevās"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Nevar izveidot pagaidu pakotnes failu."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Jūs neesat uzticējies šim pakotnes autoram.  Ja vēlaties importēt, atzīmējiet izvēles rūtiņu Automātiski uzticēties autoram"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18376,5 +18364,3 @@ msgstr "VDEF [jauns]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Izmantotos VDEF nevar izdzēst. Izmantošana tiek definēta kā atsauce uz diagrammu vai diagrammas veidni."
-
-

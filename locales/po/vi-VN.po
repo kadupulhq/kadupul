@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -453,6 +453,10 @@ msgstr "Các Biểu đồ tổng hợp đã chọn dường như không có Mẫ
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Các đồ thị tổng hợp được chọn đại diện cho các yếu tố từ nhiều hơn một mẫu biểu đồ."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Cây đã chọn không khả dụng."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3264,10 +3268,6 @@ msgstr "ID cơ sở dữ liệu nội bộ cho biểu đồ này. Hữu ích khi
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Thiết bị đã chọn không khả dụng."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Cây đã chọn không khả dụng."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10511,7 +10511,7 @@ msgstr "Đồ thị:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Đăng nhập Kadupul thất bại"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Hạn chế"
 
@@ -13091,7 +13091,7 @@ msgstr "Tùy chọn cài đặt:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Cài đặt đã được bắt đầu ở %s, hoàn thành ở %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Đã lắp đặt"
 
@@ -15099,10 +15099,6 @@ msgstr "Liên kết biến (Varbinds)"
 msgid "You must select at least one notification object."
 msgstr "Bạn phải chọn ít nhất một đối tượng thông báo."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Tự động tin cậy người ký"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Thay đổi/Khác biệt"
@@ -15138,10 +15134,6 @@ msgstr "Khác biệt tệp cho: "
 #: package_import.php
 msgid "Filename"
 msgstr "Đổi tên"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Nếu được chọn, Kadupul sẽ tự động Tin cậy Người ký cho Gói này và bất kỳ Gói nào trong tương lai của tác giả đó."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15237,10 +15229,6 @@ msgstr "Tải xuống hoặc xác thực gói thất bại"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Không thể tạo tệp gói tạm thời."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Bạn chưa Tin cậy Tác giả Gói này. Nếu bạn muốn nhập, hãy đánh dấu hộp kiểm Tự động tin cậy Tác giả"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18252,5 +18240,3 @@ msgstr "VDEFs [mới]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEFs đang sử dụng không thể bị xóa. Đang sử dụng được định nghĩa là được tham chiếu bởi Biểu đồ hoặc Mẫu biểu đồ."
-
-

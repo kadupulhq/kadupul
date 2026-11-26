@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Telugu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Telugu\n"
@@ -452,6 +452,10 @@ msgstr "ఎంచుకున్న అగ్రిగేట్ గ్రాఫ�
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "ఎంచుకున్న అగ్రిగేట్ గ్రాఫ్‌లు ఒకటి కంటే ఎక్కువ గ్రాఫ్ టెంప్లేట్‌ల నుండి అంశాలను సూచిస్తాయి."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "ఎంచుకున్న ట్రీ అందుబాటులో లేదు."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "ఈ గ్రాఫ్ కోసం అంతర్గత డేటా�
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "ఎంచుకున్న పరికరం అందుబాటులో లేదు."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "ఎంచుకున్న ట్రీ అందుబాటులో లేదు."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "గ్రాఫ్:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul లాగిన్ వైఫల్యం"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "పరిమితం చేయబడినది"
 
@@ -13111,7 +13111,7 @@ msgstr "ఇన్‌స్టాలేషన్ ఎంపికలు:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "ఇన్‌స్టాలేషన్ %s వద్ద ప్రారంభమైంది, %s వద్ద పూర్తయింది"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "ఇన్‌స్టాల్ చేయబడింది"
 
@@ -15122,10 +15122,6 @@ msgstr "వార్‌బైండ్లు"
 msgid "You must select at least one notification object."
 msgstr "మీరు కనీసం ఒక నోటిఫికేషన్ వస్తువును ఎంచుకోవాలి."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "సంతకందారుడిని స్వయంచాలకంగా విశ్వసించు"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "మార్పులు/తేడాలు"
@@ -15161,10 +15157,6 @@ msgstr "వీటికి ఫైల్ తేడాలు: "
 #: package_import.php
 msgid "Filename"
 msgstr "ఫైల్‌నేమ్"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "తనిఖీ చేస్తే, దీని కోసం మరియు ఆ రచయిత ద్వారా భవిష్యత్తులో వచ్చే ఏవైనా ప్యాకేజీల కోసం Kadupul స్వయంచాలకంగా సంతకందారుడిని విశ్వసిస్తుంది."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "ప్యాకేజీ డౌన్‌లోడ్ లేదా ధృ
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "తాత్కాలిక ప్యాకేజీ ఫైల్‌ను సృష్టించలేకపోయాము."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "మీరు ఈ ప్యాకేజీ రచయితను విశ్వసించలేదు. మీరు దిగుమతి చేయాలనుకుంటే, Automatically Trust Author చెక్‌బాక్స్‌ను ఎంచుకోండి"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "VDEFలు [కొత్తది]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "ఉపయోగంలో ఉన్న VDEFలను తొలగించలేరు. ఉపయోగంలో ఉండటం అంటే గ్రాఫ్ లేదా గ్రాఫ్ టెంప్లేట్ ద్వారా సూచించబడటం."
-
-

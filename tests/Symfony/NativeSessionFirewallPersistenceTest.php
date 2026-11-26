@@ -42,8 +42,8 @@ final class NativeSessionFirewallPersistenceTest extends TestCase
         $directory = sys_get_temp_dir() . '/native-firewall-' . bin2hex(random_bytes(8));
         $this->assertTrue(mkdir($directory, 0700));
         $pdo = new \PDO('sqlite::memory:', options: [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION, \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC]);
-        $pdo->exec("CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, locked TEXT, password TEXT);
-            INSERT INTO user_auth VALUES (9, 'operator', 'on', '', 'stored-hash');
+        $pdo->exec("CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, locked TEXT, password TEXT, realm INTEGER DEFAULT 0, must_change_password TEXT DEFAULT '', password_change TEXT DEFAULT '');
+            INSERT INTO user_auth (id, username, enabled, locked, password) VALUES (9, 'operator', 'on', '', 'stored-hash');
             CREATE TABLE settings (name TEXT, value TEXT);
             INSERT INTO settings VALUES ('auth_method', '1'), ('guest_user', '0'), ('i18n_language_support', '0');
             CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT);

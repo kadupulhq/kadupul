@@ -87,7 +87,7 @@ function form_save()
     $aggregate_template_id = get_nfilter_request_var('aggregate_template_id', 0);
 
     if ((int) $local_graph_id <= 0 || !is_graph_allowed((int) $local_graph_id)) {
-        raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+        raise_message('aggregate_access_denied', 'You are not permitted to modify the selected Aggregate Graph.', MESSAGE_LEVEL_ERROR);
         header('Location: aggregate_graphs.php?header=false');
         return null;
     }
@@ -276,7 +276,7 @@ function form_actions()
             foreach ($selected_items as $selected_item) {
                 $item_id = (int) $selected_item;
                 if ($item_id <= 0 || !is_graph_allowed($item_id)) {
-                    raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+                    raise_message('aggregate_access_denied', 'You are not permitted to modify the selected Aggregate Graph.', MESSAGE_LEVEL_ERROR);
                     header('Location: aggregate_graphs.php?header=false');
                     return;
                 }
@@ -322,7 +322,7 @@ function form_actions()
             } elseif (get_request_var('drp_action') == '10') { // associate with aggregate
                 $local_graph_id = get_filter_request_var('local_graph_id');
                 if ((int) $local_graph_id <= 0 || !is_graph_allowed((int) $local_graph_id)) {
-                    raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+                    raise_message('aggregate_access_denied', 'You are not permitted to modify the selected Aggregate Graph.', MESSAGE_LEVEL_ERROR);
                     header('Location: aggregate_graphs.php?header=false');
                     return;
                 }
@@ -337,7 +337,7 @@ function form_actions()
             } elseif (get_request_var('drp_action') == '11') { // dis-associate with aggregate
                 $local_graph_id = get_filter_request_var('local_graph_id');
                 if ((int) $local_graph_id <= 0 || !is_graph_allowed((int) $local_graph_id)) {
-                    raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+                    raise_message('aggregate_access_denied', 'You are not permitted to modify the selected Aggregate Graph.', MESSAGE_LEVEL_ERROR);
                     header('Location: aggregate_graphs.php?header=false');
                     return;
                 }

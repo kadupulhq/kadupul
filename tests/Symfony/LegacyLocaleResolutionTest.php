@@ -99,33 +99,41 @@ final class LegacyLocaleResolutionTest extends TestCase
             ['settings' => ['i18n_language_support' => '0'], 'forced' => 'de-DE', 'session' => ['sess_user_language' => 'fr-FR']],
             $english + ['cacti_locale' => 'en-US', 'session_language' => '', 'request_language' => null, 'user_writes' => []],
         ];
-        yield 'forced language beats the request and session and is written as language' => [
+        yield 'forced language beats the request and session without GET persistence' => [
             ['forced' => 'de-DE', 'request' => ['language' => 'fr-FR'], 'session' => ['sess_user_language' => 'fr-FR', 'sess_current_date1' => 'a', 'sess_current_date2' => 'b']],
-            $german + ['session_language' => 'de-DE', 'request_language' => 'de-DE', 'user_writes' => [['language', 'de-DE']], 'session_dates_kept' => false],
+            $german + ['session_language' => 'de-DE', 'request_language' => 'de-DE', 'user_writes' => [], 'session_dates_kept' => false],
         ];
         yield 'forced underscore spelling is repaired' => [
             ['forced' => 'de_DE'],
-            $german + ['request_language' => 'de-DE', 'user_writes' => [['language', 'de-DE']]],
+            $german + ['request_language' => 'de-DE', 'user_writes' => []],
         ];
         yield 'empty forced language is ignored' => [
             ['forced' => '', 'session' => ['sess_user_language' => 'fr-FR']],
             $french + ['request_language' => null, 'user_writes' => []],
         ];
-        yield 'request language beats the session, clears the dates and writes language' => [
+        yield 'GET request language beats the session and clears dates without persisting' => [
             ['request' => ['language' => 'fr-FR'], 'session' => ['sess_user_language' => 'de-DE', 'sess_current_date1' => 'a', 'sess_current_date2' => 'b']],
-            $french + ['session_language' => 'fr-FR', 'request_language' => 'fr-FR', 'user_writes' => [['language', 'fr-FR']], 'session_dates_kept' => false],
+            $french + ['session_language' => 'fr-FR', 'request_language' => 'fr-FR', 'user_writes' => [], 'session_dates_kept' => false],
+        ];
+        yield 'authenticated POST request language persists user_language' => [
+            ['method' => 'POST', 'request' => ['language' => 'fr-FR'], 'session' => $user + ['sess_user_language' => 'de-DE', 'sess_current_date1' => 'a', 'sess_current_date2' => 'b']],
+            $french + ['session_language' => 'fr-FR', 'request_language' => 'fr-FR', 'user_writes' => [['user_language', 'fr-FR']], 'session_dates_kept' => false],
+        ];
+        yield 'guest POST request language does not persist user_language' => [
+            ['method' => 'POST', 'guest' => 7, 'request' => ['language' => 'fr-FR'], 'session' => $user],
+            $french + ['session_language' => 'fr-FR', 'request_language' => 'fr-FR', 'user_writes' => []],
         ];
         yield 'bare request language picks the first listed region' => [
             ['request' => ['language' => 'fr']],
-            $french + ['request_language' => 'fr-FR', 'user_writes' => [['language', 'fr-FR']]],
+            $french + ['request_language' => 'fr-FR', 'user_writes' => []],
         ];
         yield 'unknown request language is blanked and the session applies' => [
             ['request' => ['language' => 'xx-YY'], 'session' => ['sess_user_language' => 'de-DE', 'sess_current_date1' => 'a', 'sess_current_date2' => 'b']],
             $german + ['request_language' => '', 'user_writes' => [], 'session_dates_kept' => true],
         ];
-        yield 'request language without a catalog is written and then falls back' => [
+        yield 'request language without a catalog falls back without GET persistence' => [
             ['request' => ['language' => 'zh-HK']],
-            $english + ['cacti_locale' => 'zh-HK', 'cacti_country' => 'hk', 'session_language' => '', 'request_language' => 'zh-HK', 'user_writes' => [['language', 'zh-HK']]],
+            $english + ['cacti_locale' => 'zh-HK', 'cacti_country' => 'hk', 'session_language' => '', 'request_language' => 'zh-HK', 'user_writes' => []],
         ];
         yield 'session language beats the saved language' => [
             ['session' => $user + ['sess_user_language' => 'de-DE', 'sess_current_date1' => 'a', 'sess_current_date2' => 'b'], 'saved' => [7 => ['user_language' => 'ru-RU']]],

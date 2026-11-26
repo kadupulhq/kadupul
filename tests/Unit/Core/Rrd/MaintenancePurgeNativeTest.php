@@ -138,7 +138,7 @@ SOURCE;
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
         $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-        $completed = $mode === 'proxy-valid' ? 4 : (in_array($mode, ['success', 'directory-link', 'custom-root'], true) ? 2 : (in_array($mode, ['filesystem', 'source-link', 'archive-link', 'target-link'], true) ? 1 : 0));
+        $completed = $mode === 'proxy-valid' ? 3 : ($mode === 'success' ? 2 : (in_array($mode, ['filesystem', 'source-link', 'archive-link', 'target-link', 'directory-link'], true) ? 1 : 0));
         expect($result['deleted'])->toHaveCount($completed)
             ->and($result['queue'])->toHaveCount($mode === 'empty' ? 0 : ($mode === 'proxy-unsafe' ? 5 : ($mode === 'proxy-valid' ? 4 : 2)) - $completed)
             ->and($result[$action === '1' ? 'purged' : 'archived'])->toBe($completed);
@@ -146,15 +146,15 @@ SOURCE;
             expect($result['closed'])->toBe(1)->and($result['warnings'])->toBe([]);
             if ($mode === 'proxy-valid') {
                 $operation = $action === '1' ? 'unlink' : 'archive';
-                expect($result['commands'])->toBe(['setcnn timeout off', [$operation, 'host/sample.rrd'], [$operation, 'host/cacti.rrd'], [$operation, 'host/other.rrd'], [$operation, 'host/bare.rrd']]);
-                expect($result['result'])->toBeTrue();
+                expect($result['commands'])->toBe(['setcnn timeout off', [$operation, 'host/sample.rrd'], [$operation, 'host/other.rrd'], [$operation, 'host/bare.rrd']]);
+                expect($result['result'])->toBeFalse();
             } elseif ($mode === 'proxy-unsafe') {
                 expect($result['commands'])->toBe(['setcnn timeout off'])->and($result['result'])->toBeFalse();
             } else {
                 expect($result['commands'])->toHaveCount(2)->and($result['result'])->toBeFalse();
             }
             expect(file_get_contents($directory . '/bad/sample.rrd'))->toBe('retained original');
-        } elseif (in_array($mode, ['success', 'directory-link', 'custom-root'], true)) {
+        } elseif ($mode === 'success') {
             expect($result['result'])->toBeTrue()->and($result['warnings'])->toBe(array());
             expect(file_exists($directory . '/bad/sample.rrd'))->toBeFalse();
             if ($action === '3') {

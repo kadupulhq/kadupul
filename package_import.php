@@ -137,12 +137,12 @@ function form_save()
             }
 
             if ($preview_only) {
-                print '<h3>' . __('Error: Package signature verification failed. Only packages signed by a trusted key can be imported.') . '</h3>';
+                print '<h3>Error: Package signature verification failed. Only packages signed by a trusted key can be imported.</h3>';
 
                 return;
             }
 
-            raise_message('verify_warning', __('Package signature verification failed. Only packages signed by a trusted key can be imported.'), MESSAGE_LEVEL_ERROR);
+            raise_message('verify_warning', 'Package signature verification failed. Only packages signed by a trusted key can be imported.', MESSAGE_LEVEL_ERROR);
             header('Location: package_import.php?package_location=0');
             exit;
         }
@@ -216,7 +216,7 @@ function form_save()
                 @unlink($xmlfile);
                 unset($_SESSION['sess_import_package']);
 
-                print '<h3>' . __('Error: Package signature verification or preview failed.') . '</h3>';
+                print '<h3>Error: Package signature verification or preview failed.</h3>';
 
                 return;
             }

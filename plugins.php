@@ -914,7 +914,7 @@ function plugin_actions($plugin, $table)
             $directory  = $plugin['name'];
 
             if ($path === false) {
-                $link .= "<a class='pierror' href='#' title='" . __esc('Plugin directory \'%s\' is invalid', $plugin['directory']) . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
+                $link .= "<a class='pierror' href='#' title='" . html_escape(sprintf("Plugin directory '%s' is invalid", $plugin['directory'])) . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
             } elseif (!file_exists("$path/setup.php")) {
                 $link .= "<a class='pierror' href='#' title='" . __esc('Plugin directory \'%s\' is missing setup.php', $plugin['directory']) . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
             } elseif (!file_exists("$path/INFO")) {

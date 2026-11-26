@@ -72,6 +72,10 @@ require $root . '/include/global_constants.php';
 $_SESSION = $fixture['session'] ?? [];
 $_REQUEST = $_GET = $fixture['request'] ?? [];
 $_POST = [];
+$_SERVER['REQUEST_METHOD'] = $fixture['method'] ?? 'GET';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_POST = $_REQUEST;
+}
 if (array_key_exists('accept', $fixture)) {
     $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $fixture['accept'];
 }

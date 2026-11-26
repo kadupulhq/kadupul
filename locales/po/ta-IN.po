@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Tamil Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Tamil\n"
@@ -452,6 +452,10 @@ msgstr "தேர்ந்தெடுக்கப்பட்ட திரட�
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "தேர்ந்தெடுக்கப்பட்ட திரட்டு வரைபடங்கள் ஒன்றுக்கும் மேற்பட்ட வரைபட வார்ப்புருக்களிலிருந்து கூறுகளைக் குறிக்கின்றன."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "தேர்ந்தெடுக்கப்பட்ட மரம் கிடைக்கவில்லை."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "இந்த வரைபடத்திற்கான உள் தர
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "தேர்ந்தெடுக்கப்பட்ட சாதனம் கிடைக்கவில்லை."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "தேர்ந்தெடுக்கப்பட்ட மரம் கிடைக்கவில்லை."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "வரைபடம்:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul உள்நுழைவுத் தோல்வி"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "கட்டுப்படுத்தப்பட்டது"
 
@@ -13111,7 +13111,7 @@ msgstr "நிறுவல் விருப்பங்கள்:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "நிறுவல் %s அன்று தொடங்கப்பட்டது, %s அன்று முடிந்தது"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "நிறுவப்பட்டது"
 
@@ -15122,10 +15122,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "குறைந்தது ஒரு அறிவிப்புப் பொருளையாவது தேர்ந்தெடுக்க வேண்டும்."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "கையொப்பமிடுபவரைத் தானாக நம்பு"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "மாற்றங்கள்/வேறுபாடுகள்"
@@ -15161,10 +15157,6 @@ msgstr "இதற்கான கோப்பு வேறுபாடுகள�
 #: package_import.php
 msgid "Filename"
 msgstr "கோப்புப் பெயர்"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "தேர்வுசெய்யப்பட்டால், இந்த மற்றும் அந்த ஆசிரியரின் எதிர்காலத் தொகுப்புகள் எதற்கும் கையொப்பமிடுபவரை Kadupul தானாக நம்பும்."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "தொகுப்புப் பதிவிறக்கம் அல�
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "தற்காலிகத் தொகுப்புக் கோப்பை உருவாக்க முடியவில்லை."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "இந்தத் தொகுப்பு ஆசிரியரை நீங்கள் நம்பவில்லை. இறக்குமதி செய்ய விரும்பினால், Automatically Trust Author தேர்வுப்பெட்டியைத் தேர்ந்தெடுக்கவும்"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "VDEF-கள் [புதியது]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "பயன்பாட்டில் உள்ள VDEF-களை நீக்க முடியாது. பயன்பாட்டில் என்பது ஒரு வரைபடம் அல்லது வரைபட வார்ப்புருவால் குறிப்பிடப்படுவது என வரையறுக்கப்படுகிறது."
-
-

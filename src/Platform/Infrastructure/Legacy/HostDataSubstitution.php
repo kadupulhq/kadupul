@@ -69,11 +69,10 @@ final class HostDataSubstitution
         $search = [];
         $replace = [];
         foreach (self::FIELDS as $field) {
-            $token = 'host_' . $field;
-            if (!$scope->allowsToken($token)) {
+            if (!$scope->allowsToken('host_' . $field)) {
                 continue;
             }
-            $search[] = $l_escape_string . $token . $r_escape_string;
+            $search[] = $l_escape_string . 'host_' . $field . $r_escape_string;
             $replace[] = $field === 'uptime'
                 ? \get_uptime($host)
                 : $host[self::COLUMN_ALIASES[$field] ?? $field];

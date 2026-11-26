@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Indonesian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Indonesian\n"
@@ -452,6 +452,10 @@ msgstr "Grafik Agregat yang dipilih tampaknya tidak memiliki Templat Agregat yan
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Grafik Agregat yang dipilih mewakili elemen dari lebih dari satu Templat Grafik."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Pohon yang dipilih tidak tersedia."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3263,10 +3267,6 @@ msgstr "ID basis data internal untuk Grafik ini.  Berguna saat melakukan otomati
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Perangkat yang dipilih tidak tersedia."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Pohon yang dipilih tidak tersedia."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10510,7 +10510,7 @@ msgstr "Grafik:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kegagalan Login Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Dibatasi"
 
@@ -13090,7 +13090,7 @@ msgstr "Opsi instalasi:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Instalasi dimulai pada %s, selesai pada %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Terpasang"
 
@@ -15098,10 +15098,6 @@ msgstr "Varbind"
 msgid "You must select at least one notification object."
 msgstr "Anda harus memilih setidaknya satu objek notifikasi."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Automatically Trust Signer"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Perubahan/Perbedaan"
@@ -15137,10 +15133,6 @@ msgstr "Perbedaan File untuk: "
 #: package_import.php
 msgid "Filename"
 msgstr "Nama File"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Jika dicentang, Kadupul akan otomatis Mempercayai Penanda Tangan untuk Paket ini dan Paket mendatang dari pembuat tersebut."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15236,10 +15228,6 @@ msgstr "Pengunduhan atau validasi paket gagal"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Tidak dapat membuat file paket sementara."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Anda belum Mempercayai Pembuat Paket ini.  Jika ingin mengimpor, centang kotak Percayai Pembuat Secara Otomatis"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18251,5 +18239,3 @@ msgstr "VDEF [baru]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF yang sedang digunakan tidak dapat Dihapus. Sedang digunakan berarti dirujuk oleh Grafik atau Templat Grafik."
-
-

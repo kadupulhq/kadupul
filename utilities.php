@@ -2388,7 +2388,7 @@ function utilities_view_poller_cache()
                 if ($item['snmp_version'] != 3) {
                     $details =
                         __('SNMP Version:') . ' ' . html_escape((string) $item['snmp_version']) . ', ' .
-                        __('Community:') . ' ' . __('Redacted') . ', ' .
+                        __('Community:') . ' Redacted, ' .
                         __('OID:') . ' ' . filter_value($item['arg1'], get_request_var('filter'));
                 } else {
                     $details =
@@ -2396,9 +2396,9 @@ function utilities_view_poller_cache()
                         __('User:') . ' ' . html_escape($item['snmp_username']) . ', ' . __('OID:') . ' ' . html_escape($item['arg1']);
                 }
             } elseif ($item['action'] == 1) {
-                $details = __('Script:') . ' ' . __('Redacted');
+                $details = __('Script:') . ' Redacted';
             } else {
-                $details = __('Script Server:') . ' ' . __('Redacted');
+                $details = __('Script Server:') . ' Redacted';
             }
 
             print $details;

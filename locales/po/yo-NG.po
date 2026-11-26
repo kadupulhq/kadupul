@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Yoruba Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Yoruba\n"
@@ -452,6 +452,10 @@ msgstr "Àwọn Gíráfù Àpapọ̀ tí a yàn kò dà bí ẹni pé wọ́n n�
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Àwọn Gíráfù Àpapọ̀ tí a yàn dúró fún àwọn ohun láti inú ju Àdàkọ Gíráfù kan lọ."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Igi tí a yàn kò sí."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3263,10 +3267,6 @@ msgstr "ID dátàbéèsì inú fún Gíráfù yìí. Ó wúlò nígbà tí a bá
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Ẹ̀rọ tí a yàn kò sí."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Igi tí a yàn kò sí."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10510,7 +10510,7 @@ msgstr "Àtẹ àwòrán:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Ìkùnà Ìwọlé Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Tí A Dín Kù"
 
@@ -13090,7 +13090,7 @@ msgstr "Àwọn àṣàyàn ìfisori ẹ̀rọ:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Ìfisori ẹ̀rọ bẹ̀rẹ̀ ní %s, ó parí ní %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Ti Fi Sori Ẹ̀rọ"
 
@@ -15098,10 +15098,6 @@ msgstr "Àwọn Varbind"
 msgid "You must select at least one notification object."
 msgstr "O gbọ́dọ̀ yan ó kéré jù ohun ìfitọ́nilétí kan."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Gbẹ́kẹ̀lé Olùfọwọ́sí Lọ́nà Aládàáṣe"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Àwọn Àtúnṣe/Ìyàtọ̀"
@@ -15137,10 +15133,6 @@ msgstr "Ìyàtọ̀ Fáìlì fún: "
 #: package_import.php
 msgid "Filename"
 msgstr "Orúkọ fáìlì"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Tí a bá ṣàmì sí i, Kadupul yóò Gbẹ́kẹ̀lé Olùfọwọ́sí láìfọwọ́ṣe fún èyí àti èyíkéyìí Àwọn Páàkẹ́ẹ̀tì ọjọ́ iwájú láti ọwọ́ òǹkọ̀wé yẹn."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15236,10 +15228,6 @@ msgstr "Ìgbàsílẹ̀ tàbí ìfìdí múlẹ̀ ìdìpọ̀ kùnà"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Kò ṣeé ṣe láti ṣẹ̀dá fáìlì ìdìpọ̀ ìgbà díẹ̀."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "O kò ì Gbẹ́kẹ̀lé Olùkọ Ìdìpọ̀ yìí. Tí o bá fẹ́ gbé wọlé, ṣàmì sí àpótí Gbẹ́kẹ̀lé Olùkọ Fúnra Rẹ̀"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18251,5 +18239,3 @@ msgstr "Àwọn VDEF [tuntun]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "A kò lè Pa àwọn VDEF tó wà ní lílò Rẹ́. Wà ní lílò túmọ̀ sí pé Gíráfù tàbí Àdàkọ Gíráfù kan ń tọ́ka sí i."
-
-

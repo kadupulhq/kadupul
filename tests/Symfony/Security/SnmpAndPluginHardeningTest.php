@@ -386,6 +386,7 @@ final class SnmpAndPluginHardeningTest extends TestCase
             function cacti_sizeof($v) { return is_countable($v) ? count($v) : 0; }
             function __($s, ...$a) { return $a ? vsprintf($s, $a) : $s; }
             function __esc($s, ...$a) { return htmlspecialchars(__($s, ...$a), ENT_QUOTES, 'UTF-8'); }
+            function html_escape($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); }
             function db_fetch_cell_prepared($sql, $params = []) {
                 $GLOBALS['preparedCalls'][] = [$sql, $params];
                 return '';

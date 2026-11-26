@@ -1269,7 +1269,7 @@ function validate_is_regex($regex, $max_length = 50): bool|string
     }
 
     if (!is_string($regex) || str_contains($regex, "\0")) {
-        return __('Invalid regular expression.');
+        return 'Invalid regular expression.';
     }
 
     /**
@@ -1286,7 +1286,7 @@ function validate_is_regex($regex, $max_length = 50): bool|string
     }
 
     if (str_contains($regex, '(?C')) {
-        return __('Invalid regular expression.');
+        return 'Invalid regular expression.';
     }
 
     $warning = null;

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -450,6 +450,10 @@ msgstr "Det valda aggregerade diagrammet verkar inte ha några matchande aggrege
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "De valda aggregerade graferna representerar element från mer än en grafmall."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Det valda trädet är inte tillgängligt."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3282,10 +3286,6 @@ msgstr "Det interna databas-ID:t för denna Graph.  Användbart vid automatiseri
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Den valda enheten är inte tillgänglig."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Det valda trädet är inte tillgängligt."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10529,7 +10529,7 @@ msgstr "Graf:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Felaktig inloggning för Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Begränsat"
 
@@ -13109,7 +13109,7 @@ msgstr "Alternativ för installation:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Installationen påbörjades vid %s och slutfördes vid %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Installerade"
 
@@ -15120,10 +15120,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "Du måste välja minst ett anmälningsobjekt."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Lita automatiskt på undertecknaren"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Förändringar/skillnader"
@@ -15159,10 +15155,6 @@ msgstr "Filskillnader för: "
 #: package_import.php
 msgid "Filename"
 msgstr "Filnamn"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Om det markeras kommer Kadupul automatiskt att lita på undertecknaren för detta och alla framtida paket från den författaren."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15258,10 +15250,6 @@ msgstr "Nedladdningen eller valideringen av paketet misslyckades"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Det gick inte att skapa en temporär paketfil."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Du har inte litat på den här paketförfattaren.  Om du vill importera, markera kryssrutan Lita automatiskt på författare"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18311,5 +18299,3 @@ msgstr "VDEF:er [ny]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF:er som är i bruk kan inte raderas. Används definieras som att den refereras av en Graph eller en Graph Template."
-
-

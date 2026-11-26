@@ -122,7 +122,8 @@ final class DiscoveryRange
             }
         }
         $unpacked = unpack('N', $packed);
-        return $unpacked !== false && self::isAllowedIpv4Range($unpacked[1], $unpacked[1]);
+        $ipInt = $unpacked !== false && is_int($unpacked[1] ?? null) ? $unpacked[1] : -1;
+        return $ipInt >= 0 && self::isAllowedIpv4Range($ipInt, $ipInt);
     }
 
     private static function isAllowedIpv4Range(int $start, int $end): bool

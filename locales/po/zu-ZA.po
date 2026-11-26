@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Zulu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Zulu\n"
@@ -452,6 +452,10 @@ msgstr "Amagrafu Ahlanganisiwe akhethiwe awabonakali enezifanekiso Ezihlanganisi
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Amagrafu Ahlanganisiwe akhethiwe amele izinto ezisuka Ezifanekisweni Zegrafu ezingaphezu kwesisodwa."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Isihlahla esikhethiwe asitholakali."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "I-ID yangaphakathi yesizindalwazi yale Grafu.  Iwusizo lapho wenza ukuze
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Idivayisi ekhethiwe ayitholakali."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Isihlahla esikhethiwe asitholakali."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "Igrafu:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Ukwehluleka Kokungena Ku-Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Kukhawulelwe"
 
@@ -13111,7 +13111,7 @@ msgstr "Izinketho zokufaka:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Ukufakwa kwaqalwa ngo-%s, kwaqedwa ngo-%s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Kufakiwe"
 
@@ -15122,10 +15122,6 @@ msgstr "Ama-Varbind"
 msgid "You must select at least one notification object."
 msgstr "Kufanele ukhethe okungenani into eyodwa yesaziso."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Thembela Umshayeli Ngokuzenzakalelayo"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Izinguquko/Umehluko"
@@ -15161,10 +15157,6 @@ msgstr "Umehluko Wefayela we: "
 #: package_import.php
 msgid "Filename"
 msgstr "Igama lefayela"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Uma kumakiwe, i-Kadupul izothembela ngokuzenzakalelayo Umsayini kuleli nakunoma yimaphi amaPhakheji esikhathi esizayo abhalwe yilowo mbhali."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "Ukulandwa noma ukuqinisekiswa kwephakeji kuhlulekile"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Ayikwazi ukudala ifayela lephakeji lesikhashana."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Awumethembanga lo Mlobi Wephakeji.  Uma ufisa ukungenisa, hlola ibhokisi lokuhlola elithi Themba Umlobi Ngokuzenzakalelayo"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "Ama-VDEF [amasha]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Ama-VDEF asetshenziswayo awakwazi ukususwa. Okusetshenziswayo kuchazwa njengokubhekiselwa yiGrafu noma Isifanekiso Segrafu."
-
-

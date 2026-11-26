@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Somali Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-24 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Somali\n"
@@ -452,6 +452,10 @@ msgstr "Jaantusyada Isugeynta ee la doortay uma muuqdaan inay leeyihiin wax Qaab
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Jaantusyada Isugeynta ee la doortay waxay metelaan qaybo ka yimid wax ka badan hal Qaab Jaantus."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Geedka la doortay lama heli karo."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "Aqoonsiga kaydka xogta gudaha ee Jaantuskan.  Wuxuu waxtar leeyahay mark
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Qalabka la doortay lama heli karo."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Geedka la doortay lama heli karo."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "Jaantus:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Fashil Galitaan oo Kadupul ah"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "La Xaddiday"
 
@@ -13111,7 +13111,7 @@ msgstr "Ikhtiyaarada rakibidda:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Rakibidda waxaa la bilaabay %s, waxaana la dhammeeyay %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "La rakibay"
 
@@ -15122,10 +15122,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "Waa inaad doorataa ugu yaraan hal shay oo ogeysiis ah."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Si Toos ah u Aamin Saxeexaha"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Isbeddellada/Farqiyada"
@@ -15161,10 +15157,6 @@ msgstr "Farqiyada Faylka ee: "
 #: package_import.php
 msgid "Filename"
 msgstr "Magaca faylka"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Haddii la calaamadeeyo, Kadupul wuxuu si toos ah u Aamini doonaa Saxeexaha xidhmadan iyo wixii Xidhmooyin mustaqbal ah ee qoraagaas."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "Soo dejinta ama xaqiijinta xirmada way fashilantay"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Lama samayn karo faylka xirmada ku meel gaarka ah."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Ma aadan aaminin Qoraaga Xidhmadan. Haddii aad rabto inaad soo dejiso, calaamadee sanduuqa hubinta ee Si Toos ah u Aamin Qoraaga"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "VDEF-yada [cusub]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF-yada la isticmaalayo lama tirtiri karo. La isticmaalayo waxaa loola jeedaa inuu tixraacayo Jaantus ama Qaab-jaantus."
-
-

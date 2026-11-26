@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -453,6 +453,10 @@ msgstr "所選的彙總圖表似乎沒有任何相符的彙總範本。"
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "所選的彙總圖表包含來自多個圖表範本的元素。"
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "所選的樹狀目錄無法使用。"
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3264,10 +3268,6 @@ msgstr "此圖表的內部資料庫 ID。執行自動化或偵錯時很有用。
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "所選的裝置無法使用。"
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "所選的樹狀目錄無法使用。"
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10511,7 +10511,7 @@ msgstr "圖表：(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul 登入失敗"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "受限制"
 
@@ -13091,7 +13091,7 @@ msgstr "安裝選項："
 msgid "Installation was started at %s, completed at %s"
 msgstr "安裝已於 %s 開始，於 %s 完成"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "已安裝"
 
@@ -15099,10 +15099,6 @@ msgstr "變數繫結（Varbinds）"
 msgid "You must select at least one notification object."
 msgstr "您必須至少選擇一個通知對象。"
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "自動信任簽署者"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "變更/差異"
@@ -15138,10 +15134,6 @@ msgstr "檔案差異： "
 #: package_import.php
 msgid "Filename"
 msgstr "檔案名稱"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "若勾選，Kadupul 將自動信任此套件及該作者未來任何套件的簽署者。"
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15237,10 +15229,6 @@ msgstr "套件下載或驗證失敗"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "無法建立暫存套件檔案。"
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "您尚未信任此套件作者。若您希望匯入，請勾選「自動信任作者」核取方塊"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18252,5 +18240,3 @@ msgstr "VDEF [新增]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "無法刪除使用中的 VDEF。使用中是指正在被圖表或圖表範本參照。"
-
-

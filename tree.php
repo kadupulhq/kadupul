@@ -214,7 +214,7 @@ function tree_check_sequences()
 function tree_sort_name_asc()
 {
     if (!cacti_authorize_is_admin((int) ($_SESSION['sess_user_id'] ?? 0))) {
-        raise_message('tree_idor', __('You do not have permission to reorder all trees.'), MESSAGE_LEVEL_ERROR);
+        raise_message('tree_idor', 'You do not have permission to reorder all trees.', MESSAGE_LEVEL_ERROR);
         return;
     }
 
@@ -225,7 +225,7 @@ function tree_sort_name_asc()
 function tree_sort_name_desc()
 {
     if (!cacti_authorize_is_admin((int) ($_SESSION['sess_user_id'] ?? 0))) {
-        raise_message('tree_idor', __('You do not have permission to reorder all trees.'), MESSAGE_LEVEL_ERROR);
+        raise_message('tree_idor', 'You do not have permission to reorder all trees.', MESSAGE_LEVEL_ERROR);
         return;
     }
 
@@ -264,7 +264,7 @@ function tree_down(): never
         );
 
         if ($adjacent_id !== false && $adjacent_id !== null && !cacti_authorize_resource($actor_id, (int) $adjacent_id, 'graph_tree')) {
-            raise_message('tree_idor', __('You do not have permission to reorder this tree.'), MESSAGE_LEVEL_ERROR);
+            raise_message('tree_idor', 'You do not have permission to reorder this tree.', MESSAGE_LEVEL_ERROR);
             header('Location: tree.php?header=false');
             exit;
         }
@@ -321,7 +321,7 @@ function tree_up(): never
         );
 
         if ($adjacent_id !== false && $adjacent_id !== null && !cacti_authorize_resource($actor_id, (int) $adjacent_id, 'graph_tree')) {
-            raise_message('tree_idor', __('You do not have permission to reorder this tree.'), MESSAGE_LEVEL_ERROR);
+            raise_message('tree_idor', 'You do not have permission to reorder this tree.', MESSAGE_LEVEL_ERROR);
             header('Location: tree.php?header=false');
             exit;
         }

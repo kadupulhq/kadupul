@@ -9,11 +9,11 @@ wait_for_database() {
 	# is not up yet. Fail slowly and clearly instead.
 	[ -n "${KADUPUL_DB_HOST:-}" ] || return 0
 	attempt=0
-	until mysqladmin ping \
+	until MYSQL_PWD="${KADUPUL_DB_PASSWORD:-}" mysqladmin ping \
 		--host="${KADUPUL_DB_HOST}" \
 		--port="${KADUPUL_DB_PORT:-3306}" \
 		--user="${KADUPUL_DB_USER:-kadupul}" \
-		--password="${KADUPUL_DB_PASSWORD:-}" --silent 2>/dev/null
+		--silent 2>/dev/null
 	do
 		attempt=$((attempt + 1))
 		if [ "$attempt" -ge "${KADUPUL_DB_WAIT:-60}" ]; then

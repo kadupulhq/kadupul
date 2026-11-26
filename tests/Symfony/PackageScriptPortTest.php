@@ -58,7 +58,17 @@ final class PackageScriptPortTest extends TestCase
         self::assertIsString($source);
         foreach ($commands as $command => $fixture) {
             self::assertStringContainsString($command, $source, 'The oracle must replace a command the script really runs.');
-            $source = str_replace($command, 'cat ' . realpath(self::FIXTURES . $fixture), $source);
+            $fixturePath = realpath(self::FIXTURES . $fixture);
+            self::assertIsString($fixturePath);
+            if ($command === '/proc/meminfo') {
+                $replacement = $fixturePath;
+            } elseif (str_starts_with($command, 'open(')) {
+                preg_match('/^open\((my \$\w+)/', $command, $match);
+                $replacement = sprintf("open(%s, '<', '%s')", $match[1] ?? 'my $fh', addslashes($fixturePath));
+            } else {
+                $replacement = 'cat ' . $fixturePath;
+            }
+            $source = str_replace($command, $replacement, $source);
         }
         $copy = tempnam(sys_get_temp_dir(), 'kadupul-perl-oracle');
         self::assertIsString($copy);
@@ -94,9 +104,9 @@ final class PackageScriptPortTest extends TestCase
     public function testPingMatchesPerl(string $host, string $ping, ?string $ping6): void
     {
         $hasPing6 = is_file('/bin/ping6') || is_file('/sbin/ping6');
-        $commands = ['$pingcmd 2>&1' => $ping];
+        $commands = ["open(my \$fh, '-|', @pingcmd)" => $ping];
         if ($ping6 !== null) {
-            $commands['ping6 -c 1 $host 2>&1'] = $ping6;
+            $commands["open(my \$fh6, '-|', 'ping6', '-c', '1', '--', \$host)"] = $ping6;
         }
         $expected = self::perl('ping.pl', $commands, [$host]);
 
@@ -171,7 +181,7 @@ final class PackageScriptPortTest extends TestCase
     #[DataProvider('memoryCases')]
     public function testMemoryValueMatchesPerl(string $field): void
     {
-        $expected = self::perl('linux_memory.pl', ['cat /proc/meminfo' => 'meminfo-linux.txt'], [$field]);
+        $expected = self::perl('linux_memory.pl', ['/proc/meminfo' => 'meminfo-linux.txt'], [$field]);
 
         self::assertSame($expected, linux_memory_values($field, self::fixture('meminfo-linux.txt')));
     }

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Kinyarwanda Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-24 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Kinyarwanda\n"
@@ -452,6 +452,10 @@ msgstr "Ibishushanyo byegeranyijwe byatoranyijwe bigaragara ko bitagira Inyandik
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Ibishushanyo byegeranyijwe byatoranyijwe bigaragaza ibice biva mu Nyandikorugero z'ibishushanyo zirenze imwe."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Igiti cyahiswemo ntigihari."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "ID y'imbere mu bubiko bw'amakuru y'iki gishushanyo. Ni ingirakamaro mu g
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Igikoresho cyahiswemo ntigihari."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Igiti cyahiswemo ntigihari."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "Igishushanyo:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kwinjira muri Kadupul byanze"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Byabujijwe"
 
@@ -13111,7 +13111,7 @@ msgstr "Amahitamo y'ishyirwamo:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Gushyiramo byatangijwe kuri %s, birangira kuri %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Byashyizwemo"
 
@@ -15122,10 +15122,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "Ugomba guhitamo nibura ikintu kimwe cy'imenyesha."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Izera Uwashyizeho Umukono mu Buryo Bwikora"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Impinduka/Ibitandukaniro"
@@ -15161,10 +15157,6 @@ msgstr "Ibitandukaniro by'idosiye kuri: "
 #: package_import.php
 msgid "Filename"
 msgstr "Izina ry'idosiye"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Niba gahiswemo, Kadupul izajya yizera mu buryo bwikora Uwashyizeho Umukono kuri iyi paki n'izindi zose zizaza z'uwo mwanditsi."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "Gukurura ipaki cyangwa kuyemeza byanze"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Ntibishoboka gukora idosiye y'ipaki y'igihe gito."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Nturizera uyu Mwanditsi w'Ipaki. Niba wifuza gutumiza, hitamo agasanduku ka Izera Umwanditsi mu Buryo Bwikora"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "Za VDEF [nshya]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Za VDEF zirimo gukoreshwa ntizishobora gusibwa. Gukoreshwa bisobanura ko zishingiweho n'Igishushanyo cyangwa Inyandikorugero y'igishushanyo."
-
-

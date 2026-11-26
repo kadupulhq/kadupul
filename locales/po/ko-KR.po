@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -453,6 +453,10 @@ msgstr "선택한 집계 그래프에 일치하는 집계 템플릿이 없는 �
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "선택한 집계 그래프는 둘 이상의 그래프 템플리트의 요소를 나타냅니다."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "선택한 트리를 사용할 수 없습니다."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3264,10 +3268,6 @@ msgstr "이 그래프의 내부 데이터베이스 ID입니다. 자동화 또는
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "선택한 장치를 사용할 수 없습니다."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "선택한 트리를 사용할 수 없습니다."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10511,7 +10511,7 @@ msgstr "그래프:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul 로그인 실패"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "제한됨"
 
@@ -13091,7 +13091,7 @@ msgstr "설치 옵션 :"
 msgid "Installation was started at %s, completed at %s"
 msgstr "설치가 %s에서 시작되어 %s에서 완료되었습니다"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "설치됨"
 
@@ -15099,10 +15099,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "하나 이상의 알림 개체를 선택해야합니다."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "서명자 자동 신뢰"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "변경 사항/차이점"
@@ -15138,10 +15134,6 @@ msgstr "다음에 대한 파일 차이점: "
 #: package_import.php
 msgid "Filename"
 msgstr "파일 이름"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "이 옵션을 선택하면 Kadupul는 서명자와 해당 작성자의 향후 패키지를 자동으로 신뢰합니다."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15237,10 +15229,6 @@ msgstr "패키지 다운로드 또는 유효성 검사 실패"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "임시 패키지 파일을 생성할 수 없습니다."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "이 패키지 작성자를 신뢰하지 않았습니다. 가져오려면 자동 신뢰 작성자 확인란을 선택합니다"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18252,5 +18240,3 @@ msgstr "VDEFs [신규]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "사용중인 VDEF는 h 제할 수 없습니다. 사용중은 그래프 또는 그래프 템플릿에 의해 참조되는 것으로 정의됩니다."
-
-

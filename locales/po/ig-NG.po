@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Igbo Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Igbo\n"
@@ -452,6 +452,10 @@ msgstr "Eserese Nchịkọta ahọpụtara eyighị ka ha nwere Atụmatụ Nch�
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Eserese Nchịkọta ahọpụtara na-anọchite anya ihe sitere n'ihe karịrị otu Atụmatụ Eserese."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Osisi ahọpụtara adịghị."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3263,10 +3267,6 @@ msgstr "ID database dị n'ime maka Eserese a. Bara uru mgbe a na-eme akpaaka ma
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Ngwaọrụ ahọpụtara adịghị."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Osisi ahọpụtara adịghị."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10510,7 +10510,7 @@ msgstr "Eserese:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Ọdịda Nbanye Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Egbochiri"
 
@@ -13090,7 +13090,7 @@ msgstr "Nhọrọ nwụnye:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Amalitere nwụnye na %s, mechaa na %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Ewụnyere"
 
@@ -15098,10 +15098,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "Ị ga-ahọrọ opekata mpe otu ihe ọkwa."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Tụkwasị Onye Bịanyere Aka Obi Na-akpaghị Aka"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Mgbanwe/Ndịiche"
@@ -15137,10 +15133,6 @@ msgstr "Ndịiche Faịlụ maka: "
 #: package_import.php
 msgid "Filename"
 msgstr "Aha faịlụ"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Ọ bụrụ na enyochara, Kadupul ga-atụkwasị Onye Binyere Aka obi na-akpaghị aka maka nke a na Ngwugwu ọ bụla n'ọdịnihu nke onye dere ya."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15236,10 +15228,6 @@ msgstr "Nbudata ma ọ bụ nkwado ngwugwu adaghị"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Enweghị ike imepụta faịlụ ngwugwu nwa oge."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Ị tụkwasịbeghị Onye Dere Ngwugwu a Obi. Ọ bụrụ na ịchọrọ ibubata, lelee igbe Tụkwasị Onye Odee Obi Na-akpaghị aka"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18251,5 +18239,3 @@ msgstr "VDEFs [ọhụrụ]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Enweghị ike Ihichapụ VDEFs ndị a na-eji eme ihe. A na-akọwa n'ọrụ dịka nke Eserese ma ọ bụ Atụmatụ Eserese na-ezo aka na ya."
-
-

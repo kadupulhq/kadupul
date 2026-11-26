@@ -410,7 +410,7 @@ function form_save(): never
                     );
                     if ($task_host_id === false || ((int) $task_host_id > 0 && !is_device_allowed((int) $task_host_id))) {
                         cacti_log('ERROR: Graph save refused unauthorized task_item_id ' . $submitted_task_item, false, 'SECURITY');
-                        raise_message('graph_input_invalid', __('A Graph Item Input references an unauthorized Data Source.'), MESSAGE_LEVEL_ERROR);
+                        raise_message('graph_input_invalid', 'A Graph Item Input references an unauthorized Data Source.', MESSAGE_LEVEL_ERROR);
                         $input_list = array();
 
                         break;

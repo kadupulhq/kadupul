@@ -1004,7 +1004,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
                         || in_array($name, array('path_rrdtool', 'path_snmpwalk', 'path_snmpget', 'path_snmpbulkwalk', 'path_snmpgetnext', 'path_snmptrap', 'path_spine', 'settings_sendmail_path'), true)
                     )) {
                         if (!function_exists('cacti_is_allowed_binary_path') || !cacti_is_allowed_binary_path($path, $name)) {
-                            $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Binary path is not in an allowed system directory'));
+                            $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, 'Binary path is not in an allowed system directory');
                             $should_set = false;
                         } else {
                             $canonicalPath = realpath($path);

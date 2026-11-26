@@ -11,7 +11,7 @@ namespace Kadupul\IdentityAccess\Application\Port;
 
 interface AuthenticationTransitionAccounts
 {
-    /** @return array{enabled: string, locked: string, password: string}|null */
+    /** @return array{enabled: string, locked: string, password: string, is_admin?: bool}|null */
     public function find(int $userId): ?array;
 
     public function guestId(): int;

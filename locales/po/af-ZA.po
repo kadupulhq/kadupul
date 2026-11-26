@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Afrikaans Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Afrikaans\n"
@@ -452,6 +452,10 @@ msgstr "Die gekose Aggregaatgrafieke blyk nie enige passende Aggregaatsjablone t
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Die gekose Aggregaatgrafieke verteenwoordig elemente van meer as een Grafieksjabloon."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Die gekose Boom is nie beskikbaar nie."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "Die interne databasis-ID vir hierdie Grafiek.  Nuttig wanneer outomatise
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Die gekose Toestel is nie beskikbaar nie."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Die gekose Boom is nie beskikbaar nie."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "Grafiek:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kadupul-aanmelding het misluk"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Beperk"
 
@@ -13111,7 +13111,7 @@ msgstr "Installasie-opsies:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Installasie is begin op %s, voltooi op %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Geïnstalleer"
 
@@ -15122,10 +15122,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "Jy moet ten minste een kennisgewingobjek kies."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Vertrou ondertekenaar outomaties"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Veranderinge/Verskille"
@@ -15161,10 +15157,6 @@ msgstr "Lêerverskille vir: "
 #: package_import.php
 msgid "Filename"
 msgstr "Lêernaam"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Indien gemerk, sal Kadupul outomaties die ondertekenaar vertrou vir hierdie en enige toekomstige pakkette deur daardie outeur."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "Die pakket se aflaai of validering het misluk"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Kan nie tydelike pakketlêer skep nie."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Jy het nie hierdie Pakketouteur vertrou nie.  As jy wil invoer, merk die Vertrou outeur outomaties-merkblokkie"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "VDEFs [nuut]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEFs wat gebruik word, kan nie geskrap word nie. In gebruik word gedefinieer as verwys deur 'n Grafiek of 'n Grafieksjabloon."
-
-

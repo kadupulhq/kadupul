@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Thai Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Thai\n"
@@ -452,6 +452,10 @@ msgstr "กราฟรวมที่เลือกดูเหมือนจ
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "กราฟรวมที่เลือกแสดงองค์ประกอบจากเทมเพลตกราฟมากกว่าหนึ่งรายการ"
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Tree ที่เลือกไม่พร้อมใช้งาน"
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3263,10 +3267,6 @@ msgstr "รหัสฐานข้อมูลภายในสำหรับ
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "อุปกรณ์ที่เลือกไม่พร้อมใช้งาน"
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Tree ที่เลือกไม่พร้อมใช้งาน"
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10510,7 +10510,7 @@ msgstr "กราฟ:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "การเข้าสู่ระบบ Kadupul ล้มเหลว"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "ถูกจำกัด"
 
@@ -13090,7 +13090,7 @@ msgstr "ตัวเลือกการติดตั้ง:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "การติดตั้งเริ่มเมื่อ %s เสร็จสิ้นเมื่อ %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "ติดตั้งแล้ว"
 
@@ -15098,10 +15098,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "คุณต้องเลือกออบเจ็กต์การแจ้งเตือนอย่างน้อยหนึ่งรายการ"
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "เชื่อถือผู้ลงนามโดยอัตโนมัติ"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "การเปลี่ยนแปลง/ความแตกต่าง"
@@ -15137,10 +15133,6 @@ msgstr "ความแตกต่างของไฟล์สำหรับ
 #: package_import.php
 msgid "Filename"
 msgstr "ชื่อไฟล์"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "หากเลือก Kadupul จะเชื่อถือผู้ลงนามโดยอัตโนมัติสำหรับแพ็กเกจนี้และแพ็กเกจในอนาคตใดๆ จากผู้เขียนรายนั้น"
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15236,10 +15228,6 @@ msgstr "การดาวน์โหลดหรือตรวจสอบค
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "ไม่สามารถสร้างไฟล์แพ็กเกจชั่วคราวได้"
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "คุณยังไม่ได้เชื่อถือผู้สร้างแพ็กเกจนี้ หากคุณต้องการนำเข้า ให้ทำเครื่องหมายที่ช่อง 'เชื่อถือผู้สร้างโดยอัตโนมัติ'"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18251,4 +18239,3 @@ msgstr "VDEF [ใหม่]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "ไม่สามารถลบ VDEF ที่กำลังใช้งานอยู่ได้ 'กำลังใช้งานอยู่' หมายถึงถูกอ้างอิงโดยกราฟหรือเทมเพลตกราฟ"
-

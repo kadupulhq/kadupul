@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.41)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.41\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,6 +76,10 @@ msgstr ""
 
 #: aggregate_graphs.php
 msgid "Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying."
+msgstr ""
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
 msgstr ""
 
 #: aggregate_graphs.php
@@ -220,6 +224,10 @@ msgstr ""
 msgid "Place Graph(s) on Tree"
 msgstr ""
 
+#: aggregate_graphs.php
+msgid "Aggregate Graph Accessed does not Exist"
+msgstr ""
+
 #: aggregate_graphs.php data_sources.php lib/html_reports.php user_admin.php
 #, php-format
 msgid "[edit: %s]"
@@ -239,10 +247,6 @@ msgstr ""
 
 #: aggregate_graphs.php lib/html.php lib/html_reports.php
 msgid "Preview"
-msgstr ""
-
-#: aggregate_graphs.php
-msgid "Aggregate Graph Accessed does not Exist"
 msgstr ""
 
 #: aggregate_graphs.php
@@ -2778,10 +2782,6 @@ msgstr ""
 
 #: graphs.php
 msgid "A Graph Item Input contains an invalid value."
-msgstr ""
-
-#: graphs.php
-msgid "The selected Tree is not available."
 msgstr ""
 
 #: graphs.php
@@ -10182,7 +10182,7 @@ msgstr ""
 msgid "Granted"
 msgstr ""
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr ""
 
@@ -12079,12 +12079,12 @@ msgstr ""
 
 #: lib/html_reports.php
 #, php-format
-msgid ", Device: %s"
+msgid ", Branch: %s"
 msgstr ""
 
 #: lib/html_reports.php
 #, php-format
-msgid ", Branch: %s"
+msgid ", Device: %s"
 msgstr ""
 
 #: lib/html_reports.php
@@ -12632,7 +12632,7 @@ msgstr ""
 msgid "Required PHP Modules"
 msgstr ""
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr ""
 
@@ -14666,10 +14666,6 @@ msgid "Unable to create temporary package file."
 msgstr ""
 
 #: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr ""
-
-#: package_import.php
 #, php-format
 msgid "The Package %s Imported Successfully"
 msgstr ""
@@ -14774,14 +14770,6 @@ msgstr ""
 
 #: package_import.php
 msgid "The *.xml.gz file located on your Local machine to Upload and Import."
-msgstr ""
-
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr ""
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
 msgstr ""
 
 #: package_import.php
@@ -15674,6 +15662,10 @@ msgid "Un-Lock"
 msgstr ""
 
 #: tree.php
+msgid "You do not have permission to modify this tree."
+msgstr ""
+
+#: tree.php
 msgctxt "ordering of tree items"
 msgid "inherit"
 msgstr ""
@@ -15696,10 +15688,6 @@ msgstr ""
 #: tree.php
 msgctxt "ordering of tree items"
 msgid "numeric"
-msgstr ""
-
-#: tree.php
-msgid "You do not have permission to modify this tree."
 msgstr ""
 
 #: tree.php

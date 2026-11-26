@@ -627,7 +627,7 @@ function filter()
 				});
 
 				$('#arcall').on('click', function() {
-					if (!window.confirm(<?php print json_encode(__('Are you sure you want to archive all unknown RRDfiles?'));?>)) {
+					if (!window.confirm(<?php print json_encode('Are you sure you want to archive all unknown RRDfiles?');?>)) {
 						return;
 					}
 					$('#text').text('Scheduling Archiving of All Unknowns');
@@ -646,7 +646,7 @@ function filter()
 				});
 
 				$('#remall').on('click', function() {
-					if (!window.confirm(<?php print json_encode(__('Are you sure you want to delete all unknown RRDfiles?'));?>)) {
+					if (!window.confirm(<?php print json_encode('Are you sure you want to delete all unknown RRDfiles?');?>)) {
 						return;
 					}
 					$('#text').text('Scheduling Purging of All Unknowns');

@@ -458,8 +458,8 @@ final class SettingsPollersAndLogHardeningTest extends TestCase
         $this->assertStringNotContainsString('shell_exec(cacti_escapeshellcmd(', $utilitiesSource);
         $this->assertStringNotContainsString('utilities_php_modules()', $utilitiesSource);
         $this->assertStringContainsString("\$allowed_db_settings = array(", $utilitiesSource);
-        $this->assertStringContainsString("__('Community:') . ' ' . __('Redacted')", $utilitiesSource);
-        $this->assertStringContainsString("__('Script:') . ' ' . __('Redacted')", $utilitiesSource);
+        $this->assertStringContainsString("__('Community:') . ' Redacted, '", $utilitiesSource);
+        $this->assertStringContainsString("__('Script:') . ' Redacted'", $utilitiesSource);
         $this->assertStringContainsString("html_escape((string) \$cache_directory)", $utilitiesSource);
 
         $clogSource = (string) file_get_contents($root . '/lib/clog_webapi.php');
@@ -548,6 +548,7 @@ final class SettingsPollersAndLogHardeningTest extends TestCase
                 }
                 function db_execute($sql) { $GLOBALS['executed'][] = [$sql, []]; }
                 function db_execute_prepared($sql, $params = []) { $GLOBALS['executed'][] = [$sql, $params]; }
+                function api_graph_remove_multi($graphs) {}
                 function db_fetch_assoc_prepared($sql, $params = []) { return [['id' => 42]]; }
                 function cacti_sizeof($a) { return is_array($a) ? count($a) : 0; }
                 function cacti_log($m, ...$a) {}

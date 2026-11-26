@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Swahili Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 16:18-0800\n"
+"POT-Creation-Date: 2026-11-26 10:04-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Swahili\n"
@@ -452,6 +452,10 @@ msgstr "Grafu za Jumlisho zilizochaguliwa hazionekani kuwa na Violezo vyovyote v
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "Grafu za Jumlisho zilizochaguliwa zinawakilisha vipengele kutoka zaidi ya Kiolezo kimoja cha Grafu."
+
+#: aggregate_graphs.php graphs.php
+msgid "The selected Tree is not available."
+msgstr "Mti uliochaguliwa haupatikani."
 
 #: aggregate_graphs.php
 msgid "The title for the Aggregate Graphs"
@@ -3284,10 +3288,6 @@ msgstr "ID ya ndani ya hifadhidata kwa Grafu hii.  Inafaa unapofanya otomatiki a
 #: graphs.php
 msgid "The selected Device is not available."
 msgstr "Kifaa kilichochaguliwa hakipatikani."
-
-#: graphs.php
-msgid "The selected Tree is not available."
-msgstr "Mti uliochaguliwa haupatikani."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
@@ -10531,7 +10531,7 @@ msgstr "Grafu:(%s%s)"
 msgid "Kadupul Login Failure"
 msgstr "Kushindwa Kuingia Kadupul"
 
-#: lib/auth.php
+#: lib/auth.php lib/html_reports.php
 msgid "Restricted"
 msgstr "Imezuiwa"
 
@@ -13111,7 +13111,7 @@ msgstr "Chaguo za usakinishaji:"
 msgid "Installation was started at %s, completed at %s"
 msgstr "Usakinishaji ulianza saa %s, ukakamilika saa %s"
 
-#: lib/installer.php plugins.php
+#: lib/installer.php plugins.php utilities.php
 msgid "Installed"
 msgstr "Imesakinishwa"
 
@@ -15122,10 +15122,6 @@ msgstr "Varbinds"
 msgid "You must select at least one notification object."
 msgstr "Lazima uchague angalau kipengee kimoja cha arifa."
 
-#: package_import.php
-msgid "Automatically Trust Signer"
-msgstr "Mwamini Mtia Saini Kiotomatiki"
-
 #: package_import.php templates_import.php
 msgid "Changes/Differences"
 msgstr "Mabadiliko/Tofauti"
@@ -15161,10 +15157,6 @@ msgstr "Tofauti za Faili kwa: "
 #: package_import.php
 msgid "Filename"
 msgstr "Jina la faili"
-
-#: package_import.php
-msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr "Ikiwa imetiwa tiki, Kadupul itamwamini Mtia Saini kiotomatiki kwa Kifurushi hiki na Vifurushi vyovyote vya baadaye vya mwandishi huyo."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
@@ -15260,10 +15252,6 @@ msgstr "Upakuaji au uthibitishaji wa kifurushi umeshindikana"
 #: package_import.php
 msgid "Unable to create temporary package file."
 msgstr "Imeshindwa kuunda faili ya muda ya kifurushi."
-
-#: package_import.php
-msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr "Hujamwamini Mwandishi huyu wa Kifurushi.  Ikiwa unataka kuleta, tia alama kwenye kisanduku cha Mwamini Mwandishi Kiotomatiki"
 
 #: plugins.php
 msgid "A description that the Plugin's author has given to the Plugin."
@@ -18313,5 +18301,3 @@ msgstr "VDEFs [mpya]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEF zinazotumika haziwezi Kufutwa. Inatumika inafafanuliwa kama kurejelewa na Grafu au Kiolezo cha Grafu."
-
-

@@ -82,6 +82,7 @@ RUN set -eux; \
     echo "${sha}  /usr/local/bin/supercronic" | sha256sum -c -; \
     chmod 0755 /usr/local/bin/supercronic
 
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 COPY docker/php.ini /usr/local/etc/php/conf.d/kadupul.ini
 COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/zz-kadupul.conf
 COPY docker/crontab /etc/kadupul/crontab
@@ -90,25 +91,28 @@ COPY docker/entrypoint.sh /usr/local/bin/entrypoint
 WORKDIR /var/www/html
 
 # The application is baked in. An image whose code comes from a bind mount is
-# not a release artefact.
-COPY --chown=www-data:www-data . .
-COPY --from=vendor --chown=www-data:www-data /app/include/vendor ./include/vendor
-COPY --from=assets --chown=www-data:www-data /app/include/js ./include/js
-COPY --from=assets --chown=www-data:www-data /app/include/fa ./include/fa
-COPY --from=assets --chown=www-data:www-data /app/include/themes/midwinter ./include/themes/midwinter
-COPY --from=assets --chown=www-data:www-data /app/include/vendor/flag-icons ./include/vendor/flag-icons
+# not a release artefact. Keep source, vendor code, and built assets owned by
+# root with non-owner write bits cleared so the runtime user cannot modify code.
+COPY --chown=root:root . .
+COPY --from=vendor --chown=root:root /app/include/vendor ./include/vendor
+COPY --from=assets --chown=root:root /app/include/js ./include/js
+COPY --from=assets --chown=root:root /app/include/fa ./include/fa
+COPY --from=assets --chown=root:root /app/include/themes/midwinter ./include/themes/midwinter
+COPY --from=assets --chown=root:root /app/include/vendor/flag-icons ./include/vendor/flag-icons
 
 # asset-map:compile writes digested copies of the theme, script and font files
-# legacy pages load. It leaves a root-owned kernel cache behind, which is
-# removed so the runtime rebuilds it as www-data.
+# legacy pages load. Warm the Symfony production cache into var/cache and grant
+# www-data ownership strictly to runtime-writable state directories.
 #
-# Writable state is exactly these three directories and nothing else. They are
-# declared as volumes so an operator who forgets to mount them still keeps data
-# across a restart.
+# Writable state is strictly these runtime directories and nothing else. The
+# persistent directories are declared as volumes so an operator who forgets to
+# mount them still keeps data across a restart.
 RUN set -eux; \
-    php bin/console asset-map:compile --no-debug; \
+    APP_ENV=prod APP_DEBUG=0 php bin/console asset-map:compile --no-debug; \
     rm -rf var/cache; \
-    mkdir -p cache log rra var; \
+    mkdir -p cache log rra var/cache; \
+    APP_ENV=prod APP_DEBUG=0 php bin/console cache:warmup --no-debug; \
+    chmod -R go-w /var/www/html; \
     chown -R www-data:www-data cache log rra var; \
     chmod 0755 /usr/local/bin/entrypoint; \
     rm -rf docker

@@ -132,8 +132,8 @@ function reindex_devices()
     // 2 - Weekly on Sunday
     // 3 - Monthly on Sunday
 
-    $command_string = cacti_escapeshellcmd(read_config_option('path_php_binary'));
-    $extra_args     = $config['base_path'] . '/cli/poller_reindex_hosts.php --id=all --qid=all';
+    $command_string = read_config_option('path_php_binary');
+    $extra_args     = array('-q', $config['base_path'] . '/cli/poller_reindex_hosts.php', '--id=all', '--qid=all');
 
     if ($schedule == 0) {
         return;
@@ -337,16 +337,23 @@ function realtime_purge_cache()
     if (read_config_option('realtime_cache_path') != '') {
         $cache_path = read_config_option('realtime_cache_path');
 
-        if (is_dir($cache_path) && is_writeable($cache_path)) {
+        clearstatcache(true, $cache_path);
+        $trusted_dir = !is_link($cache_path) && is_dir($cache_path) && is_writeable($cache_path)
+            && (!function_exists('rrd_maintenance_directory_is_trusted') || rrd_maintenance_directory_is_trusted($cache_path));
+
+        if ($trusted_dir) {
             foreach (new DirectoryIterator($cache_path) as $fileInfo) {
-                if ($fileInfo->isDot()) {
+                if ($fileInfo->isDot() || $fileInfo->isLink() || !$fileInfo->isFile()) {
                     continue;
                 }
 
-                // only remove .png and .rrd files
-                if ((substr($fileInfo->getFilename(), -4, 4) == '.png') || (substr($fileInfo->getFilename(), -4, 4) == '.rrd')) {
-                    if ((time() - $fileInfo->getMTime()) >= 7200) {
-                        unlink($fileInfo->getRealPath());
+                // only remove .png and .rrd regular files without following symlinks
+                $filename = $fileInfo->getFilename();
+                if ((substr($filename, -4, 4) == '.png') || (substr($filename, -4, 4) == '.rrd')) {
+                    $pathname = $fileInfo->getPathname();
+                    $stat = @lstat($pathname);
+                    if ($stat !== false && ($stat['mode'] & 0170000) === 0100000 && (time() - $stat['mtime']) >= 7200) {
+                        @unlink($pathname);
                     }
                 }
             }
@@ -421,30 +428,75 @@ function logrotate_file_rotate($name, $log, $date)
         return 0;
     }
 
-    if (is_writable(dirname($log) . '/') && is_writable($log)) {
-        $perms = octdec(substr(decoct(fileperms($log)), 2));
-        $owner = fileowner($log);
-        $group = filegroup($log);
+    $log_dir = dirname($log);
+    $log_lstat = @lstat($log);
+    $dir_stat = @lstat($log_dir);
+    if (is_link($log) || $log_lstat === false || ($log_lstat['mode'] & 0170000) !== 0100000) {
+        cacti_log('Kadupul Log Rotation - ERROR: Refused rotation of symlink or non-regular ' . $name . ' Log : ' . $log, true, 'MAINT');
+        return 0;
+    }
+
+    if ($dir_stat === false || (DIRECTORY_SEPARATOR === '/' && ($dir_stat['mode'] & 0002) !== 0)
+        || (function_exists('rrd_maintenance_directory_is_trusted') && !rrd_maintenance_directory_is_trusted($log_dir))) {
+        cacti_log('Kadupul Log Rotation - ERROR: Refused rotation in untrusted directory for ' . $name . ' Log : ' . $log, true, 'MAINT');
+        return 0;
+    }
+
+    if (is_writable($log_dir . '/') && is_writable($log)) {
+        $perms = $log_lstat['mode'] & 0777;
+        $owner = $log_lstat['uid'];
+        $group = $log_lstat['gid'];
 
         if ($owner !== false) {
             $ext = $date->format('Ymd');
 
-            if (file_exists($log . '-' . $ext)) {
+            if (file_exists($log . '-' . $ext) || is_link($log . '-' . $ext)) {
                 $ext_inc = 1;
-                while (file_exists($log . '-' . $ext . '-' . $ext_inc) && $ext_inc < 99) {
+                while ((file_exists($log . '-' . $ext . '-' . $ext_inc) || is_link($log . '-' . $ext . '-' . $ext_inc)) && $ext_inc < 99) {
                     $ext_inc++;
                 }
                 $ext = $ext . '-' . $ext_inc;
             }
 
-            if (rename($log, $log . '-' . $ext)) {
-                touch($log);
-                chown($log, $owner);
-                chgrp($log, $group);
-                chmod($log, $perms);
+            $rotated_path = $log . '-' . $ext;
+            if (is_link($rotated_path)) {
+                cacti_log('Kadupul Log Rotation - ERROR: Refused rotation over symlink destination : ' . basename($rotated_path), true, 'MAINT');
+                return 0;
+            }
+
+            $tmp_replacement = $log_dir . DIRECTORY_SEPARATOR . '.' . basename($log) . '.new.' . bin2hex(random_bytes(8));
+            $fh = @fopen($tmp_replacement, 'xb');
+            if (!is_resource($fh)) {
+                cacti_log('Kadupul Log Rotation - ERROR: Could not exclusively create replacement ' . $name . ' Log', true, 'MAINT');
+                return 0;
+            }
+
+            $fstat = @fstat($fh);
+            if ($fstat === false || ($fstat['mode'] & 0170000) !== 0100000 || is_link($tmp_replacement)) {
+                fclose($fh);
+                @unlink($tmp_replacement);
+                return 0;
+            }
+
+            @chmod($tmp_replacement, $perms);
+            if (function_exists('lchown')) {
+                @lchown($tmp_replacement, $owner);
+            }
+            if (function_exists('lchgrp')) {
+                @lchgrp($tmp_replacement, $group);
+            }
+            fclose($fh);
+
+            if (rename($log, $rotated_path)) {
+                if (!rename($tmp_replacement, $log)) {
+                    @unlink($tmp_replacement);
+                    cacti_log('Kadupul Log Rotation - ERROR: Could not move replacement ' . $name . ' Log into place', true, 'MAINT');
+                    return 0;
+                }
                 cacti_log('Kadupul Log Rotation - Created ' . $name . ' Log : ' . basename($log) . '-' . $ext, true, 'MAINT');
                 return 1;
             } else {
+                @unlink($tmp_replacement);
                 cacti_log('Kadupul Log Rotation - ERROR: Could not rename ' . $name . ' Log "' . basename($log) . '" to "' . basename($log) . '-' . $ext . '"', true, 'MAINT');
             }
         } else {
@@ -534,6 +586,16 @@ function secpass_check_expired()
 
         $t = $t - (intval($e) * 86400);
 
+        $expired_users = db_fetch_assoc_prepared(
+            "SELECT id
+			FROM user_auth
+			WHERE realm = 0
+			AND enabled = 'on'
+			AND lastlogin < ?
+			AND id > 1",
+            array($t)
+        );
+
         db_execute_prepared(
             "UPDATE user_auth
 			SET enabled = ''
@@ -543,6 +605,17 @@ function secpass_check_expired()
 			AND id > 1",
             array($t)
         );
+
+        if (cacti_sizeof($expired_users)) {
+            foreach ($expired_users as $expired_user) {
+                db_execute_prepared(
+                    "UPDATE reports
+					SET enabled = ''
+					WHERE user_id = ?",
+                    array((int) $expired_user['id'])
+                );
+            }
+        }
     }
 
     $e = read_config_option('secpass_expirepass');
@@ -722,25 +795,27 @@ function remove_files($file_array, &$retained = 0)
     try {
         /* now scan the files */
         foreach ($file_array as $file) {
-            /* the variables shouldn't be here, but I'm keeping them just in case */
+            if (str_contains((string) $file['name'], '<path_cacti>')) {
+                cacti_log('WARNING: RRDfile maintenance rejected a <path_cacti> purge path outside the configured RRA directory; purge queue retained.', true, 'MAINT');
+                $retained++;
+                continue;
+            }
+
+            /* Only expand <path_rra> for RRD purge targets */
             $real_file = str_replace('<path_rra>', $rra_path, $file['name']);
-            $real_file = str_replace('<path_cacti>', $config['base_path'], $real_file);
             if ($real_file == $file['name']) {
                 $real_file = $rra_path . '/' . $file['name'];
             }
 
             $base_file = str_replace('<path_rra>', '', $file['name']);
-            $base_file = str_replace('<path_cacti>', '', $base_file);
 
             if (!read_config_option('storage_location')) {
                 $relative_name = ltrim($base_file, '/');
-                $source_relative = str_replace(array('<path_rra>', '<path_cacti>'), '', $file['name']);
-                $source_relative = ltrim($source_relative, '/');
+                $source_relative = ltrim(str_replace('<path_rra>', '', $file['name']), '/');
                 $resolved_source = false;
                 $source_missing  = false;
 
-                // Trusted directory links remain supported. Final file links
-                // are never targets; the lease checks and locks lexical parents.
+                // Reject symlinks and enforce containment within configured $rra_path.
                 if (rrdcleaner_is_safe_relative_path($source_relative) && !is_link($real_file)
                     && rrd_maintenance_directory_is_trusted(dirname($real_file))) {
                     $resolved_source = realpath($real_file);
@@ -750,8 +825,19 @@ function remove_files($file_array, &$retained = 0)
                     // file created later through an unresolved path is never
                     // touched, and let the queue entry clear as before.
                     if ($resolved_source === false && !file_exists($real_file) && !is_link($real_file)) {
-                        $resolved_source = $real_file;
-                        $source_missing  = true;
+                        $resolved_parent = rrdcleaner_resolve_contained_path(dirname($real_file), $rra_path);
+                        if ($resolved_parent !== false
+                            || (function_exists('rrd_check_path') && rrd_check_path($real_file))) {
+                            $resolved_source = $real_file;
+                            $source_missing  = true;
+                        }
+                    } elseif ($resolved_source !== false) {
+                        $is_contained = function_exists('rrd_check_path')
+                            ? rrd_check_path($resolved_source)
+                            : (rrdcleaner_resolve_contained_path($resolved_source, $rra_path) !== false);
+                        if (!$is_contained) {
+                            $resolved_source = false;
+                        }
                     }
                 }
 
@@ -771,7 +857,7 @@ function remove_files($file_array, &$retained = 0)
                 try {
                     switch ($file['action']) {
                         case '1':
-                            if (!$source_missing && file_exists($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
+                            if (!$source_missing && file_exists($real_file) && !is_link($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
                                 if (unlink($real_file)) {
                                     maint_debug('Deleted: ' . $real_file);
                                     $purged++;
@@ -811,7 +897,7 @@ function remove_files($file_array, &$retained = 0)
                                 continue 2;
                             }
 
-                            if (!$source_missing && file_exists($real_file)) {
+                            if (!$source_missing && file_exists($real_file) && !is_link($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
                                 if (rename($real_file, $target_file)) {
                                     maint_debug("Moved: $real_file to: $target_file");
                                     $archived++;
@@ -828,7 +914,7 @@ function remove_files($file_array, &$retained = 0)
                     rrd_maintenance_release($lease);
                 }
             } else {
-                $proxy_name = str_replace(array('<path_rra>', '<path_cacti>'), '', $file['name']);
+                $proxy_name = str_replace('<path_rra>', '', $file['name']);
                 $proxy_name = ltrim($proxy_name, '/');
 
                 if (!rrdcleaner_is_safe_relative_path($proxy_name) || strtolower(pathinfo($proxy_name, PATHINFO_EXTENSION)) !== 'rrd') {

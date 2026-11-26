@@ -342,7 +342,7 @@ function form_save() {
 			$save['dbsslca']       = form_input_validate(get_nfilter_request_var('dbsslca'),   'dbsslca',   '', true, 3);
 
 			if (!poller_validate_remote_host($save['hostname'])) {
-				raise_message('poller_hostname_invalid', __('Invalid remote Data Collector hostname. Loopback, link-local, reserved, and socket targets are not permitted.'), MESSAGE_LEVEL_ERROR);
+				raise_message('poller_hostname_invalid', 'Invalid remote Data Collector hostname. Loopback, link-local, reserved, and socket targets are not permitted.', MESSAGE_LEVEL_ERROR);
 				$error = true;
 			}
 
@@ -352,12 +352,12 @@ function form_save() {
 			}
 
 			if ($save['dbport'] !== '' && filter_var($save['dbport'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1, 'max_range' => 65535))) === false) {
-				raise_message('poller_dbport_invalid', __('Remote Database Port must be between 1 and 65535.'), MESSAGE_LEVEL_ERROR);
+				raise_message('poller_dbport_invalid', 'Remote Database Port must be between 1 and 65535.', MESSAGE_LEVEL_ERROR);
 				$error = true;
 			}
 
 			if ($save['dbretries'] !== '' && filter_var($save['dbretries'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 0, 'max_range' => 5))) === false) {
-				raise_message('poller_dbretries_invalid', __('Remote Database Retries must be between 0 and 5.'), MESSAGE_LEVEL_ERROR);
+				raise_message('poller_dbretries_invalid', 'Remote Database Retries must be between 0 and 5.', MESSAGE_LEVEL_ERROR);
 				$error = true;
 			}
 		} else {
@@ -366,7 +366,7 @@ function form_save() {
 				|| str_starts_with($trimmed_host, '-')
 				|| (!\Kadupul\Platform\Domain\IpAddressPolicy::isValidIpAddress($trimmed_host)
 					&& filter_var($trimmed_host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)) {
-				raise_message('poller_hostname_invalid', __('Invalid Data Collector hostname.'), MESSAGE_LEVEL_ERROR);
+				raise_message('poller_hostname_invalid', 'Invalid Data Collector hostname.', MESSAGE_LEVEL_ERROR);
 				$error = true;
 			}
 		}
@@ -759,7 +759,7 @@ function poller_edit() {
 			unset($fields_poller_edit['dbsslca']);
 		} else {
 			if (!empty($poller['dbpass'])) {
-				$fields_poller_edit['dbpass']['placeholder'] = __('Leave blank to keep existing password');
+				$fields_poller_edit['dbpass']['placeholder'] = 'Leave blank to keep existing password';
 			}
 			$poller['dbpass'] = '';
 		}

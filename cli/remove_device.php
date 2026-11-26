@@ -68,10 +68,20 @@ if (cacti_sizeof($parms)) {
 		case '--id':
 			$id = trim($value);
 
-			if (strpos($id, ',') !== false) {
-				$ids_id = explode(',', $id);
-			} else {
-				$ids_id = array($id);
+			if ($id === '') {
+				print "ERROR: Invalid Device ID: ($id)" . PHP_EOL;
+				exit(1);
+			}
+
+			$ids_id = array();
+			foreach (explode(',', $id) as $raw_id) {
+				$candidate = trim($raw_id);
+				if (!ctype_digit($candidate) || (int) $candidate <= 0) {
+					print "ERROR: Invalid Device ID: ($candidate)" . PHP_EOL;
+					exit(1);
+				}
+
+				$ids_id[] = (int) $candidate;
 			}
 
 			break;
@@ -108,7 +118,13 @@ if (cacti_sizeof($parms)) {
 			print "Searching hosts by description..." . PHP_EOL;
 		}
 
-		$ids_host = preg_array_key_match("/$description/", $hosts);
+		$description_regex = remove_device_compile_regex($description);
+		if ($description_regex === false) {
+			print "ERROR: Invalid regular expression for --description ($description)" . PHP_EOL;
+			exit(1);
+		}
+
+		$ids_host = preg_array_key_match($description_regex, $hosts);
 		if (cacti_sizeof($ids_host) == 0) {
 			print "ERROR: Unable to find host in the database matching description ($description)" . PHP_EOL;
 			exit(1);
@@ -120,7 +136,13 @@ if (cacti_sizeof($parms)) {
 			print "Searching hosts by IP..." . PHP_EOL;
 		}
 
-		$ids_ip = preg_array_key_match("/$ip/", $addresses);
+		$ip_regex = remove_device_compile_regex($ip);
+		if ($ip_regex === false) {
+			print "ERROR: Invalid regular expression for --ip ($ip)" . PHP_EOL;
+			exit(1);
+		}
+
+		$ids_ip = preg_array_key_match($ip_regex, $addresses);
 		if (cacti_sizeof($ids_ip) == 0) {
 			print "ERROR: Unable to find host in the database matching IP ($ip)" . PHP_EOL;
 			exit(1);
@@ -132,23 +154,27 @@ if (cacti_sizeof($parms)) {
 		exit(1);
 	}
 
-	$ids = array_merge($ids_host, $ids_ip);
-	$ids = array_unique($ids, SORT_NUMERIC);
+	$ids = array_merge($ids_host, $ids_ip, $ids_id);
+	$ids = array_values(array_unique(array_filter(array_map('intval', $ids), static function ($value) {
+		return $value > 0;
+	}), SORT_NUMERIC));
 
-	if (cacti_sizeof($ids_id)) {
-		$ids = array_merge($ids, $ids_id);
-		$ids = array_unique($ids, SORT_NUMERIC);
+	if (cacti_sizeof($ids) == 0) {
+		print "ERROR: No valid Device IDs found." . PHP_EOL;
+		exit(1);
 	}
 
-	$ids_sql = implode(',', $ids);
+	$ids_sql      = implode(',', $ids);
+	$placeholders = implode(', ', array_fill(0, count($ids), '?'));
 	if ($debug) {
 		print "Finding devices with ids $ids_sql" . PHP_EOL;
 	}
 
-	$hosts = db_fetch_assoc("SELECT id, hostname, description
+	$hosts = db_fetch_assoc_prepared("SELECT id, hostname, description
 		FROM host
-		WHERE id IN ($ids_sql)
-		ORDER BY description");
+		WHERE id IN ($placeholders)
+		ORDER BY description",
+		$ids);
 
 	$ids_found = array();
 	if (!$quiet) {
@@ -213,6 +239,28 @@ function display_help() {
 
 	print 'List Options:' . PHP_EOL;
 	print '    --quiet             batch mode value return' . PHP_EOL . PHP_EOL;
+}
+
+function remove_device_compile_regex($pattern) {
+	if (!is_string($pattern) || $pattern === '' || str_contains($pattern, "\0")) {
+		return false;
+	}
+
+	$escaped = preg_replace('/(?<!\\\\)((?:\\\\\\\\)*)\//', '$1\\/', $pattern);
+	if (!is_string($escaped)) {
+		return false;
+	}
+
+	if (preg_match('/(?<!\\\\)(?:\\\\\\\\)*\\\\\z/', $escaped) === 1) {
+		return false;
+	}
+
+	$regex = '/(*LIMIT_MATCH=10000)' . $escaped . '/';
+	if (@preg_match($regex, '') === false) {
+		return false;
+	}
+
+	return $regex;
 }
 
 function preg_array_key_match($needle, $haystack) {

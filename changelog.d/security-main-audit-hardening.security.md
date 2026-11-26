@@ -1,0 +1,2 @@
+- Harden authentication, session revocation, visibility policies, CSRF/redirect boundaries, and HTTP security header parity across Symfony and legacy entry points.
+- Enforce per-table column allowlists, object-level authorization, credential isolation, and strict input/path validation across graphing, reporting, automation, poller, import, plugin, settings, CLI, and Docker runtime components.

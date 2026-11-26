@@ -8,6 +8,7 @@
 
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/rrd.php');
+require_once($config['base_path'] . '/lib/rrd_maintenance.php');
 
 if ($config['poller_id'] > 1) {
 	print 'FATAL: This utility is designed for the main Data Collector only' . PHP_EOL;
@@ -96,8 +97,26 @@ if ($proceed == false) {
 
 /* check ownership of the current base path */
 $base_rra_path = $config['rra_path'];
-$owner_id      = fileowner($base_rra_path);
-$group_id      = filegroup($base_rra_path);
+if (!is_string($base_rra_path) || $base_rra_path === '' || is_link($base_rra_path) || !rrd_maintenance_directory_is_trusted($base_rra_path)) {
+	print "FATAL: Base RRA path '$base_rra_path' is not a trusted directory." . PHP_EOL;
+	exit(1);
+}
+
+$resolved_base_rra_path = realpath($base_rra_path);
+if ($resolved_base_rra_path === false || !is_dir($resolved_base_rra_path)) {
+	print "FATAL: Base RRA path '$base_rra_path' cannot be resolved." . PHP_EOL;
+	exit(1);
+}
+
+$base_rra_path = rtrim($resolved_base_rra_path, '/');
+$base_stat     = @lstat($base_rra_path);
+if ($base_stat === false) {
+	print "FATAL: Could not inspect Base RRA path '$base_rra_path'." . PHP_EOL;
+	exit(1);
+}
+
+$owner_id = $base_stat['uid'];
+$group_id = $base_stat['gid'];
 
 /* turn on extended paths from in the database */
 set_config_option('extended_paths', 'on');
@@ -110,7 +129,7 @@ if (empty($maxdirs) || $maxdirs < 0 || !is_numeric($maxdirs)) {
 
 if ($pattern == '' || $pattern == 'device') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
-	$pattern2  = "REPLACE(CONCAT('<path_rra>/', '/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', '$base_rra_path') AS new_rrd_path";
+	$pattern2  = "REPLACE(CONCAT('<path_rra>/', host_id, '/', local_data_id, '.rrd'), '<path_rra>', '$base_rra_path') AS new_rrd_path";
 	$sql_where = "WHERE dtd.data_source_path != CONCAT('<path_rra>/', dl.host_id, '/', dtd.local_data_id, '.rrd')";
 } elseif ($pattern == 'device_dq') {
 	$pattern1  = "CONCAT('<path_rra>/', host_id, '/', snmp_query_id, '/', local_data_id, '.rrd') AS new_data_source_path,";
@@ -176,38 +195,46 @@ foreach ($data_sources as $info) {
 	$local_data_id = $info['local_data_id'];
 
 	/* the stored path names the file that is moved, so it must be inside the RRA directory */
-	if (!rrd_check_path($old_rrd_path, null, 'SYSTEM')) {
+	clearstatcache(true);
+	if (!rrd_check_path($old_rrd_path, $base_rra_path, 'SYSTEM') || is_link($old_rrd_path) || (file_exists($old_rrd_path) && rrdtool_ownership_path($old_rrd_path, $base_rra_path, 'SYSTEM') === false)) {
 		$warn_count++;
 
-		print "WARNING: Legacy RRA Path '$old_rrd_path' is outside the RRA directory, Skipping" . PHP_EOL;
+		print "WARNING: Legacy RRA Path '$old_rrd_path' is outside the RRA directory or is a symlink, Skipping" . PHP_EOL;
 
 		continue;
 	}
 
-    /* acquire lock in order to prevent race conditions */
-    while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds.$local_data_id', 1)")) {
-        usleep(50000);
-    }
+	if (!rrd_check_path($new_base_path, $base_rra_path, 'SYSTEM') || !rrd_check_path($new_rrd_path, $base_rra_path, 'SYSTEM') || is_link($new_base_path) || is_link($new_rrd_path)) {
+		$warn_count++;
 
-	/* create one subfolder for every host */
-	if (!is_dir($new_base_path)) {
-		/* see if we can create the directory for the new file */
-		if (mkdir($new_base_path, 0775, true)) {
-			struct_debug("NOTE: New Directory '$new_base_path' Created for RRD Files");
+		print "WARNING: Destination RRA Path '$new_rrd_path' is outside the RRA directory or is a symlink, Skipping" . PHP_EOL;
 
-			if ($config['cacti_server_os'] != 'win32') {
-				if (sp_recursive_chown($new_base_path, $owner_id) && sp_recursive_chgrp($new_base_path, $group_id)) {
-					struct_debug("NOTE: New Directory '$new_base_path' Permissions Set");
-				} else {
-					print "FATAL: Could not Set Permissions for Directory '$new_base_path'" . PHP_EOL;
+		continue;
+	}
 
-					exit -5;
-				}
-			}
-		} else {
+	/* acquire lock in order to prevent race conditions */
+	while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds.$local_data_id', 1)")) {
+		usleep(50000);
+	}
+
+	/* create and validate every intermediate subfolder inside the RRA root */
+	$dir_result = sp_ensure_rra_directory($new_base_path, $base_rra_path, $owner_id, $group_id, $config['cacti_server_os'] == 'win32');
+	if ($dir_result !== true) {
+		db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
+
+		if ($dir_result === 'perm') {
+			print "FATAL: Could not Set Permissions for Directory '$new_base_path'" . PHP_EOL;
+
+			exit -5;
+		} elseif ($dir_result === 'mkdir') {
 			print "FATAL: Could NOT Make New Directory '$new_base_path'" . PHP_EOL;
 
 			exit -1;
+		} else {
+			$warn_count++;
+			print "WARNING: Destination Directory '$new_base_path' is unsafe or contains a symlink, Skipping" . PHP_EOL;
+
+			continue;
 		}
 	}
 
@@ -224,6 +251,7 @@ foreach ($data_sources as $info) {
 			array($local_data_id));
 
 		$data_source_path1 = $base_rra_path . '/' . strtolower(clean_up_file_name($info['description'])) . '_' . $local_data_id . '.rrd';
+		$data_source_path2 = '';
 
 		if ($pattern == '' || $pattern == 'device') {
 			$data_source_path2 = $base_rra_path . '/' . $info['host_id'] . '/' . $info['snmp_query_id'] . '/' . $local_data_id . '.rrd';
@@ -235,9 +263,9 @@ foreach ($data_sources as $info) {
 			$data_source_path2 = $base_rra_path . '/' . $info['hash_id'] . '/' . $info['host_id'] . '/' . $info['snmp_query_id'] . '/' . $local_data_id . '.rrd';
 		}
 
-		if (file_exists($data_source_path1)) {
+		if (sp_is_safe_existing_rra_file($data_source_path1, $base_rra_path)) {
 			$old_rrd_path = $data_source_path1;
-		} elseif (file_exists($data_source_path2)) {
+		} elseif ($data_source_path2 !== '' && sp_is_safe_existing_rra_file($data_source_path2, $base_rra_path)) {
 			$old_rrd_path = $data_source_path2;
 		} else {
 			$warn_count++;
@@ -251,19 +279,23 @@ foreach ($data_sources as $info) {
 
 	/**
 	 * check that the old file exists, and if so, move it to
-	 * it's new location if different than the old
+	 * its new location if different than the old
 	 */
 	if (file_exists($old_rrd_path)) {
-		if ($old_rrd_path != $new_rrd_path) {
+		if (!sp_is_safe_existing_rra_file($old_rrd_path, $base_rra_path) || !sp_is_safe_destination_rra_file($new_rrd_path, $base_rra_path)) {
+			$warn_count++;
+			print "WARNING: Unsafe RRA path detected for '$old_rrd_path' -> '$new_rrd_path', Skipping" . PHP_EOL;
+		} elseif ($old_rrd_path != $new_rrd_path) {
 			if (rename($old_rrd_path, $new_rrd_path)) {
 				$done_count++;
 
 				struct_debug("Move Completed for: '" . $old_rrd_path . "' > '" . $new_rrd_path . "'");
 
 				if ($config['cacti_server_os'] != 'win32') {
-					if (sp_recursive_chown($new_rrd_path, $owner_id) && sp_recursive_chgrp($new_rrd_path, $group_id)) {
+					if (sp_recursive_chown($new_rrd_path, $owner_id, $base_rra_path) && sp_recursive_chgrp($new_rrd_path, $group_id, $base_rra_path)) {
 						struct_debug("Permissions set for '$new_rrd_path'");
 					} else {
+						db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
 						print "FATAL: Could not Set Permissions for File '$new_rrd_path'" . PHP_EOL;
 						exit -6;
 					}
@@ -272,6 +304,7 @@ foreach ($data_sources as $info) {
 				/* alter database */
 				update_database($info);
 			} else {
+				db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
 				print "FATAL: Could not Move RRD File '$old_rrd_path' to '$new_rrd_path'" . PHP_EOL;
 				exit -3;
 			}
@@ -280,7 +313,7 @@ foreach ($data_sources as $info) {
 		}
 	}
 
-    db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
+	db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
 }
 
 $end = microtime(true);
@@ -331,51 +364,239 @@ function update_database($info) {
 }
 
 /**
- * sp_recursive_chown - Recursively chown on a path
+ * sp_is_safe_existing_rra_file - Verify an existing regular RRD file inside the trusted RRA root without following symlinks
  *
- * @param  (string)     $path
- * @param  (string|int) $user
+ * @param  (string) $path
+ * @param  (string) $base_rra_path
  *
- * @return (void)
+ * @return (bool)
  */
-function sp_recursive_chown($path, $user) {
-	$directory = rtrim($path, '/');
-
-	if ($items = glob($path . '/*')) {
-		foreach ($items as $item) {
-			if (is_dir($item)) {
-				return sp_recursive_chown($item, $user);
-			} else {
-				return chown($item, $user);
-			}
-		}
+function sp_is_safe_existing_rra_file($path, $base_rra_path) {
+	clearstatcache(true, $path);
+	if (!is_string($path) || $path === '' || is_link($path) || !is_file($path)) {
+		return false;
 	}
 
-	return chown($path, $user);
+	if (!rrd_check_path($path, $base_rra_path, 'SYSTEM')) {
+		return false;
+	}
+
+	return rrdtool_ownership_path($path, $base_rra_path, 'SYSTEM') !== false;
 }
 
 /**
- * sp_recursive_chgrp - Recursively chgrp on a path
+ * sp_is_safe_destination_rra_file - Verify a destination RRD path and its parent directory inside the trusted RRA root
  *
- * @param  (string)     $path
- * @param  (string|int) $group
+ * @param  (string) $path
+ * @param  (string) $base_rra_path
  *
- * @return (void)
+ * @return (bool)
  */
-function sp_recursive_chgrp($path, $group) {
-	$directory = rtrim($path, '/');
+function sp_is_safe_destination_rra_file($path, $base_rra_path) {
+	clearstatcache(true, $path);
+	if (!is_string($path) || $path === '' || is_link($path)) {
+		return false;
+	}
 
-	if ($items = glob($path . '/*')) {
-		foreach ($items as $item) {
-			if (is_dir($item)) {
-				return sp_recursive_chgrp($item, $group);
+	if (!rrd_check_path($path, $base_rra_path, 'SYSTEM')) {
+		return false;
+	}
+
+	$parent = dirname($path);
+	clearstatcache(true, $parent);
+	if (is_link($parent) || !is_dir($parent)) {
+		return false;
+	}
+
+	if ($parent !== $base_rra_path && rrdtool_ownership_path($parent, $base_rra_path, 'SYSTEM') === false) {
+		return false;
+	}
+
+	if (file_exists($path) && rrdtool_ownership_path($path, $base_rra_path, 'SYSTEM') === false) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * sp_ensure_rra_directory - Safely walk and create each intermediate directory under the RRA root without following symlinks
+ *
+ * @param  (string)     $target_dir
+ * @param  (string)     $base_rra_path
+ * @param  (string|int) $owner_id
+ * @param  (string|int) $group_id
+ * @param  (bool)       $is_windows
+ *
+ * @return (true|string)
+ */
+function sp_ensure_rra_directory($target_dir, $base_rra_path, $owner_id, $group_id, $is_windows) {
+	if (!is_string($target_dir) || !is_string($base_rra_path) || $target_dir === '' || $base_rra_path === '') {
+		return 'unsafe';
+	}
+
+	$root = rtrim($base_rra_path, '/');
+	$dir  = rtrim($target_dir, '/');
+
+	if ($dir === $root) {
+		return is_dir($root) && !is_link($root) ? true : 'unsafe';
+	}
+
+	if (!str_starts_with($dir, $root . '/') || !rrd_check_path($dir, $root, 'SYSTEM')) {
+		return 'unsafe';
+	}
+
+	$relative = substr($dir, strlen($root) + 1);
+	$segments = explode('/', $relative);
+	$current  = $root;
+
+	foreach ($segments as $segment) {
+		if ($segment === '' || $segment === '.' || $segment === '..' || str_contains($segment, "\0")) {
+			return 'unsafe';
+		}
+
+		$current .= '/' . $segment;
+		clearstatcache(true, $current);
+
+		if (is_link($current)) {
+			return 'unsafe';
+		}
+
+		if (file_exists($current)) {
+			if (!is_dir($current) || rrdtool_ownership_path($current, $root, 'SYSTEM') === false) {
+				return 'unsafe';
+			}
+
+			continue;
+		}
+
+		if (!mkdir($current, 0775, false)) {
+			return 'mkdir';
+		}
+
+		struct_debug("NOTE: New Directory '$current' Created for RRD Files");
+		clearstatcache(true, $current);
+
+		if (is_link($current) || rrdtool_ownership_path($current, $root, 'SYSTEM') === false) {
+			return 'unsafe';
+		}
+
+		if (!$is_windows) {
+			if (sp_recursive_chown($current, $owner_id, $root) && sp_recursive_chgrp($current, $group_id, $root)) {
+				struct_debug("NOTE: New Directory '$current' Permissions Set");
 			} else {
-				return chgrp($item, $group);
+				return 'perm';
 			}
 		}
 	}
 
-	return chgrp($path, $group);
+	return true;
+}
+
+/**
+ * sp_recursive_chown - Recursively lchown on a validated non-symlink path
+ *
+ * @param  (string)      $path
+ * @param  (string|int)  $user
+ * @param  (string|null) $root
+ *
+ * @return (bool)
+ */
+function sp_recursive_chown($path, $user, $root = null) {
+	clearstatcache(true, $path);
+	if (!is_string($path) || $path === '' || is_link($path)) {
+		return false;
+	}
+
+	$safe_path = rrdtool_ownership_path($path, $root, 'SYSTEM');
+	if ($safe_path === false) {
+		return false;
+	}
+
+	if (is_dir($safe_path)) {
+		try {
+			$iterator = new DirectoryIterator($safe_path);
+		} catch (UnexpectedValueException $e) {
+			return false;
+		}
+
+		foreach ($iterator as $entry) {
+			if ($entry->isDot()) {
+				continue;
+			}
+
+			$entry_path = $entry->getPathname();
+			if ($entry->isLink() || is_link($entry_path)) {
+				return false;
+			}
+
+			if ($entry->isDir()) {
+				if (!sp_recursive_chown($entry_path, $user, $root)) {
+					return false;
+				}
+			} else {
+				$safe_entry = rrdtool_ownership_path($entry_path, $root, 'SYSTEM');
+				if ($safe_entry === false || !lchown($safe_entry, $user)) {
+					return false;
+				}
+			}
+		}
+	}
+
+	return lchown($safe_path, $user);
+}
+
+/**
+ * sp_recursive_chgrp - Recursively lchgrp on a validated non-symlink path
+ *
+ * @param  (string)      $path
+ * @param  (string|int)  $group
+ * @param  (string|null) $root
+ *
+ * @return (bool)
+ */
+function sp_recursive_chgrp($path, $group, $root = null) {
+	clearstatcache(true, $path);
+	if (!is_string($path) || $path === '' || is_link($path)) {
+		return false;
+	}
+
+	$safe_path = rrdtool_ownership_path($path, $root, 'SYSTEM');
+	if ($safe_path === false) {
+		return false;
+	}
+
+	if (is_dir($safe_path)) {
+		try {
+			$iterator = new DirectoryIterator($safe_path);
+		} catch (UnexpectedValueException $e) {
+			return false;
+		}
+
+		foreach ($iterator as $entry) {
+			if ($entry->isDot()) {
+				continue;
+			}
+
+			$entry_path = $entry->getPathname();
+			if ($entry->isLink() || is_link($entry_path)) {
+				return false;
+			}
+
+			if ($entry->isDir()) {
+				if (!sp_recursive_chgrp($entry_path, $group, $root)) {
+					return false;
+				}
+			} else {
+				$safe_entry = rrdtool_ownership_path($entry_path, $root, 'SYSTEM');
+				if ($safe_entry === false || !lchgrp($safe_entry, $group)) {
+					return false;
+				}
+			}
+		}
+	}
+
+	return lchgrp($safe_path, $group);
 }
 
 /**
