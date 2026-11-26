@@ -74,7 +74,7 @@
 "Item": "Mục"
 "Item # %number%": "Mục số %number%"
 "Max OIDs": "Số OID tối đa"
-"Maximum OIDs Per Get Request": "Yêu cầu tối đa cho mỗi OID"
+"Maximum OIDs Per Get Request": "Số OID tối đa cho mỗi yêu cầu Get"
 "Move Down": "Chuyển xuống"
 "Move Up": "Chuyển lên"
 "Move outcome is uncertain. Reload before retrying.": "Kết quả di chuyển không chắc chắn. Hãy tải lại trước khi thử lại."

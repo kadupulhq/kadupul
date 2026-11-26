@@ -66,7 +66,7 @@
 "RRD Name": "RRD 名称"
 "RRD Path": "RRD 路径"
 "RRD Step": "RRD 步长"
-"RRDfile Checker": "RRD 文件清理器"
+"RRDfile Checker": "RRD 文件检查器"
 "RRDfile Cleaner": "RRD 文件清理器"
 "Recorded Boost settings and database statistics. Row estimates are not exact queue counts. Refresh to read current values.": "已记录 Boost 设置和数据库统计信息。行估算值并非精确的队列计数。刷新可读取当前值。"
 "Recorded configuration and inventory counts. External tool probes and tuning recommendations are available in advanced diagnostics.": "已记录的配置与资产清单计数。高级诊断中提供外部工具探测与调优建议。"

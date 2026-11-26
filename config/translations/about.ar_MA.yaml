@@ -1,11 +1,17 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"- Beta %beta%": "- بيتا %beta%"
 "About Kadupul": "حول Kadupul"
 "Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul هو مشروع مستقل مفتوح المصدر لمراقبة الشبكات ورسم مبيانات السلاسل الزمنية."
-"Kadupul is licensed under the GNU GPL:": "Kadupul مرخص تحت GNU GPL:"
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "تُدبَّر قرارات التطوير والمساهمات والإصدار من طرف منظمة Kadupul."
+"For documentation and support, visit the Kadupul project.": "للاطلاع على الوثائق وطلب الدعم، يُرجى زيارة مشروع Kadupul."
 "License": "الترخيص"
-"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "يُوزّع هذا البرنامج على أمل أن يكون مفيداً، ولكن دون أي ضمان؛ حتى دون الضمان الضمني للصلاحية التجارية أو الملاءمة لغرض معين. راجع رخصة جنو العمومية لمزيد من التفاصيل."
+"Kadupul is licensed under the GNU GPL:": "Kadupul مرخص تحت GNU GPL:"
 "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "هذا البرنامج حر؛ يمكنك إعادة توزيعه و/أو تعديله وفق شروط رخصة جنو العمومية (GNU General Public License) كما نشرتها مؤسسة البرمجيات الحرة؛ إما الإصدار 2 من الترخيص، أو (حسب اختيارك) أي إصدار لاحق."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "يُوزّع هذا البرنامج على أمل أن يكون مفيداً، ولكن دون أي ضمان؛ حتى دون الضمان الضمني للصلاحية التجارية أو الملاءمة لغرض معين. راجع رخصة جنو العمومية لمزيد من التفاصيل."
+"Access denied.": "الولوج مرفوض."
+"Open About Kadupul to view project information.": "افتح \"حول Kadupul\" لعرض معطيات المشروع."
 "Version %version%": "الإصدار %version%"
+"- Beta %beta%": "- بيتا %beta%"
+"Kadupul organization": "منظمة Kadupul"
+"Kadupul project": "مشروع Kadupul"

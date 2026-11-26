@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} ساعة} other {{number} ساعات}}"
-"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} دقيقة} other {{number} دقيقة}}"
-"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, one {{number} خيط معالجة} other {{number} خيوط معالجة}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, zero {{number} ساعة} one {ساعة واحدة} two {ساعتان} few {{number} ساعات} many {{number} ساعة} other {{number} ساعة}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, zero {{number} دقيقة} one {دقيقة واحدة} two {دقيقتان} few {{number} دقائق} many {{number} دقيقة} other {{number} دقيقة}}"
+"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, zero {{number} خيط معالجة} one {خيط معالجة واحد} two {خيطا معالجة} few {{number} خيوط معالجة} many {{number} خيط معالجة} other {{number} خيط معالجة}}"

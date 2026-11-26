@@ -75,10 +75,11 @@ final class TranslationCatalogTest extends TestCase
 
     /** @var list<string> */
     private const TRANSLATED_LOCALES = [
-        'af_ZA', 'am_ET', 'ar_SA', 'bg_BG', 'bn_BD', 'de_DE', 'el_GR', 'es_ES',
-        'fa_IR', 'fr', 'fr_SN', 'ha_NG', 'he_IL', 'hi_IN', 'id_ID', 'ig_NG',
-        'it_IT', 'ja_JP', 'ko_KR', 'lv_LV', 'mr_IN', 'nl_NL', 'pl_PL', 'pt_BR',
-        'pt_PT', 'ru_RU', 'sv_SE', 'sw_KE', 'ta_IN', 'te_IN', 'th_TH', 'tr_TR',
+        'af_ZA', 'am_ET', 'ar_EG', 'ar_MA', 'ar_SA', 'bg_BG', 'bn_BD', 'de_DE',
+        'el_GR', 'es_ES', 'es_MX', 'fa_IR', 'fr', 'fr_CA', 'fr_MA', 'fr_SN',
+        'ha_NG', 'he_IL', 'hi_IN', 'id_ID', 'ig_NG', 'it_IT', 'ja_JP', 'ko_KR',
+        'lv_LV', 'mg_MG', 'mr_IN', 'nl_NL', 'pl_PL', 'pt_BR', 'pt_PT', 'ru_RU',
+        'rw_RW', 'so_SO', 'sv_SE', 'sw_KE', 'ta_IN', 'te_IN', 'th_TH', 'tr_TR',
         'uk_UA', 'ur_PK', 'vi_VN', 'xh_ZA', 'yo_NG', 'zh_CN', 'zh_TW', 'zu_ZA',
     ];
 
@@ -220,7 +221,8 @@ final class TranslationCatalogTest extends TestCase
      * product names, acronyms, units and code-like tokens stay as they are.
      */
     private const SCRIPTS = [
-        'am_ET' => ['Ethiopic'], 'ar_SA' => ['Arabic'], 'bg_BG' => ['Cyrillic'], 'bn_BD' => ['Bengali'],
+        'am_ET' => ['Ethiopic'], 'ar_EG' => ['Arabic'], 'ar_MA' => ['Arabic'], 'ar_SA' => ['Arabic'],
+        'bg_BG' => ['Cyrillic'], 'bn_BD' => ['Bengali'],
         'el_GR' => ['Greek'], 'fa_IR' => ['Arabic'], 'he_IL' => ['Hebrew'], 'hi_IN' => ['Devanagari'],
         'ja_JP' => ['Han', 'Hiragana', 'Katakana'], 'ko_KR' => ['Hangul', 'Han'], 'mr_IN' => ['Devanagari'],
         'ru_RU' => ['Cyrillic'], 'ta_IN' => ['Tamil'], 'te_IN' => ['Telugu'], 'th_TH' => ['Thai'],

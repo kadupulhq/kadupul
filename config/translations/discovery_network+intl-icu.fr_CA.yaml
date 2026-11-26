@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} heure} other {{number} heures}}"
-"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, =1 {{number} thread} other {{number} Threads}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} heure} other {{number} heures}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minute} other {{number} minutes}}"
+"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, one {{number} fil d''exécution} other {{number} fils d''exécution}}"

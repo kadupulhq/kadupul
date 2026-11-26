@@ -1,6 +1,16 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Graphs": "Kisary"
 "Help": "Fanampiana"
+"Access denied.": "Tsy nahazo alalana."
+"Choose a topic to open the Kadupul documentation.": "Misafidiana lohahevitra hanokafana ny torolalana Kadupul."
+"Get started": "Hanomboka"
+"Graphs": "Kisary"
 "Templates": "Lasitra"
+"Data queries": "Fangatahana angona"
+"Remote data collectors": "Mpanangona angona lavitra"
+"Users and permissions": "Mpampiasa sy alalana"
+"Plugins": "Plugins"
+"Troubleshoot missing data": "Famahana olana amin'ny angona tsy hita"
+"Not available locally.": "Tsy misy eto an-toerana."
+"Back to console": "Hiverina any amin'ny konsoly"

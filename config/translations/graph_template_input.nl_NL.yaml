@@ -13,7 +13,7 @@
 "Continue": "Volgende"
 "Create": "Maken"
 "Dash Offset (dash-offset=offset)": "Dash Offset (dash-offset=offset)"
-"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Streepjes (streepjes[=on_s[,off_s[,on_s,off_s]....]])"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Streepjes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 "Data Source": "Data bron"
 "Delete Graph Item Input": "Delete Graph Item Input"
 "Delete outcome is uncertain. Reload before retrying.": "Het verwijderresultaat is onzeker. Herlaad voordat u het opnieuw probeert."

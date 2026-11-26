@@ -1,7 +1,16 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Graphs": "Jaantusyada"
 "Help": "Caawimaad"
-"Plugins": "Kordhimaha"
+"Access denied.": "Gelitaanka waa la diiday."
+"Choose a topic to open the Kadupul documentation.": "Dooro mawduuc si aad u furto dukumeentiyada Kadupul."
+"Get started": "Bilow"
+"Graphs": "Jaantusyada"
 "Templates": "Qaab-dhismeedyada"
+"Data queries": "Weydiimaha xogta"
+"Remote data collectors": "Ururiyeyaasha xogta fog"
+"Users and permissions": "Isticmaalayaasha iyo oggolaanshaha"
+"Plugins": "Kordhimaha"
+"Troubleshoot missing data": "Xalli xogta maqan"
+"Not available locally.": "Lagama heli karo gudaha."
+"Back to console": "Ku noqo koonsolka"

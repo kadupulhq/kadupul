@@ -66,7 +66,7 @@
 "RRD Name": "RRD nosaukums"
 "RRD Path": "RRD ceļš"
 "RRD Step": "RRD solis"
-"RRDfile Checker": "RRDfile tīrītājs"
+"RRDfile Checker": "RRDfile pārbaudītājs"
 "RRDfile Cleaner": "RRDfile tīrītājs"
 "Recorded Boost settings and database statistics. Row estimates are not exact queue counts. Refresh to read current values.": "Reģistrētie Boost iestatījumi un datubāzes statistika. Rindu aplēses nav precīzs rindas vienumu skaits. Atsvaidziniet, lai nolasītu pašreizējās vērtības."
 "Recorded configuration and inventory counts. External tool probes and tuning recommendations are available in advanced diagnostics.": "Reģistrētā konfigurācija un inventāra skaits. Ārējo rīku zondes un optimizācijas ieteikumi ir pieejami papildu diagnostikā."

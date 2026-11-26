@@ -66,7 +66,7 @@
 "RRD Name": "RRD-naam"
 "RRD Path": "RRD-pad"
 "RRD Step": "RRD-stap"
-"RRDfile Checker": "RRDfile Cleaner"
+"RRDfile Checker": "RRDfile-controle"
 "RRDfile Cleaner": "RRDfile Cleaner"
 "Recorded Boost settings and database statistics. Row estimates are not exact queue counts. Refresh to read current values.": "Vastgelegde Boost-instellingen en databasestatistieken. Rijschattingen zijn geen exacte wachtrijaantallen. Vernieuw om actuele waarden te lezen."
 "Recorded configuration and inventory counts. External tool probes and tuning recommendations are available in advanced diagnostics.": "Vastgelegde configuratie- en inventarisaantallen. Probes voor externe hulpprogramma's en aanbevelingen voor afstemming zijn beschikbaar in geavanceerde diagnostiek."

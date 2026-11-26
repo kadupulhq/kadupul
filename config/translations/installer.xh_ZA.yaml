@@ -174,7 +174,7 @@
 "directory writable by this process": "uvimba ubhaleka yile nkqubo"
 "missing or not writable": "ilahlekile okanye ayibhaleki"
 "Configure sys_temp_dir as an existing directory writable by the installation account. Native imports use temporary files.": "Qwalasela i-sys_temp_dir njengovimba weefayili okhoyo obhalwayo yi-akhawunti yofakelo. Ukungenisa kwemveli kusebenzisa iifayili zethutyana."
-"Background worker launch": "Ukuphehlelelwa komsebenzi wangaphambili"
+"Background worker launch": "Ukuphehlelelwa komsebenzi wangasemva"
 "required PHP functions available; launch not exercised": "imisebenzi ye-PHP efunekayo iyafumaneka; ukuqaliswa akuvavanywanga"
 "required PHP launch function disabled": "umsebenzi wokuqalisa we-PHP ofunekayo ukhibaziwe"
 "Enable exec for the web PHP runtime, or use the authorized CLI installer.": "Vula i-exec kwixesha lokusebenza le-PHP yewebhu, okanye usebenzise umfakeli ogunyazisiweyo we-CLI."

@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {كل {number} يوم} other {Every {number} Days}}"
-"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {يوم {number}} other {{number} أيام}}"
-"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} ساعة} other {{number} ساعات}}"
-"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} دقيقة} other {{number} دقيقة}}"
-"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} شهر} other {{number} أشهر}}"
-"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} Second} other {{number} ثوانٍ}}"
-"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} أسبوع} other {{number} أسابيع}}"
-"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} سنة} other {{number} سنوات}}"
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, zero {كل {number} يوم} one {كل يوم} two {كل يومين} few {كل {number} أيام} many {كل {number} يومًا} other {كل {number} يوم}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, zero {{number} يوم} one {يوم واحد} two {يومان} few {{number} أيام} many {{number} يومًا} other {{number} يوم}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, zero {{number} ساعة} one {ساعة واحدة} two {ساعتان} few {{number} ساعات} many {{number} ساعة} other {{number} ساعة}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, zero {{number} دقيقة} one {دقيقة واحدة} two {دقيقتان} few {{number} دقائق} many {{number} دقيقة} other {{number} دقيقة}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, zero {{number} شهر} one {شهر واحد} two {شهران} few {{number} أشهر} many {{number} شهرًا} other {{number} شهر}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, zero {{number} ثانية} one {ثانية واحدة} two {ثانيتان} few {{number} ثوانٍ} many {{number} ثانية} other {{number} ثانية}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, zero {{number} أسبوع} one {أسبوع واحد} two {أسبوعان} few {{number} أسابيع} many {{number} أسبوعًا} other {{number} أسبوع}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, zero {{number} سنة} one {سنة واحدة} two {سنتان} few {{number} سنوات} many {{number} سنة} other {{number} سنة}}"

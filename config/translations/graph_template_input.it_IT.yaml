@@ -13,7 +13,7 @@
 "Continue": "Continua"
 "Create": "Crea"
 "Dash Offset (dash-offset=offset)": "Dash Offset (dash-offset=offset)"
-"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Tratti (trattini (trattini[=on_s[,off_s[,on_s,on_s,off_s]....]]))"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Trattini (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 "Data Source": "Origine Dati"
 "Delete Graph Item Input": "Delete Graph Item Input"
 "Delete outcome is uncertain. Reload before retrying.": "L'esito dell'eliminazione è incerto. Ricarica prima di riprovare."

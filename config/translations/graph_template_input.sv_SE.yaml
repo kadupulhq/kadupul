@@ -13,7 +13,7 @@
 "Continue": "Fortsätt"
 "Create": "Skapa"
 "Dash Offset (dash-offset=offset)": "Dash Offset (dash-offset=offset)"
-"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Bindestreck (bindestreck[=på_s[,av_s[,på_s,av_s]...]]])"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Streck (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 "Data Source": "Datakälla"
 "Delete Graph Item Input": "Delete Graph Item Input"
 "Delete outcome is uncertain. Reload before retrying.": "Resultatet av borttagningen är osäkert. Ladda om innan du försöker igen."
