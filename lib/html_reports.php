@@ -1755,7 +1755,11 @@ function display_reports_items($report_id) {
 		foreach ($items as $item) {
 			switch ($item['item_type']) {
 			case REPORTS_ITEM_GRAPH:
-				$item_details = __('Graph: %s', get_graph_title($item['local_graph_id']));
+				if (is_graph_allowed($item['local_graph_id'])) {
+					$item_details = __('Graph: %s', get_graph_title($item['local_graph_id']));
+				} else {
+					$item_details = __('Graph: %s', __('Access Denied'));
+				}
 
 				if ($css == 'on') {
 					$align = __('Using CSS');

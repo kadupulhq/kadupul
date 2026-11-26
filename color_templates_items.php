@@ -33,6 +33,7 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'ajax_dnd':
+		csrf_require_post(true);
 		color_templates_item_dnd();
 
 		break;
@@ -41,6 +42,7 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
+		csrf_require_post(true);
 		get_filter_request_var('color_template_id');
 
 		aggregate_color_item_remove();
@@ -48,6 +50,7 @@ switch (get_request_var('action')) {
 		header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('id'));
 		break;
 	case 'item_movedown':
+		csrf_require_post(true);
 		get_filter_request_var('color_template_id');
 
 		aggregate_color_item_movedown();
@@ -55,6 +58,7 @@ switch (get_request_var('action')) {
 		header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . get_request_var('color_template_id'));
 		break;
 	case 'item_moveup':
+		csrf_require_post(true);
 		get_filter_request_var('color_template_id');
 
 		aggregate_color_item_moveup();

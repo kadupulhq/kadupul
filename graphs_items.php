@@ -123,11 +123,32 @@ function form_save() {
 		/* ================= input validation ================= */
 		get_filter_request_var('sequence');
 		get_filter_request_var('graph_type_id');
-		get_filter_request_var('local_graph_id');
-		get_filter_request_var('graph_template_item_id');
+		$local_graph_id         = (int) get_filter_request_var('local_graph_id');
+		$graph_template_item_id = (int) get_filter_request_var('graph_template_item_id');
 		get_filter_request_var('graph_template_id');
 		get_filter_request_var('local_graph_template_item_id');
 		/* ==================================================== */
+
+		/* Enforce local graph ownership so Realm 5 cannot overwrite Graph Template rows (local_graph_id = 0) */
+		if ($local_graph_id <= 0 || !db_fetch_cell_prepared('SELECT id FROM graph_local WHERE id = ?', array($local_graph_id))) {
+			cacti_log('WARNING: Rejected graphs_items.php?action=save for invalid local_graph_id ' . $local_graph_id, false, 'AUTH');
+			header('Location: graphs.php?header=false');
+			exit;
+		}
+
+		if ($graph_template_item_id > 0) {
+			$owned = db_fetch_cell_prepared('SELECT COUNT(*)
+				FROM graph_templates_item
+				WHERE id = ?
+				AND local_graph_id = ?',
+				array($graph_template_item_id, $local_graph_id));
+
+			if (empty($owned)) {
+				cacti_log('WARNING: Rejected graphs_items.php?action=save for item ' . $graph_template_item_id . ' outside graph ' . $local_graph_id, false, 'AUTH');
+				header('Location: graphs.php?header=false');
+				exit;
+			}
+		}
 
 		$items[0] = array();
 
@@ -210,7 +231,7 @@ function form_save() {
 				set_request_var('alpha', get_nfilter_request_var('invisible_alpha'));
 			}
 
-			$save['alpha']          = form_input_validate((isset($item['alpha']) ? $item['alpha'] : get_nfilter_request_var('alpha')), 'alpha', '', true, 3);
+			$save['alpha']          = form_input_validate((isset($item['alpha']) ? $item['alpha'] : get_nfilter_request_var('alpha')), 'alpha', '^[0-9A-Fa-f]{2}\z', true, 3);
 			$save['graph_type_id']  = form_input_validate((isset($item['graph_type_id']) ? $item['graph_type_id'] : get_nfilter_request_var('graph_type_id')), 'graph_type_id', '^[0-9]+$', true, 3);
 
 			if (in_array($save['graph_type_id'], array(GRAPH_ITEM_TYPE_LINE1, GRAPH_ITEM_TYPE_LINE2, GRAPH_ITEM_TYPE_LINE3))) {
@@ -244,7 +265,7 @@ function form_save() {
 			$save['vdef_id']        = form_input_validate(get_nfilter_request_var('vdef_id'), 'vdef_id', '^[0-9]+$', true, 3);
 			$save['shift']          = form_input_validate((isset_request_var('shift') ? get_nfilter_request_var('shift') : ''), 'shift', '^((on)|)$', true, 3);
 			$save['consolidation_function_id'] = form_input_validate((isset($item['consolidation_function_id']) ? $item['consolidation_function_id'] : get_nfilter_request_var('consolidation_function_id')), 'consolidation_function_id', '^[0-9]+$', true, 3);
-			$save['textalign']      = form_input_validate((isset_request_var('textalign') ? get_nfilter_request_var('textalign') : ''), 'textalign', '^[a-z]+$', true, 3);
+			$save['textalign']      = form_input_validate((isset_request_var('textalign') ? get_nfilter_request_var('textalign') : ''), 'textalign', '^(?:left|right|justified|center)\z', true, 3);
 			$save['text_format']    = form_input_validate((isset($item['text_format']) ? $item['text_format'] : get_nfilter_request_var('text_format')), 'text_format', '', true, 3);
 			$save['value']          = form_input_validate(get_nfilter_request_var('value'), 'value', '', true, 3);
 			$save['hard_return']    = form_input_validate(((isset($item['hard_return']) ? $item['hard_return'] : (isset_request_var('hard_return') ? get_nfilter_request_var('hard_return') : ''))), 'hard_return', '', true, 3);

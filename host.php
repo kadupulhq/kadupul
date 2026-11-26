@@ -265,6 +265,12 @@ function host_reindex_release($host_id) {
 	db_execute_prepared('DO RELEASE_LOCK(?)', array('host.reindex.' . $host_id));
 }
 
+function host_tree_placement_is_allowed($tree_id) {
+	return is_scalar($tree_id) && ctype_digit((string) $tree_id) && (int) $tree_id > 0
+		&& is_tree_allowed((int) $tree_id)
+		&& cacti_authorize_resource($_SESSION['sess_user_id'], (int) $tree_id, 'graph_tree');
+}
+
 function add_tree_names_to_actions_array() {
 	global $device_actions;
 
@@ -273,7 +279,9 @@ function add_tree_names_to_actions_array() {
 
 	if (cacti_sizeof($trees)) {
 		foreach ($trees as $tree) {
-			$device_actions['tr_' . $tree['id']] = __esc('Place on a Tree (%s)', $tree['name']);
+			if (host_tree_placement_is_allowed($tree['id'])) {
+				$device_actions['tr_' . $tree['id']] = __esc('Place on a Tree (%s)', $tree['name']);
+			}
 		}
 	}
 }
@@ -399,11 +407,18 @@ function form_actions() {
 
 				api_device_remove_multi($selected_items, get_filter_request_var('delete_type'));
 			} elseif (preg_match('/^tr_([0-9]+)$/', get_request_var('drp_action'), $matches)) { // place on tree
-				get_filter_request_var('tree_id');
-				get_filter_request_var('tree_item_id');
+				$tree_id      = get_filter_request_var('tree_id');
+				$tree_item_id = get_filter_request_var('tree_item_id');
+
+				if (!host_tree_placement_is_allowed($tree_id)) {
+					cacti_log('WARNING: Rejected host.php tree placement on Tree ' . (int) $tree_id . ' for User ' . (int) $_SESSION['sess_user_id'], false, 'AUTH');
+					raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+					header('Location: host.php?header=false');
+					exit;
+				}
 
 				foreach ($selected_items as $selected_item) {
-					api_tree_item_save(0, get_nfilter_request_var('tree_id'), TREE_ITEM_TYPE_HOST, get_nfilter_request_var('tree_item_id'), '', 0, $selected_item, 0, 1, 1, false);
+					api_tree_item_save(0, $tree_id, TREE_ITEM_TYPE_HOST, $tree_item_id, '', 0, $selected_item, 0, 1, 1, false);
 				}
 			} elseif (get_request_var('drp_action') == 6) { // automation
 				cacti_log(__FUNCTION__ . ' called, action: ' . get_request_var('drp_action'), true, 'AUTOM8 TRACE', POLLER_VERBOSITY_MEDIUM);
@@ -552,6 +567,12 @@ function form_actions() {
 
 			$save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Delete Device(s)') . "'>";
 		} elseif (preg_match('/^tr_([0-9]+)$/', get_request_var('drp_action'), $matches)) { // place on tree
+			if (!host_tree_placement_is_allowed($matches[1])) {
+				raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+				header('Location: host.php?header=false');
+				exit;
+			}
+
 			print "<tr>
 				<td class='textArea'>
 					<p>" . __('Click \'Continue\' to place the following Device(s) under the branch selected below.') . "</p>

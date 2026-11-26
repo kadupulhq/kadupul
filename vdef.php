@@ -38,6 +38,9 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
 		vdef_form_actions();
 
 		break;
@@ -46,10 +49,12 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
+		csrf_require_post(true);
 		vdef_item_remove();
 
 		break;
 	case 'item_movedown':
+		csrf_require_post(true);
 		get_filter_request_var('vdef_id');
 
 		item_movedown();
@@ -57,6 +62,7 @@ switch (get_request_var('action')) {
 		header('Location: vdef.php?header=false&action=edit&id=' . get_request_var('vdef_id'));
 		break;
 	case 'item_moveup':
+		csrf_require_post(true);
 		get_filter_request_var('vdef_id');
 
 		item_moveup();
@@ -78,6 +84,7 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'ajax_dnd':
+		csrf_require_post(true);
 		vdef_item_dnd();
 
 		break;
@@ -127,14 +134,20 @@ function vdef_form_save() {
 
 		header('Location: vdef.php?action=edit&header=false&id=' . (empty($vdef_id) ? get_request_var('id') : $vdef_id));
 	} elseif (isset_request_var('save_component_item')) {
+		global $vdef_item_types;
+
 		$sequence = get_sequence(get_filter_request_var('id'), 'sequence', 'vdef_items', 'vdef_id=' . get_filter_request_var('vdef_id'));
 
 		$save['id']       = get_filter_request_var('id');
 		$save['hash']     = get_hash_vdef(get_request_var('id'), 'vdef_item');
 		$save['vdef_id']  = get_filter_request_var('vdef_id');
 		$save['sequence'] = $sequence;
-		$save['type']     = get_nfilter_request_var('type');
+		$save['type']     = get_filter_request_var('type');
 		$save['value']    = get_nfilter_request_var('value');
+
+		if (!isset($vdef_item_types[$save['type']])) {
+			raise_message(3);
+		}
 
 		if (!is_error_message()) {
 			$vdef_item_id = sql_save($save, 'vdef_items');
@@ -217,16 +230,23 @@ function vdef_form_actions() {
 			if (get_nfilter_request_var('drp_action') === '1') { // delete
 				/* do a referential integrity check */
 				if (cacti_sizeof($selected_items)) {
-				foreach($selected_items as $vdef_id) {
-					/* ================= input validation ================= */
-					input_validate_input_number($vdef_id);
-					/* ==================================================== */
+					foreach($selected_items as $vdef_id) {
+						/* ================= input validation ================= */
+						input_validate_input_number($vdef_id);
+						/* ==================================================== */
 
-					$vdef_ids[] = $vdef_id;
-				}
+						$in_use = (int) db_fetch_cell_prepared('SELECT COUNT(*)
+							FROM graph_templates_item
+							WHERE vdef_id = ?',
+							array((int) $vdef_id));
+
+						if ($in_use === 0) {
+							$vdef_ids[] = (int) $vdef_id;
+						}
+					}
 				}
 
-				if (isset($vdef_ids)) {
+				if (isset($vdef_ids) && cacti_sizeof($vdef_ids)) {
 					db_execute('DELETE FROM vdef WHERE ' . array_to_sql_or($vdef_ids, 'id'));
 					db_execute('DELETE FROM vdef_items WHERE ' . array_to_sql_or($vdef_ids, 'vdef_id'));
 				}

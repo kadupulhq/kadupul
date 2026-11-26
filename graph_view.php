@@ -46,14 +46,42 @@ process_tree_settings();
 initialize_realtime_step_and_window();
 
 function get_matching_nodes() {
-	$my_matches = array();
-	$match = array();
+	if (!is_view_allowed('show_tree')) {
+		header('Content-Type: application/json; charset=utf-8');
+		print json_encode(array());
+		return;
+	}
 
-	$filter = '%' . get_nfilter_request_var('str') . '%';
+	$tree_total    = -1;
+	$allowed_trees = array_rekey(
+		get_allowed_trees(false, false, '', '', '', $tree_total),
+		'id', 'name'
+	);
 
-	if (get_nfilter_request_var('str') != '') {
-		$matching = db_fetch_assoc_prepared("SELECT gti.parent, gti.graph_tree_id
+	if (!cacti_sizeof($allowed_trees)) {
+		header('Content-Type: application/json; charset=utf-8');
+		print json_encode(array());
+		return;
+	}
+
+	$allowed_tree_ids = implode(', ', array_map('intval', array_keys($allowed_trees)));
+	$my_matches       = array();
+	$match            = array();
+
+	$raw_str = (string) get_nfilter_request_var('str');
+	$filter  = '%' . db_like_escape($raw_str) . '%';
+
+	if ($raw_str != '') {
+		$matching = db_fetch_assoc_prepared("SELECT gti.parent, gti.graph_tree_id, gti.host_id, gti.local_graph_id, gti.site_id,
+			(gti.title LIKE ?) AS matched_title,
+			(h.id IS NOT NULL AND (h.description LIKE ? OR h.hostname LIKE ?)) AS matched_host,
+			(h2.site_id > 0) AS matched_site_host,
+			(gtg.local_graph_id > 0) AS matched_graph,
+			(site.id > 0) AS matched_site
 			FROM graph_tree_items AS gti
+			INNER JOIN graph_tree AS gt
+			ON gt.id = gti.graph_tree_id
+			AND gt.enabled = 'on'
 			LEFT JOIN host AS h
 			ON h.id = gti.host_id
 			LEFT JOIN (
@@ -76,19 +104,51 @@ function get_matching_nodes() {
 				WHERE name LIKE ?
 			) AS site
 			ON site.id = gti.site_id
-			WHERE (gti.title LIKE ?)
-			OR (h.description LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
-			OR (h.hostname LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
-			OR (h2.site_id > 0)
-			OR (gtg.local_graph_id > 0)
-			OR (site.id > 0)",
-			array($filter, $filter, $filter, $filter, $filter, $filter, $filter));
+			WHERE gti.graph_tree_id IN ($allowed_tree_ids)
+			AND (
+				(gti.title LIKE ?)
+				OR (h.description LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
+				OR (h.hostname LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
+				OR (h2.site_id > 0)
+				OR (gtg.local_graph_id > 0)
+				OR (site.id > 0)
+			)",
+			array($filter, $filter, $filter, $filter, $filter, $filter, $filter, $filter, $filter, $filter));
 	} else {
-		$matching = db_fetch_assoc("SELECT parent, graph_tree_id FROM graph_tree_items");
+		$matching = db_fetch_assoc("SELECT gti.parent, gti.graph_tree_id, gti.host_id, gti.local_graph_id, gti.site_id
+			FROM graph_tree_items AS gti
+			INNER JOIN graph_tree AS gt
+			ON gt.id = gti.graph_tree_id
+			AND gt.enabled = 'on'
+			WHERE gti.graph_tree_id IN ($allowed_tree_ids)");
 	}
 
 	if (cacti_sizeof($matching)) {
 		foreach($matching as $row) {
+			if (!isset($allowed_trees[(int) $row['graph_tree_id']])) {
+				continue;
+			}
+
+			if ($row['host_id'] > 0 && !is_device_allowed((int) $row['host_id'])) {
+				continue;
+			}
+
+			if ($row['local_graph_id'] > 0 && !is_graph_allowed((int) $row['local_graph_id'])) {
+				continue;
+			}
+
+			if ($row['site_id'] > 0) {
+				$site_total = -1;
+				$site_where = '';
+				if ($raw_str != '' && !empty($row['matched_site_host']) && empty($row['matched_site']) && empty($row['matched_title'])) {
+					$qfilter    = db_qstr($filter);
+					$site_where = "(h.description LIKE $qfilter OR h.hostname LIKE $qfilter)";
+				}
+				if (!cacti_sizeof(get_allowed_site_devices((int) $row['site_id'], $site_where, '', 1, $site_total))) {
+					continue;
+				}
+			}
+
 			while ($row['parent'] != '0') {
 				$match[] = 'tbranch-' . $row['parent'];
 
@@ -158,6 +218,8 @@ case 'ajax_search':
 
 	break;
 case 'ajax_reports':
+	csrf_require_post(true);
+
 	// Add to a report
 	get_filter_request_var('report_id');
 	get_filter_request_var('timespan');
@@ -170,7 +232,8 @@ case 'ajax_reports':
 			$good = true;
 
 			foreach($items as $item) {
-				if (!reports_add_graphs(get_filter_request_var('report_id'), $item, get_request_var('timespan'), get_request_var('align'))) {
+				$item_id = (int) trim($item);
+				if ($item_id <= 0 || !is_graph_allowed($item_id) || !reports_add_graphs(get_filter_request_var('report_id'), $item_id, get_request_var('timespan'), get_request_var('align'))) {
 					raise_message('reports_add_error');
 					$good = false;
 					break;

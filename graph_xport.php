@@ -93,7 +93,9 @@ $xport_array = rrdtool_function_xport(get_request_var('local_graph_id'), get_req
 
 /* Make graph title the suggested file name */
 if (is_array($xport_array) && isset($xport_array['meta']) && is_array($xport_array['meta'])) {
-	$filename = $xport_array['meta']['title_cache'] . '.csv';
+	$base_name = preg_replace('/[^A-Za-z0-9._ -]/', '_', (string) $xport_array['meta']['title_cache']);
+	$base_name = trim($base_name, ". \t\n\r\0\x0B");
+	$filename  = ($base_name !== '' ? $base_name : 'graph_export') . '.csv';
 } else {
 	$filename = 'graph_export.csv';
 }
@@ -117,8 +119,16 @@ if (isset_request_var('format') && get_nfilter_request_var('format') == 'table')
 
 if (is_array($xport_array) && isset($xport_array['meta']['start'])) {
 	if (!$html) {
-		$output  = '"' . __('Title') . '","'          . $xport_array['meta']['title_cache']    . '"' . "\n";
-		$output .= '"' . __('Vertical Label') . '","' . $xport_array['meta']['vertical_label'] . '"' . "\n";
+		$csv_cell = function ($value) {
+			$str = (string) $value;
+			if (function_exists('cacti_csv_safe')) {
+				$str = cacti_csv_safe($str);
+			}
+			return str_replace(array("\r", "\n", '"'), array(' ', ' ', '""'), $str);
+		};
+
+		$output  = '"' . __('Title') . '","'          . $csv_cell($xport_array['meta']['title_cache'])    . '"' . "\n";
+		$output .= '"' . __('Vertical Label') . '","' . $csv_cell($xport_array['meta']['vertical_label']) . '"' . "\n";
 
 		$output .= '"' . __('Start Date') . '","'     . date('Y-m-d H:i:s', $xport_array['meta']['start']) . '"' . "\n";
 		$output .= '"' . __('End Date') . '","'       . date('Y-m-d H:i:s', ($xport_array['meta']['end'] == $xport_array['meta']['start']) ? $xport_array['meta']['start'] + $xport_array['meta']['step']*($xport_array['meta']['rows']-1) : $xport_array['meta']['end']) . '"' . "\n";
@@ -129,13 +139,13 @@ if (is_array($xport_array) && isset($xport_array['meta']['start'])) {
 
 		if (isset($xport_meta['NthPercentile'])) {
 			foreach($xport_meta['NthPercentile'] as $item) {
-				$output .= '"' . __('Nth Percentile') . '","' . $item['value'] . '","' . $item['format'] . '"' . "\n";
+				$output .= '"' . __('Nth Percentile') . '","' . $csv_cell($item['value']) . '","' . $csv_cell($item['format']) . '"' . "\n";
 			}
 		}
 
 		if (isset($xport_meta['Summation'])) {
 			foreach($xport_meta['Summation'] as $item) {
-				$output .= '"' . __('Summation') . '","' . $item['value'] . '","' . $item['format'] . '"' . "\n";
+				$output .= '"' . __('Summation') . '","' . $csv_cell($item['value']) . '","' . $csv_cell($item['format']) . '"' . "\n";
 			}
 		}
 
@@ -147,7 +157,7 @@ if (is_array($xport_array) && isset($xport_array['meta']['start'])) {
 			/* RFC 4180 CSV quoting so a column name carrying a double-quote
 			 * or newline (often from SNMP-sourced ifAlias/ifDescr) cannot
 			 * break the CSV shape downstream. */
-			$header .= ',"' . str_replace(array("\r", "\n", '"'), array(' ', ' ', '""'), $legend) . '"';
+			$header .= ',"' . $csv_cell($legend) . '"';
 		}
 		$output .= $header . "\n";
 	} else {
@@ -278,7 +288,7 @@ if (isset($xport_array['data']) && is_array($xport_array['data'])) {
 					$row_data = '-';
 
 					if (!is_numeric($row['col'.$i])) {
-						$row_data .= '(unexpected: ' . $row['col' . $i] . ')';
+						$row_data .= '(unexpected: ' . html_escape($row['col' . $i]) . ')';
 					}
 				} elseif (is_numeric($row_data)) {
 					$row_data = trim(number_format_i18n(round($row_data, 5), 4));

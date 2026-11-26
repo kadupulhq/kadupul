@@ -29,10 +29,18 @@
  * @arg $web - is this a web operation
  * @returns - null unless in $web, in which case it redirects to the page */
 function api_tree_lock($tree_id, $user_id = 0, $web = true) {
+	global $config;
+
 	/* ================= input validation ================= */
 	input_validate_input_number($tree_id);
 	input_validate_input_number($user_id);
 	/* ==================================================== */
+
+	if ($web && !empty($config['is_web']) && !empty($_SESSION['sess_user_id'])
+		&& !cacti_authorize_resource($_SESSION['sess_user_id'], (int) $tree_id, 'graph_tree')) {
+		cacti_log('WARNING: Rejected api_tree_lock on Tree ' . (int) $tree_id . ' for User ' . (int) $_SESSION['sess_user_id'], false, 'AUTH');
+		return;
+	}
 
 	db_execute_prepared('UPDATE graph_tree
 		SET `locked` = 1, locked_date = NOW(), last_modified = NOW(), modified_by = ?
@@ -46,10 +54,18 @@ function api_tree_lock($tree_id, $user_id = 0, $web = true) {
  * @arg $web - is this a web operation
  * @returns - null unless in $web, in which case it redirects to the page */
 function api_tree_unlock($tree_id, $user_id = 0, $web = true) {
+	global $config;
+
 	/* ================= input validation ================= */
 	input_validate_input_number($tree_id);
 	input_validate_input_number($user_id);
 	/* ==================================================== */
+
+	if ($web && !empty($config['is_web']) && !empty($_SESSION['sess_user_id'])
+		&& !cacti_authorize_resource($_SESSION['sess_user_id'], (int) $tree_id, 'graph_tree')) {
+		cacti_log('WARNING: Rejected api_tree_unlock on Tree ' . (int) $tree_id . ' for User ' . (int) $_SESSION['sess_user_id'], false, 'AUTH');
+		return;
+	}
 
 	db_execute_prepared('UPDATE graph_tree
 		SET `locked` = 0, last_modified = NOW(), modified_by = ?
@@ -851,6 +867,13 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 
 	input_validate_input_number($tree_id);
 	input_validate_input_number($parent_tree_item_id);
+
+	if (!empty($config['is_web']) && !empty($_SESSION['sess_user_id'])
+		&& (!is_tree_allowed((int) $tree_id) || !cacti_authorize_resource($_SESSION['sess_user_id'], (int) $tree_id, 'graph_tree'))) {
+		cacti_log('WARNING: Rejected api_tree_item_save on Tree ' . (int) $tree_id . ' for User ' . (int) $_SESSION['sess_user_id'], false, 'AUTH');
+		raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+		return false;
+	}
 
 	if (!db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE id = ?', array($tree_id))) {
 		raise_message(2);

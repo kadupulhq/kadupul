@@ -756,26 +756,24 @@ function graphs() {
 					$html_dq_header = '';
 
 					/* if there is a where clause, get the matching snmp_indexes */
-					$sql_where = '';
+					$sql_where        = '';
+					$sql_where_params = array();
 					if (get_request_var('filter') != '') {
-						$sql_where = '';
 						$indexes = db_fetch_assoc_prepared('SELECT DISTINCT snmp_index
 							FROM host_snmp_cache
 							WHERE field_value LIKE ?
 							AND snmp_query_id = ?
 							AND host_id = ?',
-							array('%' . get_request_var('filter') . '%', $snmp_query['id'], $host['id']));
+							array('%' . db_like_escape(get_request_var('filter')) . '%', $snmp_query['id'], $host['id']));
 
 						if (cacti_sizeof($indexes)) {
+							$placeholders = array();
 							foreach($indexes as $index) {
-								if ($sql_where != '') {
-									$sql_where .= ", '" . $index['snmp_index'] . "'";
-								} else {
-									$sql_where .= " AND snmp_index IN('" . $index['snmp_index'] . "'";
-								}
+								$placeholders[]     = '?';
+								$sql_where_params[] = $index['snmp_index'];
 							}
 
-							$sql_where .= ')';
+							$sql_where = ' AND snmp_index IN (' . implode(', ', $placeholders) . ')';
 						}
 					}
 
@@ -803,45 +801,57 @@ function graphs() {
 							array($host['id'], $snmp_query['id']));
 
 						/* build magic query */
-						$sql_query  = 'SELECT host_id, snmp_query_id, snmp_index';
-						$num_visible_fields = cacti_sizeof($field_names);
+						$sql_query          = 'SELECT host_id, snmp_query_id, snmp_index';
+						$select_params      = array();
+						$num_visible_fields = 0;
 						$i = 0;
 						if (cacti_sizeof($field_names)) {
 							foreach($field_names as $column) {
 								$field_name = $column['field_name'];
-								$sql_query .= ", MAX(CASE WHEN field_name='$field_name' THEN field_value ELSE NULL END) AS '$field_name'";
+								if (!preg_match('/^[A-Za-z0-9_.-]+$/D', (string) $field_name)) {
+									continue;
+								}
+								$safe_alias       = str_replace('`', '``', $field_name);
+								$sql_query       .= ", MAX(CASE WHEN field_name = ? THEN field_value ELSE NULL END) AS `$safe_alias`";
+								$select_params[]  = $field_name;
+								$num_visible_fields++;
 								$i++;
 							}
 						}
 
-						$sql_query_worder = $sql_query . ' FROM host_snmp_cache
-							WHERE host_id=' . $host['id'] . '
-							AND snmp_query_id=' . $snmp_query['id'] . "
+						$limit_offset = max(0, (int) ($rows * ($page - 1)));
+						$limit_rows   = max(1, (int) $rows);
+						$base_params  = array_merge(array((int) $host['id'], (int) $snmp_query['id']), $sql_where_params);
+						$query_params = array_merge($select_params, $base_params);
+
+						$sql_query_worder = $sql_query . " FROM host_snmp_cache
+							WHERE host_id = ?
+							AND snmp_query_id = ?
 							$sql_where
 							GROUP BY host_id, snmp_query_id, snmp_index
 							$sql_order
-							LIMIT " . ($rows*($page-1)) . ',' . $rows;
+							LIMIT $limit_offset, $limit_rows";
 
-						$sql_query .= ' FROM host_snmp_cache
-							WHERE host_id=' . $host['id'] . '
-							AND snmp_query_id=' . $snmp_query['id'] . "
+						$sql_query .= " FROM host_snmp_cache
+							WHERE host_id = ?
+							AND snmp_query_id = ?
 							$sql_where
 							GROUP BY host_id, snmp_query_id, snmp_index
-							LIMIT " . ($rows*($page-1)) . ',' . $rows;
+							LIMIT $limit_offset, $limit_rows";
 
-						$rows_query = 'SELECT host_id, snmp_query_id, snmp_index
+						$rows_query = "SELECT host_id, snmp_query_id, snmp_index
 							FROM host_snmp_cache
-							WHERE host_id=' . $host['id'] . '
-							AND snmp_query_id=' . $snmp_query['id'] . "
+							WHERE host_id = ?
+							AND snmp_query_id = ?
 							$sql_where
 							GROUP BY host_id, snmp_query_id, snmp_index";
 
-						$snmp_query_indexes = db_fetch_assoc($sql_query);
+						$snmp_query_indexes = db_fetch_assoc_prepared($sql_query, $query_params);
 						if (cacti_sizeof($snmp_query_indexes)) {
-							$snmp_query_indexes = db_fetch_assoc($sql_query_worder);
+							$snmp_query_indexes = db_fetch_assoc_prepared($sql_query_worder, $query_params);
 						}
 
-						$total_rows = cacti_sizeof(db_fetch_assoc($rows_query));
+						$total_rows = cacti_sizeof(db_fetch_assoc_prepared($rows_query, $base_params));
 
 						if (($page - 1) * $rows > $total_rows) {
 							$page = 1;

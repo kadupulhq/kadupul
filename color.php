@@ -40,6 +40,9 @@ switch (get_request_var('action')) {
 		break;
 	case 'actions':
 		csrf_require_post();
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
 		form_actions();
 
 		break;

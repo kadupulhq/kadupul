@@ -1229,7 +1229,13 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, 
 
 						$save[$field_name] = $color_id;
 					} else {
-						$save[$field_name] = xml_character_decode($item_array[$field_name]);
+						$decoded_val = xml_character_decode($item_array[$field_name]);
+						if ($field_name === 'alpha' && $decoded_val !== '' && !preg_match('/^[0-9A-Fa-f]{2}\z/', $decoded_val)) {
+							$decoded_val = 'FF';
+						} elseif ($field_name === 'textalign' && !in_array($decoded_val, array('', 'left', 'right', 'justified', 'center'), true)) {
+							$decoded_val = '';
+						}
+						$save[$field_name] = $decoded_val;
 					}
 				}
 			}
@@ -1790,7 +1796,13 @@ function xml_to_data_query($hash, &$xml_array, &$hash_cache, &$files, $replace_s
 					if (preg_match('/hash_([a-f0-9]{2})([a-f0-9]{4})([a-f0-9]{32})/', $item_array[$field_name])) {
 						$save[$field_name] = resolve_hash_to_id($item_array[$field_name], $hash_cache, 'snmp_query_graph');
 					} else {
-						$save[$field_name] = xml_character_decode($item_array[$field_name]);
+						$decoded_val = xml_character_decode($item_array[$field_name]);
+						if ($field_name === 'alpha' && $decoded_val !== '' && !preg_match('/^[0-9A-Fa-f]{2}\z/', $decoded_val)) {
+							$decoded_val = 'FF';
+						} elseif ($field_name === 'textalign' && !in_array($decoded_val, array('', 'left', 'right', 'justified', 'center'), true)) {
+							$decoded_val = '';
+						}
+						$save[$field_name] = $decoded_val;
 					}
 				}
 			}
@@ -2359,7 +2371,13 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 							$save[$field_name] = $_cdef_id;
 						}
 					} else {
-						$save[$field_name] = xml_character_decode($item_array[$field_name]);
+						$decoded_val = xml_character_decode($item_array[$field_name]);
+						if ($field_name === 'alpha' && $decoded_val !== '' && !preg_match('/^[0-9A-Fa-f]{2}\z/', $decoded_val)) {
+							$decoded_val = 'FF';
+						} elseif ($field_name === 'textalign' && !in_array($decoded_val, array('', 'left', 'right', 'justified', 'center'), true)) {
+							$decoded_val = '';
+						}
+						$save[$field_name] = $decoded_val;
 					}
 				}
 			}

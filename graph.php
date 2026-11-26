@@ -929,6 +929,12 @@ var rra_id        = <?php
 
 	break;
 case 'properties':
+	if (!is_realm_allowed(27)) {
+		http_response_code(403);
+		print '<strong><font class="txtErrorTextBox">' . __('PERMISSION DENIED') . '</font></strong>';
+		exit;
+	}
+
 	$graph_data_array['print_source'] = true;
 
 	/* override: graph start time (unix time) */

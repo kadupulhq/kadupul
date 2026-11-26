@@ -39,6 +39,9 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
 		aggregate_color_form_actions();
 
 		break;
@@ -188,8 +191,23 @@ function aggregate_color_form_actions() {
 
 		if ($selected_items != false) {
 			if (get_request_var('drp_action') == '1') { /* delete */
-				db_execute('DELETE FROM color_templates WHERE ' . array_to_sql_or($selected_items, 'color_template_id'));
-				db_execute('DELETE FROM color_template_items WHERE ' . array_to_sql_or($selected_items, 'color_template_id'));
+				$deletable_ids = array();
+				foreach ($selected_items as $template_id) {
+					input_validate_input_number($template_id);
+					$in_use = (int) db_fetch_cell_prepared('SELECT COUNT(*)
+						FROM aggregate_graph_templates_item
+						WHERE color_template = ?',
+						array((int) $template_id));
+
+					if ($in_use === 0) {
+						$deletable_ids[] = (int) $template_id;
+					}
+				}
+
+				if (cacti_sizeof($deletable_ids)) {
+					db_execute('DELETE FROM color_templates WHERE ' . array_to_sql_or($deletable_ids, 'color_template_id'));
+					db_execute('DELETE FROM color_template_items WHERE ' . array_to_sql_or($deletable_ids, 'color_template_id'));
+				}
 			} elseif (get_nfilter_request_var('drp_action') == '2') { // duplicate
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
 					duplicate_color_template($selected_items[$i], get_nfilter_request_var('title_format'));

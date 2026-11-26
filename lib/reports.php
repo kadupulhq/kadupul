@@ -156,7 +156,13 @@ function reports_add_devices($report_id, $device_ids, $timespan, $align) {
 }
 
 function reports_add_graphs($report_id, $local_graph_id, $timespan, $align) {
+	$local_graph_id = (int) $local_graph_id;
+
 	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $report_id, 'reports')) {
+		raise_message('reports_not_owner');
+
+		return false;
+	} elseif ($local_graph_id <= 0 || !is_graph_allowed($local_graph_id)) {
 		raise_message('reports_not_owner');
 
 		return false;

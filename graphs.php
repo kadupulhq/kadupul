@@ -137,18 +137,22 @@ switch (get_request_var('action')) {
    -------------------------- */
 
 function get_ajax_graph_items() {
-	$rrd_id  = get_filter_request_var('rrd_id');
-	$host_id = get_filter_request_var('host_id');
+	$rrd_id  = (int) get_filter_request_var('rrd_id');
+	$host_id = (int) get_filter_request_var('host_id');
+	$params  = array($rrd_id);
+	$sql_where = '';
 
 	if ($host_id > 0) {
-		$sql_where = ' AND data_local.host_id=' . $host_id;
-	} else {
-		$sql_where = '';
+		$sql_where .= ' AND data_local.host_id = ?';
+		$params[]   = $host_id;
 	}
 
-	if (get_request_var('term') != '') {
-		$sql_where .= ' HAVING name LIKE "%' . trim(db_qstr(get_request_var('term')),"'") . '%"';
+	if (get_nfilter_request_var('term') != '') {
+		$sql_where .= ' HAVING name LIKE ?';
+		$params[]   = '%' . db_like_escape(get_nfilter_request_var('term')) . '%';
 	}
+
+	$limit = max(1, (int) read_config_option('autocomplete_rows'));
 
 	$items  = db_fetch_assoc_prepared("SELECT *
 		FROM (SELECT data_template_rrd.id AS id,
@@ -180,8 +184,8 @@ function get_ajax_graph_items() {
 			$sql_where
 			ORDER BY name
 		) AS b
-		LIMIT " . read_config_option('autocomplete_rows'),
-		array($rrd_id));
+		LIMIT $limit",
+		$params);
 
 	foreach($items as $key => $item) {
 		$items[$key]['label'] = $item['name'];
@@ -342,6 +346,21 @@ function form_save(): never {
 
 		if (!is_error_message()) {
 			$save2['local_graph_id'] = $local_graph_id;
+
+			/* Resolve graph_templates_graph.id server-side for this local graph so Realm 5 cannot overwrite template rows (local_graph_id = 0) */
+			$existing_gtg_id = (int) db_fetch_cell_prepared('SELECT id
+				FROM graph_templates_graph
+				WHERE local_graph_id = ?
+				AND local_graph_id > 0',
+				array((int) $local_graph_id));
+
+			if ((int) $save2['id'] > 0 && $existing_gtg_id !== (int) $save2['id']) {
+				cacti_log('WARNING: Rejected graphs.php?action=save for graph_templates_graph id ' . (int) $save2['id'] . ' outside graph ' . (int) $local_graph_id, false, 'AUTH');
+				header('Location: graphs.php?header=false');
+				exit;
+			}
+
+			$save2['id'] = $existing_gtg_id;
 			$graph_templates_graph_id = sql_save($save2, 'graph_templates_graph');
 
 			if ($graph_templates_graph_id) {

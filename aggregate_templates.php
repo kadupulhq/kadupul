@@ -44,6 +44,9 @@ switch (get_request_var('action')) {
 		aggregate_form_save();
 		break;
 	case 'actions':
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
 		aggregate_form_actions();
 		break;
 	case 'edit':
@@ -281,10 +284,25 @@ function aggregate_form_actions() {
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */
-				db_execute('DELETE FROM aggregate_graph_templates WHERE ' . array_to_sql_or($selected_items, 'id'));
-				db_execute('DELETE FROM aggregate_graph_templates_item WHERE ' . array_to_sql_or($selected_items, 'aggregate_template_id'));
-				db_execute('DELETE FROM aggregate_graph_templates_graph WHERE ' . array_to_sql_or($selected_items, 'aggregate_template_id'));
-				db_execute("UPDATE aggregate_graphs SET aggregate_template_id=0, template_propogation='' WHERE " . array_to_sql_or($selected_items, 'aggregate_template_id'));
+				$deletable_ids = array();
+				foreach ($selected_items as $template_id) {
+					input_validate_input_number($template_id);
+					$in_use = (int) db_fetch_cell_prepared('SELECT COUNT(*)
+						FROM aggregate_graphs
+						WHERE aggregate_template_id = ?',
+						array((int) $template_id));
+
+					if ($in_use === 0) {
+						$deletable_ids[] = (int) $template_id;
+					}
+				}
+
+				if (cacti_sizeof($deletable_ids)) {
+					db_execute('DELETE FROM aggregate_graph_templates WHERE ' . array_to_sql_or($deletable_ids, 'id'));
+					db_execute('DELETE FROM aggregate_graph_templates_item WHERE ' . array_to_sql_or($deletable_ids, 'aggregate_template_id'));
+					db_execute('DELETE FROM aggregate_graph_templates_graph WHERE ' . array_to_sql_or($deletable_ids, 'aggregate_template_id'));
+					db_execute("UPDATE aggregate_graphs SET aggregate_template_id=0, template_propogation='' WHERE " . array_to_sql_or($deletable_ids, 'aggregate_template_id'));
+				}
 			}
 		} else {
 		}

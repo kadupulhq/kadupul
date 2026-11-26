@@ -60,6 +60,9 @@ switch (get_request_var('action')) {
 		form_save();
 		break;
 	case 'actions':
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
 		form_actions();
 		break;
 	case 'edit':
@@ -74,6 +77,12 @@ switch (get_request_var('action')) {
 		break;
 }
 
+function aggregate_tree_placement_is_allowed($tree_id) {
+	return is_scalar($tree_id) && ctype_digit((string) $tree_id) && (int) $tree_id > 0
+		&& is_tree_allowed((int) $tree_id)
+		&& cacti_authorize_resource($_SESSION['sess_user_id'], (int) $tree_id, 'graph_tree');
+}
+
 function add_tree_names_to_actions_array() {
 	global $graph_actions;
 
@@ -82,7 +91,9 @@ function add_tree_names_to_actions_array() {
 
 	if (cacti_sizeof($trees)) {
 		foreach ($trees as $tree) {
-			$graph_actions['tr_' . $tree['id']] = __('Place on a Tree (%s)', $tree['name']);
+			if (aggregate_tree_placement_is_allowed($tree['id'])) {
+				$graph_actions['tr_' . $tree['id']] = __esc('Place on a Tree (%s)', $tree['name']);
+			}
 		}
 	}
 }
@@ -308,10 +319,18 @@ function form_actions() {
 				header('Location: aggregate_graphs.php?header=false&action=edit&tab=items&id=' . $local_graph_id);
 				exit;
 			} elseif (preg_match('/^tr_([0-9]+)$/', get_request_var('drp_action'), $matches)) { // place on tree
-				get_filter_request_var('tree_id');
-				get_filter_request_var('tree_item_id');
+				$tree_id      = get_filter_request_var('tree_id');
+				$tree_item_id = get_filter_request_var('tree_item_id');
+
+				if (!aggregate_tree_placement_is_allowed($tree_id)) {
+					cacti_log('WARNING: Rejected aggregate_graphs.php tree placement on Tree ' . (int) $tree_id . ' for User ' . (int) $_SESSION['sess_user_id'], false, 'AUTH');
+					raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+					header('Location: aggregate_graphs.php?header=false');
+					exit;
+				}
+
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
-					api_tree_item_save(0, get_nfilter_request_var('tree_id'), TREE_ITEM_TYPE_GRAPH, get_nfilter_request_var('tree_item_id'), '', $selected_items[$i], 0, 0, 0, 0, false);
+					api_tree_item_save(0, $tree_id, TREE_ITEM_TYPE_GRAPH, $tree_item_id, '', $selected_items[$i], 0, 0, 0, 0, false);
 				}
 			}
 		}
@@ -517,6 +536,12 @@ function form_actions() {
 
 			$save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Dis-Associate Graph(s)') . "'>";
 		} elseif (preg_match("/^tr_([0-9]+)$/", get_request_var('drp_action'), $matches)) { // place on tree
+			if (!aggregate_tree_placement_is_allowed($matches[1])) {
+				raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+				header('Location: aggregate_graphs.php?header=false');
+				exit;
+			}
+
 			print "<tr>
 				<td class='textArea'>
 					<p>" . __('Click \'Continue\' to place the following Aggregate Graph(s) under the Tree Branch.') . "</p>

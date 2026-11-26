@@ -45,7 +45,14 @@ function get_cdef_item_name($cdef_item_id) 	{
      string. this name will be resolved recursively if necessary
    @arg $cdef_id - the id of the cdef to resolve
    @returns - a text-based representation of the cdef */
-function get_cdef($cdef_id) {
+function get_cdef($cdef_id, array $visited = array()) {
+	$cdef_id = (int) $cdef_id;
+	if ($cdef_id <= 0 || isset($visited[$cdef_id])) {
+		return '';
+	}
+
+	$visited[$cdef_id] = true;
+
 	$cdef_items = db_fetch_assoc_prepared('SELECT id, type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence', array($cdef_id));
 
 	$i = 0; $cdef_string = '';
@@ -56,8 +63,8 @@ function get_cdef($cdef_id) {
 				$cdef_string .= ',';
 			}
 			if ($cdef_item['type'] == 5) {
-				$current_cdef_id = $cdef_item['value'];
-				$cdef_string .= get_cdef($current_cdef_id);
+				$current_cdef_id = (int) $cdef_item['value'];
+				$cdef_string .= get_cdef($current_cdef_id, $visited);
 			} else {
 				$cdef_string .= get_cdef_item_name($cdef_item['id']);
 			}
@@ -65,6 +72,51 @@ function get_cdef($cdef_id) {
 		}
 	}
 	return $cdef_string;
+}
+
+/**
+ * cdef_would_cycle - return true if adding a reference from $cdef_id to
+ *   $target_cdef_id would introduce a direct or transitive cycle.
+ *
+ * @param int $cdef_id
+ * @param int $target_cdef_id
+ *
+ * @return bool
+ */
+function cdef_would_cycle($cdef_id, $target_cdef_id) {
+	$cdef_id        = (int) $cdef_id;
+	$target_cdef_id = (int) $target_cdef_id;
+
+	if ($cdef_id <= 0 || $target_cdef_id <= 0) {
+		return false;
+	}
+
+	if ($cdef_id === $target_cdef_id) {
+		return true;
+	}
+
+	$visited = array($target_cdef_id => true);
+	$queue   = array($target_cdef_id);
+
+	while (cacti_sizeof($queue)) {
+		$current = array_shift($queue);
+		$refs    = db_fetch_assoc_prepared('SELECT value FROM cdef_items WHERE cdef_id = ? AND type = 5', array($current));
+
+		if (cacti_sizeof($refs)) {
+			foreach ($refs as $ref) {
+				$next = (int) $ref['value'];
+				if ($next === $cdef_id) {
+					return true;
+				}
+				if ($next > 0 && !isset($visited[$next])) {
+					$visited[$next] = true;
+					$queue[]        = $next;
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 /**

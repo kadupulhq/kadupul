@@ -1193,7 +1193,9 @@ $settings = array(
 			'method' => 'textbox',
 			'default' => 'ccccccff',
 			'max_length' => '8',
-			'size' => '60'
+			'size' => '60',
+			'filter' => FILTER_VALIDATE_REGEXP,
+			'options' => array('options' => array('regexp' => '/^[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?\z/'))
 		),
         'business_hours_max_days' => array(
             'friendly_name' => __('Maximum number of days to show business hours'),

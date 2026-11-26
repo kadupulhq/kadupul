@@ -866,6 +866,12 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 	// Fold continuation lines before sending a single IPC command.
 	$command_line = str_replace("\\\n", ' ', $command_line);
 
+	if (preg_match('/[\r\n\0]/', $command_line)) {
+		cacti_log('ERROR: Rejected RRDtool command containing embedded control characters.', false, $logopt);
+
+		return false;
+	}
+
 	$owned =& rrd_acknowledged_pipes();
 	if (is_resource($rrdtool_pipe) && isset($owned[(int) $rrdtool_pipe])) {
 		list($acknowledged, $response) = rrd_acknowledged_command($rrdtool_pipe, $command_line);
@@ -3580,9 +3586,11 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 			/* initialize color support */
 			$graph_item_color_code = '';
-			if (!empty($graph_item['hex'])) {
+			if (!empty($graph_item['hex']) && preg_match('/^[0-9A-Fa-f]{6}\z/', (string) $graph_item['hex'])) {
 				$graph_item_color_code = '#' . $graph_item['hex'];
-				$graph_item_color_code .= $graph_item['alpha'];
+				if (!empty($graph_item['alpha']) && preg_match('/^[0-9A-Fa-f]{2}\z/', (string) $graph_item['alpha'])) {
+					$graph_item_color_code .= $graph_item['alpha'];
+				}
 			}
 
 			/* initialize dash support */
@@ -3642,7 +3650,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 					break;
 				case GRAPH_ITEM_TYPE_TEXTALIGN:
 					if (!isset($graph_data_array['graph_nolegend'])) {
-						if (!empty($graph_item['textalign'])) {
+						if (!empty($graph_item['textalign']) && in_array($graph_item['textalign'], array('left', 'right', 'justified', 'center'), true)) {
 							$txt_graph_items .= $graph_item_types[$graph_item['graph_type_id']] . ':' . $graph_item['textalign'];
 						}
 					}
@@ -5911,7 +5919,7 @@ function add_business_hours($data) {
                 $data['graph_defs'] .= 'CDEF:officehours' . $day . '=a,POP,TIME,' . $current_start_bh_time . ',LT,1,0,IF,TIME,' . $current_end_bh_time . ',GT,1,0,IF,MAX,0,GT,0,1,IF' . RRD_NL;
                 $data['graph_defs'] .= 'CDEF:dslimit' . $day . '=INF,officehours' . $day . ',*' . RRD_NL;
 
-                if (preg_match('/[0-9A-Fa-f]{6,8}/',read_config_option('business_hours_color'))) {
+                if (preg_match('/^[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?\z/', (string) read_config_option('business_hours_color'))) {
                     $bh_color = read_config_option('business_hours_color');
                 } else {
                     $bh_color = 'ccccccff';

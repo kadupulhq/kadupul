@@ -40,6 +40,9 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
 		form_actions();
 
 		break;
@@ -48,11 +51,13 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
+		csrf_require_post(true);
 		cdef_item_remove();
 
 		header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
 		break;
 	case 'item_movedown':
+		csrf_require_post(true);
 		get_filter_request_var('cdef_id');
 
 		item_movedown();
@@ -60,6 +65,7 @@ switch (get_request_var('action')) {
 		header('Location: cdef.php?action=edit&id=' . get_request_var('cdef_id'));
 		break;
 	case 'item_moveup':
+		csrf_require_post(true);
 		get_filter_request_var('cdef_id');
 
 		item_moveup();
@@ -81,6 +87,7 @@ switch (get_request_var('action')) {
 		bottom_footer();
 		break;
     case 'ajax_dnd':
+        csrf_require_post(true);
         cdef_item_dnd();
 
         break;
@@ -155,6 +162,11 @@ function form_save() {
 		$save['sequence'] = $sequence;
 		$save['type']     = form_input_validate(get_nfilter_request_var('type'), 'type', '^[0-9]+$', false, 3);
 		$save['value']    = form_input_validate(get_nfilter_request_var('value'), 'value', '', false, 3);
+
+		/* Reject direct or transitive cyclic CDEF references (type 5) */
+		if ((int) $save['type'] === 5 && cdef_would_cycle((int) $save['cdef_id'], (int) $save['value'])) {
+			raise_message('cdef_cycle', __('A CDEF cannot reference itself directly or indirectly.'), MESSAGE_LEVEL_ERROR);
+		}
 
 		if (!is_error_message()) {
 			$cdef_item_id = sql_save($save, 'cdef_items');
