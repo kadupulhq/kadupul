@@ -71,7 +71,7 @@ switch (get_request_var('action')) {
 		bottom_footer();
 		break;
 	case 'qedit':
-		csrf_require_post();
+		csrf_require_post(true);
 		automation_change_query_type();
 
 		$query = http_build_query(array(
@@ -142,8 +142,23 @@ function save() {
 		$save['operator']  = form_input_validate((isset_request_var('operator') ? get_nfilter_request_var('operator') : ''), 'operator', '^[0-9]+$', true, 3);
 		$save['pattern']   = form_input_validate((isset_request_var('pattern') ? get_nfilter_request_var('pattern') : ''), 'pattern', '', true, 3);
 
+		if (($save['operator'] == AUTOMATION_OP_REGEXP || $save['operator'] == AUTOMATION_OP_NOT_REGEXP) && $save['pattern'] !== '' && !validate_is_rlike_regex($save['pattern'])) {
+			raise_message('regex_invalid', __('Invalid regular expression pattern specified.'), MESSAGE_LEVEL_ERROR);
+			$_SESSION['sess_error_fields']['pattern'] = 'pattern';
+		}
+
 		/* Test for SQL injections */
-		$field_name = str_replace(array('ht.', 'h.', 'gt.', 'gtg.'), '', $save['field']);
+		if ($save['field'] !== '' && preg_match('/^(?:(?:h|ht|gt|gl|gtg)\.)?[a-zA-Z0-9_]+\z/', $save['field']) !== 1) {
+			raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Graph automation'), MESSAGE_LEVEL_ERROR);
+
+			cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Graph Automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
+
+			header('Location: automation_graph_rules.php?header=false&action=edit&id=' . get_request_var('id'));
+
+			exit;
+		}
+
+		$field_name = preg_replace('/^(?:ht|h|gt|gl|gtg)\./', '', $save['field']);
 
 		$exists = db_fetch_cell_prepared('SELECT field_name
 			FROM host_snmp_cache
@@ -151,22 +166,20 @@ function save() {
 			LIMIT 1',
 			array($field_name));
 
-		if (!$exists) {
+		if ($save['field'] !== '' && !$exists) {
 			/* check the case where there is no entry in the host_snmp_cache table yet */
-			if ("'$field_name'" != db_qstr($field_name)) {
 			if (!db_column_exists('host', $field_name) &&
 				!db_column_exists('host_template', $field_name) &&
 				!db_column_exists('graph_templates', $field_name) &&
 				!db_column_exists('graph_local', $field_name) &&
 				!db_column_exists('graph_templates_graph', $field_name)) {
-					raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Graph automation'), MESSAGE_LEVEL_ERROR);
+				raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Graph automation'), MESSAGE_LEVEL_ERROR);
 
-					cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Graph Automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
+				cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Graph Automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
 
-					header('Location: automation_graph_rules.php?header=false&action=edit&id=' . get_request_var('id'));
+				header('Location: automation_graph_rules.php?header=false&action=edit&id=' . get_request_var('id'));
 
-					exit;
-				}
+				exit;
 			}
 		}
 
@@ -201,11 +214,26 @@ function save() {
 		$save['operator']  = form_input_validate((isset_request_var('operator') ? get_nfilter_request_var('operator') : ''), 'operator', '^[0-9]+$', true, 3);
 		$save['pattern']   = form_input_validate((isset_request_var('pattern') ? get_nfilter_request_var('pattern') : ''), 'pattern', '', true, 3);
 
-		/* Test for SQL injections */
-		$field_name = str_replace(array('ht.', 'h.', 'gt.', 'gl.', 'gtg.'), '', $save['field']);
-		$field_name = preg_replace('/[^a-zA-Z0-9_]/', '', $field_name);
+		if (($save['operator'] == AUTOMATION_OP_REGEXP || $save['operator'] == AUTOMATION_OP_NOT_REGEXP) && $save['pattern'] !== '' && !validate_is_rlike_regex($save['pattern'])) {
+			raise_message('regex_invalid', __('Invalid regular expression pattern specified.'), MESSAGE_LEVEL_ERROR);
+			$_SESSION['sess_error_fields']['pattern'] = 'pattern';
+		}
 
-		if (!db_column_exists('host', $field_name) &&
+		/* Test for SQL injections */
+		if ($save['field'] !== '' && preg_match('/^(?:(?:h|ht|gt|gl|gtg)\.)?[a-zA-Z0-9_]+\z/', $save['field']) !== 1) {
+			raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Graph automation'), MESSAGE_LEVEL_ERROR);
+
+			cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Graph Automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
+
+			header('Location: automation_graph_rules.php?header=false&action=edit&id=' . get_request_var('id') . '&rule_type=' . AUTOMATION_RULE_TYPE_GRAPH_ACTION);
+
+			exit;
+		}
+
+		$field_name = preg_replace('/^(?:ht|h|gt|gl|gtg)\./', '', $save['field']);
+
+		if ($save['field'] !== '' &&
+			!db_column_exists('host', $field_name) &&
 			!db_column_exists('host_template', $field_name) &&
 			!db_column_exists('graph_templates', $field_name) &&
 			!db_column_exists('graph_local', $field_name) &&
@@ -259,7 +287,7 @@ function automation_graph_rules_form_actions() {
 			if (get_nfilter_request_var('drp_action') == AUTOMATION_ACTION_GRAPH_DELETE) { /* delete */
 				db_execute('DELETE FROM automation_graph_rules WHERE ' . array_to_sql_or($selected_items, 'id'));
 				db_execute('DELETE FROM automation_graph_rule_items WHERE ' . array_to_sql_or($selected_items, 'rule_id'));
-				db_execute('DELETE FROM automation_match_rule_items WHERE ' . array_to_sql_or($selected_items, 'rule_id'));
+				db_execute('DELETE FROM automation_match_rule_items WHERE rule_type = ' . AUTOMATION_RULE_TYPE_GRAPH_MATCH . ' AND (' . array_to_sql_or($selected_items, 'rule_id') . ')');
 			} elseif (get_nfilter_request_var('drp_action') == AUTOMATION_ACTION_GRAPH_DUPLICATE) { /* duplicate */
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
 					cacti_log('form_actions duplicate: ' . $selected_items[$i] . ' name: ' . get_nfilter_request_var('name_format'), true, 'AUTOM8 TRACE', POLLER_VERBOSITY_MEDIUM);

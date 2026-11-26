@@ -274,7 +274,7 @@ function substitute_script_query_path($path) {
    @arg $r_escape_string - the character used to escape each variable on the right side
    @arg $host_id - (int) the host ID to match
    @returns - the original string with all of the variable substitutions made */
-function substitute_host_data($string, $l_escape_string, $r_escape_string, $host_id) {
+function substitute_host_data($string, $l_escape_string, $r_escape_string, $host_id, $include_credentials = false) {
 	if (!empty($host_id)) {
 		$host = db_fetch_row_prepared('SELECT ' . SQL_NO_CACHE . ' h.*, s.name AS site_name
 			FROM host AS h
@@ -317,28 +317,31 @@ function substitute_host_data($string, $l_escape_string, $r_escape_string, $host
 		$replace[] = get_uptime($host);
 
 		/* snmp connectivity information */
-		$search[]  = $l_escape_string . 'host_snmp_community' . $r_escape_string;
-		$replace[] = $host['snmp_community'];
 		$search[]  = $l_escape_string . 'host_snmp_version' . $r_escape_string;
 		$replace[] = $host['snmp_version'];
-		$search[]  = $l_escape_string . 'host_snmp_username' . $r_escape_string;
-		$replace[] = $host['snmp_username'];
-		$search[]  = $l_escape_string . 'host_snmp_password' . $r_escape_string;
-		$replace[] = $host['snmp_password'];
-		$search[]  = $l_escape_string . 'host_snmp_auth_protocol' . $r_escape_string;
-		$replace[] = $host['snmp_auth_protocol'];
-		$search[]  = $l_escape_string . 'host_snmp_priv_passphrase' . $r_escape_string;
-		$replace[] = $host['snmp_priv_passphrase'];
-		$search[]  = $l_escape_string . 'host_snmp_priv_protocol' . $r_escape_string;
-		$replace[] = $host['snmp_priv_protocol'];
-		$search[]  = $l_escape_string . 'host_snmp_context' . $r_escape_string;
-		$replace[] = $host['snmp_context'];
-		$search[]  = $l_escape_string . 'host_snmp_engine_id' . $r_escape_string;
-		$replace[] = $host['snmp_engine_id'];
 		$search[]  = $l_escape_string . 'host_snmp_port' . $r_escape_string;
 		$replace[] = $host['snmp_port'];
 		$search[]  = $l_escape_string . 'host_snmp_timeout' . $r_escape_string;
 		$replace[] = $host['snmp_timeout'];
+
+		if ($include_credentials === true) {
+			$search[]  = $l_escape_string . 'host_snmp_community' . $r_escape_string;
+			$replace[] = $host['snmp_community'];
+			$search[]  = $l_escape_string . 'host_snmp_username' . $r_escape_string;
+			$replace[] = $host['snmp_username'];
+			$search[]  = $l_escape_string . 'host_snmp_password' . $r_escape_string;
+			$replace[] = $host['snmp_password'];
+			$search[]  = $l_escape_string . 'host_snmp_auth_protocol' . $r_escape_string;
+			$replace[] = $host['snmp_auth_protocol'];
+			$search[]  = $l_escape_string . 'host_snmp_priv_passphrase' . $r_escape_string;
+			$replace[] = $host['snmp_priv_passphrase'];
+			$search[]  = $l_escape_string . 'host_snmp_priv_protocol' . $r_escape_string;
+			$replace[] = $host['snmp_priv_protocol'];
+			$search[]  = $l_escape_string . 'host_snmp_context' . $r_escape_string;
+			$replace[] = $host['snmp_context'];
+			$search[]  = $l_escape_string . 'host_snmp_engine_id' . $r_escape_string;
+			$replace[] = $host['snmp_engine_id'];
+		}
 
 		/* snmp system information */
 		$search[]  = $l_escape_string . 'host_snmp_sysDescr' . $r_escape_string;

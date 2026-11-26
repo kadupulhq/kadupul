@@ -195,23 +195,66 @@ function host_reload_query() {
    ------------------- */
 
 function host_new_graphs_save($host_id) {
+	if ((int) $host_id > 0 && !is_device_allowed((int) $host_id)) {
+		cacti_log('SECURITY: Rejected unauthorized host_id in graphs_new.php', false, 'AUTH');
+		raise_message('permission_denied', __('You do not have permission to create graphs for this device.'), MESSAGE_LEVEL_ERROR);
+		header('Location: graphs_new.php?header=false');
+		exit;
+	}
+
 	$selected_graphs_array = cacti_unserialize(stripslashes(get_nfilter_request_var('selected_graphs_array')));
 
 	$values = array();
 	$form_data = array();
+	$allowed_gtg = template_allowed_override_columns('graph_templates_graph');
+	$allowed_gti = template_allowed_override_columns('graph_templates_item');
+	$allowed_dtd = template_allowed_override_columns('data_template_data');
+	$allowed_dtr = template_allowed_override_columns('data_template_rrd');
 
 	/* form an array that contains all of the data on the previous form */
 	foreach ($_POST as $var => $val) {
-		if (preg_match('/^g_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: field_name
-			if (empty($matches[1])) { // this is a new graph from template field
-				$values['cg'][$matches[2]]['graph_template'][$matches[3]] = $val;
-			} else { // this is a data query field
-				$values['sg'][$matches[1]][$matches[2]]['graph_template'][$matches[3]] = $val;
+		if (preg_match('/^g_(\d+)_(\d+)_(\w+)\z/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: field_name
+			$field_name = $matches[3];
+			if (!in_array($field_name, $allowed_gtg, true)) {
+				continue;
 			}
-		} elseif (preg_match('/^gi_(\d+)_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: graph_template_input_id, 4:field_name
+			$t_col = 't_' . $field_name;
+			if (db_column_exists('graph_templates_graph', $t_col)) {
+				$t_val = db_fetch_cell_prepared("SELECT `$t_col`
+					FROM graph_templates_graph
+					WHERE local_graph_id = 0
+					AND graph_template_id = ?",
+					array($matches[2]));
+				if ($t_val != 'on') {
+					continue;
+				}
+			}
+
+			if (empty($matches[1])) { // this is a new graph from template field
+				$values['cg'][$matches[2]]['graph_template'][$field_name] = $val;
+			} else { // this is a data query field
+				$values['sg'][$matches[1]][$matches[2]]['graph_template'][$field_name] = $val;
+			}
+		} elseif (preg_match('/^gi_(\d+)_(\d+)_(\d+)_(\w+)\z/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: graph_template_input_id, 4:field_name
 			/* ================= input validation ================= */
 			input_validate_input_number($matches[3]);
 			/* ==================================================== */
+
+			$field_name = $matches[4];
+			if (!in_array($field_name, $allowed_gti, true)) {
+				continue;
+			}
+
+			$input_valid = db_fetch_cell_prepared('SELECT id
+				FROM graph_template_input
+				WHERE id = ?
+				AND graph_template_id = ?
+				AND column_name = ?',
+				array($matches[3], $matches[2], $field_name));
+
+			if (!$input_valid) {
+				continue;
+			}
 
 			/* we need to find out which graph items will be affected by saving this particular item */
 			$item_list = db_fetch_assoc_prepared('SELECT
@@ -224,19 +267,35 @@ function host_new_graphs_save($host_id) {
 			if (cacti_sizeof($item_list)) {
 				foreach ($item_list as $item) {
 					if (empty($matches[1])) { // this is a new graph from template field
-						$values['cg'][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$matches[4]] = $val;
+						$values['cg'][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$field_name] = $val;
 					} else { // this is a data query field
-						$values['sg'][$matches[1]][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$matches[4]] = $val;
+						$values['sg'][$matches[1]][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$field_name] = $val;
 					}
 				}
 			}
-		} elseif (preg_match('/^d_(\d+)_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:field_nam
-			if (empty($matches[1])) { // this is a new graph from template field
-				$values['cg'][$matches[2]]['data_template'][$matches[3]][$matches[4]] = $val;
-			} else { // this is a data query field
-				$values['sg'][$matches[1]][$matches[2]]['data_template'][$matches[3]][$matches[4]] = $val;
+		} elseif (preg_match('/^d_(\d+)_(\d+)_(\d+)_(\w+)\z/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:field_name
+			$field_name = $matches[4];
+			if (!in_array($field_name, $allowed_dtd, true)) {
+				continue;
 			}
-		} elseif (preg_match('/^c_(\d+)_(\d+)_(\d+)_(\d+)/', $var, $matches)) {
+			$t_col = 't_' . $field_name;
+			if (db_column_exists('data_template_data', $t_col)) {
+				$t_val = db_fetch_cell_prepared("SELECT `$t_col`
+					FROM data_template_data
+					WHERE local_data_id = 0
+					AND data_template_id = ?",
+					array($matches[3]));
+				if ($t_val != 'on') {
+					continue;
+				}
+			}
+
+			if (empty($matches[1])) { // this is a new graph from template field
+				$values['cg'][$matches[2]]['data_template'][$matches[3]][$field_name] = $val;
+			} else { // this is a data query field
+				$values['sg'][$matches[1]][$matches[2]]['data_template'][$matches[3]][$field_name] = $val;
+			}
+		} elseif (preg_match('/^c_(\d+)_(\d+)_(\d+)_(\d+)\z/', $var, $matches)) {
 			/**
 			 * Custom Data.  Need to validate these against the input regular expressions
 			 *
@@ -244,23 +303,62 @@ function host_new_graphs_save($host_id) {
 			 * 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:data_input_field_id
 			 */
 			$input_field_id = $matches[4];
-			$idata = db_fetch_row_prepared('SELECT *
-				FROM data_input_fields
-				WHERE id = ?',
-				array($input_field_id));
+			$idata = db_fetch_row_prepared("SELECT dif.*
+				FROM data_input_fields AS dif
+				INNER JOIN data_template_data AS dtd
+				ON dtd.data_input_id = dif.data_input_id
+				INNER JOIN data_input_data AS did
+				ON did.data_template_data_id = dtd.id
+				AND did.data_input_field_id = dif.id
+				WHERE dif.id = ?
+				AND dif.input_output = 'in'
+				AND dtd.local_data_id = 0
+				AND dtd.data_template_id = ?
+				AND did.t_value = 'on'",
+				array($input_field_id, $matches[3]));
 
-			$val = form_input_validate($val, $var, $idata['regexp_match'], $idata['allow_nulls'], 3);
+			if (!cacti_sizeof($idata)) {
+				continue;
+			}
+
+			if ($idata['type_code'] != '' && preg_match('/^(?:' . VALID_HOST_FIELDS . ')$/i', $idata['type_code'])) {
+				continue;
+			}
+
+			$regexp_match = $idata['regexp_match'];
+			if ($idata['type_code'] == 'output_type') {
+				$regexp_match = '^[0-9]+$';
+			}
+
+			$val = form_input_validate($val, $var, $regexp_match, $idata['allow_nulls'], 3);
 
 			if (empty($matches[1])) { // this is a new graph from template field
 				$values['cg'][$matches[2]]['custom_data'][$matches[3]][$matches[4]] = $val;
 			} else { // this is a data query field
 				$values['sg'][$matches[1]][$matches[2]]['custom_data'][$matches[3]][$matches[4]] = $val;
 			}
-		} elseif (preg_match('/^di_(\d+)_(\d+)_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:local_data_template_rrd_id, 5:field_name
+		} elseif (preg_match('/^di_(\d+)_(\d+)_(\d+)_(\d+)_(\w+)\z/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:local_data_template_rrd_id, 5:field_name
+			$field_name = $matches[5];
+			if (!in_array($field_name, $allowed_dtr, true)) {
+				continue;
+			}
+			$t_col = 't_' . $field_name;
+			if (db_column_exists('data_template_rrd', $t_col)) {
+				$t_val = db_fetch_cell_prepared("SELECT `$t_col`
+					FROM data_template_rrd
+					WHERE id = ?
+					AND local_data_id = 0
+					AND data_template_id = ?",
+					array($matches[4], $matches[3]));
+				if ($t_val != 'on') {
+					continue;
+				}
+			}
+
 			if (empty($matches[1])) { // this is a new graph from template field
-				$values['cg'][$matches[2]]['data_template_item'][$matches[4]][$matches[5]] = $val;
+				$values['cg'][$matches[2]]['data_template_item'][$matches[4]][$field_name] = $val;
 			} else { // this is a data query field
-				$values['sg'][$matches[1]][$matches[2]]['data_template_item'][$matches[4]][$matches[5]] = $val;
+				$values['sg'][$matches[1]][$matches[2]]['data_template_item'][$matches[4]][$field_name] = $val;
 			}
 		}
 	}

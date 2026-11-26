@@ -29,10 +29,10 @@ namespace CsrfRequirePostCrossSiteTest;
  */
 function page_guards() {
 	return array(
-		'automation_devices.php'     => array('purge' => false, 'actions' => false),
+		'automation_devices.php'     => array('purge' => true, 'actions' => false),
 		'automation_graph_rules.php' => array(
 			'save' => true, 'actions' => false, 'item_movedown' => false, 'item_moveup' => false,
-			'item_remove' => false, 'qedit' => false, 'remove' => false,
+			'item_remove' => false, 'qedit' => true, 'remove' => false,
 		),
 		'automation_templates.php'   => array(
 			'save' => true, 'ajax_dnd' => false, 'actions' => false, 'movedown' => false,

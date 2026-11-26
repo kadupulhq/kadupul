@@ -141,10 +141,25 @@ function automation_tree_rules_form_save() {
 		$save['operator']  = form_input_validate((isset_request_var('operator') ? get_nfilter_request_var('operator') : ''), 'operator', '^[0-9]+$', true, 3);
 		$save['pattern']   = form_input_validate((isset_request_var('pattern') ? get_nfilter_request_var('pattern') : ''), 'pattern', '', true, 3);
 
-		/* Test for SQL injections */
-		$field_name = str_replace(array('ht.', 'h.', 'gt.'), '', $save['field']);
+		if (($save['operator'] == AUTOMATION_OP_REGEXP || $save['operator'] == AUTOMATION_OP_NOT_REGEXP) && $save['pattern'] !== '' && !validate_is_rlike_regex($save['pattern'])) {
+			raise_message('regex_invalid', __('Invalid regular expression pattern specified.'), MESSAGE_LEVEL_ERROR);
+			$_SESSION['sess_error_fields']['pattern'] = 'pattern';
+		}
 
-		if (!db_column_exists('host', $field_name) && !db_column_exists('host_template', $field_name) && !db_column_exists('graph_templates', $field_name)) {
+		/* Test for SQL injections */
+		if ($save['field'] !== '' && preg_match('/^(?:(?:h|ht|gt|gl|gtg)\.)?[a-zA-Z0-9_]+\z/', $save['field']) !== 1) {
+			raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Tree automation'), MESSAGE_LEVEL_ERROR);
+
+			cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Tree automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
+
+			header('Location: automation_tree_rules.php?header=false&action=item_edit&id=' . get_request_var('id') . '&item_id=' . (empty($item_id) ? get_request_var('item_id') : $item_id) . '&rule_type=' . AUTOMATION_RULE_TYPE_TREE_MATCH);
+
+			exit;
+		}
+
+		$field_name = preg_replace('/^(?:ht|h|gt|gl|gtg)\./', '', $save['field']);
+
+		if ($save['field'] !== '' && !db_column_exists('host', $field_name) && !db_column_exists('host_template', $field_name) && !db_column_exists('graph_templates', $field_name)) {
 			raise_message('sql_injection', __('An attempt was made to perform a SQL injection in Tree automation'), MESSAGE_LEVEL_ERROR);
 
 			cacti_log(sprintf('ERROR: An attempt was made to perform a SQL Injection in Tree automation from client address \'%s\'', get_client_addr()), false, 'SECURITY');
@@ -186,9 +201,18 @@ function automation_tree_rules_form_save() {
 		$save['search_pattern']    = isset_request_var('search_pattern') ? form_input_validate(get_nfilter_request_var('search_pattern'), 'search_pattern', '', false, 3) : '';
 		$save['replace_pattern']   = isset_request_var('replace_pattern') ? form_input_validate(get_nfilter_request_var('replace_pattern'), 'replace_pattern', '', true, 3) : '';
 
+		if ($save['search_pattern'] !== '' && !validate_is_regex($save['search_pattern'])) {
+			raise_message('regex_invalid', __('Invalid regular expression search pattern specified.'), MESSAGE_LEVEL_ERROR);
+			$_SESSION['sess_error_fields']['search_pattern'] = 'search_pattern';
+		}
+
 		if ($save['field'] != AUTOMATION_TREE_ITEM_TYPE_STRING && $save['field'] != '') {
-			$field_name = str_replace(array('ht.', 'h.', 'gt.', 'gl.', 'gtg.'), '', $save['field']);
-			$field_name = preg_replace('/[^a-zA-Z0-9_]/', '', $field_name);
+			if (preg_match('/^(?:(?:h|ht|gt|gl|gtg)\.)?[a-zA-Z0-9_]+\z/', $save['field']) !== 1) {
+				raise_message('field_invalid', __('Invalid Field Name specified for Tree Rule Item.'), MESSAGE_LEVEL_ERROR);
+				header('Location: automation_tree_rules.php?header=false&action=item_edit&id=' . get_request_var('id') . '&item_id=' . get_request_var('item_id') . '&rule_type=' . AUTOMATION_RULE_TYPE_TREE_ACTION);
+				exit;
+			}
+			$field_name = preg_replace('/^(?:ht|h|gt|gl|gtg)\./', '', $save['field']);
 			if (!db_column_exists('host', $field_name) &&
 				!db_column_exists('host_template', $field_name) &&
 				!db_column_exists('graph_templates', $field_name) &&
@@ -239,7 +263,7 @@ function automation_tree_rules_form_actions() {
 
 				db_execute('DELETE FROM automation_tree_rules WHERE ' . array_to_sql_or($selected_items, 'id'));
 				db_execute('DELETE FROM automation_tree_rule_items WHERE ' . array_to_sql_or($selected_items, 'rule_id'));
-				db_execute('DELETE FROM automation_match_rule_items WHERE ' . array_to_sql_or($selected_items, 'rule_id'));
+				db_execute('DELETE FROM automation_match_rule_items WHERE rule_type = ' . AUTOMATION_RULE_TYPE_TREE_MATCH . ' AND (' . array_to_sql_or($selected_items, 'rule_id') . ')');
 			} elseif (get_nfilter_request_var('drp_action') == AUTOMATION_ACTION_TREE_DUPLICATE) { /* duplicate */
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
 					cacti_log('form_actions duplicate: ' . $selected_items[$i], true, 'AUTOM8 TRACE', POLLER_VERBOSITY_MEDIUM);

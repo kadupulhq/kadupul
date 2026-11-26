@@ -49,13 +49,20 @@ switch (get_request_var('action')) {
 function form_save() {
 	global $export_types, $export_errors;
 
-    /* ================= input validation ================= */
-    get_filter_request_var('export_item_id');
-    /* ==================================================== */
+	/* ================= input validation ================= */
+	$export_item_id = get_filter_request_var('export_item_id');
+	$export_type    = get_nfilter_request_var('export_type');
+	/* ==================================================== */
 
 	if (isset_request_var('save_component_export')) {
+		if (!is_string($export_type) || !isset($export_types[$export_type])) {
+			raise_message('invalid_export_type', __('Invalid export type specified.'), MESSAGE_LEVEL_ERROR);
+			header('Location: templates_export.php?header=false');
+			exit;
+		}
+
 		$export_errors = 0;
-		$xml_data = get_item_xml(get_nfilter_request_var('export_type'), get_nfilter_request_var('export_item_id'), (((isset_request_var('include_deps') ? get_nfilter_request_var('include_deps') : '') == '') ? false : true));
+		$xml_data = get_item_xml($export_type, $export_item_id, (((isset_request_var('include_deps') ? get_nfilter_request_var('include_deps') : '') == '') ? false : true));
 
 		if (get_nfilter_request_var('output_format') == '1') {
 			top_header();
@@ -65,14 +72,23 @@ function form_save() {
 			bottom_footer();
 		} elseif (get_nfilter_request_var('output_format') == '2') {
 			header('Content-type: application/xml');
+			header("Content-Security-Policy: default-src 'none'; sandbox");
+			header('X-Content-Type-Options: nosniff');
 			if ($export_errors) echo __('WARNING: Export Errors Encountered. Refresh Browser Window for Details!') . "\n";
 			print $xml_data;
 		} elseif (get_nfilter_request_var('output_format') == '3') {
 			if ($export_errors) {
 				header('Location: templates_export.php');
 			} else {
+				$title_sql = str_replace('|id|', '?', $export_types[$export_type]['title_sql']);
+				$title     = db_fetch_cell_prepared($title_sql, array((int) $export_item_id));
+				$safe_type = preg_replace('/[^a-zA-Z0-9_-]/', '', $export_type);
+				$safe_name = preg_replace('/[^a-zA-Z0-9_.-]/', '_', strtolower(clean_up_file_name((string) $title)));
+
 				header('Content-type: application/xml');
-				header('Content-Disposition: attachment; filename=cacti_' . get_nfilter_request_var('export_type') . '_' . strtolower(clean_up_file_name(db_fetch_cell(str_replace('|id|', get_nfilter_request_var('export_item_id'), $export_types[get_nfilter_request_var('export_type')]['title_sql'])))) . '.xml');
+				header("Content-Security-Policy: default-src 'none'; sandbox");
+				header('X-Content-Type-Options: nosniff');
+				header('Content-Disposition: attachment; filename="cacti_' . $safe_type . '_' . $safe_name . '.xml"');
 				print $xml_data;
 			}
 		}

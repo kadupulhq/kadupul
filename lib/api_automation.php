@@ -1359,7 +1359,7 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	} else {
 		$sql_field = '"SQL Injection" AS source ';
 		cacti_log("Attempted SQL Injection found in Tree Automation for the field variable {$item['field']}.", false, 'AUTOM8');
-		raise_message('sql_injection', __("Attempted SQL Injection found in Tree Automation for the field variable {$item['field']}."), MESSAGE_LEVEL_ERROR);
+		raise_message('sql_injection', __esc("Attempted SQL Injection found in Tree Automation for the field variable %s.", $item['field']), MESSAGE_LEVEL_ERROR);
 	}
 
 	/* now we build up a new query for counting the rows */
@@ -1399,7 +1399,7 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 		'hostname'           => array(__('Hostname'), 'ASC'),
 		'host_template_name' => array(__('Device Template Name'), 'ASC'),
 		'status'             => array(__('Status'), 'ASC'),
-		'source'             => array($item['field'], 'ASC'),
+		'source'             => array(html_escape($item['field']), 'ASC'),
 		'result'             => array(__('Resulting Branch'), 'ASC'),
 	);
 
@@ -1422,9 +1422,9 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 			for ($j=0; cacti_sizeof($replacement); $j++) {
 				if ($j > 0) {
 					$repl .= '<br>';
-					$repl .= str_pad('', $j*3, '-') . '&nbsp;' . array_shift($replacement);
+					$repl .= str_pad('', $j*3, '-') . '&nbsp;' . html_escape(array_shift($replacement));
 				} else {
-					$repl  = array_shift($replacement);
+					$repl  = html_escape(array_shift($replacement));
 				}
 			}
 			cacti_log($function . " replacement: $repl", false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
@@ -1434,7 +1434,7 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 			form_selectable_cell(filter_value($template['hostname'], get_request_var('filter')), $template['host_id']);
 			form_selectable_cell(filter_value($template['host_template_name'], get_request_var('filter')), $template['host_id']);
 			form_selectable_cell(get_colored_device_status(($template['disabled'] == 'on' ? true : false), $template['status']), $template['host_id']);
-			form_selectable_cell($template['source'], $template['host_id']);
+			form_selectable_ecell($template['source'], $template['host_id']);
 			form_selectable_cell($repl, $template['host_id']);
 			form_end_row();
 		}
@@ -1866,15 +1866,23 @@ function build_rule_item_filter($automation_rule_items, $prefix = '') {
 			if ($automation_rule_item['field'] != '') {
 				$sql_filter .= (' ' . $prefix . '`' . implode('`.`', explode('.', sanitize_sql_column($automation_rule_item['field']))) . '`');
 				#
-				$sql_filter .= ' ' . $automation_op_array['op'][$automation_rule_item['operator']] . ' ';
-				if ($automation_op_array['binary'][$automation_rule_item['operator']]) {
+				if ($automation_rule_item['operator'] == AUTOMATION_OP_REGEXP) {
+					$query_pattern = $automation_op_array['pre'][$automation_rule_item['operator']] . $automation_rule_item['pattern'] . $automation_op_array['post'][$automation_rule_item['operator']];
+					$sql_filter .= ' ' . db_qstr_rlike($query_pattern);
+				} elseif ($automation_rule_item['operator'] == AUTOMATION_OP_NOT_REGEXP) {
+					$query_pattern = $automation_op_array['pre'][$automation_rule_item['operator']] . $automation_rule_item['pattern'] . $automation_op_array['post'][$automation_rule_item['operator']];
+					$sql_filter .= ' NOT ' . db_qstr_rlike($query_pattern);
+				} else {
+					$sql_filter .= ' ' . $automation_op_array['op'][$automation_rule_item['operator']] . ' ';
+					if ($automation_op_array['binary'][$automation_rule_item['operator']]) {
 						$query_pattern = $automation_op_array['pre'][$automation_rule_item['operator']] . $automation_rule_item['pattern'] . $automation_op_array['post'][$automation_rule_item['operator']];
 						// Don't escape numeric values with numeric comparison operators
-						if($automation_rule_item['operator'] >= AUTOMATION_OP_LT && $automation_rule_item['operator'] <= AUTOMATION_OP_GE && is_numeric($query_pattern)) {
+						if ($automation_rule_item['operator'] >= AUTOMATION_OP_LT && $automation_rule_item['operator'] <= AUTOMATION_OP_GE && is_numeric($query_pattern)) {
 							$sql_filter .= $query_pattern;
 						} else {
 							$sql_filter .= db_qstr($query_pattern);
 						}
+					}
 				}
 			}
 		}
@@ -2151,7 +2159,11 @@ function array_minus($big_array, $small_array) {
 }
 
 function automation_string_replace($search, $replace, $target) {
-	$repl = preg_replace('/' . $search . '/i', $replace, $target);
+	$escaped_search = preg_replace('/(?<!\\\\)\//', '\\/', (string) $search);
+	$repl = @preg_replace('/' . $escaped_search . '/i', (string) $replace, (string) $target);
+	if ($repl === null) {
+		return array((string) $target);
+	}
 	return preg_split('/\\\\n/', $repl, -1, PREG_SPLIT_NO_EMPTY);
 }
 
@@ -3885,7 +3897,12 @@ function ping_netbios_name($ip, $timeout_ms = 1000) {
 				$host .= $response[$i];
 			}
 
-			return trim(strtolower($host));
+			$host = preg_replace('/[^a-zA-Z0-9._-]/', '', trim(strtolower($host)));
+			if ($host === '' || $host[0] === '-' || strlen($host) > 255) {
+				return false;
+			}
+
+			return $host;
 		} else {
 			return false;
 		}

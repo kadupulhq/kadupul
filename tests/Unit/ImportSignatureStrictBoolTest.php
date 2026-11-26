@@ -41,3 +41,43 @@ test('import_package enforces the signature before reading the package', functio
 	expect($read)->not->toBeFalse();
 	expect($guard)->toBeLessThan($read);
 });
+
+test('import_validate_signature rejects a keyless package at runtime and does not trust the legacy 512-bit key', function () {
+	$root = dirname(__DIR__, 2);
+	$pkg  = tempnam(sys_get_temp_dir(), 'keyless-pkg-');
+	$xml  = '<?xml version="1.0" encoding="UTF-8"?><xml><info><name>Unsigned</name></info></xml>';
+	file_put_contents($pkg, gzencode($xml));
+
+	$program = <<<'PHP'
+function cacti_log($msg, ...$args) {}
+function cacti_sizeof($a) { return is_array($a) ? count($a) : 0; }
+function db_table_exists($t) { return false; }
+require $argv[1] . '/lib/import.php';
+$details = import_package_get_details($argv[2]);
+$valid   = import_validate_signature($argv[2]);
+$legacy  = is_cacti_public_key(get_public_key());
+$sha256  = is_cacti_public_key(get_public_key_sha256());
+echo json_encode(array(
+	'public_key' => $details['public_key'] ?? null,
+	'valid'      => $valid,
+	'legacy'     => $legacy,
+	'sha256'     => $sha256,
+));
+PHP;
+
+	try {
+		$proc = proc_open(array(PHP_BINARY, '-r', $program, $root, $pkg), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+		$stdout = stream_get_contents($pipes[1]);
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[1]);
+		fclose($pipes[2]);
+		expect(proc_close($proc))->toBe(0, $stderr)->and($stderr)->toBe('');
+		$res = json_decode($stdout, true);
+		expect($res['public_key'])->toBe('')
+			->and($res['valid'])->toBeFalse()
+			->and($res['legacy'])->toBeFalse()
+			->and($res['sha256'])->toBeTrue();
+	} finally {
+		@unlink($pkg);
+	}
+});

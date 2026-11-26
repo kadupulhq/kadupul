@@ -801,7 +801,7 @@ function data_query_to_xml($data_query_id) {
 				foreach ($snmp_query_graph_rrd as $item2) {
 					$xml_text .= "\t\t\t\t<item_" . str_pad(strval($i), 3, '0', STR_PAD_LEFT) . ">\n";
 
-					$xml_text .= "\t\t\t\t\t<snmp_field_name>" . $item2['snmp_field_name'] . "</snmp_field_name>\n";
+					$xml_text .= "\t\t\t\t\t<snmp_field_name>" . xml_character_encode($item2['snmp_field_name']) . "</snmp_field_name>\n";
 					$xml_text .= "\t\t\t\t\t<data_template_id>hash_" . get_hash_version('data_template') . get_hash_data_template($item2['data_template_id']) . "</data_template_id>\n";
 					$xml_text .= "\t\t\t\t\t<data_template_rrd_id>hash_" . get_hash_version('data_template_item') . get_hash_data_template($item2['data_template_rrd_id'], 'data_template_item') . "</data_template_rrd_id>\n";
 

@@ -414,12 +414,23 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	return $info_array;
 }
 
-function is_cacti_public_key($public_key) {
-	$public_key = trim($public_key);
-	$keys[] = get_public_key_sha1();
-	$keys[] = get_public_key_sha256();
+if (!function_exists('import_escape_markup')) {
+	function import_escape_markup($text) {
+		return preg_replace_callback('/<span style="background-color:#([0-9A-Fa-f]{6})">\1<\/span>|</', function ($match) {
+			return $match[0] === '<' ? '&lt;' : $match[0];
+		}, (string) $text);
+	}
+}
 
-	foreach($keys as $key) {
+function is_cacti_public_key($public_key) {
+	$public_key = trim((string) $public_key);
+	if ($public_key === '') {
+		return false;
+	}
+
+	$keys = array(get_public_key_sha256());
+
+	foreach ($keys as $key) {
 		if ($public_key === $key) {
 			return true;
 		}
@@ -545,10 +556,11 @@ function import_package_get_details($xmlfile) {
 	$pkgarr = xml_to_array($xmlget);
 	$return = $pkgarr['info'];
 
-	if (isset($pkgarr['publickey'])) {
-		$return['public_key'] = base64_decode($pkgarr['publickey']);
+	if (isset($pkgarr['publickey']) && is_string($pkgarr['publickey']) && $pkgarr['publickey'] !== '') {
+		$decoded_key = base64_decode($pkgarr['publickey'], true);
+		$return['public_key'] = ($decoded_key !== false) ? $decoded_key : '';
 	} else {
-		$return['public_key'] = get_public_key();
+		$return['public_key'] = '';
 	}
 
 	if (isset($pkgarr['publickeyname'])) {
@@ -1827,7 +1839,12 @@ function xml_to_data_query($hash, &$xml_array, &$hash_cache, &$files, $replace_s
 						$save['snmp_query_graph_id']  = $data_query_graph_id;
 						$save['data_template_id']     = resolve_hash_to_id($sub_item_array['data_template_id'], $hash_cache, 'snmp_query_graph_rrd');
 						$save['data_template_rrd_id'] = resolve_hash_to_id($sub_item_array['data_template_rrd_id'], $hash_cache, 'snmp_query_graph_rrd');
-						$save['snmp_field_name']      = $sub_item_array['snmp_field_name'];
+						$save['snmp_field_name']      = xml_character_decode((string) $sub_item_array['snmp_field_name']);
+
+						if ($save['snmp_field_name'] !== '' && preg_match('/^[a-zA-Z0-9_.-]+\z/', $save['snmp_field_name']) !== 1) {
+							cacti_log('Import Error: rejected invalid snmp_field_name in snmp_query_graph_rrd', false, 'IMPORT');
+							continue;
+						}
 
 						if (!empty($save['data_template_id']) && !empty($save['data_template_rrd_id'])) {
 							sql_save($save, 'snmp_query_graph_rrd', array('snmp_query_graph_id', 'data_template_id', 'data_template_rrd_id'), false);
@@ -2155,7 +2172,7 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache, &$host_template_
 						array($dhash));
 
 					if (!$exists1) {
-						$import_debug_info['differences'][] = __('New Graph Template: %s', $dname);
+						$import_debug_info['differences'][] = __esc('New Graph Template: %s', $dname);
 						$status++;
 					} elseif ($save['id']) {
 						// For existing, we have to perform two checks
@@ -2172,7 +2189,7 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache, &$host_template_
 								array($exists1));
 
 							if (!$data_query_id) {
-								$import_debug_info['differences'][] = __('New Graph Template: %s', $dname);
+								$import_debug_info['differences'][] = __esc('New Graph Template: %s', $dname);
 								$status++;
 							}
 						}
@@ -2184,7 +2201,7 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache, &$host_template_
 						array($dhash));
 
 					if (!$exists) {
-						$import_debug_info['differences'][] = __('New Data Query: %s', $dname);
+						$import_debug_info['differences'][] = __esc('New Data Query: %s', $dname);
 						$status++;
 					} elseif ($save['id']) {
 						$exists = db_fetch_cell_prepared('SELECT COUNT(*)
@@ -2194,7 +2211,7 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache, &$host_template_
 							array($save['id'], $exists));
 
 						if (!$exists) {
-							$import_debug_info['differences'][] = __('New Data Query: %s', $dname);
+							$import_debug_info['differences'][] = __esc('New Data Query: %s', $dname);
 							$status++;
 						}
 					}
@@ -2946,19 +2963,26 @@ function compare_data($save, $previous_data, $table) {
 				}
 
 				if ($column == 'color_id') {
-					$oldvalue = db_fetch_cell_prepared('SELECT hex FROM colors WHERE id = ?', array($previous_data[$column]));
-					$oldvalue = html_escape($oldvalue);
-					$oldvalue = '<span style="background-color:#' . $oldvalue . '">' . $oldvalue . '</span>';
-
-					$newvalue = db_fetch_cell_prepared('SELECT hex FROM colors WHERE id = ?', array($value));
-
-					if (empty($newvalue) && $preview_only) {
-						$newvalue = html_escape($value);
+					$oldhex = (string) db_fetch_cell_prepared('SELECT hex FROM colors WHERE id = ?', array($previous_data[$column]));
+					if (preg_match('/^[0-9A-Fa-f]{6}\z/', $oldhex) === 1) {
+						$oldvalue = '<span style="background-color:#' . $oldhex . '">' . $oldhex . '</span>';
 					} else {
-						$newvalue = html_escape($newvalue);
+						$oldvalue = html_escape($oldhex);
 					}
 
-					$newvalue = '<span style="background-color:#' . $newvalue . '">' . $newvalue . '</span>';
+					$newhex = db_fetch_cell_prepared('SELECT hex FROM colors WHERE id = ?', array($value));
+
+					if (empty($newhex) && $preview_only) {
+						$newhex = (string) $value;
+					} else {
+						$newhex = (string) $newhex;
+					}
+
+					if (preg_match('/^[0-9A-Fa-f]{6}\z/', $newhex) === 1) {
+						$newvalue = '<span style="background-color:#' . $newhex . '">' . $newhex . '</span>';
+					} else {
+						$newvalue = html_escape($newhex);
+					}
 				} else {
 					$oldvalue = html_escape($previous_data[$column]);
 					$newvalue = html_escape($value);
@@ -3306,7 +3330,7 @@ function import_display_results($import_debug_info, $filestatus, $web = false, $
 				if (isset($vals['differences'])) {
 					print '<ul class="monoSpace">' . PHP_EOL;
 					foreach($vals['differences'] as $diff) {
-						print '<li>' . $diff . '</li>' . PHP_EOL;
+						print '<li>' . import_escape_markup($diff) . '</li>' . PHP_EOL;
 					}
 					print '</ul>' . PHP_EOL;
 				}

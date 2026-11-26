@@ -224,6 +224,15 @@ function form_save() {
 							input_validate_input_number($data_template_rrd_id);
 							/* ==================================================== */
 
+							$snmp_field_output = trim((string) get_nfilter_request_var('dsdt_' .
+								$data_template_id . '_' .
+								$data_template_rrd_id . '_snmp_field_output'));
+
+							if ($snmp_field_output !== '' && preg_match('/^[a-zA-Z0-9_.-]+\z/', $snmp_field_output) !== 1) {
+								raise_message('invalid_snmp_field', __('Invalid SNMP Field Name specified.'), MESSAGE_LEVEL_ERROR);
+								continue;
+							}
+
 							db_execute_prepared('REPLACE INTO snmp_query_graph_rrd
 								(snmp_query_graph_id, data_template_id, data_template_rrd_id, snmp_field_name)
 								VALUES (?, ?, ?, ?)',
@@ -231,9 +240,7 @@ function form_save() {
 									$snmp_query_graph_id,
 									$data_template_id,
 									$data_template_rrd_id,
-									get_nfilter_request_var('dsdt_' .
-									$data_template_id . '_' .
-									$data_template_rrd_id . '_snmp_field_output')
+									$snmp_field_output
 								)
 							);
 						}

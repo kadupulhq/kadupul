@@ -1603,9 +1603,14 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 
 	/* suggested values: graph, passed from parent */
 	if (isset($suggested_vals[$graph_template_id]['graph_template'])) {
+		$allowed_gtg = template_allowed_override_columns('graph_templates_graph');
 		foreach ($suggested_vals[$graph_template_id]['graph_template'] as $field_name => $field_value) {
+			if (!in_array($field_name, $allowed_gtg, true)) {
+				cacti_log('SECURITY: Rejected disallowed graph_templates_graph column override: ' . $field_name, false, 'WEBUI');
+				continue;
+			}
 			db_execute_prepared("UPDATE graph_templates_graph
-				SET $field_name = ?
+				SET `$field_name` = ?
 				WHERE local_graph_id = ?",
 				array($field_value, $cache_array['local_graph_id']));
 		}
@@ -1613,18 +1618,32 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 
 	/* suggested values: graph item, passed from parent */
 	if (isset($suggested_vals[$graph_template_id]['graph_template_item'])) {
+		$allowed_gti = template_allowed_override_columns('graph_templates_item');
 		foreach ($suggested_vals[$graph_template_id]['graph_template_item'] as $graph_template_item_id => $field_array) {
 			foreach ($field_array as $field_name => $field_value) {
+				if (!in_array($field_name, $allowed_gti, true)) {
+					cacti_log('SECURITY: Rejected disallowed graph_templates_item column override: ' . $field_name, false, 'WEBUI');
+					continue;
+				}
+				if ($field_name === 'alpha' && $field_value !== '' && !preg_match('/^[0-9A-Fa-f]{2}\z/', (string) $field_value)) {
+					continue;
+				}
+				if ($field_name === 'textalign' && !in_array((string) $field_value, array('', 'left', 'right', 'justified', 'center'), true)) {
+					continue;
+				}
+
 				$graph_item_id = db_fetch_cell_prepared('SELECT id
 					FROM graph_templates_item
 					WHERE local_graph_template_item_id = ?
 					AND local_graph_id = ?',
 					array($graph_template_item_id, $cache_array['local_graph_id']));
 
-				db_execute_prepared("UPDATE graph_templates_item
-					SET $field_name = ?
-					WHERE id = ?",
-					array($field_value, $graph_item_id));
+				if ($graph_item_id) {
+					db_execute_prepared("UPDATE graph_templates_item
+						SET `$field_name` = ?
+						WHERE id = ?",
+						array($field_value, $graph_item_id));
+				}
 			}
 		}
 	}
@@ -1787,9 +1806,14 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 
 				/* suggested values: data source, passed from parent */
 				if (isset($suggested_vals[$graph_template_id]['data_template'][$data_template['id']])) {
+					$allowed_dtd = template_allowed_override_columns('data_template_data');
 					foreach ($suggested_vals[$graph_template_id]['data_template'][$data_template['id']] as $field_name => $field_value) {
+						if (!in_array($field_name, $allowed_dtd, true)) {
+							cacti_log('SECURITY: Rejected disallowed data_template_data column override: ' . $field_name, false, 'WEBUI');
+							continue;
+						}
 						db_execute_prepared("UPDATE data_template_data
-							SET $field_name = ?
+							SET `$field_name` = ?
 							WHERE local_data_id = ?",
 							array($field_value, $cache_array['local_data_id'][$data_template['id']]));
 					}
@@ -1797,18 +1821,26 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 
 				/* suggested values: data source item, passed from parent */
 				if (isset($suggested_vals[$graph_template_id]['data_template_item'])) {
+					$allowed_dtr = template_allowed_override_columns('data_template_rrd');
 					foreach ($suggested_vals[$graph_template_id]['data_template_item'] as $data_template_item_id => $field_array) {
 						foreach ($field_array as $field_name => $field_value) {
+							if (!in_array($field_name, $allowed_dtr, true)) {
+								cacti_log('SECURITY: Rejected disallowed data_template_rrd column override: ' . $field_name, false, 'WEBUI');
+								continue;
+							}
+
 							$data_source_item_id = db_fetch_cell_prepared('SELECT id
 								FROM data_template_rrd
 								WHERE local_data_template_rrd_id = ?
 								AND local_data_id = ?',
 								array($data_template_item_id, $cache_array['local_data_id'][$data_template['id']]));
 
-							db_execute_prepared("UPDATE data_template_rrd
-								SET $field_name = ?
-								WHERE id = ?",
-								array($field_value, $data_source_item_id));
+							if ($data_source_item_id) {
+								db_execute_prepared("UPDATE data_template_rrd
+									SET `$field_name` = ?
+									WHERE id = ?",
+									array($field_value, $data_source_item_id));
+							}
 						}
 					}
 				}
@@ -1936,7 +1968,12 @@ function create_graph_custom_data_compatible($suggested_vals, $previous_data_sou
 						}
 
 						if (is_array($values)) {
+							$allowed_dtd = template_allowed_override_columns('data_template_data');
 							foreach($values as $vkey => $vvalue) {
+								if (!in_array($vkey, $allowed_dtd, true)) {
+									return false;
+								}
+
 								if (read_config_option('data_source_trace') == 'on') {
 									cacti_log('Item Sub Element Key: "' . $vkey . '"', false, 'DSTRACE');
 									cacti_log('Item Sub Element Value: "' . $vvalue . '"', false, 'DSTRACE');
@@ -1967,7 +2004,12 @@ function create_graph_custom_data_compatible($suggested_vals, $previous_data_sou
 						}
 
 						if (is_array($values)) {
+							$allowed_dtr = template_allowed_override_columns('data_template_rrd');
 							foreach($values as $vkey => $vvalue) {
+								if (!in_array($vkey, $allowed_dtr, true)) {
+									return false;
+								}
+
 								if (read_config_option('data_source_trace') == 'on') {
 									cacti_log('Item Sub Element Key: "' . $vkey . '"', false, 'DSTRACE');
 									cacti_log('Item Sub Element Value: "' . $vvalue . '"', false, 'DSTRACE');
@@ -2038,7 +2080,12 @@ function create_graph_custom_data_compatible($suggested_vals, $previous_data_sou
 									}
 
 									if (is_array($fitem)) {
+										$allowed_dtd = template_allowed_override_columns('data_template_data');
 										foreach($fitem as $vkey => $vvalue) {
+											if (!in_array($vkey, $allowed_dtd, true)) {
+												return false;
+											}
+
 											if (read_config_option('data_source_trace') == 'on') {
 												cacti_log('Item Sub Element Key: "' . $vkey . '"', false, 'DSTRACE');
 												cacti_log('Item Sub Element Value: "' . $vvalue . '"', false, 'DSTRACE');
@@ -2069,7 +2116,12 @@ function create_graph_custom_data_compatible($suggested_vals, $previous_data_sou
 									}
 
 									if (is_array($fitem)) {
+										$allowed_dtr = template_allowed_override_columns('data_template_rrd');
 										foreach($fitem as $vkey => $vvalue) {
+											if (!in_array($vkey, $allowed_dtr, true)) {
+												return false;
+											}
+
 											if (read_config_option('data_source_trace') == 'on') {
 												cacti_log('Item Sub Element Key: "' . $vkey . '"', false, 'DSTRACE');
 												cacti_log('Item Sub Element Value: "' . $vvalue . '"', false, 'DSTRACE');
@@ -2339,13 +2391,50 @@ function data_source_exists($graph_template_id, $host_id, &$data_template, &$snm
 	}
 }
 
+function template_allowed_override_columns($table) {
+	static $columns = array(
+		'graph_templates_graph' => array(
+			'title', 'vertical_label', 'image_format_id', 'height', 'width', 'base_value',
+			'slope_mode', 'auto_scale', 'auto_scale_opts', 'auto_scale_log', 'scale_log_units',
+			'auto_scale_rigid', 'auto_padding', 'export', 'upper_limit', 'lower_limit',
+			'unit_value', 'unit_exponent_value', 'unit_length', 'no_gridfit', 'alt_y_grid',
+			'right_axis', 'right_axis_label', 'right_axis_format', 'right_axis_formatter',
+			'left_axis_formatter', 'dynamic_labels', 'force_rules_legend', 'tab_width',
+			'legend_position', 'legend_direction', 'right_axis_min', 'right_axis_max', 'grouping'
+		),
+		'graph_templates_item' => array(
+			'task_item_id', 'color_id', 'alpha', 'graph_type_id', 'line_width', 'dashes',
+			'dash_offset', 'cdef_id', 'vdef_id', 'shift', 'consolidation_function_id',
+			'textalign', 'text_format', 'value', 'hard_return', 'gprint_id', 'legend'
+		),
+		'data_template_data' => array(
+			'name', 'active', 'rrd_step', 'data_source_profile_id'
+		),
+		'data_template_rrd' => array(
+			'rrd_maximum', 'rrd_minimum', 'rrd_heartbeat', 'data_source_type_id',
+			'data_source_name', 'data_input_field_id'
+		)
+	);
+
+	return isset($columns[$table]) ? $columns[$table] : array();
+}
+
 function verify_data_input($hash, $input_string) {
 	$input = db_fetch_row_prepared('SELECT *
 		FROM data_input
 		WHERE hash = ?',
 		array($hash));
 
-	if ($input['input_string'] == $input_string) {
+	if (!cacti_sizeof($input) || !is_string($input_string)) {
+		return array(
+			'id'           => 0,
+			'name'         => '',
+			'input_string' => '',
+			'status'       => false
+		);
+	}
+
+	if ($input['input_string'] === $input_string) {
 		$input['status'] = true;
 		return $input;
 	} else {
@@ -2359,14 +2448,23 @@ function verify_data_input_whitelist($hash, $input_string) {
 
 	if (!isset($config['input_whitelist'])) {
 		return true;
-	} elseif (isset($config['input_whitelist']) && !file_exists($config['input_whitelist'])) {
-		return true;
 	}
 
-	$whitelist = json_decode(file_get_contents($config['input_whitelist']), true);
+	if (!is_string($config['input_whitelist']) || $config['input_whitelist'] === '' || !is_file($config['input_whitelist']) || !is_readable($config['input_whitelist'])) {
+		cacti_log('ERROR: Input whitelist file is missing or unreadable: ' . (is_string($config['input_whitelist']) ? $config['input_whitelist'] : ''), false, 'SECURITY');
+		return false;
+	}
 
-	if (isset($whitelist[$hash])) {
-		if ($input_string == $whitelist[$hash]) {
+	$raw = file_get_contents($config['input_whitelist']);
+	$whitelist = ($raw !== false) ? json_decode($raw, true) : null;
+
+	if (!is_array($whitelist)) {
+		cacti_log('ERROR: Failed to parse input whitelist file: ' . $config['input_whitelist'], false, 'SECURITY');
+		return false;
+	}
+
+	if (array_key_exists($hash, $whitelist)) {
+		if (is_string($whitelist[$hash]) && $input_string === $whitelist[$hash]) {
 			return true;
 		} else {
 			return false;
@@ -2380,25 +2478,30 @@ function graph_template_whitelist_check($graph_template_id) {
 	global $config;
 
 	static $data_input_whitelist = null;
-	static $notified = array();
+	static $whitelist_path       = null;
+	static $notified             = array();
 
 	// no whitelist file defined, everything whitelisted
 	if (!isset($config['input_whitelist'])) {
 		return true;
 	}
 
-	// whitelist is configured but does not exist, means nothing whitelisted
-	if (!file_exists($config['input_whitelist'])) {
+	// whitelist is configured but invalid, missing, or unreadable: fail closed
+	if (!is_string($config['input_whitelist']) || $config['input_whitelist'] === '' || !is_file($config['input_whitelist']) || !is_readable($config['input_whitelist'])) {
+		cacti_log('ERROR: Input whitelist file is missing or unreadable: ' . (is_string($config['input_whitelist']) ? $config['input_whitelist'] : ''), false, 'SECURITY');
 		return false;
 	}
 
-	// load whitelist, but only once within process execution
-	if ($data_input_whitelist == null) {
-		$data_input_whitelist = json_decode(file_get_contents($config['input_whitelist']), true);
-		if ($data_input_whitelist === null) {
-			cacti_log('ERROR: Failed to parse input whitelist file: ' . $config['input_whitelist']);
-			return true;
+	// load whitelist, reloading if the configured path changed
+	if ($data_input_whitelist === null || $whitelist_path !== $config['input_whitelist']) {
+		$raw = file_get_contents($config['input_whitelist']);
+		$decoded = ($raw !== false) ? json_decode($raw, true) : null;
+		if (!is_array($decoded)) {
+			cacti_log('ERROR: Failed to parse input whitelist file: ' . $config['input_whitelist'], false, 'SECURITY');
+			return false;
 		}
+		$data_input_whitelist = $decoded;
+		$whitelist_path       = $config['input_whitelist'];
 	}
 
 	$valid = true;
@@ -2415,23 +2518,26 @@ function graph_template_whitelist_check($graph_template_id) {
 
 	if (cacti_sizeof($data_input_ids)) {
 		foreach ($data_input_ids as $dii) {
-			$found = false;
 			$data_input = db_fetch_row_prepared('SELECT *
 				FROM data_input
 				WHERE id = ?',
 				array($dii['data_input_id']));
 
-			if (isset($data_input_whitelist[$data_input['hash']])) {
-				$found = true;
-
-				if ($data_input_whitelist[$data_input['hash']] != $data_input['input_string']) {
-					$valid = false;
-				}
+			if (!cacti_sizeof($data_input) || !isset($data_input['hash'])) {
+				$valid = false;
+				continue;
 			}
 
-			if (!$found && !isset($notified[$dii['data_input_id']])) {
-				cacti_log('WARNING: Data input script not found in input whitelist file: ' . $config['input_whitelist']);
-				$notified[$dii['data_input_id']] = true;
+			if (array_key_exists($data_input['hash'], $data_input_whitelist)) {
+				if (!is_string($data_input_whitelist[$data_input['hash']]) || $data_input_whitelist[$data_input['hash']] !== $data_input['input_string']) {
+					$valid = false;
+				}
+			} else {
+				$valid = false;
+				if (!isset($notified[$dii['data_input_id']])) {
+					cacti_log('WARNING: Data input script not found in input whitelist file: ' . $config['input_whitelist'], false, 'SECURITY');
+					$notified[$dii['data_input_id']] = true;
+				}
 			}
 		}
 	}

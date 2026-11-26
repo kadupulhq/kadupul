@@ -211,13 +211,15 @@ function prepare_template_display(&$import_info) {
 /* import_escape_markup - neutralises markup in preview text from an uploaded template
    @arg $text - a name, path, difference or orphan line
    @returns - the text with every tag opener escaped except a color swatch */
-function import_escape_markup($text) {
-	/* Only '<' is escaped, so text without markup, including entities lib/import.php
-	 * already encoded, prints exactly as before. The one tag the preview builds
-	 * itself is the color swatch around a hex value. */
-	return preg_replace_callback('/<span style="background-color:#([0-9A-Fa-f]{0,8})">\1<\/span>|</', function ($match) {
-		return $match[0] === '<' ? '&lt;' : $match[0];
-	}, (string) $text);
+if (!function_exists('import_escape_markup')) {
+	function import_escape_markup($text) {
+		/* Only '<' is escaped, so text without markup, including entities lib/import.php
+		 * already encoded, prints exactly as before. The one tag the preview builds
+		 * itself is the color swatch around a hex value. */
+		return preg_replace_callback('/<span style="background-color:#([0-9A-Fa-f]{0,8})">\1<\/span>|</', function ($match) {
+			return $match[0] === '<' ? '&lt;' : $match[0];
+		}, (string) $text);
+	}
 }
 
 function display_template_data(&$templates) {

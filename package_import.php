@@ -402,8 +402,8 @@ function package_public_key_is_trusted($public_key) {
 		return false;
 	}
 
-	/* both official Cacti keys, which import_read_package_data() also accepts */
-	if ($public_key == get_public_key() || is_cacti_public_key($public_key)) {
+	/* official Cacti SHA-256 signing key only (legacy 512-bit key is not trusted) */
+	if (is_cacti_public_key($public_key)) {
 		return true;
 	}
 
@@ -725,9 +725,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				}
 
 				if (cacti_sizeof($diff_array)) {
-					// $diff_array entries are pre-escaped at source in lib/import.php via html_escape();
-					// do NOT wrap with array_map('html_escape') here — that would double-encode color spans.
-					$diff_details .= __('Differences') . '<br>' . implode('<br>', $diff_array);
+					$diff_details .= __('Differences') . '<br>' . implode('<br>', array_map('import_escape_markup', $diff_array));
 				}
 
 				if (cacti_sizeof($orphan_array)) {

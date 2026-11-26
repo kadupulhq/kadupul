@@ -67,7 +67,7 @@ process_request_vars();
 
 switch(get_request_var('action')) {
 	case 'purge':
-		csrf_require_post();
+		csrf_require_post(true);
 		purge_discovery_results();
 
 		break;
@@ -620,7 +620,8 @@ function draw_filter() {
 				loadPageUsingPost('automation_devices.php', {
 					header: false,
 					action: 'purge',
-					network_id: $('#network').val()
+					network: $('#network').val(),
+					__csrf_magic: csrfMagicToken
 				}, 'main');
 			});
 
@@ -656,37 +657,49 @@ function draw_filter() {
 function export_discovery_results() {
 	$results = get_discovery_results($total_rows, 0, true);
 
-	header('Content-type: application/csv');
-	header('Content-Disposition: attachment; filename=discovery_results.csv');
-	print "Host,IP,System Name,System Location,System Contact,System Description,OS,Uptime,SNMP,Status\n";
+	header('Content-type: text/csv; charset=utf-8');
+	header('Content-Disposition: attachment; filename="discovery_results.csv"');
+
+	$out = fopen('php://output', 'w');
+	if ($out === false) {
+		return;
+	}
+
+	fputcsv($out, array('Host', 'IP', 'System Name', 'System Location', 'System Contact', 'System Description', 'OS', 'Uptime', 'SNMP', 'Status'));
 
 	if (cacti_sizeof($results)) {
-	foreach ($results as $host) {
-		if ($host['sysUptime'] != 0) {
-			$days = intval($host['sysUptime']/8640000);
-			$hours = intval(($host['sysUptime'] - ($days * 8640000)) / 360000);
-			$uptime = $days . ' days ' . $hours . ' hours';
-		} else {
-			$uptime = '';
+		foreach ($results as $host) {
+			if ($host['sysUptime'] != 0) {
+				$days   = intval($host['sysUptime']/8640000);
+				$hours  = intval(($host['sysUptime'] - ($days * 8640000)) / 360000);
+				$uptime = $days . ' days ' . $hours . ' hours';
+			} else {
+				$uptime = '';
+			}
+
+			fputcsv($out, array(
+				cacti_csv_safe($host['hostname'] == '' ? __('Not Detected') : $host['hostname']),
+				cacti_csv_safe($host['ip']),
+				export_data($host['sysName']),
+				export_data($host['sysLocation']),
+				export_data($host['sysContact']),
+				export_data($host['sysDescr']),
+				export_data($host['os']),
+				export_data($uptime),
+				cacti_csv_safe($host['snmp'] == 1 ? __('Up') : __('Down')),
+				cacti_csv_safe($host['up'] == 1 ? __('Up') : __('Down'))
+			));
 		}
-		foreach($host as $h=>$r) {
-			$host['$h'] = str_replace(',','',$r);
-		}
-		print ($host['hostname'] == '' ? __('Not Detected'):$host['hostname']) . ',';
-		print $host['ip'] . ',';
-		print export_data($host['sysName']) . ',';
-		print export_data($host['sysLocation']) . ',';
-		print export_data($host['sysContact']) . ',';
-		print export_data($host['sysDescr']) . ',';
-		print export_data($host['os']) . ',';
-		print export_data($uptime) . ',';
-		print ($host['snmp'] == 1 ? __('Up'):__('Down')) . ',';
-		print ($host['up'] == 1 ? __('Up'):__('Down')) . "\n";
 	}
-	}
+
+	fclose($out);
 }
 
 function purge_discovery_results(): never {
+	if (!isset_request_var('network') && isset_request_var('network_id')) {
+		set_request_var('network', get_filter_request_var('network_id'));
+	}
+
 	get_filter_request_var('network');
 
 	if (get_request_var('network') > 0) {

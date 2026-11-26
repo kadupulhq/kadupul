@@ -2490,7 +2490,7 @@ function get_script_query_path($args, $script_path, $host_id, $literal_args = ar
 		$parts = preg_split("/[\s,]*\\\"([^\\\"]+)\\\"[\s,]*|" . "[\s,]*'([^']+)'[\s,]*|" . "[\s,]+/", $args, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
 		foreach ($parts as $part) {
-			$arg_list[] = cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id));
+			$arg_list[] = cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id, true));
 		}
 	}
 
