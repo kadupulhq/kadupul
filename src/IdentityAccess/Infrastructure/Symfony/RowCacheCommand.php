@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -32,8 +34,8 @@ final class RowCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $execute = $input->getOption('execute');
-        $json = $input->getOption('json');
+        $execute = (bool) $input->getOption('execute');
+        $json = (bool) $input->getOption('json');
         $lock = null;
         try {
             if ($execute) {

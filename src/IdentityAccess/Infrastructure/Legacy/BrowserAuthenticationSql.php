@@ -11,6 +11,7 @@ namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 
 final class BrowserAuthenticationSql
 {
+    /** @param list<mixed> $parameters */
     public static function execute(\PDO $database, string $sql, array $parameters = []): \PDOStatement
     {
         $statement = $database->prepare($sql);
@@ -24,8 +25,10 @@ final class BrowserAuthenticationSql
         return $statement;
     }
 
+    /** @return array<string, mixed>|false */
     public static function row(\PDOStatement $statement): array|false
     {
+        /** @var array<string, mixed>|false $row */
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
         self::confirmRead($statement);
         return $row;
@@ -53,6 +56,7 @@ final class BrowserAuthenticationSql
         }
     }
 
+    /** @param array<mixed> $info */
     private static function failure(array $info): never
     {
         $failure = new \PDOException('Browser authentication persistence failed.');

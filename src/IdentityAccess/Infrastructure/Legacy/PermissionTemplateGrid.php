@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -13,11 +15,15 @@ final class PermissionTemplateGrid
     /** Read the validated grid request once for either principal type. */
     public static function countFromRequest(bool $group): int
     {
+        $rawId = \get_request_var('id');
+        $rawFilter = \get_request_var('filter');
+        $rawAssociated = \get_request_var('associated');
+
         return self::count(
             $group,
-            (int) \get_request_var('id'),
-            (string) \get_request_var('filter'),
-            \get_request_var('associated') != 'false'
+            is_scalar($rawId) ? (int) $rawId : 0,
+            is_scalar($rawFilter) ? (string) $rawFilter : '',
+            $rawAssociated !== 'false' && $rawAssociated !== false,
         );
     }
 
@@ -25,8 +31,8 @@ final class PermissionTemplateGrid
     {
         $table = $group ? 'user_auth_group_perms' : 'user_auth_perms';
         $subject = $group ? 'group_id' : 'user_id';
-        $parameters = array($principal);
-        $conditions = array();
+        $parameters = [$principal];
+        $conditions = [];
         if ($filter !== '') {
             $conditions[] = 'gt.name LIKE ?';
             $parameters[] = '%' . $filter . '%';
@@ -35,14 +41,16 @@ final class PermissionTemplateGrid
             $conditions[] = "(grants.type = 4 AND grants.$subject = ?)";
             $parameters[] = $principal;
         }
-        $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
-        return (int) db_fetch_cell_prepared(
+        $where = $conditions !== [] ? 'WHERE ' . implode(' AND ', $conditions) : '';
+        $count = \db_fetch_cell_prepared(
             "SELECT COUNT(DISTINCT gt.id)
             FROM graph_templates AS gt
             LEFT JOIN $table AS grants ON gt.id = grants.item_id
                 AND grants.type = 4 AND grants.$subject = ?
             $where",
-            $parameters
+            $parameters,
         );
+
+        return is_scalar($count) ? (int) $count : 0;
     }
 }

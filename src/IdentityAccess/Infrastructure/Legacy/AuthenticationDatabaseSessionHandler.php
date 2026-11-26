@@ -30,10 +30,10 @@ final class AuthenticationDatabaseSessionHandler implements \SessionHandlerInter
         return true;
     }
 
-    public function read(string $id): string|false
+    public function read(string $id): string
     {
         $data = BrowserAuthenticationSql::column(BrowserAuthenticationSql::execute($this->database->get(), 'SELECT data FROM sessions WHERE id = ? AND access >= ?', [$id, time() - (int) ini_get('session.gc_maxlifetime')]));
-        return $data === false ? '' : (string) $data;
+        return is_string($data) ? $data : '';
     }
 
     public function write(string $id, string $data): bool
@@ -59,7 +59,7 @@ final class AuthenticationDatabaseSessionHandler implements \SessionHandlerInter
         return true;
     }
 
-    public function gc(int $max_lifetime): int|false
+    public function gc(int $max_lifetime): int
     {
         return 0;
     }

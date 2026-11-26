@@ -26,7 +26,7 @@ final class VisibilitySql
 
     public static function mode(mixed $stored): int
     {
-        $mode = $stored === false ? 1 : (int) $stored;
+        $mode = $stored === false ? 1 : (is_int($stored) || is_string($stored) ? (int) $stored : 0);
         if (!in_array($mode, [1, 2, 3, 4], true)) {
             throw new \RuntimeException('Unsupported visibility policy.');
         }
@@ -46,10 +46,12 @@ final class VisibilitySql
         foreach ($policies as $policy) {
             $table = $policy['kind'] === 'user' ? 'user_auth_perms' : 'user_auth_group_perms';
             $column = $policy['kind'] === 'user' ? 'user_id' : 'group_id';
-            $id = (int) $policy['id'];
+            $rawId = $policy['id'];
+            $id = is_int($rawId) || is_string($rawId) ? (int) $rawId : 0;
             $clauses = [];
             foreach ([['gl.id', 1, 'policy_graphs'], ['h.id', 3, 'policy_hosts'], ['gl.graph_template_id', 4, 'policy_graph_templates']] as [$field, $type, $key]) {
-                $default = (int) $policy[$key];
+                $rawDefault = $policy[$key];
+                $default = is_int($rawDefault) || is_string($rawDefault) ? (int) $rawDefault : 0;
                 if (!in_array($default, [1, 2], true)) {
                     throw new \RuntimeException('Unsupported visibility policy.');
                 }
@@ -64,6 +66,7 @@ final class VisibilitySql
                 2 => "($graph OR ($device AND $template))",
                 3 => "($graph OR $device)",
                 4 => "($graph OR $template)",
+                default => throw new \RuntimeException('Unsupported visibility policy.'),
             };
         }
 

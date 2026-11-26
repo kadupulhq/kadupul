@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -58,7 +60,7 @@ final class CliConsoleAccess implements ConsoleOperator
     {
         $db = $this->database();
         $authMethod = $db->fetchOne("SELECT value FROM settings WHERE name = 'auth_method'");
-        if ($authMethod !== false && !in_array((int) $authMethod, [1, 2, 3, 4], true)) {
+        if ($authMethod !== false && (!is_scalar($authMethod) || !in_array((int) $authMethod, [1, 2, 3, 4], true))) {
             return null;
         }
         $columns = 'SELECT id, username, enabled, locked, must_change_password FROM user_auth';
@@ -72,7 +74,7 @@ final class CliConsoleAccess implements ConsoleOperator
             // the row is absent. A stored value that is not a plain positive id,
             // such as '1abc', must not be truncated into one.
             $setting = $db->fetchOne("SELECT value FROM settings WHERE name = 'admin_user'");
-            $setting = $setting === false ? '1' : (string) $setting;
+            $setting = $setting === false ? '1' : (is_scalar($setting) ? (string) $setting : '');
             if (!ctype_digit($setting) || (int) $setting <= 0) {
                 return null;
             }
@@ -89,16 +91,17 @@ final class CliConsoleAccess implements ConsoleOperator
         if ($user['enabled'] !== 'on' || $user['locked'] === 'on' || $this->changePending($user)) {
             return null;
         }
-        $id = (int) $user['id'];
+        $id = is_int($user['id']) || is_string($user['id']) ? (int) $user['id'] : 0;
         if ($this->sessionId !== null && !$this->sessionCredentialMatches($id, $user['password'])) {
             return null;
         }
         $guest = $db->fetchOne("SELECT value FROM settings WHERE name = 'guest_user'");
-        if ($id === (int) $guest || $user['username'] === $guest || !$this->hasRealm($id, 8)) {
+        $guestId = is_scalar($guest) ? (int) $guest : 0;
+        if ($id === $guestId || $user['username'] === $guest || !$this->hasRealm($id, 8)) {
             return null;
         }
 
-        return new Actor($id, (string) $user['username']);
+        return new Actor($id, is_scalar($user['username']) ? (string) $user['username'] : '');
     }
 
     #[\Override]
