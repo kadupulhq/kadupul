@@ -17,8 +17,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
+use Kadupul\Platform\Infrastructure\Symfony\LocaleDirection;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
 final class InstallerControllerTest extends TestCase
@@ -130,6 +132,7 @@ final class InstallerControllerTest extends TestCase
         $translator = new Translator('en');
         $twig = new Environment(new FilesystemLoader(dirname(__DIR__, 2) . '/templates'), ['strict_variables' => true]);
         $twig->addExtension(new TranslationExtension($translator));
+        $twig->addFunction(new TwigFunction('locale_direction', (new LocaleDirection())->direction(...)));
         return new InstallerController(new InstallerWorkflow($backend), $context, $twig, $translator);
     }
 
@@ -239,6 +242,7 @@ final class InstallerControllerTest extends TestCase
     {
         $twig = new Environment(new FilesystemLoader(dirname(__DIR__, 2) . '/templates'), ['strict_variables' => true]);
         $twig->addExtension(new TranslationExtension(new Translator('en')));
+        $twig->addFunction(new TwigFunction('locale_direction', (new LocaleDirection())->direction(...)));
         $plan = [
             'mode' => 'install', 'target' => '1.2.38', 'schema' => 'new_install', 'collector' => 1,
             'job' => ['state' => 'not_started', 'phase' => 'ready', 'progress' => 0, 'error' => ''],

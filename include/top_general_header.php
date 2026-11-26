@@ -11,7 +11,7 @@ $using_guest_account = false;
 
 if (!isset_request_var('headercontent')) { ?>
 <!DOCTYPE html>
-<html lang='<?php print CACTI_LOCALE;?>'>
+<html lang='<?php print CACTI_LOCALE;?>'<?php print ((get_list_of_locales()[CACTI_LOCALE]['direction'] ?? 'ltr') === 'rtl' ? " dir='rtl'" : '');?>>
 <head>
 	<?php html_common_header($page_title);?>
 </head>

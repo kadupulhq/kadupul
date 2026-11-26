@@ -13,7 +13,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 {% set profileName = plan.profile %}
 {% for profile in plan.profiles %}{% if plan.profile == profile.id %}{% set profileName = profile.name %}{% endif %}{% endfor %}
 <!doctype html>
-<html lang="{{ view.locale }}">
+<html lang="{{ view.locale }}"{% if locale_direction(view.locale) == 'rtl' %} dir="rtl"{% endif %}>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
