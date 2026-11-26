@@ -187,8 +187,8 @@ final class LegacyLocaleResolutionTest extends TestCase
             $german + ['session_language' => 'de-DE'],
         ];
         yield 'weighted: the first entry is listed without a catalog' => [
-            ['accept' => 'fi-FI,de;q=0.5'],
-            // First-entry rule: fi-FI, which has no catalog, so English.
+            ['accept' => 'is-IS,de;q=0.5'],
+            // First-entry rule: is-IS, which has no catalog, so English.
             $german,
         ];
         yield 'weighted: a later entry carries the higher weight' => [
@@ -197,8 +197,8 @@ final class LegacyLocaleResolutionTest extends TestCase
             $french,
         ];
         yield 'weighted: no entry is shipped, so the default' => [
-            ['accept' => 'fi-FI,xx;q=0.5', 'settings' => ['i18n_default_language' => 'fr-FR']],
-            // First-entry rule: fi-FI, which has no catalog, so English.
+            ['accept' => 'is-IS,xx;q=0.5', 'settings' => ['i18n_default_language' => 'fr-FR']],
+            // First-entry rule: is-IS, which has no catalog, so English.
             $french,
         ];
         yield 'browser English region without a catalog is English' => [
@@ -314,7 +314,7 @@ final class LegacyLocaleResolutionTest extends TestCase
         yield 'saved en-AU' => [['session' => $user, 'saved' => [7 => ['user_language' => 'en-AU']], 'accept' => 'de-DE'], 'en'];
         yield 'browser first entry is shipped' => [['accept' => 'de-DE,fr;q=0.8'], 'de_DE'];
         yield 'browser: only a later entry is shipped' => [['accept' => 'xx-YY,de-DE;q=0.8', 'settings' => ['i18n_default_language' => 'fr-FR']], 'de_DE'];
-        yield 'browser: first entry is listed without a catalog' => [['accept' => 'fi-FI,de;q=0.5'], 'de_DE'];
+        yield 'browser: first entry is listed without a catalog' => [['accept' => 'is-IS,de;q=0.5'], 'de_DE'];
         yield 'browser script subtag' => [['accept' => 'zh-Hant-TW'], 'zh_CN'];
         yield 'empty browser header' => [['accept' => '', 'settings' => ['i18n_default_language' => 'ja-JP']], 'ja_JP'];
         yield 'detection off' => [['accept' => 'de-DE', 'settings' => ['i18n_auto_detection' => '0', 'i18n_default_language' => 'fr-FR']], 'fr'];
