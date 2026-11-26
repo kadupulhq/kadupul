@@ -649,12 +649,6 @@ function form_save() {
 			$save['failed_attempts'] = 0;
 		}
 
-		/* remove any stored tokens in case of account take over */
-		if ($save['must_change_password'] == 'on') {
-			db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($save['id']));
-			db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($save['id']));
-		}
-
 		$save = api_plugin_hook_function('user_admin_setup_sql_save', $save);
 
 		if (!is_error_message()) {
@@ -664,6 +658,13 @@ function form_save() {
 				/* an administrator who changes their own password keeps this session */
 				if ($user_id == $_SESSION['sess_user_id'] && $password != $old_password) {
 					auth_session_bind_credentials($user_id);
+				}
+
+				/* remove any stored tokens and active sessions in case of account take over */
+				if ($save['must_change_password'] == 'on' && !is_template_account($user_id)) {
+					db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
+					db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user_id));
+					auth_session_epoch_advance($user_id);
 				}
 
 				/* revoke tokens and sessions the same way the bulk Disable action does;
@@ -2460,7 +2461,7 @@ function user() {
 			form_selectable_cell($user['id'], $user['id']);
 			form_selectable_cell(filter_value($user['full_name'], get_request_var('filter')), $user['id']);
 			form_selectable_cell($enabled, $user['id']);
-			form_selectable_cell($realm, $user['id']);
+			form_selectable_ecell($realm, $user['id']);
 			form_selectable_cell(($user['policy_graphs'] == 1 ? __('ALLOW'):__('DENY')), $user['id']);
 			form_selectable_cell(($user['policy_hosts'] == 1 ? __('ALLOW'):__('DENY')), $user['id']);
 			form_selectable_cell(($user['policy_graph_templates'] == 1 ? __('ALLOW'):__('DENY')), $user['id']);

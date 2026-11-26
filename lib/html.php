@@ -2481,9 +2481,19 @@ function html_host_filter($host_id = '-1', $call_back = 'applyFilter', $sql_wher
 		<?php
 	} else {
 		if ($host_id > 0) {
-			$hostname = db_fetch_cell_prepared('SELECT description
-				FROM host WHERE id = ?',
-				array($host_id));
+			$host_total_rows = -1;
+			$allowed_hosts = ($sql_where != '')
+				? get_allowed_devices($sql_where, '', '', $host_total_rows, 0, (int) $host_id)
+				: (is_device_allowed((int) $host_id) ? array(array('id' => (int) $host_id)) : array());
+
+			if (cacti_sizeof($allowed_hosts)) {
+				$hostname = db_fetch_cell_prepared('SELECT description
+					FROM host WHERE id = ?',
+					array((int) $host_id));
+			} else {
+				$host_id  = -1;
+				$hostname = __('Any');
+			}
 		} elseif ($host_id == 0) {
 			$hostname = __('None');
 		} else {
@@ -2559,13 +2569,25 @@ function html_location_filter($location = '', $call_back = 'applyFilter', $sql_w
 			<?php if (!$nonone) {?><option value='0'<?php if ($location == '0') {?> selected<?php }?>><?php print __('None');?></option><?php }?>
 			<?php
 
-			$locations = array_rekey(
-				db_fetch_assoc("SELECT DISTINCT location
-					FROM host
-					$sql_where
-					ORDER BY location ASC"),
-				'location', 'location'
-			);
+			$device_where = trim((string) $sql_where);
+			if (stripos($device_where, 'WHERE ') === 0) {
+				$device_where = trim(substr($device_where, 6));
+			}
+			$device_where = preg_replace('/\b(?<!\.)site_id\b/', 'h.site_id', $device_where);
+
+			$loc_total_rows  = -1;
+			$allowed_devices = get_allowed_devices($device_where, '', '', $loc_total_rows);
+			$locations       = array();
+
+			if (cacti_sizeof($allowed_devices)) {
+				foreach ($allowed_devices as $device) {
+					if (isset($device['location']) && $device['location'] != '') {
+						$locations[$device['location']] = $device['location'];
+					}
+				}
+
+				asort($locations, SORT_STRING);
+			}
 
 			if (cacti_sizeof($locations)) {
 				foreach ($locations as $l) {

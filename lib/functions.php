@@ -6504,41 +6504,19 @@ function poller_maintenance () {
 }
 
 function clog_admin() {
-	if (!isset($_SESSION['sess_clog_level'])) {
-		clog_authorized();
+	if (isset($_SESSION['sess_user_id']) && is_realm_allowed(18)) {
+		return true;
 	}
 
-	if ($_SESSION['sess_clog_level'] == CLOG_PERM_ADMIN) {
-		return true;
-	} else {
-		return false;
-	}
+	return false;
 }
 
 function clog_authorized() {
-	if (!isset($_SESSION['sess_clog_level'])) {
-		if (isset($_SESSION['sess_user_id'])) {
-			if (is_realm_allowed(18)) {
-				$_SESSION['sess_clog_level'] = CLOG_PERM_ADMIN;
-			} else {
-				if (is_realm_allowed(19)) {
-					$_SESSION['sess_clog_level'] = CLOG_PERM_USER;
-				} else {
-					$_SESSION['sess_clog_level'] = CLOG_PERM_NONE;
-				}
-			}
-		} else {
-			$_SESSION['sess_clog_level'] = CLOG_PERM_NONE;
-		}
+	if (isset($_SESSION['sess_user_id']) && (is_realm_allowed(18) || is_realm_allowed(19))) {
+		return true;
 	}
 
-	if ($_SESSION['sess_clog_level'] == CLOG_PERM_USER) {
-		return true;
-	} elseif ($_SESSION['sess_clog_level'] == CLOG_PERM_ADMIN) {
-		return true;
-	} else {
-		return false;
-	}
+	return false;
 }
 
 function cacti_debug_backtrace($entry = '', $html = false, $record = true, $limit = 0, $skip = 0) {

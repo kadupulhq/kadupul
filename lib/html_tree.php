@@ -881,65 +881,88 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	}
 
 	if (!empty($leaf_id)) {
-		$host_name = db_fetch_cell_prepared('SELECT description
-			FROM host
-			WHERE id = ?',
-			array($leaf['host_id']));
+		if ($leaf['host_id'] > 0 && is_device_allowed($leaf['host_id'])) {
+			$host_name = db_fetch_cell_prepared('SELECT description
+				FROM host
+				WHERE id = ?',
+				array($leaf['host_id']));
+		}
 
-		$site_name = db_fetch_cell_prepared('SELECT name
-			FROM sites
-			WHERE id = ?',
-			array($leaf['site_id']));
+		if ($leaf['site_id'] > 0) {
+			$site_total = -1;
+			$allowed_site = get_allowed_sites('', '', '', $site_total, 0, (int) $leaf['site_id']);
+			if (cacti_sizeof($allowed_site)) {
+				$site_name = $allowed_site[0]['name'];
+			}
+		}
 	}
 
 	if (isset_request_var('host_id') && get_request_var('host_id') > 0 && $host_name == '') {
-		$host_name = db_fetch_cell_prepared('SELECT description
-			FROM host
-			WHERE id = ?',
-			array(get_request_var('host_id')));
+		if (is_device_allowed((int) get_request_var('host_id'))) {
+			$host_name = db_fetch_cell_prepared('SELECT description
+				FROM host
+				WHERE id = ?',
+				array((int) get_request_var('host_id')));
+		}
 	}
 
 	if (isset_request_var('site_id') && get_request_var('site_id') > 0 && $site_name == '') {
-		$site_name = db_fetch_cell_prepared('SELECT name
-			FROM sites
-			WHERE id = ?',
-			array(get_request_var('site_id')));
+		$site_total = -1;
+		$allowed_site = get_allowed_sites('', '', '', $site_total, 0, (int) get_request_var('site_id'));
+		if (cacti_sizeof($allowed_site)) {
+			$site_name = $allowed_site[0]['name'];
+		}
 	}
 
 	if (isset_request_var('host_template_id') && get_request_var('host_template_id') > 0) {
-		$host_template_name = db_fetch_cell_prepared('SELECT name
-			FROM host_template
-			WHERE id = ?',
-			array(get_request_var('host_template_id')));
+		$ht_id = (int) get_request_var('host_template_id');
+		$ht_total = -1;
+		if (cacti_sizeof(get_allowed_devices('h.host_template_id = ' . $ht_id, '', 1, $ht_total))) {
+			$host_template_name = db_fetch_cell_prepared('SELECT name
+				FROM host_template
+				WHERE id = ?',
+				array($ht_id));
+		}
 	}
 
 	$host_group_data_array = explode(':', $host_group_data);
 
 	if ($host_group_data_array[0] == 'gt') {
-		$name = db_fetch_cell_prepared('SELECT name
-			FROM graph_templates
-			WHERE id = ?',
-			array($host_group_data_array[1]));
+		$gt_id = (int) ($host_group_data_array[1] ?? 0);
+		if ($gt_id > 0 && is_graph_template_allowed($gt_id)) {
+			$name = db_fetch_cell_prepared('SELECT name
+				FROM graph_templates
+				WHERE id = ?',
+				array($gt_id));
 
-		$host_group_data_name = '<strong>' . __('Graph Template:'). '</strong> ' . html_escape($name);
-		$graph_template_id    = $host_group_data_array[1];
+			$host_group_data_name = '<strong>' . __('Graph Template:'). '</strong> ' . html_escape($name);
+			$graph_template_id    = $gt_id;
+		}
 	} elseif ($host_group_data_array[0] == 'dq') {
-		$name = db_fetch_cell_prepared('SELECT name
-			FROM snmp_query
-			WHERE id = ?',
-			array($host_group_data_array[1]));
+		$dq_id = (int) ($host_group_data_array[1] ?? 0);
+		$dq_total = -1;
+		if ($dq_id == 0 || cacti_sizeof(get_allowed_devices('EXISTS (SELECT 1 FROM host_snmp_query AS hsq WHERE hsq.host_id = h.id AND hsq.snmp_query_id = ' . $dq_id . ')', '', 1, $dq_total))) {
+			$name = ($dq_id > 0) ? db_fetch_cell_prepared('SELECT name
+				FROM snmp_query
+				WHERE id = ?',
+				array($dq_id)) : '';
 
-		$host_group_data_name = '<strong>' . __('Graph Template:') . '</strong> ' . (empty($host_group_data_array[1]) ? __('Non Query Based') : html_escape($name));
-		$data_query_id        = $host_group_data_array[1];
+			$host_group_data_name = '<strong>' . __('Graph Template:') . '</strong> ' . (empty($dq_id) ? __('Non Query Based') : html_escape($name));
+			$data_query_id        = $dq_id;
+		}
 	} elseif ($host_group_data_array[0] == 'dqi') {
-		$name = db_fetch_cell_prepared('SELECT name
-			FROM snmp_query
-			WHERE id = ?',
-			array($host_group_data_array[1]));
+		$dq_id = (int) ($host_group_data_array[1] ?? 0);
+		$leaf_host_id = (int) ($leaf['host_id'] ?? 0);
+		if ($leaf_host_id > 0 && is_device_allowed($leaf_host_id)) {
+			$name = ($dq_id > 0) ? db_fetch_cell_prepared('SELECT name
+				FROM snmp_query
+				WHERE id = ?',
+				array($dq_id)) : '';
 
-		$host_group_data_name = '<strong>' . __('Graph Template:') . '</strong> ' . (empty($host_group_data_array[1]) ? __('Non Query Based') : html_escape($name)) . '-> ' . (empty($host_group_data_array[2]) ? __('Template Based') : html_escape(get_formatted_data_query_index($leaf['host_id'], $host_group_data_array[1], $host_group_data_array[2])));
-		$data_query_id    = $host_group_data_array[1];
-		$data_query_index = $host_group_data_array[2];
+			$host_group_data_name = '<strong>' . __('Graph Template:') . '</strong> ' . (empty($dq_id) ? __('Non Query Based') : html_escape($name)) . '-> ' . (empty($host_group_data_array[2]) ? __('Template Based') : html_escape(get_formatted_data_query_index($leaf_host_id, $dq_id, $host_group_data_array[2])));
+			$data_query_id    = $dq_id;
+			$data_query_index = $host_group_data_array[2] ?? '';
+		}
 	}
 
 	if ($tree_name != '') {

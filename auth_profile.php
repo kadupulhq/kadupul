@@ -23,8 +23,13 @@
  +-------------------------------------------------------------------------+
 */
 
-$guest_account = true;
 include('./include/auth.php');
+
+if (!is_realm_allowed(20)) {
+	raise_message('permission_denied');
+	header('Location: permission_denied.php');
+	exit;
+}
 
 /* set default action */
 set_default_action();
@@ -309,6 +314,10 @@ function api_auth_user_setting_valid($name, $field, $value) {
 				&& is_readable($directory . '/' . $value);
 		case 'textbox_password':
 		case 'textbox':
+			if ($name === 'day_shift_start' || $name === 'day_shift_end') {
+				return preg_match('/^(?:[01][0-9]|2[0-3]):[0-5][0-9]\z/', $value) === 1;
+			}
+
 			/* save_user_settings() treats a field with a numeric default as numeric */
 			if (isset($field['default']) && is_numeric($field['default'])) {
 				return is_numeric($value);
@@ -349,9 +358,34 @@ function form_save() {
 		 */
 		foreach ($settings_user as $tab_short_name => $tab_fields) {
 			foreach ($tab_fields as $field_name => $field_array) {
-				if (isset($field_array['method'])
-					&& in_array($field_array['method'], array('drop_array', 'drop_sql', 'drop_language'), true)
-					&& isset_request_var($field_name)
+				if (!isset($field_array['method'])) {
+					continue;
+				}
+
+				if ($field_array['method'] === 'checkbox_group' && isset($field_array['items']) && is_array($field_array['items'])) {
+					foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
+						$sub_field_def = $sub_field_array;
+						if (!isset($sub_field_def['method'])) {
+							$sub_field_def['method'] = 'checkbox';
+						}
+
+						if (isset_request_var($sub_field_name)
+							&& !api_auth_user_setting_valid($sub_field_name, $sub_field_def, get_nfilter_request_var($sub_field_name))) {
+							unset($settings_user[$tab_short_name][$field_name]['items'][$sub_field_name]);
+
+							$_SESSION['sess_error_fields'][$sub_field_name] = $sub_field_name;
+							$errors[3] = 3;
+						}
+					}
+
+					continue;
+				}
+
+				if (in_array($field_array['method'], array('spacer', 'other', 'hidden', 'hidden_zero'), true)) {
+					continue;
+				}
+
+				if (isset_request_var($field_name)
 					&& !api_auth_user_setting_valid($field_name, $field_array, get_nfilter_request_var($field_name))) {
 					unset($settings_user[$tab_short_name][$field_name]);
 

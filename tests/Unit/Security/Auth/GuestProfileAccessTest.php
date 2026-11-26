@@ -14,8 +14,8 @@
 
 /*
  * Every anonymous visitor shares the guest account, so the guest may not open
- * Edit Profile. Signed-in users keep the guest page exemption auth_profile.php
- * has always had, with or without the profile realm.
+ * Edit Profile. Authenticated non-guest users go through normal realm checks
+ * even on guest-enabled pages so missing realms cannot be bypassed.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
@@ -61,14 +61,11 @@ test('a signed-in user with the profile realm still opens the profile', function
 		->and($result['page_continued'])->toBeTrue();
 });
 
-test('a signed-in user without the profile realm opens the profile as in 1.2.31', function () {
-	/* auth_profile.php is a guest page, so a signed-in user skips the realm check */
+test('a signed-in user without the profile realm is denied access to the profile', function () {
 	$result = cacti_test_run_auth_entry_probe(guest_profile_request('auth_profile.php', array('sess_user_id' => '42')));
 
-	expect($result['session']['sess_user_id'] ?? null)->toBe('42')
-		->and($result['events'])->not->toContain('error_page')
-		->and($result['events'])->not->toContain('login_page')
-		->and($result['page_continued'])->toBeTrue();
+	expect($result['events'])->toContain('error_page')
+		->and($result['page_continued'])->toBeFalse();
 });
 
 test('an anonymous visitor still views other guest pages as the guest', function () {

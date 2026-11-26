@@ -729,16 +729,30 @@ function api_tree_rename_node($tree_id, $node_id = '', $title = '') {
  * @arg $parent - The parent id of the branch/leaf
  * @returns - string of the tree items in html format */
 function api_tree_get_main($tree_id, $parent = 0) {
+	if (!is_view_allowed('show_tree')) {
+		return;
+	}
+
+	$tree_id = (int) $tree_id;
 	$is_root = false;
 	if ($parent == -1) {
 		$parent  = 0;
 		$is_root = true;
 
 		if ($tree_id > 0) {
-			$name = db_fetch_cell_prepared('SELECT name
+			if (!is_tree_allowed($tree_id, 0, true)) {
+				return;
+			}
+
+			$name = db_fetch_cell_prepared("SELECT name
 				FROM graph_tree
-				WHERE id = ?',
+				WHERE id = ?
+				AND enabled = 'on'",
 				array($tree_id));
+
+			if ($name === false || $name === null) {
+				return;
+			}
 
 			print "<ul><li class='jstree-closed' id='tree_anchor-$tree_id' data-jstree='{ \"type\" : \"tree\" }'><a href='" . html_escape('graph_view.php?action=tree&node=tree_anchor-' . $tree_id). "'>" . html_escape($name) . "</a>\n";
 
@@ -759,6 +773,10 @@ function api_tree_get_main($tree_id, $parent = 0) {
 			}
 		}
 	} else {
+		if ($tree_id > 0 && !is_tree_allowed($tree_id, 0, true)) {
+			return;
+		}
+
 		$hierarchy = draw_dhtml_tree_level_graphing($tree_id, $parent);
 
 		if (cacti_sizeof($hierarchy)) {
@@ -779,6 +797,24 @@ function api_tree_get_main($tree_id, $parent = 0) {
  * @arg $editing - The determine if we are building a user tree or a tree for editing
  * @returns - string of the tree items in html format */
 function api_tree_get_node($tree_id, $node_id, $editing = false) {
+	$tree_id = (int) $tree_id;
+
+	if ($tree_id <= 0) {
+		return;
+	}
+
+	if (read_config_option('auth_method') != 0) {
+		$uid = (int) ($_SESSION['sess_user_id'] ?? 0);
+
+		if ($editing) {
+			if (!cacti_authorize_resource($uid, $tree_id, 'graph_tree')) {
+				return;
+			}
+		} elseif (!is_tree_allowed($tree_id, 0, true) && !cacti_authorize_resource($uid, $tree_id, 'graph_tree')) {
+			return;
+		}
+	}
+
 	if ($node_id == '#') {
 		$hierarchy = draw_dhtml_tree_level($tree_id, 0, $editing);
 	} else {

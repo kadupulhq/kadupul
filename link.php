@@ -25,8 +25,16 @@
 
 include_once('./include/global.php');
 
+$auth_method = read_config_option('auth_method');
+check_reset_no_authentication($auth_method);
+
 /* this page loads global.php, not auth.php, so it runs the per-request session check itself */
 auth_session_enforce();
+
+if ($auth_method != 0 && $auth_method != 2 && isset($_SESSION['sess_change_password'])) {
+	header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+	exit;
+}
 
 $page = db_fetch_row_prepared('SELECT
 	id, title, style, contentfile, enabled, refresh

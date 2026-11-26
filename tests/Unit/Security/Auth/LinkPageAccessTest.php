@@ -33,6 +33,9 @@ function general_header() { echo "RENDERED\n"; }
 function top_header() { echo "RENDERED\n"; }
 function bottom_footer() {}
 function auth_session_enforce() { return false; }
+function read_config_option($name) { return 1; }
+function check_reset_no_authentication($method) {}
+function validate_redirect_url($url = '', $default = 'index.php') { return $default; }
 
 eval('namespace LinkPageRuntime; ' . $source);
 PHP;

@@ -112,6 +112,10 @@ switch (get_request_var('action')) {
 		header('Location: tree.php?header=false');
 		break;
 	case 'edit':
+		if (isset_request_var('id') && (int) get_filter_request_var('id') > 0) {
+			tree_require_access(get_filter_request_var('id'), 'edit');
+		}
+
 		top_header();
 		tree_edit();
 		bottom_footer();
@@ -194,9 +198,13 @@ switch (get_request_var('action')) {
 		api_tree_rename_node(get_request_var('tree_id'), get_request_var('id'), get_nfilter_request_var('text'));
 		break;
 	case 'get_node':
+		tree_require_access(get_filter_request_var('tree_id'), 'get_node');
+
 		api_tree_get_node(get_request_var('tree_id'), get_request_var('id'));
 		break;
 	case 'get_host_sort':
+		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'get_host_sort');
+
 		get_host_sort_type();
 		break;
 	case 'set_host_sort':
@@ -207,6 +215,8 @@ switch (get_request_var('action')) {
 		set_host_sort_type();
 		break;
 	case 'get_branch_sort':
+		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'get_branch_sort');
+
 		get_branch_sort_type();
 		break;
 	case 'set_branch_sort':
@@ -824,6 +834,10 @@ function form_actions() {
 			/* ================= input validation ================= */
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */
+
+			if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $matches[1], 'graph_tree')) {
+				continue;
+			}
 
 			$tree_list .= '<li>' . html_escape(db_fetch_cell_prepared('SELECT name FROM graph_tree WHERE id = ?', array($matches[1]))) . '</li>';
 			$tree_array[$i] = $matches[1];
@@ -2132,8 +2146,8 @@ function display_hosts() {
 	$site_ids = get_filter_request_var('site_id', FILTER_VALIDATE_IS_NUMERIC_LIST);
 
 	if (get_nfilter_request_var('filter') != '') {
-		$sql_where .= 'h.hostname LIKE ' . db_qstr('%' . get_nfilter_request_var('filter') . '%') . '
-			OR h.description LIKE '      . db_qstr('%' . get_nfilter_request_var('filter') . '%');
+		$sql_where .= '(h.hostname LIKE ' . db_qstr('%' . get_nfilter_request_var('filter') . '%') . '
+			OR h.description LIKE '      . db_qstr('%' . get_nfilter_request_var('filter') . '%') . ')';
 	}
 
 	if ($site_ids != '') {
@@ -2362,6 +2376,10 @@ function tree() {
 			OR ti.title LIKE ' . db_qstr('%' . get_request_var('filter') . '%') . ')';
 	} else {
 		$sql_where = '';
+	}
+
+	if (read_config_option('auth_method') != 0 && !cacti_authorize_is_admin($_SESSION['sess_user_id'] ?? 0)) {
+		$sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . 't.user_id = ' . (int) ($_SESSION['sess_user_id'] ?? 0);
 	}
 
 	$sql_order = get_order_string(array('name', 'id', 'enabled', 'locked', 'user_id', 'sequence', 'last_modified', 'modified_by', 'sites', 'branches', 'hosts', 'graphs'));

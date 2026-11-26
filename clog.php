@@ -22,8 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-$guest_account=true;
-
 include('./include/auth.php');
 include_once('./lib/clog_webapi.php');
 include_once('./lib/poller.php');

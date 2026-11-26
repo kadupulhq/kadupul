@@ -71,6 +71,17 @@ if ($auth_method != 0) {
 	 * handle change password dialog and auth cookie if not using basic auth
 	 */
 	if ($auth_method != 2) {
+		if (!isset($_SESSION['sess_change_password']) && !empty($_SESSION['sess_user_id']) && $_SESSION['sess_user_id'] != get_guest_account()) {
+			$mc_account = db_fetch_row_prepared('SELECT realm, must_change_password, password_change
+				FROM user_auth
+				WHERE id = ?',
+				array($_SESSION['sess_user_id']));
+
+			if (cacti_sizeof($mc_account) && ($mc_account['realm'] ?? -1) == 0 && ($mc_account['must_change_password'] ?? '') == 'on' && ($mc_account['password_change'] ?? '') == 'on') {
+				$_SESSION['sess_change_password'] = true;
+			}
+		}
+
 		if (isset($_SESSION['sess_change_password'])) {
 			header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 			exit;
@@ -160,8 +171,8 @@ if ($auth_method != 0) {
 	if (isset($guest_account)) {
 		$guest_user_id = get_guest_account();
 
-		/* find guest user */
-		if (!empty($guest_user_id)) {
+		/* find guest user; authenticated non-guest accounts still go through realm checks below */
+		if (!empty($guest_user_id) && (empty($_SESSION['sess_user_id']) || $_SESSION['sess_user_id'] == $guest_user_id)) {
 			if (empty($_SESSION['sess_user_id'])) {
 				$_SESSION['sess_user_id'] = $guest_user_id;
 			}

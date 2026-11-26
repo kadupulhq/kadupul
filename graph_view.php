@@ -253,6 +253,10 @@ case 'tree':
 
 	break;
 case 'get_node':
+	if (!is_view_allowed('show_tree')) {
+		exit;
+	}
+
 	$parent  = -1;
 	$tree_id = 0;
 
@@ -300,6 +304,11 @@ case 'get_node':
 				}
 			}
 		}
+	}
+
+	$tree_id = (int) $tree_id;
+	if ($tree_id > 0 && !is_tree_allowed($tree_id, 0, true)) {
+		exit;
 	}
 
 	api_tree_get_main($tree_id, $parent);
