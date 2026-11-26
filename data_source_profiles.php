@@ -849,7 +849,9 @@ function profile_edit() {
 
         $('#consolidation_function_id').multiselect({
             selectedList: 4,
-            noneSelectedText: <?php print json_encode(__('Select Consolidation Function(s)'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>,
+            noneSelectedText: <?php
+                print json_encode(__('Select Consolidation Function(s)'),
+                    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
             header: false,
             groupColumns: true,
             groupColumnsWidth: 90,
@@ -890,7 +892,9 @@ function profile_edit() {
 					});
 
 					$('#cdialog').dialog({
-						title: <?php print json_encode(__('Delete Data Source Profile Item'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>,
+						title: <?php
+							print json_encode(__('Delete Data Source Profile Item'),
+								JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
 						close: function () { $('.delete').blur(); $('.selectable').removeClass('selected'); },
 						minHeight: 80,
 						minWidth: 500

@@ -746,7 +746,9 @@ function template_edit() {
 					applySkin();
 
 					$('#cdialog').dialog({
-						title: <?php print json_encode(__('Delete Item from Device Template'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>,
+						title: <?php
+							print json_encode(__('Delete Item from Device Template'),
+								JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
 						close: function () { $('.delete').blur(); $('.selectable').removeClass('selected'); },
 						minHeight: 80,
 						minWidth: 500
