@@ -81,6 +81,27 @@ deptrac:
           must_not:
             - type: directory
               value: src/Automation/Infrastructure/Legacy/.*
+    - name: Collection.Domain
+      collectors:
+        - type: directory
+          value: src/Collection/Domain/.*
+    - name: Collection.Application
+      collectors:
+        - type: directory
+          value: src/Collection/Application/.*
+    - name: Collection.Legacy
+      collectors:
+        - type: directory
+          value: src/Collection/Infrastructure/Legacy/.*
+    - name: Collection.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Collection/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Collection/Infrastructure/Legacy/.*
     - name: DataInput.Domain
       collectors:
         - type: directory
@@ -102,6 +123,27 @@ deptrac:
           must_not:
             - type: directory
               value: src/DataInput/Infrastructure/Legacy/.*
+    - name: Extensions.Domain
+      collectors:
+        - type: directory
+          value: src/Extensions/Domain/.*
+    - name: Extensions.Application
+      collectors:
+        - type: directory
+          value: src/Extensions/Application/.*
+    - name: Extensions.Legacy
+      collectors:
+        - type: directory
+          value: src/Extensions/Infrastructure/Legacy/.*
+    - name: Extensions.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Extensions/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Extensions/Infrastructure/Legacy/.*
     - name: GraphDefinition.Domain
       collectors:
         - type: directory
@@ -434,6 +476,30 @@ deptrac:
       - PlatformContract
       - Automation.Infrastructure
       - Superglobals
+    Collection.Domain:
+      - Psr
+      - Contract
+    Collection.Application:
+      - Collection.Domain
+      - Psr
+      - Contract
+    Collection.Infrastructure:
+      - Collection.Domain
+      - Collection.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Collection.Legacy
+    Collection.Legacy:
+      - Collection.Domain
+      - Collection.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Collection.Infrastructure
+      - Superglobals
     DataInput.Domain:
       - Psr
       - Contract
@@ -457,6 +523,30 @@ deptrac:
       - Contract
       - PlatformContract
       - DataInput.Infrastructure
+      - Superglobals
+    Extensions.Domain:
+      - Psr
+      - Contract
+    Extensions.Application:
+      - Extensions.Domain
+      - Psr
+      - Contract
+    Extensions.Infrastructure:
+      - Extensions.Domain
+      - Extensions.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Extensions.Legacy
+    Extensions.Legacy:
+      - Extensions.Domain
+      - Extensions.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Extensions.Infrastructure
       - Superglobals
     GraphDefinition.Domain:
       - Psr
@@ -732,10 +822,18 @@ deptrac:
       - Automation.Application
       - Automation.Infrastructure
       - Automation.Legacy
+      - Collection.Domain
+      - Collection.Application
+      - Collection.Infrastructure
+      - Collection.Legacy
       - DataInput.Domain
       - DataInput.Application
       - DataInput.Infrastructure
       - DataInput.Legacy
+      - Extensions.Domain
+      - Extensions.Application
+      - Extensions.Infrastructure
+      - Extensions.Legacy
       - GraphDefinition.Domain
       - GraphDefinition.Application
       - GraphDefinition.Infrastructure
