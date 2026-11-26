@@ -2221,8 +2221,8 @@ msgstr "Mainīt ierīci"
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "Izvēlieties jaunu ierīci šiem datu avotiem un noklikšķiniet uz 'Turpināt'."
-msgstr[1] "Izvēlieties jaunu ierīci šim datu avotam un noklikšķiniet uz 'Turpināt'."
-msgstr[2] "Izvēlieties jaunu ierīci šiem datu avotiem un noklikšķiniet uz 'Turpināt'."
+msgstr[1] "Izvēlieties jaunu ierīci šiem datu avotiem un noklikšķiniet uz 'Turpināt'"
+msgstr[2] "Izvēlieties jaunu ierīci šiem datu avotiem un noklikšķiniet uz 'Turpināt'"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -2322,14 +2322,14 @@ msgstr[2] "Dzēst datu avotus"
 #: data_sources.php
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Dzēst visus <strong>grafika vienumus</strong>, kas atsaucas uz šo datu avotu."
+msgstr[0] "Dzēst visus <strong>grafika vienumus</strong>, kas atsaucas uz šiem datu avotiem."
 msgstr[1] "Dzēst visus <strong>grafika vienumus</strong>, kas atsaucas uz šo datu avotu."
 msgstr[2] "Dzēst visus <strong>grafika vienumus</strong>, kas atsaucas uz šiem datu avotiem."
 
 #: data_sources.php
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
-msgstr[0] "Dzēst visus <strong>grafikus</strong>, kas atsaucas uz šo datu avotu."
+msgstr[0] "Dzēst visus <strong>grafikus</strong>, kas atsaucas uz šiem datu avotiem."
 msgstr[1] "Dzēst visus <strong>grafikus</strong>, kas atsaucas uz šo datu avotu."
 msgstr[2] "Dzēst visus <strong>grafikus</strong>, kas atsaucas uz šiem datu avotiem."
 
@@ -2385,7 +2385,7 @@ msgstr "Ja šo datu avotu Graphs vairs neizmanto, to var dzēst."
 #: data_sources.php
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
-msgstr[0] "Atstāt <strong>grafiku</strong> neskartu."
+msgstr[0] "Atstāt visus <strong>grafikus</strong> neskartus."
 msgstr[1] "Atstāt <strong>grafiku</strong> neskartu."
 msgstr[2] "Atstāt visus <strong>grafikus</strong> neskartus."
 
@@ -6273,7 +6273,7 @@ msgstr "Domuzīmes nobīde (dash-offset=nobīde)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "Svītras (domuzīmes[=on_s[,off_s[,on_s,off_s]...]])"
+msgstr "Svītras (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php
 msgid "Data Retention"
@@ -6833,7 +6833,7 @@ msgstr "Labās ass formāts (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Labās ass formatētājs (--right-axis-formatter &lt;formāta nosaukums&gt;)"
+msgstr "Labās ass formatētājs (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
@@ -7077,7 +7077,7 @@ msgstr "Dati, kas tiek nosūtīti uz skriptu, kas ietver pilnu ceļu uz skriptu 
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Cik bieži dati tiks vākti no datu avota?"
+msgstr "Biežums, ar kādu dati tiks vākti no datu avota."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7293,7 +7293,7 @@ msgstr "Vertikālā etiķete (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Ar kādu vietni šī Ierīce ir saistīta."
+msgstr "Ar kādu vietni šī ierīce ir saistīta?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8401,7 +8401,7 @@ msgstr "Cik žurnālfailus vēlaties saglabāt? Izmantojiet 0, lai nekad neizņe
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Cik bieži vēlaties atjaunināt Kadupul žurnāla displeju."
+msgstr "Cik bieži vēlaties atjaunināt Kadupul žurnāla displeju?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8409,7 +8409,7 @@ msgstr "Kā Kadupul nosaka klienta datumus, pamatojoties uz klienta pārlūkprog
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kā Kadupul apstrādās notikumu reģistrēšanu."
+msgstr "Kā Kadupul apstrādās notikumu reģistrēšanu?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8453,7 +8453,7 @@ msgstr "Ja pastiprināšanas izvades tabula pārsniedz šo izmēru, ierakstos ti
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Ja boost aptaujātājs pārsniedz šo izpildlaiku, cacti žurnālā tiks ievietots brīdinājums,"
+msgstr "Ja boost aptaujātājs pārsniedz šo izpildlaiku, cacti žurnālā tiks ievietots brīdinājums."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9161,7 +9161,7 @@ msgstr "Meklēšanas bāze meklēšanai LDAP direktorijā, piemēram, <i>'dc=win
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Meklēšanas filtrs, ko izmantot, lai atrastu lietotāju LDAP direktorijā, piemēram, logiem: <i>&#39;(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;lietotājvārds&gt;*))&#39;</i> vai OpenLDAP: <i>&#39;(&amp;(objectClass =konts)(uid=&lt;lietotājvārds&gt;))&#39;</i> . “&lt;lietotājvārds&gt;” tiek aizstāts ar lietotājvārdu, kas tika norādīts pieteikšanās uzvednē. "
+msgstr "Meklēšanas filtrs, ko izmantot, lai atrastu lietotāju LDAP direktorijā, piemēram, Windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> vai OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' tiek aizstāts ar lietotājvārdu, kas tika norādīts pieteikšanās uzvednē. "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9233,7 +9233,7 @@ msgstr "Vai ir jāiespējo attēlu kešatmiņa?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Vai pēc noklusējuma pārbaudīt grafikus un datu avotus."
+msgstr "Vai pēc noklusējuma pārbaudīt grafikus un datu avotus?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10090,7 +10090,7 @@ msgstr "Ja atzīmēta, visi mēģinājumi piekļūt Kadupul tiks novirzīti uz H
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Veidojot jaunu pārskatu, kāds attēla veids ir jāizmanto iekļautajām diagrammām."
+msgstr "Veidojot jaunu pārskatu, kāds attēla veids ir jāizmanto iekļautajām diagrammām?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -11117,7 +11117,7 @@ msgstr "XML fails ir parsēts labi."
 #: lib/data_query.php
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
-msgstr "Jums ir jāatlasa XML izvades kolonna datu avotam “%s” un jāieslēdz izvēles rūtiņa tās labajā pusē."
+msgstr "Jums ir jāatlasa XML izvades kolonna datu avotam “%s” un jāieslēdz izvēles rūtiņa tās labajā pusē"
 
 #: lib/data_query.php
 msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
@@ -12785,7 +12785,7 @@ msgstr "Šeit ir parādīts mapju atļauju iestatīšanas piemērs, taču, iesp�
 
 #: lib/installer.php
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "Ja salīdzinājums nav saskaņots, jebkurām spraudņu izveidotajām tabulām var būt problēmas, kas saistītas ar Kadupul Core tabulām. Lūdzu, pārliecinieties, ka jūsu datu bāze ir mainīta uz “utf8mb4_unicode_ci”, izpildot tālāk norādīto. "
+msgstr "Ja salīdzinājums nav saskaņots, spraudņu izveidotajām tabulām var būt problēmas, saistot tās ar Kadupul Core tabulām. Lūdzu, pārliecinieties, ka jūsu datubāze ir mainīta uz 'utf8mb4_unicode_ci', izpildot tālāk norādīto: "
 
 #: lib/installer.php package_import.php plugins.php
 msgid "Author"
@@ -13692,7 +13692,7 @@ msgstr "Nevar atjaunināt lietojumprogrammas noklusējumus."
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "Sadaļā [mysqld] atrodiet ierakstus ar nosaukumu 'rakstzīmju kopas serveris' un 'collation-server' un iestatiet tos šādi:"
+msgstr "Sadaļā [mysqld] atrodiet ierakstus ar nosaukumu 'character-set-server' un 'collation-server' un iestatiet tos šādi:"
 
 #: lib/installer.php
 msgid "Unexpected path parameter"
@@ -13757,7 +13757,7 @@ msgstr "JUMS MANUĀLI JĀMAINA Kadupul DATUBĀZE, LAI ATJAUNOTU JEBKĀDAS JAUNIN
 
 #: lib/installer.php
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "Jums <b>OBLIGĀTI</b> JĀIEMPORTĒ arī MySQL TimeZone informācija MySQL un piešķiriet Kadupul lietotājam SELECT piekļuvi tabulai mysql.time_zone_name."
+msgstr "Jums <b>OBLIGĀTI</b> JĀIMPORTĒ arī MySQL TimeZone informācija MySQL un piešķiriet Kadupul lietotājam SELECT piekļuvi tabulai mysql.time_zone_name"
 
 #: lib/installer.php
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
@@ -13896,12 +13896,12 @@ msgstr "Protokola kļūda, nevar saistīt, LDAP rezultāts: (%s) serverī (%s)"
 #: lib/ldap.php
 #, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
-msgstr "Protokola kļūda, serverī (%s) nevar iestatīt novirzīšanas opciju (%s)"
+msgstr "Protokola kļūda, nevar iestatīt novirzīšanas opciju (%s) serverī (%s)"
 
 #: lib/ldap.php
 #, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
-msgstr "Protokola kļūda, serverī (%s) nevar iestatīt versiju (%s)"
+msgstr "Protokola kļūda, nevar iestatīt versiju (%s) serverī (%s)"
 
 #: lib/ldap.php
 #, php-format
@@ -14208,7 +14208,7 @@ msgstr "Pēdējā DS"
 
 #: lib/rrd.php
 msgid "Max"
-msgstr "Maks."
+msgstr "Maksimums"
 
 #: lib/rrd.php
 msgid "Min"
@@ -14350,7 +14350,7 @@ msgstr "SNMP komanda ir: %s"
 
 #: lib/spikekill.php
 msgid "Avg"
-msgstr "Vid."
+msgstr "Vidēji"
 
 #: lib/spikekill.php
 msgid "CF"
@@ -14682,7 +14682,7 @@ msgstr "Derīga laika josla, kas atbilst MySQL un sistēmai"
 #: lib/utility.php
 #, php-format
 msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
-msgstr "No %s %s varat kontrolēt, cik bieži %s izskalo darījumus diskā. Noklusējums ir 1 sekunde, bet augstās I/O sistēmās, iestatot vērtību, kas lielāka par 1, diska ievade/izvade var būt vairāk secīga."
+msgstr "No %s %s varat kontrolēt, cik bieži %s izskalo darījumus diskā. Noklusējums ir 1 sekunde, bet augstās I/O sistēmās, iestatot vērtību, kas lielāka par 1, diska ievade/izvade var būt vairāk secīga"
 
 #: lib/utility.php
 msgid "Comments"
@@ -16748,7 +16748,7 @@ msgstr "< Pirms mazāk nekā 1 nedēļas"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>Piezīme.</b> Sistēmas grafika politika ir “ierīce”, kas nozīmē, ka lietotājam ir jābūt piekļuvei grafikam vai ierīcei, lai piekļūtu grafikam."
+msgstr "<b>Piezīme.</b> Sistēmas grafika politika ir “ierīce”, kas nozīmē, ka lietotājam ir jābūt piekļuvei grafikam vai ierīcei, lai piekļūtu grafikam"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
@@ -16756,11 +16756,11 @@ msgstr "<b>Piezīme:</b> Sistēmas grafika politika ir \"Grafika veidne\", kas n
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "<b>Piezīme.</b> Sistēmas grafika politika ir “atļaujoša”, kas nozīmē, ka lietotājam ir jābūt piekļuvei vismaz vienai no diagrammām, ierīcēm vai diagrammas veidnēm, lai piekļūtu grafikam."
+msgstr "<b>Piezīme.</b> Sistēmas grafika politika ir “atļaujoša”, kas nozīmē, ka lietotājam ir jābūt piekļuvei vismaz vienai no diagrammām, ierīcēm vai diagrammas veidnēm, lai piekļūtu grafikam"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<b>Piezīme.</b> Sistēmas grafika politika ir “ierobežojoša”, kas nozīmē, ka lietotājam ir jābūt piekļuvei grafikam vai ierīcei un grafika veidnei, lai piekļūtu grafikam."
+msgstr "<b>Piezīme.</b> Sistēmas grafika politika ir “ierobežojoša”, kas nozīmē, ka lietotājam ir jābūt piekļuvei grafikam vai ierīcei un grafika veidnei, lai piekļūtu grafikam"
 
 #: user_admin.php
 msgid "> 1 Month Ago"
@@ -17238,7 +17238,7 @@ msgstr "Meklēšanas bāze meklēšanai LDAP direktorijā, piemēram, <i>\"dc=wi
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Meklēšanas filtrs, ko izmantot, lai atrastu lietotāju LDAP direktorijā, piemēram, logiem: <i>&quot;(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;lietotājvārds&gt;*))&quot;</i> vai OpenLDAP: <i>&quot;(&amp;(objectClass =konts)(uid=&lt;lietotājvārds&gt;))&quot;</i> . &quot;&lt;lietotājvārds&gt;&quot; tiek aizstāts ar lietotājvārdu, kas tika norādīts pieteikšanās uzvednē."
+msgstr "Meklēšanas filtrs, ko izmantot, lai atrastu lietotāju LDAP direktorijā, piemēram, Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> vai OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" tiek aizstāts ar lietotājvārdu, kas tika norādīts pieteikšanās uzvednē."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."
@@ -17872,7 +17872,7 @@ msgstr "NET-SNMP versija"
 
 #: utilities.php
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
-msgstr "PIEZĪME: Lielās sistēmās šīs komandas izpilde var ilgt no vairākām minūtēm līdz stundām, tāpēc to nevajadzētu palaist no Kadupul UI.  Jūs varat vienkārši palaist \"php -q cli/rebuild_poller_cache.php -help\" komandrindā, lai iegūtu vairāk informācijas."
+msgstr "PIEZĪME: Lielās sistēmās šīs komandas izpilde var ilgt no vairākām minūtēm līdz stundām, tāpēc to nevajadzētu palaist no Kadupul UI.  Komandrindā varat vienkārši palaist 'php -q cli/rebuild_poller_cache.php --help', lai iegūtu vairāk informācijas."
 
 #: utilities.php
 msgid "Name: "
@@ -18159,7 +18159,7 @@ msgstr "Kadupul žurnālā tiek saglabāti statistikas, kļūdu un citi ziņojum
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "Ja atlasīsit šo opciju, Poller kešatmiņa tiks ģenerēta atkārtoti. Izmantojiet šo opciju tikai datu bāzes avārijas gadījumā, ja pēc avārijas rodas problēmas un jau esat palaidis datu bāzes labošanas rīkus. Alternatīvi, ja jums ir problēmas ar konkrētu ierīci, vienkārši saglabājiet šo ierīci atkārtoti, lai atjaunotu tās Poller Cache. Šai komandai ir arī komandrindas interfeiss, kas ir ieteicams lielām sistēmām. <i class=\"deviceDown\">PIEZĪME. Lielās sistēmās šīs komandas izpilde var ilgt no vairākām minūtēm līdz stundām, tāpēc to nevajadzētu palaist no Kadupul lietotāja saskarnes. Lai iegūtu papildinformāciju, komandrindā varat vienkārši palaist 'php -q cli/rebuild_poller_cache.php --help'.</i>"
+msgstr "Ja atlasīsit šo opciju, Poller kešatmiņa tiks ģenerēta atkārtoti. Izmantojiet šo opciju tikai datu bāzes avārijas gadījumā, ja pēc avārijas rodas problēmas un jau esat palaidis datu bāzes labošanas rīkus. Alternatīvi, ja jums ir problēmas ar konkrētu ierīci, vienkārši saglabājiet šo ierīci atkārtoti, lai atjaunotu tās Poller Cache. Šai komandai ir arī komandrindas interfeiss, kas ir ieteicams lielām sistēmām."
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
@@ -18376,3 +18376,5 @@ msgstr "VDEF [jauns]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Izmantotos VDEF nevar izdzēst. Izmantošana tiek definēta kā atsauce uz diagrammu vai diagrammas veidni."
+
+

@@ -45,7 +45,7 @@ msgstr "Ten program jest rozpowszechniany w nadziei, że będzie przydatny, ale 
 
 #: aggregate_graphs.php
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "Stosowana lista wykresów niestandardowych - filtr z listy ]"
+msgstr " Stosowana lista wykresów niestandardowych - filtr z listy ]"
 
 #: aggregate_graphs.php graphs.php
 msgid "Add Graphs to Report"
@@ -166,7 +166,7 @@ msgstr "Kliknij 'Kontynuuj', aby dodać wybrane wykresy do poniższego raportu."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to associate the following Graph(s) with the Aggregate Graph."
-msgstr "Kliknij \"Kontynuuj\", aby powiązać poniższy wykres(y) z wykresem zbiorczym"
+msgstr "Kliknij \"Kontynuuj\", aby powiązać poniższy wykres(y) z wykresem zbiorczym."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to combine the following Aggregate Graph(s) into a single Aggregate Graph."
@@ -182,7 +182,7 @@ msgstr "Kliknij \"Kontynuuj\", aby usunąć następujący(e) zagregowany wykres(
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to disassociate the following Graph(s) from the Aggregate."
-msgstr "Kliknij 'Kontynuuj', aby oddzielić poniższy wykres(y) od wykres(ów) zagregowanego"
+msgstr "Kliknij 'Kontynuuj', aby oddzielić poniższy wykres(y) od wykresu zagregowanego."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
@@ -622,7 +622,7 @@ msgstr "Legitymacja hasłem poprawna"
 
 #: auth_changepassword.php
 msgid "Password requirements include:"
-msgstr "Wymagania dotyczące hasła obejmują"
+msgstr "Wymagania dotyczące hasła obejmują:"
 
 #: auth_changepassword.php user_admin.php
 msgid "Passwords Match"
@@ -1088,7 +1088,7 @@ msgstr "%d minut"
 #: include/global_settings.php pollers.php
 #, php-format
 msgid "%d Seconds"
-msgstr "%d sek."
+msgstr "%d sekund"
 
 #: automation_networks.php
 #, php-format
@@ -1533,7 +1533,7 @@ msgstr "Debug źródła danych otrzymał nieprawidłowy identyfikator źródła 
 
 #: data_debug.php
 msgid "Data Source debug started."
-msgstr "Źródło danych Debug"
+msgstr "Rozpoczęto debugowanie źródła danych."
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
@@ -1728,7 +1728,7 @@ msgstr "Drugi znacznik czasu kontroli"
 
 #: data_debug.php
 msgid "Started"
-msgstr "Rozpoczęte "
+msgstr "Rozpoczęte"
 
 #: data_debug.php
 msgid "Summary of issues found for the Data Source."
@@ -1984,7 +1984,7 @@ msgstr "Powiązane szablony wykresów"
 #: data_queries.php
 #, php-format
 msgid "Associated Graph/Data Templates [edit: %s]"
-msgstr "Powiązane szablony wykresów/danych [edytuj: %s]."
+msgstr "Powiązane szablony wykresów/danych [edytuj: %s]"
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
@@ -2117,7 +2117,7 @@ msgstr "Nazwa"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
-msgstr "Format imienia i nazwiska"
+msgstr "Format nazwy:"
 
 #: data_queries.php
 msgid "No Data Queries Found"
@@ -2221,8 +2221,8 @@ msgstr "Zmień urządzenie"
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "Wybierz nowe urządzenie dla tego źródła danych i kliknij 'Kontynuuj'."
-msgstr[1] "Wybierz nowe urządzenie dla tych źródeł danych i kliknij 'Kontynuuj'."
-msgstr[2] "Wybierz nowe urządzenie dla tych źródeł danych i kliknij 'Kontynuuj'."
+msgstr[1] "Wybierz nowe urządzenie dla tych źródeł danych i kliknij 'Kontynuuj'"
+msgstr[2] "Wybierz nowe urządzenie dla tych źródeł danych i kliknij 'Kontynuuj'"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -2348,7 +2348,7 @@ msgstr[2] "Wyłącz źródła danych"
 
 #: data_sources.php
 msgid "Disable Data Source."
-msgstr "Wyłączyć źródło danych"
+msgstr "Wyłącz źródło danych."
 
 #: data_sources.php
 msgid "Edit Data Template."
@@ -2356,7 +2356,7 @@ msgstr "Edycja szablonu danych."
 
 #: data_sources.php graphs.php
 msgid "Edit Device."
-msgstr "Edytuj urządzenie"
+msgstr "Edytuj urządzenie."
 
 #: data_sources.php
 #, php-format
@@ -2372,7 +2372,7 @@ msgstr[2] "Włącz źródła danych"
 
 #: data_sources.php
 msgid "Enable Data Source."
-msgstr "Włącz źródło danych"
+msgstr "Włącz źródło danych."
 
 #: data_sources.php data_templates.php include/global_form.php
 msgid "External"
@@ -2395,7 +2395,7 @@ msgstr "Nowy"
 
 #: data_sources.php
 msgid "New Device:"
-msgstr "Nowy produkt"
+msgstr "Nowe urządzenie:"
 
 #: data_sources.php
 msgid "No Aggregates"
@@ -2653,7 +2653,7 @@ msgstr "Ta wartość jest wyłączona, ponieważ albo jest wartością pochodną
 
 #: data_templates.php graph_templates.php host_templates.php
 msgid "Title Format:"
-msgstr "Format tytułu"
+msgstr "Format tytułu:"
 
 #: data_templates.php
 msgid "Value will be derived from the Device if this field is left empty."
@@ -2677,7 +2677,7 @@ msgstr "Kliknij, aby wyświetlić tylko ten wykres w czasie rzeczywistym"
 
 #: graph.php lib/html.php
 msgid "Edit Graph Template"
-msgstr "Edycja szablonu wykresu."
+msgstr "Edycja szablonu wykresu"
 
 #: graph.php
 msgid "GRAPH DOES NOT EXIST"
@@ -2725,7 +2725,7 @@ msgstr "Kadupul Poller jeszcze nie działa."
 
 #: graph_realtime.php
 msgid " seconds left."
-msgstr "pozostały sekundy."
+msgstr " pozostały sekundy."
 
 #: graph_realtime.php
 #, php-format
@@ -2913,7 +2913,7 @@ msgstr "Pozycja szablonu danych"
 #: graph_templates_items.php
 #, php-format
 msgid "Graph Template Items [edit graph: %s]"
-msgstr "Elementy szablonu wykresu [edytuj wykres: %s]."
+msgstr "Elementy szablonu wykresu [edytuj wykres: %s]"
 
 #: graph_templates_items.php graphs_items.php
 msgid "Max:"
@@ -3027,7 +3027,7 @@ msgstr "Stosowana lista wykresów niestandardowych - filtr z listy ]"
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filtering from List ]"
-msgstr "Stosowana lista wykresów niestandardowych - filtrowanie z listy ]."
+msgstr "[ Zastosowano niestandardową listę wykresów - filtrowanie z listy ]"
 
 #: graph_xport.php utilities.php
 msgid "Date"
@@ -3079,11 +3079,11 @@ msgstr "Łączna liczba wierszy"
 
 #: graphs.php
 msgid "<graph_title> (1)"
-msgstr "<graf_title> (1)"
+msgstr "<graph_title> (1)"
 
 #: graphs.php
 msgid "<graph_title> Template"
-msgstr "<graf_title> Szablon"
+msgstr "Szablon <graph_title>"
 
 #: graphs.php
 msgid "A Graph Item Input contains an invalid value."
@@ -3186,7 +3186,7 @@ msgstr "ERROR: Brak źródła danych. Szablon kontrolny"
 #: graphs.php
 #, php-format
 msgid "Edit Data Source: '%s'."
-msgstr "Źródła danych [%s]"
+msgstr "Edytuj źródło danych: '%s'."
 
 #: graphs.php
 msgid "Edit Graph Template."
@@ -3297,7 +3297,7 @@ msgstr "Poniższe źródła danych są wykorzystywane przez te wykresy."
 
 #: graphs.php
 msgid "The following Data Sources are in use by these Graphs:"
-msgstr "Poniższe źródła danych są wykorzystywane przez te wykresy."
+msgstr "Poniższe źródła danych są wykorzystywane przez te wykresy:"
 
 #: graphs.php
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
@@ -3399,7 +3399,7 @@ msgstr "Błąd w zapytaniu o dane. Może to być spowodowane następującymi prz
 
 #: graphs_new.php lib/html.php
 msgid "Filter Settings Saved"
-msgstr " [ Ustawienia filtra zapisane ]"
+msgstr "[ Ustawienia filtra zapisane ]"
 
 #: graphs_new.php
 msgid "From there you can get more information."
@@ -3736,7 +3736,7 @@ msgstr "%d Megabajty"
 #: include/global_arrays.php
 #, php-format
 msgid "%d Min"
-msgstr "%d Min."
+msgstr "%d min"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -3790,7 +3790,7 @@ msgstr "%s Minuty"
 
 #: include/global_arrays.php
 msgid "(Action)"
-msgstr "Akcja:"
+msgstr "(Akcja)"
 
 #: include/global_arrays.php
 msgid "(Edit)"
@@ -4371,7 +4371,7 @@ msgstr "Holenderski"
 
 #: include/global_arrays.php
 msgid "East"
-msgstr "Wschód "
+msgstr "Wschód"
 
 #: include/global_arrays.php
 msgid "Enabled (strict mode)"
@@ -4912,7 +4912,7 @@ msgstr "Maj"
 
 #: include/global_arrays.php
 msgid "Minute(s)"
-msgstr "Min."
+msgstr "Minut(y)"
 
 #: include/global_arrays.php
 msgid "Modern"
@@ -5273,7 +5273,7 @@ msgstr "Zapisz niepowodzenie z powodu błędów w polu (Sprawdź czerwone pola).
 
 #: include/global_arrays.php
 msgid "Save Failed."
-msgstr "Zapis raportu nie powiódł się"
+msgstr "Zapis nie powiódł się."
 
 #: include/global_arrays.php
 msgid "Save Failed.  Minimum Values must be less than Maximum Value."
@@ -6701,11 +6701,11 @@ msgstr "Kanał nieprzezroczystości/Alfa"
 
 #: include/global_form.php lib/api_automation.php
 msgid "Operation"
-msgstr "Operacja "
+msgstr "Operacja"
 
 #: include/global_form.php
 msgid "Operator."
-msgstr "Operator"
+msgstr "Operator."
 
 #: include/global_form.php
 msgid "Output Field"
@@ -6825,7 +6825,7 @@ msgstr "Wzór zastępczy"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Oś prawa (--right-axis &lt;scale:shift&gt;)"
+msgstr "Prawa oś (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
@@ -6833,11 +6833,11 @@ msgstr "Format prawej osi (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Formator osi prawej (--right-axis-formatter &lt;formatname&gt;)"
+msgstr "Formater prawej osi (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
-msgstr "Etykieta osi prawej (--right-axis-label &lt;string&gt;)"
+msgstr "Etykieta prawej osi (--right-axis-label &lt;string&gt;)"
 
 #: include/global_form.php
 msgid "Rigid Boundaries Mode (--rigid)"
@@ -6929,7 +6929,7 @@ msgstr "Sekwencja"
 
 #: include/global_form.php
 msgid "Sequence."
-msgstr "Sekwencja"
+msgstr "Sekwencja."
 
 #: include/global_form.php
 msgid "Set any graph specific options here."
@@ -7045,7 +7045,7 @@ msgstr "Szerokość używana podczas importowania lub aktualizowania szablonów 
 
 #: include/global_form.php
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
-msgstr "Algorytm zapewnia, że zawsze masz siatkę, że jest jej wystarczająco dużo, ale nie za dużo, oraz że siatka jest metryczna. Ten parametr zapewni również, że otrzymasz wystarczająco dużo miejsc po przecinku wyświetlane nawet jeśli wykres idzie od 69.998 do 70.001.<br><strong>Note: </strong>Parametr ten może kolidować z opcjami --alt-autoskala."
+msgstr "Algorytm zapewnia, że siatka jest zawsze obecna, że linii siatki jest wystarczająco dużo, ale nie za dużo, oraz że siatka jest metryczna. Ten parametr zapewni również wyświetlenie wystarczającej liczby miejsc po przecinku, nawet jeśli wykres obejmuje zakres od 69.998 do 70.001.<br><strong>Uwaga: </strong>Ten parametr może kolidować z opcjami --alt-autoscale."
 
 #: include/global_form.php
 msgid "The amount of time in seconds between expected updates."
@@ -7077,7 +7077,7 @@ msgstr "Dane, które są wysyłane do skryptu, który zawiera pełną ścieżkę
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Częstotliwość, z jaką dane będą zbierane ze źródła danych?"
+msgstr "Częstotliwość, z jaką dane będą zbierane ze źródła danych."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7225,7 +7225,7 @@ msgstr "Jednostkowa wartość siatki (--unit/--y-grid)"
 
 #: include/global_form.php
 msgid "Unit Length (--units-length &lt;length&gt;)"
-msgstr "Jednostka Długość (--units-length &lt;długości&gt;)"
+msgstr "Długość jednostki (--units-length &lt;length&gt;)"
 
 #: include/global_form.php
 msgid "Update RRDfile"
@@ -7241,19 +7241,19 @@ msgstr "Użyj --alt-autoscale (akceptuje oba limity, wartość domyślna RRDtool
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (ignoring given limits)"
-msgstr "Zastosowanie --alt-autoskala (ignorowanie podanych wartości granicznych)"
+msgstr "Użyj --alt-autoscale (ignorując podane granice)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale-max (accepting a lower limit)"
-msgstr "Użyj --alt-autoskale-max (akceptując dolny limit)"
+msgstr "Użyj --alt-autoscale-max (akceptując dolny limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale-min (accepting an upper limit)"
-msgstr "Użyj --alt-autoskale-min (akceptując górną granicę)"
+msgstr "Użyj --alt-autoscale-min (akceptując górną granicę)"
 
 #: include/global_form.php
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "Użyj <br> --alt-autoskala do skali do absolutnego minimum i maksimum <br> --alt-autoskala-maksymalnie do skali do wartości maksymalnej, używając danej dolnej granicy <br> --alt-autoskala-min do skali do wartości minimalnej, używając danej górnej granicy <br> --alt-automatoskala (z ograniczeniami) do skali, używając zarówno dolnej, jak i górnej granicy (RRDtool domyślnie) <br>"
+msgstr "Użyj <br> --alt-autoscale, aby skalować do bezwzględnego minimum i maksimum <br> --alt-autoscale-max, aby skalować do wartości maksymalnej, używając podanej dolnej granicy <br> --alt-autoscale-min, aby skalować do wartości minimalnej, używając podanej górnej granicy <br> --alt-autoscale (z ograniczeniami), aby skalować z użyciem zarówno dolnej, jak i górnej granicy (domyślnie w RRDtool) <br>"
 
 #: include/global_form.php
 msgid "Use Logarithmic y-axis scaling"
@@ -7293,7 +7293,7 @@ msgstr "Etykieta pionowa (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Z czym wiąże się to urządzenie."
+msgstr "Z jaką lokalizacją powiązane jest to urządzenie?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7353,11 +7353,11 @@ msgstr "HRULE|VRULE]: Wartość pozycji wykresu <br/> [TICK]: Frakcja dla kleszc
 
 #: include/global_languages.php
 msgid " G"
-msgstr "G"
+msgstr " G"
 
 #: include/global_languages.php
 msgid " K"
-msgstr "tys "
+msgstr " tys"
 
 #: include/global_languages.php
 msgid " M"
@@ -7365,7 +7365,7 @@ msgstr " mln"
 
 #: include/global_languages.php
 msgid " T"
-msgstr "W"
+msgstr " W"
 
 #: include/global_settings.php
 #, php-format
@@ -7565,7 +7565,7 @@ msgstr "Konto zostanie automatycznie odblokowane po tych wielu minutach.  Nawet 
 
 #: include/global_settings.php
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
-msgstr "Wszelkie ciągi pasujące do tego regexu zostaną wyłączone z wyświetlacza użytkownika.  <strong>Na przykład, jeśli chcesz wykluczyć wszystkie linie logowania, które zawierają słowa 'Admin' lub 'Login' wpiszesz '(Admin ||| Login)'</strong>."
+msgstr "Wszelkie ciągi pasujące do tego wyrażenia regularnego zostaną wykluczone z widoku użytkownika.  <strong>Na przykład, jeśli chcesz wykluczyć wszystkie linie dziennika zawierające słowa 'Admin' lub 'Login', wpiszesz '(Admin || Login)'</strong>"
 
 #: include/global_settings.php
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
@@ -8213,7 +8213,7 @@ msgstr "Pole, które zastąpi e-mail pobrany z LDAP. (w oknach: poczta)"
 
 #: include/global_settings.php user_domains.php
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
-msgstr "Pole, które zastąpi Pełną nazwę podczas tworzenia nowego użytkownika, pobraną z LDAP. (na oknach: displayname)"
+msgstr "Pole, które zastąpi Pełną nazwę podczas tworzenia nowego użytkownika, pobraną z LDAP. (na oknach: displayname) "
 
 #: include/global_settings.php
 msgid "Filter Settings"
@@ -8401,7 +8401,7 @@ msgstr "Ile plików dziennika chcesz zachować?  Użyj 0, aby nigdy nie usuwać 
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Jak często chcesz, aby wyświetlacz dziennika Kadupul był aktualizowany."
+msgstr "Jak często widok dziennika Kadupul ma być aktualizowany?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8409,7 +8409,7 @@ msgstr "Jak Kadupul powinien obsługiwać Terminy Klienta w oparciu o strefę cz
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Jak Kadupul poradzi sobie z rejestrowaniem zdarzeń."
+msgstr "Jak Kadupul będzie obsługiwać rejestrowanie zdarzeń?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8453,7 +8453,7 @@ msgstr "Jeśli tabela wyjściowa Boost przekroczy ten rozmiar, w rekordach nast�
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Jeśli ankieter Boost wykona ten czas działania, w dzienniku Kadupul zostanie umieszczone ostrzeżenie,"
+msgstr "Jeśli proces odpytujący Boost przekroczy ten czas działania, w dzienniku cacti zostanie umieszczone ostrzeżenie."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8897,7 +8897,7 @@ msgstr "Główny adres IP DNS"
 
 #: include/global_settings.php
 msgid "Privacy Passphrase (v3)"
-msgstr "Paszport prywatności (v3)."
+msgstr "Hasło prywatności (v3)"
 
 #: include/global_settings.php
 msgid "Privacy Protocol (v3)"
@@ -9049,7 +9049,7 @@ msgstr "Wymóg Wymieszać Przypadek"
 
 #: include/global_settings.php
 msgid "Require Number"
-msgstr "Wymagany numer."
+msgstr "Wymagana liczba"
 
 #: include/global_settings.php
 msgid "Require Special Character"
@@ -9161,7 +9161,7 @@ msgstr "Wyszukaj bazę do przeszukiwania katalogów LDAP, takich jak <i>'dc=win2
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Wyszukaj filtr, za pomocą którego można zlokalizować użytkownika w katalogu LDAP, np. dla okien: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> lub dla OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt)))'</i>.  '&lt;username&gt' zostaje zastąpiona nazwą użytkownika, która została podana w oknie logowania."
+msgstr "Wyszukaj filtr, za pomocą którego można zlokalizować użytkownika w katalogu LDAP, np. dla okien: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> lub dla OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt)))'</i>.  '&lt;username&gt' zostaje zastąpiona nazwą użytkownika, która została podana w oknie logowania. "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9233,7 +9233,7 @@ msgstr "Czy należy włączyć buforowanie obrazów?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Czy opcje „Posiada wykresy” i „Posiada źródła danych” powinny być domyślnie zaznaczone."
+msgstr "Czy opcje „Posiada wykresy” i „Posiada źródła danych” powinny być domyślnie zaznaczone?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -9645,7 +9645,7 @@ msgstr "Maksymalny rozmiar wiadomości e-mail wraz ze wszystkimi załącznikami.
 
 #: include/global_settings.php
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
-msgstr "Maksymalny czas, przez jaki Kadupul będzie czekał na zakończenie skryptu.  Ta wartość Timeout jest wyrażona w sekundach"
+msgstr "Maksymalny czas oczekiwania procesu spine na zakończenie skryptu.  Ta wartość limitu czasu jest wyrażona w sekundach i jest prawidłowa tylko dla modułu zbierania danych spine."
 
 #: include/global_settings.php
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
@@ -9725,7 +9725,7 @@ msgstr "Liczba prób pingowania urządzenia przez Kadupul przed oznaczeniem go j
 
 #: include/global_settings.php
 msgid "The password to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
-msgstr "Hasło do uwierzytelnienia przy wysyłce przez SMTP. (Pozostaw puste pole, jeśli nie wymagasz uwierzytelnienia)."
+msgstr "Hasło do uwierzytelnienia przy wysyłce przez SMTP. (Pozostaw puste pole, jeśli nie wymagasz uwierzytelnienia.)"
 
 #: include/global_settings.php
 msgid "The path to Spine binary."
@@ -9809,7 +9809,7 @@ msgstr "Ten przedział czasowy, który chcesz zobaczyć na domyślnym wykresie."
 
 #: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
-msgstr "Nazwa użytkownika do uwierzytelnienia przy wysyłce przez SMTP. (Pozostaw puste pole, jeśli nie wymagasz uwierzytelnienia)."
+msgstr "Nazwa użytkownika do uwierzytelnienia przy wysyłce przez SMTP. (Pozostaw puste pole, jeśli nie wymagasz uwierzytelnienia.)"
 
 #: include/global_settings.php
 msgid "The version of RRDtool that you have installed."
@@ -10066,7 +10066,7 @@ msgstr "Jaki poziom szczegółowości chcesz wysłać do pliku dziennika. OSTRZE
 
 #: include/global_settings.php
 msgid "What time of day should Weekly, Monthly, and Yearly Data be updated?  Format is HH:MM [am/pm]"
-msgstr "O jakiej porze dnia należy aktualizować dane tygodniowe, miesięczne i roczne?  Format to HH:MM [am/pm]."
+msgstr "O jakiej porze dnia należy aktualizować dane tygodniowe, miesięczne i roczne?  Format to HH:MM [am/pm]"
 
 #: include/global_settings.php
 msgid "When SpikeKill kills spikes in graphs, it makes a backup of the RRDfile.  How long should these backup files be retained?"
@@ -10090,7 +10090,7 @@ msgstr "Po zaznaczeniu tej opcji, wszelkie próby dostępu do Kadupul zostaną p
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Podczas tworzenia nowego raportu, jaki typ obrazu powinien być użyty dla wykresów liniowych."
+msgstr "Jaki typ obrazu powinien być użyty dla wykresów osadzonych podczas tworzenia nowego raportu?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10366,7 +10366,7 @@ msgstr "Oddział wynikowy"
 #: lib/api_automation.php
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
-msgstr "Reguła Pozycja [edytuj regułę dla %s: %s]."
+msgstr "Element reguły [edytuj element reguły dla %s: %s]"
 
 #: lib/api_automation.php
 #, php-format
@@ -10537,7 +10537,7 @@ msgstr "Zgoda"
 
 #: lib/auth.php
 msgid "Granted By: "
-msgstr "Przyznane przez:"
+msgstr "Przyznane przez: "
 
 #: lib/auth.php
 #, php-format
@@ -10559,7 +10559,7 @@ msgstr "Ograniczony"
 
 #: lib/auth.php
 msgid "Restricted By: "
-msgstr "Ograniczony"
+msgstr "Ograniczone przez: "
 
 #: lib/auth.php
 #, php-format
@@ -10661,12 +10661,12 @@ msgstr "Filtry do kłód"
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "Log [Linie całkowite: %d %s - filtr aktywny]."
+msgstr "Log [Linie całkowite: %d %s - filtr aktywny]"
 
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "Kłoda [Linie ogółem: %d %s - niefiltrowane]."
+msgstr "Dziennik [Linie ogółem: %d %s - niefiltrowane]"
 
 #: lib/clog_webapi.php
 msgid "Matches"
@@ -10765,12 +10765,12 @@ msgstr "Sprawdzanie, czy w polu sortowania nie nastąpiła zmiana.  Nie wykryto 
 
 #: lib/data_query.php
 msgid "Click to show Data Query output for 'index'"
-msgstr "Kliknij, aby wyświetlić dane wyjściowe zapytań dla 'indeksu'."
+msgstr "Kliknij, aby wyświetlić dane wyjściowe zapytań dla 'indeksu'"
 
 #: lib/data_query.php
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
-msgstr "Kliknąć, aby wyświetlić dane wyjściowe dla pola '%s'."
+msgstr "Kliknij, aby wyświetlić dane wyjściowe dla pola '%s'"
 
 #: lib/data_query.php
 #, php-format
@@ -10897,7 +10897,7 @@ msgstr "Znaleziono OCTET STRING \"%s\" wartość dekodowana: \"%s"
 #: lib/data_query.php
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
-msgstr "Znaleziono zasadę przepisywania OID: 's/%s/%s/s/'."
+msgstr "Znaleziono regułę przepisywania OID: 's/%s/%s/'"
 
 #: lib/data_query.php
 #, php-format
@@ -10942,7 +10942,7 @@ msgstr "Założona liczba indeksów: %s"
 #: lib/data_query.php
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
-msgstr "Znaleziono wynik dla danych @ \"%s\" [wartość=\"%s\"]."
+msgstr "Znaleziono wynik dla danych @ \"%s\" [wartość=\"%s\"]"
 
 #: lib/data_query.php
 #, php-format
@@ -10966,12 +10966,12 @@ msgstr "Wykryto usunięcie indeksu! Poprzednindex: %s"
 #: lib/data_query.php
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
-msgstr "Indeks znaleziony na OID: wartość \"%s\": \"%s"
+msgstr "Indeks znaleziony pod OID: '%s' wartość: '%s'"
 
 #: lib/data_query.php
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
-msgstr "Wprowadzanie danych indeksu dla pola \"%s\" [wartość=\"%s\"]."
+msgstr "Wprowadzanie danych indeksu dla pola \"%s\" [wartość=\"%s\"]"
 
 #: lib/data_query.php
 #, php-format
@@ -10991,12 +10991,12 @@ msgstr "Lista indeksów filtrowana według wartości @ '%s' Liczba indeksów: %s
 #: lib/data_query.php
 #, php-format
 msgid "Located input field '%s' [get]"
-msgstr "Położone pole wejściowe \"%s\" [get]."
+msgstr "Zlokalizowano pole wejściowe \"%s\" [get]"
 
 #: lib/data_query.php
 #, php-format
 msgid "Located input field '%s' [walk]"
-msgstr "Położone pole wejściowe \"%s\" [spacer]."
+msgstr "Zlokalizowano pole wejściowe \"%s\" [walk]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
@@ -11048,7 +11048,7 @@ msgstr "Ustawianie wyniku dla danych @ '%s' [key='%s', value='%s']"
 #: lib/data_query.php
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
-msgstr "Pominięty wynik dla danych @ '%s' [key='%s', value='%s']."
+msgstr "Pominięty wynik dla danych @ '%s' [key='%s', value='%s']"
 
 #: lib/data_query.php
 #, php-format
@@ -11073,7 +11073,7 @@ msgstr "Ogółem: %f, Delta: %f, %s"
 #: lib/data_query.php
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
-msgstr "Wykryto usunięcie indeksu! Poprzednindex: %s"
+msgstr "Wykryto przejściowe usunięcie indeksu! Poprzedni indeks: %s.  Nie podjęto żadnych działań."
 
 #: lib/data_query.php
 msgid "Unknown Index"
@@ -11152,7 +11152,7 @@ msgstr "Źródło danych nie jest ustawione jako aktywne"
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "Źródło danych Zwrócono złe wyniki za"
+msgstr "Źródło danych Zwrócono złe wyniki za "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -11164,7 +11164,7 @@ msgstr "Debug nie zakończony po 5 głosowaniach"
 
 #: lib/dsdebug.php
 msgid "Failed fields: "
-msgstr "Pola, które nie zostały wypełnione:"
+msgstr "Pola, które nie zostały wypełnione: "
 
 #: lib/dsdebug.php
 msgid "No issues found"
@@ -11317,7 +11317,7 @@ msgstr "Port"
 
 #: lib/functions.php
 msgid "SMTP error: "
-msgstr "Błąd SMTP:"
+msgstr "Błąd SMTP: "
 
 #: lib/functions.php
 msgid "Security"
@@ -11384,7 +11384,7 @@ msgstr "Usuwanie nie powiodło się. Czyszczenie trwałych transakcji zostało p
 
 #: lib/graph_item_choices.php
 msgid "No Device - "
-msgstr "Brak urządzenia"
+msgstr "Brak urządzenia "
 
 #: lib/graph_item_editor.php
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
@@ -12492,7 +12492,7 @@ msgstr "Korzystanie z CSS"
 
 #: lib/html_reports.php lib/import.php user_admin.php
 msgid "[new]"
-msgstr "nowy] [nowy]."
+msgstr "[nowy]"
 
 #: lib/html_reports.php
 msgid "e.g. 'Week(s)' represents a weekly Reporting Interval."
@@ -12512,7 +12512,7 @@ msgstr "Zastosowany"
 
 #: lib/html_tree.php
 msgid "Device Template:"
-msgstr "Szablon urządzenia"
+msgstr "Szablon urządzenia:"
 
 #: lib/html_tree.php
 msgid "Filter"
@@ -12528,7 +12528,7 @@ msgstr "Szablon wykresu:"
 
 #: lib/html_tree.php
 msgid "Leaf:"
-msgstr "Liść"
+msgstr "Liść:"
 
 #: lib/html_tree.php
 msgid "Set/Refresh Filter"
@@ -12618,11 +12618,11 @@ msgstr "Wyniki przywozu"
 
 #: lib/import.php
 msgid "Kadupul has imported the following items for the Package:"
-msgstr "Kadupul zaimportowało do Pakietu następujące pozycje"
+msgstr "Kadupul zaimportował następujące pozycje dla pakietu:"
 
 #: lib/import.php
 msgid "Kadupul has imported the following items for the Template:"
-msgstr "Kadupul zaimportowało do Szablonu następujące elementy"
+msgstr "Kadupul zaimportował następujące elementy dla szablonu:"
 
 #: lib/import.php
 msgid "Kadupul would make the following changes if the Package was imported:"
@@ -12676,7 +12676,7 @@ msgstr "Podgląd"
 
 #: lib/import.php
 msgid "[preview] "
-msgstr "Podgląd"
+msgstr "Podgląd "
 
 #: lib/import.php
 msgid "[success]"
@@ -12722,7 +12722,7 @@ msgstr "Liczba źródeł danych ze ścieżką pliku RRD poza katalogiem RRA: %d.
 #: lib/installer.php
 #, php-format
 msgid "%s - N/A"
-msgstr "%s - nd."
+msgstr "%s - nie dotyczy"
 
 #: lib/installer.php
 #, php-format
@@ -12785,7 +12785,7 @@ msgstr "Przykład ustawiania uprawnień do folderów jest pokazany tutaj, choć 
 
 #: lib/installer.php
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "Wszystkie tabele utworzone przez wtyczki mogą mieć problemy z tabelami Kadupul Core, jeśli kolacja nie jest dopasowana.   Upewnij się, że twoja baza danych została zmieniona na 'utf8mb4_unicode_ci', wykonując następujące czynności:"
+msgstr "Wszystkie tabele utworzone przez wtyczki mogą mieć problemy z tabelami Kadupul Core, jeśli kolacja nie jest dopasowana.   Upewnij się, że twoja baza danych została zmieniona na 'utf8mb4_unicode_ci', wykonując następujące czynności: "
 
 #: lib/installer.php package_import.php plugins.php
 msgid "Author"
@@ -13106,7 +13106,7 @@ msgstr "Import pakietu #%s '%s' w profilu '%s' powiódł się"
 
 #: lib/installer.php
 msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
-msgstr "W przypadku problemów zaleca się wyczyścić pamięć podręczną przeglądarki, zamknąć, a następnie ponownie otworzyć przeglądarkę (nie tylko zakładka Kadupul jest włączona) i spróbować ponownie, przed zgłoszeniem problemu z Kadupul."
+msgstr "W przypadku problemów zdecydowanie zaleca się wyczyszczenie pamięci podręcznej przeglądarki, zamknięcie i ponowne otwarcie całej przeglądarki (a nie tylko karty z aplikacją Kadupul) oraz ponowienie próby przed zgłoszeniem problemu w Kadupul"
 
 #: lib/installer.php
 msgid "Input Validation Whitelist Protection"
@@ -13296,7 +13296,7 @@ msgstr "Jedna lub więcej ścieżek wydaje się być nieprawidłowa, niezdolna d
 
 #: lib/installer.php
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
-msgstr "Jedna lub więcej tabel są zbyt duże, aby można je było przekonwertować podczas instalacji.  Do konwersji należy użyć skryptu cli/convert_tables.php, a następnie odświeżyć tę stronę. Na przykład:"
+msgstr "Jedna lub więcej tabel są zbyt duże, aby można je było przekonwertować podczas instalacji.  Do konwersji należy użyć skryptu cli/convert_tables.php, a następnie odświeżyć tę stronę. Na przykład: "
 
 #: lib/installer.php
 msgid "Optional"
@@ -13481,7 +13481,7 @@ msgstr "Szczegóły znajdują się w pliku docs/rrd-path-containment.md."
 
 #: lib/installer.php
 msgid "Select default theme: "
-msgstr "Wybierz motyw domyślny:"
+msgstr "Wybierz motyw domyślny: "
 
 #: lib/installer.php
 #, php-format
@@ -13614,7 +13614,7 @@ msgstr "Użytkownik '%s' powinien posiadać zezwolenie MODIFY, aby umożliwić o
 
 #: lib/installer.php
 msgid "The variables that must be set in the config.php file include the following:"
-msgstr "Zmienne, które muszą być ustawione w pliku config.php zawierają następujące elementy"
+msgstr "Zmienne, które muszą zostać ustawione w pliku config.php, obejmują:"
 
 #: lib/installer.php
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
@@ -13647,7 +13647,7 @@ msgstr "Może to nastąpić, jeśli masz pustą bazę danych i nie zaimportował
 #: lib/installer.php
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
-msgstr "Proces ten poprowadzi Cię przez etapy aktualizacji z wersji '%s'."
+msgstr "Proces ten poprowadzi Cię przez etapy aktualizacji z wersji '%s'. "
 
 #: lib/installer.php
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
@@ -13829,7 +13829,7 @@ msgstr "Domyślna kolacja bazy danych wydaje się być zgodna z UTF8"
 
 #: lib/installer.php
 msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
-msgstr "Domyślna kolacja bazy danych NIE wydaje się być w pełni zgodna z UTF8."
+msgstr "Domyślna kolacja bazy danych NIE wydaje się być w pełni zgodna z UTF8. "
 
 #: lib/installer.php
 msgid "Your server collation appears to be UTF8 compliant"
@@ -13837,7 +13837,7 @@ msgstr "Zestawienie serwerów wydaje się być zgodne z UTF8"
 
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
-msgstr "Zestawienie serwerów NIE wydaje się być w pełni zgodne z UTF8."
+msgstr "Zestawienie serwerów NIE wydaje się być w pełni zgodne z UTF8. "
 
 #: lib/installer.php
 #, php-format
@@ -14006,7 +14006,7 @@ msgstr "%s: wersja %s lub nowsza jest wymagana dla %s. "
 #: lib/plugins.php
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
-msgstr "%s jest wymagany dla %s i nie jest zainstalowany."
+msgstr "%s jest wymagany dla %s i nie jest zainstalowany. "
 
 #: lib/plugins.php
 msgid "Legacy Plugin"
@@ -14075,7 +14075,7 @@ msgstr "Wybierz Raport, z którym chcesz powiązać te wykresy.  Domyślne ustaw
 #: lib/reports.php
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
-msgstr "Pozycja utworzonego raportu \"<i>%s</i>\"."
+msgstr "Utworzono element wykresu raportu '<i>%s</i>'"
 
 #: lib/reports.php
 #, php-format
@@ -14350,7 +14350,7 @@ msgstr "Polecenie SNMP to: %s"
 
 #: lib/spikekill.php
 msgid "Avg"
-msgstr "Śr."
+msgstr "Średnia"
 
 #: lib/spikekill.php
 msgid "CF"
@@ -14682,7 +14682,7 @@ msgstr "Prawidłowa strefa czasowa, która pasuje do MySQL i systemu"
 #: lib/utility.php
 #, php-format
 msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
-msgstr "W %s %s, można kontrolować, jak często %s przepłukuje transakcje na dysk.  Domyślnie jest to 1 sekunda, ale w systemach o wysokim poziomie We/Wy ustawienie wartości większej niż 1 może pozwolić na to, aby we/wy dysku były bardziej sekwencyjne."
+msgstr "Począwszy od %s %s, można kontrolować, jak często %s zapisuje transakcje na dysk. Domyślnie jest to 1 sekunda, ale w systemach o dużym obciążeniu We/Wy ustawienie wartości większej niż 1 może sprawić, że operacje We/Wy dysku będą bardziej sekwencyjne"
 
 #: lib/utility.php
 msgid "Comments"
@@ -15010,7 +15010,7 @@ msgstr "Wersja %s"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
-msgstr "Zostałeś wylogowany z Kadupul z powodu limitu czasu sesji."
+msgstr "Zostałeś wylogowany z Kadupul z powodu zmiany stanu zdalnego kolektora danych"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a session timeout."
@@ -15181,7 +15181,7 @@ msgstr "Błąd: Nieprawidłowa ścieżka pliku."
 
 #: package_import.php
 msgid "File Differences for: "
-msgstr "Różnice w plikach dla:"
+msgstr "Różnice w plikach dla: "
 
 #: package_import.php
 msgid "Filename"
@@ -15470,7 +15470,7 @@ msgstr "Odinstaluj wtyczkę"
 
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
-msgstr "Odinstalowanie wtyczki spowoduje usunięcie wszystkich danych i ustawień wtyczki.  Jeśli naprawdę chcesz odinstalować wtyczkę, kliknij 'Odinstaluj' poniżej.  W przeciwnym razie kliknij 'Anuluj'."
+msgstr "Odinstalowanie wtyczki spowoduje usunięcie wszystkich danych i ustawień wtyczki.  Jeśli naprawdę chcesz odinstalować wtyczkę, kliknij 'Odinstaluj' poniżej.  W przeciwnym razie kliknij 'Anuluj'"
 
 #: poller.php
 #, php-format
@@ -15538,7 +15538,7 @@ msgstr "OSTRZEŻENIE: Główna baza danych Kadupul %s jest w trybie offline lub 
 
 #: poller_boost.php
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
-msgstr "OSTRZEŻENIE: Wykryto przekroczenie doładowania doładowania, możliwy awaria odpytywania doładowania"
+msgstr "OSTRZEŻENIE: Wykryto przekroczenie procesu Poller Boost, możliwa awaria procesu Boost Poller"
 
 #: pollers.php
 msgid "Avg/Max"
@@ -16022,7 +16022,7 @@ msgstr "Wybrane wtyczki"
 
 #: settings.php
 msgid "Poller Interval must be less than Cron Interval"
-msgstr "Odstęp czasu między kolejnymi pollerami musi być mniejszy od odstępu koronowego."
+msgstr "Interwał Pollera musi być mniejszy niż interwał Cron"
 
 #: settings.php
 msgid "Select File(s)"
@@ -17210,7 +17210,7 @@ msgstr "Wprowadź znaczącą nazwę dla tej domeny. Będzie to nazwa, która poj
 
 #: user_domains.php
 msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
-msgstr "Pole, które zastąpi wiadomość e-mail pobraną z LDAP. (w oknach: poczta)"
+msgstr "Pole, które zastąpi wiadomość e-mail pobraną z LDAP. (w oknach: poczta) "
 
 #: user_domains.php
 msgid "If this checkbox is checked, users will be able to log in using this domain."
@@ -17384,7 +17384,7 @@ msgstr "Prefiks grupy:"
 
 #: user_group_admin.php
 msgid "Login Name"
-msgstr "Nazwa uzytkownika "
+msgstr "Nazwa uzytkownika"
 
 #: user_group_admin.php
 msgid "Members"
@@ -17497,7 +17497,7 @@ msgstr "%d minut"
 #: utilities.php
 #, php-format
 msgid "%d seconds"
-msgstr "%d sek."
+msgstr "%d sekund"
 
 #: utilities.php
 #, php-format
@@ -17608,7 +17608,7 @@ msgstr "Procesy równoległe"
 
 #: utilities.php
 msgid "Concurrent Processes:"
-msgstr "Procesy równoległe"
+msgstr "Procesy równoległe:"
 
 #: utilities.php
 msgid "Configuration Settings"
@@ -17636,7 +17636,7 @@ msgstr "Pozycje pamięci podręcznej zapytania o dane"
 
 #: utilities.php
 msgid "Data Source Statistics Purged."
-msgstr "Źródła danych Statystyka"
+msgstr "Wyczyszczono statystyki źródła danych."
 
 #: utilities.php
 msgid "Data Source Statistics Utilities"
@@ -17794,12 +17794,12 @@ msgstr "Wpisy do rejestru"
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "Dziennik [Linie ogółem: %d - wszystkie wyświetlone pozycje]."
+msgstr "Dziennik [Linie ogółem: %d - wszystkie wyświetlone pozycje]"
 
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "Dziennik [Linie ogółem: %d - Pozycje niedopasowane ukryte]."
+msgstr "Dziennik [Linie ogółem: %d - Pozycje niedopasowane ukryte]"
 
 #: utilities.php
 msgid "MBytes"
@@ -17848,7 +17848,7 @@ msgstr "Maksymalny dozwolony czas rundy:"
 
 #: utilities.php
 msgid "Maximum Records:"
-msgstr "Maksymalna liczba rekordów"
+msgstr "Maksymalna liczba rekordów:"
 
 #: utilities.php
 msgid "Minimum Connections:"
@@ -17920,7 +17920,7 @@ msgstr "Informacje o module PHP"
 
 #: utilities.php
 msgid "PHP OS"
-msgstr "PHP_OS:"
+msgstr "PHP OS"
 
 #: utilities.php
 msgid "PHP SNMP"
@@ -18071,7 +18071,7 @@ msgstr "Konfiguracja czasu pracy"
 
 #: utilities.php
 msgid "Running Processes:"
-msgstr "Procesy równoległe"
+msgstr "Uruchomione procesy:"
 
 #: utilities.php
 msgid "SNMP Agent Cache"
@@ -18099,7 +18099,7 @@ msgstr "Skrypt"
 
 #: utilities.php
 msgid "Script Server:"
-msgstr "Serwer skryptów"
+msgstr "Serwer skryptów:"
 
 #: utilities.php
 msgid "Script Timeout"
@@ -18159,7 +18159,7 @@ msgstr "Kadupul Log przechowuje statystyki, błędy i inne komunikaty w zależno
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "Po wybraniu tej opcji Poller Cache zostanie wygenerowany ponownie. Użyj tej opcji tylko w przypadku awarii bazy danych, jeśli występują problemy po awarii i zostały już uruchomione narzędzia do naprawy bazy danych.  Alternatywnie, jeśli masz problemy z określonym urządzeniem, po prostu ponownie zapisz to urządzenie, aby odbudować pamięć podręczną Poller Cache.  Istnieje również interfejs wiersza poleceń odpowiadający tej komendzie, który jest zalecany dla dużych systemów.  <i class=\"deviceDown\">NOTE: W dużych systemach komenda ta może trwać kilka minut do godzin i dlatego nie powinna być uruchamiana z Kadupul UI.  Możesz po prostu uruchomić 'php -q cli/rebuild_poller_cache.php --help' w wierszu poleceń, aby uzyskać więcej informacji.</i>"
+msgstr "Po wybraniu tej opcji Poller Cache zostanie wygenerowany ponownie. Użyj tej opcji tylko w przypadku awarii bazy danych, jeśli występują problemy po awarii i zostały już uruchomione narzędzia do naprawy bazy danych.  Alternatywnie, jeśli masz problemy z określonym urządzeniem, po prostu ponownie zapisz to urządzenie, aby odbudować pamięć podręczną Poller Cache.  Istnieje również interfejs wiersza poleceń odpowiadający tej komendzie, który jest zalecany dla dużych systemów."
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
@@ -18195,7 +18195,7 @@ msgstr "Ta sugerowana wartość pamięci jest obliczana na podstawie liczby obec
 
 #: utilities.php
 msgid "Threads: "
-msgstr "Tematy"
+msgstr "Wątki: "
 
 #: utilities.php
 msgid "Timed Out"
@@ -18211,7 +18211,7 @@ msgstr "Źródła danych ogółem:"
 
 #: utilities.php
 msgid "Total Poller Items:"
-msgstr "Elementy pamięci podręcznej Poller Cache"
+msgstr "Łączna liczba elementów pollera:"
 
 #: utilities.php
 #, php-format
@@ -18232,7 +18232,7 @@ msgstr "Użyj tego narzędzia, aby wyświetlić problemy z brakującymi plikami 
 
 #: utilities.php
 msgid "User Login History"
-msgstr "Historia logowania użytkownika "
+msgstr "Historia logowania użytkownika"
 
 #: utilities.php
 msgid "User Logins"
@@ -18376,3 +18376,5 @@ msgstr "VDEFs [nowe]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Używane VDEF-y nie mogą być usunięte. W użyciu jest zdefiniowany jako odniesienie do wykresu lub szablonu wykresu."
+
+

@@ -7055,7 +7055,7 @@ msgstr "ወደ ስክሪፕቱ የሚላከው ውሂብ፣ ይህም ወደ ስ
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "ከውሂብ ምንጩ ውሂብ የሚሰበሰብበት ድግግሞሽ?"
+msgstr "ከውሂብ ምንጩ ውሂብ የሚሰበሰብበት ድግግሞሽ።"
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "አቀባዊ መለያ (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "ይህ መሣሪያ ከየትኛው ጣቢያ ጋር የተያያዘ ነው።"
+msgstr "ይህ መሣሪያ ከየትኛው ጣቢያ ጋር የተያያዘ ነው?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7407,7 +7407,7 @@ msgstr "%s ትሬዶች"
 
 #: include/global_settings.php
 msgid ".  This is limited by the php setting 'max_input_vars', currently:"
-msgstr ". ይህ በአሁኑ ጊዜ በ php ቅንብር 'max_input_vars' የተገደበ ነው፦"
+msgstr ". ይህ በአሁኑ ጊዜ በ php ቅንብር 'max_input_vars' የተገደበ ነው:"
 
 #: include/global_settings.php
 msgid "1 Attempt"
@@ -8379,7 +8379,7 @@ msgstr "ስንት የምዝግብ ማስታወሻ ፋይሎችን ማቆየት �
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "የKadupul ምዝግብ ማስታወሻ ማሳያ በምን ያህል ጊዜ እንዲዘመን ይፈልጋሉ።"
+msgstr "የKadupul ምዝግብ ማስታወሻ ማሳያ በምን ያህል ጊዜ እንዲዘመን ይፈልጋሉ?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "Kadupul በደንበኛው አሳሽ የሰዓት ሰቅ ላይ በመ�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul የክስተት ምዝግብ ማስታወሻን እንዴት ይይዛል።"
+msgstr "Kadupul የክስተት ምዝግብ ማስታወሻን እንዴት ይይዛል?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "የboost ውጤት ሰንጠረዥ ይህን መጠን፣ በመዝገ�
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "የboost poller ከዚህ የአሂድ ጊዜ ካለፈ፣ በcacti ምዝግብ ማስታወሻ ውስጥ ማስጠንቀቂያ ይቀመጣል፣"
+msgstr "የboost poller ከዚህ የአሂድ ጊዜ ካለፈ፣ በcacti ምዝግብ ማስታወሻ ውስጥ ማስጠንቀቂያ ይቀመጣል።"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "የምስል መሸጎጫ መንቃት አለበት?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "ግራፎች አሉት እና የውሂብ ምንጮች አሉት በነባሪነት ምልክት መደረግ አለባቸው።"
+msgstr "ግራፎች አሉት እና የውሂብ ምንጮች አሉት በነባሪነት ምልክት መደረግ አለባቸው?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "ምልክት ሲደረግበት፣ Kadupul ን ለመድረስ የሚደ
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "አዲስ ሪፖርት ሲፈጥሩ፣ ለመስመር ውስጥ ግራፎች የትኛው የምስል ዓይነት ጥቅም ላይ መዋል አለበት።"
+msgstr "አዲስ ሪፖርት ሲፈጥሩ፣ ለመስመር ውስጥ ግራፎች የትኛው የምስል ዓይነት ጥቅም ላይ መዋል አለበት?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -12695,7 +12695,7 @@ msgstr "ተጽፏል"
 #: lib/installer.php
 #, php-format
 msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
-msgstr "%d የውሂብ ምንጮች ከ RRA ማውጫ ውጭ የሆነ የ RRDfile መንገድ አላቸው። ይህ ስሪት RRDfiles የሚፈጥረው እና የሚያዘምነው በ RRA ማውጫ ውስጥ ወይም በ include/config.php ውስጥ በ $config['rrd_additional_paths'] በተዘረዘረ ማውጫ ውስጥ ብቻ ስለሆነ፣ ከሚከተሉት አንዱ እስኪደረግ ድረስ እነዚህ የውሂብ ምንጮች መዘመን ያቆማሉ፦"
+msgstr "%d የውሂብ ምንጮች ከ RRA ማውጫ ውጭ የሆነ የ RRDfile መንገድ አላቸው። ይህ ስሪት RRDfiles የሚፈጥረው እና የሚያዘምነው በ RRA ማውጫ ውስጥ ወይም በ include/config.php ውስጥ በ $config['rrd_additional_paths'] በተዘረዘረ ማውጫ ውስጥ ብቻ ስለሆነ፣ ከሚከተሉት አንዱ እስኪደረግ ድረስ እነዚህ የውሂብ ምንጮች መዘመን ያቆማሉ:"
 
 #: lib/installer.php
 #, php-format
@@ -12763,7 +12763,7 @@ msgstr "የአቃፊ ፈቃዶችን እንዴት ማዘጋጀት እንደሚ�
 
 #: lib/installer.php
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "መደርደሪያው ካልተዛመደ በተሰኪዎች የተፈጠሩ ማናቸውም ሰንጠረዦች ከ Kadupul Core ሰንጠረዦች ጋር ሲገናኙ ችግር ሊኖራቸው ይችላል። እባክዎ የሚከተለውን በማስኬድ ዳታቤዝዎ ወደ 'utf8mb4_unicode_ci' መቀየሩን ያረጋግጡ፦ "
+msgstr "መደርደሪያው ካልተዛመደ በተሰኪዎች የተፈጠሩ ማናቸውም ሰንጠረዦች ከ Kadupul Core ሰንጠረዦች ጋር ሲገናኙ ችግር ሊኖራቸው ይችላል። እባክዎ የሚከተለውን በማስኬድ ዳታቤዝዎ ወደ 'utf8mb4_unicode_ci' መቀየሩን ያረጋግጡ: "
 
 #: lib/installer.php package_import.php plugins.php
 msgid "Author"
@@ -13020,7 +13020,7 @@ msgstr "ፋይል አልተገኘም"
 #: lib/installer.php
 #, php-format
 msgid "Finished %s Process for v%s"
-msgstr "ለv%s የ%s ሂደት ተጠናቋል"
+msgstr "የ%s ሂደት ተጠናቋል (v%s)"
 
 #: lib/installer.php
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
@@ -13075,12 +13075,12 @@ msgstr "መሣሪያዎችዎ መጀመሪያ የተለየ የአማራጮች �
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
-msgstr "በመገለጫ '%s' ስር የጥቅል #%s '%s' ማስመጣት አልተሳካም"
+msgstr "የጥቅል #%s '%s' ማስመጣት (በመገለጫ '%s' ስር) አልተሳካም"
 
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
-msgstr "በመገለጫ '%s' ስር የጥቅል #%s '%s' ማስመጣት ተሳክቷል"
+msgstr "የጥቅል #%s '%s' ማስመጣት (በመገለጫ '%s' ስር) ተሳክቷል"
 
 #: lib/installer.php
 msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
@@ -14168,7 +14168,7 @@ msgstr "የውሂብ ፋይሉን መክፈት አልተቻለም፣ poller ገ�
 #: lib/rrd.php
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "የፋይል RRA '%s' ከ'%s' ጋር ተመሳሳይ CF/steps (%s, %s) አለው"
+msgstr "የፋይል RRA '%s' ያለው CF/steps (%s, %s) ከ'%s' ጋር ተመሳሳይ ነው"
 
 #: lib/rrd.php
 #, php-format
@@ -14178,7 +14178,7 @@ msgstr "ለውሂብ ምንጭ '%s' Heartbeat '%s' መሆን አለበት"
 #: lib/rrd.php
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "Kadupul RRA '%s' ከ'%s' ጋር ተመሳሳይ CF/steps (%s, %s) አለው"
+msgstr "Kadupul RRA '%s' ያለው CF/steps (%s, %s) ከ'%s' ጋር ተመሳሳይ ነው"
 
 #: lib/rrd.php
 msgid "Last DS"
@@ -15464,7 +15464,7 @@ msgstr "የKadupul ስርዓት ማሳወቂያ"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "ለpoller id %d ከፍተኛው የ%d ሰከንዶች የአሂድ ጊዜ አልፏል። በመውጣት ላይ።"
+msgstr "ከፍተኛው የ%d ሰከንዶች የአሂድ ጊዜ ለpoller id %d አልፏል። በመውጣት ላይ።"
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -15496,7 +15496,7 @@ msgstr "ማስጠንቀቂያ: PollerID:%s ከስም:%s ጋር በHeartbeat ሁ�
 #: poller.php
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
-msgstr "ማስጠንቀቂያ: ለሰብሳቢ መለያ %d የመጠየቂያ ዑደቱን ሲያልፉ %d ሂደቶች ተገኝተዋል፣ እባክዎ ይመርምሩ።"
+msgstr "ማስጠንቀቂያ: %d ሂደቶች ለሰብሳቢ መለያ %d የመጠየቂያ ዑደቱን ሲያልፉ ተገኝተዋል፣ እባክዎ ይመርምሩ።"
 
 #: poller_automation.php
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -16352,7 +16352,7 @@ msgstr "ከKadupul ወደ ውጭ መላክ የሚፈልጉትን የአብነት
 
 #: templates_export.php
 msgid "Some templates rely on other items in Kadupul to function properly. It is highly recommended that you select this box or the resulting import may fail."
-msgstr "አንዳንድ አብነቶች በትክክል ለመስራት በKadupul ውስጥ ባሉ ሌሎች ንጥሎች ላይ ይመሰረታሉ። ይህን ሳጥን እንዲመርጡ በጥብቅ ይመከራል አለበለዚያ የሚመጣው ውጤት ሊሳካ ይችላል።"
+msgstr "አንዳንድ አብነቶች በትክክል ለመስራት በKadupul ውስጥ ባሉ ሌሎች ንጥሎች ላይ ይመሰረታሉ። ይህን ሳጥን እንዲመርጡ በጥብቅ ይመከራል አለበለዚያ ማስመጣቱ ላይሳካ ይችላል።"
 
 #: templates_export.php
 msgid "WARNING: Export Errors Encountered. Refresh Browser Window for Details!"
@@ -18313,3 +18313,5 @@ msgstr "VDEFs [አዲስ]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "በጥቅም ላይ ያሉ VDEFs ሊሰረዙ አይችሉም። በጥቅም ላይ ማለት በግራፍ ወይም በግራፍ አብነት የተጠቀሰ ማለት ነው።"
+
+

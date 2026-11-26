@@ -939,7 +939,7 @@ msgstr "Ligging"
 #: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
 #: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
-msgstr "N.v.t."
+msgstr "NVT"
 
 #: automation_devices.php
 msgid "Network"
@@ -7055,7 +7055,7 @@ msgstr "Die data wat na die skrip gestuur word, wat die volledige pad na die skr
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Die frekwensie waarteen data vanaf die Databron ingesamel sal word?"
+msgstr "Die frekwensie waarteen data vanaf die Databron ingesamel sal word."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "Vertikale etiket (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Met watter Werf is hierdie Toestel geassosieer."
+msgstr "Met watter Werf is hierdie Toestel geassosieer?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "Hoeveel loglêers wil jy behou? Gebruik 0 om nooit enige logs te verwyde
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Hoe gereeld wil jy hê die Kadupul-logvertoning moet bywerk."
+msgstr "Hoe gereeld wil jy hê die Kadupul-logvertoning moet bywerk?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "Hoe moet Kadupul kliëntdatums ondersteun op grond van die kliëntblaaie
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Hoe sal Kadupul gebeurtenislogboeking hanteer."
+msgstr "Hoe sal Kadupul gebeurtenislogboeking hanteer?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "As die boost-uitvoertabel hierdie grootte in rekords oorskry, sal 'n byw
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "As die boost-peiler hierdie looptyd oorskry, sal 'n waarskuwing in die cacti-log geplaas word,"
+msgstr "As die boost-peiler hierdie looptyd oorskry, sal 'n waarskuwing in die cacti-log geplaas word."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "Moet beeldkas geaktiveer word?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Moet Het Grafieke en Het Databronne by verstek gemerk wees."
+msgstr "Moet Het Grafieke en Het Databronne by verstek gemerk wees?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "Wanneer gemerk, sal enige pogings om toegang tot Kadupul te verkry na HT
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Wanneer 'n nuwe verslag geskep word, watter beeldtipe moet vir die inlyngrafieke gebruik word."
+msgstr "Wanneer 'n nuwe verslag geskep word, watter beeldtipe moet vir die inlyngrafieke gebruik word?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -18313,3 +18313,5 @@ msgstr "VDEFs [nuut]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEFs wat gebruik word, kan nie geskrap word nie. In gebruik word gedefinieer as verwys deur 'n Grafiek of 'n Grafieksjabloon."
+
+

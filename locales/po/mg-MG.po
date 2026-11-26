@@ -7055,7 +7055,7 @@ msgstr "Ny angon-drakitra alefa any amin'ny script, izay ahitana ny lalana feno 
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Ny matetika hanangonana ny angon-drakitra avy amin'ny loharanon-drakitra?"
+msgstr "Ny fahatetehana hanangonana ny angon-drakitra avy amin'ny loharanon-drakitra."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "Marika mitsangana (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Amin'ny Toerana inona no ifandraisan'ity Fitaovana ity."
+msgstr "Amin'ny Toerana inona no ifandraisan'ity Fitaovana ity?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "Firy ny rakitra diary tianao hotehirizina? Ampiasao ny 0 raha tsy hanais
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Matetika toy ny ahoana no tianao hanavaozana ny fampisehoana ny rakitra firaketan'i Kadupul."
+msgstr "Matetika toy ny ahoana no tianao hanavaozana ny fampisehoana ny rakitra firaketan'i Kadupul?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "Ny fomba tokony hanohanan'i Kadupul ny Daty amin'ny Mpanjifa araka ny fa
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Ny fomba hitantanan'i Kadupul ny firaketana ny zava-mitranga."
+msgstr "Ahoana no hitantanan'i Kadupul ny firaketana ny zava-mitranga?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "Raha mihoatra izany habe izany, amin'ny isan'ny tahirin-drakitra, ny tab
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Raha mihoatra io faharetan'ny fihazakazahana io ny mpanangona Boost dia hisy fampitandremana hapetraka ao amin'ny diary Cacti,"
+msgstr "Raha mihoatra io faharetan'ny fihazakazahana io ny mpanangona Boost dia hisy fampitandremana hapetraka ao amin'ny diary Cacti."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "Tokony halefa ve ny fitahirizana sary vonjimaika?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Raha tokony ho voamarika ho azy ny Manana Kisary sy ny Manana Loharanon-drakitra."
+msgstr "Tokony ho voamarika ho azy ve ny Manana Kisary sy ny Manana Loharanon-drakitra?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "Rehefa voamarika, ny fiezahana rehetra hiditra ao amin'i Kadupul dia hat
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Rehefa mamorona tatitra vaovao, inona no karazana sary tokony hampiasaina ho an'ireo kisary ao anatiny."
+msgstr "Rehefa mamorona tatitra vaovao, inona no karazana sary tokony hampiasaina ho an'ireo kisary ao anatiny?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -14465,7 +14465,7 @@ msgstr "Famonoana farany:  Tsy voafetra"
 
 #: lib/spikekill.php
 msgid "MaxStdDev"
-msgstr "Fiviliana fenitra maks."
+msgstr "Fiviliana fenitra maksimaly"
 
 #: lib/spikekill.php
 msgid "MaxValue"
@@ -14478,7 +14478,7 @@ msgstr "Fomba fiasa:       %s"
 
 #: lib/spikekill.php
 msgid "MinStdDev"
-msgstr "Fiviliana fenitra min."
+msgstr "Fiviliana fenitra minimaly"
 
 #: lib/spikekill.php
 msgid "MinValue"
@@ -18313,3 +18313,5 @@ msgstr "Ireo VDEF [vaovao]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Tsy azo fafana ny VDEF izay mbola ampiasaina. Ny hoe ampiasaina dia midika fa tondroin'ny Kisary na ny Lasitra Kisary iray."
+
+

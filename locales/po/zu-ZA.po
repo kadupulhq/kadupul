@@ -6295,7 +6295,7 @@ msgstr "Khubaza Idivayisi"
 
 #: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
-msgstr "Ungawunweba umkhawulo ophansi nophezulu uma igrafu iqukethe inani elingaphandle kwebanga elivumelekile."
+msgstr "Ungawunwebi umkhawulo ophansi nophezulu uma igrafu iqukethe inani elingaphandle kwebanga elivumelekile."
 
 #: include/global_form.php include/global_settings.php
 msgid "Downed Device Detection"
@@ -6627,11 +6627,11 @@ msgstr "Ama-OID Amakhulu Ngesicelo Ngasinye Se-Get"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
-msgstr "Inani Elikhulu (\"U\" uma Kunamkhawulo)"
+msgstr "Inani Elikhulu (\"U\" uma Kungenamkhawulo)"
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
-msgstr "Inani Elincane (\"U\" uma Kunamkhawulo)"
+msgstr "Inani Elincane (\"U\" uma Kungenamkhawulo)"
 
 #: include/global_form.php
 msgid "Multiple Instances"
@@ -7055,7 +7055,7 @@ msgstr "Idatha ethunyelwa kuskripthi, ehlanganisa indlela ephelele eya kuskripth
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Imvamisa yokuqoqwa kwedatha kuMthombo Wedatha?"
+msgstr "Imvamisa yokuqoqwa kwedatha kuMthombo Wedatha."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "Ilebula Eliqondile (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Yiliphi Isayithi le Divayisi ehlotshaniswa nalo."
+msgstr "Yiliphi Isayithi le Divayisi ehlotshaniswa nalo?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "Mangaki amafayela elogi ofisa ukuwagcina? Sebenzisa u-0 ukuze ungalokoth
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Ufuna ukuthi isibonisi selogi se-Kadupul sibuyekezwe kangaki."
+msgstr "Ufuna ukuthi isibonisi selogi se-Kadupul sibuyekezwe kangaki?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "I-Kadupul kufanele isekele kanjani Izinsuku Zeklayenti ngokusekelwe enda
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "I-Kadupul izokuphatha kanjani ukugcinwa kwelogi yezehlakalo."
+msgstr "I-Kadupul izokuphatha kanjani ukugcinwa kwelogi yezehlakalo?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,11 +8431,11 @@ msgstr "Uma ithebula lokukhipha le-boost lidlula lo sayizi, ngamarekhodi, kuzokw
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Uma i-boost poller idlula lesi sikhathi sokusebenza, kuzofakwa isexwayiso ku-cacti log,"
+msgstr "Uma i-boost poller idlula lesi sikhathi sokusebenza, kuzofakwa isexwayiso ku-cacti log."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
-msgstr "Uma le dayirekthri ingenalutho, khona-ke amafayela akho e-RRD okuqala azosekelwa kule ndawo."
+msgstr "Uma le dayirekthri inokuqukethwe, khona-ke amafayela akho e-RRD okuqala azosekelwa kule ndawo."
 
 #: include/global_settings.php
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
@@ -9211,7 +9211,7 @@ msgstr "Ingabe ukulondolozwa kwesithombe kwesikhashana kufanele kunikwe amandla?
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Ingabe okuthi Inamagrafu nokuthi Inemithombo Yedatha kufanele Kuhlolwe Ngokuzenzakalelayo."
+msgstr "Ingabe okuthi Inamagrafu nokuthi Inemithombo Yedatha kufanele Kuhlolwe Ngokuzenzakalelayo?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "Uma kukhethiwe, noma yimiphi imizamo yokufinyelela i-Kadupul izoqondiswa
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Lapho udala umbiko omusha, yiluphi uhlobo lwesithombe okufanele lusetshenziswe kumagrafu asemugqeni."
+msgstr "Lapho udala umbiko omusha, yiluphi uhlobo lwesithombe okufanele lusetshenziswe kumagrafu asemugqeni?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -13138,7 +13138,7 @@ msgstr "Kuphakanyiswa kakhulu ukuthi ubuyekeze i-config.php yakho ukuze unike am
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
-msgstr "Izindlela Zokufaka Idatha Ze-Kadupul ezibiza isikripthi zingaxhashazwa ngezindlela zokuthi ongumlawuli angalimaza amafayela aphethwe yi-akhawunti ye-poller, futhi ezimeni lapho umuntu esebenzisa i-Kadupul poller njenge-root, angabeka engcupheni isistimu yokusebenza okuvumela abahlaseli ukuba baxhaphaze ingqalasizinda yakho."
+msgstr "Izindlela Zokufaka Idatha Ze-Kadupul ezibiza isikripthi zingaxhashazwa ngezindlela zokuthi ongesiye umlawuli angalimaza amafayela aphethwe yi-akhawunti ye-poller, futhi ezimeni lapho umuntu esebenzisa i-Kadupul poller njenge-root, angabeka engcupheni isistimu yokusebenza okuvumela abahlaseli ukuba baxhaphaze ingqalasizinda yakho."
 
 #: lib/installer.php utilities.php
 msgid "Kadupul Version"
@@ -13201,7 +13201,7 @@ msgstr "QAPHELA: Isebenzisa ifayela lesikhashana le-db cache: %s"
 
 #: lib/installer.php
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
-msgstr "QAPHELA: Idatha yakho ekhona ngeke iguqulwe, futhi yona noma noma yimuphi umlando ngeke kutholakale ekufakweni okusha"
+msgstr "QAPHELA: Idatha yakho ekhona ngeke iguqulwe, futhi yona nanoma yimuphi umlando ngeke kutholakale ekufakweni okusha"
 
 #: lib/installer.php
 msgid "Network Range"
@@ -14328,7 +14328,7 @@ msgstr "Umyalo We-SNMP uthi: %s"
 
 #: lib/spikekill.php
 msgid "Avg"
-msgstr "Isiling."
+msgstr "Isilinganiso"
 
 #: lib/spikekill.php
 msgid "CF"
@@ -18313,3 +18313,5 @@ msgstr "Ama-VDEF [amasha]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Ama-VDEF asetshenziswayo awakwazi ukususwa. Okusetshenziswayo kuchazwa njengokubhekiselwa yiGrafu noma Isifanekiso Segrafu."
+
+

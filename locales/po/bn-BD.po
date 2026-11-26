@@ -2212,7 +2212,7 @@ msgstr "ডিভাইস পরিবর্তন করুন"
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "এই ডেটা সোর্সের জন্য একটি নতুন ডিভাইস নির্বাচন করুন এবং 'Continue'-তে ক্লিক করুন।"
-msgstr[1] "এই ডেটা সোর্সগুলোর জন্য একটি নতুন ডিভাইস নির্বাচন করুন এবং 'Continue'-তে ক্লিক করুন।"
+msgstr[1] "এই ডেটা সোর্সগুলোর জন্য একটি নতুন ডিভাইস নির্বাচন করুন এবং 'Continue'-তে ক্লিক করুন"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -3359,17 +3359,17 @@ msgstr "এই ডিভাইসটি সম্পাদনা করুন"
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
-msgstr "আইডি '%s'-সহ ডেটা কোয়েরি '%s'-এর জন্য ডেটা কোয়েরি রিসোর্স XML ফাইল পার্স করতে ত্রুটি"
+msgstr "ডেটা কোয়েরি '%s' (আইডি '%s')-এর জন্য ডেটা কোয়েরি রিসোর্স XML ফাইল পার্স করতে ত্রুটি"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "আইডি '%s'-সহ ডেটা কোয়েরি '%s'-এর জন্য ডেটা কোয়েরি রিসোর্স XML ফাইল পার্স করতে ত্রুটি। ফিল্ডের নাম '%s'-এ একটি 'direction' অ্যাট্রিবিউট অনুপস্থিত"
+msgstr "ডেটা কোয়েরি '%s' (আইডি '%s')-এর জন্য ডেটা কোয়েরি রিসোর্স XML ফাইল পার্স করতে ত্রুটি। ফিল্ডের নাম '%s'-এ একটি 'direction' অ্যাট্রিবিউট অনুপস্থিত"
 
 #: graphs_new.php
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
-msgstr "'%s' আইডিসহ ডেটা কোয়েরি '%s'-এর জন্য ডেটা কোয়েরি রিসোর্স XML ফাইল পার্স করতে ত্রুটি"
+msgstr "ডেটা কোয়েরি '%s' (আইডি '%s')-এর জন্য ডেটা কোয়েরি রিসোর্স XML ফাইল পার্স করতে ত্রুটি"
 
 #: graphs_new.php
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
@@ -3461,7 +3461,7 @@ msgstr "ডকুমেন্ট পৃষ্ঠা '%s'-এ স্থানী�
 #: help.php
 #, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "সতর্কতা: ব্যবহারকারী:%s-এর জন্য Kadupul পৃষ্ঠা:%s একটি গুরুতর ত্রুটি %d তৈরি করেছে!"
+msgstr "সতর্কতা: Kadupul পৃষ্ঠা:%s (ব্যবহারকারী:%s-এর জন্য) একটি গুরুতর ত্রুটি %d তৈরি করেছে!"
 
 #: host_templates.php
 msgid "Add Data Query"
@@ -4604,7 +4604,7 @@ msgstr "ICMP পিং"
 
 #: include/global_arrays.php
 msgid "ILO, IPMI, iDrac, etc."
-msgstr "ILO, IPMI, iDrac ইত্যাদি"
+msgstr "ILO, IPMI, iDrac ইত্যাদি।"
 
 #: include/global_arrays.php
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -5077,7 +5077,7 @@ msgstr "পর্তুগিজ (ব্রাজিল)"
 
 #: include/global_arrays.php
 msgid "Power Related PDUs/STS, etc."
-msgstr "পাওয়ার সম্পর্কিত PDU/STS ইত্যাদি"
+msgstr "পাওয়ার সম্পর্কিত PDU/STS ইত্যাদি।"
 
 #: include/global_arrays.php lib/html_filter.php lib/html_graph.php
 #: lib/html_tree.php
@@ -7055,7 +7055,7 @@ msgstr "স্ক্রিপ্টে পাঠানো ডেটা, যা�
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "ডেটা সোর্স থেকে কোন কম্পাঙ্কে ডেটা সংগ্রহ করা হবে?"
+msgstr "ডেটা সোর্স থেকে যে কম্পাঙ্কে ডেটা সংগ্রহ করা হবে।"
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "উল্লম্ব লেবেল (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "এই ডিভাইসটি কোন সাইটের সাথে যুক্ত।"
+msgstr "এই ডিভাইসটি কোন সাইটের সাথে যুক্ত?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "আপনি কতগুলো লগ ফাইল সংরক্ষ�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "আপনি কত ঘন ঘন Kadupul লগ প্রদর্শন আপডেট করতে চান।"
+msgstr "আপনি কত ঘন ঘন Kadupul লগ প্রদর্শন আপডেট করতে চান?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "ক্লায়েন্ট ব্রাউজারের সময�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul কীভাবে ইভেন্ট লগিং পরিচালনা করবে।"
+msgstr "Kadupul কীভাবে ইভেন্ট লগিং পরিচালনা করবে?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "boost আউটপুট টেবিল রেকর্ডের সং
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "boost পোলার এই রানটাইম অতিক্রম করলে cacti লগে একটি সতর্কতা দেওয়া হবে,"
+msgstr "boost পোলার এই রানটাইম অতিক্রম করলে cacti লগে একটি সতর্কতা দেওয়া হবে।"
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "ইমেজ ক্যাশিং কি সক্রিয় করা �
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Has Graphs এবং Has Data Sources কি ডিফল্টরূপে চেক করা থাকবে।"
+msgstr "Has Graphs এবং Has Data Sources কি ডিফল্টরূপে চেক করা থাকবে?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "চেক করা থাকলে, উচ্চ নিরাপত্�
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "একটি নতুন রিপোর্ট তৈরি করার সময়, ইনলাইন গ্রাফগুলোর জন্য কোন ইমেজ ধরন ব্যবহার করা উচিত।"
+msgstr "একটি নতুন রিপোর্ট তৈরি করার সময়, ইনলাইন গ্রাফগুলোর জন্য কোন ইমেজ ধরন ব্যবহার করা উচিত?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -11130,7 +11130,7 @@ msgstr "ডেটা সোর্স সক্রিয় হিসেবে �
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "ডেটা সোর্স ত্রুটিপূর্ণ ফলাফল দিয়েছে: "
+msgstr "ডেটা সোর্স ত্রুটিপূর্ণ ফলাফল দিয়েছে "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -11234,7 +11234,7 @@ msgstr "লিংক %s"
 
 #: lib/functions.php
 msgid "Logged in as"
-msgstr "লগইনকৃত ব্যবহারকারী:"
+msgstr "লগইনকৃত ব্যবহারকারী"
 
 #: lib/functions.php
 #, php-format
@@ -11931,7 +11931,7 @@ msgstr "কলামসমূহ"
 #: lib/html_graph.php
 #, php-format
 msgid "Create %s Graphs from %s"
-msgstr "%s থেকে %s গ্রাফ তৈরি করুন"
+msgstr "%s গ্রাফ (%s থেকে) তৈরি করুন"
 
 #: lib/html_graph.php
 #, php-format
@@ -13020,7 +13020,7 @@ msgstr "ফাইল পাওয়া যায়নি"
 #: lib/installer.php
 #, php-format
 msgid "Finished %s Process for v%s"
-msgstr "v%s-এর জন্য %s প্রক্রিয়া সম্পন্ন হয়েছে"
+msgstr "%s প্রক্রিয়া (v%s-এর জন্য) সম্পন্ন হয়েছে"
 
 #: lib/installer.php
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
@@ -13075,12 +13075,12 @@ msgstr "আপনার ডিভাইসগুলোর যদি প্রথ
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
-msgstr "প্রোফাইল '%s'-এর অধীনে প্যাকেজ #%s '%s' ইমপোর্ট ব্যর্থ হয়েছে"
+msgstr "প্যাকেজ #%s '%s' (প্রোফাইল '%s'-এর অধীনে) ইমপোর্ট ব্যর্থ হয়েছে"
 
 #: lib/installer.php
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
-msgstr "প্রোফাইল '%s'-এর অধীনে প্যাকেজ #%s '%s' ইমপোর্ট সফল হয়েছে"
+msgstr "প্যাকেজ #%s '%s' (প্রোফাইল '%s'-এর অধীনে) ইমপোর্ট সফল হয়েছে"
 
 #: lib/installer.php
 msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
@@ -13979,12 +13979,12 @@ msgstr "ডিফল্ট"
 #: lib/plugins.php
 #, php-format
 msgid "%s Version %s or above is required for %s. "
-msgstr "%s-এর জন্য %s সংস্করণ %s বা তার পরবর্তী সংস্করণ প্রয়োজন। "
+msgstr "%s সংস্করণ %s বা তার পরবর্তী সংস্করণ প্রয়োজন (%s-এর জন্য)। "
 
 #: lib/plugins.php
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
-msgstr "%s-এর জন্য %s প্রয়োজন, এবং এটি ইনস্টল করা নেই। "
+msgstr "%s প্রয়োজন (%s-এর জন্য), এবং এটি ইনস্টল করা নেই। "
 
 #: lib/plugins.php
 msgid "Legacy Plugin"
@@ -14821,7 +14821,7 @@ msgstr "এই VDEF-এর জন্য একটি কার্যকর ন�
 #: link.php
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr "'%s' শিরোনামসহ বাহ্যিক লিংক আইডি '%s' একটি অবৈধ URL ইনজেক্ট করার চেষ্টা করেছিল এবং ব্লক করা হয়েছে!"
+msgstr "বাহ্যিক লিংক আইডি '%s' ('%s' শিরোনামসহ) একটি অবৈধ URL ইনজেক্ট করার চেষ্টা করেছিল এবং ব্লক করা হয়েছে!"
 
 #: links.php
 msgid "Apply Filter"
@@ -15450,12 +15450,12 @@ msgstr "এই প্লাগইনটি আনইনস্টল করলে
 #: poller.php
 #, php-format
 msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
-msgstr "ত্রুটি: পোলার আইডি %2$d-এর জন্য PHP বাইনারি পাথ: %1$s অবৈধ। পোলার চালিয়ে যেতে পারবে না!"
+msgstr "ত্রুটি: PHP বাইনারি পাথ: %s পোলার আইডি %d-এর জন্য অবৈধ। পোলার চালিয়ে যেতে পারবে না!"
 
 #: poller.php
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
-msgstr "ত্রুটি: পোলার আইডি %2$d-এর জন্য spine পাথ: %1$s অবৈধ। পোলার চালিয়ে যেতে পারবে না!"
+msgstr "ত্রুটি: spine পাথ: %s পোলার আইডি %d-এর জন্য অবৈধ। পোলার চালিয়ে যেতে পারবে না!"
 
 #: poller.php
 msgid "Kadupul System Notification"
@@ -15464,7 +15464,7 @@ msgstr "Kadupul সিস্টেম নোটিফিকেশন"
 #: poller.php
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "পোলার আইডি %d-এর জন্য %d সেকেন্ডের সর্বোচ্চ রানটাইম অতিক্রম করেছে। প্রস্থান করা হচ্ছে।"
+msgstr "%d সেকেন্ডের সর্বোচ্চ রানটাইম অতিক্রম করেছে (পোলার আইডি %d-এর জন্য)। প্রস্থান করা হচ্ছে।"
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -15491,12 +15491,12 @@ msgstr "সতর্কতা: পোলার id %d-এর জন্য পো�
 #: poller.php
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
-msgstr "সতর্কতা: নাম:%s সহ PollerID:%s হার্টবিট অবস্থায় রয়েছে"
+msgstr "সতর্কতা: PollerID:%s (নাম:%s-সহ) হার্টবিট অবস্থায় রয়েছে"
 
 #: poller.php
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
-msgstr "সতর্কতা: পোলার id %d-এর জন্য %d-টি প্রসেস একটি পোলিং চক্র অতিক্রম করছে বলে শনাক্ত হয়েছে, অনুগ্রহ করে তদন্ত করুন।"
+msgstr "সতর্কতা: %d-টি প্রসেস একটি পোলিং চক্র অতিক্রম করছে বলে শনাক্ত হয়েছে (পোলার আইডি %d-এর জন্য), অনুগ্রহ করে তদন্ত করুন।"
 
 #: poller_automation.php
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -18313,3 +18313,5 @@ msgstr "VDEF সমূহ [নতুন]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "ব্যবহৃত হচ্ছে এমন VDEFs মুছে ফেলা যাবে না। ব্যবহৃত হচ্ছে বলতে কোনো গ্রাফ বা গ্রাফ টেমপ্লেট দ্বারা নির্দেশিত থাকাকে বোঝায়।"
+
+

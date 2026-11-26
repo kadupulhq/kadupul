@@ -7034,7 +7034,7 @@ msgstr "Dátà tí a fi ránṣẹ́ sí síkíríìtì, tó ní gbogbo ọ̀nà
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Ìgbàgbọ̀ tí a ó fi máa kó dátà jọ láti inú Orísun Dátà?"
+msgstr "Ìgbàgbọ̀ tí a ó fi máa kó dátà jọ láti inú Orísun Dátà."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7250,7 +7250,7 @@ msgstr "Àmì Inaro (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Ibùdó wo ni Ẹ̀rọ yìí sopọ̀ mọ́."
+msgstr "Ibùdó wo ni Ẹ̀rọ yìí sopọ̀ mọ́?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7450,7 +7450,7 @@ msgstr "Àtòjọ àwọn ID Ẹ̀rọ tí a fi kọ́mà pín tí o fẹ́ kí 
 
 #: include/global_settings.php
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
-msgstr "Àṣàyàn fún olùgbédàgbà nìkan láti tọpinpin ìdásílẹ̀ Àwọn Orísun Dátà pàápàá nípa àyẹ̀wò fún ìṣọ̀kan ọ̀tọ̀."
+msgstr "Àṣàyàn fún olùgbédàgbà nìkan láti tọpinpin ìdásílẹ̀ Àwọn Orísun Dátà pàápàá nípa àyẹ̀wò fún ìṣọ̀kan ọ̀tọ̀"
 
 #: include/global_settings.php user_domains.php
 msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
@@ -7830,7 +7830,7 @@ msgstr "Lẹ́tà Ìpilẹ̀ṣẹ̀"
 
 #: include/global_settings.php
 msgid "Default Graph Image Format"
-msgstr "Ọ̀nà Àwòrán Àwòrán ìtọ́ka Ìpilẹ̀ṣẹ̀"
+msgstr "Ọ̀nà Àwòrán Gíráfù Ìpilẹ̀ṣẹ̀"
 
 #: include/global_settings.php
 msgid "Default Graph Type"
@@ -8358,7 +8358,7 @@ msgstr "Àwọn fáìlì àkọsílẹ̀ mélòó ni o fẹ́ láti pa mọ́? L
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Báwo ni o ṣe fẹ́ kí ìfihàn àkọsílẹ̀ Kadupul máa ṣe àtúnṣe lóòrèkóòrè tó."
+msgstr "Báwo ni o ṣe fẹ́ kí ìfihàn àkọsílẹ̀ Kadupul máa ṣe àtúnṣe lóòrèkóòrè tó?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8366,7 +8366,7 @@ msgstr "Báwo ni Kadupul ṣe yẹ kí ó ṣètìlẹ́yìn fún Àwọn Ọj�
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Báwo ni Kadupul yóò ṣe bójú tó àkọsílẹ̀ ìṣẹ̀lẹ̀."
+msgstr "Báwo ni Kadupul yóò ṣe bójú tó àkọsílẹ̀ ìṣẹ̀lẹ̀?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8410,7 +8410,7 @@ msgstr "Tí tábìlì àbájáde boost bá ju ìwọ̀n yìí lọ, ní àwọn 
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Tí boost poller bá ju àkókò ìṣiṣẹ́ yìí lọ, a ó fi ìkìlọ̀ sí inú àkọsílẹ̀ cacti,"
+msgstr "Tí boost poller bá ju àkókò ìṣiṣẹ́ yìí lọ, a ó fi ìkìlọ̀ sí inú àkọsílẹ̀ cacti."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9190,7 +9190,7 @@ msgstr "Ṣé a gbọ́dọ̀ mú ìpamọ́ àwòrán káàṣì ṣiṣẹ́?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Ṣé a gbọ́dọ̀ ṣàmì sí Ní Àwọn Gíráfù àti Ní Àwọn Orísun Dátà gẹ́gẹ́ bí Àìyípadà."
+msgstr "Ṣé a gbọ́dọ̀ ṣàmì sí Ní Àwọn Gíráfù àti Ní Àwọn Orísun Dátà gẹ́gẹ́ bí Àìyípadà?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -9318,7 +9318,7 @@ msgstr "Olùtúnṣe RRD Ìpele Ètò"
 
 #: include/global_settings.php
 msgid "System Setting"
-msgstr "Ètò Ètò"
+msgstr "Ìṣètò Ètò"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
@@ -10047,7 +10047,7 @@ msgstr "Nígbà tí a bá ṣàmì sí i, gbogbo ìgbìyànjú láti wọ Kadupu
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Nígbà tí a bá ń ṣẹ̀dá ìròyìn tuntun, irú àwòrán wo ni a gbọ́dọ̀ lò fún àwọn gíráfù inú ìlà."
+msgstr "Nígbà tí a bá ń ṣẹ̀dá ìròyìn tuntun, irú àwòrán wo ni a gbọ́dọ̀ lò fún àwọn gíráfù inú ìlà?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -11596,7 +11596,7 @@ msgstr "Ìrànlọ́wọ́ nínú Ìtúmọ̀ Èdè"
 
 #: lib/html.php
 msgid "Ignore System Color"
-msgstr "Kọbi ara sí Àwọ̀ Ètò"
+msgstr "Fojú fo Àwọ̀ Ètò"
 
 #: lib/html.php
 msgid "Kadupul"
@@ -18251,3 +18251,5 @@ msgstr "Àwọn VDEF [tuntun]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "A kò lè Pa àwọn VDEF tó wà ní lílò Rẹ́. Wà ní lílò túmọ̀ sí pé Gíráfù tàbí Àdàkọ Gíráfù kan ń tọ́ka sí i."
+
+

@@ -45,7 +45,7 @@ msgstr "Το πρόγραμμα αυτό διανέμεται με την ελπ
 
 #: aggregate_graphs.php
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "[Εφαρμογή προσαρμοσμένης γραφήματος - Φίλτρο από λίστα]"
+msgstr " [Εφαρμογή προσαρμοσμένης γραφήματος - Φίλτρο από λίστα]"
 
 #: aggregate_graphs.php graphs.php
 msgid "Add Graphs to Report"
@@ -772,7 +772,7 @@ msgstr "Εκκαθάριση ρυθμίσεων χρήστη"
 
 #: auth_profile.php
 msgid "Clear all your Login Session Tokens."
-msgstr "Καταργήστε όλα τα αναγνωριστικά σύνδεσης σύνδεσης."
+msgstr "Καταργήστε όλα τα διακριτικά συνεδρίας σύνδεσης."
 
 #: auth_profile.php include/global_form.php
 msgid "Email Address"
@@ -1531,7 +1531,7 @@ msgstr "Η επιδιόρθωση πηγής δεδομένων έλαβε έν�
 
 #: data_debug.php
 msgid "Data Source debug started."
-msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομένων"
+msgstr "Ξεκίνησε ο εντοπισμός σφαλμάτων της πηγής δεδομένων."
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
@@ -2043,8 +2043,8 @@ msgstr "Διαγράψτε το σχετικό γράφημα"
 #: data_queries.php
 msgid "Delete Data Query"
 msgid_plural "Delete Data Queries"
-msgstr[0] "Διαγραφή δεδομένων"
-msgstr[1] "Διαγραφή δεδομένων"
+msgstr[0] "Διαγραφή ερωτήματος δεδομένων"
+msgstr[1] "Διαγραφή ερωτημάτων δεδομένων"
 
 #: data_queries.php data_templates.php graph_templates.php graphs.php
 #: host_templates.php include/global_arrays.php
@@ -2109,7 +2109,7 @@ msgstr "Όνομα"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
-msgstr "Μορφή ονόματος"
+msgstr "Μορφή ονόματος:"
 
 #: data_queries.php
 msgid "No Data Queries Found"
@@ -2271,7 +2271,7 @@ msgstr "Στοιχείο προέλευσης δεδομένων %s"
 
 #: data_sources.php
 msgid "Data Source Item Fields"
-msgstr "Πεδία στοιχείων στοιχείων πηγών"
+msgstr "Πεδία στοιχείου πηγής δεδομένων"
 
 #: data_sources.php utilities.php
 msgid "Data Source Name"
@@ -2331,7 +2331,7 @@ msgstr[1] "Απενεργοποιήστε τις Πηγές Δεδομένων"
 
 #: data_sources.php
 msgid "Disable Data Source."
-msgstr "Απενεργοποιήστε την Πηγή δεδομένων"
+msgstr "Απενεργοποιήστε την Πηγή δεδομένων."
 
 #: data_sources.php
 msgid "Edit Data Template."
@@ -2339,7 +2339,7 @@ msgstr "Επεξεργασία προτύπου δεδομένων."
 
 #: data_sources.php graphs.php
 msgid "Edit Device."
-msgstr "Επεξεργασία συσκευής"
+msgstr "Επεξεργασία συσκευής."
 
 #: data_sources.php
 #, php-format
@@ -2354,7 +2354,7 @@ msgstr[1] "Ενεργοποιήστε τις Πηγές δεδομένων"
 
 #: data_sources.php
 msgid "Enable Data Source."
-msgstr "Ενεργοποιήστε την Πηγή δεδομένων"
+msgstr "Ενεργοποιήστε την Πηγή δεδομένων."
 
 #: data_sources.php data_templates.php include/global_form.php
 msgid "External"
@@ -2376,7 +2376,7 @@ msgstr "Νέο"
 
 #: data_sources.php
 msgid "New Device:"
-msgstr "Νέα συσκευή"
+msgstr "Νέα συσκευή:"
 
 #: data_sources.php
 msgid "No Aggregates"
@@ -2656,7 +2656,7 @@ msgstr "Κάντε κλικ για να δείτε μόνο αυτό το γρά
 
 #: graph.php lib/html.php
 msgid "Edit Graph Template"
-msgstr "Επεξεργασία προτύπου γραφήματος."
+msgstr "Επεξεργασία προτύπου γραφήματος"
 
 #: graph.php
 msgid "GRAPH DOES NOT EXIST"
@@ -2704,7 +2704,7 @@ msgstr "Ο Kadupul Poller δεν έχει τρέξει ακόμα."
 
 #: graph_realtime.php
 msgid " seconds left."
-msgstr "δευτερόλεπτα."
+msgstr " δευτερόλεπτα."
 
 #: graph_realtime.php
 #, php-format
@@ -3165,7 +3165,7 @@ msgstr "ΣΦΑΛΜΑ: Δεν συσχετίστηκε πηγή δεδομένω�
 #: graphs.php
 #, php-format
 msgid "Edit Data Source: '%s'."
-msgstr "Πηγές δεδομένων [ %s]"
+msgstr "Επεξεργασία πηγής δεδομένων: '%s'."
 
 #: graphs.php
 msgid "Edit Graph Template."
@@ -3276,7 +3276,7 @@ msgstr "Οι ακόλουθες πηγές δεδομένων χρησιμοπο
 
 #: graphs.php
 msgid "The following Data Sources are in use by these Graphs:"
-msgstr "Οι ακόλουθες πηγές δεδομένων χρησιμοποιούνται από αυτά τα γράμματα."
+msgstr "Οι ακόλουθες πηγές δεδομένων χρησιμοποιούνται από αυτά τα γραφήματα:"
 
 #: graphs.php
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
@@ -3296,7 +3296,7 @@ msgstr "Προς το παρόν δεν υπάρχουν πρότυπα συσσ
 
 #: graphs.php
 msgid "Title Format"
-msgstr "Μορφή τίτλου:"
+msgstr "Μορφή τίτλου"
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -3769,7 +3769,7 @@ msgstr "%s λεπτά"
 
 #: include/global_arrays.php
 msgid "(Action)"
-msgstr "Ενέργεια:"
+msgstr "(Ενέργεια)"
 
 #: include/global_arrays.php
 msgid "(Edit)"
@@ -3922,7 +3922,7 @@ msgstr "Όλες οι γραμμές"
 
 #: include/global_arrays.php
 msgid "All Re-Indexing will be manual or managed through scripts or Device Automation."
-msgstr "Όλη η επανεξέλιξη θα είναι χειροκίνητη ή θα διαχειρίζεται μέσω δέσμης ενεργειών ή Συσκευής Συσκευής."
+msgstr "Όλη η επανευρετηρίαση θα είναι χειροκίνητη ή θα γίνεται η διαχείρισή της μέσω δεσμών ενεργειών ή Αυτοματισμού συσκευών."
 
 #: include/global_arrays.php
 msgid "All Similar Data Sources (Do not Include Duplicates)"
@@ -4521,7 +4521,7 @@ msgstr "Στοιχεία πρότυπου γραφήματος"
 
 #: include/global_arrays.php
 msgid "Graph Template includes deleted CDEFs.  Please run database repair script to identify and/or correct."
-msgstr "Το πρότυπο γραφήματος περιλαμβάνει τα διαγραμμένα CDEF. Εκτελέστε δέσμη ενεργειών επιδιόρθωσης βάσεων δεδομένων για να εντοπίσετε και /"
+msgstr "Το πρότυπο γραφήματος περιλαμβάνει διαγραμμένα CDEF. Εκτελέστε τη δέσμη ενεργειών επιδιόρθωσης της βάσης δεδομένων για να τα εντοπίσετε και/ή να τα διορθώσετε."
 
 #: include/global_arrays.php
 msgid "Graph Template includes deleted Data Input Method.  Please run database repair script to identify."
@@ -4529,7 +4529,7 @@ msgstr "Το πρότυπο γραφήματος περιλαμβάνει τη �
 
 #: include/global_arrays.php
 msgid "Graph Template includes deleted GPrint Prefix.  Please run database repair script to identify and/or correct."
-msgstr "Το πρότυπο γραφήματος περιλαμβάνει το διαγραφέν πρόθεμα GPrint. Εκτελέστε δέσμη ενεργειών επιδιόρθωσης βάσεων δεδομένων για να εντοπίσετε και /"
+msgstr "Το πρότυπο γραφήματος περιλαμβάνει διαγραμμένο πρόθεμα GPrint. Εκτελέστε τη δέσμη ενεργειών επιδιόρθωσης της βάσης δεδομένων για να το εντοπίσετε και/ή να το διορθώσετε."
 
 #: include/global_arrays.php
 msgid "Graph Template not found during Export.  Please run database repair script to identify."
@@ -5689,7 +5689,7 @@ msgstr "Προβολή SNMP Agent Cache"
 
 #: include/global_arrays.php utilities.php
 msgid "View SNMP Agent Notification Log"
-msgstr "Προβολή αρχείου καταγραφής ειδοποιήσεων παραμέτρων παραμέτρων SNMP"
+msgstr "Προβολή αρχείου καταγραφής ειδοποιήσεων πράκτορα SNMP"
 
 #: include/global_arrays.php
 msgid "View SNMP Notification Receivers"
@@ -5818,7 +5818,7 @@ msgstr "Επιτυχία!"
 
 #: include/global_arrays.php
 msgid "[Warning]"
-msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:"
+msgstr "[Προειδοποίηση]"
 
 #: include/global_arrays.php
 msgid "begins with"
@@ -6058,7 +6058,7 @@ msgstr "Επιτρέψτε την άδεια εισαγωγής"
 
 #: include/global_form.php
 msgid "Alternative Y Grid (--alt-y-grid)"
-msgstr "Εναλλακτικό πλέγμα Υ (--alt-y-grid)"
+msgstr "Εναλλακτικό πλέγμα Y (--alt-y-grid)"
 
 #: include/global_form.php
 msgid "An Email Address where the User can be reached."
@@ -6248,11 +6248,11 @@ msgstr "Δημιουργία νέου από το πρότυπο"
 
 #: include/global_form.php
 msgid "Dash Offset (dash-offset=offset)"
-msgstr "Απόκλιση παύλα (offset = εξισορρόπηση)"
+msgstr "Μετατόπιση παύλας (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "Πινακίδες (παύλες [= on_s [, off_s [, on_s, off_s] ...]])"
+msgstr "Παύλες (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php
 msgid "Data Retention"
@@ -6386,7 +6386,7 @@ msgstr "Για συσκευές SNMPv2 και SNMPv3, το μέγιστο μέγ
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Υποχρεωτικά Κανόνες Δύναμης (--force-rules-legend)"
+msgstr "Επιβολή υπομνήματος κανόνων (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6576,11 +6576,11 @@ msgstr "Είναι αυτό να φέρει το πρότυπο;"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Διαμορφωτής αριστερού άξονα (--left-axis-formatter &lt;formatname&gt;)"
+msgstr "Μορφοποιητής αριστερού άξονα (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
-msgstr "Κατεύθυνση λεκτικού (--legend-direction=&lt;κατεύθυνση&gt;)"
+msgstr "Κατεύθυνση υπομνήματος (--legend-direction=&lt;direction&gt;)"
 
 #: include/global_form.php
 msgid "Legend Options"
@@ -6588,7 +6588,7 @@ msgstr "Επιλογές λεζάντων"
 
 #: include/global_form.php
 msgid "Legend Position (--legend-position=&lt;position&gt;)"
-msgstr "Θέση θρυλικού (--legend-position=&lt;θέση&gt;)"
+msgstr "Θέση υπομνήματος (--legend-position=&lt;position&gt;)"
 
 #: include/global_form.php
 msgid "Line Width (decimal)"
@@ -6600,7 +6600,7 @@ msgstr "Κλειδωμένο"
 
 #: include/global_form.php
 msgid "Logarithmic Scaling (--logarithmic)"
-msgstr "Λογαριθμική κλίμακα (--logarithmic)"
+msgstr "Λογαριθμική κλιμάκωση (--logarithmic)"
 
 #: include/global_form.php
 msgid "Logical operation to combine rules."
@@ -6684,7 +6684,7 @@ msgstr "Λειτουργία"
 
 #: include/global_form.php
 msgid "Operator."
-msgstr "Χειριστής"
+msgstr "Χειριστής."
 
 #: include/global_form.php
 msgid "Output Field"
@@ -6804,15 +6804,15 @@ msgstr "Αντικατάσταση μοτίβου"
 
 #: include/global_form.php
 msgid "Right Axis (--right-axis &lt;scale:shift&gt;)"
-msgstr "Δεξικός άξονας (--right-axis &lt;κλίμακα: μετατόπιση&gt;)"
+msgstr "Δεξιός άξονας (--right-axis &lt;scale:shift&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Format (--right-axis-format &lt;format&gt;)"
-msgstr "Μορφή ορθών αξόνων (--right-axis-format &lt;format&gt;)"
+msgstr "Μορφή δεξιού άξονα (--right-axis-format &lt;format&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
-msgstr "Διαμορφωτής σωστών αξόνων (--right-axis-formatter &lt;formatname&gt;)"
+msgstr "Μορφοποιητής δεξιού άξονα (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Right Axis Label (--right-axis-label &lt;string&gt;)"
@@ -6908,7 +6908,7 @@ msgstr "Αλληλουχία"
 
 #: include/global_form.php
 msgid "Sequence."
-msgstr "Αλληλουχία"
+msgstr "Αλληλουχία."
 
 #: include/global_form.php
 msgid "Set any graph specific options here."
@@ -6920,7 +6920,7 @@ msgstr "Ορίστε τυχόν επιλογές συγκεκριμένου λο
 
 #: include/global_form.php
 msgid "Sets the exponent value on the Y-axis for numbers. Note: This option is deprecated and replaced by the --y-grid option.  In this option, Y-axis grid lines appear at each grid step interval.  Labels are placed every label factor lines."
-msgstr "Ορίζει την τιμή του εκθέτη στον άξονα Υ για αριθμούς. Σημείωση: Αυτή η επιλογή έχει καταργηθεί και αντικατασταθεί από την επιλογή -y-πλέγμα. Σε αυτήν την επιλογή, οι γραμμές πλέγματος άξονα Υ εμφανίζονται σε κάθε διάστημα βήματος δικτύου. Οι ετικέτες τοποθετούνται σε κάθε γραμμή παράγοντα ετικέτας."
+msgstr "Ορίζει την τιμή του εκθέτη στον άξονα Y για αριθμούς. Σημείωση: Αυτή η επιλογή έχει καταργηθεί και αντικατασταθεί από την επιλογή --y-grid. Σε αυτήν την επιλογή, οι γραμμές πλέγματος του άξονα Y εμφανίζονται σε κάθε διάστημα βήματος πλέγματος. Οι ετικέτες τοποθετούνται ανά γραμμές παράγοντα ετικέτας."
 
 #: include/global_form.php
 msgid "Shift Data"
@@ -7012,7 +7012,7 @@ msgstr "Το μοτίβο πρέπει να ταιριάζει."
 
 #: include/global_form.php
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "Το μοτίβο στοιχειοσειράς αντικατάστασης για χρήση ως κεφαλίδα δέντρου. <br> Ανατρέξτε σε έναν αγώνα π.χ. <strong>\\ $ {1}</strong> για τον πρώτο αγώνα!"
+msgstr "Το μοτίβο συμβολοσειράς αντικατάστασης για χρήση ως κεφαλίδα δέντρου.<br>Αναφερθείτε σε μια αντιστοίχιση, π.χ. <strong>\\${1}</strong> για την πρώτη αντιστοίχιση!"
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
@@ -7056,7 +7056,7 @@ msgstr "Τα δεδομένα που αποστέλλονται στο σενά�
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Η συχνότητα που θα συλλέγονται τα δεδομένα από την Πηγή Δεδομένων;"
+msgstr "Η συχνότητα με την οποία θα συλλέγονται τα δεδομένα από την Πηγή Δεδομένων."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7196,7 +7196,7 @@ msgstr "Σύνολο"
 
 #: include/global_form.php
 msgid "Unit Exponent Value (--units-exponent)"
-msgstr "Τιμή μονάδας εκθέτη (--units-exponent)"
+msgstr "Τιμή εκθέτη μονάδας (--units-exponent)"
 
 #: include/global_form.php
 msgid "Unit Grid Value (--unit/--y-grid)"
@@ -7216,11 +7216,11 @@ msgstr "Ανώτερο όριο (--upper-limit)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (accepting both limits, RRDtool default)"
-msgstr "Χρησιμοποιήστε - αυτόματη κλίμακα (δεκτή και τα δύο όρια, προεπιλογή RRDtool)"
+msgstr "Χρήση --alt-autoscale (αποδοχή και των δύο ορίων, προεπιλογή RRDtool)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale (ignoring given limits)"
-msgstr "Χρήση - αυτόματης κλίμακας (παραβλέποντας τα συγκεκριμένα όρια)"
+msgstr "Χρήση --alt-autoscale (παράβλεψη των δοθέντων ορίων)"
 
 #: include/global_form.php
 msgid "Use --alt-autoscale-max (accepting a lower limit)"
@@ -7232,7 +7232,7 @@ msgstr "Χρησιμοποιήστε --alt-autoscale-min (αποδεχόμενο
 
 #: include/global_form.php
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "Χρήση <br> - άλλη αυτόματη κλίμακα για την κλίμακα στο απόλυτο ελάχιστο και το μέγιστο <br> --alt-autoscale-max για την κλίμακα στη μέγιστη τιμή, χρησιμοποιώντας ένα δεδομένο κατώτατο όριο <br> - alt-autoscale-min για να κλιμακωθεί στην ελάχιστη τιμή, χρησιμοποιώντας ένα δεδομένο ανώτερο όριο <br> - άλλος-αυτόματη κλίμακα (με όρια) σε κλίμακα χρησιμοποιώντας τόσο το κατώτερο όσο και το ανώτερο όριο (προεπιλογή RRDtool) <br>"
+msgstr "Χρήση <br> --alt-autoscale για κλιμάκωση στο απόλυτο ελάχιστο και μέγιστο <br> --alt-autoscale-max για κλιμάκωση στη μέγιστη τιμή, χρησιμοποιώντας ένα δεδομένο κατώτερο όριο <br> --alt-autoscale-min για κλιμάκωση στην ελάχιστη τιμή, χρησιμοποιώντας ένα δεδομένο ανώτερο όριο <br> --alt-autoscale (με όρια) για κλιμάκωση χρησιμοποιώντας τόσο το κατώτερο όσο και το ανώτερο όριο (προεπιλογή RRDtool) <br>"
 
 #: include/global_form.php
 msgid "Use Logarithmic y-axis scaling"
@@ -7272,7 +7272,7 @@ msgstr "Κατακόρυφη ετικέτα (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Σε ποια τοποθεσία συσχετίζεται αυτή η συσκευή."
+msgstr "Με ποια Τοποθεσία συσχετίζεται αυτή η Συσκευή?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7296,11 +7296,11 @@ msgstr "Κατά την προβολή ενός γραφήματος που βα
 
 #: include/global_form.php
 msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Όταν ρυθμίζετε την επισήμανση του αριστερού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν &quot;αριθμητική&quot; όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, &quot;timestamp&quot; όπου οι τιμές ερμηνεύονται ως timestamps UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (προεπιλογή είναι &quot;% Y-% m-%d% H&quot; :%ΚΥΡΙΑ&quot;). Δείτε επίσης - μήκους μονάδων. Τέλος, &quot;διάρκεια&quot; όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες της υψηλής ποιότητας PRINT / GPRINT."
+msgstr "Όταν ρυθμίζετε την επισήμανση του αριστερού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν \"numeric\" όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, \"timestamp\" όπου οι τιμές ερμηνεύονται ως χρονικές σημάνσεις UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (η προεπιλογή είναι \"%Y-%m-%d %H:%M:%S\"). Δείτε επίσης --units-length. Τέλος, \"duration\" όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες των PRINT/GPRINT με προσδιορισμό valstrfduration."
 
 #: include/global_form.php
 msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Όταν ρυθμίζετε την επισήμανση του δεξιού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν &quot;αριθμητική&quot; όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, &quot;timestamp&quot; όπου οι τιμές ερμηνεύονται ως timestamps UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (προεπιλογή είναι &quot;% Y-% m-%d% H&quot; :%ΚΥΡΙΑ&quot;). Δείτε επίσης - μορφοποίηση μήκους και άξονα-άξονα. Τέλος, &quot;διάρκεια&quot; όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες της υψηλής ποιότητας PRINT / GPRINT."
+msgstr "Όταν ρυθμίζετε την επισήμανση του δεξιού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν \"numeric\" όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, \"timestamp\" όπου οι τιμές ερμηνεύονται ως χρονικές σημάνσεις UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (η προεπιλογή είναι \"%Y-%m-%d %H:%M:%S\"). Δείτε επίσης --units-length και --right-axis-format. Τέλος, \"duration\" όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες των PRINT/GPRINT με προσδιορισμό valstrfduration."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7332,19 +7332,19 @@ msgstr "[HRULE | VRULE]: Η τιμή του στοιχείου γραφήματ�
 
 #: include/global_languages.php
 msgid " G"
-msgstr "Γ"
+msgstr " Γ"
 
 #: include/global_languages.php
 msgid " K"
-msgstr "χιλ"
+msgstr " χιλ"
 
 #: include/global_languages.php
 msgid " M"
-msgstr "M"
+msgstr " M"
 
 #: include/global_languages.php
 msgid " T"
-msgstr "T"
+msgstr " T"
 
 #: include/global_settings.php
 #, php-format
@@ -7484,7 +7484,7 @@ msgstr "Κλείδωμα λογαριασμού"
 
 #: include/global_settings.php
 msgid "Additional Data Collector Settings"
-msgstr "Κατάσταση απομακρυσμένης συλλογής δεδομένων:"
+msgstr "Πρόσθετες ρυθμίσεις συλλέκτη δεδομένων"
 
 #: include/global_settings.php lib/html.php
 msgid "Advanced"
@@ -7876,7 +7876,7 @@ msgstr "Προεπιλεγμένη τιμή Ping Timeout σε milli-δευτερ
 
 #: include/global_settings.php
 msgid "Default Ping type for all new Devices.</i>"
-msgstr "Προεπιλεγμένος τύπος Ping για όλες τις νέες συσκευές."
+msgstr "Προεπιλεγμένος τύπος Ping για όλες τις νέες συσκευές.</i>"
 
 #: include/global_settings.php
 msgid "Default SNMP read community for all new Devices."
@@ -8192,7 +8192,7 @@ msgstr "Πεδίο που θα αντικαταστήσει το μήνυμα η
 
 #: include/global_settings.php user_domains.php
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
-msgstr "Πεδίο που θα αντικαταστήσει το πλήρες όνομα κατά τη δημιουργία ενός νέου χρήστη, που λαμβάνεται από το LDAP. (στα παράθυρα: displayname)"
+msgstr "Πεδίο που θα αντικαταστήσει το πλήρες όνομα κατά τη δημιουργία ενός νέου χρήστη, που λαμβάνεται από το LDAP. (στα παράθυρα: displayname) "
 
 #: include/global_settings.php
 msgid "Filter Settings"
@@ -8380,7 +8380,7 @@ msgstr "Πόσα αρχεία καταγραφής θέλετε να διατη�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Πόσο συχνά θέλετε να ενημερώνεται η εμφάνιση του ημερολογίου Kadupul."
+msgstr "Πόσο συχνά θέλετε να ενημερώνεται η εμφάνιση του ημερολογίου Kadupul?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8388,7 +8388,7 @@ msgstr "Πώς θα πρέπει οι Kadupul να υποστηρίζουν τι
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Πώς θα χειριστεί το Kadupul την καταγραφή συμβάντων."
+msgstr "Πώς θα χειριστεί το Kadupul την καταγραφή συμβάντων?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8432,7 +8432,7 @@ msgstr "Εάν ο πίνακας εξόδου ώθησης υπερβαίνει 
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Εάν ο συλλέκτης Boost υπερβεί αυτόν τον χρόνο εκτέλεσης, θα καταγραφεί μια προειδοποίηση στο αρχείο καταγραφής του Cacti,"
+msgstr "Εάν ο συλλέκτης Boost υπερβεί αυτόν τον χρόνο εκτέλεσης, θα καταγραφεί μια προειδοποίηση στο αρχείο καταγραφής του Cacti."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8876,7 +8876,7 @@ msgstr "Πρωτεύουσα διεύθυνση IP DNS"
 
 #: include/global_settings.php
 msgid "Privacy Passphrase (v3)"
-msgstr "Προσωπική φράση απορρήτου (v3)."
+msgstr "Φράση πρόσβασης απορρήτου (v3)"
 
 #: include/global_settings.php
 msgid "Privacy Protocol (v3)"
@@ -9152,11 +9152,11 @@ msgstr "Επίπεδο ασφάλειας (SL)"
 
 #: include/global_settings.php
 msgid "Select which Plugins you wish to place in Debug mode regardless of the Generic Log Level setting.  Any files used by this plugin will be treated as they are in Debug mode."
-msgstr "Επιλέξτε ποια πρόσθετα θέλετε να τοποθετήσετε στη λειτουργία Debug ανεξάρτητα από τη ρύθμιση Generic Level Level. Όλα τα αρχεία που χρησιμοποιούνται από αυτό το πρόσθετο θα αντιμετωπίζονται όπως είναι σε λειτουργία Debug."
+msgstr "Επιλέξτε ποια πρόσθετα θέλετε να τοποθετήσετε στη λειτουργία Debug ανεξάρτητα από τη ρύθμιση Generic Log Level. Όλα τα αρχεία που χρησιμοποιούνται από αυτό το πρόσθετο θα αντιμετωπίζονται όπως είναι σε λειτουργία Debug."
 
 #: include/global_settings.php
 msgid "Select which files you wish to place in Debug mode regardless of the Generic Log Level setting.  Any files selected will be treated as they are in Debug mode."
-msgstr "Επιλέξτε ποια αρχεία θέλετε να τοποθετήσετε στη λειτουργία Debug ανεξάρτητα από τη ρύθμιση Generic Level Level. Όλα τα επιλεγμένα αρχεία θα αντιμετωπίζονται όπως είναι σε λειτουργία Debug."
+msgstr "Επιλέξτε ποια αρχεία θέλετε να τοποθετήσετε στη λειτουργία Debug ανεξάρτητα από τη ρύθμιση Generic Log Level. Όλα τα επιλεγμένα αρχεία θα αντιμετωπίζονται όπως είναι σε λειτουργία Debug."
 
 #: include/global_settings.php
 msgid "Selective Device Debug"
@@ -9212,7 +9212,7 @@ msgstr "Πρέπει να ενεργοποιηθεί η προσωρινή απ�
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Πρέπει να ελέγχονται από προεπιλογή οι Χάρτες Έχει και έχει Πηγές Δεδομένων."
+msgstr "Θα πρέπει να είναι επιλεγμένα από προεπιλογή τα «Έχει γραφήματα» και «Έχει πηγές δεδομένων»?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -9532,7 +9532,7 @@ msgstr "Ο προεπιλεγμένος αριθμός γραμμών για ε�
 
 #: include/global_settings.php
 msgid "The default polling sync interval to use when creating a poller.  This setting will affect how often remote pollers are checked and updated."
-msgstr "Το προεπιλεγμένο διάστημα συγχρονισμού συγχρονισμού που χρησιμοποιείται κατά τη δημιουργία ενός poller. Αυτή η ρύθμιση θα επηρεάσει πόσο συχνά ελέγχονται και ενημερώνονται οι απομακρυσμένοι παραλήπτες."
+msgstr "Το προεπιλεγμένο διάστημα συγχρονισμού σάρωσης (polling) που χρησιμοποιείται κατά τη δημιουργία ενός poller. Αυτή η ρύθμιση θα επηρεάσει το πόσο συχνά ελέγχονται και ενημερώνονται οι απομακρυσμένοι pollers."
 
 #: include/global_settings.php
 msgid "The encryption method to use for the Email."
@@ -9624,7 +9624,7 @@ msgstr "Το μέγιστο μέγεθος του μηνύματος ηλεκτ�
 
 #: include/global_settings.php
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
-msgstr "Ο μέγιστος χρόνος που ο Kadupul θα περιμένει για την ολοκλήρωση ενός σεναρίου. Αυτή η τιμή χρονικού ορίου είναι σε δευτερόλεπτα"
+msgstr "Ο μέγιστος χρόνος που θα περιμένει το spine για την ολοκλήρωση ενός σεναρίου. Αυτή η τιμή χρονικού ορίου είναι σε δευτερόλεπτα και ισχύει μόνο για τον συλλέκτη δεδομένων spine."
 
 #: include/global_settings.php
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
@@ -10069,7 +10069,7 @@ msgstr "Όταν επιλεγεί, οι προσπάθειες πρόσβαση�
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Κατά τη δημιουργία μιας νέας αναφοράς, ποιος τύπος εικόνας θα πρέπει να χρησιμοποιηθεί για τα inline γραφήματα."
+msgstr "Κατά τη δημιουργία μιας νέας αναφοράς, ποιος τύπος εικόνας θα πρέπει να χρησιμοποιηθεί για τα ενσωματωμένα γραφήματα?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10304,7 +10304,7 @@ msgstr "Δεν υπάρχουν κριτήρια δημιουργίας γραφ
 
 #: lib/api_automation.php
 msgid "No Items Found"
-msgstr "Δε βρέθηκαν αντικείμενα."
+msgstr "Δε βρέθηκαν αντικείμενα"
 
 #: lib/api_automation.php
 msgid "No Matching Devices"
@@ -10373,7 +10373,7 @@ msgstr "Άγνωστο"
 
 #: lib/api_device.php
 msgid "Contact:"
-msgstr "Επαφή"
+msgstr "Επαφή:"
 
 #: lib/api_device.php
 msgid "Device Availability Check Bypassed"
@@ -10516,7 +10516,7 @@ msgstr "Χορήγηση"
 
 #: lib/auth.php
 msgid "Granted By: "
-msgstr "Χορηγείται από:"
+msgstr "Χορηγείται από: "
 
 #: lib/auth.php
 #, php-format
@@ -10538,7 +10538,7 @@ msgstr "Περιορισμένη"
 
 #: lib/auth.php
 msgid "Restricted By: "
-msgstr "Περιορισμένη"
+msgstr "Περιορίζεται από: "
 
 #: lib/auth.php
 #, php-format
@@ -10574,15 +10574,15 @@ msgstr "%s MBytes"
 
 #: lib/clog_webapi.php
 msgid " - Admin Filter active"
-msgstr "- Φίλτρο διαχειριστή ενεργό"
+msgstr " - Φίλτρο διαχειριστή ενεργό"
 
 #: lib/clog_webapi.php
 msgid " - Admin Unfiltered"
-msgstr "- Διαχειριστής χωρίς φιλτράρισμα"
+msgstr " - Διαχειριστής χωρίς φιλτράρισμα"
 
 #: lib/clog_webapi.php
 msgid " - Admin view"
-msgstr "- Προβολή διαχειριστή"
+msgstr " - Προβολή διαχειριστή"
 
 #: lib/clog_webapi.php utilities.php
 #, php-format
@@ -10595,7 +10595,7 @@ msgstr "Αυτόματα"
 
 #: lib/clog_webapi.php
 msgid "Boost"
-msgstr "Ενισχύστε "
+msgstr "Ενισχύστε"
 
 #: lib/clog_webapi.php
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog."
@@ -10705,7 +10705,7 @@ msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, &#3
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, το &#39;Count Count Changed&#39; δεν υποστηρίζεται"
+msgstr "&lt;arg_num_indexes&gt; λείπει από το αρχείο XML, το 'Index Count Changed' δεν υποστηρίζεται"
 
 #: lib/data_query.php
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
@@ -10817,7 +10817,7 @@ msgstr "Εκτέλεση βάδισης SNMP για δεδομένα @ &#39; %s&
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
-msgstr "Εκτέλεση περιπάτου SNMP για τη λίστα ευρετηρίων @ &#39; %s&#39; Count Count: %s"
+msgstr "Εκτέλεση SNMP walk για τη λίστα ευρετηρίων @ '%s' Πλήθος ευρετηρίων: %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11131,7 +11131,7 @@ msgstr "Η Πηγή δεδομένων δεν έχει οριστεί ως εν�
 
 #: lib/dsdebug.php
 msgid "Data Source returned Bad Results for "
-msgstr "Η πηγή δεδομένων επέστρεψε κακά αποτελέσματα για"
+msgstr "Η πηγή δεδομένων επέστρεψε κακά αποτελέσματα για "
 
 #: lib/dsdebug.php
 msgid "Data Source was not polled"
@@ -11143,7 +11143,7 @@ msgstr "Η αποσφαλμάτωση δεν ολοκληρώθηκε μετά �
 
 #: lib/dsdebug.php
 msgid "Failed fields: "
-msgstr "Αποτυχημένα πεδία:"
+msgstr "Αποτυχημένα πεδία: "
 
 #: lib/dsdebug.php
 msgid "No issues found"
@@ -11296,7 +11296,7 @@ msgstr "Θύρα"
 
 #: lib/functions.php
 msgid "SMTP error: "
-msgstr "Σφάλμα SMTP:"
+msgstr "Σφάλμα SMTP: "
 
 #: lib/functions.php
 msgid "Security"
@@ -11550,7 +11550,7 @@ msgstr "Σειρά πλωτών επιφανειών ξηρής λειτουργ
 
 #: lib/html.php
 msgid "Dry Run Gap Fill Range"
-msgstr "Σειρά γεμίσματος γεμίσματος ξηρής λειτουργίας"
+msgstr "Εύρος πλήρωσης κενών δοκιμαστικής εκτέλεσης"
 
 #: lib/html.php
 msgid "Dry Run StdDev"
@@ -12151,7 +12151,7 @@ msgstr "(Από τη συσκευή: %s)"
 
 #: lib/html_reports.php
 msgid "Email Frequency"
-msgstr "Συχνότητα ειδοποιήσεων με Email "
+msgstr "Συχνότητα ειδοποιήσεων με Email"
 
 #: lib/html_reports.php
 msgid "Email Sender/Receiver Details"
@@ -12507,7 +12507,7 @@ msgstr "Πρότυπο γραφήματος:"
 
 #: lib/html_tree.php
 msgid "Leaf:"
-msgstr "Φύλλο"
+msgstr "Φύλλο:"
 
 #: lib/html_tree.php
 msgid "Set/Refresh Filter"
@@ -12523,7 +12523,7 @@ msgstr "Βασισμένο στο πρότυπο"
 
 #: lib/html_tree.php lib/reports.php
 msgid "Tree:"
-msgstr "Δέντρο"
+msgstr "Δέντρο:"
 
 #: lib/html_utility.php
 msgid "Backtrack limit was exhausted!"
@@ -12655,7 +12655,7 @@ msgstr "Προεπισκόπηση"
 
 #: lib/import.php
 msgid "[preview] "
-msgstr "Προεπισκόπηση"
+msgstr "Προεπισκόπηση "
 
 #: lib/import.php
 msgid "[success]"
@@ -12760,11 +12760,11 @@ msgstr "Επίσης, αν πρόκειται για αναβάθμιση, βε�
 
 #: lib/installer.php
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
-msgstr "Ένα παράδειγμα του τρόπου ορισμού των δικαιωμάτων φακέλου εμφανίζεται εδώ, αν και ίσως χρειαστεί να το προσαρμόσετε ανάλογα με το λειτουργικό σας σύστημα, τους λογαριασμούς χρήστη και τα επιθυμητά δικαιώματα"
+msgstr "Ένα παράδειγμα του τρόπου ορισμού των δικαιωμάτων φακέλου εμφανίζεται εδώ, αν και ίσως χρειαστεί να το προσαρμόσετε ανάλογα με το λειτουργικό σας σύστημα, τους λογαριασμούς χρήστη και τα επιθυμητά δικαιώματα."
 
 #: lib/installer.php
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "Οι πίνακες που δημιουργούνται από τα πρόσθετα ενδέχεται να έχουν ζητήματα που συνδέονται με τους πίνακες Kadupul Core, εάν η αντιστοίχιση δεν συμφωνεί. Βεβαιωθείτε ότι η βάση δεδομένων σας έχει αλλάξει σε &#39;utf8mb4_unicode_ci&#39; εκτελώντας τα εξής:"
+msgstr "Οι πίνακες που δημιουργούνται από τα πρόσθετα ενδέχεται να έχουν ζητήματα που συνδέονται με τους πίνακες Kadupul Core, εάν η αντιστοίχιση δεν συμφωνεί. Βεβαιωθείτε ότι η βάση δεδομένων σας έχει αλλάξει σε &#39;utf8mb4_unicode_ci&#39; εκτελώντας τα εξής: "
 
 #: lib/installer.php package_import.php plugins.php
 msgid "Author"
@@ -13275,7 +13275,7 @@ msgstr "Μία ή περισσότερες διαδρομές εμφανίζον
 
 #: lib/installer.php
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
-msgstr "Ένα ή περισσότερα τραπέζια είναι πολύ μεγάλα για να μετατραπούν κατά τη διάρκεια της εγκατάστασης. Θα πρέπει να χρησιμοποιήσετε τη δέσμη ενεργειών cli / convert_tables.php για να εκτελέσετε τη μετατροπή και στη συνέχεια να ανανεώσετε αυτήν τη σελίδα. Για παράδειγμα:"
+msgstr "Ένα ή περισσότερα τραπέζια είναι πολύ μεγάλα για να μετατραπούν κατά τη διάρκεια της εγκατάστασης. Θα πρέπει να χρησιμοποιήσετε τη δέσμη ενεργειών cli / convert_tables.php για να εκτελέσετε τη μετατροπή και στη συνέχεια να ανανεώσετε αυτήν τη σελίδα. Για παράδειγμα: "
 
 #: lib/installer.php
 msgid "Optional"
@@ -13460,7 +13460,7 @@ msgstr "Ανατρέξτε στο docs/rrd-path-containment.md για λεπτο
 
 #: lib/installer.php
 msgid "Select default theme: "
-msgstr "Επιλέξτε προεπιλεγμένο θέμα:"
+msgstr "Επιλέξτε προεπιλεγμένο θέμα: "
 
 #: lib/installer.php
 #, php-format
@@ -13626,7 +13626,7 @@ msgstr "Αυτό μπορεί να συμβεί εάν έχετε μια κεν�
 #: lib/installer.php
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
-msgstr "Αυτή η διαδικασία θα σας καθοδηγήσει στα βήματα αναβάθμισης από την έκδοση &#39; %s&#39;."
+msgstr "Αυτή η διαδικασία θα σας καθοδηγήσει στα βήματα αναβάθμισης από την έκδοση &#39; %s&#39;. "
 
 #: lib/installer.php
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
@@ -13808,7 +13808,7 @@ msgstr "Η προεπιλεγμένη ταξινόμηση της βάσης δ�
 
 #: lib/installer.php
 msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
-msgstr "Η προεπιλεγμένη ταξινόμηση της βάσης δεδομένων ΔΕΝ φαίνεται να είναι πλήρης συμβατή με UTF8."
+msgstr "Η προεπιλεγμένη ταξινόμηση της βάσης δεδομένων ΔΕΝ φαίνεται να είναι πλήρης συμβατή με UTF8. "
 
 #: lib/installer.php
 msgid "Your server collation appears to be UTF8 compliant"
@@ -13816,7 +13816,7 @@ msgstr "Η ταξινόμηση του διακομιστή σας φαίνετ�
 
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
-msgstr "Η ταξινόμηση του διακομιστή σας ΔΕΝ φαίνεται να είναι πλήρως συμβατή με UTF8."
+msgstr "Η ταξινόμηση του διακομιστή σας ΔΕΝ φαίνεται να είναι πλήρως συμβατή με UTF8. "
 
 #: lib/installer.php
 #, php-format
@@ -13825,7 +13825,7 @@ msgstr "και %d ακόμη"
 
 #: lib/ldap.php
 msgid "Authentication Failure"
-msgstr "Αποτυχία ταυτοποίησης VNC."
+msgstr "Αποτυχία ταυτοποίησης"
 
 #: lib/ldap.php
 msgid "Authentication Success"
@@ -13980,12 +13980,12 @@ msgstr "προεπιλογή"
 #: lib/plugins.php
 #, php-format
 msgid "%s Version %s or above is required for %s. "
-msgstr "%s Έκδοση %s ή παραπάνω απαιτείται για το %s."
+msgstr "%s Έκδοση %s ή παραπάνω απαιτείται για το %s. "
 
 #: lib/plugins.php
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
-msgstr "Το %s απαιτείται για το %s και δεν είναι εγκατεστημένο."
+msgstr "Το %s απαιτείται για το %s και δεν είναι εγκατεστημένο. "
 
 #: lib/plugins.php
 msgid "Legacy Plugin"
@@ -14329,7 +14329,7 @@ msgstr "Η εντολή SNMP είναι: %s"
 
 #: lib/spikekill.php
 msgid "Avg"
-msgstr "Μ.Ο."
+msgstr "Μέσος όρος"
 
 #: lib/spikekill.php
 msgid "CF"
@@ -15145,7 +15145,7 @@ msgstr "Κανόνες συσκευών"
 
 #: package_import.php templates_import.php
 msgid "Differences"
-msgstr "Διαφορές "
+msgstr "Διαφορές"
 
 #: package_import.php
 msgid "Error in Package"
@@ -15157,7 +15157,7 @@ msgstr "Σφάλμα: Μη έγκυρη διαδρομή αρχείου."
 
 #: package_import.php
 msgid "File Differences for: "
-msgstr "Διαφορές αρχείων για:"
+msgstr "Διαφορές αρχείων για: "
 
 #: package_import.php
 msgid "Filename"
@@ -15821,7 +15821,7 @@ msgstr "Ο αριθμός των επαναλήψεων προσπάθειας �
 
 #: pollers.php
 msgid "The polling sync interval in use.  This setting will affect how often this poller is checked and updated."
-msgstr "Το διάστημα συγχρονισμού συγχρονισμού που χρησιμοποιείται. Αυτή η ρύθμιση θα επηρεάσει πόσο συχνά ελέγχεται και ενημερώνεται αυτό το poller."
+msgstr "Το διάστημα συγχρονισμού που χρησιμοποιείται. Αυτή η ρύθμιση θα επηρεάσει πόσο συχνά ελέγχεται και ενημερώνεται αυτό το poller."
 
 #: pollers.php
 msgid "The primary name for this Data Collector."
@@ -16519,7 +16519,7 @@ msgstr "Κληρονομώ"
 
 #: tree.php
 msgid "Last Edited"
-msgstr "Διορθώθηκε "
+msgstr "Διορθώθηκε"
 
 #: tree.php
 msgid "Natural"
@@ -17160,7 +17160,7 @@ msgstr "Εισαγάγετε ένα σημαντικό όνομα για αυτ�
 
 #: user_domains.php
 msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
-msgstr "Πεδίο που θα αντικαταστήσει το μήνυμα ηλεκτρονικού ταχυδρομείου που λαμβάνεται από το LDAP. (στα παράθυρα: ταχυδρομείο)"
+msgstr "Πεδίο που θα αντικαταστήσει το μήνυμα ηλεκτρονικού ταχυδρομείου που λαμβάνεται από το LDAP. (στα παράθυρα: ταχυδρομείο) "
 
 #: user_domains.php
 msgid "If this checkbox is checked, users will be able to log in using this domain."
@@ -17168,7 +17168,7 @@ msgstr "Εάν το πλαίσιο ελέγχου είναι ενεργοποι�
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
-msgstr "Κάντε την προεπιλεγμένη προεπιλεγμένη περιοχή"
+msgstr "Ορισμός επιλεγμένου τομέα ως προεπιλεγμένου"
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17550,7 +17550,7 @@ msgstr "Συγχρόνες διαδικασίες"
 
 #: utilities.php
 msgid "Concurrent Processes:"
-msgstr "Συγχρόνες διαδικασίες"
+msgstr "Ταυτόχρονες διεργασίες:"
 
 #: utilities.php
 msgid "Configuration Settings"
@@ -17578,7 +17578,7 @@ msgstr "Στοιχεία προσωρινής αποθήκευσης ερωτη�
 
 #: utilities.php
 msgid "Data Source Statistics Purged."
-msgstr "Στατιστικά στοιχεία πηγών δεδομένων"
+msgstr "Τα στατιστικά στοιχεία πηγών δεδομένων εκκαθαρίστηκαν."
 
 #: utilities.php
 msgid "Data Source Statistics Utilities"
@@ -17762,7 +17762,7 @@ msgstr "Δυνατότητα μέγιστης μνήμης σύνδεσης"
 
 #: utilities.php
 msgid "Max Core Memory Possible"
-msgstr "Μέγιστη χωρητικότητα μνήμης:"
+msgstr "Μέγιστη δυνατή μνήμη πυρήνα"
 
 #: utilities.php
 msgid "Max OID"
@@ -17782,7 +17782,7 @@ msgstr "Μέγιστα θέματα"
 
 #: utilities.php
 msgid "Max Total Memory Possible"
-msgstr "Μέγιστη χωρητικότητα μνήμης:"
+msgstr "Μέγιστη δυνατή συνολική μνήμη"
 
 #: utilities.php
 msgid "Maximum Allowed Runtime:"
@@ -17915,7 +17915,7 @@ msgstr "Διεργασία: %d"
 
 #: utilities.php
 msgid "Procs: "
-msgstr "1 Διαδικασία"
+msgstr "Διεργασίες: "
 
 #: utilities.php
 msgctxt "Button: delete all table entries"
@@ -18013,7 +18013,7 @@ msgstr "Εκτέλεση ρύθμισης ώρας"
 
 #: utilities.php
 msgid "Running Processes:"
-msgstr "Συγχρόνες διαδικασίες"
+msgstr "Εκτελούμενες διεργασίες:"
 
 #: utilities.php
 msgid "SNMP Agent Cache"
@@ -18101,7 +18101,7 @@ msgstr "Το αρχείο καταγραφής Kadupul αποθηκεύει στ
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "Η Poller Cache θα επαναδημιουργηθεί αν επιλέξετε αυτήν την επιλογή. Χρησιμοποιήστε αυτήν την επιλογή μόνο σε περίπτωση συντριβής βάσης δεδομένων, εάν αντιμετωπίζετε ζητήματα μετά τη συντριβή και έχετε ήδη εκτελέσει τα εργαλεία επισκευής βάσης δεδομένων. Εναλλακτικά, εάν αντιμετωπίζετε προβλήματα με μια συγκεκριμένη συσκευή, απλά αποθηκεύστε εκ νέου τη Συσκευή για να δημιουργήσετε ξανά τη Poller Cache. Υπάρχει επίσης μια διεπαφή γραμμής εντολών ισοδύναμη με αυτήν την εντολή που συνιστάται για μεγάλα συστήματα. <i class=\"deviceDown\">ΣΗΜΕΙΩΣΗ: Σε μεγάλα συστήματα, αυτή η εντολή μπορεί να διαρκέσει αρκετά λεπτά έως ώρες για να ολοκληρωθεί και συνεπώς δεν πρέπει να τρέξει από το Kadupul UI. Μπορείτε απλά να εκτελέσετε &#39;php -q cli / rebuild_poller_cache.php --help&#39; στη γραμμή εντολών για περισσότερες πληροφορίες.</i>"
+msgstr "Η Poller Cache θα επαναδημιουργηθεί αν επιλέξετε αυτήν την επιλογή. Χρησιμοποιήστε αυτήν την επιλογή μόνο σε περίπτωση συντριβής βάσης δεδομένων, εάν αντιμετωπίζετε ζητήματα μετά τη συντριβή και έχετε ήδη εκτελέσει τα εργαλεία επισκευής βάσης δεδομένων. Εναλλακτικά, εάν αντιμετωπίζετε προβλήματα με μια συγκεκριμένη συσκευή, απλά αποθηκεύστε εκ νέου τη Συσκευή για να δημιουργήσετε ξανά τη Poller Cache. Υπάρχει επίσης μια διεπαφή γραμμής εντολών ισοδύναμη με αυτήν την εντολή που συνιστάται για μεγάλα συστήματα."
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
@@ -18137,7 +18137,7 @@ msgstr "Αυτή η προτεινόμενη τιμή μνήμης υπολογ�
 
 #: utilities.php
 msgid "Threads: "
-msgstr "Θέματα"
+msgstr "Νήματα: "
 
 #: utilities.php
 msgid "Timed Out"
@@ -18153,7 +18153,7 @@ msgstr "Συνολικές πηγές δεδομένων:"
 
 #: utilities.php
 msgid "Total Poller Items:"
-msgstr "Poller Cache στοιχεία"
+msgstr "Σύνολο στοιχείων Poller:"
 
 #: utilities.php
 #, php-format
@@ -18314,3 +18314,5 @@ msgstr "VDEF [νέο]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Τα χρησιμοποιούμενα VDEF δεν μπορούν να διαγραφούν. Κατά τη χρήση ορίζεται ως αναφορά από ένα γράφημα ή ένα πρότυπο γραφήματος."
+
+

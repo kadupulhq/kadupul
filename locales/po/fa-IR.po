@@ -2212,7 +2212,7 @@ msgstr "تغییر دستگاه"
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "یک دستگاه جدید برای این منبع داده انتخاب کنید و روی «ادامه» کلیک کنید."
-msgstr[1] "یک دستگاه جدید برای این منابع داده انتخاب کنید و روی «ادامه» کلیک کنید."
+msgstr[1] "یک دستگاه جدید برای این منابع داده انتخاب کنید و روی «ادامه» کلیک کنید"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -4604,7 +4604,7 @@ msgstr "Ping از نوع ICMP"
 
 #: include/global_arrays.php
 msgid "ILO, IPMI, iDrac, etc."
-msgstr "ILO، IPMI، iDrac و غیره"
+msgstr "ILO، IPMI، iDrac و غیره."
 
 #: include/global_arrays.php
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -5077,7 +5077,7 @@ msgstr "پرتغالی (برزیل)"
 
 #: include/global_arrays.php
 msgid "Power Related PDUs/STS, etc."
-msgstr "مرتبط با برق؛ PDUها/STSها و غیره"
+msgstr "مرتبط با برق؛ PDUها/STSها و غیره."
 
 #: include/global_arrays.php lib/html_filter.php lib/html_graph.php
 #: lib/html_tree.php
@@ -7271,7 +7271,7 @@ msgstr "برچسب عمودی (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "این دستگاه با کدام سایت مرتبط است."
+msgstr "این دستگاه با کدام سایت مرتبط است؟"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "چند فایل لاگ می‌خواهید نگهداری کنید؟ ب�
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "هر چند وقت یک‌بار می‌خواهید نمایش لاگ Kadupul به‌روزرسانی شود."
+msgstr "هر چند وقت یک‌بار می‌خواهید نمایش لاگ Kadupul به‌روزرسانی شود؟"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "Kadupul چگونه باید از تاریخ‌های کلاینت بر �
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Kadupul چگونه ثبت لاگ رویدادها را مدیریت خواهد کرد."
+msgstr "Kadupul چگونه ثبت لاگ رویدادها را مدیریت خواهد کرد؟"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "اگر جدول خروجی boost بر حسب تعداد رکوردها �
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "اگر پولر boost از این زمان اجرا فراتر رود، یک هشدار در لاگ cacti قرار داده خواهد شد،"
+msgstr "اگر پولر boost از این زمان اجرا فراتر رود، یک هشدار در لاگ cacti قرار داده خواهد شد."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "آیا کش تصویر باید فعال شود؟"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "آیا گزینه‌های دارای نمودار و دارای منبع داده به صورت پیش‌فرض علامت‌دار باشند."
+msgstr "آیا گزینه‌های دارای نمودار و دارای منبع داده به صورت پیش‌فرض علامت‌دار باشند؟"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "وقتی علامت زده شود، هرگونه تلاش برای دس�
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "هنگام ایجاد یک گزارش جدید، چه نوع تصویری باید برای نمودارهای درون‌خطی استفاده شود."
+msgstr "هنگام ایجاد یک گزارش جدید، چه نوع تصویری باید برای نمودارهای درون‌خطی استفاده شود؟"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -18313,3 +18313,5 @@ msgstr "VDEFها [جدید]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "VDEFهایی که در حال استفاده هستند قابل حذف نیستند. «در حال استفاده» به معنی ارجاع شدن توسط یک نمودار یا قالب نمودار است."
+
+

@@ -7055,7 +7055,7 @@ msgstr "Les données envoyées au script, incluant le chemin complet vers le scr
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "La fréquence à laquelle les données seront collectées depuis la source de données ?"
+msgstr "La fréquence à laquelle les données seront collectées depuis la source de données."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "Étiquette verticale (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Le site auquel cet équipement est associé."
+msgstr "À quel site cet équipement est-il associé ?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7607,7 +7607,7 @@ msgstr "Lignes d'auto-complétion"
 
 #: include/global_settings.php
 msgid "Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Kadupul"
-msgstr "Archivage ou suppression automatique des fichiers RRD lorsque les sources de données correspondantes sont supprimées de Kadupul."
+msgstr "Archivage ou suppression automatique des fichiers RRD lorsque les sources de données correspondantes sont supprimées de Kadupul"
 
 #: include/global_settings.php
 msgid "Automation Notification From Email"
@@ -8387,7 +8387,7 @@ msgstr "Comment Kadupul doit-il gérer les dates côté client en fonction du fu
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Mode de gestion de la journalisation des événements par Kadupul."
+msgstr "Comment Kadupul gérera-t-il la journalisation des événements ?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8403,11 +8403,11 @@ msgstr "Si cette case est cochée, Kadupul enregistrera des informations LDAP su
 
 #: include/global_settings.php
 msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
-msgstr "Si Kadupul ne peut pas déterminer la vitesse de l'interface parce que ifSpeed ou ifHighSpeed n'est pas défini ou est nul, quelle valeur maximale souhaitez-vous pour les fichiers RRD générés ?"
+msgstr "Si Kadupul ne peut pas déterminer la vitesse de l'interface parce que ifSpeed ou ifHighSpeed n'est pas défini ou est nul, quelle valeur maximale souhaitez-vous pour les fichiers RRD générés."
 
 #: include/global_settings.php
 msgid "If a Device Data Source is included in an Aggregate Graph, show that Graph along with other Device Graphs"
-msgstr "Si une source de données d'un équipement est incluse dans un graphique agrégé, afficher ce graphique avec les autres graphiques de l'équipement."
+msgstr "Si une source de données d'un équipement est incluse dans un graphique agrégé, afficher ce graphique avec les autres graphiques de l'équipement"
 
 #: include/global_settings.php
 msgid "If a user authenticates and selects 'Keep me signed in', an authentication cookie will be created on the user's computer allowing that user to stay logged in.  The authentication cookie expires after 90 days of non-use."
@@ -9211,7 +9211,7 @@ msgstr "La mise en cache d'images doit-elle être activée ?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Indique si les options « Avec graphiques » et « Avec sources de données » doivent être cochées par défaut."
+msgstr "Les options « Avec graphiques » et « Avec sources de données » doivent-elles être cochées par défaut ?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "Une fois cochée, toute tentative d'accès à Kadupul sera redirigée ve
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Lors de la création d'un nouveau rapport, quel type d'image doit être utilisé pour les graphiques intégrés."
+msgstr "Lors de la création d'un nouveau rapport, quel type d'image doit être utilisé pour les graphiques intégrés ?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -10084,7 +10084,7 @@ msgstr "Lorsque cette option est désactivée, Kadupul Automation ne crée activ
 
 #: include/global_settings.php
 msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
-msgstr "Lors de l'affichage des graphiques, autoriser les dates des graphiques à s'étendre « dans le futur »."
+msgstr "Lors de l'affichage des graphiques, autoriser les dates des graphiques à s'étendre « dans le futur »"
 
 #: include/global_settings.php
 msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
@@ -13620,7 +13620,7 @@ msgstr "Cette erreur peut également se produire si l'utilisateur de la base de 
 
 #: lib/installer.php
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
-msgstr "Cela peut se produire si vous avez une base de données vierge et que vous n'avez pas encore importé le fichier cacti.sql."
+msgstr "Cela peut se produire si vous avez une base de données vierge et que vous n'avez pas encore importé le fichier cacti.sql"
 
 #: lib/installer.php
 #, php-format
@@ -13770,7 +13770,7 @@ msgstr "Votre serveur Kadupul est en cours d'installation"
 #: lib/installer.php
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
-msgstr "Votre serveur Kadupul v%s a été installé/mis à jour avec des erreurs."
+msgstr "Votre serveur Kadupul v%s a été installé/mis à jour avec des erreurs"
 
 #: lib/installer.php
 #, php-format
@@ -14328,7 +14328,7 @@ msgstr "La commande SNMP est : %s"
 
 #: lib/spikekill.php
 msgid "Avg"
-msgstr "Moy."
+msgstr "Moyenne"
 
 #: lib/spikekill.php
 msgid "CF"
@@ -14660,7 +14660,7 @@ msgstr "Un fuseau horaire valide qui correspond à MySQL et au système"
 #: lib/utility.php
 #, php-format
 msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
-msgstr "À partir de %s %s, vous pouvez contrôler la fréquence à laquelle %s vide les transactions sur le disque. La valeur par défaut est de 1 seconde, mais sur les systèmes à fortes E/S, une valeur supérieure à 1 permet de rendre les E/S disque plus séquentielles."
+msgstr "À partir de %s %s, vous pouvez contrôler la fréquence à laquelle %s vide les transactions sur le disque. La valeur par défaut est de 1 seconde, mais sur les systèmes à fortes E/S, une valeur supérieure à 1 permet de rendre les E/S disque plus séquentielles"
 
 #: lib/utility.php
 msgid "Comments"
@@ -15445,7 +15445,7 @@ msgstr "Désinstaller le plugin"
 
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
-msgstr "La désinstallation de ce plugin supprimera toutes ses données et tous ses paramètres. Si vous souhaitez vraiment désinstaller le plugin, cliquez sur « Désinstaller » ci-dessous. Sinon, cliquez sur « Annuler »."
+msgstr "La désinstallation de ce plugin supprimera toutes ses données et tous ses paramètres. Si vous souhaitez vraiment désinstaller le plugin, cliquez sur « Désinstaller » ci-dessous. Sinon, cliquez sur « Annuler »"
 
 #: poller.php
 #, php-format
@@ -18169,7 +18169,7 @@ msgstr "Fréquence de mise à jour :"
 
 #: utilities.php
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
-msgstr "Utilisez cet utilitaire pour afficher les problèmes liés aux fichiers RRD manquants ou aux valeurs manquantes dans les fichiers RRD. Vous devez activer rrdcheck dans Configuration -> Paramètres -> Données."
+msgstr "Utilisez cet utilitaire pour afficher les problèmes liés aux fichiers RRD manquants ou aux valeurs manquantes dans les fichiers RRD. Vous devez activer rrdcheck dans Configuration -> Paramètres -> Données"
 
 #: utilities.php
 msgid "User Login History"
@@ -18313,3 +18313,5 @@ msgstr "VDEFs [nouveau]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Les VDEF en cours d'utilisation ne peuvent pas être supprimés. « En cours d'utilisation » signifie qu'un VDEF est référencé par un graphique ou un modèle de graphique."
+
+

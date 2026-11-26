@@ -5913,7 +5913,7 @@ msgstr "bihura n'imvugo isanzwe (RegEx)"
 
 #: include/global_arrays.php
 msgid "mins"
-msgstr "imin."
+msgstr "iminota"
 
 #: include/global_arrays.php lib/api_device.php
 msgid "minutes"
@@ -5929,7 +5929,7 @@ msgstr "amasegonda"
 
 #: include/global_arrays.php
 msgid "secs"
-msgstr "amaseg."
+msgstr "amasegonda"
 
 #: include/global_form.php
 #, php-format
@@ -7055,7 +7055,7 @@ msgstr "Amakuru yoherezwa kuri script, arimo inzira yuzuye igana kuri script n'i
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Inshuro amakuru azajya akusanywa avuye ku nkomoko y'amakuru?"
+msgstr "Inshuro amakuru azajya akusanywa avuye ku nkomoko y'amakuru."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7271,7 +7271,7 @@ msgstr "Inyandiko ihagaritse (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Ikibanza iki Gikoresho gihujwe na cyo."
+msgstr "Ni ikihe Kibanza iki Gikoresho gihujwe na cyo?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -8379,7 +8379,7 @@ msgstr "Ni amadosiye angahe y'ibikorwa wifuza kugumana? Koresha 0 kugira ngo uta
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Inshuro wifuza ko iyerekanwa rya Log ya Kadupul rivugururwa."
+msgstr "Ni kangahe wifuza ko iyerekanwa rya Log ya Kadupul rivugururwa?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8387,7 +8387,7 @@ msgstr "Uko Kadupul igomba gushyigikira amatariki y'Umukoresha hashingiwe ku isa
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Uko Kadupul izajya yandika amakuru y'ibikorwa."
+msgstr "Ni gute Kadupul izajya yandika amakuru y'ibikorwa?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8431,7 +8431,7 @@ msgstr "Niba imbonerahamwe y'ibisohoka ya Boost irenze iki gipimo mu mubare w'in
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Niba igikusanyamakuru cya Boost kirengeje iki gihe cy'imikorere, umuburo uzashyirwa mu nyandiko y'ibyabaye ya Cacti,"
+msgstr "Niba igikusanyamakuru cya Boost kirengeje iki gihe cy'imikorere, umuburo uzashyirwa mu nyandiko y'ibyabaye ya Cacti."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -9211,7 +9211,7 @@ msgstr "Kubika amashusho by'agateganyo bikwiye kwemerwa?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "Niba Ifite Ibishushanyo na Ifite Inkomoko y'amakuru bigomba guhora bihiswemo ku buryo bw'ibanze."
+msgstr "Ese Ifite Ibishushanyo na Ifite Inkomoko y'amakuru bigomba guhora bihiswemo ku buryo bw'ibanze?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10068,7 +10068,7 @@ msgstr "Igihe hashyizweho akamenyetso, buri gikorwa cyose cyo kwinjira muri Kadu
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Igihe uhanga raporo nshya, ni ubuhe bwoko bw'ishusho bugomba gukoreshwa ku bishushanyo biri mu nyandiko."
+msgstr "Igihe uhanga raporo nshya, ni ubuhe bwoko bw'ishusho bugomba gukoreshwa ku bishushanyo biri mu nyandiko?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -18313,3 +18313,5 @@ msgstr "Za VDEF [nshya]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Za VDEF zirimo gukoreshwa ntizishobora gusibwa. Gukoreshwa bisobanura ko zishingiweho n'Igishushanyo cyangwa Inyandikorugero y'igishushanyo."
+
+

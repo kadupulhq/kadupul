@@ -797,7 +797,7 @@ msgstr "Pụọ n'Ebe Niile"
 
 #: auth_profile.php include/global_arrays.php lib/html.php
 msgid "Preview View"
-msgstr "Nlele Nlele Mbụ"
+msgstr "Ọhụụ Nlele Mbụ"
 
 #: auth_profile.php
 msgid "Private Data Cleared"
@@ -5416,7 +5416,7 @@ msgstr "Okwu Nzuzo Nkwenye SNMP v3 adabaghị"
 
 #: include/global_arrays.php
 msgid "The SNMP v3 Privacy Passphrases do not match"
-msgstr "Okwu Nzuzo Nzuzo SNMP v3 adabaghị"
+msgstr "Okwu Nzuzo nke Nzuzo SNMP v3 adabaghị"
 
 #: include/global_arrays.php
 msgid "The directory highlighted does not exist.  Please enter a valid directory."
@@ -6189,7 +6189,7 @@ msgstr "Họrọ Usoro Nkwado SNMPv3."
 
 #: include/global_form.php
 msgid "Choose the SNMPv3 Privacy Passphrase."
-msgstr "Họrọ Okwu Nzuzo Nzuzo SNMPv3."
+msgstr "Họrọ Okwu Nzuzo nke Nzuzo SNMPv3."
 
 #: include/global_form.php
 msgid "Choose the SNMPv3 Privacy Protocol."
@@ -6834,7 +6834,7 @@ msgstr "Port SNMP"
 
 #: include/global_form.php
 msgid "SNMP Privacy Passphrase (v3)"
-msgstr "Okwu Nzuzo Nzuzo SNMP (v3)"
+msgstr "Okwu Nzuzo nke Nzuzo SNMP (v3)"
 
 #: include/global_form.php
 msgid "SNMP Privacy Protocol (v3)"
@@ -7034,7 +7034,7 @@ msgstr "Data e zigara na script, nke gụnyere ụzọ zuru ezu gaa na script na
 
 #: include/global_form.php
 msgid "The frequency that data will be collected from the Data Source."
-msgstr "Ugboro ole a ga-anakọta data site na Isi Iyi Data?"
+msgstr "Ugboro ole a ga-anakọta data site na Isi Iyi Data."
 
 #: include/global_form.php
 msgid "The full path to the RRDfile."
@@ -7250,7 +7250,7 @@ msgstr "Akara Kwụ Ọtọ (--vertical-label)"
 
 #: include/global_form.php
 msgid "What Site is this Device associated with?"
-msgstr "Saịtị nke Ngwaọrụ a jikọtara na ya."
+msgstr "Kedu Saịtị nke Ngwaọrụ a jikọtara na ya?"
 
 #: include/global_form.php
 msgid "What to do when this user logs in."
@@ -7450,7 +7450,7 @@ msgstr "Ndepụta ID Ngwaọrụ e ji rikọm kewaa nke ị chọrọ ka ọ d�
 
 #: include/global_settings.php
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
-msgstr "Nhọrọ naanị maka onye mmepe iji chọpụta mmepụta Isi Data karịsịa gburugburu nyocha maka ịdị iche."
+msgstr "Nhọrọ naanị maka onye mmepe iji chọpụta mmepụta Isi Data karịsịa gburugburu nyocha maka ịdị iche"
 
 #: include/global_settings.php user_domains.php
 msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
@@ -7526,7 +7526,7 @@ msgstr "Eriri ọ bụla dakọtara na regex a ga-ewepụ na ngosi onye ọrụ.
 
 #: include/global_settings.php
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
-msgstr "Ọnụọgụ ọ bụla karịrị nkezi site na ndịiche ọkọlọtọ ole a ga-ewepụ. Ọnụọgụ dị mma ga-adabere n'ụdị data a ga-arụ ọrụ na ya. Anyị na-akwado ọnụọgụ na-erughị Ndịiche Ọkọlọtọ 5."
+msgstr "Ọnụọgụ ọ bụla karịrị nkezi site na ndịiche ọkọlọtọ ole a ga-ewepụ. Ọnụọgụ dị mma ga-adabere n'ụdị data a ga-arụ ọrụ na ya. Anyị na-akwado ọnụọgụ na-adịghị ala karịa Ndịiche Ọkọlọtọ 5."
 
 #: include/global_settings.php
 msgid "Archive"
@@ -7894,7 +7894,7 @@ msgstr "Usoro Nkwado SNMPv3 Ndabere maka Ngwaọrụ ọhụrụ niile."
 
 #: include/global_settings.php
 msgid "Default SNMPv3 Privacy Passphrase for all new Devices."
-msgstr "Okwu Nzuzo Nzuzo SNMPv3 Ndabere maka Ngwaọrụ ọhụrụ niile."
+msgstr "Okwu Nzuzo nke Nzuzo SNMPv3 Ndabere maka Ngwaọrụ ọhụrụ niile."
 
 #: include/global_settings.php
 msgid "Default SNMPv3 Privacy Protocol for all new Devices."
@@ -8358,7 +8358,7 @@ msgstr "Faịlụ log ole ka ị chọrọ idobe? Jiri 0 ka ị ghara iwepụ lo
 
 #: include/global_settings.php
 msgid "How often do you want the Kadupul log display to update?"
-msgstr "Ugboro ole ị chọrọ ka ngosi log Kadupul melite."
+msgstr "Ugboro ole ị chọrọ ka ngosi log Kadupul melite?"
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
@@ -8366,7 +8366,7 @@ msgstr "Otu Kadupul kwesịrị isi kwado Ụbọchị Onye Ahịa dabere na mpa
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging?"
-msgstr "Otu Kadupul ga-esi jikwaa ndekọ ihe omume."
+msgstr "Kedu otu Kadupul ga-esi jikwaa ndekọ ihe omume?"
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
@@ -8410,7 +8410,7 @@ msgstr "Ọ bụrụ na tebụl mmepụta boost karịrị ogo a, na ndekọ, mm
 
 #: include/global_settings.php
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
-msgstr "Ọ bụrụ na boost poller karịrị oge arụmọrụ a, a ga-etinye ịdọ aka ná ntị na cacti log,"
+msgstr "Ọ bụrụ na boost poller karịrị oge arụmọrụ a, a ga-etinye ịdọ aka ná ntị na cacti log."
 
 #: include/global_settings.php
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
@@ -8854,7 +8854,7 @@ msgstr "Adreesị IP DNS Mbụ"
 
 #: include/global_settings.php
 msgid "Privacy Passphrase (v3)"
-msgstr "Okwu Nzuzo Nzuzo (v3)"
+msgstr "Okwu Nzuzo nke Nzuzo (v3)"
 
 #: include/global_settings.php
 msgid "Privacy Protocol (v3)"
@@ -9190,7 +9190,7 @@ msgstr "E kwesịrị ịgbanwuo caching onyonyo?"
 
 #: include/global_settings.php
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
-msgstr "E kwesịrị ịlele Has Graphs na Has Data Sources na Ndabere."
+msgstr "E kwesịrị ịlele Has Graphs na Has Data Sources na Ndabere?"
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
@@ -10047,7 +10047,7 @@ msgstr "Mgbe a lelere ya, mgbalị ọ bụla ịnweta Kadupul ka a ga-ebufe na 
 
 #: include/global_settings.php
 msgid "When creating a new report, what image type should be used for the inline graphs?"
-msgstr "Mgbe ị na-emepụta akụkọ ọhụrụ, ụdị onyonyo dị aṅaa ka e kwesịrị iji maka eserese dị n'ahịrị."
+msgstr "Mgbe ị na-emepụta akụkọ ọhụrụ, ụdị onyonyo dị aṅaa ka e kwesịrị iji maka eserese dị n'ahịrị?"
 
 #: include/global_settings.php
 msgid "When creating graphs, what Graph Type would you like preselected?"
@@ -14330,7 +14330,7 @@ msgstr "NJỌ NKE UKWUU: Faịlụ '%s' abụghị faịlụ nkịtị."
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
-msgstr "NJỌ NKE UKWUU: '%s' enweghị ike ide na faịlụ '%s'."
+msgstr "NJỌ NKE UKWUU: Faịlụ '%s' adịghị ekwe ka '%s' dee ihe na ya."
 
 #: lib/spikekill.php
 msgid "FATAL: Number of spikes to remove must be a positive integer"
@@ -16928,7 +16928,7 @@ msgstr "Kagbuo Ohere"
 
 #: user_admin.php
 msgid "Set a new password to move this account to the Local realm."
-msgstr "Tọọ okwuntụghe ọhụrụ iji bugharịa akaụntụ a gaa na mpaghara Mpaghara (Local)."
+msgstr "Tọọ okwuntụghe ọhụrụ iji bugharịa akaụntụ a gaa na mpaghara Local."
 
 #: user_admin.php user_group_admin.php
 #, php-format
@@ -18251,3 +18251,5 @@ msgstr "VDEFs [ọhụrụ]"
 #: vdef.php
 msgid "VDEFs that are in use cannot be Deleted. In use is defined as being referenced by a Graph or a Graph Template."
 msgstr "Enweghị ike Ihichapụ VDEFs ndị a na-eji eme ihe. A na-akọwa n'ọrụ dịka nke Eserese ma ọ bụ Atụmatụ Eserese na-ezo aka na ya."
+
+
