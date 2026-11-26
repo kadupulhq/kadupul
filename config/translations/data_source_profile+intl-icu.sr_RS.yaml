@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {На сваки {number} дан} few {На сваке {number} дана} other {На сваких {number} дана}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} дан} few {{number} дана} other {{number} дана}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} сат} few {{number} сата} other {{number} сати}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} минут} few {{number} минута} other {{number} минута}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} месец} few {{number} месеца} other {{number} месеци}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} секунда} few {{number} секунде} other {{number} секунди}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} недеља} few {{number} недеље} other {{number} недеља}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} година} few {{number} године} other {{number} година}}"

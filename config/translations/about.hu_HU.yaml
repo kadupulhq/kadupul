@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "A Kadupul névjegye"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "A Kadupul egy független, nyílt forráskódú projekt hálózatfelügyeletre és idősoros grafikonok készítésére."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "A fejlesztést, a közreműködéseket és a kiadási döntéseket a Kadupul szervezet kezeli."
+"For documentation and support, visit the Kadupul project.": "Dokumentációért és támogatásért keresse fel a Kadupul projektet."
+"License": "Licenc"
+"Kadupul is licensed under the GNU GPL:": "A Kadupul a GNU GPL licenc alatt érhető el:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Ez a program szabad szoftver; terjesztheti és/vagy módosíthatja a Free Software Foundation által kiadott GNU General Public License feltételei szerint, annak 2. verziója vagy (az Ön választása szerint) bármely későbbi verziója szerint."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Ezt a programot abban a reményben terjesztjük, hogy hasznos lesz, de MINDENFÉLE GARANCIA NÉLKÜL; még a FORGALOMKÉPESSÉGRE vagy az ADOTT CÉLRA VALÓ ALKALMASSÁGRA vonatkozó beleértett garancia nélkül is. További részletekért lásd a GNU General Public License szövegét."
+"Access denied.": "A hozzáférés megtagadva."
+"Open About Kadupul to view project information.": "Nyissa meg a Kadupul névjegyét a projektinformációk megtekintéséhez."
+"Version %version%": "%version% verzió"
+"- Beta %beta%": "- Béta %beta%"
+"Kadupul organization": "Kadupul szervezet"
+"Kadupul project": "Kadupul projekt"

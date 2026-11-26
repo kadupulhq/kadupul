@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Nápověda"
+"Access denied.": "Přístup byl odepřen."
+"Choose a topic to open the Kadupul documentation.": "Vyberte téma a otevřete dokumentaci Kadupul."
+"Get started": "Začínáme"
+"Graphs": "Grafy"
+"Templates": "Šablony"
+"Data queries": "Datové dotazy"
+"Remote data collectors": "Vzdálené sběrače dat"
+"Users and permissions": "Uživatelé a oprávnění"
+"Plugins": "Pluginy"
+"Troubleshoot missing data": "Řešení chybějících dat"
+"Not available locally.": "Místně není k dispozici."
+"Back to console": "Zpět na konzoli"

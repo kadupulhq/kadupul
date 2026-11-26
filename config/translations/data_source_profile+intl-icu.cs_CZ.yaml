@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Každý {number} den} few {Každé {number} dny} many {Každého {number} dne} other {Každých {number} dní}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} den} few {{number} dny} many {{number} dne} other {{number} dní}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} hodina} few {{number} hodiny} many {{number} hodiny} other {{number} hodin}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minuta} few {{number} minuty} many {{number} minuty} other {{number} minut}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} měsíc} few {{number} měsíce} many {{number} měsíce} other {{number} měsíců}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} sekunda} few {{number} sekundy} many {{number} sekundy} other {{number} sekund}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} týden} few {{number} týdny} many {{number} týdne} other {{number} týdnů}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} rok} few {{number} roky} many {{number} roku} other {{number} let}}"

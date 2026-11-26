@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Kas {number} dieną} few {Kas {number} dienas} many {Kas {number} dienos} other {Kas {number} dienų}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} diena} few {{number} dienos} many {{number} dienos} other {{number} dienų}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} valanda} few {{number} valandos} many {{number} valandos} other {{number} valandų}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minutė} few {{number} minutės} many {{number} minutės} other {{number} minučių}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} mėnuo} few {{number} mėnesiai} many {{number} mėnesio} other {{number} mėnesių}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} sekundė} few {{number} sekundės} many {{number} sekundės} other {{number} sekundžių}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} savaitė} few {{number} savaitės} many {{number} savaitės} other {{number} savaičių}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} metai} few {{number} metai} many {{number} metų} other {{number} metų}}"

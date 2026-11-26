@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Súgó"
+"Access denied.": "A hozzáférés megtagadva."
+"Choose a topic to open the Kadupul documentation.": "Válasszon egy témát a Kadupul dokumentáció megnyitásához."
+"Get started": "Első lépések"
+"Graphs": "Grafikonok"
+"Templates": "Sablonok"
+"Data queries": "Adatlekérdezések"
+"Remote data collectors": "Távoli adatgyűjtők"
+"Users and permissions": "Felhasználók és jogosultságok"
+"Plugins": "Bővítmények"
+"Troubleshoot missing data": "Hiányzó adatok hibaelhárítása"
+"Not available locally.": "Helyben nem érhető el."
+"Back to console": "Vissza a konzolra"

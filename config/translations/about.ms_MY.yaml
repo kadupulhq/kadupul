@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Perihal Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul ialah projek sumber terbuka bebas untuk pemantauan rangkaian dan pengegrafan siri masa."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Pembangunan, sumbangan dan keputusan keluaran diuruskan oleh organisasi Kadupul."
+"For documentation and support, visit the Kadupul project.": "Untuk dokumentasi dan sokongan, layari projek Kadupul."
+"License": "Lesen"
+"Kadupul is licensed under the GNU GPL:": "Kadupul dilesenkan di bawah GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Program ini ialah perisian percuma; anda boleh mengedarkan semula dan/atau mengubah suainya di bawah syarat GNU General Public License seperti yang diterbitkan oleh Free Software Foundation; sama ada versi 2 Lesen tersebut, atau (mengikut pilihan anda) mana-mana versi yang lebih terkini."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Program ini diedarkan dengan harapan ia akan berguna, tetapi TANPA SEBARANG WARANTI; tanpa waranti tersirat bagi KEBOLEHDAGANGAN atau KESESUAIAN UNTUK TUJUAN TERTENTU. Lihat GNU General Public License untuk butiran lanjut."
+"Access denied.": "Akses dinafikan."
+"Open About Kadupul to view project information.": "Buka Perihal Kadupul untuk melihat maklumat projek."
+"Version %version%": "Versi %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Organisasi Kadupul"
+"Kadupul project": "Projek Kadupul"

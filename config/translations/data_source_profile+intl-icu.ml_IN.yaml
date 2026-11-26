@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {ഓരോ {number} ദിവസവും} other {ഓരോ {number} ദിവസവും}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} ദിവസം} other {{number} ദിവസം}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} മണിക്കൂർ} other {{number} മണിക്കൂർ}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} മിനിറ്റ്} other {{number} മിനിറ്റ്}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} മാസം} other {{number} മാസം}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} സെക്കൻഡ്} other {{number} സെക്കൻഡ്}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} ആഴ്ച} other {{number} ആഴ്ച}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} വർഷം} other {{number} വർഷം}}"

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Kadupul વિશે"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul નેટવર્ક મોનિટરિંગ અને ટાઇમ-સિરીઝ ગ્રાફિંગ માટેનો એક સ્વતંત્ર ઓપન-સોર્સ પ્રોજેક્ટ છે."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "વિકાસ, યોગદાન અને રિલીઝ નિર્ણયોનું સંચાલન Kadupul સંસ્થા દ્વારા કરવામાં આવે છે."
+"For documentation and support, visit the Kadupul project.": "દસ્તાવેજીકરણ અને સપોર્ટ માટે Kadupul પ્રોજેક્ટની મુલાકાત લો."
+"License": "લાઇસન્સ"
+"Kadupul is licensed under the GNU GPL:": "Kadupul GNU GPL હેઠળ લાઇસન્સ થયેલ છે:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "આ પ્રોગ્રામ મુક્ત સૉફ્ટવેર છે; ફ્રી સૉફ્ટવેર ફાઉન્ડેશન દ્વારા પ્રકાશિત GNU જનરલ પબ્લિક લાઇસન્સની શરતો હેઠળ, લાઇસન્સના સંસ્કરણ 2 અથવા (તમારી પસંદગી મુજબ) કોઈપણ પછીના સંસ્કરણ હેઠળ, તમે તેને પુનઃવિતરિત અને/અથવા સુધારી શકો છો."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "આ પ્રોગ્રામ ઉપયોગી થશે તેવી આશા સાથે વિતરિત કરવામાં આવે છે, પરંતુ કોઈપણ વોરંટી વિના; વેપારીયોગ્યતા અથવા કોઈ ચોક્કસ હેતુ માટે યોગ્યતાની ગર્ભિત વોરંટી વિના પણ. વધુ વિગતો માટે GNU જનરલ પબ્લિક લાઇસન્સ જુઓ."
+"Access denied.": "પ્રવેશ નકારવામાં આવ્યો."
+"Open About Kadupul to view project information.": "પ્રોજેક્ટની માહિતી જોવા માટે Kadupul વિશે ખોલો."
+"Version %version%": "સંસ્કરણ %version%"
+"- Beta %beta%": "- બીટા %beta%"
+"Kadupul organization": "Kadupul સંસ્થા"
+"Kadupul project": "Kadupul પ્રોજેક્ટ"

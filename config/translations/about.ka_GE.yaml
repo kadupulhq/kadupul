@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Kadupul-ის შესახებ"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul არის დამოუკიდებელი ღია კოდის პროექტი ქსელის მონიტორინგისა და დროითი მწკრივების გრაფიკების აგებისთვის."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "დამუშავებას, წვლილს და გამოშვების გადაწყვეტილებებს Kadupul-ის ორგანიზაცია განაგებს."
+"For documentation and support, visit the Kadupul project.": "დოკუმენტაციისა და მხარდაჭერისთვის ეწვიეთ Kadupul-ის პროექტს."
+"License": "ლიცენზია"
+"Kadupul is licensed under the GNU GPL:": "Kadupul ლიცენზირებულია GNU GPL-ით:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "ეს პროგრამა თავისუფალი პროგრამული უზრუნველყოფაა; თქვენ შეგიძლიათ გაავრცელოთ და/ან შეცვალოთ იგი Free Software Foundation-ის მიერ გამოქვეყნებული GNU General Public License-ის პირობებით, ლიცენზიის ან მე-2 ვერსიით, ან (თქვენი არჩევანით) ნებისმიერი უფრო გვიანდელი ვერსიით."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "ეს პროგრამა ვრცელდება იმ იმედით, რომ ის სასარგებლო იქნება, მაგრამ ყოველგვარი გარანტიის გარეშე; მათ შორის ნაგულისხმევი გარანტიის გარეშე კომერციული ვარგისიანობის ან კონკრეტული მიზნისთვის გამოსადეგობის შესახებ. დამატებითი ინფორმაციისთვის იხილეთ GNU General Public License."
+"Access denied.": "წვდომა აკრძალულია."
+"Open About Kadupul to view project information.": "პროექტის შესახებ ინფორმაციის სანახავად გახსენით Kadupul-ის შესახებ."
+"Version %version%": "ვერსია %version%"
+"- Beta %beta%": "- ბეტა %beta%"
+"Kadupul organization": "Kadupul-ის ორგანიზაცია"
+"Kadupul project": "Kadupul-ის პროექტი"

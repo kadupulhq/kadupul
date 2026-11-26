@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Tungkol sa Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Ang Kadupul ay isang independiyenteng open-source na proyekto para sa pagmo-monitor ng network at paggawa ng time-series graph."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Ang pagbuo, mga kontribusyon, at mga desisyon sa release ay pinamamahalaan ng organisasyong Kadupul."
+"For documentation and support, visit the Kadupul project.": "Para sa dokumentasyon at suporta, bisitahin ang proyektong Kadupul."
+"License": "Lisensya"
+"Kadupul is licensed under the GNU GPL:": "Lisensyado ang Kadupul sa ilalim ng GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Ang programang ito ay libreng software; maaari mo itong ipamahagi muli at/o baguhin sa ilalim ng mga tuntunin ng GNU General Public License na inilathala ng Free Software Foundation; alinman sa bersyon 2 ng Lisensya, o (ayon sa iyong pasya) anumang mas bagong bersyon."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Ang programang ito ay ipinamamahagi sa pag-asang magiging kapaki-pakinabang ito, ngunit WALANG ANUMANG WARRANTY; kahit ang ipinahihiwatig na warranty ng MERCHANTABILITY o FITNESS FOR A PARTICULAR PURPOSE. Tingnan ang GNU General Public License para sa karagdagang detalye."
+"Access denied.": "Tinanggihan ang access."
+"Open About Kadupul to view project information.": "Buksan ang Tungkol sa Kadupul upang makita ang impormasyon ng proyekto."
+"Version %version%": "Bersyon %version%"
+"- Beta %beta%": "- Beta na bersyon %beta%"
+"Kadupul organization": "Organisasyong Kadupul"
+"Kadupul project": "Proyektong Kadupul"

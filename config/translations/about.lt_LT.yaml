@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Apie „Kadupul“"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "„Kadupul“ yra nepriklausomas atvirojo kodo projektas tinklo stebėsenai ir laiko eilučių grafikams braižyti."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Kūrimą, indėlius ir leidimų sprendimus valdo „Kadupul“ organizacija."
+"For documentation and support, visit the Kadupul project.": "Dokumentaciją ir pagalbą rasite apsilankę „Kadupul“ projekte."
+"License": "Licencija"
+"Kadupul is licensed under the GNU GPL:": "„Kadupul“ licencijuojamas pagal GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Ši programa yra laisvoji programinė įranga; galite ją platinti ir (arba) keisti pagal Free Software Foundation paskelbtos GNU bendrosios viešosios licencijos 2 versijos arba (jūsų pasirinkimu) bet kurios vėlesnės versijos sąlygas."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Ši programa platinama tikintis, kad ji bus naudinga, tačiau BE JOKIOS GARANTIJOS, taip pat be numanomos PARDAVIMO ar TINKAMUMO TAM TIKRAM TIKSLUI garantijos. Daugiau informacijos rasite GNU bendrojoje viešojoje licencijoje."
+"Access denied.": "Prieiga uždrausta."
+"Open About Kadupul to view project information.": "Atidarykite „Apie Kadupul“, kad peržiūrėtumėte projekto informaciją."
+"Version %version%": "Versija %version%"
+"- Beta %beta%": "– beta %beta%"
+"Kadupul organization": "„Kadupul“ organizacija"
+"Kadupul project": "„Kadupul“ projektas"

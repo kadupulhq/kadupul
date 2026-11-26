@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Tietoja Kadupulista"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul on itsenäinen avoimen lähdekoodin projekti verkon valvontaan ja aikasarjojen kaavioiden piirtoon."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Kehityksestä, osallistumisesta ja julkaisupäätöksistä vastaa Kadupul-organisaatio."
+"For documentation and support, visit the Kadupul project.": "Dokumentaatio ja tuki löytyvät Kadupul-projektin sivuilta."
+"License": "Lisenssi"
+"Kadupul is licensed under the GNU GPL:": "Kadupulin lisenssi on GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Tämä ohjelma on vapaa ohjelmisto; voit levittää sitä edelleen ja muokata sitä Free Software Foundationin julkaisemien GNU General Public License -lisenssin ehtojen mukaisesti, joko lisenssin version 2 tai (valintasi mukaan) jonkin myöhemmän version mukaisesti."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Tätä ohjelmaa levitetään siinä toivossa, että se on hyödyllinen, mutta ILMAN MINKÄÄN NIMENOMAISTA TAKUUTA; ilman edes hiljaista takuuta KAUPALLISESTA HYÖDYNNETTÄVYYDESTÄ tai SOPIVUUDESTA TIETTYYN TARKOITUKSEEN. Lisätietoja on GNU General Public License -lisenssissä."
+"Access denied.": "Pääsy estetty."
+"Open About Kadupul to view project information.": "Avaa Tietoja Kadupulista nähdäksesi projektin tiedot."
+"Version %version%": "Versio %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Kadupul-organisaatio"
+"Kadupul project": "Kadupul-projekti"

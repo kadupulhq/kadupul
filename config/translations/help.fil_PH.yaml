@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Tulong"
+"Access denied.": "Tinanggihan ang access."
+"Choose a topic to open the Kadupul documentation.": "Pumili ng paksa upang buksan ang dokumentasyon ng Kadupul."
+"Get started": "Magsimula"
+"Graphs": "Mga Graph"
+"Templates": "Mga Template"
+"Data queries": "Mga data query"
+"Remote data collectors": "Mga remote data collector"
+"Users and permissions": "Mga user at pahintulot"
+"Plugins": "Mga Plugin"
+"Troubleshoot missing data": "Lutasin ang nawawalang data"
+"Not available locally.": "Hindi available nang lokal."
+"Back to console": "Bumalik sa console"

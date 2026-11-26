@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Despre Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul este un proiect open-source independent pentru monitorizarea rețelelor și reprezentarea grafică a seriilor de timp."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Dezvoltarea, contribuțiile și deciziile privind versiunile sunt gestionate de organizația Kadupul."
+"For documentation and support, visit the Kadupul project.": "Pentru documentație și asistență, vizitați proiectul Kadupul."
+"License": "Licență"
+"Kadupul is licensed under the GNU GPL:": "Kadupul este licențiat sub GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Acest program este software liber; îl puteți redistribui și/sau modifica în conformitate cu termenii Licenței Publice Generale GNU, așa cum este publicată de Free Software Foundation; fie versiunea 2 a Licenței, fie (la alegerea dumneavoastră) orice versiune ulterioară."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Acest program este distribuit în speranța că va fi util, dar FĂRĂ NICIO GARANȚIE; chiar și fără garanția implicită de VANDABILITATE sau DE POTRIVIRE PENTRU UN ANUMIT SCOP. Consultați Licența Publică Generală GNU pentru mai multe detalii."
+"Access denied.": "Acces refuzat."
+"Open About Kadupul to view project information.": "Deschideți Despre Kadupul pentru a vedea informațiile despre proiect."
+"Version %version%": "Versiunea %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "organizația Kadupul"
+"Kadupul project": "proiectul Kadupul"
