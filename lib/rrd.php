@@ -100,14 +100,11 @@ function escape_command($command)
  */
 function rrdtool_locale_environment(): \Kadupul\Graphing\Infrastructure\Rrd\RrdLocaleEnvironment
 {
-    $class = \Kadupul\Graphing\Infrastructure\Rrd\RrdLocaleEnvironment::class;
-    if (!class_exists($class)) {
-        require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/RrdLocaleEnvironment.php';
-    }
+    require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/RrdLocaleEnvironment.php';
 
     static $environment = null;
 
-    return $environment ??= new $class();
+    return $environment ??= new \Kadupul\Graphing\Infrastructure\Rrd\RrdLocaleEnvironment();
 }
 
 /** Return the allowlisted Kadupul BCP-47 locale tags.
@@ -116,12 +113,9 @@ function rrdtool_locale_environment(): \Kadupul\Graphing\Infrastructure\Rrd\RrdL
  */
 function rrdtool_known_locales(): array
 {
-    $class = \Kadupul\Platform\Application\Locale\KnownLocales::class;
-    if (!class_exists($class)) {
-        require_once __DIR__ . '/../src/Platform/Application/Locale/KnownLocales.php';
-    }
+    require_once __DIR__ . '/../src/Platform/Application/Locale/KnownLocales.php';
 
-    return array_keys($class::ALL);
+    return array_keys(\Kadupul\Platform\Application\Locale\KnownLocales::ALL);
 }
 
 /** Resolve the validated POSIX UTF-8 LC_TIME locale for RRDtool and Rondi.
@@ -132,13 +126,7 @@ function rrdtool_known_locales(): array
 function rrdtool_time_locale($lang = -1): string
 {
     $environment = rrdtool_locale_environment();
-    if ($lang === -1 || $lang == -1) {
-        $locale = defined('CACTI_LOCALE') && is_string(CACTI_LOCALE) ? CACTI_LOCALE : null;
-    } elseif (is_string($lang)) {
-        $locale = $lang;
-    } else {
-        $locale = null;
-    }
+    $locale = $lang == -1 ? (defined('CACTI_LOCALE') && is_string(CACTI_LOCALE) ? CACTI_LOCALE : null) : (is_string($lang) ? $lang : null);
 
     return $environment::normalizeTimeLocale($locale, rrdtool_known_locales());
 }
@@ -254,7 +242,6 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
     }
     $pipe = rrdtool_local_processes()->open($descriptors, $streams);
     if (!is_resource($pipe)) {
-        rrdtool_reset_language();
         return false;
     }
 
@@ -2847,7 +2834,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     $now = rrdtool_clock_now($clock);
 
     if (getenv('LANG') == '') {
-        putenv('LANG=' . rrdtool_time_locale());
+        putenv('LANG=' . str_replace('-', '_', CACTI_LOCALE) . '.UTF-8');
     }
 
     /* check the purge the boost poller output cache, and check for a live image file if caching is enabled */
