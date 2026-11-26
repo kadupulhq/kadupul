@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Die hoeveelheid onbekende data wat steeds as bekend beskou kan word."
 "The default Data Source Profile cannot be deleted.": "Die verstek Databronprofiel kan nie geskrap word nie."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Die verstek profiel en profiele wat deur Datasjablone of Databronne gebruik word, kan nie geskrap word nie."
-"The frequency that data will be collected from the Data Source.": "Die frekwensie waarteen data vanaf die Databron ingesamel sal word?"
+"The frequency that data will be collected from the Data Source.": "Die frekwensie waarteen data vanaf die Databron ingesamel sal word."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Die aantal monsters wat vereis word voordat 'n ry in die RRA-spesifikasie gevul word.  Die eerste RRA moet altyd 'n waarde van 1 hê."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Die peilingsinterval, X-Files-faktor, Konsolidasiefunksies en RRAs kan nie verander word nie."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Hierdie verouderde Databronprofiel-vorm het verval. Maak Databronprofiele oop en dien 'n nuwe vorm in."

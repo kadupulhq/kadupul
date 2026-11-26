@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "仍可視為已知資料的未知資料量。"
 "The default Data Source Profile cannot be deleted.": "無法刪除預設資料來源設定檔。"
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "預設設定檔以及正在被資料範本或資料來源使用的設定檔無法刪除。"
-"The frequency that data will be collected from the Data Source.": "從資料來源收集資料的頻率？"
+"The frequency that data will be collected from the Data Source.": "從資料來源收集資料的頻率。"
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "在填滿 RRA 規格中的一列之前所需的樣本數。第一個 RRA 的值應始終為 1。"
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "輪詢間隔、X-Files 係數、彙總函式與 RRAs 無法變更。"
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "此舊版資料來源設定檔表單已過期。請開啟資料來源設定檔並提交新表單。"

@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Ubungakanani bedatha engaziwayo obusenokuthathwa njengeyaziwayo."
 "The default Data Source Profile cannot be deleted.": "IProfayile yoMthombo weDatha emiselweyo ayinakho ukucinywa."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Iprofayile emiselweyo kunye neeprofayile ezisetyenziswa ziiTempleyithi zeDatha okanye iMithombo yeDatha azinakho ukucinywa."
-"The frequency that data will be collected from the Data Source.": "Ixesha eliya kuqokelelwa ngalo idatha kuMthombo weDatha?"
+"The frequency that data will be collected from the Data Source.": "Ixesha eliya kuqokelelwa ngalo idatha kuMthombo weDatha."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Inani leesampuli ezifunekayo ngaphambi kokuzalisa umqolo kwinkcazo ye-RRA.  I-RRA yokuqala kufuneka ihlale inexabiso elingu-1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Ixesha lokuqokelela, i-X-Files Factor, iMisebenzi yoKudibanisa kunye nee-RRA azinakutshintshwa."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Le fomu yeProfayile yoMthombo weDatha endala iphelelwe lixesha. Vula iiProfayile zeMithombo yeDatha uze uthumele ifomu entsha."

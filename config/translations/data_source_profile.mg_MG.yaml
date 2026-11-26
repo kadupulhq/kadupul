@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Ny habetsahan'ny angon-drakitra tsy fantatra izay mbola azo heverina ho fantatra."
 "The default Data Source Profile cannot be deleted.": "Tsy azo fafana ny profilan'ny loharanon'angona mahazatra."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Tsy azo fafana ny profila mahazatra sy ireo profila ampiasain'ny lasitry ny angona na loharanon'angona."
-"The frequency that data will be collected from the Data Source.": "Ny matetika hanangonana ny angon-drakitra avy amin'ny loharanon-drakitra?"
+"The frequency that data will be collected from the Data Source.": "Ny matetika hanangonana ny angon-drakitra avy amin'ny loharanon-drakitra."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Ny isan'ny santionany ilaina alohan'ny hamenoana andalana iray ao amin'ny famaritana RRA. Ny RRA voalohany dia tokony hanana sanda 1 foana."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Tsy azo ovana ny elanelam-potoana fakana angona, ny taha X-Files, ny asa fanakambanana ary ireo RRA."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Lany daty ity takelaky ny profilan'ny loharanon'angona taloha ity. Sokafy ny profilan'ny loharanon'angona ary mandefasa takelaka vaovao."

@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Количеството неизвестни данни, което все още може да се счита за известно."
 "The default Data Source Profile cannot be deleted.": "Профилът на източник на данни по подразбиране не може да бъде изтрит."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Профилът по подразбиране и профилите, използвани от шаблони за данни или източници на данни, не могат да бъдат изтрити."
-"The frequency that data will be collected from the Data Source.": "Честотата, която данните ще се събират от източника на данни?"
+"The frequency that data will be collected from the Data Source.": "Честотата, която данните ще се събират от източника на данни."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Броят на пробите, необходими за попълване на ред в спецификацията на RRA. Първата RRA винаги трябва да има стойност 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Интервалът на обхождане, X-Files Factor, функциите за консолидация и RRA не могат да бъдат променяни."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Този наследен формуляр за профил на източник на данни е изтекъл. Отворете Профили на източници на данни и изпратете нов формуляр."

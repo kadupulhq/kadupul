@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Η ποσότητα των άγνωστων δεδομένων που μπορούν ακόμη να θεωρηθούν γνωστά."
 "The default Data Source Profile cannot be deleted.": "Το προεπιλεγμένο προφίλ πηγής δεδομένων δεν μπορεί να διαγραφεί."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Το προεπιλεγμένο προφίλ και τα προφίλ που χρησιμοποιούνται από πρότυπα δεδομένων ή πηγές δεδομένων δεν μπορούν να διαγραφούν."
-"The frequency that data will be collected from the Data Source.": "Η συχνότητα που θα συλλέγονται τα δεδομένα από την Πηγή Δεδομένων;"
+"The frequency that data will be collected from the Data Source.": "Η συχνότητα που θα συλλέγονται τα δεδομένα από την Πηγή Δεδομένων."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Ο αριθμός των δειγμάτων που απαιτούνται πριν από την πλήρωση μιας σειράς στην προδιαγραφή RRA. Το πρώτο RRA θα πρέπει πάντα να έχει τιμή 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Το διάστημα polling, ο συντελεστής X-Files, οι συναρτήσεις ενοποίησης και τα RRA δεν μπορούν να αλλάξουν."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Αυτή η παλαιού τύπου φόρμα προφίλ πηγής δεδομένων έχει λήξει. Ανοίξτε τα Προφίλ πηγών δεδομένων και υποβάλετε νέα φόρμα."

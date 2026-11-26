@@ -17984,7 +17984,7 @@ msgstr "Firaketana: %s (andalana ds), Fotoana: %s (seg), GetRows: %s (seg), Resu
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Ahenao ho latsaky ny valopolo isan-jaton'ny fitadidian'ny rafitra (80% of System Memory) ny fitadidian'ny MySQL/MariaDB.  Tehirizo ny fitadidiana cache fanampiny ho an'ny rakitra RRD raha ao amin'ny rafitra iray ihany ny angon-drakitra sy ny rakitra RRD.  Jereo etsy ambany ny Fitambaran'ny Core sy Client ho fanazavana ny fomba kajy."
+msgstr "Ahenao ho latsaky ny valopolo isan-jaton'ny fitadidian'ny rafitra ny fitadidian'ny MySQL/MariaDB.  Tehirizo ny fitadidiana cache fanampiny ho an'ny rakitra RRD raha ao amin'ny rafitra iray ihany ny angon-drakitra sy ny rakitra RRD.  Jereo etsy ambany ny Fitambaran'ny Core sy Client ho fanazavana ny fomba kajy."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"

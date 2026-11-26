@@ -638,7 +638,7 @@ msgstr "Voer alstublieft uw huidige en uw nieuwe<br>Kadupul wachtwoord in."
 
 #: auth_changepassword.php
 msgid "Please enter your new Kadupul password."
-msgstr "Voer alstublieft uw huidige en uw nieuwe<br>Kadupul wachtwoord in."
+msgstr "Voer alstublieft uw nieuwe Kadupul wachtwoord in."
 
 #: auth_changepassword.php auth_profile.php graphs_new.php lib/html_form.php
 #: lib/html_graph.php lib/html_tree.php settings.php
@@ -2234,8 +2234,8 @@ msgstr[1] "Klik op 'Volgende' om de volgende data bronnen uit te schakelen."
 #: data_sources.php
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
-msgstr[0] "Klik op  Volgende' om de volgende data bron te activeren."
-msgstr[1] "Klik op  Volgende' om de volgende data bronnen te activeren."
+msgstr[0] "Klik op Volgende' om de volgende data bron te activeren."
+msgstr[1] "Klik op Volgende' om de volgende data bronnen te activeren."
 
 #: data_sources.php
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
@@ -13671,7 +13671,7 @@ msgstr "Kan standaardwaarden van de toepassing niet bijwerken."
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "Onder de sectie [mysqld] kunt u de vermeldingen 'character&#8209;set&#8209;server' en 'collation&#8209;server' vinden en als volgt instellen:"
+msgstr "Onder de sectie [mysqld] kunt u de vermeldingen 'character-set-server' en 'collation-server' vinden en als volgt instellen:"
 
 #: lib/installer.php
 msgid "Unexpected path parameter"
@@ -17985,7 +17985,7 @@ msgstr "Records: %s (ds rijen), Tijd: %s (secs), GetRows: %s (secs), ResultsCycl
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Verminder het MySQL/MariaDB-geheugen tot minder dan 80% of systeemgeheugen.  Bewaar extra cachegeheugen voor RRD-bestanden als de database zich op hetzelfde systeem bevindt als de RRD-bestanden.  Zie Kern- en klanttotalen hieronder voor uitleg van de berekeningsmethode."
+msgstr "Verminder het MySQL/MariaDB-geheugen tot minder dan 80% van het systeemgeheugen.  Bewaar extra cachegeheugen voor RRD-bestanden als de database zich op hetzelfde systeem bevindt als de RRD-bestanden.  Zie Kern- en klanttotalen hieronder voor uitleg van de berekeningsmethode."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"

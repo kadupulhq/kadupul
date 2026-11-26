@@ -17984,7 +17984,7 @@ msgstr "Inyandiko: %s (imirongo ya ds), Igihe: %s (amasegonda), GetRows: %s (ama
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Gabanya Ububiko bwa MySQL/MariaDB bube munsi ya 80% y'Ububiko bwa Sisitemu (80% of System Memory). Zigama ububiko bw'inyongera bwa Cache Memory bugenewe RRDfiles niba Ububiko bw'amakuru (Database) buri kuri sisitemu imwe na RRDfiles. Reba Core and Client Totals hasi aha kugira ngo ubone ibisobanuro by'uburyo bwo kubara."
+msgstr "Gabanya Ububiko bwa MySQL/MariaDB bube munsi ya 80% y'Ububiko bwa Sisitemu. Zigama ububiko bw'inyongera bwa Cache Memory bugenewe RRDfiles niba Ububiko bw'amakuru (Database) buri kuri sisitemu imwe na RRDfiles. Reba Core and Client Totals hasi aha kugira ngo ubone ibisobanuro by'uburyo bwo kubara."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"

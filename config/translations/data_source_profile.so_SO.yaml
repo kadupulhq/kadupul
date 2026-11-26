@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Xaddiga xogta aan la garanayn ee weli loo aqoonsan karo mid la yaqaan."
 "The default Data Source Profile cannot be deleted.": "Astaanta Isha Xogta ee caadiga ah lama tirtiri karo."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Astaanta caadiga ah iyo astaamaha ay isticmaalayaan Qaababka Xogta ama Ilaha Xogta lama tirtiri karo."
-"The frequency that data will be collected from the Data Source.": "Inta jeer ee xogta laga soo ururinayo Isha Xogta?"
+"The frequency that data will be collected from the Data Source.": "Inta jeer ee xogta laga soo ururinayo Isha Xogta."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Tirada muunadaha loo baahan yahay ka hor inta aan la buuxin safka qeexidda RRA. RRA-ga ugu horreeya waa inuu had iyo jeer yeeshaa qiime ah 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Muddada xog-ururinta, Isirka X-Files, Hawlqabadyada Isku-daridda iyo RRA-yada lama beddeli karo."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Foomkan duugga ah ee Astaanta Isha Xogtu wuu dhacay. Fur Astaamaha Ilaha Xogta oo dir foom cusub."

@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Inani ledatha engaziwa elingathathwa njengolwazi olwaziwayo."
 "The default Data Source Profile cannot be deleted.": "Iphrofayela Yomthombo Wedatha ezenzakalelayo ayikwazi ukususwa."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Iphrofayela ezenzakalelayo kanye namaphrofayela asetshenziswa Izifanekiso Zedatha noma Imithombo Yedatha awakwazi ukususwa."
-"The frequency that data will be collected from the Data Source.": "Imvamisa yokuqoqwa kwedatha kuMthombo Wedatha?"
+"The frequency that data will be collected from the Data Source.": "Imvamisa yokuqoqwa kwedatha kuMthombo Wedatha."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Inani lamasampula adingekayo ngaphambi kokugcwalisa umugqa encazelweni ye-RRA.  I-RRA yokuqala kufanele ihlale inenani lika-1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Isikhawu sokuqoqa idatha, i-X-Files Factor, Imisebenzi Yokuhlanganisa nama-RRA akukwazi ukushintshwa."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Leli fomu Lephrofayela Yomthombo Wedatha lendabuko liphelelwe yisikhathi. Vula Amaphrofayela Omthombo Wedatha bese uthumela ifomu elisha."

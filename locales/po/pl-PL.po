@@ -45,7 +45,7 @@ msgstr "Ten program jest rozpowszechniany w nadziei, że będzie przydatny, ale 
 
 #: aggregate_graphs.php
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr " Stosowana lista wykresów niestandardowych - filtr z listy ]"
+msgstr " [ Stosowana lista wykresów niestandardowych - filtr z listy ]"
 
 #: aggregate_graphs.php graphs.php
 msgid "Add Graphs to Report"
@@ -3023,7 +3023,7 @@ msgstr "NIE MASZ PRAW DO WIDOKU DRZEWA"
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filter FROM List ]"
-msgstr "Stosowana lista wykresów niestandardowych - filtr z listy ]"
+msgstr "[ Stosowana lista wykresów niestandardowych - filtr z listy ]"
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filtering from List ]"
@@ -3224,7 +3224,7 @@ msgstr "Nowe wykresy dla [ Wszystkie urządzenia]"
 
 #: graphs.php
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
-msgstr "Stosowana lista wykresów niestandardowych - filtr z listy ]"
+msgstr "Zarządzanie wykresami [ Stosowana lista wykresów niestandardowych - filtr z listy ]"
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
@@ -4774,7 +4774,7 @@ msgstr "NISKI - statystyki i błędy"
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Days"
-msgstr "Ostatnie %d  dni"
+msgstr "Ostatnie %d dni"
 
 #: include/global_arrays.php
 #, php-format
@@ -7349,7 +7349,7 @@ msgstr "Współczynnik X-Files"
 
 #: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
-msgstr "HRULE|VRULE]: Wartość pozycji wykresu <br/> [TICK]: Frakcja dla kleszcza line.<br/> [SHIFT]: Przesunięcie czasu w sekundach."
+msgstr "[HRULE|VRULE]: Wartość pozycji wykresu <br/> [TICK]: Frakcja dla kleszcza line.<br/> [SHIFT]: Przesunięcie czasu w sekundach."
 
 #: include/global_languages.php
 msgid " G"
@@ -8705,7 +8705,7 @@ msgstr "Tryb"
 
 #: include/global_settings.php user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Tryb, w którym Kadupul będą próbowały uwierzytelnić się w stosunku do serwera LDAP.<blockquote><i>Brak wyszukiwania</i> - Nie występuje wyszukiwanie Distinguished Name (DN), po prostu spróbuj powiązać z podanym formatem Distinguished Name (DN).<br><br><br><i>Wyszukiwanie anonimowe</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą wiązania anonimowego w celu zlokalizowania nazwy użytkownika (DN).<br><br><i>Specyficzne wyszukiwanie</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą Określonej Nazwy Rozróżniającej (DN) i Określonego Hasła do wiązania w celu zlokalizowania nazwy odróżniającej użytkownika (DN)."
+msgstr "Tryb, w którym Kadupul będą próbowały uwierzytelnić się w stosunku do serwera LDAP.<blockquote><i>Brak wyszukiwania</i> - Nie występuje wyszukiwanie Distinguished Name (DN), po prostu spróbuj powiązać z podanym formatem Distinguished Name (DN).<br><br><i>Wyszukiwanie anonimowe</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą wiązania anonimowego w celu zlokalizowania nazwy użytkownika (DN).<br><br><i>Specyficzne wyszukiwanie</i> - Próby wyszukania nazwy użytkownika w stosunku do katalogu LDAP za pomocą Określonej Nazwy Rozróżniającej (DN) i Określonego Hasła do wiązania w celu zlokalizowania nazwy odróżniającej użytkownika (DN)."
 
 #: include/global_settings.php
 msgid "Monthly on Sunday"
@@ -9161,7 +9161,7 @@ msgstr "Wyszukaj bazę do przeszukiwania katalogów LDAP, takich jak <i>'dc=win2
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Wyszukaj filtr, za pomocą którego można zlokalizować użytkownika w katalogu LDAP, np. dla okien: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> lub dla OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt)))'</i>.  '&lt;username&gt' zostaje zastąpiona nazwą użytkownika, która została podana w oknie logowania. "
+msgstr "Wyszukaj filtr, za pomocą którego można zlokalizować użytkownika w katalogu LDAP, np. dla okien: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> lub dla OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' zostaje zastąpiona nazwą użytkownika, która została podana w oknie logowania. "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -13692,7 +13692,7 @@ msgstr "Nie można zaktualizować ustawień domyślnych aplikacji."
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "W sekcji [mysqld] znajdź wpisy o nazwie 'character&#8209;set&#8209;server' i 'collation&#8209;server' i ustaw je w następujący sposób:"
+msgstr "W sekcji [mysqld] znajdź wpisy o nazwie 'character-set-server' i 'collation-server' i ustaw je w następujący sposób:"
 
 #: lib/installer.php
 msgid "Unexpected path parameter"

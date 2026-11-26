@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Lượng dữ liệu chưa biết vẫn có thể được coi là đã biết."
 "The default Data Source Profile cannot be deleted.": "Không thể xóa Hồ sơ nguồn dữ liệu mặc định."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Không thể xóa hồ sơ mặc định và các hồ sơ đang được sử dụng bởi Mẫu dữ liệu hoặc Nguồn dữ liệu."
-"The frequency that data will be collected from the Data Source.": "Tần suất mà dữ liệu sẽ được thu thập từ Nguồn dữ liệu?"
+"The frequency that data will be collected from the Data Source.": "Tần suất mà dữ liệu sẽ được thu thập từ Nguồn dữ liệu."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Số lượng mẫu được yêu cầu trước khi điền vào một hàng trong đặc tả RRA. RRA đầu tiên phải luôn có giá trị là 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Không thể thay đổi chu kỳ thăm dò, X-Files Factor, Hàm hợp nhất và RRA."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Biểu mẫu Hồ sơ nguồn dữ liệu kế thừa này đã hết hạn. Hãy mở Hồ sơ nguồn dữ liệu và gửi biểu mẫu mới."

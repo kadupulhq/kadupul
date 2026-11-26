@@ -638,7 +638,7 @@ msgstr "Digite sua senha atual e sua nova senha<br>Kadupul."
 
 #: auth_changepassword.php
 msgid "Please enter your new Kadupul password."
-msgstr "Digite sua senha atual e sua nova senha<br>Kadupul."
+msgstr "Digite sua nova senha Kadupul."
 
 #: auth_changepassword.php auth_profile.php graphs_new.php lib/html_form.php
 #: lib/html_graph.php lib/html_tree.php settings.php
@@ -2368,7 +2368,7 @@ msgstr "Se esta Fonte de Dados não estiver em uso há muito tempo por Gráficos
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
 msgstr[0] "Deixa o <strong>Gráfico</strong> intocado."
-msgstr[1] "Deixa todos os gráficos não tocados."
+msgstr[1] "Deixa todos os <strong>gráficos</strong> não tocados."
 
 #: data_sources.php data_templates.php lib/import.php package_import.php
 msgid "New"
@@ -9140,7 +9140,7 @@ msgstr "Base de pesquisa para pesquisar o diretório LDAP, como <i>'dc=win2kdoma
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "Filtro de pesquisa para usar para localizar o usuário no diretório LDAP, como no Windows: <i>''(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> ou para OpenLDAP: <i>''(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' é substituído pelo nome de usuário que foi fornecido no prompt de login. "
+msgstr "Filtro de pesquisa para usar para localizar o usuário no diretório LDAP, como no Windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> ou para OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' é substituído pelo nome de usuário que foi fornecido no prompt de login. "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -13671,7 +13671,7 @@ msgstr "Não foi possível atualizar as predefinições da aplicação."
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "Na seção [mysqld], localize as entradas chamadas 'character&#8209;set&#8209;server' e 'collation&#8209;server' e configure-as como segue:"
+msgstr "Na seção [mysqld], localize as entradas chamadas 'character-set-server' e 'collation-server' e configure-as como segue:"
 
 #: lib/installer.php
 msgid "Unexpected path parameter"
@@ -17188,7 +17188,7 @@ msgstr "Base de pesquisa para pesquisar o diretório LDAP, como <i>\"dc=win2kdom
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Filtro de pesquisa para usar para localizar o usuário no diretório LDAP, como no Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> ou para OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt)))</i>.  \"&lt;username&gt\" é substituído pelo nome de usuário que foi fornecido no prompt de login."
+msgstr "Filtro de pesquisa para usar para localizar o usuário no diretório LDAP, como no Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> ou para OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" é substituído pelo nome de usuário que foi fornecido no prompt de login."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."
@@ -17985,7 +17985,7 @@ msgstr "Registros: %s (linhas ds), Tempo: %s (segs), GetRows: %s (segs), Results
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Reduza a Memória MySQL/MariaDB para menos de 80% of Memória do Sistema.  Preserve a memória de cache adicional para arquivos RRD se o banco de dados estiver no mesmo sistema que os arquivos RRD.  Consulte os Totais Principais e do Cliente abaixo para obter uma explicação do método de cálculo."
+msgstr "Reduza a Memória MySQL/MariaDB para menos de 80% da Memória do Sistema.  Preserve a memória de cache adicional para arquivos RRD se o banco de dados estiver no mesmo sistema que os arquivos RRD.  Consulte os Totais Principais e do Cliente abaixo para obter uma explicação do método de cálculo."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"
@@ -18101,7 +18101,7 @@ msgstr "O Kadupul Log armazena estatísticas, erros e outras mensagens dependend
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "O Poller Cache será gerado novamente se você selecionar esta opção. Use esta opção apenas no caso de uma falha de banco de dados se você estiver enfrentando problemas após a falha e já tiver executado as ferramentas de reparo do banco de dados.  Alternativamente, se você está tendo problemas com um Dispositivo específico, simplesmente salve novamente esse Dispositivo para reconstruir seu Cache Poller.  Há também uma interface de linha de comando equivalente a este comando que é recomendada para sistemas grandes.  <i class=\"deviceDown\">NOTE: Em sistemas grandes, este comando pode levar vários minutos a horas para ser completado e, portanto, não deve ser executado a partir da interface Kadupul.  Você pode simplesmente executar 'php -q cli/rebuild_poller_cache.php --help' na linha de comando para mais informações.</i>."
+msgstr "O Poller Cache será gerado novamente se você selecionar esta opção. Use esta opção apenas no caso de uma falha de banco de dados se você estiver enfrentando problemas após a falha e já tiver executado as ferramentas de reparo do banco de dados.  Alternativamente, se você está tendo problemas com um Dispositivo específico, simplesmente salve novamente esse Dispositivo para reconstruir seu Cache Poller.  Há também uma interface de linha de comando equivalente a este comando que é recomendada para sistemas grandes."
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."

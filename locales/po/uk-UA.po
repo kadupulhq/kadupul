@@ -1529,7 +1529,7 @@ msgstr "Засіб усунення несправностей Джерела Д
 
 #: data_debug.php
 msgid "Data Source debug received an invalid Data Source ID."
-msgstr "Відлагодженням Джерела Даних отримало невірний  ID Джерела Даних."
+msgstr "Відлагодженням Джерела Даних отримало невірний ID Джерела Даних."
 
 #: data_debug.php
 msgid "Data Source debug started."
@@ -2322,16 +2322,16 @@ msgstr[2] "Видалити Джерела Даних"
 #: data_sources.php
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Видалити всі  <strong>Елементи Графіків</strong> що посилаються на це Джерело Даних."
-msgstr[1] "Видалити всі  <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
-msgstr[2] "Видалити всі  <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
+msgstr[0] "Видалити всі <strong>Елементи Графіків</strong> що посилаються на це Джерело Даних."
+msgstr[1] "Видалити всі <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
+msgstr[2] "Видалити всі <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
 
 #: data_sources.php
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
-msgstr[0] "Видалити всі  <strong>Графіки</strong> що посилаються на це Джерело Даних."
-msgstr[1] "Видалити всі  <strong>Графіки</strong> що посилаються на ці Джерела Даних."
-msgstr[2] "Видалити всі  <strong>Графіки</strong> що посилаються на ці Джерела Даних."
+msgstr[0] "Видалити всі <strong>Графіки</strong> що посилаються на це Джерело Даних."
+msgstr[1] "Видалити всі <strong>Графіки</strong> що посилаються на ці Джерела Даних."
+msgstr[2] "Видалити всі <strong>Графіки</strong> що посилаються на ці Джерела Даних."
 
 #: data_sources.php graph_view.php graphs.php include/global_arrays.php
 #: lib/api_automation.php lib/functions.php lib/html.php lib/html_reports.php
@@ -3428,7 +3428,7 @@ msgstr "Нові Графіки для [ %s ] (%s %s)"
 
 #: graphs_new.php
 msgid "New Graphs for [ All Devices ]"
-msgstr "Нові Графіки для  [ Всіх Пристроїв ]"
+msgstr "Нові Графіки для [ Всіх Пристроїв ]"
 
 #: graphs_new.php include/global_form.php lib/html.php lib/html_filter.php
 #: lib/installer.php lib/rrd.php utilities.php

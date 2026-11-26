@@ -60,7 +60,7 @@
 "Enter a name for this SNMP Option Set.": "Въведете име за този набор от SNMP опции."
 "Enter a valid name format.": "Enter a valid name format."
 "Enter a whole number.": "Въведете цяло число."
-"Enter the UDP port number to use for SNMP (default is 161).": "Въведете UDP порт номер който да се използва за SNMP (стандартно 161)"
+"Enter the UDP port number to use for SNMP (default is 161).": "Въведете UDP порт номер който да се използва за SNMP (стандартно 161)."
 "Enter the credentials for a new SNMP entry.": "Въведете идентификационните данни за нов SNMP запис."
 "Every <name> is replaced by the name of the SNMP Option Set being copied.": "Every <name> is replaced by the name of the SNMP Option Set being copied."
 "Fill in the name of this SNMP Option Set.": "Попълнете името на този набор от SNMP опции."
