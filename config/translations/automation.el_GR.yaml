@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Το πρότυπο αυτοματοποίησης άλλαξε από τότε που ανοίξατε αυτήν τη φόρμα. Επαναφορτώστε πριν αποθηκεύσετε."
 "The automation template order changed since you opened this page. Reload before moving.": "Η σειρά προτύπων αυτοματοποίησης άλλαξε από τότε που ανοίξατε αυτήν τη σελίδα. Επαναφορτώστε πριν από τη μετακίνηση."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Ο μέγιστος αριθμός προσπαθειών προσέγγισης μιας συσκευής μέσω μιας σειράς ανάγνωσης SNMP πριν από την εγκατάλειψη."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Ο μέγιστος αριθμός χιλιοστών του δευτερολέπτου που το Cacti θα περιμένει για απόκριση SNMP (δεν λειτουργεί με υποστήριξη php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Ο μέγιστος αριθμός χιλιοστών του δευτερολέπτου που το Kadupul θα περιμένει για απόκριση SNMP (δεν λειτουργεί με υποστήριξη php-snmp)."
 "The name can be at most 100 characters.": "Το όνομα μπορεί να έχει το πολύ 100 χαρακτήρες."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Αυτή η φόρμα συνόλου επιλογών SNMP έχει λήξει. Ανοίξτε ξανά το σύνολο επιλογών SNMP και χρησιμοποιήστε την τρέχουσα φόρμα του."

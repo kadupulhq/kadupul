@@ -50,5 +50,31 @@
     "zh-CN",
     "zh-TW",
     "zu-ZA"
-  ]
+  ],
+  "sparse_yaml_overrides": [
+    "en-GB"
+  ],
+  "scripts": {
+    "am-ET": ["Ethiopic"],
+    "ar-EG": ["Arabic"],
+    "ar-MA": ["Arabic"],
+    "ar-SA": ["Arabic"],
+    "bg-BG": ["Cyrillic"],
+    "bn-BD": ["Bengali"],
+    "el-GR": ["Greek"],
+    "fa-IR": ["Arabic"],
+    "he-IL": ["Hebrew"],
+    "hi-IN": ["Devanagari"],
+    "ja-JP": ["Han", "Hiragana", "Katakana"],
+    "ko-KR": ["Hangul", "Han"],
+    "mr-IN": ["Devanagari"],
+    "ru-RU": ["Cyrillic"],
+    "ta-IN": ["Tamil"],
+    "te-IN": ["Telugu"],
+    "th-TH": ["Thai"],
+    "uk-UA": ["Cyrillic"],
+    "ur-PK": ["Arabic"],
+    "zh-CN": ["Han"],
+    "zh-TW": ["Han"]
+  }
 }

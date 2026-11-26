@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Kiolezo cha uotomatishaji kilibadilika tangu ulipofungua fomu hii. Pakia upya kabla ya kuhifadhi."
 "The automation template order changed since you opened this page. Reload before moving.": "Mpangilio wa kiolezo cha uotomatishaji ulibadilika tangu ulipofungua ukurasa huu. Pakia upya kabla ya kusogeza."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Idadi ya juu ya majaribio ya kufikia kifaa kupitia readstring ya SNMP kabla ya kukata tamaa."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Idadi ya juu ya milisekunde ambazo Cacti itasubiri majibu ya SNMP (haifanyi kazi na usaidizi wa php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Idadi ya juu ya milisekunde ambazo Kadupul itasubiri majibu ya SNMP (haifanyi kazi na usaidizi wa php-snmp)."
 "The name can be at most 100 characters.": "Jina linaweza kuwa na herufi zisizozidi 100."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Fomu hii ya Seti ya Chaguo za SNMP muda wake umeisha. Fungua Seti ya Chaguo za SNMP tena na utumie fomu yake ya sasa."

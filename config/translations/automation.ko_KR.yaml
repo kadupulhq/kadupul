@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "이 양식을 연 후 자동화 템플릿이 변경되었습니다. 저장하기 전에 다시 불러오세요."
 "The automation template order changed since you opened this page. Reload before moving.": "이 페이지를 연 후 자동화 템플릿 순서가 변경되었습니다. 이동하기 전에 다시 불러오세요."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "포기하기 전에 SNMP 읽기 스트링을 통해 장치에 도달하려는 최대 시도 횟수."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Cacti가 SNMP 응답을 기다리는 최대 밀리초 수입니다(php-snmp 지원 시 작동하지 않음)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Kadupul이 SNMP 응답을 기다리는 최대 밀리초 수입니다(php-snmp 지원 시 작동하지 않음)."
 "The name can be at most 100 characters.": "이름은 최대 100자까지 입력할 수 있습니다."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "이 SNMP 옵션 세트 양식이 만료되었습니다. SNMP 옵션 세트를 다시 열고 현재 양식을 사용하세요."

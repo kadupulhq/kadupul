@@ -13655,7 +13655,7 @@ msgstr "Esta versión de Kadupul (%s) no parece tener un código de versión vá
 
 #: lib/installer.php
 msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Para poder continuar, <b> debe </b> crear una nueva base de datos, importar \"Kadupul. sql\" en ella:"
+msgstr "Para poder continuar, <b> debe </b> crear una nueva base de datos, importar \"cacti.sql\" en ella:"
 
 #: lib/installer.php
 msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"

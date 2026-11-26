@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Atụmatụ akpaaka agbanweela kemgbe ị meghere fọm a. Bugharịa tupu ịchekwaa."
 "The automation template order changed since you opened this page. Reload before moving.": "Usoro atụmatụ akpaaka agbanweela kemgbe ị meghere ibe a. Bugharịa tupu ịkwaga."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Ọnụọgụ kachasị nke mgbalị iru ngwaọrụ site na readstring SNMP tupu ịkwụsị."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Ọnụọgụ kachasị nke milliseconds Cacti ga-eche maka nzaghachi SNMP (anaghị arụ ọrụ na nkwado php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Ọnụọgụ kachasị nke milliseconds Kadupul ga-eche maka nzaghachi SNMP (anaghị arụ ọrụ na nkwado php-snmp)."
 "The name can be at most 100 characters.": "Aha nwere ike ịbụkarị mkpụrụedemede 100."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Fọm Nhazi Nhọrọ SNMP a ekubiela. Meghee Nhazi Nhọrọ SNMP ahụ ọzọ ma jiri fọm ya dị ugbu a."

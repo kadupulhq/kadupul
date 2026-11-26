@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Bu formu açtığınızdan beri otomasyon şablonu değişti. Kaydetmeden önce yeniden yükleyin."
 "The automation template order changed since you opened this page. Reload before moving.": "Bu sayfayı açtığınızdan beri otomasyon şablonu sırası değişti. Taşımadan önce yeniden yükleyin."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Bir cihaza bir SNMP okuma yoluyla pes etmeden önce ulaşma girişimlerinin azami sayısı."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Cacti'nin bir SNMP yanıtı için bekleyeceği maksimum milisaniye sayısı (php-snmp desteğiyle çalışmaz)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Kadupul'un bir SNMP yanıtı için bekleyeceği maksimum milisaniye sayısı (php-snmp desteğiyle çalışmaz)."
 "The name can be at most 100 characters.": "Ad en fazla 100 karakter olabilir."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Bu SNMP Seçenek Kümesi formunun süresi doldu. SNMP Seçenek Kümesini yeniden açın ve geçerli formunu kullanın."

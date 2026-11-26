@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Itempleyithi yokuzenzekelayo itshintshile ukusukela oko uvule le fomu. Layisha kwakhona ngaphambi kokugcina."
 "The automation template order changed since you opened this page. Reload before moving.": "Ulandelelwano lwetempleyithi yokuzenzekelayo lutshintshile ukusukela oko uvule eli phepha. Layisha kwakhona ngaphambi kokushukumisa."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Elona nani likhulu leenzame zokufikelela kwisixhobo nge-SNMP readstring ngaphambi kokuyeka."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Elona nani likhulu leemilisekhondi i-Cacti eya kulinda impendulo ye-SNMP (ayisebenzi ngenkxaso ye-php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Elona nani likhulu leemilisekhondi i-Kadupul eya kulinda impendulo ye-SNMP (ayisebenzi ngenkxaso ye-php-snmp)."
 "The name can be at most 100 characters.": "Igama alinakho ukuba ngaphezu koonobumba abayi-100."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Le fomu yeSeti yeeNketho ze-SNMP iphelelwe lixesha. Vula iSeti yeeNketho ze-SNMP kwakhona uze usebenzise ifom yayo yangoku."

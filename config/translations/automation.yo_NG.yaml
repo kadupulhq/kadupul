@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Àdàkọ àdáṣe náà yí padà láti ìgbà tí o ti ṣí fọ́ọ̀mù yìí. Tún gbé jáde kí o tó fi pamọ́."
 "The automation template order changed since you opened this page. Reload before moving.": "Ìtòlẹ́sẹẹsẹ àdàkọ àdáṣe náà yí padà láti ìgbà tí o ti ṣí ojú-òpó yìí. Tún gbé jáde kí o tó sún un."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Nọ́ńbà pípọ̀jù ti àwọn ìgbìyànjú láti dé ẹ̀rọ kan nípasẹ̀ ọ̀rọ̀ ìkà SNMP kí a tó jáwọ́."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Nọ́ńbà pípọ̀jù ti ìdá-ẹgbẹ̀rún ìṣẹ́jú-àáyá tí Cacti yóò dúró fún ìdáhùn SNMP (kò ṣiṣẹ́ pẹ̀lú àtìlẹ́yìn php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Nọ́ńbà pípọ̀jù ti ìdá-ẹgbẹ̀rún ìṣẹ́jú-àáyá tí Kadupul yóò dúró fún ìdáhùn SNMP (kò ṣiṣẹ́ pẹ̀lú àtìlẹ́yìn php-snmp)."
 "The name can be at most 100 characters.": "Orúkọ lè tó lẹ́tà 100 ní pípọ̀jù."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Fọ́ọ̀mù Àtòjọ Àṣàyàn SNMP yìí ti kọjá àkókò. Tún Àtòjọ Àṣàyàn SNMP ṣí kí o sì lo fọ́ọ̀mù rẹ̀ lọ́wọ́lọ́wọ́."

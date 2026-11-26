@@ -13654,7 +13654,7 @@ msgstr "Esta versión de Kadupul (%s) no parece tener un código de versión vá
 
 #: lib/installer.php
 msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Para poder continuar, <b> debe </b> crear una nueva base de datos, importar \"cacti. sql\" en ella:"
+msgstr "Para poder continuar, <b> debe </b> crear una nueva base de datos, importar \"cacti.sql\" en ella:"
 
 #: lib/installer.php
 msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
@@ -13752,7 +13752,7 @@ msgstr "Está intentando instalar Kadupul %s en una base de datos 0.6.x. Desafor
 
 #: lib/installer.php
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
-msgstr "Ha creado una nueva base de datos, pero aún no ha importado el archivo 'Cacti. SQL'. En la línea de comandos, ejecute lo siguiente para continuar:"
+msgstr "Ha creado una nueva base de datos, pero aún no ha importado el archivo 'cacti.sql'. En la línea de comandos, ejecute lo siguiente para continuar:"
 
 #: lib/installer.php
 #, php-format

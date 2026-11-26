@@ -6227,7 +6227,7 @@ msgstr "从模板新建"
 
 #: include/global_form.php
 msgid "Dash Offset (dash-offset=offset)"
-msgstr "偏移(Dash-offset = offset)"
+msgstr "虚线偏移 (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"

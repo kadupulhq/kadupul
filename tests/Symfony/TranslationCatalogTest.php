@@ -41,6 +41,118 @@ final class TranslationCatalogTest extends TestCase
 
     private const GETTEXT_FUNCTIONS = ['__', '__esc', '_n', '__x', '_x', 'gettext', '_'];
 
+    /** @var array<string, mixed>|null */
+    private static ?array $manifest = null;
+
+    /** @var list<string>|null */
+    private static ?array $translatedLocales = null;
+
+    /** @var list<string>|null */
+    private static ?array $sparseYamlOverrides = null;
+
+    /** @var array<string, list<string>>|null */
+    private static ?array $scripts = null;
+
+    /** @return array<string, mixed> */
+    private static function manifest(): array
+    {
+        if (self::$manifest !== null) {
+            return self::$manifest;
+        }
+        $decoded = json_decode((string) file_get_contents(self::ROOT . '/locales/catalogs.json'), true, 16, JSON_THROW_ON_ERROR);
+        self::assertIsArray($decoded);
+
+        /** @var array<string, mixed> $decoded */
+        return self::$manifest = $decoded;
+    }
+
+    private static function toSymfonyLocale(string $bcp47): string
+    {
+        // Symfony locale names: fr-FR is fr, others use an underscore.
+        return $bcp47 === 'fr-FR' ? 'fr' : str_replace('-', '_', $bcp47);
+    }
+
+    /**
+     * Full translated Symfony locales derived dynamically from locales/catalogs.json
+     * (all translated_locales except sparse_yaml_overrides).
+     *
+     * @return list<string>
+     */
+    private static function translatedLocales(): array
+    {
+        if (self::$translatedLocales !== null) {
+            return self::$translatedLocales;
+        }
+        $manifest = self::manifest();
+        $declared = $manifest['translated_locales'] ?? null;
+        $sparse = $manifest['sparse_yaml_overrides'] ?? [];
+        self::assertIsArray($declared);
+        self::assertIsArray($sparse);
+
+        $locales = [];
+        foreach ($declared as $locale) {
+            self::assertIsString($locale);
+            if (!in_array($locale, $sparse, true)) {
+                $locales[] = self::toSymfonyLocale($locale);
+            }
+        }
+        sort($locales);
+
+        return self::$translatedLocales = $locales;
+    }
+
+    /**
+     * Sparse YAML override Symfony locales derived dynamically from locales/catalogs.json.
+     *
+     * @return list<string>
+     */
+    private static function sparseYamlOverrides(): array
+    {
+        if (self::$sparseYamlOverrides !== null) {
+            return self::$sparseYamlOverrides;
+        }
+        $sparse = self::manifest()['sparse_yaml_overrides'] ?? [];
+        self::assertIsArray($sparse);
+
+        $locales = [];
+        foreach ($sparse as $locale) {
+            self::assertIsString($locale);
+            $locales[] = self::toSymfonyLocale($locale);
+        }
+        sort($locales);
+
+        return self::$sparseYamlOverrides = $locales;
+    }
+
+    /**
+     * Unicode scripts each Symfony locale is written in, derived from locales/catalogs.json.
+     * Latin is accepted everywhere: product names, acronyms, units and code-like tokens stay as they are.
+     *
+     * @return array<string, list<string>>
+     */
+    private static function scripts(): array
+    {
+        if (self::$scripts !== null) {
+            return self::$scripts;
+        }
+        $raw = self::manifest()['scripts'] ?? [];
+        self::assertIsArray($raw);
+
+        $map = [];
+        foreach ($raw as $bcp47 => $scriptList) {
+            self::assertIsString($bcp47);
+            self::assertIsArray($scriptList);
+            $validated = [];
+            foreach ($scriptList as $script) {
+                self::assertIsString($script);
+                $validated[] = $script;
+            }
+            $map[self::toSymfonyLocale($bcp47)] = $validated;
+        }
+
+        return self::$scripts = $map;
+    }
+
     /** @return iterable<string, array{string}> */
     public static function domains(): iterable
     {
@@ -73,21 +185,37 @@ final class TranslationCatalogTest extends TestCase
         return self::$catalogs[$name] = array_combine(array_map('strval', array_keys($messages)), $messages);
     }
 
-    /** @var list<string> */
-    private const TRANSLATED_LOCALES = [
-        'af_ZA', 'am_ET', 'ar_EG', 'ar_MA', 'ar_SA', 'bg_BG', 'bn_BD', 'de_DE',
-        'el_GR', 'es_ES', 'es_MX', 'fa_IR', 'fr', 'fr_CA', 'fr_MA', 'fr_SN',
-        'ha_NG', 'he_IL', 'hi_IN', 'id_ID', 'ig_NG', 'it_IT', 'ja_JP', 'ko_KR',
-        'lv_LV', 'mg_MG', 'mr_IN', 'nl_NL', 'pl_PL', 'pt_BR', 'pt_PT', 'ru_RU',
-        'rw_RW', 'so_SO', 'sv_SE', 'sw_KE', 'ta_IN', 'te_IN', 'th_TH', 'tr_TR',
-        'uk_UA', 'ur_PK', 'vi_VN', 'xh_ZA', 'yo_NG', 'zh_CN', 'zh_TW', 'zu_ZA',
-    ];
+    public function testManifestSingleSourceOfTruthMetadataIsValid(): void
+    {
+        $manifest = self::manifest();
+        self::assertSame('en-US', $manifest['source_fallback'] ?? null);
+        $declared = $manifest['translated_locales'] ?? null;
+        $sparse = $manifest['sparse_yaml_overrides'] ?? null;
+        $scripts = $manifest['scripts'] ?? null;
+        self::assertIsArray($declared);
+        self::assertIsArray($sparse);
+        self::assertIsArray($scripts);
+        self::assertSame(['en-GB'], $sparse);
+        self::assertCount(count($declared) - count($sparse), self::translatedLocales());
+        foreach ($sparse as $locale) {
+            self::assertContains($locale, $declared);
+        }
+        foreach ($scripts as $locale => $scriptList) {
+            self::assertContains($locale, $declared);
+            self::assertIsArray($scriptList);
+            self::assertNotSame([], $scriptList);
+            foreach ($scriptList as $script) {
+                self::assertIsString($script);
+                self::assertSame(1, preg_match('/\A[A-Z][A-Za-z_]+\z/D', $script));
+            }
+        }
+    }
 
     #[DataProvider('domains')]
     public function testEnglishAndTranslatedLocalesDefineTheSameMessages(string $domain): void
     {
         $english = self::catalog($domain, 'en');
-        foreach (self::TRANSLATED_LOCALES as $locale) {
+        foreach (self::translatedLocales() as $locale) {
             $translated = self::catalog($domain, $locale);
             self::assertSame([], array_values(array_diff_key($english, $translated)), $domain . ' is missing ' . $locale . ' messages');
             self::assertSame([], array_values(array_diff_key($translated, $english)), $domain . ' has extra ' . $locale . ' messages');
@@ -98,7 +226,7 @@ final class TranslationCatalogTest extends TestCase
     public function testMessagesAreNotBlankAndKeepPlaceholders(string $domain): void
     {
         $english = self::catalog($domain, 'en');
-        foreach (self::TRANSLATED_LOCALES as $locale) {
+        foreach (self::translatedLocales() as $locale) {
             foreach (self::catalog($domain, $locale) as $id => $message) {
                 $id = (string) $id;
                 self::assertNotSame('', trim($message), $domain . ' ' . $locale . ': ' . $id);
@@ -119,17 +247,14 @@ final class TranslationCatalogTest extends TestCase
 
     public function testOtherLocaleCatalogsAreShippedLocalesWithKnownMessages(): void
     {
-        $catalogs = json_decode((string) file_get_contents(self::ROOT . '/locales/catalogs.json'), true, flags: JSON_THROW_ON_ERROR);
-        self::assertIsArray($catalogs['translated_locales'] ?? null);
-        // Symfony locale names: fr-FR is fr, others use an underscore.
-        $shipped = array_map(static fn(string $locale): string => str_replace('-', '_', $locale), array_diff($catalogs['translated_locales'], ['fr-FR']));
+        $shipped = array_merge(self::translatedLocales(), self::sparseYamlOverrides());
         $count = 0;
         foreach (glob(self::ROOT . '/config/translations/*.*.yaml') ?: [] as $file) {
             if (preg_match('/\A([a-z_]+(?:\+intl-icu)?)\.([A-Za-z_]+)\.yaml\z/D', basename($file), $match) !== 1) {
                 self::fail('Unexpected translation file name: ' . basename($file));
             }
             [, $domain, $locale] = $match;
-            if ($locale === 'en' || $locale === 'fr') {
+            if ($locale === 'en') {
                 continue;
             }
             ++$count;
@@ -216,22 +341,27 @@ final class TranslationCatalogTest extends TestCase
         self::assertNotSame([], self::icuProblems('fr', $key, '{count, plural, =1 {} other {}}'), 'blank output');
     }
 
-    /**
-     * Unicode scripts each locale is written in. Latin is accepted everywhere:
-     * product names, acronyms, units and code-like tokens stay as they are.
-     */
-    private const SCRIPTS = [
-        'am_ET' => ['Ethiopic'], 'ar_EG' => ['Arabic'], 'ar_MA' => ['Arabic'], 'ar_SA' => ['Arabic'],
-        'bg_BG' => ['Cyrillic'], 'bn_BD' => ['Bengali'],
-        'el_GR' => ['Greek'], 'fa_IR' => ['Arabic'], 'he_IL' => ['Hebrew'], 'hi_IN' => ['Devanagari'],
-        'ja_JP' => ['Han', 'Hiragana', 'Katakana'], 'ko_KR' => ['Hangul', 'Han'], 'mr_IN' => ['Devanagari'],
-        'ru_RU' => ['Cyrillic'], 'ta_IN' => ['Tamil'], 'te_IN' => ['Telugu'], 'th_TH' => ['Thai'],
-        'uk_UA' => ['Cyrillic'], 'ur_PK' => ['Arabic'], 'zh_CN' => ['Han'], 'zh_TW' => ['Han'],
-    ];
-
     private const PRINTF = '/%(?:\d+\$)?[-+0#]?\d*(?:\.\d+)?[sdfuxXeEgGcbo](?![A-Za-z])|%\s\d/';
 
     private const ENTITY = '/&(?:#\d+|#[xX][0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9]*);/';
+
+    private const SPLIT_ENTITY = '/&(?:lt|gt|amp|quot|apos|nbsp) ;|& #\d+;/';
+
+    private const UNCLOSED_HTML_TAG = '/<[A-Za-z][^<>]*(?=<|\z)/';
+
+    /** @var list<string> */
+    private const BALANCED_HTML_TAGS = ['b', 'i', 'strong', 'em', 'u', 'a', 'code', 'span', 'p', 'div', 'li', 'ul', 'ol'];
+
+    private const RRD_OPTION_LABEL = '/^.*\S \((--[^()&]+?)[ =]?(?:&lt;.*)?\)\z/';
+
+    /** @var list<string> */
+    private const RRD_SYNTAX_TOKENS = [
+        '(dash-offset=offset)',
+        '(dashes[=on_s[,off_s[,on_s,off_s]...]])',
+    ];
+
+    /** @var list<string> */
+    private const CJK_LOCALES = ['ja_JP', 'ko_KR', 'zh_CN', 'zh_TW'];
 
     private const SPACE = '[\s\x{00A0}\x{3000}]';
 
@@ -244,7 +374,13 @@ final class TranslationCatalogTest extends TestCase
     {
         $english = self::catalog($domain, 'en');
         $problems = [];
-        foreach (self::TRANSLATED_LOCALES as $locale) {
+        $locales = self::translatedLocales();
+        foreach (self::sparseYamlOverrides() as $sparse) {
+            if (is_file(self::ROOT . '/config/translations/' . $domain . '.' . $sparse . '.yaml')) {
+                $locales[] = $sparse;
+            }
+        }
+        foreach ($locales as $locale) {
             foreach (self::catalog($domain, $locale) as $id => $message) {
                 $id = (string) $id;
                 if (!isset($english[$id])) {
@@ -268,7 +404,8 @@ final class TranslationCatalogTest extends TestCase
     public static function valueProblems(string $locale, string $id, string $message, string $source): array
     {
         $problems = [];
-        $scripts = implode('', array_map(static fn(string $script): string => '\p{' . $script . '}', self::SCRIPTS[$locale] ?? []));
+        $scriptMap = self::scripts();
+        $scripts = implode('', array_map(static fn(string $script): string => '\p{' . $script . '}', $scriptMap[$locale] ?? []));
         $text = (string) preg_replace(['/%\w+%/', '/<\/?[A-Za-z][^<>]*>/'], '', $message);
         if (preg_match('/(?![\p{Latin}\p{Common}\p{Inherited}' . $scripts . '])\p{L}/u', $text, $match) === 1) {
             $problems[] = 'has letters in a script foreign to ' . $locale . ', first "' . $match[0] . '"';
@@ -279,6 +416,35 @@ final class TranslationCatalogTest extends TestCase
         }
         if (preg_match(self::ENTITY, $message) === 1 && preg_match(self::ENTITY, $source) !== 1) {
             $problems[] = 'has an HTML entity the source lacks; templates escape it and show it literally';
+        }
+        if (preg_match(self::SPLIT_ENTITY, $message) === 1 && preg_match(self::SPLIT_ENTITY, $source) !== 1) {
+            $problems[] = 'splits an HTML entity with whitespace';
+        }
+        if (preg_match(self::UNCLOSED_HTML_TAG, $message) === 1 && preg_match(self::UNCLOSED_HTML_TAG, $source) !== 1) {
+            $problems[] = 'has an unclosed HTML tag';
+        }
+        foreach (self::BALANCED_HTML_TAGS as $tag) {
+            $srcOpen = preg_match_all('/<' . $tag . '(?:\s[^<>]*?)?>/i', $source);
+            $srcClose = preg_match_all('/<\/' . $tag . '\s*>/i', $source);
+            $msgOpen = preg_match_all('/<' . $tag . '(?:\s[^<>]*?)?>/i', $message);
+            $msgClose = preg_match_all('/<\/' . $tag . '\s*>/i', $message);
+            if ($srcOpen === $srcClose && $msgOpen !== $msgClose) {
+                $problems[] = 'has unbalanced <' . $tag . '> HTML tags';
+            }
+        }
+        if (preg_match(self::RRD_OPTION_LABEL, $source, $optionMatch) === 1 && !str_contains($message, $optionMatch[1])) {
+            $problems[] = 'drops the RRDtool option ' . $optionMatch[1];
+        }
+        foreach (self::RRD_SYNTAX_TOKENS as $token) {
+            if (str_contains($source, $token) && !str_contains($message, $token)) {
+                $problems[] = 'alters the RRDtool syntax ' . $token;
+            }
+        }
+        if (str_contains($source, 'cacti.sql') && !str_contains($message, 'cacti.sql')) {
+            $problems[] = 'alters the schema filename cacti.sql';
+        }
+        if (preg_match('/(?<![A-Za-z0-9_])cacti(?![A-Za-z0-9_])/i', $message) === 1 && preg_match('/(?<![A-Za-z0-9_])cacti(?![A-Za-z0-9_])/i', $source) !== 1) {
+            $problems[] = 'introduces unexpected "Cacti" brand absent from source';
         }
         foreach (['/^' . self::SPACE . '*/u' => 'leading', '/' . self::SPACE . '*\z/u' => 'trailing'] as $pattern => $side) {
             preg_match($pattern, $message, $translated);
@@ -302,6 +468,22 @@ final class TranslationCatalogTest extends TestCase
         if ($message === $id && $source !== $id) {
             $problems[] = 'repeats the symbolic key instead of translating "' . $source . '"';
         }
+        if (
+            $id !== $source
+            && preg_match('/\A[a-z][a-z0-9_]*\z/D', $id) === 1
+            && str_word_count($source) >= 4
+            && mb_strlen($source) >= 24
+        ) {
+            $minLen = in_array($locale, self::CJK_LOCALES, true)
+                ? 6
+                : max(12, (int) floor(mb_strlen($source) * 0.25));
+            $missingStop = str_ends_with($source, '.')
+                && $locale !== 'th_TH'
+                && preg_match('/[.!?。？！۔።։।]' . self::SPACE . '*\z/u', $message) !== 1;
+            if (mb_strlen($message) < $minLen || $missingStop) {
+                $problems[] = 'appears to translate symbolic key "' . $id . '" instead of the full sentence "' . $source . '"';
+            }
+        }
 
         return $problems;
     }
@@ -316,6 +498,13 @@ final class TranslationCatalogTest extends TestCase
         self::assertSame('', $reasons('de_DE', '%count% of %total% [%pct%]', '%count% von %total% [%pct%]'));
         self::assertSame('', $reasons('fr', 'Usage is above 90%', 'L’utilisation dépasse 90 % depuis hier'));
         self::assertSame('', $reasons('nl_NL', 'csrf', 'Het formulier kon niet worden gecontroleerd.', 'The form could not be verified.'));
+        self::assertSame('', $reasons('zh_CN', 'csrf', '无法验证表单。请重新加载并重试。', 'The form could not be verified. Reload it and try again.'));
+        self::assertSame('', $reasons('th_TH', 'disabled', 'ปิดใช้งานการจัดการสินทรัพย์แล้ว', 'Asset management is disabled.'));
+        self::assertSame('', $reasons('de_DE', 'Right Axis (--right-axis)', 'Rechte Achse (--right-axis)'));
+        self::assertSame('', $reasons('de_DE', 'Dash Offset (dash-offset=offset)', 'Strich-Abstand (dash-offset=offset)'));
+        self::assertSame('', $reasons('de_DE', 'Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])', 'Striche (dashes[=on_s[,off_s[,on_s,off_s]...]])'));
+        self::assertSame('', $reasons('es_ES', 'Import cacti.sql first.', 'Importe cacti.sql primero.'));
+        self::assertSame('', $reasons('de_DE', 'Kadupul timeout', 'Kadupul-Zeitlimit'));
         self::assertStringContainsString('script foreign to bg_BG', $reasons('bg_BG', 'Running', '실행 중'));
         self::assertStringContainsString('script foreign to de_DE', $reasons('de_DE', 'ALLOW', '允許'));
         self::assertStringContainsString('script foreign to ja_JP', $reasons('ja_JP', 'Unknown', '알려지지 않음'));
@@ -324,6 +513,14 @@ final class TranslationCatalogTest extends TestCase
         self::assertStringContainsString('printf-style', $reasons('pl_PL', 'Rows', '%1$s wierszy'));
         self::assertStringContainsString('printf-style', $reasons('vi_VN', 'Named Colors', '% 1 is the number of paths'));
         self::assertStringContainsString('HTML entity', $reasons('tr_TR', 'Update RRA', 'RRA&#39;yı Güncelle'));
+        self::assertStringContainsString('splits an HTML entity', $reasons('fr', 'A > B', 'A &gt ; B'));
+        self::assertStringContainsString('unclosed HTML tag', $reasons('de_DE', 'Bold', '<b Fett'));
+        self::assertStringContainsString('unbalanced <i>', $reasons('de_DE', 'Italic', '<i>Kursiv<i>'));
+        self::assertStringContainsString('drops the RRDtool option --right-axis', $reasons('de_DE', 'Right Axis (--right-axis)', 'Rechte Achse (--rechte-achse)'));
+        self::assertStringContainsString('alters the RRDtool syntax (dash-offset=offset)', $reasons('de_DE', 'Dash Offset (dash-offset=offset)', 'Strich-Abstand (dash-offset=Abstand)'));
+        self::assertStringContainsString('alters the RRDtool syntax (dashes[=on_s[,off_s[,on_s,off_s]...]])', $reasons('ru_RU', 'Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])', 'Тире (тире [=on_s[,off_s[,on_s,off_s]...]])'));
+        self::assertStringContainsString('alters the schema filename cacti.sql', $reasons('es_ES', 'Import cacti.sql first.', 'Importe Kadupul.sql primero.'));
+        self::assertStringContainsString('unexpected "Cacti" brand', $reasons('de_DE', 'Kadupul timeout', 'Cacti-Zeitlimit'));
         self::assertStringContainsString('trailing whitespace', $reasons('ko_KR', 'Graphs', '그래프 '));
         self::assertStringContainsString('leading whitespace', $reasons('tr_TR', 'Options', ' Seçenekler'));
         self::assertStringContainsString('adds a trailing colon', $reasons('ko_KR', 'Color Name', '색상명:'));
@@ -335,6 +532,8 @@ final class TranslationCatalogTest extends TestCase
         self::assertStringContainsString('invisible', $reasons('he_IL', 'ROOT', "\u{202B}Root"));
         self::assertStringContainsString('invisible', $reasons('sv_SE', 'Numeric', "\u{FEFF}Numerisk"));
         self::assertStringContainsString('repeats the symbolic key', $reasons('nl_NL', 'csrf', 'csrf', 'The form could not be verified.'));
+        self::assertStringContainsString('appears to translate symbolic key "capacity"', $reasons('af_ZA', 'capacity', 'kapasiteit', 'The pilot capacity has been reached. Review scope before expanding it.'));
+        self::assertStringContainsString('appears to translate symbolic key "dependency_cycle"', $reasons('zh_TW', 'dependency_cycle', '相依性循環', 'This dependency would create a cycle.'));
     }
 
     public function testSourceUsesNoGettextOutsideLegacyPageHelpers(): void

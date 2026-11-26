@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Mẫu tự động hóa đã thay đổi kể từ khi bạn mở biểu mẫu này. Hãy tải lại trước khi lưu."
 "The automation template order changed since you opened this page. Reload before moving.": "Thứ tự mẫu tự động hóa đã thay đổi kể từ khi bạn mở trang này. Hãy tải lại trước khi di chuyển."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Số lần thử tối đa để tiếp cận thiết bị thông qua chuỗi đọc SNMP trước khi từ bỏ."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Số mili giây tối đa Cacti sẽ chờ phản hồi SNMP (không hoạt động với hỗ trợ php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Số mili giây tối đa Kadupul sẽ chờ phản hồi SNMP (không hoạt động với hỗ trợ php-snmp)."
 "The name can be at most 100 characters.": "Tên chỉ được dài tối đa 100 ký tự."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Biểu mẫu Bộ tùy chọn SNMP này đã hết hạn. Hãy mở lại Bộ tùy chọn SNMP và sử dụng biểu mẫu hiện tại của nó."

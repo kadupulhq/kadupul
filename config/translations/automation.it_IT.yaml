@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Il modello di automazione è cambiato dopo l'apertura di questo modulo. Ricarica prima di salvare."
 "The automation template order changed since you opened this page. Reload before moving.": "L'ordine dei modelli di automazione è cambiato dopo l'apertura di questa pagina. Ricarica prima di spostare."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Il numero massimo di tentativi di raggiungere un dispositivo tramite una stringa di lettura SNMP prima della rinuncia."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Il numero massimo di millisecondi che Cacti attenderà per una risposta SNMP (non funziona con il supporto php-snmp)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Il numero massimo di millisecondi che Kadupul attenderà per una risposta SNMP (non funziona con il supporto php-snmp)."
 "The name can be at most 100 characters.": "Il nome può contenere al massimo 100 caratteri."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Questo modulo del set di opzioni SNMP è scaduto. Apri nuovamente il set di opzioni SNMP e utilizza il modulo corrente."

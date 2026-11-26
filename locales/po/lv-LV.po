@@ -6269,7 +6269,7 @@ msgstr "Izveidot jaunu no veidnes"
 
 #: include/global_form.php
 msgid "Dash Offset (dash-offset=offset)"
-msgstr "Domuzīmes nobīde (dash-offset=nobīde)"
+msgstr "Domuzīmes nobīde (dash-offset=offset)"
 
 #: include/global_form.php
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"

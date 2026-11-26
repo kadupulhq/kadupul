@@ -159,7 +159,7 @@
 "The automation template changed since you opened this form. Reload before saving.": "Die outomatiseringsjabloon het verander sedert jy hierdie vorm oopgemaak het. Herlaai voordat jy stoor."
 "The automation template order changed since you opened this page. Reload before moving.": "Die outomatiseringsjabloon-volgorde het verander sedert jy hierdie bladsy oopgemaak het. Herlaai voordat jy skuif."
 "The maximum number of attempts to reach a device via an SNMP readstring prior to giving up.": "Die maksimum aantal pogings om 'n toestel via 'n SNMP-leesstring te bereik voordat daar moed opgegee word."
-"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Die maksimum aantal millisekondes wat Cacti vir 'n SNMP-reaksie sal wag (werk nie met php-snmp-ondersteuning nie)."
+"The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).": "Die maksimum aantal millisekondes wat Kadupul vir 'n SNMP-reaksie sal wag (werk nie met php-snmp-ondersteuning nie)."
 "The name can be at most 100 characters.": "Die naam kan hoogstens 100 karakters wees."
 "The name format must give every copy a name of 1 to 100 characters.": "The name format must give every copy a name of 1 to 100 characters."
 "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.": "Hierdie SNMP-opsiestel-vorm het verval. Maak die SNMP-opsiestel weer oop en gebruik sy huidige vorm."
