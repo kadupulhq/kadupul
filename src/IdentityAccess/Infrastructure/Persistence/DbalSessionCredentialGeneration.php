@@ -29,7 +29,8 @@ final class DbalSessionCredentialGeneration
     public static function forAccount(
         Connection $database,
         int $userId,
-        #[\SensitiveParameter] string $password,
+        #[\SensitiveParameter]
+        string $password,
     ): string {
         $fingerprint = self::key($password);
         $lock = $database->isTransactionActive() && $database->getDatabasePlatform() instanceof AbstractMySQLPlatform

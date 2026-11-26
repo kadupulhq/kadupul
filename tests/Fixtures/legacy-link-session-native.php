@@ -248,7 +248,7 @@ if ($stage === 'save') {
     $audit = new class implements Kadupul\IdentityAccess\Contract\AuditTrail {
         public function record(Kadupul\IdentityAccess\Contract\AuditEvent $event): void {}
     };
-    $store = new Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkStore($connection, $access, $audit, $configuration, Kadupul\Platform\Contract\PlatformConfiguration::fromBootstrap($root . '/include', 1, '/', PHP_OS));
+    $store = new Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkStore($connection, $access, $audit, $configuration, Kadupul\Platform\Contract\PlatformConfiguration::fromBootstrap($root . '/include', 1, '/', PHP_OS), new Kadupul\IdentityAccess\Infrastructure\Persistence\InstallationRealmGrantManager($connection));
     if ($scenario === 'grant-rollback') {
         $db->exec($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite'
             ? "CREATE TRIGGER reject_permission_epoch BEFORE UPDATE OF reset_perms ON user_auth BEGIN SELECT RAISE(ABORT,'epoch-write-rejected'); END"
@@ -264,7 +264,7 @@ if ($stage === 'save') {
         $savedId = $store->save(9, $scenario === 'grant-full-create' ? null : 1, ['title' => 'Saved viewer', 'style' => 'TAB', 'filename' => '0', 'fileurl' => 'https://example.com/native-viewer', 'consolesection' => '', 'consolenewsection' => '', 'refresh' => 0, 'enabled' => true], $store->snapshot()['revision']);
         file_put_contents($directory . '/link-id', (string) $savedId);
     } catch (PDOException|RuntimeException $error) {
-        if (!str_contains($error->getMessage(), 'epoch-write-rejected') && !str_contains($error->getMessage(), 'Link permission invalidation')) {
+        if (!str_contains($error->getMessage(), 'epoch-write-rejected') && !str_contains($error->getMessage(), 'Permission invalidation')) {
             throw $error;
         }
         $failed = true;
