@@ -146,7 +146,7 @@
 "The smallest deviation used, in the series' own unit; greater than zero.": "The smallest deviation used, in the series' own unit; greater than zero."
 "This incident has ended and cannot be acknowledged.": "This incident has ended and cannot be acknowledged."
 "This incident record is unreadable and cannot be shown or acknowledged.": "This incident record is unreadable and cannot be shown or acknowledged."
-"Threshold": "Потоки"
+"Threshold": "Поріг"
 "Threshold rule": "Threshold rule"
 "Trigger and clear thresholds must be finite numbers.": "Trigger and clear thresholds must be finite numbers."
 "Trigger threshold": "Trigger threshold"

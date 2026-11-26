@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Buri munsi {number}} other {Every {number} Days}}"
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Buri munsi {number}} other {Buri minsi {number}}}"
 "{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {Umunsi {number}} other {Iminsi {number}}}"
 "{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {Isaha {number}} other {Amasaha {number}}}"
 "{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {Umunota {number}} other {Iminota {number}}}"
 "{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {Ukwezi {number}} other {Amezi {number}}}"
-"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} Second} other {Amasegonda {number}}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {Isegonda {number}} other {Amasegonda {number}}}"
 "{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {Icyumweru {number}} other {Ibyumweru {number}}}"
 "{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {Umwaka {number}} other {Imyaka {number}}}"

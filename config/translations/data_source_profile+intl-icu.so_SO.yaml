@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Kolkii {number} Maalinba} other {Every {number} Days}}"
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Kolkii {number} maalinba} other {Kolkii {number} maalmoodba}}"
 "{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} Maalin} other {{number} Maalmood}}"
 "{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} Saac} other {{number} Saacadood}}"
 "{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} Daqiiqo} other {{number} Daqiiqo}}"
 "{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} Bil} other {{number} Bilood}}"
-"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} Second} other {{number} Ilbiriqsi}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} ilbiriqsi} other {{number} ilbiriqsi}}"
 "{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} Toddobaad} other {{number} Toddobaad}}"
 "{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} Sano} other {{number} Sano}}"

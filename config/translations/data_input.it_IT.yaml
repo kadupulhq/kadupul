@@ -72,7 +72,7 @@
 "Script/Command": "Script/Comando"
 "Script Server": "Server Script"
 "Script Query": "Query Script"
-"Script Server Query": "Server Script"
+"Script Server Query": "Query del server di script"
 "SNMP Get": "SNMP Get"
 "SNMP Query": "Query SNMP"
 "Unknown": "Sconosciuto"

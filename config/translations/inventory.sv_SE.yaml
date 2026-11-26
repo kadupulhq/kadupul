@@ -180,7 +180,7 @@
 "UDP": "UDP"
 "TCP": "TCP"
 "SNMP": "SNMP"
-"Ping": "Notifiera"
+"Ping": "Ping"
 "Remote collectors must be online. Creation verifies the replicated device before confirming success.": "Fjärrinsamlare måste vara online. Skapande verifierar den replikerade enheten innan det lyckade resultatet bekräftas."
 "[None]": "[Ingen]"
 "Select a site": "Välj en plats"

@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"(User Removed)": "(Usuário Removido)"
+"(User Removed)": "(Utilizador Removido)"
 "10": "10"
 "100": "100"
 "1000": "1000"
@@ -177,7 +177,7 @@
 "Status": "Estado"
 "Storage Related": "Relacionado ao armazenamento"
 "Success - Password": "Sucesso - Pswd"
-"Success - Password Change": "Sucesso - Pswd"
+"Success - Password Change": "Sucesso - Alteração de palavra-passe"
 "Success - Token": "Sucesso - Token"
 "Telco Related": "Relacionado com telecomunicações"
 "Template": "Modelo"

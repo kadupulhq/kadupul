@@ -36,7 +36,7 @@
 "SNMP Notification Receiver [edit: %name%]": "Получател на SNMP известия [редактиране: %name%]"
 "SNMP Notification Receiver [new]": "SNMP уведомяващ приемник [нов]"
 "SNMP Port": "SNMP Порт"
-"SNMP Privacy Passphrase (v3)": "Декларация за поверителност на SNMP (v3)"
+"SNMP Privacy Passphrase (v3)": "Паролна фраза за поверителност на SNMP (v3)"
 "SNMP Privacy Protocol (v3)": "Протокол за поверителност на SNMP (v3)"
 "SNMP Username (v3)": "SNMP потребителско име (v3)"
 "SNMP Version": "SNMP Версия"

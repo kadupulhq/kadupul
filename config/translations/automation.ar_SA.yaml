@@ -71,7 +71,7 @@
 "Invalid automation template filters.": "مرشحات قوالب الأتمتة غير صالحة."
 "Invalid automation template order.": "ترتيب قوالب الأتمتة غير صالح."
 "Invalid automation template selection.": "تحديد قالب الأتمتة غير صالح."
-"Item": "اعلان"
+"Item": "عنصر"
 "Item # %number%": "العنصر # %number%"
 "Max OIDs": "الحد الأقصى لـ OIDs"
 "Maximum OIDs Per Get Request": "الحد الأقصى لكل طلب الحصول على OID"

@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, =1 {Isaky ny {number} andro} other {Every {number} Days}}"
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Isaky ny {number} andro} other {Isaky ny {number} andro}}"
 "{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, =1 {{number} Andro} other {{number} Andro}}"
 "{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, =1 {{number} Ora} other {Ora {number}}}"
 "{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, =1 {{number} Minitra} other {Minitra {number}}}"
 "{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, =1 {{number} Volana} other {{number} Volana}}"
-"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, =1 {{number} Second} other {{number} segondra}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} segondra} other {{number} segondra}}"
 "{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, =1 {{number} Herinandro} other {{number} Herinandro}}"
 "{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, =1 {{number} taona} other {{number} Taona}}"

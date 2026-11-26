@@ -101,7 +101,7 @@
 "Subnet Range": "Dải mạng con"
 "Sunday": "Chủ nhật"
 "TCP Ping Closed": "TCP Ping bị đóng"
-"TCP Ping": "Ping Ping"
+"TCP Ping": "TCP Ping"
 "TCP or UDP port to attempt connection.": "Cổng TCP hoặc UDP để thử kết nối."
 "The Email Address to be used as the sender's Email for the Notification Email.  If left blank, the default Automation Notification Email Address is used.": "Địa chỉ Email được dùng làm Email người gửi cho Email thông báo. Nếu để trống, Địa chỉ Email thông báo tự động hóa mặc định sẽ được sử dụng."
 "The Email account name to be used as the sender's name for the Notification Email.  If left blank, the default Automation Notification Name is used.": "Tên tài khoản Email được dùng làm tên người gửi cho Email thông báo. Nếu để trống, Tên thông báo tự động hóa mặc định sẽ được sử dụng."

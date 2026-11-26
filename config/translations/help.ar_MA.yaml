@@ -1,7 +1,16 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Graphs": "المبيانات"
 "Help": "مساعدة"
-"Plugins": "الإضافات"
+"Access denied.": "الولوج مرفوض."
+"Choose a topic to open the Kadupul documentation.": "اختر موضوعاً لفتح وثائق Kadupul."
+"Get started": "ابدأ الآن"
+"Graphs": "المبيانات"
 "Templates": "القوالب"
+"Data queries": "استعلامات المعطيات"
+"Remote data collectors": "مجمّعات المعطيات البعيدة"
+"Users and permissions": "المستعملون والصلاحيات"
+"Plugins": "الإضافات"
+"Troubleshoot missing data": "تشخيص ومعالجة المعطيات المفقودة"
+"Not available locally.": "غير متوفر محلياً."
+"Back to console": "الرجوع إلى وحدة التحكم"

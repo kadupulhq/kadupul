@@ -1,7 +1,16 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Graphs": "Ibishushanyo"
 "Help": "Ubufasha"
-"Plugins": "Imigereka"
+"Access denied.": "Uburenganzira bwanzwe."
+"Choose a topic to open the Kadupul documentation.": "Hitamo insanganyamatsiko kugira ngo ufungure inyandiko za Kadupul."
+"Get started": "Tangira"
+"Graphs": "Ibishushanyo"
 "Templates": "Inyandikorugero"
+"Data queries": "Amasabamakuru"
+"Remote data collectors": "Ibikusanyamakuru bya kure"
+"Users and permissions": "Abakoresha n'uburenganzira"
+"Plugins": "Imigereka"
+"Troubleshoot missing data": "Kemura ikibazo cy'amakuru abura"
+"Not available locally.": "Ntibiboneka hano imbere."
+"Back to console": "Subira kuri konsoli"

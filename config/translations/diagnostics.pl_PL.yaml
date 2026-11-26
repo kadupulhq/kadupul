@@ -70,7 +70,7 @@
 "RRDfile Cleaner": "RRDfile Cleaner"
 "Recorded Boost settings and database statistics. Row estimates are not exact queue counts. Refresh to read current values.": "Zapisane ustawienia Boost i statystyki bazy danych. Szacunki wierszy nie są dokładną liczbą elementów w kolejce. Odśwież, aby odczytać bieżące wartości."
 "Recorded configuration and inventory counts. External tool probes and tuning recommendations are available in advanced diagnostics.": "Zapisana konfiguracja i liczby inwentarzowe. Testy narzędzi zewnętrznych oraz zalecenia strojenia są dostępne w zaawansowanej diagnostyce."
-"Row Format": "Surowy format"
+"Row Format": "Format wierszy"
 "Rows": "Wiersze"
 "Running Boost Processes": "Działające procesy Boost"
 "SNMP": "Agent SNMP"
