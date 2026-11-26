@@ -2670,34 +2670,57 @@ function get_best_data_query_index_type($host_id, $data_query_id)
    @arg $script_path - the path on the disk to the script file
    @arg $host_id - the id of the host that this script query belongs to
    @returns - a full path to the script query script containing all arguments */
-function get_script_query_path($args, $script_path, $host_id)
+function get_script_query_path($args, $script_path, $host_id, array $literal_args = array())
 {
     global $config;
 
     include_once($config['library_path'] . '/variables.php');
 
     /* get any extra arguments that need to be passed to the script */
+    $extra_arguments = '';
     if ($args != '') {
         $parts = preg_split("/[\s,]*\\\"([^\\\"]+)\\\"[\s,]*|" . "[\s,]*'([^']+)'[\s,]*|" . "[\s,]+/", $args, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
-        $extra_arguments = '';
         foreach ($parts as $index => $part) {
             // Devices supply most of these values and cmd.exe runs them on Windows.
             // Only an argument made of SNMP credential placeholders may keep a '%'.
             $credential = preg_match('/^(?:\|host_snmp_(?:community|password|priv_passphrase)\|)+$/D', $part) === 1;
             $extra_arguments .= ($index > 0 ? ' ' : '') . cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id), true, true, $credential);
         }
-    } else {
-        $extra_arguments = '';
+    }
+
+    /* Append untrusted device-sourced values (such as snmp_index) as discrete
+     * literal arguments without template whitespace splitting or host-variable
+     * substitution so crafted indices cannot expand credentials or split args. */
+    foreach ($literal_args as $literal) {
+        $extra_arguments .= ($extra_arguments !== '' ? ' ' : '') . cacti_escapeshellarg((string) $literal, true, true, false);
     }
 
     /* SECURITY: The base script path MUST be sanitized to prevent RCE from malicious templates */
     $parsed_script_path = substitute_script_query_path($script_path);
 
-    if (strpos($parsed_script_path, '..') !== false) {
+    if (strpos($parsed_script_path, '..') !== false || strpbrk($parsed_script_path, "\0\r\n") !== false) {
         cacti_log('FATAL: Malicious path traversal detected in Data Query script path: ' . $parsed_script_path, true, 'REINDEX');
 
         return false;
+    }
+
+    if (!empty($config['base_path']) && is_string($config['base_path']) && function_exists('cacti_path_is_within')) {
+        $script_tokens = preg_split('/\s+/', trim($parsed_script_path));
+        if (is_array($script_tokens)) {
+            $base_real = realpath($config['base_path']);
+            $scripts_root = $base_real !== false ? $base_real . '/scripts' : rtrim($config['base_path'], '/') . '/scripts';
+            foreach ($script_tokens as $token) {
+                if (str_contains($token, '/scripts/') || str_starts_with($token, 'scripts/')) {
+                    $candidate = str_starts_with($token, '/') ? $token : rtrim($config['base_path'], '/') . '/' . ltrim($token, '/');
+                    if (file_exists($candidate) && !cacti_path_is_within($candidate, $scripts_root)) {
+                        cacti_log('FATAL: Script query path escaped scripts directory: ' . $parsed_script_path, true, 'REINDEX');
+
+                        return false;
+                    }
+                }
+            }
+        }
     }
 
     $safe_script_path = cacti_escapeshellcmd($parsed_script_path);

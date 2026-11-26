@@ -799,17 +799,18 @@ function rrdcheck_poller_bottom()
 
         $command_string = read_config_option('path_php_binary');
 
+        $extra_args = array('-q', $config['base_path'] . '/poller_rrdcheck.php');
+        $redirect_args = '';
+
         if (read_config_option('path_rrdcheck_log') != '') {
             if ($config['cacti_server_os'] == 'unix') {
-                $extra_args = '-q ' . $config['base_path'] . '/poller_rrdcheck.php >> ' . cacti_escapeshellarg(read_config_option('path_rrdcheck_log')) . ' 2>&1';
+                $redirect_args = '>> ' . cacti_escapeshellarg(read_config_option('path_rrdcheck_log')) . ' 2>&1';
             } else {
-                $extra_args = '-q ' . $config['base_path'] . '/poller_rrdcheck.php >> ' . cacti_escapeshellarg(read_config_option('path_rrdcheck_log'));
+                $redirect_args = '>> ' . cacti_escapeshellarg(read_config_option('path_rrdcheck_log'));
             }
-        } else {
-            $extra_args = '-q ' . $config['base_path'] . '/poller_rrdcheck.php';
         }
 
-        exec_background($command_string, $extra_args);
+        exec_background($command_string, $extra_args, $redirect_args);
     }
 }
 
@@ -845,9 +846,7 @@ function rrdcheck_rrdtool_init()
         putenv('RRD_DEFAULT_FONT=' . $font);
     }
 
-    $command = read_config_option('path_rrdtool') . ' - ';
-
-    $process = proc_open($command, $fds, $pipes);
+    $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $fds, $pipes);
 
     /* make stdin/stdout/stderr non-blocking */
     stream_set_blocking($pipes[0], 0);
@@ -961,7 +960,11 @@ function rrdcheck_launch_children($type)
 
         cacti_log(sprintf('NOTE: Launching rrdcheck Process Number %s for Type %s', $i, $type), false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
 
-        exec_background($php_binary, $config['base_path'] . "/poller_rrdcheck.php --type=$sub_type --child=$i" . ($debug ? ' --debug' : ''));
+        $child_args = array($config['base_path'] . '/poller_rrdcheck.php', '--type=' . $sub_type, '--child=' . $i);
+        if ($debug) {
+            $child_args[] = '--debug';
+        }
+        exec_background($php_binary, $child_args);
     }
 
     sleep(2);

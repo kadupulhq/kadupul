@@ -297,6 +297,8 @@ $methods = array(
 
 $pages = array(
     'aggregate_graphs-edit' => $page('aggregate_graphs.php', array('action' => 'edit', 'id' => '42'), array(
+        array('sql' => 'SELECT COUNT(*) FROM graph_templates_graph AS gtg', 'rows' => array(array('COUNT(*)' => '1'))),
+        array('sql' => 'SELECT gtg.local_graph_id', 'rows' => array(array('local_graph_id' => '42'))),
         array('sql' => 'FROM graph_templates_graph WHERE local_graph_id = ?', 'params' => array(42), 'rows' => array(array(
             'id' => '5', 'local_graph_template_graph_id' => '0', 'local_graph_id' => '42', 'graph_template_id' => '0',
             't_image_format_id' => '', 'image_format_id' => '1', 't_title' => '', 'title' => 'Aggregate <one>', 'title_cache' => 'Aggregate <one>',

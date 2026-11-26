@@ -105,8 +105,8 @@ function data_input_whitelist_update(string $configuredPath, callable $readRecor
                     $pushes[$record['id']] = $record['name'];
                 }
                 $input[$hash] = $command;
-            } else {
-                $input[$hash] = $whitelist[$hash] ?? $command;
+            } elseif (isset($whitelist[$hash])) {
+                $input[$hash] = $whitelist[$hash];
             }
         }
         $bytes = json_encode($input, JSON_THROW_ON_ERROR);

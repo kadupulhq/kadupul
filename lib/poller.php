@@ -150,15 +150,22 @@ function exec_background($filename, $args = '', $redirect_args = '')
     global $config, $debug;
 
     if (is_array($args)) {
-        $args = implode(' ', array_map('cacti_escapeshellarg', $args));
+        $args = implode(' ', array_map('cacti_escapeshellarg', array_map('strval', $args)));
     } else {
-        /* SECURITY: If args are passed as a string, strip shell operators to
-         * prevent background command chaining if a caller forgot to escape */
+        /* SECURITY: If args are passed as a string, strip shell operators,
+         * command substitution, and line breaks so a caller cannot chain commands. */
         $args = preg_replace('/[&;|]+/', '', $args);
+        $args = preg_replace('/[`$()\r\n\0]+/', '', (string) $args);
     }
 
     if (is_array($redirect_args)) {
         $redirect_args = '';
+    } else {
+        $redirect_args = trim((string) $redirect_args);
+        if ($redirect_args !== '' && preg_match('/\A(?:>>?)\s+(?:\'[^\'\r\n\0]+\'|"[^"\r\n\0]+"|[A-Za-z0-9_.\/:\\\\-]+)(?:\s+2>&1)?\z/D', $redirect_args) !== 1) {
+            cacti_log('WARNING: Rejected unsafe redirect arguments passed to exec_background.', false, 'POLLER');
+            $redirect_args = '';
+        }
     }
 
     cacti_log("DEBUG: About to Spawn a Remote Process [CMD: $filename, ARGS: $args]", true, 'POLLER', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_DEBUG));
@@ -372,10 +379,15 @@ function update_reindex_cache($host_id, $data_query_id)
                  * on this device first */
                 if ($host['snmp_version'] > 0) {
                     if (isset($data_query_xml['oid_uptime'])) {
-                        $oid_uptime = $data_query_xml['oid_uptime'];
+                        $oid_uptime = trim((string) $data_query_xml['oid_uptime']);
                     } elseif (isset($data_query_xml['uptime_oid'])) {
-                        $oid_uptime = $data_query_xml['uptime_oid'];
+                        $oid_uptime = trim((string) $data_query_xml['uptime_oid']);
                     } else {
+                        $oid_uptime = '.1.3.6.1.2.1.1.3.0';
+                    }
+
+                    if (preg_match('/\A\.?[0-9]+(?:\.[0-9]+)*\z/D', $oid_uptime) !== 1) {
+                        cacti_log('WARNING: Ignoring invalid oid_uptime in data query XML; using default sysUpTime OID.', false, 'REINDEX');
                         $oid_uptime = '.1.3.6.1.2.1.1.3.0';
                     }
 
@@ -423,7 +435,7 @@ function update_reindex_cache($host_id, $data_query_id)
 
                     $session->close();
 
-                    $recache_stack[] = "('$host_id', '$data_query_id'," . POLLER_ACTION_SNMP . ", '<', '$assert_value', '$oid_uptime', 1)";
+                    $recache_stack[] = '(' . (int) $host_id . ', ' . (int) $data_query_id . ', ' . POLLER_ACTION_SNMP . ", '<', " . db_qstr($assert_value ?? '') . ', ' . db_qstr($oid_uptime) . ', 1)';
                 }
 
                 break;
@@ -500,7 +512,7 @@ function update_reindex_cache($host_id, $data_query_id)
                         if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
                             $recache_stack[] = "($host_id, $data_query_id, " . POLLER_ACTION_SNMP . ", '=', " . db_qstr($assert_value) . ', ' . db_qstr(($data_query_xml['fields'][$data_query['sort_field']]['source'] == 'index') ? $data_query_xml['oid_index'] . '.' . $index['snmp_index'] : $data_query_xml['fields'][$data_query['sort_field']]['oid'] . '.' . $index['snmp_index']) . ", 1)";
                         } elseif ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
-                            $recache_stack[] = '(' . $host_id . ', ' . $data_query_id . ', ' . POLLER_ACTION_SCRIPT . ", '=', " . db_qstr($assert_value) . ', ' . db_qstr(get_script_query_path((isset($data_query_xml['arg_prepend']) ? $data_query_xml['arg_prepend'] . ' ' : '') . $data_query_xml['arg_get'] . ' ' . $data_query_xml['fields'][$data_query['sort_field']]['query_name'] . ' "' . $index['snmp_index'] . '"', $data_query_xml['script_path'], $host_id)) . ", 1)";
+                            $recache_stack[] = '(' . (int) $host_id . ', ' . (int) $data_query_id . ', ' . POLLER_ACTION_SCRIPT . ", '=', " . db_qstr($assert_value) . ', ' . db_qstr(get_script_query_path((isset($data_query_xml['arg_prepend']) ? $data_query_xml['arg_prepend'] . ' ' : '') . $data_query_xml['arg_get'] . ' ' . $data_query_xml['fields'][$data_query['sort_field']]['query_name'], $data_query_xml['script_path'], $host_id, array((string) $index['snmp_index']))) . ", 1)";
                         }
                     }
                 }
@@ -1976,8 +1988,22 @@ function poller_connect_to_remote($poller_id)
             return false;
         }
 
-        if ($cinfo['dbhost'] == 'localhost' || $cinfo['dbhost'] == '127.0.0.1') {
+        require_once __DIR__ . '/../src/Platform/Domain/IpAddressPolicy.php';
+        $dbhost = trim((string) ($cinfo['dbhost'] ?? ''));
+        if (!\Kadupul\Platform\Domain\IpAddressPolicy::isSafeRemoteHostSyntax($dbhost)) {
+            cacti_log('ERROR: Refused remote collector connection to disallowed target host.', false, 'REPLICATE');
             return false;
+        }
+        if (!\Kadupul\Platform\Domain\IpAddressPolicy::isValidIpAddress($dbhost)) {
+            $resolved_ips = @gethostbynamel($dbhost);
+            if (is_array($resolved_ips)) {
+                foreach ($resolved_ips as $resolved_ip) {
+                    if (\Kadupul\Platform\Domain\IpAddressPolicy::isLoopbackOrReservedIp($resolved_ip)) {
+                        cacti_log('ERROR: Refused remote collector connection resolving to a disallowed address.', false, 'REPLICATE');
+                        return false;
+                    }
+                }
+            }
         }
 
         $rcnn_id = db_connect_real(
@@ -2068,6 +2094,7 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND name != "poller_enabled"
 			AND name NOT LIKE "md5dirsum%"
 			AND name != "alerting_evaluation_cursor"
+			AND name != "csrf_secret"
 			UNION
 			SELECT *
 			FROM settings

@@ -683,24 +683,28 @@ function api_reapply_suggested_data_source_data($local_data_id)
                     continue;
                 }
 
-                if (db_column_exists('data_template_data', $sv['field_name'])) {
-                    $matches[] = $sv['field_name'];
+                require_once __DIR__ . '/../src/Graphing/Domain/TemplateEditableColumns.php';
+                $dtd_column = \Kadupul\Graphing\Domain\TemplateEditableColumns::suggestedDataSourceDataColumn((string) $sv['field_name']);
+                $dtr_column = \Kadupul\Graphing\Domain\TemplateEditableColumns::suggestedDataSourceRrdColumn((string) $sv['field_name']);
+
+                if ($dtd_column !== null && db_column_exists('data_template_data', $dtd_column)) {
+                    $matches[] = $dtd_column;
                     db_execute_prepared(
                         'UPDATE data_template_data
-						SET ' . $sv['field_name'] . ' = ?
+						SET `' . $dtd_column . '` = ?
 						WHERE local_data_id = ?',
                         array($sv['text'], $local_data_id)
                     );
-                } elseif (db_column_exists('data_template_rrd', $sv['field_name'])) {
-                    $matches[] = $sv['field_name'];
+                } elseif ($dtr_column !== null && db_column_exists('data_template_rrd', $dtr_column)) {
+                    $matches[] = $dtr_column;
                     db_execute_prepared(
                         'UPDATE data_template_rrd
-						SET ' . $sv['field_name'] . ' = ?
+						SET `' . $dtr_column . '` = ?
 						WHERE local_data_id = ?',
                         array($sv['text'], $local_data_id)
                     );
                 } else {
-                    cacti_log('ERROR: Suggested value column error.  Column ' . $sv['field_name'] . ' for Data Template ID ' . $data_local['data_template_id'] . ' is not a compatible field name for tables data_template_data and data_template_rrd.  Please correct this suggested value mapping', false);
+                    cacti_log('ERROR: Suggested value column error.  Column ' . $sv['field_name'] . ' for Data Template ID ' . $data_local['data_template_id'] . ' is not an allowed suggested value field for tables data_template_data and data_template_rrd.  Please correct this suggested value mapping', false);
                 }
             }
         }

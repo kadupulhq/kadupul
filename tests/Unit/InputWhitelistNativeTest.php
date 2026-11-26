@@ -215,7 +215,7 @@ final class InputWhitelistNativeTest extends TestCase
     {
         unlink($this->directory . '/whitelist.json');
         self::assertSame(0, $this->finish($this->start(['--update', '--id=1']))[0]);
-        self::assertSame([$this->first => 'new first', $this->second => 'new second'], $this->state());
+        self::assertSame([$this->first => 'new first'], $this->state());
         file_put_contents($this->directory . '/whitelist.json', json_encode([$this->first => 'old first', $this->second => 'kept second', 'unknown' => 'removed']));
         self::assertSame(0, $this->finish($this->start(['--update', '--id=1']))[0]);
         self::assertSame([$this->first => 'new first', $this->second => 'kept second'], $this->state());

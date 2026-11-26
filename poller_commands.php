@@ -318,9 +318,13 @@ function commands_master_handler($forcerun, &$hosts, $threads)
     commands_debug("There are " . cacti_sizeof($hosts) . " to reindex");
 
     foreach ($hosts as $id) {
+        if (!is_scalar($id) || preg_match('/\A[1-9][0-9]*\z/D', (string) $id) !== 1) {
+            cacti_log('WARNING: Skipping malformed poller_command host identifier.', false, 'PCOMMAND');
+            continue;
+        }
         /* run the daily stats */
         commands_debug("Launching Host ID $id");
-        commands_launch_child($id);
+        commands_launch_child((int) $id);
 
         /* Wait for if there are 50 processes running */
         while (true) {
@@ -368,13 +372,24 @@ function commands_launch_child($host_id)
 {
     global $config, $seebug;
 
+    if (!is_scalar($host_id) || preg_match('/\A[1-9][0-9]*\z/D', (string) $host_id) !== 1) {
+        cacti_log('WARNING: Refused launching poller_commands child with invalid host identifier.', false, 'PCOMMAND');
+        return;
+    }
+
+    $host_id = (int) $host_id;
     $php_binary = read_config_option('path_php_binary');
 
     commands_debug(sprintf('Launching Commands Process Number %s for Type %s', $host_id, 'child'));
 
     cacti_log(sprintf('NOTE: Launching Commands Process Number %s for Type %s', $host_id, 'child'), false, 'CLEANUP', POLLER_VERBOSITY_MEDIUM);
 
-    exec_background($php_binary, $config['base_path'] . "/poller_commands.php --child=$host_id" . ($seebug ? ' --debug' : ''));
+    $child_args = array($config['base_path'] . '/poller_commands.php', '--child=' . $host_id);
+    if ($seebug) {
+        $child_args[] = '--debug';
+    }
+
+    exec_background($php_binary, $child_args);
 }
 
 /**

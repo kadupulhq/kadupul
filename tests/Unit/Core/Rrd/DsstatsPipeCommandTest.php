@@ -33,6 +33,7 @@ function cacti_log($message, ...$args) { $GLOBALS['logged'][] = $message; }
 function read_config_option($key) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function db_execute($sql, ...$args) { $GLOBALS['written'][] = $sql; return true; }
+function db_execute_prepared($sql, $params = array(), ...$args) { $GLOBALS['written'][] = array('sql' => $sql, 'params' => $params); return true; }
 require $root . '/src/Graphing/Infrastructure/Rrd/UnrepresentableArgument.php';
 require $root . '/src/Graphing/Infrastructure/Rrd/PipeEncoder.php';
 require $root . '/lib/rrd.php';
@@ -82,7 +83,8 @@ SOURCE;
         if ($real) {
             expect($result['values'])->toBe(array('value' => array('AVG' => '5.000000', 'MAX' => '9.000000')))
                 ->and($result['written'])->toHaveCount(1)
-                ->and($result['written'][0])->toContain("('1','value','5.000000','9.000000')")->not->toContain("'2'");
+                ->and($result['written'][0]['sql'])->toContain('INSERT INTO data_source_stats_daily')
+                ->and($result['written'][0]['params'])->toBe(array(1, 'value', '5.000000', '9.000000'));
         } else {
             expect($result['written'])->toBe(array());
         }

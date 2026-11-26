@@ -195,36 +195,47 @@ function dsstats_get_and_store_ds_avgpeak_values($interval, $type, $thread_id = 
  */
 function dsstats_write_buffer(&$stats_array, $interval)
 {
+    $allowed_intervals = array('daily', 'weekly', 'monthly', 'yearly');
+    if (!in_array($interval, $allowed_intervals, true)) {
+        return;
+    }
+
     /* initialize some variables */
-    $sql_prefix = "INSERT INTO data_source_stats_$interval (local_data_id, rrd_name, average, peak) VALUES";
-    $sql_suffix = " ON DUPLICATE KEY UPDATE average=VALUES(average), peak=VALUES(peak)";
-    $overhead   = strlen($sql_prefix) + strlen($sql_suffix);
-    $outbuf     = '';
-    $out_length = 0;
-    $i          = 1;
-    $max_packet = '264000';
+    $sql_prefix   = "INSERT INTO data_source_stats_$interval (local_data_id, rrd_name, average, peak) VALUES";
+    $sql_suffix   = " ON DUPLICATE KEY UPDATE average=VALUES(average), peak=VALUES(peak)";
+    $placeholders = array();
+    $params       = array();
+    $batch_limit  = 500;
 
     /* don't attempt to process an empty array */
     if (cacti_sizeof($stats_array)) {
         foreach ($stats_array as $local_data_id => $stats) {
             /* some additional sanity checking */
             if (is_array($stats) && cacti_sizeof($stats)) {
+                $local_data_id_int = (int) $local_data_id;
+
                 foreach ($stats as $rrd_name => $avgpeak_stats) {
-                    $outbuf .= ($i == 1 ? ' ' : ', ') . "('" . $local_data_id . "','" .
-                        $rrd_name . "','" .
-                        $avgpeak_stats['AVG'] . "','" .
-                        $avgpeak_stats['MAX'] . "')";
+                    if (!is_string($rrd_name) || preg_match('/^[a-zA-Z0-9_-]{1,19}$/D', $rrd_name) !== 1) {
+                        continue;
+                    }
 
-                    $out_length += strlen($outbuf);
+                    $avg = $avgpeak_stats['AVG'] ?? null;
+                    $max = $avgpeak_stats['MAX'] ?? null;
 
-                    if (($out_length + $overhead) > $max_packet) {
-                        db_execute($sql_prefix . $outbuf . $sql_suffix);
+                    $avg_param = (is_numeric($avg) && is_finite((float) $avg)) ? (string) $avg : null;
+                    $max_param = (is_numeric($max) && is_finite((float) $max)) ? (string) $max : null;
 
-                        $outbuf     = '';
-                        $out_length = 0;
-                        $i          = 1;
-                    } else {
-                        $i++;
+                    $placeholders[] = '(?, ?, ?, ?)';
+                    $params[]       = $local_data_id_int;
+                    $params[]       = $rrd_name;
+                    $params[]       = $avg_param;
+                    $params[]       = $max_param;
+
+                    if (count($placeholders) >= $batch_limit) {
+                        db_execute_prepared($sql_prefix . ' ' . implode(', ', $placeholders) . $sql_suffix, $params);
+
+                        $placeholders = array();
+                        $params       = array();
                     }
                 }
             }
@@ -232,8 +243,8 @@ function dsstats_write_buffer(&$stats_array, $interval)
     }
 
     /* flush the buffer if it still has elements in it */
-    if ($out_length > 0) {
-        db_execute($sql_prefix . $outbuf . $sql_suffix);
+    if (count($placeholders) > 0) {
+        db_execute_prepared($sql_prefix . ' ' . implode(', ', $placeholders) . $sql_suffix, $params);
     }
 }
 
@@ -305,25 +316,28 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
              */
             if (cacti_sizeof($info_array)) {
                 foreach ($info_array as $line) {
-                    if (substr_count($line, 'ds[')) {
-                        $parts  = explode(']', $line);
-                        $parts2 = explode('[', $parts[0]);
-
-                        $dsnames[trim($parts2[1])] = 1;
+                    if (preg_match('/^ds\[([a-zA-Z0-9_-]{1,19})\]\./', $line, $matches) === 1) {
+                        $dsnames[$matches[1]] = 1;
                     } elseif (substr_count($line, '.cf')) {
                         $parts = explode('=', $line);
 
-                        if (substr_count($parts[1], 'AVERAGE')) {
+                        if (isset($parts[1]) && substr_count($parts[1], 'AVERAGE')) {
                             $average = true;
-                        } elseif (substr_count($parts[1], 'MAX')) {
+                        } elseif (isset($parts[1]) && substr_count($parts[1], 'MAX')) {
                             $max = true;
                         }
                     } elseif (substr_count($line, 'step')) {
                         $parts = explode('=', $line);
 
-                        $poller_interval = trim($parts[1]);
+                        if (isset($parts[1])) {
+                            $poller_interval = trim($parts[1]);
+                        }
                     }
                 }
+            }
+
+            if (!cacti_sizeof($dsnames)) {
+                return;
             }
 
             /* create the command syntax to get data */
@@ -414,6 +428,14 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
                 //print_r($xport_array);
 
                 if (cacti_sizeof($xport_array)) {
+                    foreach ($xport_array as $line) {
+                        if (strncmp(ltrim($line), 'ERROR:', 6) === 0) {
+                            cacti_log('WARNING: RRDtool graph returned an error for Local Data ID ' . (int) $local_data_id . ': ' . trim($line), false, 'DSSTATS');
+
+                            return;
+                        }
+                    }
+
                     foreach ($xport_array as $index => $line) {
                         if ($line == '') {
                             continue;
@@ -426,27 +448,34 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
                                 $parts = explode(' ', $line);
                                 //print $line . PHP_EOL;
 
-                                foreach ($parts as $line) {
-                                    $sparts = explode(':', $line);
+                                foreach ($parts as $part) {
+                                    $sparts = explode(':', $part);
 
-                                    switch ($sparts[0]) {
-                                        case 'u':
-                                            $user_time = $sparts[1];
-                                            break;
-                                        case 's':
-                                            $system_time = $sparts[1];
-                                            break;
-                                        case 'r':
-                                            $real_time = $sparts[1];
-                                            break;
+                                    if (isset($sparts[1])) {
+                                        switch ($sparts[0]) {
+                                            case 'u':
+                                                $user_time = $sparts[1];
+                                                break;
+                                            case 's':
+                                                $system_time = $sparts[1];
+                                                break;
+                                            case 'r':
+                                                $real_time = $sparts[1];
+                                                break;
+                                        }
                                     }
                                 }
 
                                 break;
                             } else {
                                 if (isset($position[$index]) && cacti_sizeof($position[$index])) {
+                                    $val = trim($line);
+                                    if (!is_numeric($val) || !is_finite((float) $val)) {
+                                        $val = 'NULL';
+                                    }
+
                                     foreach ($position[$index] as $dsname => $stat) {
-                                        $dsvalues[$dsname][$stat] = trim($line);
+                                        $dsvalues[$dsname][$stat] = $val;
                                     }
                                 }
                             }
@@ -743,12 +772,11 @@ function dsstats_poller_output(&$rrd_update_array)
             }
 
             /* required for updating tables */
-            $cache_i      = 1;
-            $last_i       = 1;
-            $out_length   = 0;
-            $last_length  = 0;
-            $lastbuf      = '';
-            $cachebuf     = '';
+            $cache_placeholders = array();
+            $cache_params       = array();
+            $last_placeholders  = array();
+            $last_params        = array();
+            $batch_limit        = 500;
 
             /* process each array */
             $n = 1;
@@ -756,7 +784,13 @@ function dsstats_poller_output(&$rrd_update_array)
                 if (isset($data_source['times'])) {
                     foreach ($data_source['times'] as $time => $sample) {
                         foreach ($sample as $ds => $value) {
-                            $result['local_data_id'] = $data_source['local_data_id'];
+                            if (!is_string($ds) || preg_match('/^[a-zA-Z0-9_-]{1,19}$/D', $ds) !== 1) {
+                                cacti_log('ERROR: Invalid RRDfile DS Name skipped for local_data_id ' . (int) $data_source['local_data_id'] . '.', false, 'DSSTATS');
+
+                                continue;
+                            }
+
+                            $result['local_data_id'] = (int) $data_source['local_data_id'];
                             $result['rrd_name']      = $ds;
                             $result['time']          = date('Y-m-d H:i:s', $time);
 
@@ -774,7 +808,8 @@ function dsstats_poller_output(&$rrd_update_array)
                                     "Please check your script or data input method for errors.");
                             }
 
-                            $lastval = '';
+                            $currentval = 'NULL';
+                            $lastval    = '';
 
                             if (!isset($ds_types[$result['rrd_name']]['data_source_type_id'])) {
                                 $polling_interval = db_fetch_cell_prepared(
@@ -839,7 +874,7 @@ function dsstats_poller_output(&$rrd_update_array)
 
                                     $lastval = $result['output'];
 
-                                    if ($ds_type == 6) {
+                                    if ($ds_type == 6 && $lastval != 'NULL') {
                                         $lastval = round($lastval, 0);
                                     }
 
@@ -866,7 +901,7 @@ function dsstats_poller_output(&$rrd_update_array)
 
                                     $lastval = $result['output'];
 
-                                    if ($ds_type == 7) {
+                                    if ($ds_type == 7 && $lastval != 'NULL') {
                                         $lastval = round($lastval, 0);
                                     }
 
@@ -903,63 +938,48 @@ function dsstats_poller_output(&$rrd_update_array)
                                     break;
                             }
 
-                            /* when doing bulk inserts, the second record is different */
-                            if ($cache_i == 1) {
-                                $cache_delim = ' ';
+                            if ($currentval === '' || $currentval === '-' || $currentval === 'NULL' || !is_numeric($currentval) || !is_finite((float) $currentval)) {
+                                $current_param = null;
                             } else {
-                                $cache_delim = ', ';
-                            }
-
-                            if ($last_i == 1) {
-                                $last_delim = ' ';
-                            } else {
-                                $last_delim = ', ';
-                            }
-
-                            if ($currentval == '' || $currentval == '-') {
-                                $currentval = 'NULL';
+                                $current_param = (string) $currentval;
                             }
 
                             /* setup the output buffer for the cache first */
-                            $cachebuf .=
-                                $cache_delim . '(' .
-                                $result['local_data_id'] . ", '" .
-                                $result['rrd_name'] . "', '" .
-                                $result['time'] . "', " .
-                                $currentval . ')';
-
-                            $out_length += strlen($cachebuf);
+                            $cache_placeholders[] = '(?, ?, ?, ?)';
+                            $cache_params[]       = $result['local_data_id'];
+                            $cache_params[]       = $result['rrd_name'];
+                            $cache_params[]       = $result['time'];
+                            $cache_params[]       = $current_param;
 
                             /* now do the last value, if applicable */
-                            if ($lastval != '') {
-                                $lastbuf .=
-                                    $last_delim . '(' .
-                                    $result['local_data_id'] . ", '" .
-                                    $result['rrd_name'] . "', " .
-                                    $lastval . ", " .
-                                    $currentval . ')';
-
-                                $last_i++;
-                                $last_length += strlen($lastbuf);
-                            }
-
-                            /* if we exceed our output buffer, it's time to write */
-                            if ((($out_length + $overhead) > $max_packet) ||
-                                (($last_length + $overhead_last) > $max_packet)) {
-                                db_execute($sql_cache_prefix . $cachebuf . $sql_suffix);
-
-                                if ($last_i > 1) {
-                                    db_execute($sql_last_prefix . $lastbuf . $sql_last_suffix);
+                            if ($lastval !== '') {
+                                if ($lastval === 'NULL' || !is_numeric($lastval) || !is_finite((float) $lastval)) {
+                                    $last_param = null;
+                                } else {
+                                    $last_param = (string) $lastval;
                                 }
 
-                                $cachebuf     = '';
-                                $lastbuf      = '';
-                                $out_length   = 0;
-                                $last_length  = 0;
-                                $cache_i      = 1;
-                                $last_i       = 1;
-                            } else {
-                                $cache_i++;
+                                $last_placeholders[] = '(?, ?, ?, ?)';
+                                $last_params[]       = $result['local_data_id'];
+                                $last_params[]       = $result['rrd_name'];
+                                $last_params[]       = $last_param;
+                                $last_params[]       = $current_param;
+                            }
+
+                            /* if we exceed our batch size, it's time to write */
+                            if (count($cache_placeholders) >= $batch_limit || count($last_placeholders) >= $batch_limit) {
+                                if (count($cache_placeholders) > 0) {
+                                    db_execute_prepared($sql_cache_prefix . ' ' . implode(', ', $cache_placeholders) . $sql_suffix, $cache_params);
+                                }
+
+                                if (count($last_placeholders) > 0) {
+                                    db_execute_prepared($sql_last_prefix . ' ' . implode(', ', $last_placeholders) . $sql_last_suffix, $last_params);
+                                }
+
+                                $cache_placeholders = array();
+                                $cache_params       = array();
+                                $last_placeholders  = array();
+                                $last_params        = array();
                             }
 
                             $n++;
@@ -970,12 +990,12 @@ function dsstats_poller_output(&$rrd_update_array)
                 }
             }
 
-            if ($cache_i > 1) {
-                db_execute($sql_cache_prefix . $cachebuf . $sql_suffix);
+            if (count($cache_placeholders) > 0) {
+                db_execute_prepared($sql_cache_prefix . ' ' . implode(', ', $cache_placeholders) . $sql_suffix, $cache_params);
             }
 
-            if ($last_i > 1) {
-                db_execute($sql_last_prefix . $lastbuf . $sql_last_suffix);
+            if (count($last_placeholders) > 0) {
+                db_execute_prepared($sql_last_prefix . ' ' . implode(', ', $last_placeholders) . $sql_last_suffix, $last_params);
             }
         }
     }
@@ -1052,14 +1072,15 @@ function dsstats_poller_bottom()
         chdir($config['base_path']);
 
         $command_string = read_config_option('path_php_binary');
+        $poller_script  = cacti_escapeshellarg($config['base_path'] . '/poller_dsstats.php');
         if (read_config_option('path_dsstats_log') != '') {
             if ($config['cacti_server_os'] == 'unix') {
-                $extra_args = '-q ' . $config['base_path'] . '/poller_dsstats.php >> ' . cacti_escapeshellarg(read_config_option('path_dsstats_log')) . ' 2>&1';
+                $extra_args = '-q ' . $poller_script . ' >> ' . cacti_escapeshellarg(read_config_option('path_dsstats_log')) . ' 2>&1';
             } else {
-                $extra_args = '-q ' . $config['base_path'] . '/poller_dsstats.php >> ' . cacti_escapeshellarg(read_config_option('path_dsstats_log'));
+                $extra_args = '-q ' . $poller_script . ' >> ' . cacti_escapeshellarg(read_config_option('path_dsstats_log'));
             }
         } else {
-            $extra_args = '-q ' . $config['base_path'] . '/poller_dsstats.php';
+            $extra_args = '-q ' . $poller_script;
         }
 
         exec_background($command_string, $extra_args);
@@ -1199,7 +1220,16 @@ function dsstats_launch_children($type)
 
         cacti_log(sprintf('NOTE: Launching DSStats Process Number %s for Type %s', $i, $type), false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
 
-        exec_background($php_binary, $config['base_path'] . "/poller_dsstats.php --type=$sub_type --child=$i" . ($debug ? ' --debug' : ''));
+        $args = array(
+            $config['base_path'] . '/poller_dsstats.php',
+            '--type=' . $sub_type,
+            '--child=' . (int) $i,
+        );
+        if ($debug) {
+            $args[] = '--debug';
+        }
+
+        exec_background($php_binary, $args);
     }
 
     sleep(2);

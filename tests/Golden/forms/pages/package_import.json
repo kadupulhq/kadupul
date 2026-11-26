@@ -9,8 +9,7 @@
         "import_file",
         "preview_only",
         "remove_orphans",
-        "replace_svalues",
-        "trust_signer"
+        "replace_svalues"
     ],
     "script_names": []
 }

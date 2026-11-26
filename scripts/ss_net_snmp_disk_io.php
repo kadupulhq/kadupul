@@ -23,7 +23,7 @@ function ss_net_snmp_disk_io($host_id_or_hostname = '') {
 
 	if (empty($host_id_or_hostname) || $host_id_or_hostname === NULL) {
 		return 'reads:0 writes:0';
-	} elseif (!is_numeric($host_id_or_hostname)) {
+	} elseif (!ctype_digit((string) $host_id_or_hostname)) {
 		$host_id = db_fetch_cell_prepared('SELECT id
 			FROM host
 			WHERE hostname = ?',
@@ -32,26 +32,29 @@ function ss_net_snmp_disk_io($host_id_or_hostname = '') {
 		$host_id = $host_id_or_hostname;
 	}
 
-	$tmpdir = sys_get_temp_dir();
-
-	if ($environ != 'realtime') {
-		$tmpdir = $tmpdir . '/cacti/net-snmp-devio';
-		$tmpfile = $host_id . '_io';
-	} else {
-		$tmpdir = $tmpdir . '/cacti-rt/net-snmp-devio';
-		$tmpfile = $host_id . '_' . $poller_id . '_io_rt';
+	if (!ctype_digit((string) $host_id) || (int) $host_id <= 0) {
+		return 'reads:0 writes:0';
 	}
 
-	if (!is_dir($tmpdir)) {
-		mkdir($tmpdir, 0777, true);
+	$host_id        = (int) $host_id;
+	$safe_poller_id = (is_scalar($poller_id) && ctype_digit((string) $poller_id) && (int) $poller_id > 0) ? (int) $poller_id : 1;
+	$tmpdir         = ss_net_snmp_disk_io_state_dir($config, $environ);
+
+	if ($environ != 'realtime') {
+		$tmpfile = $host_id . '_io';
+	} else {
+		$tmpfile = $host_id . '_' . $safe_poller_id . '_io_rt';
 	}
 
 	$previous = array();
 	$found    = false;
 
-	if (file_exists("$tmpdir/$tmpfile")) {
-		$previous = json_decode(file_get_contents("$tmpdir/$tmpfile"), true);
-		$found = true;
+	if ($tmpdir !== false) {
+		$loaded = ss_net_snmp_disk_io_read_state($tmpdir, $tmpfile);
+		if ($loaded !== null) {
+			$previous = $loaded;
+			$found    = true;
+		}
 	}
 
 	$indexes = array();
@@ -205,7 +208,9 @@ function ss_net_snmp_disk_io($host_id_or_hostname = '') {
 		}
 
 		$data = json_encode($current);
-		file_put_contents("$tmpdir/$tmpfile", $data);
+		if ($tmpdir !== false && is_string($data)) {
+			ss_net_snmp_disk_io_write_state($tmpdir, $tmpfile, $data);
+		}
 	}
 
 	if ($found) {
@@ -213,5 +218,149 @@ function ss_net_snmp_disk_io($host_id_or_hostname = '') {
 	} else {
 		return 'reads:0 writes:0';
 	}
+}
+
+function ss_net_snmp_disk_io_state_dir($config, $environ) {
+	if (!class_exists(\Symfony\Component\Filesystem\Path::class)) {
+		require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
+		\Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
+	}
+
+	if (is_array($config) && isset($config['base_path']) && is_string($config['base_path']) && $config['base_path'] !== '') {
+		$anchor   = \Symfony\Component\Filesystem\Path::join($config['base_path'], 'cache');
+		$base_dir = \Symfony\Component\Filesystem\Path::join($anchor, 'net_snmp_disk');
+	} elseif (is_array($config) && isset($config['rra_path']) && is_string($config['rra_path']) && $config['rra_path'] !== '') {
+		$anchor   = $config['rra_path'];
+		$base_dir = \Symfony\Component\Filesystem\Path::join($anchor, '.net_snmp_disk');
+	} else {
+		return false;
+	}
+
+	$anchor_real = realpath($anchor);
+	if ($anchor_real === false || !is_dir($anchor_real) || is_link($anchor)) {
+		return false;
+	}
+
+	$sub_dir   = ($environ != 'realtime') ? 'poller' : 'realtime';
+	$state_dir = \Symfony\Component\Filesystem\Path::join($base_dir, $sub_dir);
+	$euid      = function_exists('posix_geteuid') ? posix_geteuid() : null;
+
+	foreach (array($base_dir, $state_dir) as $dir) {
+		clearstatcache(true, $dir);
+		if (is_link($dir)) {
+			return false;
+		}
+
+		if (!file_exists($dir)) {
+			if (!@mkdir($dir, 0700, false) && !is_dir($dir)) {
+				return false;
+			}
+			@chmod($dir, 0700);
+		}
+
+		clearstatcache(true, $dir);
+		$stat = @lstat($dir);
+		if ($stat === false || ($stat['mode'] & 0170000) !== 0040000) {
+			return false;
+		}
+
+		if ($euid !== null && $stat['uid'] !== $euid) {
+			return false;
+		}
+
+		if (($stat['mode'] & 0022) !== 0) {
+			@chmod($dir, 0700);
+			clearstatcache(true, $dir);
+			$stat = @lstat($dir);
+			if ($stat === false || ($stat['mode'] & 0022) !== 0) {
+				return false;
+			}
+		}
+
+		$resolved = realpath($dir);
+		if ($resolved === false || !str_starts_with($resolved, rtrim($anchor_real, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
+			return false;
+		}
+	}
+
+	return $state_dir;
+}
+
+function ss_net_snmp_disk_io_read_state($state_dir, $filename) {
+	if (!is_string($state_dir) || $state_dir === '' || preg_match('/^[0-9]+(?:_[0-9]+)?_io(?:_rt)?\z/', $filename) !== 1) {
+		return null;
+	}
+
+	$path = \Symfony\Component\Filesystem\Path::join($state_dir, $filename);
+	clearstatcache(true, $path);
+	if (is_link($path)) {
+		return null;
+	}
+
+	$stat = @lstat($path);
+	if ($stat === false || ($stat['mode'] & 0170000) !== 0100000) {
+		return null;
+	}
+
+	if (function_exists('posix_geteuid') && $stat['uid'] !== posix_geteuid()) {
+		return null;
+	}
+
+	if (($stat['mode'] & 0022) !== 0) {
+		return null;
+	}
+
+	$raw = @file_get_contents($path);
+	if (!is_string($raw)) {
+		return null;
+	}
+
+	$decoded = json_decode($raw, true);
+
+	return is_array($decoded) ? $decoded : null;
+}
+
+function ss_net_snmp_disk_io_write_state($state_dir, $filename, $data) {
+	if (!is_string($state_dir) || $state_dir === '' || preg_match('/^[0-9]+(?:_[0-9]+)?_io(?:_rt)?\z/', $filename) !== 1) {
+		return false;
+	}
+
+	$path = \Symfony\Component\Filesystem\Path::join($state_dir, $filename);
+	clearstatcache(true, $path);
+	if (is_link($path)) {
+		return false;
+	}
+
+	$tmp = \Symfony\Component\Filesystem\Path::join($state_dir, '.' . $filename . '.' . bin2hex(random_bytes(8)) . '.tmp');
+	$fh  = @fopen($tmp, 'xb');
+	if ($fh === false) {
+		return false;
+	}
+
+	$written = @fwrite($fh, $data);
+	@fflush($fh);
+	@fclose($fh);
+
+	if ($written !== strlen($data)) {
+		@unlink($tmp);
+
+		return false;
+	}
+
+	@chmod($tmp, 0600);
+	clearstatcache(true, $path);
+	if (is_link($path)) {
+		@unlink($tmp);
+
+		return false;
+	}
+
+	if (!@rename($tmp, $path)) {
+		@unlink($tmp);
+
+		return false;
+	}
+
+	return true;
 }
 

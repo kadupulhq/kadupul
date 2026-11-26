@@ -47,7 +47,9 @@ function form_save() {
 
 			bottom_footer();
 		} elseif (get_nfilter_request_var('output_format') == '2') {
-			header('Content-type: application/xml');
+			header('Content-Type: text/plain; charset=utf-8');
+			header('X-Content-Type-Options: nosniff');
+			header("Content-Security-Policy: default-src 'none'; sandbox");
 			if ($export_errors) echo __('WARNING: Export Errors Encountered. Refresh Browser Window for Details!') . "\n";
 			print $xml_data;
 		} elseif (get_nfilter_request_var('output_format') == '3') {

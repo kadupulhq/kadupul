@@ -1080,7 +1080,7 @@ function data_debug_filter()
         $host_where = '';
     }
 
-    if (get_request_var('host_id') > 0) {
+    if (get_request_var('host_id') > 0 && is_device_allowed((int) get_request_var('host_id'))) {
         $hostname = db_fetch_cell_prepared('SELECT CONCAT(description, " ( ", hostname, " )") FROM host WHERE id = ?', array(get_request_var('host_id')));
     } else {
         $hostname = '';

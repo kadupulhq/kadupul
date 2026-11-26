@@ -1752,10 +1752,15 @@ function xml_to_data_query($hash, &$xml_array, &$hash_cache, &$files, $replace_s
                 if (is_array($item_array['rrd'])) {
                     foreach ($item_array['rrd'] as $sub_item_hash => $sub_item_array) {
                         unset($save);
+                        $snmp_field_name = (string) ($sub_item_array['snmp_field_name'] ?? '');
+                        if (preg_match('/\A[A-Za-z0-9_.-]{1,50}\z/D', $snmp_field_name) !== 1) {
+                            cacti_log('Import Error: Rejected invalid snmp_field_name in snmp_query_graph_rrd', false, 'IMPORT');
+                            continue;
+                        }
                         $save['snmp_query_graph_id']  = $data_query_graph_id;
                         $save['data_template_id']     = resolve_hash_to_id($sub_item_array['data_template_id'], $hash_cache, 'snmp_query_graph_rrd');
                         $save['data_template_rrd_id'] = resolve_hash_to_id($sub_item_array['data_template_rrd_id'], $hash_cache, 'snmp_query_graph_rrd');
-                        $save['snmp_field_name']      = $sub_item_array['snmp_field_name'];
+                        $save['snmp_field_name']      = $snmp_field_name;
 
                         if (!empty($save['data_template_id']) && !empty($save['data_template_rrd_id'])) {
                             sql_save($save, 'snmp_query_graph_rrd', array('snmp_query_graph_id', 'data_template_id', 'data_template_rrd_id'), false);
@@ -1878,12 +1883,19 @@ function xml_to_data_query($hash, &$xml_array, &$hash_cache, &$files, $replace_s
                         $previous_data = array();
                     }
 
+                    require_once __DIR__ . '/../src/Graphing/Domain/TemplateEditableColumns.php';
+                    $sv_field_name = (string) ($sub_item_array['field_name'] ?? '');
+                    if (!\Kadupul\Graphing\Domain\TemplateEditableColumns::isSuggestedDataSourceFieldAllowed($sv_field_name)) {
+                        cacti_log('Import Error: Rejected disallowed suggested data source field_name in snmp_query_graph_rrd_sv', false, 'IMPORT');
+                        continue;
+                    }
+
                     $save['id']                  = (empty($_data_query_graph_rrd_sv_id) ? '0' : $_data_query_graph_rrd_sv_id);
                     $save['hash']                = $parsed_hash['hash'];
                     $save['snmp_query_graph_id'] = $data_query_graph_id;
                     $save['data_template_id']    = resolve_hash_to_id($sub_item_array['data_template_id'], $hash_cache, 'snmp_query_graph_rrd_sv');
                     $save['sequence']            = $sub_item_array['sequence'];
-                    $save['field_name']          = $sub_item_array['field_name'];
+                    $save['field_name']          = $sv_field_name;
                     $save['text']                = xml_character_decode($sub_item_array['text']);
 
                     /* check for status changes */
@@ -2539,6 +2551,15 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache)
     global $fields_data_input_edit, $fields_data_input_field_edit, $fields_data_input_field_edit_1;
     global $preview_only, $import_debug_info, $ignorable_hashes;
 
+    /* Reject creation or modification of built-in system Data Input Methods. */
+    require_once __DIR__ . '/../src/DataInput/Domain/DataInputState.php';
+    if (in_array((string) $hash, \Kadupul\DataInput\Domain\DataInputState::SYSTEM, true)) {
+        cacti_log("ERROR: Refusing to import or overwrite built-in system data input method '$hash'", false, 'IMPORT');
+        $import_debug_info['type']   = 'fail';
+        $import_debug_info['unsafe'] = true;
+        return false;
+    }
+
     /* track changes */
     $status = 0;
 
@@ -2598,6 +2619,36 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache)
                 $import_debug_info['unsafe']   = true;
                 return false;
             }
+        }
+    }
+
+    /* Enforce Realm 2 authorization and script-path restrictions on executable
+     * Data Input Methods imported through web sessions so template-only actors
+     * (Realm 17) cannot register arbitrary poller commands. */
+    $imported_type_id = isset($save['type_id']) ? (int) $save['type_id'] : (int) ($previous_data['type_id'] ?? 0);
+    $imported_input_string = isset($save['input_string']) ? trim((string) $save['input_string']) : trim((string) ($previous_data['input_string'] ?? ''));
+    $is_executable_input = in_array($imported_type_id, array(DATA_INPUT_TYPE_SCRIPT, DATA_INPUT_TYPE_PHP_SCRIPT_SERVER), true) || $imported_input_string !== '';
+
+    if ($is_executable_input && function_exists('is_realm_allowed') && !empty($_SESSION['sess_user_id']) && !is_realm_allowed(2)) {
+        cacti_log("ERROR: Refusing to import executable data input method '$hash' without Realm 2 authorization", false, 'IMPORT');
+        $import_debug_info['type']   = 'fail';
+        $import_debug_info['unsafe'] = true;
+        return false;
+    }
+
+    if ($imported_input_string !== '') {
+        $script_allowed = false;
+        if (str_contains($imported_input_string, '<path_cacti>/scripts/') && !str_contains($imported_input_string, '..')) {
+            $script_allowed = true;
+        } elseif (function_exists('verify_data_input_whitelist') && verify_data_input_whitelist($hash, $imported_input_string) === true) {
+            $script_allowed = true;
+        }
+
+        if (!$script_allowed) {
+            cacti_log("ERROR: Refusing to import data input method '$hash' - input_string must reference a script under <path_cacti>/scripts/ or be whitelisted", false, 'IMPORT');
+            $import_debug_info['type']   = 'fail';
+            $import_debug_info['unsafe'] = true;
+            return false;
         }
     }
 
@@ -2672,6 +2723,14 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache)
 
                     $save[$field_name] = xml_character_decode($item_array[$field_name]);
                 }
+            }
+
+            /* Validate data_input_fields.data_name as a strict identifier token. */
+            if (isset($save['data_name']) && $save['data_name'] !== '' && preg_match('/\A[A-Za-z0-9_]+\z/D', (string) $save['data_name']) !== 1) {
+                cacti_log('ERROR: Refusing to import data_input_fields entry with invalid data_name', false, 'IMPORT');
+                $import_debug_info['type']   = 'fail';
+                $import_debug_info['unsafe'] = true;
+                return false;
             }
 
             /* check for status changes */

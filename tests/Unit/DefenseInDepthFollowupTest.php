@@ -111,8 +111,9 @@ test('package_import cleans up session tempfile on signature failure', function 
 	$start = strpos($importSource, 'session_tmpfile');
 	expect($start)->not->toBeFalse();
 
-	// The unlink must appear before the exit on signature failure path
-	$sig_fail = strpos($importSource, 'package_validate_signature');
-	$block = substr($importSource, $sig_fail, 400);
-	expect($block)->toContain('@unlink($xmlfile)');
+	// The unlink must appear on signature/verification failure paths
+	$sig_fail = strpos($importSource, 'import_read_package_data');
+	expect($sig_fail)->not->toBeFalse();
+	$block = substr($importSource, $sig_fail, 600);
+	expect($block)->toContain('@unlink(');
 });

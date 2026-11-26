@@ -181,11 +181,14 @@ function run_poller() {
 
 	debug('Kadupul Data Collector');
 
-	$command = ' -q ' . $config['base_path'] . '/poller.php --force' . ($debug ? ' --debug':'');
+	$command_args = array('-q', $config['base_path'] . '/poller.php', '--force');
+	if ($debug) {
+		$command_args[] = '--debug';
+	}
 
-	debug('Command Line is: ' . $command);
+	debug('Command Line is: ' . implode(' ', $command_args));
 
-	exec_background(read_config_option('path_php_binary'), $command);
+	exec_background(read_config_option('path_php_binary'), $command_args);
 }
 
 function get_options() {

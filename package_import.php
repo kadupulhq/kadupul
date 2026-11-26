@@ -96,14 +96,20 @@ function form_save()
 
     if (isset_request_var('save_component_import')) {
         $session_tmpfile = false;
+        $uploaded_file   = false;
+
+        if (get_nfilter_request_var('preview_only') == 'on') {
+            $preview_only = true;
+        } else {
+            $preview_only = false;
+        }
 
         if (isset($_FILES['import_file']['tmp_name']) &&
             ($_FILES['import_file']['tmp_name'] != 'none') &&
             ($_FILES['import_file']['tmp_name'] != '')) {
             /* file upload */
-            $xmlfile = $_FILES['import_file']['tmp_name'];
-
-            $_SESSION['sess_import_package'] = file_get_contents($xmlfile);
+            $xmlfile       = $_FILES['import_file']['tmp_name'];
+            $uploaded_file = true;
         } elseif (isset($_SESSION['sess_import_package'])) {
             $xmlfile = package_import_write_session_file();
 
@@ -121,16 +127,28 @@ function form_save()
             exit;
         }
 
-        if (isset_request_var('trust_signer') && get_request_var('trust_signer') == 'on') {
-            import_validate_public_key($xmlfile, true);
-        } elseif (!package_validate_signature($xmlfile)) {
+        $public_key    = '';
+        $verified_data = import_read_package_data($xmlfile, $public_key);
+
+        if ($verified_data === false) {
             if ($session_tmpfile) {
                 @unlink($xmlfile);
+                unset($_SESSION['sess_import_package']);
             }
 
-            raise_message('verify_warning', __('You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox'), MESSAGE_LEVEL_ERROR);
-            header('Location: package_import?package_location=0');
+            if ($preview_only) {
+                print '<h3>' . __('Error: Package signature verification failed. Only packages signed by a trusted key can be imported.') . '</h3>';
+
+                return;
+            }
+
+            raise_message('verify_warning', __('Package signature verification failed. Only packages signed by a trusted key can be imported.'), MESSAGE_LEVEL_ERROR);
+            header('Location: package_import.php?package_location=0');
             exit;
+        }
+
+        if ($uploaded_file) {
+            $_SESSION['sess_import_package'] = file_get_contents($xmlfile);
         }
 
         if (get_filter_request_var('data_source_profile') == '0') {
@@ -139,12 +157,6 @@ function form_save()
         } else {
             $import_as_new = false;
             $profile_id = get_request_var('data_source_profile');
-        }
-
-        if (get_nfilter_request_var('preview_only') == 'on') {
-            $preview_only = true;
-        } else {
-            $preview_only = false;
         }
 
         if (isset_request_var('remove_orphans') && get_nfilter_request_var('remove_orphans') == 'on') {
@@ -200,19 +212,32 @@ function form_save()
         $data = import_package($xmlfile, $profile_id, $remove_orphans, $replace_svalues, $preview_only, false, false, $hashes, $files, $class);
 
         if ($preview_only) {
+            if ($data === false) {
+                @unlink($xmlfile);
+                unset($_SESSION['sess_import_package']);
+
+                print '<h3>' . __('Error: Package signature verification or preview failed.') . '</h3>';
+
+                return;
+            }
+
             package_prepare_import_array($templates, $files, $package_name, $xmlfile, $data);
 
             import_display_package_data($templates, $files, $package_name, $xmlfile, $data);
 
-            unlink($xmlfile);
+            @unlink($xmlfile);
         } else {
             if ($data !== false) {
                 raise_message('import_success', __('The Package %s Imported Successfully', html_escape($package_name)), MESSAGE_LEVEL_INFO);
 
-                unlink($xmlfile);
+                @unlink($xmlfile);
 
                 unset($_SESSION['sess_import_package']);
             } else {
+                if ($session_tmpfile) {
+                    @unlink($xmlfile);
+                }
+
                 /* keep the package so the import can be retried once the failure is fixed */
                 raise_message('import_fail', __('The Package %s Import Failed', html_escape($package_name)), MESSAGE_LEVEL_ERROR);
             }
@@ -316,7 +341,12 @@ function package_diff_file()
         'ignoreCase' => false
     );
 
-    $validated_path = validate_relative_path_within($filename, $config['base_path']);
+    $normalized_name = package_import_normalize_selected_file($filename);
+    $validated_path  = false;
+
+    if (preg_match('#^(plugins/[A-Za-z0-9_-]+/)?(scripts|resource)/#', $normalized_name) === 1) {
+        $validated_path = validate_relative_path_within($normalized_name, $config['base_path']);
+    }
 
     if ($validated_path === false) {
         print '<h3>' . __('Error: Invalid file path.') . '</h3>';
@@ -324,33 +354,33 @@ function package_diff_file()
         return;
     }
 
-    $newfile = package_file_get_contents($filename);
+    $newfile = package_file_get_contents($normalized_name);
 
-    if ($newfile !== false) {
-        $newfile = str_replace("\n\r", "\n", $newfile);
-        $newfile = explode("\n", $newfile);
+    if ($newfile === false) {
+        print 'New file does not exist';
+
+        return;
     }
 
-    $oldfile = file_get_contents($validated_path);
+    $newfile = str_replace("\n\r", "\n", $newfile);
+    $newfile = explode("\n", $newfile);
 
-    if ($oldfile !== false) {
-        $oldfile = str_replace("\n\r", "\n", $oldfile);
-        $oldfile = explode("\n", $oldfile);
+    $oldfile = is_file($validated_path) ? @file_get_contents($validated_path) : false;
+
+    if ($oldfile === false) {
+        print 'Old file does not exist';
+
+        return;
     }
 
-    if (cacti_sizeof($oldfile)) {
-        if (cacti_sizeof($newfile)) {
-            $diff = new Diff($oldfile, $newfile, $options);
+    $oldfile = str_replace("\n\r", "\n", $oldfile);
+    $oldfile = explode("\n", $oldfile);
 
-            $renderer = new Diff_Renderer_Html_Inline;
+    $diff = new Diff($oldfile, $newfile, $options);
 
-            print $diff->render($renderer);
-        } else {
-            print "New file does not exist";
-        }
-    } else {
-        print "Old file does not exist";
-    }
+    $renderer = new Diff_Renderer_Html_Inline;
+
+    print $diff->render($renderer);
 }
 
 function package_get_details()
@@ -820,11 +850,6 @@ function validate_request_vars()
             'options' => array('options' => array('regexp' => '(on|true|false)')),
             'default' => 'on'
         ),
-        'trust_signer' => array(
-            'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(on|true|false)')),
-            'default' => 'on'
-        ),
         'data_source_profile' => array(
             'filter' => FILTER_VALIDATE_INT,
             'default' => $default_profile
@@ -871,12 +896,6 @@ function get_import_form($default_profile)
         $remove_orphans = '';
     }
 
-    if (isset_request_var('trust_signer') && get_nfilter_request_var('trust_signer') == 'on') {
-        $trust_signer = 'on';
-    } else {
-        $trust_signer = '';
-    }
-
     if (isset_request_var('image_format')) {
         $image_format = get_filter_request_var('image_format');
     } else {
@@ -901,13 +920,6 @@ function get_import_form($default_profile)
             'description' => __('The *.xml.gz file located on your Local machine to Upload and Import.'),
             'accept' => '.xml.gz',
             'method' => 'file'
-        ),
-        'trust_signer' => array(
-            'friendly_name' => __('Automatically Trust Signer'),
-            'method' => 'hidden',
-            'description' => __('If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author.'),
-            'value' => 'on',
-            'default' => ''
         ),
     );
 
@@ -1050,10 +1062,6 @@ function package_import()
 
 			if ($('#replace_svalues').is(':checked')) {
 				formExtra += '&replace_svalues=on';
-			}
-
-			if ($('#trust_signer').is(':checked')) {
-				formExtra += '&trust_signer=on';
 			}
 
 			Pace.start();

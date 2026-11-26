@@ -1065,6 +1065,9 @@ function ds_edit()
     }
 
     if (get_request_var('host_id') > 0) {
+        if (!data_source_device_id_is_allowed(get_request_var('host_id'))) {
+            data_source_access_denied();
+        }
         $hostDescription = db_fetch_cell_prepared(
             'SELECT description
 			FROM host
@@ -1072,6 +1075,9 @@ function ds_edit()
             array(get_request_var('host_id'))
         );
     } elseif (isset($data_local['host_id'])) {
+        if (!data_source_device_id_is_allowed($data_local['host_id'])) {
+            data_source_access_denied();
+        }
         $hostDescription = db_fetch_cell_prepared(
             'SELECT description
 			FROM host
@@ -1206,19 +1212,19 @@ function ds_edit()
 
         /* get more information about the rrd we chose */
         if (!isempty_request_var('view_rrd')) {
-            $local_data_template_rrd_id = db_fetch_cell_prepared(
-                'SELECT local_data_template_rrd_id
-				FROM data_template_rrd
-				WHERE id = ?',
-                array(get_request_var('view_rrd'))
-            );
-
             $rrd = db_fetch_row_prepared(
                 'SELECT *
 				FROM data_template_rrd
-				WHERE id = ?',
-                array(get_request_var('view_rrd'))
+				WHERE id = ?
+				AND local_data_id = ?',
+                array(get_request_var('view_rrd'), get_request_var('id'))
             );
+
+            if (empty($rrd)) {
+                data_source_access_denied();
+            }
+
+            $local_data_template_rrd_id = $rrd['local_data_template_rrd_id'];
 
             $rrd_template = db_fetch_row_prepared(
                 'SELECT *
@@ -1482,17 +1488,17 @@ function data_source_path_is_allowed($path)
     }
 
     $base = realpath($config['rra_path']);
-    if ($base === false || strpbrk($path, "\0\r\n<>'\"=") !== false || str_contains($path, '\\')) {
+    if ($base === false || strpbrk($path, "\0\r\n'\"=") !== false || str_contains($path, '\\') || !str_ends_with(strtolower($path), '.rrd')) {
         return false;
     }
 
     if (str_starts_with($path, '<path_rra>/')) {
         $relative = substr($path, strlen('<path_rra>/'));
-        if (str_contains($relative, '<path_rra>')) {
+        if (str_contains($relative, '<path_rra>') || strpbrk($relative, '<>') !== false) {
             return false;
         }
         $candidate = $base . '/' . $relative;
-    } elseif (str_contains($path, '<path_rra>')) {
+    } elseif (str_contains($path, '<path_rra>') || strpbrk($path, '<>') !== false) {
         return false;
     } elseif (!str_contains($path, '/')) {
         $candidate = $base . '/' . $path;

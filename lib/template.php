@@ -2598,14 +2598,19 @@ function verify_data_input_whitelist($hash, $input_string)
 
     if (!isset($config['input_whitelist'])) {
         return true;
-    } elseif (isset($config['input_whitelist']) && !file_exists($config['input_whitelist'])) {
-        return true;
+    } elseif (!file_exists($config['input_whitelist'])) {
+        cacti_log('ERROR: Input whitelist file is configured but missing: ' . $config['input_whitelist'], false, 'POLLER');
+        return false;
     }
 
-    $whitelist = json_decode(file_get_contents($config['input_whitelist']), true);
+    $whitelist = json_decode((string) file_get_contents($config['input_whitelist']), true);
+    if (!is_array($whitelist)) {
+        cacti_log('ERROR: Failed to parse input whitelist file: ' . $config['input_whitelist'], false, 'POLLER');
+        return false;
+    }
 
-    if (isset($whitelist[$hash])) {
-        if ($input_string == $whitelist[$hash]) {
+    if (isset($whitelist[$hash]) && is_string($whitelist[$hash])) {
+        if ((string) $input_string === $whitelist[$hash]) {
             return true;
         } else {
             return false;
@@ -2633,12 +2638,13 @@ function graph_template_whitelist_check($graph_template_id)
     }
 
     // load whitelist, but only once within process execution
-    if ($data_input_whitelist == null) {
-        $data_input_whitelist = json_decode(file_get_contents($config['input_whitelist']), true);
-        if ($data_input_whitelist === null) {
+    if ($data_input_whitelist === null) {
+        $decoded = json_decode((string) file_get_contents($config['input_whitelist']), true);
+        if (!is_array($decoded)) {
             cacti_log('ERROR: Failed to parse input whitelist file: ' . $config['input_whitelist']);
-            return true;
+            return false;
         }
+        $data_input_whitelist = $decoded;
     }
 
     $valid = true;
@@ -2665,17 +2671,20 @@ function graph_template_whitelist_check($graph_template_id)
                 array($dii['data_input_id'])
             );
 
-            if (isset($data_input_whitelist[$data_input['hash']])) {
+            if (isset($data_input['hash'], $data_input_whitelist[$data_input['hash']]) && is_string($data_input_whitelist[$data_input['hash']])) {
                 $found = true;
 
-                if ($data_input_whitelist[$data_input['hash']] != $data_input['input_string']) {
+                if ($data_input_whitelist[$data_input['hash']] !== (string) $data_input['input_string']) {
                     $valid = false;
                 }
             }
 
-            if (!$found && !isset($notified[$dii['data_input_id']])) {
-                cacti_log('WARNING: Data input script not found in input whitelist file: ' . $config['input_whitelist']);
-                $notified[$dii['data_input_id']] = true;
+            if (!$found) {
+                $valid = false;
+                if (!isset($notified[$dii['data_input_id']])) {
+                    cacti_log('WARNING: Data input script not found in input whitelist file: ' . $config['input_whitelist']);
+                    $notified[$dii['data_input_id']] = true;
+                }
             }
         }
     }

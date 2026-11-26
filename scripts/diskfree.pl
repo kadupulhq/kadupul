@@ -1,29 +1,20 @@
 #!/usr/bin/env perl
+use strict;
+use warnings;
 
 delete @ENV{qw(PATH)};
 $ENV{PATH} = '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin';
 
-#
-# Get the OS name
-#
-my $osname = "$^O";
-
-# the argument is pasted into a shell command, so refuse shell metacharacters
-if ($ARGV[0] =~ /[`\$;&|<>\r\n]/) {
-	exit;
+my $partition = $ARGV[0];
+if (!defined $partition || $partition eq '' || $partition =~ /^-/ || $partition =~ /[\x00-\x1f\x7f]/) {
+	exit 0;
 }
 
-if ($osname =~ 'freebsd') {
-  # FreeBSD have other parameters
-  $dfcmd="df -k -P $ARGV[0] | grep -v Filesystem |";
-} else {
-  $dfcmd="df --block-size=1024 -P $ARGV[0] | grep -v Filesystem |";
-}
-
-open(PROCESS, $dfcmd);
-foreach (<PROCESS>) {
-	if ($_ =~ /($ARGV[0])(.* )(.*[0-9])(.* )(.*[0-9])(.* )(.*[0-9])(.* )(.*[0-9])%(.* )/) {
+open(my $fh, '-|', 'df', '-k', '-P', '--', $partition) or exit 0;
+while (my $line = <$fh>) {
+	next if $line =~ /^Filesystem\b/;
+	if ($line =~ /(\Q$partition\E)(.* )(.*[0-9])(.* )(.*[0-9])(.* )(.*[0-9])(.* )(.*[0-9])%(.* )/) {
 		print "megabytes:$7 percent:$9";
 	}
 }
-close(PROCESS);
+close($fh);
