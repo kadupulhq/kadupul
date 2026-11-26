@@ -94,31 +94,58 @@ function escape_command($command)
     #TODO return preg_replace((\\\$(?=\w+|\*|\@|\#|\?|\-|\\\$|\!|\_|[0-9]|\(.*\))|`(?=.*(?=`)))","$2", $command);  #allow for a single $
 }
 
-/** set the language environment variable for rrdtool functions
- * @param string $lang		- the desired language to set
- * @return null
+/** Return the locale environment manager for legacy RRDtool and Rondi processes.
+ *
+ * @return \Kadupul\Graphing\Infrastructure\Rrd\RrdLocaleEnvironment
+ */
+function rrdtool_locale_environment(): \Kadupul\Graphing\Infrastructure\Rrd\RrdLocaleEnvironment
+{
+    require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/RrdLocaleEnvironment.php';
+
+    static $environment = null;
+
+    return $environment ??= new \Kadupul\Graphing\Infrastructure\Rrd\RrdLocaleEnvironment();
+}
+
+/** Return the allowlisted Kadupul BCP-47 locale tags.
+ *
+ * @return list<string>
+ */
+function rrdtool_known_locales(): array
+{
+    require_once __DIR__ . '/../src/Platform/Application/Locale/KnownLocales.php';
+
+    return array_keys(\Kadupul\Platform\Application\Locale\KnownLocales::ALL);
+}
+
+/** Resolve the validated POSIX UTF-8 LC_TIME locale for RRDtool and Rondi.
+ *
+ * @param int|string $lang -1 for active CACTI_LOCALE, 'en' for neutral C, or a locale tag
+ * @return string
+ */
+function rrdtool_time_locale($lang = -1): string
+{
+    $environment = rrdtool_locale_environment();
+    $locale = $lang == -1 ? (defined('CACTI_LOCALE') && is_string(CACTI_LOCALE) ? CACTI_LOCALE : null) : (is_string($lang) ? $lang : null);
+
+    return $environment::normalizeTimeLocale($locale, rrdtool_known_locales());
+}
+
+/** set the language environment variables for rrdtool functions
+ * @param int|string $lang		- the desired language to set
+ * @return void
  */
 function rrdtool_set_language($lang = -1)
 {
-    global $prev_lang;
-
-    $prev_lang = getenv('LANG');
-
-    if ($lang == -1) {
-        putenv('LANG=' . str_replace('-', '_', CACTI_LOCALE) . '.UTF-8');
-    } else {
-        putenv('LANG=en_EN.UTF-8');
-    }
+    rrdtool_locale_environment()->apply(rrdtool_time_locale($lang));
 }
 
-/** restore the default language environment variable after rrdtool functions
- * @return null
+/** restore the default language environment variables after rrdtool functions
+ * @return void
  */
 function rrdtool_reset_language()
 {
-    global $prev_lang;
-
-    putenv('LANG=' . $prev_lang);
+    rrdtool_locale_environment()->restore();
 }
 
 function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = false, $lease_timeout = null, &$lease_busy = null)

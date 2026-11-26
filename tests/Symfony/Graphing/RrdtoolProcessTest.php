@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\StorageRejected;
 use Kadupul\Graphing\Infrastructure\Rrd\InvalidRrdConfiguration;
 use Kadupul\Graphing\Infrastructure\Rrd\RrdtoolProcess;
 use Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument;
+use Kadupul\Platform\Application\Locale\KnownLocales;
 use Kadupul\Telemetry\Contract\RejectionReason;
 use PHPUnit\Framework\TestCase;
 
@@ -72,6 +73,55 @@ final class RrdtoolProcessTest extends TestCase
         }
 
         self::assertSame('/usr/bin:/bin|C|UTC|unset', $result->stdout);
+    }
+
+    public function testTimeLocaleSetsLcTimePinsLcNumericToCAndClearsLcAll(): void
+    {
+        $saved = [
+            'LC_ALL' => getenv('LC_ALL'),
+            'LC_NUMERIC' => getenv('LC_NUMERIC'),
+            'LC_TIME' => getenv('LC_TIME'),
+            'LANG' => getenv('LANG'),
+        ];
+        putenv('LC_ALL=fr_FR.UTF-8');
+        putenv('LC_NUMERIC=de_DE.UTF-8');
+        putenv('LC_TIME=C');
+        putenv('LANG=fr_FR.UTF-8');
+        putenv('KADUPUL_RRDTOOL_PROCESS_CANARY=inherited');
+        $_ENV['LC_ALL'] = 'fr_FR.UTF-8';
+        $_ENV['LC_NUMERIC'] = 'de_DE.UTF-8';
+        $_ENV['KADUPUL_RRDTOOL_PROCESS_CANARY'] = 'inherited';
+
+        $probe = $this->script(
+            'locale-env',
+            "printf '%s|%s|%s|%s|%s|%s|%s' \"\$PATH\" \"\${LC_ALL-unset}\" \"\$LC_NUMERIC\" \"\$LC_TIME\" \"\$LANG\" \"\$TZ\" \"\${KADUPUL_RRDTOOL_PROCESS_CANARY-unset}\"\n",
+        );
+        $known = array_keys(KnownLocales::ALL);
+
+        try {
+            $process = new RrdtoolProcess($probe);
+            foreach (['en-US' => 'en_US.UTF-8', 'de-DE' => 'de_DE.UTF-8', 'ja-JP' => 'ja_JP.UTF-8', 'ar-MA' => 'ar_MA.UTF-8', 'fr-CA' => 'fr_CA.UTF-8', 'zh-CN' => 'zh_CN.UTF-8'] as $locale => $expected) {
+                $result = $process->run([], $locale, $known);
+                self::assertSame('/usr/bin:/bin|unset|C|' . $expected . '|' . $expected . '|UTC|unset', $result->stdout, $locale);
+            }
+
+            foreach (["de-DE\nLC_NUMERIC=de_DE", '../../etc/passwd', 'xx-ZZ', ''] as $invalid) {
+                $result = $process->run([], $invalid, $known);
+                self::assertSame('/usr/bin:/bin|unset|C|C|C|UTC|unset', $result->stdout, (string) json_encode($invalid));
+            }
+        } finally {
+            foreach ($saved as $name => $value) {
+                if ($value === false) {
+                    putenv($name);
+                    unset($_ENV[$name]);
+                } else {
+                    putenv($name . '=' . $value);
+                    $_ENV[$name] = $value;
+                }
+            }
+            putenv('KADUPUL_RRDTOOL_PROCESS_CANARY');
+            unset($_ENV['KADUPUL_RRDTOOL_PROCESS_CANARY']);
+        }
     }
 
     public function testStandardInputIsClosedSoAProgramReadingItDoesNotWait(): void

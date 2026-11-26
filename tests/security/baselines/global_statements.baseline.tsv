@@ -104,7 +104,7 @@ lib/plugins.php	19	30
 lib/poller.php	17	27
 lib/reference_write.php	1	4
 lib/reports.php	18	28
-lib/rrd.php	32	44
+lib/rrd.php	30	42
 lib/rrd_maintenance.php	8	8
 lib/rrdcheck.php	11	19
 lib/schema_repair_integrity.php	1	5

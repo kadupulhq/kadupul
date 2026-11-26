@@ -19,6 +19,8 @@ final class RrdNoShellCoverageRegistration
         'src/Graphing/Infrastructure/Rrd/LocalRrdtool.php',
         'src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php',
         'src/Graphing/Infrastructure/Rrd/ProxyCipher.php',
+        'src/Graphing/Infrastructure/Rrd/RrdLocaleEnvironment.php',
+        'src/Platform/Application/Locale/KnownLocales.php',
         'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php',
         'composer.lock', 'tests/composer.lock',
     ];
