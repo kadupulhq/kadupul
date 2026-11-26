@@ -104,6 +104,19 @@ function form_save()
             $save['local_graph_template_item_id'] = (int) $associations['local_graph_template_item_id'];
             $save['local_graph_id']               = get_nfilter_request_var('local_graph_id');
             $save['task_item_id']                 = form_input_validate(get_nfilter_request_var('task_item_id'), 'task_item_id', '^[0-9]+$', true, 3);
+            if (!is_error_message() && (int) $save['task_item_id'] > 0) {
+                $task_item_host = db_fetch_row_prepared(
+                    'SELECT dl.host_id
+                    FROM data_template_rrd AS dtr
+                    INNER JOIN data_local AS dl ON dl.id = dtr.local_data_id
+                    WHERE dtr.id = ?',
+                    array((int) $save['task_item_id'])
+                );
+
+                if (empty($task_item_host) || ((int) $task_item_host['host_id'] > 0 && !is_device_allowed((int) $task_item_host['host_id']))) {
+                    graph_item_editor_access_denied();
+                }
+            }
             $save['color_id']                     = form_input_validate((isset($item['color_id']) ? $item['color_id'] : get_nfilter_request_var('color_id')), 'color_id', '^[0-9]+$', true, 3);
 
             /* if alpha is disabled, use invisible_alpha instead */
@@ -395,6 +408,9 @@ function item_edit()
         }
 
         /* modifications to the default graph items array */
+        $device_scope_sql = get_allowed_management_device_ids_sql();
+        $scope_where = "(dl.host_id=0 OR dl.host_id IN ($device_scope_sql))";
+
         $struct_graph_item['task_item_id']['sql'] = "SELECT
 			CONCAT_WS('', dtd.name_cache,' (', dtr.data_source_name, ')') as name, dtr.id
 			FROM data_local AS dl
@@ -408,10 +424,12 @@ function item_edit()
         /* Make sure we don't limit the list so that the selected DS isn't in the list in edit mode */
         if ($sql_where != '') {
             if (!isempty_request_var('id')) {
-                $struct_graph_item['task_item_id']['sql'] .= " WHERE ($sql_where) OR (dtr.id=" . $template_item['task_item_id'] . ")";
+                $struct_graph_item['task_item_id']['sql'] .= " WHERE $scope_where AND (($sql_where) OR (dtr.id=" . (int) $template_item['task_item_id'] . '))';
             } else {
-                $struct_graph_item['task_item_id']['sql'] .= " WHERE $sql_where";
+                $struct_graph_item['task_item_id']['sql'] .= " WHERE $scope_where AND ($sql_where)";
             }
+        } else {
+            $struct_graph_item['task_item_id']['sql'] .= " WHERE $scope_where";
         }
 
         $struct_graph_item['task_item_id']['sql'] .= ' ORDER BY name';

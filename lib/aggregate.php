@@ -45,9 +45,25 @@ function aggregate_build_children_url($local_graph_id, $graph_start = -1, $graph
     }
 }
 
+function aggregate_graphs_are_allowed(array $graphs): bool
+{
+    if (!function_exists('is_graph_allowed') || empty($_SESSION['sess_user_id'])) {
+        return true;
+    }
+
+    foreach ($graphs as $graph) {
+        $graph_id = (int) $graph;
+        if ($graph_id <= 0 || !is_graph_allowed($graph_id)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function api_aggregate_convert_template($graphs)
 {
-    if (!is_array($graphs) || !$graphs)
+    if (!is_array($graphs) || !$graphs || !aggregate_graphs_are_allowed($graphs))
         return false;
     $saved = aggregate_graph_mutation(function () use ($graphs) {
         $aggregate_template_id = get_nfilter_request_var('aggregate_template_id');
@@ -128,7 +144,7 @@ function api_aggregate_convert_template($graphs)
 
 function api_aggregate_associate($local_graph_id, $graphs)
 {
-    if (!is_array($graphs) || !$graphs)
+    if (!is_array($graphs) || !$graphs || !aggregate_graphs_are_allowed(array_merge(array($local_graph_id), $graphs)))
         return false;
     $saved = aggregate_graph_mutation(function () use ($local_graph_id, $graphs) {
         $aggregate_template = aggregate_graph_fetch_value(
@@ -188,7 +204,7 @@ function api_aggregate_associate($local_graph_id, $graphs)
 
 function api_aggregate_disassociate($local_graph_id, $graphs)
 {
-    if (!is_array($graphs) || !$graphs)
+    if (!is_array($graphs) || !$graphs || !aggregate_graphs_are_allowed(array_merge(array($local_graph_id), $graphs)))
         return false;
     $saved = aggregate_graph_mutation(function () use ($local_graph_id, $graphs) {
         $aggregate_template = aggregate_graph_fetch_value(
@@ -236,7 +252,7 @@ function api_aggregate_disassociate($local_graph_id, $graphs)
 
 function api_aggregate_create($aggregate_name, $graphs, $agg_template_id = 0)
 {
-    if (!is_array($graphs) || !$graphs)
+    if (!is_array($graphs) || !$graphs || !aggregate_graphs_are_allowed($graphs))
         return false;
     return aggregate_graph_mutation(function () use ($aggregate_name, $graphs, $agg_template_id) {
         /* get the first aggregate graph */
@@ -1116,7 +1132,7 @@ function api_aggregate_remove_multi($graphs)
 
     include_once($config['base_path'] . '/lib/api_graph.php');
 
-    if (cacti_sizeof($graphs)) {
+    if (cacti_sizeof($graphs) && aggregate_graphs_are_allowed($graphs)) {
         foreach ($graphs as $graph) {
             $ag = db_fetch_cell_prepared(
                 'SELECT id
@@ -1220,7 +1236,7 @@ function aggregate_prune_graphs($local_graph_id = 0)
 
 function api_aggregate_convert_to_graph($graphs)
 {
-    if (cacti_sizeof($graphs)) {
+    if (cacti_sizeof($graphs) && aggregate_graphs_are_allowed($graphs)) {
         foreach ($graphs as $graph) {
             $ag = db_fetch_cell_prepared(
                 'SELECT id

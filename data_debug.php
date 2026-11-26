@@ -931,6 +931,8 @@ function debug_view()
 
         if (array_key_exists('value', $field)) {
             $value = html_escape($field['value']);
+        } else {
+            $value = html_escape((string) $value);
         }
 
         if (array_key_exists('icon', $field)) {
@@ -965,14 +967,14 @@ function debug_view()
             $i = 0;
             foreach ($check['info']['rrd_match_array']['ds'] AS $data_source => $details) {
                 form_alternate_row('line2_' . $i, true);
-                form_selectable_cell($data_source, $i);
+                form_selectable_ecell($data_source, $i);
 
                 $output = '';
                 foreach ($details as $attribute => $recommendation) {
                     $output .= __('For attribute \'%s\', issue found \'%s\'', $attribute, $recommendation);
                 }
 
-                form_selectable_cell($output, 'line_2' . $i);
+                form_selectable_ecell($output, 'line_2' . $i);
                 form_end_row();
                 $i++;
             }
@@ -995,7 +997,7 @@ function debug_view()
             $i = 0;
             foreach ($check['info']['rrd_match_array']['tune'] AS $options) {
                 form_alternate_row('line3_' . $i, true);
-                form_selectable_cell($rrdtool_path . ' tune ' . $options, 'line3_' . $i);
+                form_selectable_ecell($rrdtool_path . ' tune ' . $options, 'line3_' . $i);
                 form_end_row();
                 $i++;
             }

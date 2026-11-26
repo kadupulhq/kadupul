@@ -242,16 +242,44 @@ function host_new_graphs_save($host_id)
 
     /* form an array that contains all of the data on the previous form */
     foreach ($_POST as $var => $val) {
-        if (preg_match('/^g_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: field_name
-            if (empty($matches[1])) { // this is a new graph from template field
-                $values['cg'][$matches[2]]['graph_template'][$matches[3]] = $val;
-            } else { // this is a data query field
-                $values['sg'][$matches[1]][$matches[2]]['graph_template'][$matches[3]] = $val;
+        if (preg_match('/^g_(\d+)_(\d+)_(\w+)$/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: field_name
+            $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::graphTemplateColumn($matches[3]);
+            if ($column === null) {
+                continue;
             }
-        } elseif (preg_match('/^gi_(\d+)_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: graph_template_input_id, 4:field_name
+            $t_col = 't_' . $column;
+            $t_allowed = db_fetch_cell_prepared(
+                "SELECT `$t_col` FROM graph_templates_graph WHERE local_graph_id = 0 AND graph_template_id = ?",
+                array((int) $matches[2])
+            );
+            if ($t_allowed !== 'on') {
+                continue;
+            }
+            if (empty($matches[1])) { // this is a new graph from template field
+                $values['cg'][$matches[2]]['graph_template'][$column] = $val;
+            } else { // this is a data query field
+                $values['sg'][$matches[1]][$matches[2]]['graph_template'][$column] = $val;
+            }
+        } elseif (preg_match('/^gi_(\d+)_(\d+)_(\d+)_(\w+)$/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: graph_template_input_id, 4:field_name
             /* ================= input validation ================= */
             input_validate_input_number($matches[3]);
             /* ==================================================== */
+
+            $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::graphTemplateItemColumn($matches[4]);
+            if ($column === null) {
+                continue;
+            }
+
+            $input_row = db_fetch_row_prepared(
+                'SELECT id, column_name
+				FROM graph_template_input
+				WHERE id = ?
+				AND graph_template_id = ?',
+                array((int) $matches[3], (int) $matches[2])
+            );
+            if (!cacti_sizeof($input_row) || $input_row['column_name'] !== $column) {
+                continue;
+            }
 
             /* we need to find out which graph items will be affected by saving this particular item */
             $item_list = db_fetch_assoc_prepared(
@@ -259,52 +287,88 @@ function host_new_graphs_save($host_id)
 				graph_template_item_id
 				FROM graph_template_input_defs
 				WHERE graph_template_input_id = ?',
-                array($matches[3])
+                array((int) $matches[3])
             );
 
             /* loop through each item affected and update column data */
             if (cacti_sizeof($item_list)) {
                 foreach ($item_list as $item) {
                     if (empty($matches[1])) { // this is a new graph from template field
-                        $values['cg'][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$matches[4]] = $val;
+                        $values['cg'][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$column] = $val;
                     } else { // this is a data query field
-                        $values['sg'][$matches[1]][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$matches[4]] = $val;
+                        $values['sg'][$matches[1]][$matches[2]]['graph_template_item'][$item['graph_template_item_id']][$column] = $val;
                     }
                 }
             }
-        } elseif (preg_match('/^d_(\d+)_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:field_nam
-            if (empty($matches[1])) { // this is a new graph from template field
-                $values['cg'][$matches[2]]['data_template'][$matches[3]][$matches[4]] = $val;
-            } else { // this is a data query field
-                $values['sg'][$matches[1]][$matches[2]]['data_template'][$matches[3]][$matches[4]] = $val;
+        } elseif (preg_match('/^d_(\d+)_(\d+)_(\d+)_(\w+)$/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:field_name
+            $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::dataTemplateDataColumn($matches[4]);
+            if ($column === null) {
+                continue;
             }
-        } elseif (preg_match('/^c_(\d+)_(\d+)_(\d+)_(\d+)/', $var, $matches)) {
+            $t_col = 't_' . $column;
+            $t_allowed = db_fetch_cell_prepared(
+                "SELECT `$t_col` FROM data_template_data WHERE local_data_id = 0 AND data_template_id = ?",
+                array((int) $matches[3])
+            );
+            if ($t_allowed !== 'on') {
+                continue;
+            }
+            if (empty($matches[1])) { // this is a new graph from template field
+                $values['cg'][$matches[2]]['data_template'][$matches[3]][$column] = $val;
+            } else { // this is a data query field
+                $values['sg'][$matches[1]][$matches[2]]['data_template'][$matches[3]][$column] = $val;
+            }
+        } elseif (preg_match('/^c_(\d+)_(\d+)_(\d+)_(\d+)$/', $var, $matches)) {
             /**
              * Custom Data.  Need to validate these against the input regular expressions
              *
              * Index offsets
              * 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:data_input_field_id
              */
-            $input_field_id = $matches[4];
+            $input_field_id = (int) $matches[4];
             $idata = db_fetch_row_prepared(
-                'SELECT *
-				FROM data_input_fields
-				WHERE id = ?',
-                array($input_field_id)
+                'SELECT dif.*
+				FROM data_input_fields AS dif
+				INNER JOIN data_template_data AS dtd
+				ON dtd.data_input_id = dif.data_input_id
+				INNER JOIN data_input_data AS did
+				ON did.data_template_data_id = dtd.id
+				AND did.data_input_field_id = dif.id
+				WHERE dif.id = ?
+				AND dtd.local_data_id = 0
+				AND dtd.data_template_id = ?
+				AND did.t_value = \'on\'',
+                array($input_field_id, (int) $matches[3])
             );
+
+            if (!cacti_sizeof($idata)) {
+                continue;
+            }
 
             $val = form_input_validate($val, $var, $idata['regexp_match'], $idata['allow_nulls'], 3);
 
             if (empty($matches[1])) { // this is a new graph from template field
-                $values['cg'][$matches[2]]['custom_data'][$matches[3]][$matches[4]] = $val;
+                $values['cg'][$matches[2]]['custom_data'][$matches[3]][$input_field_id] = $val;
             } else { // this is a data query field
-                $values['sg'][$matches[1]][$matches[2]]['custom_data'][$matches[3]][$matches[4]] = $val;
+                $values['sg'][$matches[1]][$matches[2]]['custom_data'][$matches[3]][$input_field_id] = $val;
             }
-        } elseif (preg_match('/^di_(\d+)_(\d+)_(\d+)_(\d+)_(\w+)/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:local_data_template_rrd_id, 5:field_name
+        } elseif (preg_match('/^di_(\d+)_(\d+)_(\d+)_(\d+)_(\w+)$/', $var, $matches)) { // 1: snmp_query_id, 2: graph_template_id, 3: data_template_id, 4:local_data_template_rrd_id, 5:field_name
+            $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::dataTemplateRrdColumn($matches[5]);
+            if ($column === null) {
+                continue;
+            }
+            $t_col = 't_' . $column;
+            $t_allowed = db_fetch_cell_prepared(
+                "SELECT `$t_col` FROM data_template_rrd WHERE local_data_id = 0 AND data_template_id = ? AND id = ?",
+                array((int) $matches[3], (int) $matches[4])
+            );
+            if ($t_allowed !== 'on') {
+                continue;
+            }
             if (empty($matches[1])) { // this is a new graph from template field
-                $values['cg'][$matches[2]]['data_template_item'][$matches[4]][$matches[5]] = $val;
+                $values['cg'][$matches[2]]['data_template_item'][$matches[4]][$column] = $val;
             } else { // this is a data query field
-                $values['sg'][$matches[1]][$matches[2]]['data_template_item'][$matches[4]][$matches[5]] = $val;
+                $values['sg'][$matches[1]][$matches[2]]['data_template_item'][$matches[4]][$column] = $val;
             }
         }
     }

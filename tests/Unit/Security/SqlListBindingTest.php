@@ -127,7 +127,7 @@ function api_graph_remove_aggregate_items($ids, $reject = false) {}
 
 function set_config_option($name, $value) {}
 
-function is_graph_allowed($id, $user)
+function is_graph_allowed($id, $user = 0)
 {
     return true;
 }

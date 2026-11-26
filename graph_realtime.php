@@ -240,7 +240,7 @@ switch (get_request_var('action')) {
         }
 
         /* print RRDtool graph source? */
-        if (!isempty_request_var('show_source')) {
+        if (!isempty_request_var('show_source') && is_realm_allowed(27)) {
             $graph_data_array['print_source'] = get_request_var('show_source');
         }
 

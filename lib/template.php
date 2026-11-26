@@ -1714,9 +1714,14 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
     /* suggested values: graph, passed from parent */
     if (isset($suggested_vals[$graph_template_id]['graph_template'])) {
         foreach ($suggested_vals[$graph_template_id]['graph_template'] as $field_name => $field_value) {
+            $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::graphTemplateColumn((string) $field_name);
+            if ($column === null) {
+                cacti_log('WARNING: Rejected disallowed graph_templates_graph override column', false, 'SECURITY');
+                continue;
+            }
             db_execute_prepared(
                 "UPDATE graph_templates_graph
-				SET $field_name = ?
+				SET `$column` = ?
 				WHERE local_graph_id = ?",
                 array($field_value, $cache_array['local_graph_id'])
             );
@@ -1727,6 +1732,11 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
     if (isset($suggested_vals[$graph_template_id]['graph_template_item'])) {
         foreach ($suggested_vals[$graph_template_id]['graph_template_item'] as $graph_template_item_id => $field_array) {
             foreach ($field_array as $field_name => $field_value) {
+                $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::graphTemplateItemColumn((string) $field_name);
+                if ($column === null) {
+                    cacti_log('WARNING: Rejected disallowed graph_templates_item override column', false, 'SECURITY');
+                    continue;
+                }
                 $graph_item_id = db_fetch_cell_prepared(
                     'SELECT id
 					FROM graph_templates_item
@@ -1735,12 +1745,14 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
                     array($graph_template_item_id, $cache_array['local_graph_id'])
                 );
 
-                db_execute_prepared(
-                    "UPDATE graph_templates_item
-					SET $field_name = ?
-					WHERE id = ?",
-                    array($field_value, $graph_item_id)
-                );
+                if (!empty($graph_item_id)) {
+                    db_execute_prepared(
+                        "UPDATE graph_templates_item
+						SET `$column` = ?
+						WHERE id = ?",
+                        array($field_value, $graph_item_id)
+                    );
+                }
             }
         }
     }
@@ -1920,9 +1932,14 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
                 /* suggested values: data source, passed from parent */
                 if (isset($suggested_vals[$graph_template_id]['data_template'][$data_template['id']])) {
                     foreach ($suggested_vals[$graph_template_id]['data_template'][$data_template['id']] as $field_name => $field_value) {
+                        $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::dataTemplateDataColumn((string) $field_name);
+                        if ($column === null) {
+                            cacti_log('WARNING: Rejected disallowed data_template_data override column', false, 'SECURITY');
+                            continue;
+                        }
                         db_execute_prepared(
                             "UPDATE data_template_data
-							SET $field_name = ?
+							SET `$column` = ?
 							WHERE local_data_id = ?",
                             array($field_value, $cache_array['local_data_id'][$data_template['id']])
                         );
@@ -1933,6 +1950,21 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
                 if (isset($suggested_vals[$graph_template_id]['data_template_item'])) {
                     foreach ($suggested_vals[$graph_template_id]['data_template_item'] as $data_template_item_id => $field_array) {
                         foreach ($field_array as $field_name => $field_value) {
+                            $column = \Kadupul\Graphing\Domain\TemplateEditableColumns::dataTemplateRrdColumn((string) $field_name);
+                            if ($column === null) {
+                                cacti_log('WARNING: Rejected disallowed data_template_rrd override column', false, 'SECURITY');
+                                continue;
+                            }
+                            if (($column === 'rrd_minimum' || $column === 'rrd_maximum')
+                                && preg_match('/\A(?:-?[0-9]+(?:\.[0-9]+)?|U|\|query_[a-zA-Z0-9_]+\|)\z/D', (string) $field_value) !== 1) {
+                                cacti_log('WARNING: Rejected invalid data_template_rrd limit value', false, 'SECURITY');
+                                continue;
+                            }
+                            if ($column === 'data_source_name'
+                                && preg_match('/\A[a-zA-Z0-9_]{1,19}\z/D', (string) $field_value) !== 1) {
+                                cacti_log('WARNING: Rejected invalid data_source_name override', false, 'SECURITY');
+                                continue;
+                            }
                             $data_source_item_id = db_fetch_cell_prepared(
                                 'SELECT id
 								FROM data_template_rrd
@@ -1941,12 +1973,14 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
                                 array($data_template_item_id, $cache_array['local_data_id'][$data_template['id']])
                             );
 
-                            db_execute_prepared(
-                                "UPDATE data_template_rrd
-								SET $field_name = ?
-								WHERE id = ?",
-                                array($field_value, $data_source_item_id)
-                            );
+                            if (!empty($data_source_item_id)) {
+                                db_execute_prepared(
+                                    "UPDATE data_template_rrd
+									SET `$column` = ?
+									WHERE id = ?",
+                                    array($field_value, $data_source_item_id)
+                                );
+                            }
                         }
                     }
                 }
@@ -1954,11 +1988,24 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
                 /* suggested values: custom data, passed from parent */
                 if (isset($suggested_vals[$graph_template_id]['custom_data'][$data_template['id']])) {
                     foreach ($suggested_vals[$graph_template_id]['custom_data'][$data_template['id']] as $data_input_field_id => $field_value) {
+                        $valid_field = db_fetch_cell_prepared(
+                            'SELECT dif.id
+							FROM data_input_fields AS dif
+							INNER JOIN data_template_data AS dtd
+							ON dtd.data_input_id = dif.data_input_id
+							WHERE dif.id = ?
+							AND dtd.id = ?',
+                            array((int) $data_input_field_id, $data_template_data_id)
+                        );
+                        if (empty($valid_field)) {
+                            cacti_log('WARNING: Rejected unowned data_input_field_id override', false, 'SECURITY');
+                            continue;
+                        }
                         db_execute_prepared(
                             'REPLACE INTO data_input_data
 							(data_input_field_id, data_template_data_id, t_value, value)
 							VALUES (?, ?, "", ?)',
-                            array($data_input_field_id, $data_template_data_id, $field_value)
+                            array((int) $data_input_field_id, $data_template_data_id, $field_value)
                         );
                     }
                 }

@@ -29,6 +29,21 @@ initialize_realtime_step_and_window();
 
 function get_matching_nodes()
 {
+    if (!is_view_allowed('show_tree')) {
+        header('Content-Type: application/json; charset=utf-8');
+        print '[]';
+        return;
+    }
+
+    $allowed_trees = array_rekey(get_allowed_trees(), 'id', 'id');
+    if (!cacti_sizeof($allowed_trees)) {
+        header('Content-Type: application/json; charset=utf-8');
+        print '[]';
+        return;
+    }
+
+    $tree_ids_sql = implode(',', array_map('intval', array_keys($allowed_trees)));
+
     $my_matches = array();
     $match = array();
 
@@ -36,8 +51,11 @@ function get_matching_nodes()
 
     if (get_nfilter_request_var('str') != '') {
         $matching = db_fetch_assoc_prepared(
-            "SELECT gti.parent, gti.graph_tree_id
+            "SELECT gti.parent, gti.graph_tree_id, gti.host_id, gti.local_graph_id, gti.site_id
 			FROM graph_tree_items AS gti
+			INNER JOIN graph_tree AS gt
+			ON gt.id = gti.graph_tree_id
+			AND gt.enabled = 'on'
 			LEFT JOIN host AS h
 			ON h.id = gti.host_id
 			LEFT JOIN (
@@ -60,20 +78,47 @@ function get_matching_nodes()
 				WHERE name LIKE ?
 			) AS site
 			ON site.id = gti.site_id
-			WHERE (gti.title LIKE ?)
-			OR (h.description LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
-			OR (h.hostname LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
-			OR (h2.site_id > 0)
-			OR (gtg.local_graph_id > 0)
-			OR (site.id > 0)",
+			WHERE gti.graph_tree_id IN ($tree_ids_sql)
+			AND (
+				(gti.title LIKE ?)
+				OR (h.description LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
+				OR (h.hostname LIKE ? AND (gti.host_id > 0 OR gti.site_id > 0))
+				OR (h2.site_id > 0)
+				OR (gtg.local_graph_id > 0)
+				OR (site.id > 0)
+			)",
             array($filter, $filter, $filter, $filter, $filter, $filter, $filter)
         );
     } else {
-        $matching = db_fetch_assoc("SELECT parent, graph_tree_id FROM graph_tree_items");
+        $matching = db_fetch_assoc(
+            "SELECT gti.parent, gti.graph_tree_id, gti.host_id, gti.local_graph_id, gti.site_id
+			FROM graph_tree_items AS gti
+			INNER JOIN graph_tree AS gt
+			ON gt.id = gti.graph_tree_id
+			AND gt.enabled = 'on'
+			WHERE gti.graph_tree_id IN ($tree_ids_sql)"
+        );
     }
 
     if (cacti_sizeof($matching)) {
+        $simple_device_perms = get_simple_device_perms($_SESSION['sess_user_id'] ?? 0);
         foreach ($matching as $row) {
+            if (!is_tree_allowed((int) $row['graph_tree_id'], 0, true)) {
+                continue;
+            }
+            if ((int) $row['host_id'] > 0 && !is_device_allowed((int) $row['host_id'])) {
+                continue;
+            }
+            if ((int) $row['local_graph_id'] > 0 && !is_graph_allowed((int) $row['local_graph_id'])) {
+                continue;
+            }
+            if ((int) $row['site_id'] > 0 && !$simple_device_perms) {
+                $site_total = 0;
+                if (!cacti_sizeof(get_allowed_site_devices((int) $row['site_id'], '', 'description', '1', $site_total))) {
+                    continue;
+                }
+            }
+
             while ($row['parent'] != '0') {
                 $match[] = 'tbranch-' . $row['parent'];
 

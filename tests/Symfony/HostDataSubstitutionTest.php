@@ -91,12 +91,22 @@ final class HostDataSubstitutionTest extends TestCase
         $tokens = $this->originalTokens();
         self::assertCount(32, $tokens);
         $input = implode(' / ', array_map(static fn($entry) => '[[' . $entry[0] . ']]', $tokens));
-        $expected = implode(' / ', array_map(fn($entry) => $entry[1] === null ? 'observed uptime' : $this->host[$entry[1]], $tokens));
-        foreach ($this->adapters() as $adapter) {
-            self::assertSame($expected, $adapter($input, '[[', ']]', '7'));
-            self::assertSame(['substitute_host_data', ['string' => $expected, 'l_escape_string' => '[[', 'r_escape_string' => ']]', 'host_id' => '7']], end($GLOBALS['host_hook_calls']));
-        }
-        self::assertCount(2, $GLOBALS['host_uptime_calls']);
+        $expectedExecution = implode(' / ', array_map(fn($entry) => $entry[1] === null ? 'observed uptime' : $this->host[$entry[1]], $tokens));
+        $credentialFields = ['snmp_community', 'snmp_username', 'snmp_password', 'snmp_priv_passphrase'];
+        $expectedDisplay = implode(' / ', array_map(
+            fn($entry) => $entry[1] === null
+                ? 'observed uptime'
+                : (in_array($entry[1], $credentialFields, true) ? '[[' . $entry[0] . ']]' : $this->host[$entry[1]]),
+            $tokens
+        ));
+
+        self::assertSame($expectedExecution, \substitute_host_data($input, '[[', ']]', '7'));
+        self::assertSame(['substitute_host_data', ['string' => $expectedExecution, 'l_escape_string' => '[[', 'r_escape_string' => ']]', 'host_id' => '7']], end($GLOBALS['host_hook_calls']));
+
+        self::assertSame($expectedDisplay, \substitute_host_data($input, '[[', ']]', '7', true));
+        self::assertSame($expectedDisplay, \aggregate_graph_substitute_host_data($input, '[[', ']]', '7'));
+        self::assertSame(['substitute_host_data', ['string' => $expectedDisplay, 'l_escape_string' => '[[', 'r_escape_string' => ']]', 'host_id' => '7']], end($GLOBALS['host_hook_calls']));
+        self::assertCount(3, $GLOBALS['host_uptime_calls']);
     }
 
     public function testOrderedPlanRetainsRawValuesAliasesAndUptimeEvaluationPosition(): void

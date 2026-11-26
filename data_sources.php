@@ -1482,7 +1482,7 @@ function data_source_path_is_allowed($path)
     }
 
     $base = realpath($config['rra_path']);
-    if ($base === false || strpbrk($path, "\0\r\n") !== false || str_contains($path, '\\')) {
+    if ($base === false || strpbrk($path, "\0\r\n<>'\"=") !== false || str_contains($path, '\\')) {
         return false;
     }
 

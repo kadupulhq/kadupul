@@ -1666,11 +1666,7 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 return 'SVG/XML Output OK';
             }
 
-            if ($output_flag == RRDTOOL_OUTPUT_RETURN_STDERR) {
-                return $output;
-            } else {
-                print $output;
-            }
+            return $output;
 
             break;
         case RRDTOOL_OUTPUT_NULL:
@@ -1883,11 +1879,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
             if (str_starts_with($output, '<?xml')) {
                 return 'SVG/XML Output OK';
             }
-            if ($output_flag == RRDTOOL_OUTPUT_RETURN_STDERR) {
-                return $output;
-            } else {
-                print $output;
-            }
+            return $output;
             break;
         case RRDTOOL_OUTPUT_BOOLEAN:
             if (preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
@@ -3083,7 +3075,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                     // are text-output modes; returning PNG bytes in either would produce
                     // garbage in the browser or CLI. Return a human-readable error instead.
                     if (isset($graph_data_array['get_error']) || isset($graph_data_array['print_source'])) {
-                        return __('ERROR: RRD file does not exist: %s', $data_source_path);
+                        $missing_msg = __('ERROR: RRD file does not exist: %s', $data_source_path);
+                        return isset($graph_data_array['print_source']) ? html_escape($missing_msg) : $missing_msg;
                     }
 
                     return rrdtool_create_error_image(__('The Kadupul Poller has not run yet.'));
@@ -4181,7 +4174,7 @@ function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item)
         $host_id = $graph['host_id'];
     }
 
-    $txt_graph_item = substitute_host_data($txt_graph_item, '|', '|', $host_id);
+    $txt_graph_item = substitute_host_data($txt_graph_item, '|', '|', $host_id, true);
 
     /* replace query variables in graph elements */
     if (str_contains($txt_graph_item, '|query_')) {
@@ -4549,13 +4542,13 @@ function rrdtool_cacti_compare($data_source_id, &$info)
                 /* check the data source type */
                 if ($data_source['type'] != $info['ds'][$data_source_name]['type']) {
                     $diff['ds'][$data_source_name]['type'] = __("Type for Data Source '%s' should be '%s'", $data_source_name, $data_source['type']);
-                    $diff['tune'][] = $info['filename'] . ' ' . '--data-source-type ' . $data_source_name . ':' . $data_source['type'];
+                    $diff['tune'][] = rrdtool_pipe_quote($info['filename']) . ' --data-source-type ' . rrdtool_pipe_quote($data_source_name . ':' . $data_source['type']);
                 }
 
                 /* check the minimal heartbeat */
                 if ($data_source['minimal_heartbeat'] != $info['ds'][$data_source_name]['minimal_heartbeat']) {
                     $diff['ds'][$data_source_name]['minimal_heartbeat'] = __("Heartbeat for Data Source '%s' should be '%s'", $data_source_name, $data_source['minimal_heartbeat']);
-                    $diff['tune'][] = $info['filename'] . ' ' . '--heartbeat ' . $data_source_name . ':' . $data_source['minimal_heartbeat'];
+                    $diff['tune'][] = rrdtool_pipe_quote($info['filename']) . ' --heartbeat ' . rrdtool_pipe_quote($data_source_name . ':' . $data_source['minimal_heartbeat']);
                 }
 
                 /* check the minimums and maximums and correct for legacy behavior */
@@ -4567,7 +4560,7 @@ function rrdtool_cacti_compare($data_source_id, &$info)
 
                 if ($data_source['min'] != $info['ds'][$data_source_name]['min']) {
                     $diff['ds'][$data_source_name]['min'] = __("RRD minimum for Data Source '%s' should be '%s'", $data_source_name, $data_source['min']);
-                    $diff['tune'][] = $info['filename'] . ' ' . '--minimum ' . $data_source_name . ':' . $data_source['min'];
+                    $diff['tune'][] = rrdtool_pipe_quote($info['filename']) . ' --minimum ' . rrdtool_pipe_quote($data_source_name . ':' . $data_source['min']);
                 }
             }
         }
@@ -4646,9 +4639,9 @@ function rrdtool_cacti_compare($data_source_id, &$info)
                         if ($cacti_rra['rows'] != $file_rra['rows'] && $resize) {
                             $diff['rra'][$file_rra_id]['rows'] = __("The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'", $cacti_rra_id, $file_rra['rows'], $cacti_rra['rows']);
                             if ($cacti_rra['rows'] > $file_rra['rows']) {
-                                $diff['resize'][] = $info['filename'] . ' ' . $file_rra_id . ' GROW ' . ($cacti_rra['rows'] - $file_rra['rows']);
+                                $diff['resize'][] = rrdtool_pipe_quote($info['filename']) . ' ' . (int) $file_rra_id . ' GROW ' . (int) ($cacti_rra['rows'] - $file_rra['rows']);
                             } else {
-                                $diff['resize'][] = $info['filename'] . ' ' . $file_rra_id . ' SHRINK ' . ($file_rra['rows'] - $cacti_rra['rows']);
+                                $diff['resize'][] = rrdtool_pipe_quote($info['filename']) . ' ' . (int) $file_rra_id . ' SHRINK ' . (int) ($file_rra['rows'] - $cacti_rra['rows']);
                             }
                         }
                     }
@@ -4847,7 +4840,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
                 if (CACTI_CLI) {
                     print $line . PHP_EOL;
                 } else {
-                    print '<tr><td>' . $line . '</td></tr>';
+                    print '<tr><td>' . html_escape($line) . '</td></tr>';
                 }
             } else {
                 if ($key === 'tune') continue;
@@ -4884,7 +4877,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
                 if (CACTI_CLI) {
                     print $rrd_path . ' tune ' . $line . PHP_EOL;
                 } else {
-                    print '<tr><td>' . $rrd_path . ' tune ' . $line . '</td></tr>';
+                    print '<tr><td>' . html_escape($rrd_path . ' tune ' . $line) . '</td></tr>';
                 }
             } elseif (strpbrk($line, "\r\n\0") !== false) {
                 cacti_log('ERROR: RRD tune command skipped. It contains a line break or NUL.', false, 'UTIL');
@@ -4902,8 +4895,8 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
                     print read_config_option('path_rrdtool') . ' resize ' . $line . PHP_EOL;
                     print __('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file) . PHP_EOL;
                 } else {
-                    print '<tr><td>' . read_config_option('path_rrdtool') . ' resize ' . $line . '</td></tr>';
-                    print '<tr><td>' . __('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file) . '</td></tr>';
+                    print '<tr><td>' . html_escape(read_config_option('path_rrdtool') . ' resize ' . $line) . '</td></tr>';
+                    print '<tr><td>' . html_escape(__('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file)) . '</td></tr>';
                 }
             } elseif (strpbrk($line, "\r\n\0") !== false) {
                 cacti_log('ERROR: RRD resize command skipped. It contains a line break or NUL.', false, 'UTIL');
@@ -5908,18 +5901,15 @@ function add_business_hours($data, ?\DateTimeImmutable $now = null)
                 $data['graph_defs'] .= 'CDEF:officehours' . $day . '=a,POP,TIME,' . $current_start_bh_time . ',LT,1,0,IF,TIME,' . $current_end_bh_time . ',GT,1,0,IF,MAX,0,GT,0,1,IF' . RRD_NL;
                 $data['graph_defs'] .= 'CDEF:dslimit' . $day . '=INF,officehours' . $day . ',*' . RRD_NL;
 
-                if (preg_match('/[0-9A-Fa-f]{6,8}/', read_config_option('business_hours_color'))) {
-                    $bh_color = read_config_option('business_hours_color');
-                } else {
-                    $bh_color = 'ccccccff';
-                }
+                $bh_color_raw = (string) read_config_option('business_hours_color');
+                $bh_color = preg_match('/\A[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?\z/D', $bh_color_raw) === 1 ? $bh_color_raw : 'ccccccff';
 
                 if (date('N', $current_start_bh_time) < 6) {
-                    $data['graph_defs'] .= 'AREA:dslimit' . $day . '#' . $bh_color . RRD_NL;
+                    $data['graph_defs'] .= rrdtool_pipe_quote('AREA:dslimit' . $day . '#' . $bh_color) . RRD_NL;
                 }
 
                 if ((date('N', $current_start_bh_time) > 5) && (read_config_option('business_hours_hideWeekends') == '')) {
-                    $data['graph_defs'] .= 'AREA:dslimit' . $day . '#' . $bh_color . RRD_NL;
+                    $data['graph_defs'] .= rrdtool_pipe_quote('AREA:dslimit' . $day . '#' . $bh_color) . RRD_NL;
                 }
             }
         }

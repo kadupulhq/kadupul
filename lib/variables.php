@@ -260,9 +260,9 @@ function expand_title($host_id, $snmp_query_id, $snmp_index, $title)
 {
     if ((strstr($title, '|')) && (!empty($host_id))) {
         if (($snmp_query_id != '0') && ($snmp_index != '')) {
-            $title = substitute_snmp_query_data(null_out_substitutions(substitute_host_data($title, '|', '|', $host_id)), $host_id, $snmp_query_id, $snmp_index, read_config_option('max_data_query_field_length'));
+            $title = substitute_snmp_query_data(null_out_substitutions(substitute_host_data($title, '|', '|', $host_id, true)), $host_id, $snmp_query_id, $snmp_index, read_config_option('max_data_query_field_length'));
         } else {
-            $title = null_out_substitutions(substitute_host_data($title, '|', '|', $host_id));
+            $title = null_out_substitutions(substitute_host_data($title, '|', '|', $host_id, true));
         }
     } else {
         $title = null_out_substitutions($title);
@@ -302,7 +302,7 @@ function substitute_script_query_path($path)
    @arg $r_escape_string - the character used to escape each variable on the right side
    @arg $host_id - (int) the host ID to match
    @returns - the original string with all of the variable substitutions made */
-function substitute_host_data($string, $l_escape_string, $r_escape_string, $host_id)
+function substitute_host_data($string, $l_escape_string, $r_escape_string, $host_id, bool $display_only = false)
 {
     if (!empty($host_id)) {
         $host = db_fetch_row_prepared('SELECT ' . SQL_NO_CACHE . ' h.*, s.name AS site_name
@@ -319,7 +319,10 @@ function substitute_host_data($string, $l_escape_string, $r_escape_string, $host
             \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember($host);
         }
 
-        [$search, $replace] = \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::replacements($l_escape_string, $r_escape_string, $host);
+        $scope = $display_only
+            ? \Kadupul\Platform\Domain\HostSubstitutionScope::Display
+            : \Kadupul\Platform\Domain\HostSubstitutionScope::Execution;
+        [$search, $replace] = \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::replacements($l_escape_string, $r_escape_string, $host, $scope);
         $string = str_replace($search, $replace, $string);
 
         $temp = api_plugin_hook_function(

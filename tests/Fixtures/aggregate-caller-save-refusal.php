@@ -186,6 +186,11 @@ if ($page === 'graphs.php') {
     }
     eval(test_php_function_source(file_get_contents($source), 'graph_edit_graph_is_allowed'));
     eval(test_php_function_source(file_get_contents($source), 'graph_edit_access_denied'));
+} elseif ($page === 'aggregate_graphs.php') {
+    function is_graph_allowed($id): bool
+    {
+        return (int) $id === 1;
+    }
 }
 eval(test_php_function_source(file_get_contents($source), $function));
 $function();

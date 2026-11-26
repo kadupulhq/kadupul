@@ -211,7 +211,7 @@ function aggregate_graph_substitute_host_data($string, $l_escape_string, $r_esca
             return $string;
         }
 
-        [$search, $replace] = \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::replacements($l_escape_string, $r_escape_string, $host);
+        [$search, $replace] = \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::displayReplacements($l_escape_string, $r_escape_string, $host);
         $string = str_replace($search, $replace, $string);
 
         $temp = api_plugin_hook_function(

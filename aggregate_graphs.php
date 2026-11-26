@@ -67,7 +67,9 @@ function add_tree_names_to_actions_array()
 
     if (cacti_sizeof($trees)) {
         foreach ($trees as $tree) {
-            $graph_actions['tr_' . $tree['id']] = __('Place on a Tree (%s)', $tree['name']);
+            if (is_tree_allowed($tree['id'])) {
+                $graph_actions['tr_' . $tree['id']] = __esc('Place on a Tree (%s)', $tree['name']);
+            }
         }
     }
 }
@@ -83,6 +85,13 @@ function form_save()
     $local_graph_id        = get_nfilter_request_var('local_graph_id', 0);
     $graph_template_id     = get_nfilter_request_var('graph_template_id', 0);
     $aggregate_template_id = get_nfilter_request_var('aggregate_template_id', 0);
+
+    if ((int) $local_graph_id <= 0 || !is_graph_allowed((int) $local_graph_id)) {
+        raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+        header('Location: aggregate_graphs.php?header=false');
+        return null;
+    }
+
     $graph_title           = form_input_validate(get_nfilter_request_var('title_format'), 'title_format', '', false, 3);
     if (is_error_message()) {
         raise_message(2);
@@ -262,6 +271,20 @@ function form_actions()
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
+        if (is_array($selected_items)) {
+            $authorized_items = array();
+            foreach ($selected_items as $selected_item) {
+                $item_id = (int) $selected_item;
+                if ($item_id <= 0 || !is_graph_allowed($item_id)) {
+                    raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false');
+                    return;
+                }
+                $authorized_items[] = $item_id;
+            }
+            $selected_items = cacti_sizeof($authorized_items) ? $authorized_items : false;
+        }
+
         if ($selected_items != false) {
             if (get_request_var('drp_action') == '1') { // delete
                 api_aggregate_remove_multi($selected_items);
@@ -298,6 +321,11 @@ function form_actions()
                 exit;
             } elseif (get_request_var('drp_action') == '10') { // associate with aggregate
                 $local_graph_id = get_filter_request_var('local_graph_id');
+                if ((int) $local_graph_id <= 0 || !is_graph_allowed((int) $local_graph_id)) {
+                    raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false');
+                    return;
+                }
                 if (api_aggregate_associate($local_graph_id, $selected_items) === false) {
                     raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.'), MESSAGE_LEVEL_ERROR);
                     header('Location: aggregate_graphs.php?header=false');
@@ -308,6 +336,11 @@ function form_actions()
                 exit;
             } elseif (get_request_var('drp_action') == '11') { // dis-associate with aggregate
                 $local_graph_id = get_filter_request_var('local_graph_id');
+                if ((int) $local_graph_id <= 0 || !is_graph_allowed((int) $local_graph_id)) {
+                    raise_message('aggregate_access_denied', __('You are not permitted to modify the selected Aggregate Graph.'), MESSAGE_LEVEL_ERROR);
+                    header('Location: aggregate_graphs.php?header=false');
+                    return;
+                }
                 if (api_aggregate_disassociate($local_graph_id, $selected_items) === false) {
                     raise_message('aggregate_regeneration_failed', __('Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.'), MESSAGE_LEVEL_ERROR);
                     header('Location: aggregate_graphs.php?header=false');
@@ -319,6 +352,10 @@ function form_actions()
             } elseif (preg_match('/^tr_([0-9]+)$/', get_request_var('drp_action'), $matches)) { // place on tree
                 get_filter_request_var('tree_id');
                 get_filter_request_var('tree_item_id');
+                if ((int) get_request_var('tree_id') !== (int) $matches[1] || !api_tree_node_access(get_request_var('tree_id'), 'place_graph')) {
+                    $selected_items = array();
+                    raise_message('tree_access_denied', __('The selected Tree is not available.'), MESSAGE_LEVEL_ERROR);
+                }
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
                     api_tree_item_save(0, get_nfilter_request_var('tree_id'), TREE_ITEM_TYPE_GRAPH, get_nfilter_request_var('tree_item_id'), '', $selected_items[$i], 0, 0, 0, 0, false);
                 }
@@ -339,6 +376,10 @@ function form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            if (!is_graph_allowed((int) $matches[1])) {
+                continue;
+            }
 
             $graph_list .= '<li>' . html_escape(get_graph_title($matches[1])) . '</li>';
             $graph_array[$i] = $matches[1];
@@ -370,11 +411,7 @@ function form_actions()
             $save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Delete Graph(s)') . "'>";
         } elseif (get_request_var('drp_action') == '2') { // migrate to aggregate
             /* determine the common graph template if any */
-            foreach ($_POST as $var => $val) {
-                if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
-                    $local_graph_ids[] = $matches[1];
-                }
-            }
+            $local_graph_ids = $graph_array;
 
             /* for whatever reason,  subquery performance in mysql is sub-optimal.  Therefore, let's do this
              * as a few queries instead.
@@ -533,6 +570,13 @@ function form_actions()
 			</tr>";
 
             $save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Dis-Associate Graph(s)') . "'>";
+        } elseif (preg_match("/^tr_([0-9]+)$/", get_request_var('drp_action'), $matches) && !is_tree_allowed($matches[1])) { // place on an inaccessible tree
+            print "<tr>
+				<td class='textArea'>
+					<p>" . __('The selected Tree is not available.') . "</p>
+				</td>
+			</tr>";
+            $save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Return') . "'>";
         } elseif (preg_match("/^tr_([0-9]+)$/", get_request_var('drp_action'), $matches)) { // place on tree
             print "<tr>
 				<td class='textArea'>
@@ -606,6 +650,11 @@ function graph_edit()
     $aginfo = array();
     $graphs = array();
     if (!isempty_request_var('id')) {
+        if (!is_graph_allowed((int) get_request_var('id'))) {
+            raise_message('aggregate_access_denied', __('Aggregate Graph Accessed does not Exist'), MESSAGE_LEVEL_ERROR);
+            cacti_header('aggregate_graphs.php');
+            exit;
+        }
         $graphs = db_fetch_row_prepared(
             'SELECT *
 			FROM graph_templates_graph
@@ -765,7 +814,7 @@ function graph_edit()
 				<div style='overflow:auto;'>
 					<span class='textInfo'><?php print __('RRDtool Command:');?></span><br>
 					<?php print @rrdtool_function_graph(get_request_var('id'), 1, $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);?>
-					<span class='textInfo'><?php print __('RRDtool Says:');?></span><br><?php unset($graph_data_array['print_source']);?><pre class='monoSpace tableRow left'><?php print($config['poller_id'] == 1 ? @rrdtool_function_graph(get_request_var('id'), 1, $graph_data_array, '', $null_param, $_SESSION['sess_user_id']) : __esc('Not Checked'));?></pre>
+					<span class='textInfo'><?php print __('RRDtool Says:');?></span><br><?php unset($graph_data_array['print_source']);?><pre class='monoSpace tableRow left'><?php print($config['poller_id'] == 1 ? html_escape((string) @rrdtool_function_graph(get_request_var('id'), 1, $graph_data_array, '', $null_param, $_SESSION['sess_user_id'])) : __esc('Not Checked'));?></pre>
 				</div>
 				<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 				$(function() {
@@ -1199,6 +1248,9 @@ function aggregate_items()
         $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' agi.local_graph_id IN(' . get_request_var('local_graph_ids') . ')';
     }
 
+    $allowed_graph_ids_sql = get_allowed_graphs('', '', '', $allowed_graph_count, 0, 0, false, true);
+    $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . "gl.id IN ($allowed_graph_ids_sql)";
+
     $sql = "SELECT COUNT(DISTINCT gl.id) AS total
 		FROM graph_templates_graph AS gtg
 		INNER JOIN graph_local AS gl
@@ -1623,6 +1675,19 @@ function aggregate_graph()
     } elseif (!isempty_request_var('template_id')) {
         $sql_where .= ' AND ag.aggregate_template_id=' . get_request_var('template_id');
     }
+
+    $allowed_agg_graphs = get_allowed_aggregate_graphs();
+    $allowed_agg_ids = array();
+    if (cacti_sizeof($allowed_agg_graphs)) {
+        foreach ($allowed_agg_graphs as $allowed_agg) {
+            if (isset($allowed_agg['local_graph_id']) && (int) $allowed_agg['local_graph_id'] > 0) {
+                $allowed_agg_ids[] = (int) $allowed_agg['local_graph_id'];
+            }
+        }
+    }
+    $sql_where .= cacti_sizeof($allowed_agg_ids)
+        ? ' AND gl.id IN (' . implode(',', $allowed_agg_ids) . ')'
+        : ' AND 1=0';
 
     $sql = "SELECT COUNT(DISTINCT gl.id) AS total
 		FROM graph_templates_graph AS gtg

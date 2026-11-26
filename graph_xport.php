@@ -118,8 +118,10 @@ if (isset_request_var('format') && get_nfilter_request_var('format') == 'table')
 
 if (is_array($xport_array) && isset($xport_array['meta']['start'])) {
 	if (!$html) {
-		$output  = '"' . __('Title') . '","'          . graph_xport_csv_cell($xport_array['meta']['title_cache'])    . '"' . "\n";
-		$output .= '"' . __('Vertical Label') . '","' . graph_xport_csv_cell($xport_array['meta']['vertical_label']) . '"' . "\n";
+		$title_cache    = str_replace(array("\r", "\n"), ' ', (string) $xport_array['meta']['title_cache']);
+		$vertical_label = str_replace(array("\r", "\n"), ' ', (string) $xport_array['meta']['vertical_label']);
+		$output  = '"' . __('Title') . '","'          . graph_xport_csv_cell($title_cache)    . '"' . "\n";
+		$output .= '"' . __('Vertical Label') . '","' . graph_xport_csv_cell($vertical_label) . '"' . "\n";
 
 		$output .= '"' . __('Start Date') . '","'     . date('Y-m-d H:i:s', $xport_array['meta']['start']) . '"' . "\n";
 		$output .= '"' . __('End Date') . '","'       . date('Y-m-d H:i:s', ($xport_array['meta']['end'] == $xport_array['meta']['start']) ? $xport_array['meta']['start'] + $xport_array['meta']['step']*($xport_array['meta']['rows']-1) : $xport_array['meta']['end']) . '"' . "\n";
@@ -130,13 +132,17 @@ if (is_array($xport_array) && isset($xport_array['meta']['start'])) {
 
 		if (isset($xport_meta['NthPercentile'])) {
 			foreach($xport_meta['NthPercentile'] as $item) {
-				$output .= '"' . __('Nth Percentile') . '","' . $item['value'] . '","' . $item['format'] . '"' . "\n";
+				$nth_val = str_replace(array("\r", "\n"), ' ', (string) $item['value']);
+				$nth_fmt = str_replace(array("\r", "\n"), ' ', (string) $item['format']);
+				$output .= '"' . __('Nth Percentile') . '","' . graph_xport_csv_cell($nth_val) . '","' . graph_xport_csv_cell($nth_fmt) . '"' . "\n";
 			}
 		}
 
 		if (isset($xport_meta['Summation'])) {
 			foreach($xport_meta['Summation'] as $item) {
-				$output .= '"' . __('Summation') . '","' . $item['value'] . '","' . $item['format'] . '"' . "\n";
+				$sum_val = str_replace(array("\r", "\n"), ' ', (string) $item['value']);
+				$sum_fmt = str_replace(array("\r", "\n"), ' ', (string) $item['format']);
+				$output .= '"' . __('Summation') . '","' . graph_xport_csv_cell($sum_val) . '","' . graph_xport_csv_cell($sum_fmt) . '"' . "\n";
 			}
 		}
 

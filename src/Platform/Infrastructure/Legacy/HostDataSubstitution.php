@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Kadupul\Platform\Infrastructure\Legacy;
 
+use Kadupul\Platform\Domain\HostSubstitutionScope;
+
 /** The ordered legacy host substitutions, shared by checked and legacy readers. */
 final class HostDataSubstitution
 {
@@ -58,17 +60,36 @@ final class HostDataSubstitution
      * @param array<string, mixed> $host
      * @return array{0: list<string>, 1: list<mixed>}
      */
-    public static function replacements(mixed $l_escape_string, mixed $r_escape_string, array $host): array
-    {
+    public static function replacements(
+        mixed $l_escape_string,
+        mixed $r_escape_string,
+        array $host,
+        HostSubstitutionScope $scope = HostSubstitutionScope::Execution,
+    ): array {
         $search = [];
         $replace = [];
         foreach (self::FIELDS as $field) {
-            $search[] = $l_escape_string . 'host_' . $field . $r_escape_string;
+            $token = 'host_' . $field;
+            if (!$scope->allowsToken($token)) {
+                continue;
+            }
+            $search[] = $l_escape_string . $token . $r_escape_string;
             $replace[] = $field === 'uptime'
                 ? \get_uptime($host)
                 : $host[self::COLUMN_ALIASES[$field] ?? $field];
         }
 
         return [$search, $replace];
+    }
+
+    /**
+     * Display-safe replacements excluding SNMP credential tokens.
+     *
+     * @param array<string, mixed> $host
+     * @return array{0: list<string>, 1: list<mixed>}
+     */
+    public static function displayReplacements(mixed $l_escape_string, mixed $r_escape_string, array $host): array
+    {
+        return self::replacements($l_escape_string, $r_escape_string, $host, HostSubstitutionScope::Display);
     }
 }

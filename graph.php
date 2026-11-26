@@ -531,6 +531,11 @@ switch (get_request_var('action')) {
 
     break;
     case 'properties':
+        if (!is_realm_allowed(27)) {
+            http_response_code(403);
+            exit;
+        }
+
         $graph_data_array['print_source'] = true;
 
         /* override: graph start time (unix time) */
@@ -557,7 +562,7 @@ switch (get_request_var('action')) {
         unset($graph_data_array['print_source']);
         print "<span class='textInfo'>" . __('RRDtool Says:') . "</span><br>";
         if ($config['poller_id'] == 1) {
-            print @rrdtool_function_graph(get_request_var('local_graph_id'), get_request_var('rra_id'), $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
+            print html_escape((string) @rrdtool_function_graph(get_request_var('local_graph_id'), get_request_var('rra_id'), $graph_data_array, '', $null_param, $_SESSION['sess_user_id']));
         } else {
             print __esc('Not Checked');
         }
