@@ -23,12 +23,12 @@ final readonly class PasswordChangeInput
         #[Assert\Length(max: 4096)]
         #[\SensitiveParameter]
         public string $currentPassword,
-        #[Assert\NotBlank(message: 'New password is required.')]
+        #[Assert\NotBlank]
         #[Assert\Length(min: 1, max: 4096)]
         #[\SensitiveParameter]
         public string $newPassword,
-        #[Assert\NotBlank(message: 'Password confirmation is required.')]
-        #[Assert\EqualTo(propertyPath: 'newPassword', message: 'Password confirmation does not match.')]
+        #[Assert\NotBlank]
+        #[Assert\EqualTo(propertyPath: 'newPassword')]
         #[\SensitiveParameter]
         public string $confirmPassword,
     ) {}

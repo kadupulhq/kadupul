@@ -20,10 +20,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 final readonly class LoginCredentialsInput
 {
     public function __construct(
-        #[Assert\NotBlank(message: 'Username is required.')]
+        #[Assert\NotBlank]
         #[Assert\Length(max: 255)]
         public string $username,
-        #[Assert\NotBlank(message: 'Password is required.')]
+        #[Assert\NotBlank]
         #[Assert\Length(max: 4096)]
         #[\SensitiveParameter]
         public string $password,
