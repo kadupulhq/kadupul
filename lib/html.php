@@ -2523,7 +2523,7 @@ function html_spikekill_menu($local_graph_id)
     $check = html_icon_class('check');
 
     $ravgnan1 = html_spikekill_menu_item(__('Average'), html_spikekill_setting('spikekill_avgnan') == 'avg' ? $check : 'fa', 'skmethod', 'method_avg');
-    $ravgnan2 = html_spikekill_menu_item(__('NaN\'s'), html_spikekill_setting('spikekill_avgnan') == 'nan' ? $check : 'fa', 'skmethod', 'method_nan');
+    $ravgnan2 = html_spikekill_menu_item(__('NaNs'), html_spikekill_setting('spikekill_avgnan') == 'nan' ? $check : 'fa', 'skmethod', 'method_nan');
     $ravgnan3 = html_spikekill_menu_item(__('Last Known Good'), html_spikekill_setting('spikekill_avgnan') == 'last' ? $check : 'fa', 'skmethod', 'method_last');
 
     $ravgnan = html_spikekill_menu_item(__('Replacement Method'), '', '', '', '', $ravgnan1 . $ravgnan2 . $ravgnan3);
@@ -2875,7 +2875,7 @@ function html_common_header($title, $selectedTheme = '')
 		var kadupulIcons=<?php print json_encode(html_icon_registry()->forTheme($selectedTheme), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);?>;
 		var hScroll=<?php print read_user_setting('enable_hscroll', '') == 'on' ? 'true' : 'false';?>;
 		var userSettings=<?php print is_view_allowed('graph_settings') ? 'true' : 'false';?>;
-		var tableConstraints='<?php print __esc('Allow or limit the table columns to extend beyond the current windows limits.');?>';
+		var tableConstraints='<?php print __esc('Allow or limit the table columns to extend beyond the current window\'s limits.');?>';
 		var searchFilter='<?php print __esc('Enter a search term');?>';
 		var searchRFilter='<?php print __esc('Enter a regular expression');?>';
 		var noFileSelected='<?php print __esc('No file selected');?>';

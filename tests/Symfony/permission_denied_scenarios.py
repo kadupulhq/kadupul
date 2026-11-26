@@ -8,7 +8,7 @@ from urllib.error import HTTPError
 from urllib.request import Request
 
 STRICT = "default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-TEXT = 'You are not permitted to access this section of Kadupul.  If you feel that this is an error. Please contact your Kadupul Administrator.'
+TEXT = 'You are not permitted to access this section of Kadupul.  If you feel that this is an error, please contact your Kadupul Administrator.'
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):

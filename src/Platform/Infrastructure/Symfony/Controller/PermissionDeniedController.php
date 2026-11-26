@@ -33,7 +33,7 @@ final readonly class PermissionDeniedController
         if ($denied->ajax) {
             // Same status, reason phrase and text as raise_ajax_permission_denied().
             $response = new Response($translator->trans('You are not permitted to access this section of Kadupul.', [], 'console')
-                . '  ' . $translator->trans('If you feel that this is an error. Please contact your Kadupul Administrator.', [], 'console'), 401, $headers);
+                . '  ' . $translator->trans('If you feel that this is an error, please contact your Kadupul Administrator.', [], 'console'), 401, $headers);
 
             return $response->setStatusCode(401, $translator->trans('Permission Denied', [], 'console'));
         }

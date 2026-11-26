@@ -580,7 +580,7 @@ function form_actions()
 
             print "<tr>
 				<td class='textArea'>
-					<p>" . __n('Click \'Continue\' to delete the following Data Source', 'Click \'Continue\' to delete following Data Sources', cacti_sizeof($ds_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to delete the following Data Source', 'Click \'Continue\' to delete the following Data Sources', cacti_sizeof($ds_array)) . "</p>
 					<div class='itemlist'><ul>$ds_list</ul></div>";
 
             if (cacti_sizeof($graphs)) {
@@ -1994,7 +1994,7 @@ function ds()
             'display' => __('Deletable'),
             'align'   => 'left',
             'sort'    => 'ASC',
-            'tip'     => __('If this Data Source is no long in use by Graphs, it can be Deleted.')
+            'tip'     => __('If this Data Source is no longer in use by Graphs, it can be Deleted.')
         ),
         'active' => array(
             'display' => __('Active'),

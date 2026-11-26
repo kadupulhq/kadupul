@@ -116,7 +116,7 @@ def verify_data_source_profile_deletion(harness, session, check):
               'the legacy profile URL forwards to the Symfony editor')
 
         target, fields, body = client.action('delete', [template_profile, local_profile, late_profile, unused_profile])
-        check('can not be deleted' in body and 'used by 0 data sources and 1 templates' in body and 'used by 1 data sources and 0 templates' in body,
+        check('cannot be deleted' in body and 'used by 0 data sources and 1 templates' in body and 'used by 1 data sources and 0 templates' in body,
               'profile deletion confirmation page renders')
         check(client.fetch(target, fields)[0] == 422 and all(present(label) == ('1', '1', '1') for label in profiles),
               'a selection with a referenced profile deletes nothing')
@@ -126,7 +126,7 @@ def verify_data_source_profile_deletion(harness, session, check):
         target, fields, _ = client.action('delete', [late_profile, unused_profile])
         reference(late_profile, True)
         status, body, _, _ = client.fetch(target, fields)
-        check(status == 422 and 'can not be deleted' in body and present('late') == ('1', '1', '1') and present('unused') == ('1', '1', '1'),
+        check(status == 422 and 'cannot be deleted' in body and present('late') == ('1', '1', '1') and present('unused') == ('1', '1', '1'),
               'a reference added after confirmation refuses the whole deletion')
 
         target, fields, _ = client.action('delete', [unused_profile])
@@ -223,7 +223,7 @@ def verify_data_source_profiles(harness, session, user_id, check):
         check(harness.sql(f'SELECT steps FROM data_source_profiles_rra WHERE id={hourly}').strip() == '60',
               'an aggregation level is stored as steps of the polling interval')
         status, body, _, _ = client.fetch(f'{BASE}/{profile_id}/edit')
-        check('24 Hours' in body and '1 Month, 2 Days, 7 Hours' in body and '36 KBytes per Data Sources and 284 Bytes for the Header' in body,
+        check('24 Hours' in body and '1 Month, 2 Days, 7 Hours' in body and '36 KBytes per Data Source and 284 Bytes for the Header' in body,
               'the editor shows each archive retention and the RRDfile size')
 
         # The size and span lookups the legacy form called still answer.
@@ -231,7 +231,7 @@ def verify_data_source_profiles(harness, session, user_id, check):
             f'action=ajax_span&profile_id={profile_id}&span=1&rows=1440': '24 Hours',
             f'action=ajax_span&profile_id={profile_id}&span=3600&rows=775': '1 Month, 2 Days, 7 Hours',
             f'action=ajax_span&profile_id={profile_id}&span=1&rows=0': 'N/A',
-            f'action=ajax_size&type=profile&id={profile_id}&cfs=': '36 KBytes per Data Sources and 284 Bytes for the Header',
+            f'action=ajax_size&type=profile&id={profile_id}&cfs=': '36 KBytes per Data Source and 284 Bytes for the Header',
             f'action=ajax_size&type=rra&id={profile_id}&rows=600': '10 KBytes per Data Source',
         }
         for query, expected in lookups.items():

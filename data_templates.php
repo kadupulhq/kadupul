@@ -788,7 +788,7 @@ function template_edit()
             print "<div class='tabs' style='float:left;'><nav><ul role='tablist'>\n";
 
             foreach ($template_data_rrds as $template_data_rrd) {
-                print "<li class='subTab'><a " . (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='pic selected'" : "class='pic'") . " href='" . htmlspecialchars(html_escape('data_templates.php?action=template_edit&id=' . get_request_var('id') . '&view_rrd=' . $template_data_rrd['id']), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'>" . ($i + 1) . ": " . html_escape($template_data_rrd['data_source_name']) . "</a>" . ($template_data['data_sources'] == 0 ? "<a class='pic deleteMarker fa fa-times cactiPostAction' title='" . __esc('Delete') . "' href='#' data-url='" . htmlspecialchars(html_escape('data_templates.php?action=rrd_remove&id=' . $template_data_rrd['id'] . '&data_template_id=' . get_request_var('id')), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'></a>" : "<a class='deleteMarkerDisabled fa fa-times' href='#' title='" . __esc('Data Templates in use can not be modified') . "'></a>") . "</li>\n";
+                print "<li class='subTab'><a " . (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='pic selected'" : "class='pic'") . " href='" . htmlspecialchars(html_escape('data_templates.php?action=template_edit&id=' . get_request_var('id') . '&view_rrd=' . $template_data_rrd['id']), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'>" . ($i + 1) . ": " . html_escape($template_data_rrd['data_source_name']) . "</a>" . ($template_data['data_sources'] == 0 ? "<a class='pic deleteMarker fa fa-times cactiPostAction' title='" . __esc('Delete') . "' href='#' data-url='" . htmlspecialchars(html_escape('data_templates.php?action=rrd_remove&id=' . $template_data_rrd['id'] . '&data_template_id=' . get_request_var('id')), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'></a>" : "<a class='deleteMarkerDisabled fa fa-times' href='#' title='" . __esc('Data Templates in use cannot be modified') . "'></a>") . "</li>\n";
 
                 $i++;
             }
@@ -900,7 +900,7 @@ function template_edit()
 
                 // Data Query Key fields
                 if (data_input_field_always_checked($field['id'])) {
-                    $message = __esc('This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations.');
+                    $message = __esc('This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations.');
 
                     if (cacti_sizeof($data_input_data)) {
                         $old_value  = $data_input_data['value'];
@@ -1024,7 +1024,7 @@ function template_edit()
 				mixedReasonTitle = '<?php print __('Custom Data Warning Message');?>';
 				mixedOnPage      = '<?php print __esc('WARNING: Data Loss can Occur');?>';
 				sessionMessage   = {
-					message: '<?php print __esc('After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs');?>',
+					message: '<?php print __esc('After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs');?>',
 					level: MESSAGE_LEVEL_MIXED
 				};
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Amharic Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 14:53-0800\n"
+"POT-Creation-Date: 2026-11-25 16:18-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Amharic\n"
@@ -290,11 +290,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "ከታች ያሉትን Aggregate ግራፎች በአብነት ላይ ወደተመሠረተ Aggregate ለማዛወር፣ መጀመሪያ ለግራፍ አብነት '%s' Aggregate አብነት ይፍጠሩ።"
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "ከታች ያሉትን Aggregate ግራፎች በአብነት ላይ ወደተመሠረተ Aggregate ለማዛወር፣ አንድ የግራፍ አብነት ብቻ የሚጠቀሙ መሆን አለባቸው። እባክዎ 'Return'ን ይጫኑ እና ከዚያ ተመሳሳዩን የግራፍ አብነት የሚጠቀሙትን Aggregate ግራፎች ብቻ ይምረጡ።"
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "ከታች ያሉትን Aggregate ግራፎች የAggregate አብነት እንዲጠቀሙ ለማዛወር አንድ ቀድሞውኑ መኖር አለበት። እባክዎ 'Return'ን ይጫኑ እና ከዚያ እንደገና ከመሞከርዎ በፊት መጀመሪያ የAggregate አብነትዎን ይፍጠሩ።"
 
 #: aggregate_graphs.php
@@ -438,7 +438,7 @@ msgid "Template"
 msgstr "አብነት"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "ይህ ጥምር ግራፍ የተመሰረተበት የጥምር አብነት"
 
 #: aggregate_graphs.php
@@ -446,7 +446,7 @@ msgid "The internal database identifier for this object"
 msgstr "ለዚህ ነገር ውስጣዊ የውሂብ ጎታ ለዪ"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "የተመረጡት ጥምር ግራፎች ምንም ተዛማጅ የጥምር አብነቶች ያሏቸው አይመስልም።"
 
 #: aggregate_graphs.php
@@ -517,7 +517,7 @@ msgid "Aggregate Templates"
 msgstr "የጥምር አብነቶች"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "ጥቅም ላይ የዋሉ የጥምር አብነቶች ሊሰረዙ አይችሉም። ጥቅም ላይ የዋለ ማለት በአንድ ጥምር የተጠቀሰ ማለት ነው።"
 
 #: aggregate_templates.php
@@ -754,7 +754,7 @@ msgid "All your login sessions have been cleared."
 msgstr "ሁሉም የመግቢያ ክፍለ ጊዜዎችዎ ጸድተዋል።"
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "እርስዎ ሊገኙበት የሚችሉበት የኢሜይል አድራሻ።"
 
 #: auth_profile.php
@@ -1108,7 +1108,7 @@ msgid "Clear Filtered"
 msgstr "የተጣራውን አጽዳ"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "በሂደት ላይ ያሉ የአውታረ መረብ ግኝት(ቶች) ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: automation_networks.php
@@ -1235,7 +1235,7 @@ msgid "Schedule"
 msgstr "መርሐግብር"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "የዚህ የአውታረ መረቦች ግኝት የአሁኑ ሁኔታ"
 
 #: automation_networks.php
@@ -1607,11 +1607,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "ለባህሪ '%s' ችግር ተገኝቷል '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "የRRA አቃፊ በpoller ሊጻፍበት ይችላል?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "RRDfile በpoller ሊጻፍበት ይችላል?"
 
 #: data_debug.php
@@ -1991,7 +1991,7 @@ msgstr "የ XML ፋይሉ እስኪገኝ ድረስ ቁርኝቱ ለንባብ �
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "የሚከተለውን የውሂብ መጠይቅ ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን የውሂብ መጠይቆች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
@@ -2001,7 +2001,7 @@ msgstr "የሚከተለውን የውሂብ መጠይቅ ግራፍ ቁርኝት �
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "የሚከተለውን የውሂብ መጠይቅ ለማባዛት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን የውሂብ መጠይቆች ለማባዛት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
@@ -2168,7 +2168,7 @@ msgid "The name of this Data Query."
 msgstr "የዚህ የውሂብ መጠይቅ ስም።"
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "ይህን የውሂብ መጠይቅ የሚጠቀሙ የግራፍ አብነቶች ብዛት።"
 
 #: data_queries.php
@@ -2220,7 +2220,7 @@ msgstr "ይህ የውሂብ ምንጭ የሚገኝበትን መሣሪያ ይም�
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "የሚከተለውን የውሂብ ምንጭ ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 msgstr[1] "የሚከተሉትን የውሂብ ምንጮች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 
@@ -2360,7 +2360,7 @@ msgid "External"
 msgstr "ውጫዊ"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "ይህ የውሂብ ምንጭ ከአሁን በኋላ በግራፎች ጥቅም ላይ ካልዋለ ሊሰረዝ ይችላል።"
 
 #: data_sources.php
@@ -2487,7 +2487,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "ለዚህ የውሂብ ምንጭ ውሂብ ይሰበሰብ እንደሆነ ወይም እንዳልሆነ። በውሂብ አብነት ደረጃ ይቆጣጠራል።"
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "ይህንን አመልካች ሳጥን ምልክት ካነሱ እና ከዚያ የውሂብ አብነቱን ካስቀመጡ በኋላ፣ በዚህ የውሂብ አብነት ላይ የተመሰረቱ ማናቸውም ነባር የውሂብ ምንጮች ብጁ ውሂባቸውን ያጣሉ። ይህ የተበላሸ የውሂብ መሰብሰብ እና ግራፎችን ሊያስከትል ይችላል"
 
 #: data_templates.php
@@ -2549,7 +2549,7 @@ msgid "Data Templates [new]"
 msgstr "የውሂብ አብነቶች [አዲስ]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "ጥቅም ላይ የዋሉ የውሂብ አብነቶች ሊቀየሩ አይችሉም"
 
 #: data_templates.php
@@ -2626,7 +2626,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "ይህ እሴት ከመሣሪያው የመነጨ እና ተነባቢ-ብቻ በመሆኑ ተሰናክሏል።"
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "ይህ እሴት ከመሣሪያው የመነጨ ወይም ወሳኝ የውሂብ መጠይቅ ግንኙነቶችን የሚከታተል ልዩ የውሂብ መጠይቅ ነገር በመሆኑ ተሰናክሏል።"
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2752,7 +2752,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "የሚከተሉትን የግራፍ አብነት(ቶች) ለማባዛት 'ቀጥል' የሚለውን ጠቅ ያድርጉ። ለአዲሶቹ የግራፍ አብነት(ቶች) የርዕስ ቅርጸቱን በአማራጭ መቀየር ይችላሉ።"
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "በግራፎችዎ እና በተመረጡት የግራፍ አብነት(ቶች) መካከል ሙሉ ማስመርን ለማከናወን 'ቀጥል' የሚለውን ጠቅ ያድርጉ። የግራፍ ንጥሎች ከግራፍ አብነቱ ጋር የማይዛመዱበት ሁኔታ ብቻ ካለዎት፣ በጣም ያነሰ ጊዜ ስለሚወስድ መጀመሪያ የፈጣን ማስመር ግራፎች አማራጭን ይሞክሩ። ብዙ የግራፍ አብነት ስሪቶች ያሏቸው ግራፎች ካሉዎት እና ሁሉንም በመልክ የተለመዱ ለማድረግ ከፈለጉ ይህ ተግባር አስፈላጊ ነው።"
 
 #: graph_templates.php
@@ -3084,7 +3084,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "የግራፍ(ፎች) የተቆራኘ መሣሪያ ቀይር"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "ለሚከተለው ግራፍ(ፎች) የግራፍ አብነቱን ለመቀየር የግራፍ አብነት ይምረጡ እና 'ቀጥል' የሚለውን ጠቅ ያድርጉ። እባክዎ ልብ ይበሉ፣ ተኳሃኝ የግራፍ አብነቶች ብቻ ይታያሉ። ተኳሃኝ ማለት ተመሳሳይ የውሂብ ምንጮች ያላቸው ተብለው ይለያሉ።"
 
 #: graphs.php
@@ -3290,7 +3290,7 @@ msgid "The selected Tree is not available."
 msgstr "የተመረጠው ዛፍ አይገኝም።"
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "በአሁኑ ጊዜ ለዚህ የግራፍ አብነት የተገለጹ የጥምር አብነቶች የሉም። እባክዎ መጀመሪያ ለተመረጠው የግራፎች ግራፍ አብነት የጥምር አብነት ይፍጠሩ እና እንደገና ይሞክሩ፣ ወይም በቀላሉ አብነት የሌለው ጥምር ግራፍ ይፍጠሩ።"
 
 #: graphs.php
@@ -3488,20 +3488,20 @@ msgid "Class"
 msgstr "ክፍል (Class)"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "የሚከተሉትን የውሂብ መጠይቆች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ ከመሣሪያ አብነቱ ይላቀቃሉ።"
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "የሚከተለውን የግራፍ አብነት ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ ከመሣሪያ አብነቱ ይላቀቃል።"
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "ከተመረጡት የመሣሪያ አብነት(ቶች) ጋር የተቆራኙ መሣሪያዎችን ለማስመር 'ቀጥል' የሚለውን ጠቅ ያድርጉ። ወደ መሣሪያ አብነቱ በተመደቡት መሣሪያዎች ብዛት ላይ በመመስረት ይህ ድርጊት የተወሰነ ጊዜ ሊወስድ እንደሚችል ልብ ይበሉ።"
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "የሚከተሉትን የውሂብ መጠይቆች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ ከመሣሪያ አብነቱ ይላቀቃሉ።"
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "የሚከተሉትን የመሣሪያ አብነት(ቶች) ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "የሚከተለውን የግራፍ አብነት ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ ከመሣሪያ አብነቱ ይላቀቃል።"
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3591,7 +3591,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "መሣሪያዎችን ከመሣሪያ አብነት(ቶች) ጋር አመሳስል"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "የዚህ የመሣሪያ አብነት ክፍል። የክፍሉ ስም የሥራውን ተግባር የሚወክል መሆን አለበት።"
 
 #: host_templates.php
@@ -3616,7 +3616,7 @@ msgstr "ከባድ ስህተት: ይህንን የ Kadupul አካባቢ ለመድ�
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "ይህ ስህተት እንደሆነ ከተሰማዎት እባክዎ የKadupul አስተዳዳሪዎን ያነጋግሩ።"
 
 #: include/auth.php
@@ -3632,7 +3632,7 @@ msgid "Not Logged In"
 msgstr "አልገቡም"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "በዚህ ጊዜ የመጫኛ/ማሻሻያ መብት ያላቸው የKadupul አስተዳዳሪዎች ብቻ መግባት ይችላሉ"
 
 #: include/auth.php
@@ -5016,7 +5016,7 @@ msgid "Operator"
 msgstr "ኦፕሬተር"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "ገጹ አልተገለጸም። ስለዚህ ሊታይ አይችልም።"
 
 #: include/global_arrays.php
@@ -5586,8 +5586,8 @@ msgid "Use the First Handler Found"
 msgstr "የተገኘውን የመጀመሪያ ተቆጣጣሪ ተጠቀም"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "የMonoTranslator GetText ተቆጣጣሪን ተጠቀም"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "የMoTranslator GetText ተቆጣጣሪን ተጠቀም"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5732,7 +5732,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "የውሂብ መጠይቅ መረጃ ጠቋሚ ቆጠራው ሲለወጥ፣ ዳግም-መረጃ ጠቋሚ ይከናወናል።"
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "የመሣሪያዎች SNMP የሥራ ጊዜ ወደኋላ ሲሄድ፣ ዳግም-መረጃ ጠቋሚ ይከናወናል።"
 
 #: include/global_arrays.php
@@ -5776,7 +5776,7 @@ msgid "You are not allowed to change your password."
 msgstr "የይለፍ ቃልዎን መቀየር አይፈቀድልዎትም።"
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "ይህን ባህሪ ለመጠቀም አብሮገነብ የተጠቃሚ ማረጋገጫ መብራት አለበት።"
 
 #: include/global_arrays.php
@@ -5938,18 +5938,18 @@ msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "%d OIDዎች"
+
+#: include/global_form.php
+#, php-format
+msgid "%d Repetition"
+msgstr "%d ድግግሞሽ"
 
 #: include/global_form.php
 #, php-format
 msgid "%d Repetitions"
 msgstr "%d ድግግሞሾች"
-
-#: include/global_form.php
-#, php-format
-msgid "%d Repitition"
-msgstr "%d ድግግሞሽ"
 
 #: include/global_form.php
 msgid "A CDEF (math) function to apply to this item on the graph or legend."
@@ -6157,7 +6157,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "በዚህ ደንብ ላይ የሚተገበር የውሂብ መጠይቅ ይምረጡ።"
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "ለማገናኘት የንዑስ-ዛፍ ንጥል ይምረጡ።<br>ይህ ደንብ በሚፈጸምበት ጊዜ አሁንም እዚያ መኖሩን ያረጋግጡ!"
 
 #: include/global_form.php
@@ -6167,6 +6167,10 @@ msgstr "ለአዲሶቹ የዛፍ ንጥሎች ዛፍ ይምረጡ።"
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "ለዚህ የውሂብ ምንጭ ስም ይምረጡ። እንደ |host_description| ወይም |query_fieldName| ያሉ የመተኪያ ተለዋዋጮችን ሊያካትት ይችላል። ለሚደገፉ የመተኪያ መለያዎች ሙሉ ዝርዝር፣ እባክዎ የ Kadupul ሰነድን ይመልከቱ።"
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "ይህንን የውሂብ ክፍል በ RRDfile ውስጥ ለመወከል ልዩ ስም ይምረጡ።"
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6226,10 +6230,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "ለዚህ የውሂብ ግቤት ዘዴ ውሂብ ለመሰብሰብ የሚፈልጉትን ዘዴ ይምረጡ።"
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "ይህንን የውሂብ ክፍል በ RRDfile ውስጥ ለመወከል ልዩ ስም ይምረጡ።"
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "የተለመዱ አማራጮች"
 
@@ -6282,7 +6282,7 @@ msgid "Determines if the user account is locked."
 msgstr "የተጠቃሚ መለያው የተቆለፈ መሆኑን ይወስናል።"
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "ተጠቃሚው መግባት የሚችል መሆኑን ይወስናል።"
 
 #: include/global_form.php
@@ -6343,7 +6343,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "ለዚህ መሣሪያ የሚውለውን የ SNMP Context ያስገቡ።"
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "ለዚህ መሣሪያ የሚውለውን የ SNMP v3 ሞተር መታወቂያ ያስገቡ። በእያንዳንዱ የ SNMPv3 ማሳወቂያ ተቀባይ የተገለጸውን የ SNMP ሞተር መታወቂያ ለመጠቀም ይህንን መስክ ባዶ ይተዉት።"
 
 #: include/global_form.php
@@ -6546,7 +6546,7 @@ msgid "Include Prefix Text"
 msgstr "የቅድመ-ቅጥያ ጽሑፍን አካትት"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "የምንጭ ግራፎችን የGPRINT ርዕስ ጽሑፍ ከAggregate ግራፍ(ፎች) ጋር አካትት።"
 
 #: include/global_form.php
@@ -7054,7 +7054,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "ወደ ስክሪፕቱ የሚላከው ውሂብ፣ ይህም ወደ ስክሪፕቱ ያለውን ሙሉ ዱካ እና በ&lt;&gt; ቅንፎች ውስጥ ያሉ የግቤት ምንጮችን ያካትታል።"
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "ከውሂብ ምንጩ ውሂብ የሚሰበሰብበት ድግግሞሽ?"
 
 #: include/global_form.php
@@ -7158,7 +7158,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "የመሣሪያው አካላዊ ቦታ። ይህ ነጻ ቅጽ ጽሑፍ ክፍል፣ የመደርደሪያ ቦታ ወዘተ ሊሆን ይችላል።"
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "ለተወሰነው የግቤት ዘዴ የነጭ ቦታ ማረጋገጫ ፍተሻ ውጤት። የግቤት ሕብረቁምፊው ከተለወጠ እና የተፈቀደ ዝርዝር ፋይሉ ካልዘመነ፣ ግራፎች እንዲፈጠሩ አይፈቀድም።"
 
 #: include/global_form.php
@@ -7174,7 +7174,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "የሚፈጠረው የግራፍ ዓይነት፤ PNG፣ GIF ወይም SVG። የግራፍ ምስል ዓይነት ምርጫ በጣም በRRDtool ላይ የተመሰረተ ነው።"
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "የሚላከው የping ፓኬት ዓይነት። <br><i>ማሳሰቢያ: በLinux/UNIX ላይ ICMP የroot ልዩ መብቶችን ይፈልጋል።</i> <br><i>ማሳሰቢያ: TCP Ping ተዘግቷል - የtcp ping ባይሳካም እንኳ፣ መሣሪያው እንደ በርቷል (UP) ሊቆጠር ይችላል።</i>"
 
 #: include/global_form.php
@@ -7270,7 +7270,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "አቀባዊ መለያ (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "ይህ መሣሪያ ከየትኛው ጣቢያ ጋር የተያያዘ ነው።"
 
 #: include/global_form.php
@@ -7294,11 +7294,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "በጥያቄ ውስጥ ባለው RRA ላይ የተመሰረተ ግራፍ ሲመለከቱ፣ ለዚያ ግራፍ የሚታይ ነባሪ የጊዜ ክፍተት።"
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "የግራ ዘንግ መሰየሚያውን ሲያዋቅሩ፣ በውሂብ ቅርጸቱ ላይ ደንብ ይተግብሩ። የሚደገፉ ቅርጸቶች ውሂብ እንደ ቁጥር የሚታይበት \"numeric\"፣ እሴቶች እንደ UNIX የጊዜ ማህተሞች (ከጃንዋሪ 1970 ጀምሮ ያሉ የሰከንዶች ብዛት) የሚተረጎሙበት እና strftime ቅርጸትን በመጠቀም የሚገለጹበት \"timestamp\" (ነባሪው \"%Y-%m-%d %H:%M:%S\" ነው) ያካትታሉ። እንዲሁም --units-length ይመልከቱ። በመጨረሻም እሴቶች በሚሊሰከንዶች ውስጥ እንደ ቆይታ የሚተረጎሙበት \"duration\"። ቅርጸቱ በvalstrfduration ብቁ PRINT/GPRINT ደንቦችን ይከተላል።"
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "የቀኝ ዘንግ መሰየሚያውን ሲያዋቅሩ፣ በውሂብ ቅርጸቱ ላይ ደንብ ይተግብሩ። የሚደገፉ ቅርጸቶች ውሂብ እንደ ቁጥር የሚታይበት \"numeric\"፣ እሴቶች እንደ UNIX የጊዜ ማህተሞች (ከጃንዋሪ 1970 ጀምሮ ያሉ የሰከንዶች ብዛት) የሚተረጎሙበት እና strftime ቅርጸትን በመጠቀም የሚገለጹበት \"timestamp\" (ነባሪው \"%Y-%m-%d %H:%M:%S\" ነው) ያካትታሉ። እንዲሁም --units-length እና --right-axis-format ይመልከቱ። በመጨረሻም እሴቶች በሚሊሰከንዶች ውስጥ እንደ ቆይታ የሚተረጎሙበት \"duration\"። ቅርጸቱ በvalstrfduration ብቁ PRINT/GPRINT ደንቦችን ይከተላል።"
 
 #: include/global_form.php
@@ -7462,11 +7462,11 @@ msgid "56 Gbps Ethernet"
 msgstr "56 Gbps Ethernet"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote><i>አብሮገነብ ማረጋገጫ</i> - Kadupul የተጠቃሚ ማረጋገጫን ያስተዳድራል፣ ይህም ተጠቃሚዎችን እንዲፈጥሩ እና በ Kadupul ውስጥ ለተለያዩ ቦታዎች መብቶችን እንዲሰጡ ያስችልዎታል።<br><br><i>መሰረታዊ የድር ማረጋገጫ</i> - ማረጋገጫው በድር አገልጋዩ ይከናወናል። Template User ከተገለጸ ተጠቃሚዎች በመጀመሪያው መግቢያ ላይ በራስ-ሰር ሊታከሉ ወይም ሊፈጠሩ ይችላሉ፣ አለበለዚያ የተገለጹት የእንግዳ ፈቃዶች ጥቅም ላይ ይውላሉ።<br><br><i>LDAP ማረጋገጫ</i> - በ LDAP አገልጋይ ላይ ማረጋገጫን ይፈቅዳል። Template User ከተገለጸ ተጠቃሚዎች በመጀመሪያው መግቢያ ላይ በራስ-ሰር ይፈጠራሉ፣ አለበለዚያ የተገለጹት የእንግዳ ፈቃዶች ጥቅም ላይ ይውላሉ። የ PHP LDAP ሞጁል ካልነቃ፣ LDAP ማረጋገጫ እንደሚመረጥ አማራጭ አይታይም።<br><br><i>ብዙ የ LDAP/AD ጎራ ማረጋገጫ</i> - አስተዳዳሪዎች የ Kadupul ሀብቶችን ለመድረስ ከተለያዩ LDAP/AD ማውጫዎች የተለያዩ ቡድኖችን እንዲደግፉ ያስችላል። ልክ እንደ LDAP ማረጋገጫ፣ ይህንን ዘዴ ለመጠቀም የ PHP LDAP ሞጁል ያስፈልጋል።</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "በውሂብ መሰብሰብ ጊዜ በ Debug ሁነታ እንዲሆኑ የሚፈልጉት በነጠላ ሰረዝ የተለዩ የመሣሪያ መታወቂያዎች ዝርዝር። ይህ የ Debug ደረጃ የሚተገበረው በ Kadupul የፖሊንግ ሂደት ወቅት ብቻ ነው።"
 
 #: include/global_settings.php
@@ -7474,7 +7474,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "በዋናነት ለብቸኝነት ማረጋገጫዎች ዙሪያ የውሂብ ምንጮችን መፈጠር ለመከታተል ለገንቢ ብቻ የሆነ አማራጭ"
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "ለትክክለኛ LDAP አገልጋዮች በክፍተት የተለየ የ DNS አስተናጋጅ ስሞች ወይም IP አድራሻ ዝርዝር። Kadupul ተጠቃሚን ለማረጋገጥ ከግራ ወደ ቀኝ የ LDAP አገልጋዮችን ለመጠቀም ይሞክራል።"
 
 #: include/global_settings.php
@@ -7694,7 +7694,7 @@ msgid "By Template/Data Query"
 msgstr "በአብነት/ውሂብ መጠይቅ"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "በነባሪነት የ Kadupul ገጽ እገዛ በ kadupul.org ላይ ይገኛል። ሆኖም፣ ስርዓትዎ የበይነመረብ መዳረሻ ከሌለው፣ ሰነዱን በ HTML ቅርጸት በአካባቢው ማውረድ እና በ Kadupul አገልጋይዎ 'docs' ቦታ ላይ ማስተናገድ ይችላሉ። ለገጽ እገዛ ሰነድ የአካባቢውን ቦታ ብቻ ለመጠቀም ከመረጡ፣ ይህንን አመልካች ሳጥን ምልክት ያድርጉ።"
 
 #: include/global_settings.php
@@ -7718,7 +7718,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "ለአዲስ እና አዲስ ለመጡ የግራፍ አብነቶች ከመፈጠራቸው በፊት የውሂብ ምንጮችን መሞከር ከፈለጉ ይህንን አመልካች ሳጥን ምልክት ያድርጉ። Test Data Sources ሲነቃ፣ የውሂብ ምንጩ ትክክለኛ ውሂብ ካልመለሰ፣ ግራፉ አይፈጠርም። በመሣሪያው ራሱ ባህሪያት ላይ በመመስረት በምርጫ ሊተገበሩ የሚችሉ ተጨማሪ የግራፍ አብነቶችን የሚያካትት ይበልጥ አጠቃላይ የሆነ የመሣሪያ አብነት እንዲኖርዎት ከፈለጉ ይህ ቅንብር አስፈላጊ ነው። ማስታወሻ: እንደ የውሂብ ምንጭ ረጅም ጊዜ የሚወስድ ስክሪፕት ካለዎት፣ ግራፎችን የመፍጠር ጊዜ ይጨምራል።"
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "የ Kadupul ትርጉምን ለመፍቀድ 'enabled' ይምረጡ። ጥብቅ ሁነታ የተጠየቀው ቋንቋ በስርዓትዎ ላይ በተጫኑ ሁሉም ተሰኪዎች እንዲደገፍም ይጠይቃል። ያ ካልሆነ ሁሉም ነገር በእንግሊዝኛ ይታያል።"
 
 #: include/global_settings.php
@@ -7898,7 +7898,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "ለሁሉም አዲስ መሣሪያዎች ነባሪ የ SNMP v3 Authorization ተጠቃሚ።"
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "ለሁሉም አዲስ መሣሪያዎች ነባሪ የ SNMP v3 ሞተር መታወቂያ። በእያንዳንዱ የ SNMPv3 ማሳወቂያ ተቀባይ የተገለጸውን የ SNMP ሞተር መታወቂያ ለመጠቀም ይህንን መስክ ባዶ ይተዉት።"
 
 #: include/global_settings.php
@@ -8114,11 +8114,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "የ LDAP ማጣቀሻዎችን አንቃ ወይም አቦዝን። ከቦዘነ፣ የፍለጋዎችን ፍጥነት ሊጨምር ይችላል።"
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "ለ AREA እና STACK ቻርቶች የ Gradient ድጋፍ ነቅቷል።"
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "በእያንዳንዱ የፖል ዑደት ውስጥ የ 25% ጊዜ ቅነሳን በሚያስገኝ ውጤት መዝገቦችን በቀጥታ ወደ poller output boost ማስገባትን ያነቃል።"
 
 #: include/global_settings.php user_domains.php
@@ -8210,7 +8210,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "ከKadupul ውጫዊ አገናኝ ድጋፍ ጋር ለመጠቀም። ይህን ቅንብር በመጠቀም የራስዎን ገጽ ብቻ ማሳየት እንዲችሉ የKadupul ዳሽቦርዱን መደበቅ ይችላሉ።"
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "የConsole መዳረሻ ብቻ ላላቸው ተጠቃሚዎች፣ ይህ ተጠቃሚ በራስ-ሰር ከመውጣቱ በፊት ለምን ያህል ጊዜ ገብቶ መቆየት እንደሚችል። ከአንድ ሰዓት በላይ ንቁ ካልነበሩ አሳሽዎን ማደስ ሊኖርብዎ እንደሚችል ልብ ይበሉ። እንዲሁም የማረጋገጫ ኩኪዎች ሲነቁ ይህ ቅንብር ምንም ተጽእኖ እንደሌለው ልብ ይበሉ።"
 
 #: include/global_settings.php
@@ -8358,11 +8358,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "የRealtime ግራፎችን እንዴት ማየት ይፈልጋሉ?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "ዕለታዊ ስታቲስቲክስ በምን ያህል ጊዜ መዘመን አለበት?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "RRD በምን ያህል ጊዜ መፈተሽ አለበት ?"
 
 #: include/global_settings.php
@@ -8370,7 +8370,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "አንድ የግምገማ ዙር አዲስ የደንቦች ቡድኖችን መጀመር የሚችልበት የጊዜ ርዝመት። በወረፋ ላይ ያሉ ማሳወቂያዎችን መላክ ከግምገማው በኋላ በቀረው ጊዜ ይከናወናል፣ እና በጀቱ ቢያልቅም እንኳ አንድ ቡድን ሊልክ ይችላል። ያልተደረሱባቸው ደንቦች በሚቀጥለው ዙር መጀመሪያ ይገመገማሉ።"
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "በአንድ snmpbulkwalk ጥያቄ ስንት OIDዎች መመለስ አለባቸው? ትላልቅ የSNMP ዛፎች ላሏቸው መሣሪያዎች ይህን መጠን መጨመር በWAN ላይ የድጋሚ ማውጫ አፈጻጸምን ይጨምራል።"
 
 #: include/global_settings.php
@@ -8378,15 +8378,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "ስንት የምዝግብ ማስታወሻ ፋይሎችን ማቆየት ይፈልጋሉ? ማንኛውንም ምዝግብ ማስታወሻ በፍጹም ላለማስወገድ 0 ይጠቀሙ። (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "የKadupul ምዝግብ ማስታወሻ ማሳያ በምን ያህል ጊዜ እንዲዘመን ይፈልጋሉ።"
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Kadupul በደንበኛው አሳሽ የሰዓት ሰቅ ላይ በመመሥረት የደንበኛ ቀኖችን እንዴት መደገፍ አለበት።"
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Kadupul የክስተት ምዝግብ ማስታወሻን እንዴት ይይዛል።"
 
 #: include/global_settings.php
@@ -8402,7 +8402,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "ከተመረጠ Kadupul በBinding እና Searching እንቅስቃሴዎች ወቅት ተጨማሪ የLDAP መረጃን ወደ Kadupul ምዝግብ ማስታወሻ ይመዘግባል።"
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Kadupul ifSpeed ወይም ifHighSpeed ባለመቀናበራቸው ወይም ዜሮ በመሆናቸው ምክንያት የበይነገጽ ፍጥነቱን መወሰን ካልቻለ፣ በሚፈጠሩት RRDfiles ላይ ምን ከፍተኛ እሴት እንዲኖር ይፈልጋሉ።"
 
 #: include/global_settings.php
@@ -8430,7 +8430,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "የboost ውጤት ሰንጠረዥ ይህን መጠን፣ በመዝገቦች፣ ካለፈ ዝመና ይካሄዳል።"
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "የboost poller ከዚህ የአሂድ ጊዜ ካለፈ፣ በcacti ምዝግብ ማስታወሻ ውስጥ ማስጠንቀቂያ ይቀመጣል፣"
 
 #: include/global_settings.php
@@ -8438,7 +8438,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "ይህ ማውጫ ባዶ ካልሆነ፣ የመጀመሪያዎቹ RRDfilesዎ ወደዚህ ቦታ ምትኬ ይወሰዳሉ።"
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "ይህ መስክ ባዶ ካልሆነ፣ Boost ከboost\tpoller ሂደት የRRDUpdate ውጤትን ይመዘግባል።"
 
 #: include/global_settings.php
@@ -8446,7 +8446,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "ይህ አማራጭ ከተመረጠ Kadupul የSNMP Agent ሰንጠረዦችን በKadupul መሣሪያ እና የስርዓት መረጃ ይሞላል። የSNMP Agentን ራሱ አያነቃም።"
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "በKadupul የውሂብ ሰብሳቢዎች ላይ ችግሮች ካጋጠሙዎት ይህን የፋይል መንገድ ያቀናብሩ እና የውሂብ ሰብሳቢዎች መደበኛ ስህተት ወደዚህ ፋይል ይዛወራል"
 
 #: include/global_settings.php
@@ -8626,7 +8626,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "በአንድ ዙር ከፍተኛ የውሂብ ምንጭ ንጥሎች"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "ከፍተኛ የኢሜይል መጠን"
 
 #: include/global_settings.php
@@ -8681,20 +8681,20 @@ msgstr "ዝቅተኛ የዛፍ ስፋት"
 msgid "Mode"
 msgstr "ሁነታ"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "cacti ከLDAP አገልጋይ ጋር ማረጋገጫ ለማድረግ የሚሞክርበት ሁነታ።<blockquote><i>No Searching</i> - ምንም የDistinguished Name (DN) ፍለጋ አይከሰትም፣ በቀረበው የDistinguished Name (DN) ቅርጸት bind ለማድረግ ብቻ ይሞክራል።<br><br><i>Anonymous Searching</i> - የተጠቃሚውን Distinguished Name (DN) ለማግኘት በanonymous binding በኩል በLDAP ማውጫ ውስጥ የተጠቃሚ ስም ለመፈለግ ይሞክራል።<br><br><i>Specific Searching</i> - የተጠቃሚውን Distinguished Name (DN) ለማግኘት በSpecific Distinguished Name (DN) እና በSpecific Password binding በኩል በLDAP ማውጫ ውስጥ የተጠቃሚ ስም ፍለጋን ይሞክራል።"
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "በየወሩ እሁድ"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "የአሳሼ የሰዓት ሰቅ"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "NaNዎች"
 
 #: include/global_settings.php
@@ -9190,7 +9190,7 @@ msgid "Server(s)"
 msgstr "አገልጋይ(ዎች)"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Boost በKadupul ውስጥ በፍላጎት ላይ የተመሰረተ የRRD ማዘመንን ማንቃት አለበት? ካሰናከሉት፣ ይህ ለውጥ ከሚቀጥለው የመጠየቂያ ዑደት በኋላ እንጂ ተግባራዊ አይሆንም። የርቀት የውሂብ ሰብሳቢዎች ሲኖሩዎት፣ ይህ ቅንብር መብራት አለበት።"
 
 #: include/global_settings.php
@@ -9210,7 +9210,7 @@ msgid "Should image caching be enabled?"
 msgstr "የምስል መሸጎጫ መንቃት አለበት?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "ግራፎች አሉት እና የውሂብ ምንጮች አሉት በነባሪነት ምልክት መደረግ አለባቸው።"
 
 #: include/global_settings.php
@@ -9234,7 +9234,7 @@ msgid "Show business hours"
 msgstr "የሥራ ሰዓታትን አሳይ"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "በተመረጠው የመሣሪያ ጣቢያ ላይ የሚገኙ አካባቢዎችን ብቻ አሳይ።"
 
 #: include/global_settings.php
@@ -9254,11 +9254,11 @@ msgid "Site Security"
 msgstr "የጣቢያ ደህንነት"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "አንዳንድ የKadupul በይነገጾች ጎትት-እና-ጣል (Drag-N-Drop) ይደግፋሉ። ምልክት ከተደረገበት ይህ አማራጭ ይነቃል። ማሳሰቢያ: የማየት እክል ላለበት ተጠቃሚ ይህ አማራጭ ሊሰናከል ይችላል።"
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "ከድር አገልጋዩ ውጭ እንዲደረስባቸው የሚፈቀዱ በክፍተት የተለዩ የጎራ ስሞች። ይህ CDN ወይም ማስተናገጃ ጣቢያ ለመጠቀም ለሚመርጡ ተጠቃሚዎች አስፈላጊ ነው። ምንጮች wildcard ዎችን ሊያካትቱ ይችላሉ ለምሳሌ: *.mydomain.com፣ ወይም ፕሮቶኮል፣ ለምሳሌ: https://*.example.com። እነዚህ አማራጭ ምንጮች የምስል፣ CSS እና JavaScript ዓይነቶችን ብቻ ያካትታሉ።"
 
 #: include/global_settings.php
@@ -9402,15 +9402,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "በሂደት የሚፈቀዱ ነባሪ ክሮች። ማሳሰቢያ: ከKadupul 1.2+ ጀምሮ ይህ ቅንብር በውሂብ ሰብሳቢው ውስጥ ይያዛል፣ እና ይህ በቀላሉ ቅድመ-ቅንብር ነው። Spine ሲጠቀሙ ከፍ ያለ ቁጥር መጠቀም አፈጻጸምን ያሻሽላል። ሆኖም የሚከተለውን እኩልታ ለመደገፍ በቂ የMySQL/MariaDB ግንኙነቶች እንዳሉዎት ያረጋግጡ: connections = data collectors * processes * (threads + script servers)። እንዲሁም ለተጠቃሚ መግቢያ ግንኙነቶች በቂ ትርፍ ግንኙነቶች እንዳሉዎት ማረጋገጥ አለብዎት።"
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "በራስ-ሰር አውታረ መረብ ደረጃ ካልተገለጸ የራስ-ሰር ማሳወቂያ ኢሜይሎችን ለመላክ የሚያገለግል የኢሜይል አድራሻ። ይህ መስክ ወይም የራስ-ሰር አውታረ መረብ እሴቱ ባዶ ከተተው፣ Kadupul የዋናውን Kadupul አስተዳዳሪዎች የኢሜይል መለያ ይጠቀማል።"
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "በራስ-ሰር አውታረ መረብ ደረጃ ካልተገለጸ ለራስ-ሰር ማሳወቂያ ኢሜይሎች የሚያገለግል የኢሜይል አድራሻ። ይህ መስክ ወይም የራስ-ሰር አውታረ መረብ እሴቱ ባዶ ከተተው፣ Kadupul የሥርዓቱን ነባሪ የላኪ ኢሜይል አድራሻ ይጠቀማል።"
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "በራስ-ሰር አውታረ መረብ ደረጃ ካልተገለጸ ለራስ-ሰር ማሳወቂያ ኢሜይሎች የሚያገለግል የኢሜይል ስም። ይህ መስክ ወይም የራስ-ሰር አውታረ መረብ እሴቱ ባዶ ከተተው፣ Kadupul የሥርዓቱን ነባሪ የላኪ ስም ይጠቀማል።"
 
 #: include/global_settings.php
@@ -9522,7 +9522,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "በእያንዳንዱ የውሂብ ሰብሳቢ የሚፈጸሙ ነባሪ የተመሳሳይ ጊዜ ሂደቶች ብዛት። ማሳሰቢያ: ከKadupul 1.2 ጀምሮ ይህ ቅንብር በውሂብ ሰብሳቢው ውስጥ ይያዛል። ወደፊት ይህ እሴት ለውሂብ ሰብሳቢው ቅድመ-ቅንብር ብቻ ነው። cmd.php ሲጠቀሙ ከፍ ያለ ቁጥር መጠቀም አፈጻጸምን ያሻሽላል። በSpine ውስጥ ያሉ የአፈጻጸም ማሻሻያዎች በክሮች መለኪያ በተሻለ ሁኔታ ይፈታሉ። Spine ሲጠቀሙ ዝቅተኛ ቁጥር እና በምትኩ ክሮችን መጠቀም እንመክራለን። cmd.php ሲጠቀሙ ከCPU ኮሮች ብዛት 2x በላይ አይጠቀሙ።"
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "ለሠንጠረዥ የሚታዩ ነባሪ የረድፎች ብዛት።"
 
 #: include/global_settings.php
@@ -9538,7 +9538,7 @@ msgid "The encryption method to use for the Email."
 msgstr "ለኢሜይሉ የሚያገለግል የምስጠራ ዘዴ።"
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "መጠባበቂያ ፕሮክሲው እየተጠቀመበት ያለው የአሁኑ ይፋዊ የRSA ቁልፍ አሻራ። ይህ የታመነ ግንኙነት ለመመስረት ያስፈልጋል።"
 
 #: include/global_settings.php
@@ -9598,6 +9598,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "የKadupul የውሂብ ምንጭ ስታቲስቲክስ ስክሪፕት የጊዜ ማብቂያ ስህተት ሳይፈጥር እና ሳይገደል መስራት የሚችለው ከፍተኛ የጊዜ መጠን።"
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "የKadupul የጥገና ስክሪፕት የጊዜ ማብቂያ ስህተት ሳይፈጥር እና ሳይገደል መስራት የሚችለው ከፍተኛ የጊዜ መጠን።"
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "የKadupul የRRDfile ፍተሻ ስክሪፕት የጊዜ ማብቂያ ስህተት ሳይፈጥር እና ሳይገደል መስራት የሚችለው ከፍተኛ የጊዜ መጠን።"
 
@@ -9606,19 +9610,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "የKadupul የሪፖርቶች ማመንጨት ስክሪፕት የጊዜ ማብቂያ ስህተት ሳይፈጥር እና ሳይገደል መስራት የሚችለው ከፍተኛ የጊዜ መጠን።"
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "የKadupul የጥገና ስክሪፕት የጊዜ ማብቂያ ስህተት ሳይፈጥር እና ሳይገደል መስራት የሚችለው ከፍተኛ የጊዜ መጠን።"
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "የKadupul የSpikekill ስክሪፕት የጊዜ ማብቂያ ስህተት ሳይፈጥር እና ሳይገደል መስራት የሚችለው ከፍተኛ የጊዜ መጠን።"
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "በተበተነ የመሣሪያ መለያዎች ላይ ተመስርተው የሚፈጠሩ ከፍተኛ የመሣሪያ ማውጫዎች ብዛት።"
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "ሁሉንም አባሪዎች ጨምሮ የኢሜይል መልዕክቱ ከፍተኛ መጠን።"
 
 #: include/global_settings.php
@@ -9658,19 +9658,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "በዛፍ ሁነታ ድንክዬ ግራፎችን ሲያሳዩ የሚያገለግሉ ዓምዶች ብዛት።"
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "ሁሉንም የውሂብ ምንጮች ለማስኬድ የሚያገለግሉ የተመሳሳይ ጊዜ DSStats ሂደቶች ብዛት።"
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "የተመሳሳይ ጊዜ የሰብሳቢ ትዕዛዝ ሂደቶች ብዛት። በሰብሳቢ ትዕዛዝ ገንዳ ውስጥ በአንድ አስተናጋጅ ቢበዛ አንድ ተመሳሳይ ትዕዛዝ ይኖራል።"
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "ሁሉንም የrrd ፋይሎች ለማስኬድ የሚያገለግሉ የተመሳሳይ ጊዜ RRDfile ፍተሻ ሂደቶች ብዛት።"
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "በboost ሠንጠረዥ ውስጥ ያሉትን ሁሉንም RRDs ለማስኬድ የሚያገለግሉ የተመሳሳይ ጊዜ boost ሂደቶች ብዛት።"
 
 #: include/global_settings.php
@@ -9746,7 +9746,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "ወደ snmpwalk ሁለትዮሽዎ የሚወስደው ዱካ።"
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "ጥቅም ላይ የሚውለው የሰብሳቢ ዓይነት። ይህ ቅንብር በሚቀጥለው የመጠየቂያ ክፍተት ላይ ተግባራዊ ይሆናል።"
 
 #: include/global_settings.php
@@ -9782,6 +9782,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "የሥራ ሰዓታትዎ የሚጀምርበት ሰዓት። ቅርጸት: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "በነባሪ ግራፍ ላይ ማየት የሚፈልጉት ይህ የጊዜ ክፍተት።"
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "በSMTP ሲላክ ለማረጋገጥ የተጠቃሚ ስም። (ማረጋገጫ የማይፈልጉ ከሆነ ባዶ ይተዉት።)"
 
@@ -9814,28 +9818,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "እነዚህ ቅንብሮች በውሂብ ሰብሳቢ ደረጃ ይያዛሉ። እዚህ ያሉት እሴቶች መጀመሪያ የውሂብ ሰብሳቢ ሲፈጥሩ የሚያገለግሉ ነባሪዎች ብቻ ናቸው።"
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "ይህ ሁሉም ነገር በትክክል መስራቱን ለማረጋገጥ የሙከራ መልዕክት ለመላክ የሚያገለግል የኢሜይል መለያ ነው።"
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "ይህ ወደ Kadupul ጣቢያ ለሚወስዱ አገናኞች የሚያገለግል የአገልጋይ ቦታ ነው። Kadupul ከroot አቃፊ የማይሰራ ከሆነ ይህ ንዑስ ማውጫውን ማካተት አለበት።"
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "ይህ በኢሜይሉ ውስጥ ያለ መስመር በራስ-ሰር ከመታጠፉ በፊት ምን ያህል ቁምፊዎች እንደሚፈቀዱ ነው። (0 = ተሰናክሏል)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "ይህ የይለፍ ቃል ጊዜው እንዲያልፍ ከመደረጉ በፊት ያለው ከፍተኛ የቀናት ብዛት ነው።"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "ይህ ቦዘኔ መለያዎች ከመሰናከላቸው በፊት ያለው ከፍተኛ የቀናት ብዛት ነው። የAdmin መለያው ከዚህ መመሪያ ተገልሏል።"
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "ይህ የሚፈቀዱ የይለፍ ቃሎች ዝቅተኛ ርዝመት ነው።"
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9858,12 +9846,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "ይህ በድር አገልጋዩ ላይ RRDfiles እና PNG ፋይሎች የሚሸጎጡበት ቦታ ነው። ይህ መሸጎጫ በሰብሳቢው ይተዳደራል። በዚህ አቃፊ ላይ ትክክለኛ የንባብ እና የጽሑፍ ፈቃዶች እንዳሉዎት ያረጋግጡ"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "ይህ የይለፍ ቃል ጊዜው እንዲያልፍ ከመደረጉ በፊት ያለው ከፍተኛ የቀናት ብዛት ነው።"
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "ይህ ቦዘኔ መለያዎች ከመሰናከላቸው በፊት ያለው ከፍተኛ የቀናት ብዛት ነው። የAdmin መለያው ከዚህ መመሪያ ተገልሏል።"
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "ይህ የሚፈቀዱ የይለፍ ቃሎች ዝቅተኛ ርዝመት ነው።"
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "ይህ በግራፍ ዝማኔዎች መካከል ያለው ዝቅተኛው የሚደገፍ ጊዜ ነው። ይህ እሴት የተወሰኑ የRRDfile ባህሪያትን ለማዘጋጀትም ጥቅም ላይ ይውላል። ውሂብ የሚያሸጉጥ እና የእውነተኛ ጊዜ ዝማኔዎችን የማይሰጥ መሣሪያ ካለዎት፣ ክፍተት ያላቸው ግራፎችን እንዳይፈጥሩ ነባሪውን ዝቅተኛ የማደስ ክፍተት መጨመር ሊኖርብዎት ይችላል።"
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "ይህ በአገልጋይዎ ላይ ወደ sendmail የሚወስደው ዱካ ነው። (Sendmail እንደ የመልዕክት አገልግሎት ከተመረጠ ብቻ ጥቅም ላይ ይውላል)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "ይህ ወደ Kadupul ጣቢያ ለሚወስዱ አገናኞች የሚያገለግል የአገልጋይ ቦታ ነው። Kadupul ከroot አቃፊ የማይሰራ ከሆነ ይህ ንዑስ ማውጫውን ማካተት አለበት።"
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9878,15 +9882,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "ይህ ቅንብር ለአንድ ሰብሳቢ ሥርዓቶች ብቻ በእያንዳንዱ የመጠየቂያ ዑደት ላይ የሰብሳቢ ውጤት ሠንጠረዡን እንደገና ለመገንባት ነው፤ ይህም swap ሊጠቀሙ በሚችሉ ትላልቅ የውሂብ ጎታዎች ባሏቸው በጣም ትላልቅ ሥርዓቶች ላይ የማህደረ ትውስታ ሠንጠረዡ ወደ swap እንዳይገባ ለመከላከል ነው።"
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "በነባሪ ግራፍ ላይ ማየት የሚፈልጉት ይህ የጊዜ ክፍተት።"
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "ይህ እሴት ከግራፍ RRA የሚወገዱ ከፍተኛውን የሾሎች ብዛት ይወክላል።"
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "ይህ እሴት የልዩነት አማካይ ከመሰላቱ በፊት ከናሙና ስብስቡ የሚወገዱ ከፍተኛ እና ዝቅተኛ አማካይ ናሙናዎች ብዛትን ይወክላል። የoutlier እሴት 5 ከመረጡ፣ የላይኛው እና የታችኛው 5 አማካዮች ሁለቱም ይወገዳሉ።"
 
 #: include/global_settings.php
@@ -9907,7 +9907,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "ይህ አዲስ የይለፍ ቃሎች ቢያንስ 1 ልዩ ቁምፊ እንዲይዙ ይጠይቃል።"
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "ይህ አዲስ የይለፍ ቃሎች የትንሽ እና የትልቅ ፊደላትን እንዲይዙ ይጠይቃል።"
 
 #: include/global_settings.php
@@ -9995,7 +9995,7 @@ msgid "Use Custom Fonts"
 msgstr "ብጁ ቅርጸ-ቁምፊዎችን ተጠቀም"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "ለእያንዳንዱ አስተናጋጅ RRD ፋይሎች የተለየ ንዑስ አቃፊ ይጠቀሙ። የRRDfiles ስያሜ ከሚከተሉት አንዱ ይሆናል:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>ለውጡን ካደረጉ በኋላ የCLI ስክሪፕቱን <b>structure_rra_paths.php</b> በማሄድ ይህን ለውጥ ከተጫነ በኋላ ማድረግ ይችላሉ። ማሳሰቢያ: የማውጫዎችን ብዛት ለመቀነስ የከፍተኛ ማውጫዎች እሴትን ከለወጡ፣ ወይም የማውጫ ንድፉን ከለወጡ፣ የ<b>structure_rra_paths.php</b> ስክሪፕቱን እንደገና ካሄዱ በኋላ ባዶ ማውጫዎች አይቆረጡም።"
 
 #: include/global_settings.php
@@ -10035,11 +10035,11 @@ msgid "Weekly on Sunday"
 msgstr "ሳምንታዊ በእሁድ"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "ወደ ምዝግብ ማስታወሻ ፋይሉ ምን ያህል የዝርዝር ደረጃ እንዲላክ ይፈልጋሉ። ማስጠንቀቂያ: ከNONE ወይም LOW በስተቀር በማንኛውም ሌላ ሁኔታ መተው የዲስክ ቦታዎን በፍጥነት ሊያሟጥጥ ይችላል።"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "ወደ ምዝግብ ማስታወሻ ፋይሉ ምን ያህል የዝርዝር ደረጃ እንዲላክ ይፈልጋሉ። ማስጠንቀቂያ: ከNONE ወይም LOW በስተቀር በማንኛውም ሌላ ሁኔታ መተው የዲስክ ቦታዎን በፍጥነት ሊያሟጥጥ ይችላል።"
 
 #: include/global_settings.php
@@ -10055,11 +10055,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "አንድ አማራጭ ምልክት ሲደረግበት፣ ተጠቃሚዎች Kadupul ን ወደ እውነተኛ ጊዜ ሁነታ ማስገባት ይችላሉ።"
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "boost የማዘመኛ ትዕዛዞችን ወደ RRDtool ሲልክ፣ ከሥርዓተ ክወናዎች ከፍተኛ የነጋሪ እሴት ርዝመት መብለጥ የለበትም። ይህ በሥርዓተ ክወና እና በከርነል ደረጃ ይለያያል። ለምሳሌ: Windows 2000 <= 2048፣ FreeBSD <= 65535፣ Linux 2.6.22-- <= 131072፣ Linux 2.6.23++ ያልተገደበ"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "ምልክት ሲደረግበት፣ የቅጽ እና የቅንብር እገዛ በመስመር ውስጥ ይታያል። አለበለዚያ በእገዛ ቁልፉ ላይ ሲያንዣብቡ ይቀርባል።"
 
 #: include/global_settings.php
@@ -10067,7 +10067,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "ምልክት ሲደረግበት፣ Kadupul ን ለመድረስ የሚደረጉ ማናቸውም ሙከራዎች ከፍተኛ ደህንነትን ለማረጋገጥ ወደ HTTPS ይመራሉ።"
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "አዲስ ሪፖርት ሲፈጥሩ፣ ለመስመር ውስጥ ግራፎች የትኛው የምስል ዓይነት ጥቅም ላይ መዋል አለበት።"
 
 #: include/global_settings.php
@@ -10087,7 +10087,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "ግራፎችን ሲያሳዩ፣ የግራፍ ቀናት 'ወደፊት' እንዲራዘሙ ይፍቀዱ"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "ሲነቃ፣ Kadupul ግራፎችን አይቆልፍም። ይህ ከግራፍ ጋር የተያያዙ የውሂብ ምንጮችን በፍጥነት በእጅ ለማሻሻል ያስችላል።"
 
 #: include/global_settings.php
@@ -10115,7 +10115,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "መሠረታዊ ማረጋገጫን ሲጠቀሙ፣ የተጠቃሚ ስሙን ወደ ትክክለኛ የKadupul መለያ በማዛመድ ላይ ችግሮች ካሉ፣ እዚህ የተካተተው መልዕክት ለተጠቃሚዎች ይታያል። ሁለቱንም ጽሑፍ እና HTML ሊያካትት ይችላል።"
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "የመሣሪያ ስም ማጣሪያ ተቆልቋዮችን ሲመለከቱ፣ ይህን አማራጭ ምልክት ማድረግ ጎራውን ከአስተናጋጅ ስሙ ያስወግዳል።"
 
 #: include/global_settings.php
@@ -10123,11 +10123,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "boost ን ሲያነቁ፣ የRRD ፋይሎችዎ የሚዘምኑት በተጠቃሚ ሲጠየቁ ወይም ይህ የጊዜ ገደብ ሲያልፍ ብቻ ነው።"
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "ለተዋቀሩ የRRD ዱካዎች የትኛውን የማውጫ ንድፍ መጠቀም ይፈልጋሉ። 'የመሣሪያ መለያ' ነባሪ ነው። በሺዎች የሚቆጠሩ ግራፎች ያሏቸው መሣሪያዎች ሲኖሩዎት 'የመሣሪያ መለያ/የውሂብ መጠይቅ መለያ' ቅንብር ጥቅም ላይ መዋል አለበት። የማውጫ ንድፉን ከቀየሩ በኋላ፣ የRRDfile ዱካዎችን ወደ አዲሱ ንድፍ ለመቀየር የተዋቀረ ዱካ CLI ስክሪፕትን እንደገና ማሄድ አለብዎት።"
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "ለመጀመሪያ ጊዜ የግራፎች ገጽን ሲጎበኙ የትኛው የግራፍ ሁነታ በነባሪነት እንዲታይ ይፈልጋሉ?"
 
 #: include/global_settings.php
@@ -10695,7 +10695,7 @@ msgid "Warnings++"
 msgstr "ማስጠንቀቂያዎች++"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; በ XML ፋይል ውስጥ አለ ነገር ግን ምንም ውሂብ አልተመለሰም።፣ 'Index Count Changed' አይደገፍም"
 
 #: lib/data_query.php
@@ -10864,7 +10864,7 @@ msgstr "'rewrite_index' ወይም 'oid_suffix' ስለተገለጸ ለ'%s' የተ
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "ለማረጋገጥ %s Local Data IDs ተገኝተዋል"
 
 #: lib/data_query.php
@@ -10981,7 +10981,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "&lt;direction&gt;input&lt;/direction&gt; ወይም &lt;direction&gt;input-output&lt;/direction&gt; መስኮችን ብቻ መያዝ አለበት"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "አዲስ የመደርደሪያ መስክ ተረጋግጧል። የመደርደሪያ መስክ ይዘምናል።"
 
 #: lib/data_query.php
@@ -11081,7 +11081,7 @@ msgstr "የግራፍ ውሂብ መጠይቅ መሸጎጫ ማዘመን ተጠና�
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "የ%s አካባቢያዊ የውሂብ መለያዎች ማረጋገጫ ተጠናቋል"
 
 #: lib/data_query.php
@@ -11098,7 +11098,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "ለውሂብ ምንጭ '%s' የXML ውጤት ዓምድ መምረጥ እና በቀኙ ያለውን አመልካች ሳጥን መቀየር አለብዎት"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "የግራፍ አብነትዎ በጥቅም ላይ ያሉ የውሂብ አብነቶች የሉትም። እባክዎ የግራፍ አብነትዎን ያስተካክሉ"
 
 #: lib/data_query.php
@@ -11112,11 +11112,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "የእሴት ዳግም ጽሑፍ: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "የይለፍ ቃል መስክ ርዝመትን መቀየር አልተቻለም፣ የይለፍ ቃሉን ሊያበላሽ ስለሚችል መቀጠል አይቻልም"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "የይለፍ ቃል መስክ ርዝመትን መወሰን አልተቻለም፣ የይለፍ ቃሉን ሊያበላሽ ስለሚችል መቀጠል አይቻልም"
 
 #: lib/dsdebug.php
@@ -11233,10 +11233,6 @@ msgid "Link %s"
 msgstr "አገናኝ %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "እንደ እንግዳ ገብተዋል"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "የገቡት እንደ"
 
@@ -11244,6 +11240,10 @@ msgstr "የገቡት እንደ"
 #, php-format
 msgid "Logged in as %s"
 msgstr "የገቡት እንደ %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "እንደ እንግዳ ገብተዋል"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11254,7 +11254,7 @@ msgid "Logout"
 msgstr "ውጣ"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "የመልእክት ላኪ ስህተት: ምንም የተቀባይ አድራሻ አልተቀናበረም!!<br>የ<i>Test Mail</i> አገናኝን የሚጠቀሙ ከሆነ፣ እባክዎ የ<b>Alert e-mail</b> ቅንብሩን ያቀናብሩ።"
 
 #: lib/functions.php
@@ -11333,7 +11333,7 @@ msgstr "ማስጠንቀቂያ: ቁልፍ የKadupul Include ፋይል %s ጠፍ�
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "ማስጠንቀቂያ: PollerID:%s ልክ ያልሆነ አስተናጋጅ ስም አለው:%s። በDNS በኩል አይደረስበትም!"
 
 #: lib/functions.php
@@ -11423,7 +11423,7 @@ msgid "All %d %s"
 msgstr "ሁሉም %d %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "የሰንጠረዥ ዓምዶች ከአሁኑ የመስኮት ገደቦች በላይ እንዲራዘሙ ይፍቀዱ ወይም ይገድቡ።"
 
 #: lib/html.php
@@ -12079,7 +12079,7 @@ msgid "Cascade to Branches"
 msgstr "ወደ ቅርንጫፎች አስተላልፍ"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "ለሪፖርቱ ብጁ html እና CSS መጠቀም ከፈለጉ ይህንን ሳጥን ምልክት ያድርጉ።"
 
 #: lib/html_reports.php
@@ -12087,7 +12087,7 @@ msgid "Check this box to enable this Report."
 msgstr "ይህንን ሪፖርት ለማንቃት ይህንን ሳጥን ምልክት ያድርጉ።"
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "የሚጠቀሙበትን ብጁ html መጠቅለያ እና CSS ፋይል ይምረጡ። ይህ ፋይል በሪፖርትዎ ዙሪያ ለመጠቅለል ሁለቱንም html እና CSS ይዟል። ከ CSS ብቻ የበለጠ ከያዘ፣ በፋይሉ ውስጥ ልዩ <REPORT> መለያ ማስቀመጥ ያስፈልግዎታል። ይህ የቅርጸት መለያ በሪፖርቱ ይዘት ይተካል። እነዚህ ፋይሎች በ 'formats' ማውጫ ውስጥ ይገኛሉ።"
 
 #: lib/html_reports.php
@@ -12344,7 +12344,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "መሣሪያዎችን ወይም ግራፎችን ለማጣራት የሚያገለግል የመሣሪያ አብነት ይምረጡ።"
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "በመሣሪያ ዓይነት ሁኔታ ግራፎችን ለማጣራት ወይም ለመምረጥ የሚያገለግል መሣሪያ ይምረጡ።"
 
 #: lib/html_reports.php
@@ -12416,11 +12416,11 @@ msgid "The number of Graph columns."
 msgstr "የግራፍ ዓምዶች ብዛት።"
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "ይህ አድራሻ እንደ ኢሜይል ላኪ አድራሻ ሆኖ ያገለግላል"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "ይህ ስም እንደ ነባሪ የኢሜይል ላኪ ሆኖ ያገለግላል"
 
 #: lib/html_reports.php
@@ -12438,22 +12438,22 @@ msgstr "ዛፍ: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "ሪፖርት '%s' ን መላክ አልተቻለም። እባክዎ የኢሜይል ላኪ ስም ያዘጋጁ"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "ሪፖርት '%s' ን መላክ አልተቻለም። እባክዎ የኢሜይል ላኪ አድራሻ ያዘጋጁ"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "ሪፖርት '%s' ን መላክ አልተቻለም። እባክዎ የኢሜይል ርዕሰ ጉዳይ ያዘጋጁ"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "ሪፖርት '%s' ን መላክ አልተቻለም። እባክዎ የመድረሻ ኢሜይል አድራሻዎችን ያዘጋጁ"
 
 #: lib/html_reports.php
@@ -12549,7 +12549,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "የKadupul መደበኛ አገላለጾች ለደህንነት ሲባል እስከ 50 ቁምፊዎች ብቻ የተገደቡ ናቸው።"
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "የKadupul መደበኛ አገላለጾች የsemicolon ቁምፊን ማካተት አይችሉም።"
 
 #: lib/html_utility.php
@@ -13005,12 +13005,12 @@ msgstr "የPHP አማራጭ %s ማቀናበር አልተቻለም፣ %s ነው (
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "የተገለጸውን %sRRDTool ስሪት ማቀናበር አልተቻለም: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "የተገለጸውን %sRRDtool ስሪት ማቀናበር አልተቻለም: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "የAutomation አማራጭ ስብስብ %s ማዘመን አልተቻለም"
 
 #: lib/installer.php
@@ -13083,7 +13083,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "በመገለጫ '%s' ስር የጥቅል #%s '%s' ማስመጣት ተሳክቷል"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "ችግሮች በሚያጋጥሙበት ጊዜ ለKadupul ችግሩን ከማቅረብዎ በፊት የአሳሽ መሸጎጫዎን እንዲያጸዱ፣ አሳሽዎን ዘግተው እንደገና እንዲከፍቱ (Kadupul ያለበትን ትር ብቻ ሳይሆን) እና እንደገና እንዲሞክሩ በጥብቅ ይመከራል"
 
 #: lib/installer.php
@@ -13261,7 +13261,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "በአልፎ አልፎ አጋጣሚዎች፣ በኮዱ ላይ በተደረጉ ለውጦች ምክንያት አንዳንድ ጥቃቅን ችግሮች ያጋጠሟቸው ተጠቃሚዎች ሪፖርቶች ደርሰውናል። እነዚህ ችግሮች የሚከሰቱት አሳሹ ከማሻሻያ በፊት የነበረውን ኮድ በማቆየቱ ሲሆን ይህን እድል ለመቀነስ እርምጃዎችን ብንወስድም አሁንም ሊከሰት ይችላል። የአሳሽ መሸጎጫዎን እንዴት ማጽዳት እንደሚችሉ መመሪያዎች ከፈለጉ <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> ጥሩ መነሻ ነጥብ ነው።"
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "መጫኑ ከተጠናቀቀ በኋላ የCSRF መንገድ ወደ ተነባቢ ብቻ መቀናበር አለበት።"
 
 #: lib/installer.php
@@ -13338,7 +13338,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "በማሻሻያው ወቅት ማዘመን የሚፈልጓቸውን የመሣሪያ አብነቶች እባክዎ ይምረጡ።"
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "ከመጫኛው በኋላ መጠቀም የሚፈልጓቸውን የመሣሪያ አብነቶች እባክዎ ይምረጡ። ስርዓተ ክወናዎ Windows ከሆነ 'Windows Device' አብነትን መምረጥዎን ማረጋገጥ አለብዎት። ስርዓተ ክወናዎ Linux/UNIX ከሆነ 'Local Linux Machine' የመሣሪያ አብነትን መምረጥዎን ያረጋግጡ።"
 
 #: lib/installer.php
@@ -13595,7 +13595,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "በconfig.php ፋይል ውስጥ መቀናበር ያለባቸው ተለዋዋጮች የሚከተሉትን ያካትታሉ:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "የተፈቀደ ዝርዝር (Whitelisting) የሚሰራበት መንገድ መጀመሪያ የውሂብ ግቤት ዘዴን ሲያስመጡ ወይም የውሂብ ግቤት ዘዴን እንደገና ሲያስመጡ እና ስክሪፕቱ እና ወይም ነጋሪ እሴቶቹ በማንኛውም መንገድ ሲለወጡ፣ የውሂብ ግቤት ዘዴው እና ሁሉም ተጓዳኝ የውሂብ ምንጮች አስተዳዳሪው የውሂብ ግቤት ዘዴው ትክክለኛ መሆኑን እስኪያረጋግጥ ድረስ ወዲያውኑ ይሰናከላሉ።"
 
 #: lib/installer.php
@@ -13603,7 +13603,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "ከዚያም እንደ አስተዳዳሪ በMySQL ውስጥ የሚከተለውን ያሂዱ:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "ስለዚህ፣ ከበርካታ ስሪቶች በፊት፣ Kadupul በእነዚህ የውሂብ ግቤት ዘዴዎች ዓይነቶች ላይ የተፈቀደ ዝርዝር (Whitelist) አቅም እንዲሰጥ ተሻሽሏል። ምንም እንኳን ይህ Kadupul ን የበለጠ በጥልቀት ደህንነቱ የተጠበቀ ቢያደርገውም፣ አብነቶችን እና ጥቅሎችን ለማስመጣት እና ለማስተዳደር በKadupul አስተዳዳሪ የሚፈለገውን የሥራ መጠን ይጨምራል።"
 
 #: lib/installer.php
@@ -13636,10 +13636,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "ይህ ፕሮግራም ነጻ ሶፍትዌር ነው፤ በFree Software Foundation በታተመው የGNU General Public License ውሎች መሠረት እንደገና ማሰራጨት እና/ወይም ማሻሻል ይችላሉ፤ የፈቃዱ ስሪት 2፣ ወይም (በእርስዎ ምርጫ) ማንኛውም የበኋላ ስሪት።"
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "ይህ የስክሪፕት አማራጭ በአሁኑ ጊዜ የታገዱትን የውሂብ ግቤት ዘዴዎች እገዳ ያነሳል።"
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "ይህ የስክሪፕት አማራጭ ማንኛውንም የሰናከሉ የውሂብ ምንጮችን እንደገና ያነቃል።"
 
@@ -13648,16 +13644,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "ይህ የስክሪፕት አማራጭ በአሁኑ ጊዜ የታገዱ ማንኛውንም የውሂብ ግቤት ዘዴዎችን ይፈልጋል እና ለምን እንደሆነ ዝርዝሮችን ይሰጣል።"
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "ይህ የስክሪፕት አማራጭ በአሁኑ ጊዜ የታገዱትን የውሂብ ግቤት ዘዴዎች እገዳ ያነሳል።"
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "ይህ የKadupul (%s) ስሪት ትክክለኛ የስሪት ኮድ ያለው አይመስልም፣ ይህ መስተካከሉን ለማረጋገጥ እባክዎ የKadupul ልማት ቡድንን ያግኙ። ይህን ስህተት በልቀት ውስጥ እያዩ ከሆነ፣ እባክዎ ወዲያውኑ በGitHub ላይ ሪፖርት ያቅርቡ"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "መቀጠል እንዲችሉ፣ አዲስ የውሂብ ጎታ መፍጠር እና \"cacti.sql\" ን ወደ እሱ ማስመጣት <b>አለብዎት</b>:"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "በዚህ ሁኔታ ውስጥ የውሂብ ግቤት ዘዴዎችን ለመለየት፣ በሚከተሉት አማራጮች ሊሄድ የሚችል የማረጋገጫ ስክሪፕት በKadupul CLI ማውጫ ውስጥ አቅርበናል:"
 
 #: lib/installer.php
@@ -13691,7 +13691,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "የራስ-ሰር አማራጭ ስብስብ %s በማዘመን ላይ"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "ቀድመው ማሻሻያዎችን ያደረጉባቸውን አብነቶች ማዘመን አይመከርም። የአብነቶቹ ማሻሻያ በግራፍ እና በውሂብ አብነቶች ላይ የተደረጉ ማሻሻያዎችን አያስወግድም፣ እና ያልተጠበቀ ባህሪ ሊያስከትል ይችላል። ሆኖም፣ በማንኛውም ግራፍ፣ የውሂብ መጠይቅ ወይም የውሂብ አብነት ላይ ለውጥ ካላደረጉ፣ ጥቅሉን እንደገና ማስመጣት ምንም ተጽዕኖ ሊኖረው አይገባም። በዚያ ሁኔታ፣ ከዝማኔው በኋላ 'ግራፎችን አመሳስል' ማድረግ ይኖርብዎታል።"
 
 #: lib/installer.php
@@ -13747,7 +13747,7 @@ msgstr "ወደ ቀዳሚው ስሪት ዝቅ እያደረጉ ያሉ ይመስላ
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "Kadupul %s ን በ0.6.x የውሂብ ጎታ ላይ ለመጫን እየሞከሩ ነው። እንደ አለመታደል ሆኖ፣ ይህ ሊከናወን አይችልም።"
 
 #: lib/installer.php
@@ -13778,7 +13778,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "የKadupul አገልጋይዎ v%s ተጭኗል/ዘምኗል። አሁን ሶፍትዌሩን መጠቀም መጀመር ይችላሉ።"
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "የKadupul ውቅርዎ በconfig.php ውስጥ ትክክለኛው አንጻራዊ ዱካ (url_path) አለው።"
 
 #: lib/installer.php
@@ -13806,7 +13806,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "የውሂብ ጎታዎ ነባሪ ማወዳደሪያ UTF8 ተስማሚ ይመስላል"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "የውሂብ ጎታዎ ነባሪ ማወዳደሪያ ሙሉ UTF8 ተስማሚ አይመስልም። "
 
 #: lib/installer.php
@@ -13905,13 +13905,13 @@ msgid "Unable to find user from DN"
 msgstr "ተጠቃሚውን ከDN ማግኘት አልተቻለም"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "የተጠቃሚዎችን DN ማግኘት አልተቻለም"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
-msgstr "በአገልጋይ (%s) ላይ ያልተጠበቀ ስህተት %s (Ldap ስህተት: %s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
+msgstr "በአገልጋይ (%s) ላይ ያልተጠበቀ ስህተት %s (LDAP ስህተት: %s)"
 
 #: lib/ping.php
 msgid "Destination address not specified"
@@ -14018,13 +14018,13 @@ msgstr "በ'%s' ማውጫ ውስጥ ያለው ተሰኪ ከመጫኑ በፊት '
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "በ'%s' ማውጫ ውስጥ ያለው ተሰኪ የመጫኛ ተግባር '%s()' አያካትትም። ተሰኪው እንዲጫን ይህ ተግባር መኖር አለበት።"
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "በ'%s' ማውጫ ውስጥ ያለው ተሰኪ የስሪት ተግባር '%s()' አያካትትም። ተሰኪው እንዲጫን ይህ ተግባር መኖር አለበት።"
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "በ'%s' ማውጫ ውስጥ ያለው ተሰኪ የስሪት ተግባር '%s()' አያካትትም። ተሰኪው እንዲጫን ይህ ተግባር መኖር አለበት።"
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "በ'%s' ማውጫ ውስጥ ያለው ተሰኪ የመጫኛ ተግባር '%s()' አያካትትም። ተሰኪው እንዲጫን ይህ ተግባር መኖር አለበት።"
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14084,7 +14084,7 @@ msgstr "የግራፍ የጊዜ ክፍተት:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "ሪፖርት '%s'ን በመላክ ላይ ችግሮች፣ ከኢሜይል ንዑስ ስርዓት ጋር ችግር፣ ስህተቱ '%s' ነው"
 
 #: lib/reports.php
@@ -14138,7 +14138,7 @@ msgstr "ስህተት: RRD ፋይል የለም: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "ስህተት: RRDfile %s ሊጻፍበት የሚችል አይደለም"
 
 #: lib/rrd.php
@@ -14260,7 +14260,7 @@ msgstr "ለKadupul RRA መለያ XFF '%s' ነው ነገር ግን '%s' መሆን
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "ለKadupul RRA መለያ '%s' የረድፎች ብዛት ትክክል አይደለም። የረድፎቹ ብዛት '%s' ነው ነገር ግን '%s' መሆን አለበት"
 
 #: lib/rrd.php
@@ -14420,7 +14420,7 @@ msgstr "ከባድ ስህተት: የ outlier-start እና outlier-end ነጋሪ �
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "ከባድ ስህተት: '%s' ን ምትኬ መያዝ አልተቻለም"
 
 #: lib/spikekill.php
@@ -14635,12 +14635,12 @@ msgstr "%s ማስተካከያ"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s ከ 10.5 በታች ለሆኑ የ MariaDB ስሪቶች አፈጻጸምን ለማሻሻል innodb_buffer_pool ን ወደ ማህደረ ትውስታ ክልሎች ይከፍላል። ከፍተኛው እሴት 64 ነው፣ ነገር ግን ከ CPU ኮሮች/ትሬዶች ብዛት መብለጥ የለበትም። የእርስዎ innodb_buffer_pool ከ 1GB በታች ሲሆን፣ የፑል መጠኑን በ 128MB ማካፈል አለብዎት። እስከ ከፍተኛው የ CPU ኮሮች ብዛት ወይም 64 ድረስ ይህንን እኩልታ መጠቀም ይቀጥሉ።"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s እስከ MySQL 8.0 ድረስ ላሉ የ MySQL ስሪቶች አፈጻጸምን ለማሻሻል innodb_buffer_pool ን ወደ ማህደረ ትውስታ ክልሎች ይከፍላል። ከፍተኛው እሴት 64 ነው፣ ነገር ግን ከ CPU ኮሮች/ትሬዶች ብዛት መብለጥ የለበትም። የእርስዎ innodb_buffer_pool ከ 1GB በታች ሲሆን፣ የፑል መጠኑን በ 128MB ማካፈል አለብዎት። እስከ ከፍተኛው የ CPU ኮሮች ብዛት ወይም 64 ድረስ ይህንን እኩልታ መጠቀም ይቀጥሉ።"
 
 #: lib/utility.php
@@ -14659,7 +14659,7 @@ msgstr "ከ MySQL እና ከስርዓቱ ጋር የሚዛመድ ትክክለኛ 
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "ከ %s %s ጀምሮ፣ %s ግብይቶችን ወደ ዲስክ ምን ያህል ጊዜ እንደሚያፈስስ መቆጣጠር ይችላሉ። ነባሪው 1 ሰከንድ ነው፣ ነገር ግን ከፍተኛ I/O ባላቸው ስርዓቶች ላይ ከ 1 በላይ የሆነ እሴት ማዘጋጀት የዲስክ I/O ይበልጥ ተከታታይ እንዲሆን ያስችላል"
 
 #: lib/utility.php
@@ -14693,12 +14693,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "SSD ዲስኮች ካሉዎት ይህን ጥቆማ ይጠቀሙ። አለበለዚያ ይህን ቅንብር አያቀናብሩ።"
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "ሰንጠረዦችዎ በጣም ትላልቅ ማውጫዎች ካሏቸው፣ ከBarracuda innodb_file_format እና innodb_large_prefix ከ1 ጋር እኩል ሆኖ መስራት አለብዎት። ይህን አለማድረግ ተሰኪዎች ሰንጠረዦችን በትክክል እንዳይፈጥሩ ሊያደርግ ይችላል።"
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB በተቻለ መጠን ብዙ ሰንጠረዦችን እና ማውጫዎችን በስርዓት ማህደረ ትውስታ ውስጥ ያስቀምጣል። ስለዚህ innodb_buffer_pool በተቻለ መጠን ብዙ ሰንጠረዦችን እና ማውጫዎችን በማህደረ ትውስታ ውስጥ ለማቆየት በቂ ትልቅ ማድረግ አለብዎት። የ/var/lib/mysql/cacti ማውጫ መጠንን መፈተሽ ይህን እሴት ለመወሰን ይረዳል። ከስርዓቶችዎ ጠቅላላ ማህደረ ትውስታ 25%% እንመክራለን፣ ነገር ግን መስፈርቶችዎ እንደ ስርዓቶችዎ መጠን ይለያያሉ።"
 
 #: lib/utility.php
@@ -14712,7 +14712,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "ከ5.1 በላይ በሆነ ማንኛውም %s ስሪት InnoDBን እንዲያነቁ ይመከራል።"
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "የሰንጠረዥ መሸጎጫውን ትልቅ ማድረግ ማለት innodb_file_per_table በሚጠቀሙበት ጊዜ ያነሱ የፋይል መክፈቻ/መዝጊያ ክንውኖች ማለት ነው።"
 
 #: lib/utility.php
@@ -14737,7 +14737,7 @@ msgid "Recommended Value"
 msgstr "የሚመከር እሴት"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "አደገኛ መጠይቆች የውሂብ ጎታው ለሌሎች ከመስመር ውጭ እንዲሆን ማድረግ የለባቸውም። ስርዓትዎን ከመግደላቸው በፊት እነዚህን መጠይቆች ይግደሉ።"
 
 #: lib/utility.php
@@ -14750,7 +14750,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "ይህ ሜታዳታ የሚከማችበት ቦታ ነው። ብዙ ሠንጠረዦች ካሉዎት፣ ይህን መጨመር ጠቃሚ ይሆናል።"
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "የKadupul ምሳሌዎችዎ ድንገተኛ የሥርዓት ብልሽቶችን ለማስተናገድ ውስጣዊ ጆርናል ባላቸው በZFS ወይም በFusionI/O ላይ ካልሰሩ በስተቀር ይህ ቅንብር ON ሆኖ መቆየት አለበት። ሆኖም፣ በጣም ጥሩ ኃይል ካለዎት እና ሥርዓቶችዎ አልፎ አልፎ ብቻ የሚጠፉ ከሆነ እና መጠባበቂያዎች ካሉዎት፣ ይህን ቅንብር ወደ OFF ማዞር በውሂብ ጎታ አፈጻጸም ላይ ወደ 50% የሚጠጋ ጭማሪ ሊያስገኝልዎ ይችላል።"
 
 #: lib/utility.php
@@ -14758,11 +14758,11 @@ msgid "Variable"
 msgstr "ተለዋዋጭ"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "ንዑስ መጠይቆችን ሲያስፈጽሙ፣ ትልቅ ጊዜያዊ የሠንጠረዥ መጠን መኖሩ እነዚያን ጊዜያዊ ሠንጠረዦች በማህደረ ትውስታ ውስጥ ያቆያቸዋል።"
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "joins ሲያከናውኑ፣ ከዚህ መጠን በታች ከሆኑ፣ በማህደረ ትውስታ ውስጥ ይቀመጣሉ እና በፍጹም ወደ ጊዜያዊ ፋይል አይጻፉም። ይህ በአንድ ግንኙነት የማህደረ ትውስታ ምደባ ስለሆነ፣ በጣም ከፍ እንዳይል ጥንቃቄ መደረግ አለበት። የjoin_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB ማህደረ ትውስታ ድምር ከ80% በታች መሆን አለበት። ምክሩ አሉታዊ ከሆነ፣ ምክሩ በሚፈቀደው ማህደረ ትውስታ ውስጥ እስኪገባ ድረስ ይህንን እና ወይም sort_buffer_size ን መቀነስ አለብዎት።"
 
 #: lib/utility.php
@@ -15005,7 +15005,7 @@ msgstr "%s የማሳወቂያ ተቀባዮች"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "የሚከተለውን የማሳወቂያ ተቀባይ ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 msgstr[1] "የሚከተሉትን የማሳወቂያ ተቀባዮች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 
@@ -15015,13 +15015,13 @@ msgstr "የሚከተሉትን የማሳወቂያ ነገሮች ወደዚህ የ�
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "የሚከተለውን የማሳወቂያ ተቀባይ ለማቦዘን 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 msgstr[1] "የሚከተሉትን የማሳወቂያ ተቀባዮች ለማቦዘን 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "የሚከተለውን የማሳወቂያ ተቀባይ ለማንቃት 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 msgstr[1] "የሚከተሉትን የማሳወቂያ ተቀባዮች ለማንቃት 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 
@@ -15127,7 +15127,7 @@ msgid "Automatically Trust Signer"
 msgstr "ፈራሚውን በራስ-ሰር እመን"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "ለውጦች/ልዩነቶች"
 
 #: package_import.php
@@ -15195,6 +15195,10 @@ msgid "Package"
 msgstr "ጥቅል"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "የጥቅሎች ዝርዝሮች"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "ጥቅል ማስመጣት"
 
@@ -15207,19 +15211,15 @@ msgid "Package XML File Damaged."
 msgstr "የጥቅል XML ፋይል ተጎድቷል።"
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "የጥቅሎች ዝርዝሮች"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "የውሂብ ምንጭ እና የግራፍ አብነት የተጠቆመ እሴት መዝገቦችን ተካ። ግራፎች እና የውሂብ ምንጮች ከውሂብ መጠይቅ ድጋሚ ማውጫ በኋላ ወይም የግዳጅ Replace Suggested Values ሂደትን በመጠቀም አዲስ ስሞችን ይይዛሉ።"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "ለተጨማሪ መረጃ cacti.log ን ይመልከቱ። የAPI ቁልፍ ስህተት አጋጥሞዎት ወይም ጥቅሉ ተነካክቶ ወይም አካባቢው ላይገኝ ይችላል"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "ለተጨማሪ መረጃ cacti.log ን ይመልከቱ። የAPI ቁልፍ ስህተት አጋጥሞዎት ወይም ጥቅሉ ተነካክቶ ወይም አካባቢው ላይገኝ ይችላል።"
 
 #: package_import.php templates_import.php
@@ -15241,11 +15241,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "ጥቅል %s በተሳካ ሁኔታ ገብቷል"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "የXML ፋይሎቹ ልክ ያልሆኑ ይመስላሉ። እባክዎ የጥቅሉን ደራሲ ያግኙ"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "ለጥቅሉ የXML ፋይሎች የሉም"
 
 #: package_import.php
@@ -15266,7 +15266,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "ይህን የጥቅል ደራሲ አላመኑትም። ማስመጣት ከፈለጉ፣ በራስ-ሰር ደራሲን እመን የሚለውን አመልካች ሳጥን ምልክት ያድርጉ"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "የተሰኪው ደራሲ ለተሰኪው የሰጠው መግለጫ።"
 
 #: plugins.php
@@ -15359,7 +15359,7 @@ msgid "Plugin Name"
 msgstr "የተሰኪ ስም"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "የተሰኪ ማውጫዎች ክፍተቶችን ማካተት አይችሉም"
 
 #: plugins.php
@@ -15449,12 +15449,12 @@ msgstr "ይህን ተሰኪ ማራገፍ ሁሉንም የተሰኪ ውሂብ እ
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "ስህተት: የ PHP ሁለትዮሽ መንገድ: %s ለፖለር መታወቂያ %d ልክ ያልሆነ ነው። ፖለሩ መቀጠል አይችልም!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "ስህተት: የ spine መንገድ: %s ለፖለር መታወቂያ %d ልክ ያልሆነ ነው። ፖለሩ መቀጠል አይችልም!"
 
 #: poller.php
@@ -15476,7 +15476,7 @@ msgstr "Poller በHeartbeat ሁነታ"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "ማስጠንቀቂያ: %s ለሰብሳቢ መለያ %d ከሰብሳቢ ክፍተት ጋር አልተመሳሰለም! የሰብሳቢ ክፍተቱ %d ሰከንዶች ሲሆን ከፍተኛው %d ሰከንዶች ነው፣ ነገር ግን ከመጨረሻው መጠየቂያ %d ሰከንዶች አልፈዋል!"
 
 #: poller.php
@@ -15531,7 +15531,7 @@ msgstr[1] "ለውሂብ ሰብሳቢዎች ስታቲስቲክስ አጽዳ"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "ለውሂብ ሰብሳቢው የውሂብ ሰብሳቢ ስታቲስቲክስን ለማጽዳት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "ለውሂብ ሰብሳቢዎቹ የውሂብ ሰብሳቢ ስታቲስቲክስን ለማጽዳት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
@@ -15634,7 +15634,7 @@ msgid "No Data Collectors Found"
 msgstr "ምንም የውሂብ ሰብሳቢዎች አልተገኙም"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "ለዚህ የውሂብ ሰብሳቢዎች ውሂብ ጎታ ማስታወሻዎች።"
 
 #: pollers.php
@@ -15763,12 +15763,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "ከርቀት የውሂብ ጎታ ጋር ለመገናኘት የሚያገለግለውን የSSL ቁልፍ የያዘው ፋይል።"
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "ለውሂብ ሰብሳቢ አስተናጋጅ ስም። የርቀት ሰብሳቢዎች እንደ ዳግም-መረጃ ጠቋሚ፣ የእውነተኛ ጊዜ ግራፍ ማውጣት ወዘተ ላሉ እንቅስቃሴዎች እንዲያገኙት ሙሉ ብቁ የጎራ ስም (FQDN) መሆን ሊኖርበት ይችላል።"
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "ለርቀት የውሂብ ጎታ አገልጋይ አስተናጋጅ ስም።"
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "ለውሂብ ሰብሳቢ አስተናጋጅ ስም። የርቀት ሰብሳቢዎች እንደ ዳግም-መረጃ ጠቋሚ፣ የእውነተኛ ጊዜ ግራፍ ማውጣት ወዘተ ላሉ እንቅስቃሴዎች እንዲያገኙት ሙሉ ብቁ የጎራ ስም (FQDN) መሆን ሊኖርበት ይችላል።"
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15783,7 +15783,7 @@ msgid "The last time this Data Collector completed."
 msgstr "ይህ የውሂብ ሰብሳቢ ለመጨረሻ ጊዜ የተጠናቀቀበት ጊዜ።"
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "ይህ የውሂብ ሰብሳቢ ከዋናው Kadupul ጣቢያ ጋር ለመጨረሻ ጊዜ ሙሉ በሙሉ የተመሳሰለበት ጊዜ።"
 
 #: pollers.php
@@ -15966,7 +15966,7 @@ msgid "Changing Permission Model Warning"
 msgstr "የፈቃድ ሞዴል መቀየር ማስጠንቀቂያ"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "የፈቃድ ሞዴልን መቀየር የተጠቃሚዎችን ውጤታማ የግራፍ ፈቃዶች ይለውጣል።"
 
 #: settings.php
@@ -16289,7 +16289,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>ማስታወሻ:</strong> እስከ ዛሬ ድረስ ከዋና የ Kadupul ተሰኪዎች ውስጥ አንዱም ከርቀት የውሂብ ሰብሳቢዎች ጋር እንዲሰራ ዳግም አልተነደፈም። ስለዚህ፣ እንደ MacTrack እና HMIB ያሉ ወደ መሣሪያዎች ቀጥተኛ መዳረሻ የሚፈልጉ ተሰኪዎች በአሁኑ ጊዜ ከርቀት የውሂብ ሰብሳቢዎች ጋር አይሰሩም። ሆኖም፣ የርቀት የውሂብ ሰብሳቢው በ <b>'online'</b> ሁነታ ላይ እስካለ ድረስ እንደ Thold ያሉ ተሰኪዎች ይሰራሉ።"
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>ማስታወሻ:</strong> ወደ የርቀት የውሂብ ሰብሳቢ ገብተዋል። በ <b>'online'</b> ሁነታ ሲሆኑ፣ ልክ ወደ እሱ እንደገቡ ሁሉ አብዛኛውን የዋናውን Kadupul ድር ጣቢያ ማየት እና መቆጣጠር ይችላሉ። እንዲሁም፣ የርቀት የውሂብ ሰብሳቢዎች የ Kadupul የአፈጻጸም ማበልጸጊያ አገልግሎቶችን <b>'On Demand Updating'</b> ባህሪ እንዲጠቀሙ እንደሚገደዱ ልብ ማለት አስፈላጊ ነው፣ እና ሁልጊዜ Spine እንዲጠቀሙ እንመክራለን። የርቀት የውሂብ ሰብሳቢው <b>'offline'</b> ሲሆን፣ የርቀት የውሂብ ሰብሳቢው ድር ጣቢያ በጣም ያነሰ መረጃ ይይዛል። ሆኖም፣ ዋናው የ Kadupul ዳታቤዝ እና የድር አገልጋይ ተደራሽ እስኪሆኑ ድረስ ሁሉንም ዝመናዎች በመሸጎጫ ውስጥ ያቆያል። ከዚያም ለማዘመን የ Boost ሰንጠረዥ ውጤቱን ወደ ዋናው Kadupul ዳታቤዝ ይልካል።"
 
 #: templates/platform/console_home_body.html.twig
@@ -16464,25 +16464,25 @@ msgstr "ቅርንጫፎች"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "የሚከተለውን ዛፍ ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን ዛፎች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "የሚከተለውን ዛፍ ለማተም 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን ዛፎች ለማተም 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "የሚከተለውን ዛፍ ለመክፈት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን ዛፎች ለመክፈት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "የሚከተለውን ዛፍ ከማተም ለማንሳት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን ዛፎች ከማተም ለማንሳት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
@@ -16580,7 +16580,7 @@ msgid "The last user to have modified this Tree."
 msgstr "ይህን ዛፍ ለመጨረሻ ጊዜ የቀየረው ተጠቃሚ።"
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "ይህ ዛፍ የሚጠራበት ስም።"
 
 #: tree.php
@@ -16773,7 +16773,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "የተመረጡትን ተጠቃሚ(ዎች) ለማንቃት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "የተጠቃሚ(ዎች) ቅንብሮችን በተመረጠው አብነት የተጠቃሚ ቅንብሮች እና ፈቃዶች ለመተካት 'ቀጥል' የሚለውን ጠቅ ያድርጉ። የመጀመሪያዎቹ ተጠቃሚዎች ሙሉ ስም፣ የይለፍ ቃል፣ ግዛት እና የነቃ ሁኔታ ይቀመጣሉ፣ ሌሎች ሁሉም መስኮች ከአብነት ተጠቃሚው ይተካሉ።"
 
 #: user_admin.php
@@ -17093,13 +17093,13 @@ msgstr "ይህ ምን ዓይነት ጎራ እንደሆነ ይምረጡ።"
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "የሚከተለውን የተጠቃሚ ጎራ ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን የተጠቃሚ ጎራዎች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "የሚከተለውን የተጠቃሚ ጎራ ለማቦዘን 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን የተጠቃሚ ጎራዎች ለማቦዘን 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
@@ -17108,7 +17108,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "የሚከተለውን የተጠቃሚ ጎራ ለማንቃት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "የሚከተለውን የተጠቃሚ ጎራ ነባሪ ለማድረግ 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: user_domains.php
@@ -17140,15 +17140,11 @@ msgid "Domains"
 msgstr "ጎራዎች"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "የጎራዎች ዓይነት"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "ውጤታማ ተጠቃሚ"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "የተጠቃሚ ጎራ አንቃ"
 msgstr[1] "የተጠቃሚ ጎራዎችን አንቃ"
@@ -17166,16 +17162,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "ከLDAP የተወሰደውን ኢሜይል የሚተካ መስክ። (በWindows ላይ: mail) "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "ይህ አመልካች ሳጥን ከተመረጠ ተጠቃሚዎች ይህን ጎራ በመጠቀም መግባት ይችላሉ።"
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "የተመረጠውን ጎራ ነባሪ አድርግ"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "cacti ከLDAP አገልጋይ ጋር ማረጋገጫ ለማድረግ የሚሞክርበት ሁነታ።<blockquote><i>No Searching</i> - ምንም የDistinguished Name (DN) ፍለጋ አይከሰትም፣ በቀረበው የDistinguished Name (DN) ቅርጸት bind ለማድረግ ብቻ ይሞክራል።<br><br><i>Anonymous Searching</i> - የተጠቃሚዎችን Distinguished Name (DN) ለማግኘት በanonymous binding በኩል በLDAP ማውጫ ውስጥ የተጠቃሚ ስም ለመፈለግ ይሞክራል።<br><br><i>Specific Searching</i> - የተጠቃሚዎችን Distinguished Name (DN) ለማግኘት በSpecific Distinguished Name (DN) እና በSpecific Password binding በኩል በLDAP ማውጫ ውስጥ የተጠቃሚ ስም ፍለጋን ይሞክራል።"
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17241,25 +17233,25 @@ msgstr "አጽዳ"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "የሚከተለውን የተጠቃሚ ቡድን ወደ አዲስ የተጠቃሚ ቡድን ለመቅዳት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን የተጠቃሚ ቡድኖች ወደ አዲስ የተጠቃሚ ቡድኖች ለመቅዳት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "የሚከተለውን የተጠቃሚ ቡድን ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 msgstr[1] "የሚከተሉትን የተጠቃሚ ቡድኖች ለመሰረዝ 'ቀጥል' የሚለውን ጠቅ ያድርጉ"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "የሚከተለውን የተጠቃሚ ቡድን ለማቦዘን 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን የተጠቃሚ ቡድኖች ለማቦዘን 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "የሚከተለውን የተጠቃሚ ቡድን ለማንቃት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 msgstr[1] "የሚከተሉትን የተጠቃሚ ቡድኖች ለማንቃት 'ቀጥል' የሚለውን ጠቅ ያድርጉ።"
 
@@ -17282,7 +17274,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "ለዚህ የተጠቃሚ ቡድን ነባሪ የዛፍ ፖሊሲ"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "ወደ ተጠቃሚው ቅንብር አስተላልፍ"
 
 #: user_group_admin.php
@@ -17616,11 +17608,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "ዝርዝር የአሂድ ጊዜ ስታቲስቲክስ"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "የተለየ የ Kadupul እና የ Spine ስሪት!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "ማውጫው የለም!!"
 
 #: utilities.php
@@ -17634,11 +17626,11 @@ msgstr "ስህተት: የተጫነው የ RRDtool ስሪት ከተዋቀረው �
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "ስህተት: RRDtool 1.2.x+ የ GIF ምስሎችን ቅርጸት አይደግፍም፣ ነገር ግን %d\" ግራፍ(ፎች) እና/ወይም አብነቶች GIF እንደ ምስል ቅርጸት ተቀናብሮላቸዋል።"
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "እያንዳንዱ የአሳሽ ትር እንደ አሳሹ እስከ 10 ግንኙነቶችን ሊጠቀም ይችላል።"
 
 #: utilities.php
@@ -17696,7 +17688,7 @@ msgstr "ተጭኗል። <span class=\"deviceDown\">ማስታወሻ: SNMPv3ን �
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "የphp.ini memory_limitዎን ወደ %s ወይም ከዚያ በላይ እንዲቀይሩ በጥብቅ ይመከራል።"
 
 #: utilities.php
@@ -18099,11 +18091,11 @@ msgid "Technical Support [%s]"
 msgstr "የቴክኒክ ድጋፍ [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "የውሂብ መጠይቅ መሸጎጫ ከውሂብ መጠይቅ ግቤት ዓይነቶች የተሰበሰበ መረጃን ያከማቻል። ከእነዚህ መስኮች የሚገኙ እሴቶች በግራፎች የጽሑፍ ቦታ ውስጥ ለመግለጫዎች፣ ለአቀባዊ መለያዎች እና ለGPRINTS እንዲሁም በCDEFs ውስጥ ሊያገለግሉ ይችላሉ።"
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "የKadupul ምዝግብ ማስታወሻ በሥርዓት ቅንብሮች ላይ በመመስረት ስታቲስቲክስን፣ ስህተትን እና ሌሎች መልዕክቶችን ያከማቻል። ይህ መረጃ ከሰብሳቢው እና ከመተግበሪያው ጋር ያሉ ችግሮችን ለመለየት ሊያገለግል ይችላል።"
 
 #: utilities.php
@@ -18139,7 +18131,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "ይህ በSNMP ወኪል የሚስተናገዱ ሁሉንም ነገሮች ያሳያል።"
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "ይህ የተጠቆመው የማህደረ ትውስታ እሴት ባሉት የውሂብ ምንጮች ብዛት ላይ በመመስረት ይሰላል እና እንደ አስተያየት ብቻ ጥቅም ላይ መዋል አለበት፣ ትክክለኛ እሴቶች በመስፈርቶች ላይ በመመስረት ከሥርዓት ወደ ሥርዓት ሊለያዩ ይችላሉ።"
 
 #: utilities.php
@@ -18176,7 +18168,7 @@ msgid "Update Frequency:"
 msgstr "የዝማኔ ድግግሞሽ:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "የጎደሉ rrd ፋይሎችን ወይም በrrdfiles ውስጥ የጎደሉ እሴቶችን ችግሮች ለማሳየት ይህን መገልገያ ይጠቀሙ። በውቅር->ቅንብሮች->ውሂብ ውስጥ rrdcheck ን ማንቃት ያስፈልግዎታል"
 
 #: utilities.php

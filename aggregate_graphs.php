@@ -401,7 +401,7 @@ function form_actions()
                 print "<tr>
 					<td class='textArea'>
 						<p>" . __('The selected Aggregate Graphs represent elements from more than one Graph Template.') . "</p>
-						<p>" . __('In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press \'Return\' and then select only Aggregate Graph that utilize the same Graph Template.') . "</p>
+						<p>" . __('In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press \'Return\' and then select only Aggregate Graphs that utilize the same Graph Template.') . "</p>
 						<div class='itemlist'><ul>$graph_list</ul></div>
 					</td>
 				</tr>";
@@ -410,8 +410,8 @@ function form_actions()
             } elseif (cacti_sizeof($graph_templates) == 0) {
                 print "<tr>
 					<td class='textArea'>
-						<p>" . __('The selected Aggregate Graphs does not appear to have any matching Aggregate Templates.') . "</p>
-						<p>" . __('In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press \'Return\' and then first create your Aggregate Template before retrying.') . "</p>
+						<p>" . __('The selected Aggregate Graphs do not appear to have any matching Aggregate Templates.') . "</p>
+						<p>" . __('In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press \'Return\' and then first create your Aggregate Template before retrying.') . "</p>
 						<div class='itemlist'><ul>$graph_list</ul></div>
 					</td>
 				</tr>";
@@ -1664,7 +1664,7 @@ function aggregate_graph()
     $display_text = array(
         'title_cache'    => array('display' => __('Graph Title'), 'align' => 'left', 'sort' => 'ASC', 'tip' => __('The title for the Aggregate Graphs')),
         'local_graph_id' => array('display' => __('ID'), 'align' => 'right', 'sort' => 'ASC', 'tip' => __('The internal database identifier for this object')),
-        'name'           => array('display' => __('Aggregate Template'), 'align' => 'left', 'sort' => 'ASC', 'tip' => __('The Aggregate Template that this Aggregate Graphs is based upon')),
+        'name'           => array('display' => __('Aggregate Template'), 'align' => 'left', 'sort' => 'ASC', 'tip' => __('The Aggregate Template that this Aggregate Graph is based upon')),
         'height'         => array('display' => __('Size'), 'align' => 'right', 'sort' => 'ASC')
     );
 

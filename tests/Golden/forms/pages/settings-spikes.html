@@ -13,7 +13,7 @@
       <div class="formRow even" id="row_spikekill_avgnan"><div class="formColumnLeft"><div class="formFieldName">Replacement Method<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">There are three replacement methods. The first method replaces the spike with the average of the data source in question. The second method replaces the spike with a 'NaN'. The last replaces the spike with the last known good value found.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="spikekill_avgnan" name="spikekill_avgnan">
           <option value="avg">Average</option>
-          <option value="nan">NaN's</option>
+          <option value="nan">NaNs</option>
           <option selected="" value="last">Last Known Good</option>
         </select>
         </div>
@@ -60,7 +60,7 @@
         </div>
         </div>
       </div>
-      <div class="formRow odd" id="row_spikekill_outliers"><div class="formColumnLeft"><div class="formFieldName">Variance Number of Outliers<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average. If you choose an outlier value of 5, then both the top and bottom 5 averages are removed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
+      <div class="formRow odd" id="row_spikekill_outliers"><div class="formColumnLeft"><div class="formFieldName">Variance Number of Outliers<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average. If you choose an outlier value of 5, then both the top and bottom 5 averages are removed.</span></div></div></div></div><div class="formColumnRight"><div class="formData">
         <select id="spikekill_outliers" name="spikekill_outliers">
           <option value="3">3 High/Low Samples</option>
           <option value="4">4 High/Low Samples</option>

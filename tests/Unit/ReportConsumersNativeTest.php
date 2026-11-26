@@ -54,7 +54,7 @@ test('actual report controller retains item identities and bounds persisted bulk
             if ($case['mode'] === 'own') expect($report['user_id'])->toBe(1);
             else expect($report['enabled'])->toBe($case['mode'] === 'enable' ? 'on' : '');
         } elseif ($case['mode'] === 'missing-email') {
-            expect(json_encode($result['report_messages']))->toContain('Please set destination e-mail addresses');
+            expect(json_encode($result['report_messages']))->toContain('Please set destination Email addresses');
         } elseif ($case['mode'] === 'invalid-new-item') {
             expect($result['report_errors'])->not->toBe([]);
             expect($result['report_state']['reports_items'])->toHaveCount(2);

@@ -18,9 +18,13 @@ import re
 import subprocess
 import tempfile
 
-COMPATIBILITY_CONTENT_SHA256 = "53689b6da6cbe380a4be82e5dbdbce7d6b1cefbf6e8630f8f1717a93786bd314"
+COMPATIBILITY_CONTENT_SHA256 = "0fb3a4339804330d58470a6706200a2a0c9f971ec9f2966881f9287bdc330af6"
 # Catalogs record file-only references so moving lines never rewrites them.
 LINE_REFERENCE = re.compile(r":\d+$")
+# "Label (--option ...)" labels name an RRDtool option that must stay verbatim.
+OPTION_LABEL = re.compile(r"^.*\S \((--[^()&]+?)[ =]?(?:&lt;.*)?\)$")
+# An entity split by inserted whitespace, such as "&gt ;" or "& #160;", is shown literally.
+SPLIT_ENTITY = re.compile(r"&(?:lt|gt|amp|quot) ;|& #\d+;")
 RETIRED_MESSAGES = frozenset(("Access Denied!  LDAP Error: %s",
                              "Access Denied!  LDAP Search Error: %s",
                              "LDAP Search Error: %s"))
@@ -88,6 +92,24 @@ def entries(text: str) -> dict[tuple[str, str, str], dict[str, str]]:
     return result
 
 
+def translation_defects(message: dict[str, str]) -> list[str]:
+    """Defects a translation shows against its English source without reading the language."""
+    defects = []
+    option = OPTION_LABEL.match(message["msgid"])
+    for field, value in message.items():
+        if not field.startswith("msgstr") or not value:
+            continue
+        source = message.get("msgid_plural", message["msgid"]) if field not in ("msgstr", "msgstr[0]") else message["msgid"]
+        ending = value.rstrip()[-2:]
+        if ending in ("?.", "!.") and not source.rstrip().endswith(ending):
+            defects.append(f"{field} ends with {ending!r}, the source does not")
+        if option and option.group(1) not in value:
+            defects.append(f"{field} drops the RRDtool option {option.group(1)}")
+        if SPLIT_ENTITY.search(value) and not SPLIT_ENTITY.search(source):
+            defects.append(f"{field} splits an HTML entity with whitespace")
+    return defects
+
+
 def verify(source: Path, catalogs: Path) -> None:
     historical = compatibility(source / "locales/historical-compatibility.json")
     manifest = json.loads((source / "locales/catalogs.json").read_text())
@@ -149,6 +171,10 @@ def verify(source: Path, catalogs: Path) -> None:
                     raise ValueError("Reviewed historical translation differs: " + po.name)
                 if translated[key]["flags"] != ",".join(item["translations"][po.stem]["flags"]):
                     raise ValueError("Reviewed historical translation flags differ: " + po.name)
+            for key, message in translated.items():
+                defects = translation_defects(message)
+                if defects:
+                    raise ValueError(f"Translation defect in {po.name} {key[1]!r}: " + "; ".join(defects))
             compiled = Path(temporary) / (po.stem + ".mo")
             subprocess.run(["msgfmt", "--check-format", str(po), "-o", str(compiled)],
                            check=True, timeout=30)

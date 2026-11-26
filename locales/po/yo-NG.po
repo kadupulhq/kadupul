@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Yoruba Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-25 14:53-0800\n"
+"POT-Creation-Date: 2026-11-25 16:18-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Yoruba\n"
@@ -290,11 +290,11 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "Láti ṣí Àwọn Àtẹ àwòrán Àkójọpọ̀ ìsàlẹ̀ lọ sí Àkójọpọ̀ olúborí Àdàkọ, kọ́kọ́ ṣẹ̀dá Àdàkọ Àkójọpọ̀ fún Àdàkọ Àtẹ àwòrán '%s'."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
+msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
 msgstr "Láti ṣí Àwọn Àtẹ àwòrán Àkójọpọ̀ ìsàlẹ̀ lọ sí Àkójọpọ̀ olúborí Àdàkọ, wọ́n gbọ́dọ̀ máa lo Àdàkọ Àtẹ àwòrán kan ṣoṣo. Jọ̀wọ́ tẹ 'Padà' lẹ́yìn náà yan Àtẹ àwòrán Àkójọpọ̀ tí ó ń lo Àdàkọ Àtẹ àwòrán kan náà nìkan."
 
 #: aggregate_graphs.php
-msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
+msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "Láti ṣí Àwọn Àtẹ àwòrán Àkójọpọ̀ ìsàlẹ̀ lọ láti lo Àdàkọ Àkójọpọ̀, ọ̀kan gbọ́dọ̀ ti wà tẹ́lẹ̀. Jọ̀wọ́ tẹ 'Padà' lẹ́yìn náà kọ́kọ́ ṣẹ̀dá Àdàkọ Àkójọpọ̀ rẹ kí o tó tún gbìyànjú."
 
 #: aggregate_graphs.php
@@ -438,7 +438,7 @@ msgid "Template"
 msgstr "Àdàkọ"
 
 #: aggregate_graphs.php
-msgid "The Aggregate Template that this Aggregate Graphs is based upon"
+msgid "The Aggregate Template that this Aggregate Graph is based upon"
 msgstr "Àdàkọ Àpapọ̀ tí Gíráfù Àpapọ̀ yìí dá lé lórí"
 
 #: aggregate_graphs.php
@@ -446,7 +446,7 @@ msgid "The internal database identifier for this object"
 msgstr "Olùdánimọ̀ dátàbéèsì inú fún ohun yìí"
 
 #: aggregate_graphs.php
-msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
+msgid "The selected Aggregate Graphs do not appear to have any matching Aggregate Templates."
 msgstr "Àwọn Gíráfù Àpapọ̀ tí a yàn kò dà bí ẹni pé wọ́n ní Àwọn Àdàkọ Àpapọ̀ tó báramu."
 
 #: aggregate_graphs.php
@@ -517,7 +517,7 @@ msgid "Aggregate Templates"
 msgstr "Àwọn Àdàkọ Àkójọpọ̀"
 
 #: aggregate_templates.php
-msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
+msgid "Aggregate Templates that are in use cannot be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "A kò lè Pa Àwọn Àdàkọ Àkójọpọ̀ tí ó wà nínú lílò rẹ́. Nínú lílò túmọ̀ sí pé Àkójọpọ̀ kan ń tọ́ka sí i."
 
 #: aggregate_templates.php
@@ -754,7 +754,7 @@ msgid "All your login sessions have been cleared."
 msgstr "A ti nu gbogbo àwọn ìgbà ìwọlé rẹ kúrò."
 
 #: auth_profile.php
-msgid "An Email Address you be reached at."
+msgid "An Email Address you can be reached at."
 msgstr "Àdírẹ́sì Ímeèlì kan tí a lè kàn sí ọ."
 
 #: auth_profile.php
@@ -1108,7 +1108,7 @@ msgid "Clear Filtered"
 msgstr "Nu Èyí Tí A Ṣe Àlẹ̀mọ́ Rẹ̀ Kúrò"
 
 #: automation_networks.php
-msgid "Click 'Continue' to cancel on going Network Discovery(s)."
+msgid "Click 'Continue' to cancel ongoing Network Discovery(s)."
 msgstr "Tẹ 'Tẹ̀síwájú' láti fagilé (Àwọn) Ìwárí Nẹ́ẹ̀tìwọ́ọ̀kì tí ó ń lọ lọ́wọ́."
 
 #: automation_networks.php
@@ -1235,7 +1235,7 @@ msgid "Schedule"
 msgstr "Ìtòlẹ́sẹẹsẹ Àkókò"
 
 #: automation_networks.php
-msgid "The Current Status of this Networks Discovery"
+msgid "The Current Status of this Network's Discovery"
 msgstr "Ipò Lọ́wọ́lọ́wọ́ ti Ìwádìí Nẹ́tíwọ́ọ̀kì yìí"
 
 #: automation_networks.php
@@ -1605,11 +1605,11 @@ msgid "For attribute '%s', issue found '%s'"
 msgstr "Fún àbùdá '%s', a rí ìṣòro '%s'"
 
 #: data_debug.php
-msgid "Is RRA Folder writeable by poller?"
+msgid "Is RRA Folder writable by poller?"
 msgstr "Ṣé Fódà RRA ṣe é kọ sí láti ọwọ́ poller?"
 
 #: data_debug.php
-msgid "Is RRDfile writeable by poller?"
+msgid "Is RRDfile writable by poller?"
 msgstr "Ṣé RRDfile ṣe é kọ sí láti ọwọ́ poller?"
 
 #: data_debug.php
@@ -1987,7 +1987,7 @@ msgstr "Ìsopọ̀ Jẹ́ Kíkà Nìkan títí a óò fi rí fáìlì XML"
 
 #: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
-msgid_plural "Click 'Continue' to Delete following Data Queries."
+msgid_plural "Click 'Continue' to Delete the following Data Queries."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti Pa Ìbéèrè Dátà tó tẹ̀lé e rẹ́."
 
 #: data_queries.php
@@ -1996,7 +1996,7 @@ msgstr "Tẹ 'Tẹ̀síwájú' láti pa Ìsopọ̀ Àwòrán ìtọ́ka Ìbéèr
 
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
-msgid_plural "Click 'Continue' to duplicate following Data Queries."
+msgid_plural "Click 'Continue' to duplicate the following Data Queries."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti ṣe ẹ̀dà Ìbéèrè Dátà tó tẹ̀lé e."
 
 #: data_queries.php
@@ -2160,7 +2160,7 @@ msgid "The name of this Data Query."
 msgstr "Orúkọ Ìbéèrè Dátà yìí."
 
 #: data_queries.php
-msgid "The number of Graphs Templates using this Data Query."
+msgid "The number of Graph Templates using this Data Query."
 msgstr "Nọ́ńbà Àwọn Àdàkọ Gíráfù tí ó ń lo Ìbéèrè Dátà yìí."
 
 #: data_queries.php
@@ -2211,7 +2211,7 @@ msgstr "Yan Ẹ̀rọ tí Orísun Dátà yìí jẹ́ tirẹ̀."
 
 #: data_sources.php
 msgid "Click 'Continue' to delete the following Data Source"
-msgid_plural "Click 'Continue' to delete following Data Sources"
+msgid_plural "Click 'Continue' to delete the following Data Sources"
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Orísun Dátà tó tẹ̀lé e rẹ́"
 
 #: data_sources.php
@@ -2342,7 +2342,7 @@ msgid "External"
 msgstr "Ti Ìta"
 
 #: data_sources.php
-msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
+msgid "If this Data Source is no longer in use by Graphs, it can be Deleted."
 msgstr "Tí Orísun Dátà yìí kò bá sí ní lílo mọ́ láti ọwọ́ Àwọn Àtẹ àwòrán, ó lè di Píparẹ́."
 
 #: data_sources.php
@@ -2466,7 +2466,7 @@ msgid "Whether or not data will be collected for this Data Source. Controlled at
 msgstr "Bóyá a ó kó dátà jọ fún Orísun Dátà yìí tàbí bẹ́ẹ̀ kọ́. Dídarí ní ìpele Àdàkọ Dátà."
 
 #: data_templates.php
-msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will loose their Custom Data.  This can result in broken Data Collection and Graphs"
+msgid "After you uncheck this checkbox and then Save the Data Template, any existing Data Sources based on this Data Template will lose their Custom Data.  This can result in broken Data Collection and Graphs"
 msgstr "Lẹ́yìn tí o bá yọ àmì kúrò nínú àpótí yìí tí o sì Fi Àdàkọ Dátà Pamọ́, gbogbo Àwọn Orísun Dátà tó wà tẹ́lẹ̀ tí ó dá lórí Àdàkọ Dátà yìí yóò pàdánù Dátà Àkànṣe wọn. Èyí lè fa Ìkójọ Dátà àti Àwọn Àwòrán ìtọ́ka tí ó bàjẹ́"
 
 #: data_templates.php
@@ -2528,7 +2528,7 @@ msgid "Data Templates [new]"
 msgstr "Àwọn Àdàkọ Dátà [tuntun]"
 
 #: data_templates.php
-msgid "Data Templates in use can not be modified"
+msgid "Data Templates in use cannot be modified"
 msgstr "A kò lè ṣàtúnṣe Àwọn Àdàkọ Dátà tí ó wà nínú lílò"
 
 #: data_templates.php
@@ -2605,7 +2605,7 @@ msgid "This value is disabled due to it being derived from the Device and read o
 msgstr "Iye yìí ti dá dúró nítorí pé ó wá láti inú Ẹ̀rọ náà ó sì jẹ́ kíkà nìkan."
 
 #: data_templates.php
-msgid "This value is disabled due to it either it value being derived from the Device or special Data Query object that keeps track of critical data Data Query associations."
+msgid "This value is disabled due to its value either being derived from the Device or a special Data Query object that keeps track of critical Data Query associations."
 msgstr "Iye yìí ti dá dúró nítorí pé yálà iye rẹ̀ wá láti inú Ẹ̀rọ tàbí ohun Ìbéèrè Dátà pàtàkì tí ó ń tọ́pa àwọn ìsopọ̀ Ìbéèrè Dátà pàtàkì."
 
 #: data_templates.php graph_templates.php host_templates.php
@@ -2731,7 +2731,7 @@ msgid "Click 'Continue' to duplicate the following Graph Template(s). You can op
 msgstr "Tẹ 'Tẹ̀síwájú' láti ṣe ẹ̀dà (Àwọn) Àdàkọ Àwòrán ìtọ́ka tó tẹ̀lé e. O lè yí ọ̀nà àkọlé padà fún (Àwọn) Àdàkọ Àwòrán ìtọ́ka tuntun bí o bá fẹ́."
 
 #: graph_templates.php
-msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Templates(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
+msgid "Click 'Continue' to perform a Full Synchronization between your Graphs and the chosen Graph Template(s). If you simply have a situation where the Graph Items don't match the Graph Template, try the Quick Sync Graphs option first as it will take much less time.  This function is important if you have Graphs that exist with multiple versions of a Graph Template and wish to make them all common in appearance."
 msgstr "Tẹ 'Tẹ̀síwájú' láti ṣe Ìṣọ̀kan Kíkún láàárín Àwọn Àwòrán ìtọ́ka rẹ àti (Àwọn) Àdàkọ Àwòrán ìtọ́ka tí a yàn. Tí o bá kàn ní ipò kan níbi tí Àwọn Ohun Àwòrán ìtọ́ka kò bá Àdàkọ Àwòrán ìtọ́ka mu, gbìyànjú àṣàyàn Mú Àwọn Àwòrán ìtọ́ka Ṣọ̀kan Kíákíá lákọ̀ọ́kọ́ nítorí kò ní gba àkókò púpọ̀. Iṣẹ́ yìí ṣe pàtàkì tí o bá ní Àwọn Àwòrán ìtọ́ka tí ó wà pẹ̀lú onírúurú ẹ̀yà Àdàkọ Àwòrán ìtọ́ka kan tí o sì fẹ́ kí gbogbo wọn jọra ní ìrísí."
 
 #: graph_templates.php
@@ -3063,7 +3063,7 @@ msgid "Change Graph(s) Associated Device"
 msgstr "Yí Ẹ̀rọ Tí Ó Somọ́ (Àwọn) Àwòrán ìtọ́ka Padà"
 
 #: graphs.php
-msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
+msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Yan Àdàkọ Àwòrán ìtọ́ka kan kí o sì tẹ 'Tẹ̀síwájú' láti yí Àdàkọ Àwòrán ìtọ́ka padà fún (Àwọn) Àwòrán ìtọ́ka tó tẹ̀lé e. Jọ̀wọ́ kíyèsí pé, àwọn Àdàkọ Àwòrán ìtọ́ka tí ó bára mu nìkan ni a óò fi hàn. A mọ èyí tí ó bára mu nípasẹ̀ àwọn tí ó ní Àwọn Orísun Dátà kan náà."
 
 #: graphs.php
@@ -3269,7 +3269,7 @@ msgid "The selected Tree is not available."
 msgstr "Igi tí a yàn kò sí."
 
 #: graphs.php
-msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
+msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs' Graph Template and try again, or simply create an un-templated Aggregate Graph."
 msgstr "Lọ́wọ́lọ́wọ́ kò sí Àwọn Àdàkọ Àpapọ̀ tí a túmọ̀ fún Àdàkọ Gíráfù yìí. Jọ̀wọ́ yálà kọ́kọ́ ṣẹ̀dá Àdàkọ Àpapọ̀ fún Àdàkọ Gíráfù Àwọn Gíráfù tí a yàn kí o sì tún gbìyànjú, tàbí kàn ṣẹ̀dá Gíráfù Àpapọ̀ tí kò ní àdàkọ."
 
 #: graphs.php
@@ -3467,20 +3467,20 @@ msgid "Class"
 msgstr "Ìsọ̀rí"
 
 #: host_templates.php
+msgid "Click 'Continue' and the following Data Queries will be disassociated from the Device Template."
+msgstr "Tẹ 'Tẹ̀síwájú' láti pa àwọn Ìbéèrè Dátà tó tẹ̀lé e rẹ́ a óò yọ wọ́n kúrò ní ìsopọ̀ pẹ̀lú Àdàkọ Ẹ̀rọ."
+
+#: host_templates.php
+msgid "Click 'Continue' and the following Graph Template will be disassociated from the Device Template."
+msgstr "Tẹ 'Tẹ̀síwájú' láti pa Àdàkọ Àwòrán ìtọ́ka tó tẹ̀lé e rẹ́ a óò yọ ọ́ kúrò ní ìsopọ̀ pẹ̀lú Àdàkọ Ẹ̀rọ."
+
+#: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
 msgstr "Tẹ 'Tẹ̀síwájú' láti Mú Àwọn Ẹ̀rọ tí ó somọ́ (Àwọn) Àdàkọ Ẹ̀rọ tí a yàn ṣọ̀kan. Kíyèsí pé ìgbésẹ̀ yìí lè gba àkókò díẹ̀ ní ìbámu pẹ̀lú iye Àwọn Ẹ̀rọ tí a so mọ́ Àdàkọ Ẹ̀rọ náà."
 
 #: host_templates.php
-msgid "Click 'Continue' to delete the following Data Queries will be disassociated from the Device Template."
-msgstr "Tẹ 'Tẹ̀síwájú' láti pa àwọn Ìbéèrè Dátà tó tẹ̀lé e rẹ́ a óò yọ wọ́n kúrò ní ìsopọ̀ pẹ̀lú Àdàkọ Ẹ̀rọ."
-
-#: host_templates.php
 msgid "Click 'Continue' to delete the following Device Template(s)."
 msgstr "Tẹ 'Tẹ̀síwájú' láti pa (Àwọn) Àdàkọ Ẹ̀rọ tó tẹ̀lé e rẹ́."
-
-#: host_templates.php
-msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
-msgstr "Tẹ 'Tẹ̀síwájú' láti pa Àdàkọ Àwòrán ìtọ́ka tó tẹ̀lé e rẹ́ a óò yọ ọ́ kúrò ní ìsopọ̀ pẹ̀lú Àdàkọ Ẹ̀rọ."
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
@@ -3570,7 +3570,7 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Mú Àwọn Ẹ̀rọ Báramu sí Àdàkọ Ẹ̀rọ"
 
 #: host_templates.php
-msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
+msgid "The Class of this Device Template.  The Class Name should be representative of its function."
 msgstr "Ẹ̀ka ti Àdàkọ Ẹ̀rọ yìí. Orúkọ Ẹ̀ka gbọ́dọ̀ ṣàfihàn iṣẹ́ rẹ̀."
 
 #: host_templates.php
@@ -3595,7 +3595,7 @@ msgstr "PÀTÀKÌ: O gbọ́dọ̀ wọlé láti lè ráyè sí agbègbè Kadupu
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
-msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
+msgid "If you feel that this is an error, please contact your Kadupul Administrator."
 msgstr "Tí o bá rò pé àṣìṣe ni èyí. Jọ̀wọ́ kàn sí Olùṣàkóso Kadupul rẹ."
 
 #: include/auth.php
@@ -3611,7 +3611,7 @@ msgid "Not Logged In"
 msgstr "Kò Wọlé"
 
 #: include/auth.php
-msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
+msgid "Only Kadupul Administrators with Install/Upgrade privilege may log in at this time"
 msgstr "Àwọn Olùṣàkóso Kadupul tí wọ́n ní àǹfààní Ìfisori Ẹ̀rọ/Ìgbéga nìkan ni wọ́n lè wọlé ní àkókò yìí"
 
 #: include/auth.php
@@ -4995,7 +4995,7 @@ msgid "Operator"
 msgstr "Olùṣiṣẹ́"
 
 #: include/global_arrays.php
-msgid "Page is not defined.  Therefore, it can not be displayed."
+msgid "Page is not defined.  Therefore, it cannot be displayed."
 msgstr "Ojú-ewé kò sí ní títúmọ̀. Nítorí náà, a kò lè ṣàfihàn rẹ̀."
 
 #: include/global_arrays.php
@@ -5565,8 +5565,8 @@ msgid "Use the First Handler Found"
 msgstr "Lo Olùtọ́jú Àkọ́kọ́ Tí A Rí"
 
 #: include/global_arrays.php
-msgid "Use the MonoTranslator GetText Handler"
-msgstr "Lo Olùtọ́jú GetText MonoTranslator"
+msgid "Use the MoTranslator GetText Handler"
+msgstr "Lo Olùtọ́jú GetText MoTranslator"
 
 #: include/global_arrays.php
 msgid "Use the Oscarotero GetText Handler"
@@ -5711,7 +5711,7 @@ msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Nígbà tí iye àtọ́ka Ìbéèrè Dátà bá yí padà, a ó ṣe Àtúnṣe Àtọ́ka."
 
 #: include/global_arrays.php
-msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
+msgid "When the Device's SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Nígbà tí àkókò ìṣiṣẹ́ SNMP Àwọn Ẹ̀rọ bá lọ sẹ́yìn, a ó ṣe Àtúnṣe Àtọ́ka."
 
 #: include/global_arrays.php
@@ -5755,7 +5755,7 @@ msgid "You are not allowed to change your password."
 msgstr "A kò gbà ọ́ láàyè láti yí ọ̀rọ̀ aṣínà rẹ padà."
 
 #: include/global_arrays.php
-msgid "You must have built in user authentication turned on to use this feature."
+msgid "You must have built-in user authentication turned on to use this feature."
 msgstr "O gbọ́dọ̀ mú ìfìdí múlẹ̀ olùlò tí a kọ́ sínú ṣiṣẹ́ láti lo ẹ̀yà yìí."
 
 #: include/global_arrays.php
@@ -5917,17 +5917,17 @@ msgstr "OID %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d OID's"
+msgid "%d OIDs"
 msgstr "Àwọn OID %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repetitions"
+msgid "%d Repetition"
 msgstr "Àtúntẹ̀sí %d"
 
 #: include/global_form.php
 #, php-format
-msgid "%d Repitition"
+msgid "%d Repetitions"
 msgstr "Àtúntẹ̀sí %d"
 
 #: include/global_form.php
@@ -6136,7 +6136,7 @@ msgid "Choose a Data Query to apply to this rule."
 msgstr "Yan Ìbéèrè Dátà kan láti lò fún òfin yìí."
 
 #: include/global_form.php
-msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
+msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
 msgstr "Yan Ohun Igi-abẹ́ kan láti so mọ́.<br>Rí i dájú pé ó ṣì wà níbẹ̀ nígbà tí a bá ń ṣe òfin yìí!"
 
 #: include/global_form.php
@@ -6146,6 +6146,10 @@ msgstr "Yan Igi kan fún Àwọn Ohun Igi tuntun."
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
 msgstr "Yan orúkọ kan fún orísun dátà yìí. Ó lè ní àwọn àyípadà ìrọ́pò bíi |host_description| tàbí |query_fieldName|. Fún àtòjọ kíkún ti àwọn àmì ìrọ́pò tí a ṣètìlẹ́yìn fún, jọ̀wọ́ wo ìwé àkọsílẹ̀ Kadupul."
+
+#: include/global_form.php
+msgid "Choose a unique name to represent this piece of data inside of the RRDfile."
+msgstr "Yan orúkọ ọ̀tọ̀ láti dúró fún ẹyọ dátà yìí nínú RRDfile."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -6205,10 +6209,6 @@ msgid "Choose the method you wish to use to collect data for this Data Input met
 msgstr "Yan ọ̀nà tí o fẹ́ lò láti kó dátà jọ fún ọ̀nà Ìfisínú Dátà yìí."
 
 #: include/global_form.php
-msgid "Choose unique name to represent this piece of data inside of the RRDfile."
-msgstr "Yan orúkọ ọ̀tọ̀ láti dúró fún ẹyọ dátà yìí nínú RRDfile."
-
-#: include/global_form.php
 msgid "Common Options"
 msgstr "Àwọn Àṣàyàn Tó Wọ́pọ̀"
 
@@ -6261,7 +6261,7 @@ msgid "Determines if the user account is locked."
 msgstr "Ó ń pinnu bóyá àkọọ́lẹ̀ olùlò wà ní títìpa."
 
 #: include/global_form.php user_group_admin.php
-msgid "Determines if user is able to login."
+msgid "Determines if user is able to log in."
 msgstr "Ó ń pinnu bóyá olùlò lè wọlé."
 
 #: include/global_form.php
@@ -6322,7 +6322,7 @@ msgid "Enter the SNMP Context to use for this device."
 msgstr "Tẹ Àyíká-ọ̀rọ̀ SNMP láti lò fún ẹ̀rọ yìí."
 
 #: include/global_form.php
-msgid "Enter the SNMP v3 Engine Id to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Enter the SNMP v3 Engine ID to use for this device. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Tẹ Id Ẹ́ńjìnì SNMP v3 láti lò fún ẹ̀rọ yìí. Fi pápá yìí sí òfo láti lo ID Ẹ́ńjìnì SNMP tí a ń ṣàlàyé fún olùgbà Ìfitónilétí SNMPv3 kọ̀ọ̀kan."
 
 #: include/global_form.php
@@ -6525,7 +6525,7 @@ msgid "Include Prefix Text"
 msgstr "Fi Ọ̀rọ̀ Àtẹ́lẹ̀ Kún Un"
 
 #: include/global_form.php
-msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
+msgid "Include the source Graphs' GPRINT Title Text with the Aggregate Graph(s)."
 msgstr "Fi Ọ̀rọ̀ Àkọlé GPRINT Àwọn Àtẹ àwòrán Orísun Kún Un pẹ̀lú Àwọn Àtẹ àwòrán Àkójọpọ̀."
 
 #: include/global_form.php
@@ -7033,7 +7033,7 @@ msgid "The data that is sent to the script, which includes the complete path to 
 msgstr "Dátà tí a fi ránṣẹ́ sí síkíríìtì, tó ní gbogbo ọ̀nà sí síkíríìtì àti àwọn orísun ìtẹ̀wọlé nínú àkámọ́ &lt;&gt;."
 
 #: include/global_form.php
-msgid "The frequency that data will be collected from the Data Source?"
+msgid "The frequency that data will be collected from the Data Source."
 msgstr "Ìgbàgbọ̀ tí a ó fi máa kó dátà jọ láti inú Orísun Dátà?"
 
 #: include/global_form.php
@@ -7137,7 +7137,7 @@ msgid "The physical location of the Device.  This free form text can be a room, 
 msgstr "Ipò ti ara ti Ẹ̀rọ. Ọ̀rọ̀ òmìnira yìí lè jẹ́ yàrá, ipò àpótí, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
 
 #: include/global_form.php
-msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not update, Graphs will not be allowed to be created."
+msgid "The result of the Whitespace verification check for the specific Input Method.  If the Input String changes, and the Whitelist file is not updated, Graphs will not be allowed to be created."
 msgstr "Èsì àyẹ̀wò ìfìdí múlẹ̀ Ààyè funfun fún Ọ̀nà Ìtẹ̀wọlé pàtó. Tí Ọ̀rọ̀ Ìtẹ̀wọlé bá yí padà, tí a kò sì ṣàtúnṣe fáìlì Àtòjọ Àṣẹ, a kò ní gba Àwọn Gíráfù láàyè láti ṣẹ̀dá."
 
 #: include/global_form.php
@@ -7153,7 +7153,7 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Irú gíráfù tí a ṣẹ̀dá; PNG, GIF tàbí SVG. Yíyàn irú àwòrán gíráfù sinmi lórí RRDtool gan-an."
 
 #: include/global_form.php
-msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Irú ìdìpọ̀ ìṣàbẹ̀wò láti fi ránṣẹ́. <br><i>ÀKÍYÈSÍ: ICMP lórí Linux/UNIX nílò àǹfààní root.</i> <br><i>ÀKÍYÈSÍ: Ìṣàbẹ̀wò TCP Tí Ó Ti - Kódà bí ìṣàbẹ̀wò tcp kò bá yọrí sí rere, a lè ka ẹ̀rọ náà sí LÓKÈ.</i>"
 
 #: include/global_form.php
@@ -7249,7 +7249,7 @@ msgid "Vertical Label (--vertical-label)"
 msgstr "Àmì Inaro (--vertical-label)"
 
 #: include/global_form.php
-msgid "What Site is this Device associated with."
+msgid "What Site is this Device associated with?"
 msgstr "Ibùdó wo ni Ẹ̀rọ yìí sopọ̀ mọ́."
 
 #: include/global_form.php
@@ -7273,11 +7273,11 @@ msgid "When viewing a Graph based upon the RRA in question, the default Timespan
 msgstr "Nígbà tí a bá ń wo Gíráfù kan tó dá lórí RRA tí a ń sọ̀rọ̀ rẹ̀, Àkókò Ìgbà àìyípadà láti fi hàn fún Gíráfù yẹn."
 
 #: include/global_form.php
-msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Nígbà tí o bá ṣètò àmì ákísì òsì, fi òfin kan sí ìtòlẹ́sẹẹsẹ dátà. Àwọn ìtòlẹ́sẹẹsẹ tí a ṣe àtìlẹ́yìn fún ní \"numeric\" níbi tí a ti ń ṣe dátà gẹ́gẹ́ bí nọ́ńbà, \"timestamp\" níbi tí a ti ń túmọ̀ àwọn iye gẹ́gẹ́ bí àmì àkókò UNIX (nọ́ńbà àwọn ìṣẹ́jú-àáyá láti Oṣù Ṣẹẹrẹ 1970) tí a sì fi hàn ní lílo ìtòlẹ́sẹẹsẹ strftime (àìyípadà jẹ́ \"%Y-%m-%d %H:%M:%S\"). Wo --units-length pẹ̀lú. Ní ìparí \"duration\" níbi tí a ti ń túmọ̀ àwọn iye gẹ́gẹ́ bí ìwọ̀n àkókò ní ìdá-ẹgbẹ̀rún ìṣẹ́jú-àáyá. Ìtòlẹ́sẹẹsẹ tẹ̀lé àwọn òfin PRINT/GPRINT tí ó péye pẹ̀lú valstrfduration."
 
 #: include/global_form.php
-msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
+msgid "When you set up the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
 msgstr "Nígbà tí o bá ṣètò àmì ákísì ọ̀tún, fi òfin kan sí ìtòlẹ́sẹẹsẹ dátà. Àwọn ìtòlẹ́sẹẹsẹ tí a ṣe àtìlẹ́yìn fún ní \"numeric\" níbi tí a ti ń ṣe dátà gẹ́gẹ́ bí nọ́ńbà, \"timestamp\" níbi tí a ti ń túmọ̀ àwọn iye gẹ́gẹ́ bí àmì àkókò UNIX (nọ́ńbà àwọn ìṣẹ́jú-àáyá láti Oṣù Ṣẹẹrẹ 1970) tí a sì fi hàn ní lílo ìtòlẹ́sẹẹsẹ strftime (àìyípadà jẹ́ \"%Y-%m-%d %H:%M:%S\"). Wo --units-length àti --right-axis-format pẹ̀lú. Ní ìparí \"duration\" níbi tí a ti ń túmọ̀ àwọn iye gẹ́gẹ́ bí ìwọ̀n àkókò ní ìdá-ẹgbẹ̀rún ìṣẹ́jú-àáyá. Ìtòlẹ́sẹẹsẹ tẹ̀lé àwọn òfin PRINT/GPRINT tí ó péye pẹ̀lú valstrfduration."
 
 #: include/global_form.php
@@ -7441,11 +7441,11 @@ msgid "56 Gbps Ethernet"
 msgstr "Ethernet 56 Gbps"
 
 #: include/global_settings.php
-msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
+msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote><i>Ìfìdímúlẹ̀ Àṣẹ Àbínibí</i> - Kadupul ń ṣàkóso ìfìdímúlẹ̀ àṣẹ olùlò, èyí tó ń jẹ́ kí o dá àwọn olùlò sílẹ̀ kí o sì fún wọn ní ẹ̀tọ́ sí onírúurú agbègbè nínú Kadupul.<br><br><i>Ìfìdímúlẹ̀ Àṣẹ Ìpilẹ̀ Wẹ́ẹ̀bù</i> - Olùpèsè wẹ́ẹ̀bù ni ó ń ṣàkóso ìfìdímúlẹ̀ àṣẹ. A lè fi àwọn olùlò kún tàbí dá wọn sílẹ̀ lọ́nà aládàáṣe ní ìwọlé àkọ́kọ́ tí a bá ti ṣàlàyé Olùlò Àdàkọ, bí bẹ́ẹ̀ kọ́ àwọn àṣẹ àlejò tí a ṣàlàyé ni a óò lò.<br><br><i>Ìfìdímúlẹ̀ Àṣẹ LDAP</i> - Ó ń fàyè gba ìfìdímúlẹ̀ àṣẹ sí olùpèsè LDAP kan. A óò dá àwọn olùlò sílẹ̀ lọ́nà aládàáṣe ní ìwọlé àkọ́kọ́ tí a bá ti ṣàlàyé Olùlò Àdàkọ, bí bẹ́ẹ̀ kọ́ àwọn àṣẹ àlejò tí a ṣàlàyé ni a óò lò. Tí a kò bá ṣí modulu LDAP ti PHP, Ìfìdímúlẹ̀ Àṣẹ LDAP kò ní hàn gẹ́gẹ́ bí àṣàyàn.<br><br><i>Ìfìdímúlẹ̀ Àṣẹ Agbègbè LDAP/AD Púpọ̀</i> - Ó ń jẹ́ kí àwọn olùṣàkóso ṣètìlẹ́yìn fún onírúurú ẹgbẹ́ láti oríṣiríṣi ìtọ́kasí LDAP/AD láti wọlé sí àwọn ohun èlò Kadupul. Gẹ́gẹ́ bí Ìfìdímúlẹ̀ Àṣẹ LDAP, modulu LDAP ti PHP pọndandan láti lo ọ̀nà yìí.</blockquote>"
 
 #: include/global_settings.php
-msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
+msgid "A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "Àtòjọ àwọn ID Ẹ̀rọ tí a fi kọ́mà pín tí o fẹ́ kí ó wà ní ipò Debug nígbà ìkójọ dátà. Ipò Debug yìí wà nígbà ìlànà ìṣàyẹ̀wò Kadupul nìkan."
 
 #: include/global_settings.php
@@ -7453,7 +7453,7 @@ msgid "A developer only option to trace the creation of Data Sources mainly arou
 msgstr "Àṣàyàn fún olùgbédàgbà nìkan láti tọpinpin ìdásílẹ̀ Àwọn Orísun Dátà pàápàá nípa àyẹ̀wò fún ìṣọ̀kan ọ̀tọ̀."
 
 #: include/global_settings.php user_domains.php
-msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
+msgid "A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "Àtòjọ àwọn orúkọ olùgbàlejò DNS tàbí àdírẹ́sì IP tí a fi àlàfo pín fún àwọn olùpèsè LDAP tó tọ́. Kadupul yóò gbìyànjú láti lo àwọn olùpèsè LDAP láti òsì sí ọ̀tún láti fìdí olùlò múlẹ̀."
 
 #: include/global_settings.php
@@ -7673,7 +7673,7 @@ msgid "By Template/Data Query"
 msgstr "Nípasẹ̀ Àdàkọ/Ìbéèrè Dátà"
 
 #: include/global_settings.php
-msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
+msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Ní ìpilẹ̀ṣẹ̀, ìrànlọ́wọ́ ojú-ewé Kadupul wà ní kadupul.org. Síbẹ̀síbẹ̀, tí ètò rẹ kò bá ní ìráyè sí Íńtánẹ́ẹ̀tì, o lè gba ìwé àkọsílẹ̀ sílẹ̀ ní àdúgbò ní ọ̀nà HTML kí o sì gbà á sí ipò 'docs' ti olùpèsè Kadupul rẹ. Tí o bá yan láti lo ipò àdúgbò nìkan fún ìwé ìrànlọ́wọ́ ojú-ewé, ṣàmì sí àpótí yìí."
 
 #: include/global_settings.php
@@ -7697,7 +7697,7 @@ msgid "Check this checkbox if you wish to test the Data Sources prior to their c
 msgstr "Ṣàmì sí àpótí yìí tí o bá fẹ́ dán Àwọn Orísun Dátà wò kí a tó dá wọn sílẹ̀ fún àwọn Àdàkọ Àwòrán ìtọ́ka tuntun àti àwọn tí a ṣẹ̀ṣẹ̀ kó wọlé. Pẹ̀lú Dán Àwọn Orísun Dátà Wò tí ó ń ṣiṣẹ́, tí Orísun Dátà kò bá dá dátà tó tọ́ padà, a kò ní dá Àwòrán ìtọ́ka náà sílẹ̀. Ètò yìí ṣe pàtàkì tí o bá fẹ́ ní Àdàkọ Ẹ̀rọ gbogbogbòò kan tó lè ní àwọn Àdàkọ Àwòrán ìtọ́ka púpọ̀ tí a lè yàn láti lò ní ìbámu pẹ̀lú àwọn ànímọ́ Ẹ̀rọ náà fúnra rẹ̀. Àkíyèsí: Tí o bá ní ìwé àṣẹ tó ń ṣiṣẹ́ pẹ́ gẹ́gẹ́ bí Orísun Dátà, àkókò láti dá Àwọn Àwòrán ìtọ́ka sílẹ̀ yóò pọ̀ sí i."
 
 #: include/global_settings.php
-msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
+msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English."
 msgstr "Yan 'enabled' láti gba ìṣàfihàn èdè-ìbílẹ̀ ti Kadupul láàyè. Ipò mímú-le nílò pé gbogbo àwọn àfikún tí a fi sori ẹ̀rọ rẹ gbọ́dọ̀ ṣètìlẹ́yìn fún èdè tí a béèrè. Tí kò bá rí bẹ́ẹ̀, a óò fi ohun gbogbo hàn ní Èdè Gẹ̀ẹ́sì."
 
 #: include/global_settings.php
@@ -7877,7 +7877,7 @@ msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Olùlò Ìfàṣẹsì SNMP v3 Ìpilẹ̀ṣẹ̀ fún gbogbo Àwọn Ẹ̀rọ tuntun."
 
 #: include/global_settings.php
-msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
+msgid "Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Id Ẹ́ńjìnì SNMP v3 Ìpilẹ̀ṣẹ̀ fún gbogbo Àwọn Ẹ̀rọ tuntun. Fi pápá yìí sí òfo láti lo ID Ẹ́ńjìnì SNMP tí a ń ṣàlàyé fún olùgbà Ìfitónilétí SNMPv3 kọ̀ọ̀kan."
 
 #: include/global_settings.php
@@ -8093,11 +8093,11 @@ msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed
 msgstr "Mú Ṣiṣẹ́ tàbí Pa Àwọn Ìtọ́kasí LDAP Lẹ́nu Iṣẹ́. Tí a bá pa á lẹ́nu iṣẹ́, ó lè mú iyára àwọn ìwádìí pọ̀ sí i."
 
 #: include/global_settings.php
-msgid "Enabled Gradient Support for AREA and STACK charts."
+msgid "Enables Gradient Support for AREA and STACK charts."
 msgstr "Ti Mú Ìtìlẹ́yìn Ìyípadà Àwọ̀ (Gradient) Ṣiṣẹ́ fún àwọn àtẹ AREA àti STACK."
 
 #: include/global_settings.php
-msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
+msgid "Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle."
 msgstr "Ó ń mú ìfisínú tààrà ti àwọn àkọsílẹ̀ sínú poller output boost ṣiṣẹ́ pẹ̀lú àbájáde ìdínkù àkókò 25% nínú ìyípo ìṣàyẹ̀wò kọ̀ọ̀kan."
 
 #: include/global_settings.php user_domains.php
@@ -8189,7 +8189,7 @@ msgid "For use with Kadupul's External Link Support.  Using this setting, you ca
 msgstr "Fún lílo pẹ̀lú Àtìlẹ́yìn Ìjápọ̀ Òde ti Kadupul. Nípa lílo ètò yìí, o lè fi Pátákó Ìṣàkóso Kadupul pamọ́, kí o lè ṣàfihàn ojú-ewé tìrẹ nìkan."
 
 #: include/global_settings.php
-msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
+msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled."
 msgstr "Fún àwọn olùmúlò tí wọ́n ní àǹfààní Console nìkan, bí ó ṣe pẹ́ tó tí olùmúlò yìí lè dúró ní ìwọlé kí a tó yọ ọ́ jáde láìfọwọ́ṣe. Kíyè sí pé tí o kò bá ṣe nǹkan kan fún ju wákàtí kan lọ, o lè ní láti sọ aṣàwárí rẹ di tuntun. Tún kíyè sí pé ètò yìí kò ní ipa kankan nígbà tí Authentication Cookies bá wà ní ṣíṣiṣẹ́."
 
 #: include/global_settings.php
@@ -8337,11 +8337,11 @@ msgid "How do you wish to view Realtime Graphs?"
 msgstr "Báwo ni o ṣe fẹ́ láti wo Àwọn Àtẹ àwòrán Àkókò Gidi?"
 
 #: include/global_settings.php
-msgid "How frequent should Daily Stats be updated?"
+msgid "How frequently should Daily Stats be updated?"
 msgstr "Báwo ni Àwọn Ìṣirò Ojoojúmọ́ ṣe yẹ kí ó máa di títúnṣe lóòrèkóòrè tó?"
 
 #: include/global_settings.php
-msgid "How frequent should RRD be checked ?"
+msgid "How frequently should RRD be checked?"
 msgstr "Báwo ni a ṣe yẹ kí a máa ṣàyẹ̀wò RRD lóòrèkóòrè tó?"
 
 #: include/global_settings.php
@@ -8349,7 +8349,7 @@ msgid "How long one evaluation run may start new batches of rules. Sending queue
 msgstr "Bí ìṣiṣẹ́ àyẹ̀wò kan ṣe lè pẹ́ tó láti bẹ̀rẹ̀ àwọn ìdìpọ̀ òfin tuntun. Fífiránṣẹ́ àwọn ìfitónilétí tó wà lórí ìlà ń tẹ̀lé àyẹ̀wò pẹ̀lú àkókò tó kù, ó sì lè fi ìdìpọ̀ kan ránṣẹ́ kódà nígbà tí ìṣúná àkókò bá ti tán. Àwọn òfin tí a kò bá dé ni a óò kọ́kọ́ ṣàyẹ̀wò ní ìṣiṣẹ́ tó kàn."
 
 #: include/global_settings.php
-msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
+msgid "How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "Àwọn OID mélòó ni ó yẹ kí a dá padà fún ìbéèrè snmpbulkwalk kọ̀ọ̀kan? Fún Àwọn Ẹ̀rọ tí ó ní àwọn igi SNMP ńlá, fífẹ̀ ìwọ̀n yìí yóò mú iṣẹ́ àtún-àtọ́ka pọ̀ sí i lórí WAN."
 
 #: include/global_settings.php
@@ -8357,15 +8357,15 @@ msgid "How many log files do you wish to retain?  Use 0 to never remove any logs
 msgstr "Àwọn fáìlì àkọsílẹ̀ mélòó ni o fẹ́ láti pa mọ́? Lo 0 láti má ṣe yọ àwọn àkọsílẹ̀ kankan kúrò láé. (0-365)"
 
 #: include/global_settings.php
-msgid "How often do you want the Kadupul log display to update."
+msgid "How often do you want the Kadupul log display to update?"
 msgstr "Báwo ni o ṣe fẹ́ kí ìfihàn àkọsílẹ̀ Kadupul máa ṣe àtúnṣe lóòrèkóòrè tó."
 
 #: include/global_settings.php
-msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
+msgid "How should Kadupul support Client Dates based upon the Client browser's timezone."
 msgstr "Báwo ni Kadupul ṣe yẹ kí ó ṣètìlẹ́yìn fún Àwọn Ọjọ́ Olùṣàbẹ̀wò ní ìbámu pẹ̀lú agbègbè àkókò aṣàwárí Olùṣàbẹ̀wò."
 
 #: include/global_settings.php
-msgid "How will Kadupul handle event logging."
+msgid "How will Kadupul handle event logging?"
 msgstr "Báwo ni Kadupul yóò ṣe bójú tó àkọsílẹ̀ ìṣẹ̀lẹ̀."
 
 #: include/global_settings.php
@@ -8381,7 +8381,7 @@ msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log dur
 msgstr "Tí a bá ṣàmì sí i Kadupul yóò ṣe àkọsílẹ̀ àlàyé LDAP àfikún sínú àkọsílẹ̀ Kadupul nígbà àwọn ìṣiṣẹ́ Binding àti Searching."
 
 #: include/global_settings.php
-msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
+msgid "If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Tí Kadupul kò bá lè mọ iyára ìfọwọ́kọ́ nítorí pé yálà ifSpeed tàbí ifHighSpeed kò sí ní ṣíṣètò tàbí ó jẹ́ òdo, ìníyelórí púpọ̀ jùlọ wo ni o fẹ́ lórí àwọn RRDfiles tí yóò jáde."
 
 #: include/global_settings.php
@@ -8409,7 +8409,7 @@ msgid "If the boost output table exceeds this size, in records, an update will t
 msgstr "Tí tábìlì àbájáde boost bá ju ìwọ̀n yìí lọ, ní àwọn àkọsílẹ̀, àtúnṣe yóò wáyé."
 
 #: include/global_settings.php
-msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
+msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log."
 msgstr "Tí boost poller bá ju àkókò ìṣiṣẹ́ yìí lọ, a ó fi ìkìlọ̀ sí inú àkọsílẹ̀ cacti,"
 
 #: include/global_settings.php
@@ -8417,7 +8417,7 @@ msgid "If this directory is not empty, then your original RRDfiles will be backe
 msgstr "Tí fódà yìí kò bá ṣófo, nígbà náà àwọn RRDfiles àtilẹ̀wá rẹ yóò di àkọ́pamọ́ sí ibi yìí."
 
 #: include/global_settings.php
-msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
+msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost poller process."
 msgstr "Tí ààyè yìí kò bá ṣófo, Boost yóò ṣe àkọsílẹ̀ àbájáde RRDUpdate láti inú ìṣiṣẹ́ boost\tpoller."
 
 #: include/global_settings.php
@@ -8425,7 +8425,7 @@ msgid "If this option is checked, Kadupul will populate SNMP Agent tables with K
 msgstr "Tí a bá ṣàmì sí àṣàyàn yìí, Kadupul yóò fi ẹ̀rọ Kadupul àti àlàyé ètò kún àwọn tábìlì SNMP Agent. Kò mú SNMP Agent fúnra rẹ̀ ṣiṣẹ́."
 
 #: include/global_settings.php
-msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
+msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors' standard error will be redirected to this file"
 msgstr "Tí o bá ń ní ìṣòro pẹ̀lú Àwọn Olùkó Dátà ti Kadupul, ṣètò ọ̀nà fáìlì yìí, a ó sì darí àṣìṣe àṣà ti Àwọn Olùkó Dátà sí fáìlì yìí"
 
 #: include/global_settings.php
@@ -8605,7 +8605,7 @@ msgid "Maximum Data Source Items Per Pass"
 msgstr "Àwọn Ohun Èlò Orísun Dátà Púpọ̀ Jùlọ Ní Ìrékọjá Kọ̀ọ̀kan"
 
 #: include/global_settings.php
-msgid "Maximum E-Mail Size"
+msgid "Maximum Email Size"
 msgstr "Ìwọ̀n Ímeèlì Púpọ̀ Jùlọ"
 
 #: include/global_settings.php
@@ -8660,20 +8660,20 @@ msgstr "Ìbú Igi Tí Ó Kéré Jùlọ"
 msgid "Mode"
 msgstr "Ipò iṣẹ́"
 
-#: include/global_settings.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
+#: include/global_settings.php user_domains.php
+msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Ipò iṣẹ́ tí cacti yóò gbìyànjú láti fìdí ìdánimọ̀ múlẹ̀ sí sẹ́fà LDAP.<blockquote><i>No Searching</i> - Kò sí àwárí Distinguished Name (DN) tí ó ń ṣẹlẹ̀, kàn gbìyànjú láti so pọ̀ pẹ̀lú ọ̀nà ìṣètò Distinguished Name (DN) tí a pèsè.<br><br><i>Anonymous Searching</i> - Ó máa ń gbìyànjú láti wá orúkọ olùmúlò lára ìtòjọ LDAP nípasẹ̀ ìsopọ̀ àìmọ̀ láti wá Distinguished Name (DN) olùmúlò náà.<br><br><i>Specific Searching</i> - Ó máa ń gbìyànjú àwárí fún orúkọ olùmúlò lára ìtòjọ LDAP nípasẹ̀ Specific Distinguished Name (DN) àti Specific Password fún ìsopọ̀ láti wá Distinguished Name (DN) olùmúlò náà."
 
 #: include/global_settings.php
-msgid "Monthly on Sunady"
+msgid "Monthly on Sunday"
 msgstr "Lóṣooṣù lórí Ọjọ́ Àìkú"
 
 #: include/global_settings.php
-msgid "My Browsers Timezone"
+msgid "My Browser's Timezone"
 msgstr "Agbègbè Àkókò Aṣàwárí Mi"
 
 #: include/global_settings.php lib/html.php
-msgid "NaN's"
+msgid "NaNs"
 msgstr "Àwọn NaN"
 
 #: include/global_settings.php
@@ -9169,7 +9169,7 @@ msgid "Server(s)"
 msgstr "Olupin"
 
 #: include/global_settings.php
-msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
+msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on."
 msgstr "Ṣé Boost gbọ́dọ̀ mú ìmúdọ̀tun RRD lórí ìbéèrè ṣiṣẹ́ nínú Kadupul? Tí o bá dá a dúró, ìyípadà yìí kò ní ṣiṣẹ́ títí lẹ́yìn ìyípo ìṣàkójọ tó tẹ̀lé. Nígbà tí o bá ní Àwọn Olùkójọ Dátà Jíjìn, ètò yìí pọndandan láti wà ní títàn."
 
 #: include/global_settings.php
@@ -9189,7 +9189,7 @@ msgid "Should image caching be enabled?"
 msgstr "Ṣé a gbọ́dọ̀ mú ìpamọ́ àwòrán káàṣì ṣiṣẹ́?"
 
 #: include/global_settings.php
-msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
+msgid "Should the Has Graphs and Has Data Sources be Checked by Default?"
 msgstr "Ṣé a gbọ́dọ̀ ṣàmì sí Ní Àwọn Gíráfù àti Ní Àwọn Orísun Dátà gẹ́gẹ́ bí Àìyípadà."
 
 #: include/global_settings.php
@@ -9213,7 +9213,7 @@ msgid "Show business hours"
 msgstr "Fi wákàtí iṣẹ́ hàn"
 
 #: include/global_settings.php
-msgid "Show only locations that are available at a devices selected site."
+msgid "Show only locations that are available at a device's selected site."
 msgstr "Fi kìkì àwọn ibi tí ó wà ní ibùdó tí ẹ̀rọ yàn hàn."
 
 #: include/global_settings.php
@@ -9233,11 +9233,11 @@ msgid "Site Security"
 msgstr "Ààbò Ibùdó"
 
 #: include/global_settings.php
-msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
+msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled."
 msgstr "Àwọn ojú-òpó Kadupul kan ṣe àtìlẹ́yìn fún Fà-Sípò. Tí a bá ṣàmì sí i, àṣàyàn yìí yóò ṣiṣẹ́. Àkíyèsí: Fún olùlò tí kò ríran dáadáa, a lè dá àṣàyàn yìí dúró."
 
 #: include/global_settings.php
-msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
+msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "Àwọn orúkọ agbègbè tí ààyè ya sọ́tọ̀ tí a ó gbà láàyè láti wọ̀ lóde Olupin Wẹ́ẹ̀bù fúnra rẹ̀. Èyí ṣe pàtàkì fún àwọn olùlò tí wọ́n yan láti lo CDN, tàbí ibùdó ìgbàlejò. Àwọn orísun lè ní àmì gbogbogbòò bíi: *.mydomain.com, tàbí ìlànà bíi: https://*.example.com. Àwọn Orísun Àfikún wọ̀nyí ní Àwòrán, CSS àti JavaScript nìkan."
 
 #: include/global_settings.php
@@ -9381,15 +9381,15 @@ msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+,
 msgstr "Àwọn Okùn Àìyípadà tí a gbà láàyè fún ìlànà kọ̀ọ̀kan. ÀKÍYÈSÍ: Bẹ̀rẹ̀ ní Kadupul 1.2+, a ń ṣàkóso ètò yìí nínú Olùkójọ Dátà, èyí sì jẹ́ Àtòtẹ́lẹ̀ lásán. Lílo nọ́ńbà tó ga jù nígbà tí a bá ń lo Spine yóò mú iṣẹ́ dára sí i. Síbẹ̀síbẹ̀, rí i dájú pé o ní àwọn ìsopọ̀ MySQL/MariaDB tó pọ̀ tó láti ṣe àtìlẹ́yìn fún ìṣirò yìí: connections = data collectors * processes * (threads + script servers). O tún gbọ́dọ̀ rí i dájú pé o ní àwọn ìsopọ̀ àfikún tó pọ̀ tó fún àwọn ìsopọ̀ ìwọlé olùlò pẹ̀lú."
 
 #: include/global_settings.php
-msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
+msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin's Email account."
 msgstr "Àdírẹ́sì Ímeèlì láti fi Àwọn Ímeèlì Ìfitọ́nilétí Àdáṣe ránṣẹ́ sí tí a kò bá sọ ọ́ ní ìpele Nẹ́tíwọ́ọ̀kì Àdáṣe. Tí a bá fi ààyè yìí, tàbí iye Nẹ́tíwọ́ọ̀kì Àdáṣe sílẹ̀ ní òfo, Kadupul yóò lo àkọọ́lẹ̀ Ímeèlì Olùṣàkóso Àkọ́kọ́ Kadupul."
 
 #: include/global_settings.php
-msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
+msgid "The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "Àdírẹ́sì Ímeèlì láti lò fún Àwọn Ímeèlì Ìfitọ́nilétí Àdáṣe tí a kò bá sọ ọ́ ní ìpele Nẹ́tíwọ́ọ̀kì Àdáṣe. Tí a bá fi ààyè yìí, tàbí iye Nẹ́tíwọ́ọ̀kì Àdáṣe sílẹ̀ ní òfo, Kadupul yóò lo Àdírẹ́sì Ímeèlì Olùfiránṣẹ́ àìyípadà ètò."
 
 #: include/global_settings.php
-msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
+msgid "The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "Orúkọ Ímeèlì láti lò fún Àwọn Ímeèlì Ìfitọ́nilétí Àdáṣe tí a kò bá sọ ọ́ ní ìpele Nẹ́tíwọ́ọ̀kì Àdáṣe. Tí a bá fi ààyè yìí, tàbí iye Nẹ́tíwọ́ọ̀kì Àdáṣe sílẹ̀ ní òfo, Kadupul yóò lo Orúkọ Olùfiránṣẹ́ àìyípadà ètò."
 
 #: include/global_settings.php
@@ -9501,7 +9501,7 @@ msgid "The default number of concurrent processes to execute per Data Collector.
 msgstr "Nọ́ńbà àìyípadà ti àwọn ìlànà tó ń ṣiṣẹ́ lẹ́ẹ̀kan náà fún Olùkójọ Dátà kọ̀ọ̀kan. ÀKÍYÈSÍ: Bẹ̀rẹ̀ láti Kadupul 1.2, a ń ṣàkóso ètò yìí nínú Olùkójọ Dátà. Lọ síwájú, iye yìí jẹ́ àtòtẹ́lẹ̀ lásán fún Olùkójọ Dátà. Lílo nọ́ńbà tó ga jù nígbà tí a bá ń lo cmd.php yóò mú iṣẹ́ dára sí i. Ìdàgbàsókè iṣẹ́ nínú Spine dára jù láti yanjú pẹ̀lú àṣàyàn okùn. Nígbà tí a bá ń lo Spine, a dámọ̀ràn nọ́ńbà tó kéré àti lílo àwọn okùn dípò. Nígbà tí a bá ń lo cmd.php, má ṣe lo ju 2x nọ́ńbà àwọn ohun èlò CPU lọ."
 
 #: include/global_settings.php
-msgid "The default number of rows to display on for a table."
+msgid "The default number of rows to display for a table."
 msgstr "Nọ́ńbà àìyípadà ti àwọn ìlà láti fi hàn fún tábìlì kan."
 
 #: include/global_settings.php
@@ -9517,7 +9517,7 @@ msgid "The encryption method to use for the Email."
 msgstr "Ọ̀nà ìfipamọ́-àṣírí láti lò fún Ímeèlì."
 
 #: include/global_settings.php
-msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
+msgid "The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection."
 msgstr "Ìtẹ̀ka kọ́kọ́rọ́ RSA gbogbogbòò lọ́wọ́lọ́wọ́ tí aṣojú àfikún ń lò. Èyí pọndandan láti ṣètò ìsopọ̀ tí a gbẹ́kẹ̀lé."
 
 #: include/global_settings.php
@@ -9577,6 +9577,10 @@ msgid "The maximum amount of time Kadupul's Data Source Statistics script can ru
 msgstr "Iye àkókò pípọ̀jù tí síkíríìtì Ìṣirò Orísun Dátà ti Kadupul lè ṣiṣẹ́ láìṣẹ̀dá àṣìṣe àkókò-parí àti pípa á."
 
 #: include/global_settings.php
+msgid "The maximum amount of time Kadupul's Maintenance script can run without generating a timeout error and being killed."
+msgstr "Iye àkókò pípọ̀jù tí síkíríìtì Ìtọ́jú Kadupul kan lè ṣiṣẹ́ láìṣẹ̀dá àṣìṣe àkókò-parí àti pípa á."
+
+#: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Iye àkókò pípọ̀jù tí síkíríìtì àyẹ̀wò RRDfile ti Kadupul lè ṣiṣẹ́ láìṣẹ̀dá àṣìṣe àkókò-parí àti pípa á."
 
@@ -9585,19 +9589,15 @@ msgid "The maximum amount of time Kadupul's Reports Generation script can run wi
 msgstr "Iye àkókò pípọ̀jù tí síkíríìtì Ìṣẹ̀dá Ìròyìn ti Kadupul lè ṣiṣẹ́ láìṣẹ̀dá àṣìṣe àkókò-parí àti pípa á."
 
 #: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "Iye àkókò pípọ̀jù tí síkíríìtì Ìtọ́jú Kadupul kan lè ṣiṣẹ́ láìṣẹ̀dá àṣìṣe àkókò-parí àti pípa á."
-
-#: include/global_settings.php
-msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
+msgid "The maximum amount of time Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Iye àkókò pípọ̀jù tí síkíríìtì Spikekill Kadupul kan lè ṣiṣẹ́ láìṣẹ̀dá àṣìṣe àkókò-parí àti pípa á."
 
 #: include/global_settings.php
-msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
+msgid "The maximum number of Device Directories to be created based upon hashed Device IDs."
 msgstr "Nọ́ńbà pípọ̀jù ti Àwọn Fódà Ẹ̀rọ láti ṣẹ̀dá tó dá lórí àwọn ID Ẹ̀rọ tí a ṣe hash."
 
 #: include/global_settings.php
-msgid "The maximum size of the E-Mail message including all attachments."
+msgid "The maximum size of the Email message including all attachments."
 msgstr "Ìwọ̀n pípọ̀jù ti ìránṣẹ́ Ímeèlì pẹ̀lú gbogbo àwọn àfikún."
 
 #: include/global_settings.php
@@ -9637,19 +9637,19 @@ msgid "The number of columns to use when displaying Thumbnail graphs in Tree mod
 msgstr "Nọ́ńbà àwọn ọ̀wọ̀n láti lò nígbà tí a bá ń fi àwọn gíráfù Àwòrán Kékeré hàn ní ipò Igi."
 
 #: include/global_settings.php
-msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
+msgid "The number of concurrent DSStats processes to use to process all of the Data Sources."
 msgstr "Nọ́ńbà àwọn ìlànà DSStats tó ń ṣiṣẹ́ lẹ́ẹ̀kan náà láti lò láti ṣiṣẹ́ lórí gbogbo Àwọn Orísun Dátà."
 
 #: include/global_settings.php
-msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
+msgid "The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool."
 msgstr "Nọ́ńbà àwọn ìlànà Àṣẹ Olùṣàkójọ tó ń ṣiṣẹ́ lẹ́ẹ̀kan náà. Àṣẹ tó ń ṣiṣẹ́ lẹ́ẹ̀kan náà kan ṣoṣo péré ni yóò wà fún agbàlejò kọ̀ọ̀kan nínú adágún Àṣẹ Olùṣàkójọ."
 
 #: include/global_settings.php
-msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
+msgid "The number of concurrent RRDfile check processes to use to process all of rrd files."
 msgstr "Nọ́ńbà àwọn ìlànà àyẹ̀wò RRDfile tó ń ṣiṣẹ́ lẹ́ẹ̀kan náà láti lò láti ṣiṣẹ́ lórí gbogbo àwọn fáìlì rrd."
 
 #: include/global_settings.php
-msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
+msgid "The number of concurrent boost processes to use to process all of the RRDs in the boost table."
 msgstr "Nọ́ńbà àwọn ìlànà boost tó ń ṣiṣẹ́ lẹ́ẹ̀kan náà láti lò láti ṣiṣẹ́ lórí gbogbo àwọn RRD nínú tábìlì boost."
 
 #: include/global_settings.php
@@ -9725,7 +9725,7 @@ msgid "The path to your snmpwalk binary."
 msgstr "Ọ̀nà sí bínárì snmpwalk rẹ."
 
 #: include/global_settings.php
-msgid "The poller type to use.  This setting will take affect at next polling interval."
+msgid "The poller type to use.  This setting will take effect at next polling interval."
 msgstr "Irú olùṣàkójọ láti lò. Ètò yìí yóò bẹ̀rẹ̀ iṣẹ́ ní àkókò ìṣàkójọ tó kàn."
 
 #: include/global_settings.php
@@ -9761,6 +9761,10 @@ msgid "The time your business hours start. Format: hh:mm"
 msgstr "Àkókò tí àwọn wákàtí iṣẹ́ rẹ máa ń bẹ̀rẹ̀. Ìtòlẹ́sẹẹsẹ: hh:mm"
 
 #: include/global_settings.php
+msgid "The timespan you wish to see on the default graph."
+msgstr "Àkókò ìgbà yìí tí o fẹ́ rí lórí gíráfù àìyípadà."
+
+#: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "Orúkọ olùlò láti fi fìdí múlẹ̀ nígbà tí a bá ń fi ránṣẹ́ nípasẹ̀ SMTP. (Fi sílẹ̀ ní òfo tí o kò bá nílò ìfìdí múlẹ̀.)"
 
@@ -9793,28 +9797,12 @@ msgid "These settings are maintained at the Data Collector level.  The values he
 msgstr "A ń ṣàkóso àwọn ètò wọ̀nyí ní ìpele Olùkójọ Dátà. Àwọn iye níbí jẹ́ àìyípadà nìkan tí a lò nígbà tí a bá kọ́kọ́ ṣẹ̀dá Olùkójọ Dátà."
 
 #: include/global_settings.php
-msgid "This is a Email account used for sending a test message to ensure everything is working properly."
+msgid "This is an Email account used for sending a test message to ensure everything is working properly."
 msgstr "Èyí jẹ́ àkọọ́lẹ̀ Ímeèlì tí a lò fún fífi ìránṣẹ́ àyẹ̀wò ránṣẹ́ láti rí i dájú pé ohun gbogbo ń ṣiṣẹ́ dáadáa."
-
-#: include/global_settings.php
-msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "Èyí ni ibi olupin tí a ó lò fún àwọn ìjápọ̀ sí ibùdó Kadupul. Èyí gbọ́dọ̀ ní fódà abẹ́lẹ̀ tí Kadupul kò bá ṣiṣẹ́ láti inú fódà gbòǹgbò."
 
 #: include/global_settings.php
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "Èyí ni iye lẹ́tà tí a ó gbà láàyè kí ìlà nínú Ímeèlì tó fò sí ìlà mìíràn fúnra rẹ̀. (0 = Ti Dá Dúró)"
-
-#: include/global_settings.php
-msgid "This is maximum number of days before a password is set to expire."
-msgstr "Èyí ni nọ́ńbà ọjọ́ pípọ̀jù kí ọ̀rọ̀ aṣínà tó parí."
-
-#: include/global_settings.php
-msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
-msgstr "Èyí ni nọ́ńbà ọjọ́ pípọ̀jù kí a tó dá àwọn àkọọ́lẹ̀ tí kò ṣiṣẹ́ dúró. A yọ àkọọ́lẹ̀ Admin kúrò nínú ìlànà yìí."
-
-#: include/global_settings.php
-msgid "This is minimal length of allowed passwords."
-msgstr "Èyí ni gígùn kíkéréjù àwọn ọ̀rọ̀ aṣínà tí a gbà láàyè."
 
 #: include/global_settings.php
 msgid "This is the Email address that the Email will appear from."
@@ -9837,12 +9825,28 @@ msgid "This is the location, on the web server where the RRDfiles and PNG files 
 msgstr "Èyí ni ipò, lórí olupin wẹ́ẹ̀bù níbi tí a ó ti fi àwọn RRDfile àti fáìlì PNG pamọ́ sí káàṣì. Olùṣàkójọ yóò ṣàkóso káàṣì yìí. Rí i dájú pé o ní àwọn ìyọ̀ǹda kíkà àti kíkọ tó tọ́ lórí fódà yìí"
 
 #: include/global_settings.php
+msgid "This is the maximum number of days before a password is set to expire."
+msgstr "Èyí ni nọ́ńbà ọjọ́ pípọ̀jù kí ọ̀rọ̀ aṣínà tó parí."
+
+#: include/global_settings.php
+msgid "This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
+msgstr "Èyí ni nọ́ńbà ọjọ́ pípọ̀jù kí a tó dá àwọn àkọọ́lẹ̀ tí kò ṣiṣẹ́ dúró. A yọ àkọọ́lẹ̀ Admin kúrò nínú ìlànà yìí."
+
+#: include/global_settings.php
+msgid "This is the minimal length of allowed passwords."
+msgstr "Èyí ni gígùn kíkéréjù àwọn ọ̀rọ̀ aṣínà tí a gbà láàyè."
+
+#: include/global_settings.php
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "Èyí ni àkókò kíkéréjù tí a ṣe àtìlẹ́yìn fún láàárín àwọn ìmúdọ̀tun Gíráfù. A tún lo iye yìí láti ṣètò àwọn ànímọ́ RRDfile kan. Tí o bá ní Ẹ̀rọ kan tí ó ń fi dátà pamọ́ sí káàṣì tí kò sì pèsè àwọn ìmúdọ̀tun àkókò-gidi, o lè nílò láti mú Àkókò Ìmúdọ̀tun Kíkéréjù àìyípadà pọ̀ sí i láti dènà ṣíṣẹ̀dá Àwọn Gíráfù tó ní àlàfo."
 
 #: include/global_settings.php
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "Èyí ni ọ̀nà sí sendmail lórí olupin rẹ. (A lò ó nìkan tí a bá yan Sendmail gẹ́gẹ́ bí Iṣẹ́ Ímeèlì)"
+
+#: include/global_settings.php
+msgid "This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
+msgstr "Èyí ni ibi olupin tí a ó lò fún àwọn ìjápọ̀ sí ibùdó Kadupul. Èyí gbọ́dọ̀ ní fódà abẹ́lẹ̀ tí Kadupul kò bá ṣiṣẹ́ láti inú fódà gbòǹgbò."
 
 #: include/global_settings.php
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9857,15 +9861,11 @@ msgid "This setting is for a single poller systems only to rebuild the poller ou
 msgstr "Ètò yìí wà fún àwọn ètò olùṣàkójọ kanṣoṣo nìkan láti tún tábìlì àbájáde olùṣàkójọ kọ́ ní ìyípo ìṣàkójọ kọ̀ọ̀kan láti dènà tábìlì ìrántí láti ṣe swap lórí àwọn ètò tó tóbi gan-an pẹ̀lú dátàbéèsì ńlá tí ó lè lo swap."
 
 #: include/global_settings.php
-msgid "This timespan you wish to see on the default graph."
-msgstr "Àkókò ìgbà yìí tí o fẹ́ rí lórí gíráfù àìyípadà."
-
-#: include/global_settings.php
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "Iye yìí dúró fún nọ́ńbà pípọ̀jù ti àwọn ìfò-sókè láti yọ kúrò nínú RRA Gíráfù kan."
 
 #: include/global_settings.php
-msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
+msgid "This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "Iye yìí dúró fún nọ́ńbà àwọn àpẹẹrẹ ìpín ààrin gíga àti kíkéré tí a ó yọ kúrò nínú àtòjọ àpẹẹrẹ kí a tó ṣírò Ìpín Ààrin Ìyàtọ̀. Tí o bá yan iye àyàtọ̀ òde ti 5, nígbà náà a ó yọ àwọn ìpín ààrin 5 tó ga jù àti tó kéré jù kúrò."
 
 #: include/global_settings.php
@@ -9886,7 +9886,7 @@ msgid "This will require new passwords to contain at least 1 special character."
 msgstr "Èyí yóò béèrè kí àwọn ọ̀rọ̀ aṣínà tuntun ní ó kéré jù àmì pàtàkì 1."
 
 #: include/global_settings.php
-msgid "This will require new passwords to contains both lower and upper-case characters."
+msgid "This will require new passwords to contain both lower and upper-case characters."
 msgstr "Èyí yóò béèrè kí àwọn ọ̀rọ̀ aṣínà tuntun ní àwọn lẹ́tà kékeré àti ńlá méjèèjì."
 
 #: include/global_settings.php
@@ -9974,7 +9974,7 @@ msgid "Use Custom Fonts"
 msgstr "Lo Àwọn Fọ́ọ̀ntì Àdáni"
 
 #: include/global_settings.php
-msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
+msgid "Use a separate subfolder for each host's RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr "Lo fódà abẹ́lẹ̀ ọ̀tọ̀ fún àwọn fáìlì RRD agbàlejò kọ̀ọ̀kan. Orúkọ àwọn RRDfile yóò jẹ́ ọ̀kan lára ìwọ̀nyí:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>O lè ṣe ìyípadà yìí lẹ́yìn ìfi-sori-ẹ̀rọ nípa ṣíṣiṣẹ́ síkíríìtì CLI <b>structure_rra_paths.php</b> lẹ́yìn tí o bá ṣe ìyípadà náà. ÀKÍYÈSÍ: Tí o bá yí iye Àwọn Fódà Pípọ̀jù padà láti dín nọ́ńbà àwọn fódà kù, tàbí tí o bá yí Àpẹẹrẹ Fódà padà, a kò ní pa àwọn fódà òfo rẹ́ lẹ́yìn tí o bá tún ṣiṣẹ́ síkíríìtì <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php
@@ -10014,11 +10014,11 @@ msgid "Weekly on Sunday"
 msgstr "Lọ́sọ̀ọ̀sẹ̀ ní Ọjọ́ Àìkú"
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Ìpele ẹ̀kúnrẹ́rẹ́ wo ni o fẹ́ kí a fi ránṣẹ́ sí fáìlì àkọsílẹ̀. ÌKÌLỌ̀: Fífi sílẹ̀ ní ipò mìíràn yàtọ̀ sí KÒ SÍ tàbí KÉRÉ lè jẹ ààyè díísìkì rẹ tán kíákíá."
 
 #: include/global_settings.php
-msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
+msgid "What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Ìpele ẹ̀kúnrẹ́rẹ́ wo ni o fẹ́ kí a fi ránṣẹ́ sí fáìlì àkọsílẹ̀. ÌKÌLỌ̀: Fífi sílẹ̀ ní ipò mìíràn yàtọ̀ sí KÒ SÍ tàbí KÉRÉ lè jẹ ààyè díísìkì rẹ tán kíákíá."
 
 #: include/global_settings.php
@@ -10034,11 +10034,11 @@ msgid "When an option is checked, users will be able to put Kadupul into Real-ti
 msgstr "Nígbà tí a bá ṣàmì sí àṣàyàn kan, àwọn olùlò yóò lè fi Kadupul sí ipò Àkókò-gidi."
 
 #: include/global_settings.php
-msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
+msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "Nígbà tí boost bá fi àwọn àṣẹ ìmúdọ̀tun ránṣẹ́ sí RRDtool, kò gbọ́dọ̀ kọjá Gígùn Àríyànjiyàn Pípọ̀jù ti ètò ìṣiṣẹ́. Èyí yàtọ̀ nípa ètò ìṣiṣẹ́ àti ìpele kernel. Fún àpẹẹrẹ: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ aláìlópin"
 
 #: include/global_settings.php
-msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
+msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "Nígbà tí a bá ṣàmì sí i, Ìrànlọ́wọ́ Fọ́ọ̀mù àti Ètò yóò hàn nínú ìlà. Bí bẹ́ẹ̀ kọ́ a ó fi hàn nígbà tí a bá gbé kọ́ṣọ̀ sórí bọ́tìnì ìrànlọ́wọ́."
 
 #: include/global_settings.php
@@ -10046,7 +10046,7 @@ msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS 
 msgstr "Nígbà tí a bá ṣàmì sí i, gbogbo ìgbìyànjú láti wọ Kadupul ni a ó darí sí HTTPS láti rí i dájú pé ààbò gíga wà."
 
 #: include/global_settings.php
-msgid "When creating a new report, what image type should be used for the inline graphs."
+msgid "When creating a new report, what image type should be used for the inline graphs?"
 msgstr "Nígbà tí a bá ń ṣẹ̀dá ìròyìn tuntun, irú àwòrán wo ni a gbọ́dọ̀ lò fún àwọn gíráfù inú ìlà."
 
 #: include/global_settings.php
@@ -10066,7 +10066,7 @@ msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "Nígbà tí a bá ń fi Àwọn Gíráfù hàn, gba Àwọn Ọjọ́ Gíráfù láàyè láti fẹ̀ 'sí ọjọ́ iwájú'"
 
 #: include/global_settings.php
-msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
+msgid "When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph."
 msgstr "Nígbà tí a bá mú un ṣiṣẹ́, Kadupul kò ní ti Àwọn Gíráfù pa. Èyí ń jẹ́ kí àtúnṣe lọ́wọ́ kíákíá ti Àwọn Orísun Dátà tó sopọ̀ mọ́ Gíráfù kan rọrùn."
 
 #: include/global_settings.php
@@ -10094,7 +10094,7 @@ msgid "When using basic authentication, if there are issues mapping the username
 msgstr "Nígbà tí a bá ń lo ìfìdí múlẹ̀ ìpilẹ̀, tí àwọn ìṣòro bá wà láti so orúkọ olùlò pọ̀ mọ́ àkọọ́lẹ̀ Kadupul tó péye, ìránṣẹ́ tí a fi síbí yóò hàn fún àwọn olùlò. Ó lè ní ọ̀rọ̀ àti HTML méjèèjì."
 
 #: include/global_settings.php
-msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
+msgid "When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname."
 msgstr "Nígbà tí a bá ń wo àwọn àtòjọ àlẹ̀mọ́ orúkọ Ẹ̀rọ, ṣíṣàmì sí àṣàyàn yìí yóò yọ agbègbè kúrò nínú orúkọ agbàlejò."
 
 #: include/global_settings.php
@@ -10102,11 +10102,11 @@ msgid "When you enable boost, your RRD files are only updated when they are requ
 msgstr "Nígbà tí o bá mú boost ṣiṣẹ́, àwọn fáìlì RRD rẹ yóò di ṣíṣàtúnṣe nìkan nígbà tí olùlò kan bá béèrè fún wọn, tàbí nígbà tí àkókò yìí bá kọjá."
 
 #: include/global_settings.php
-msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
+msgid "Which Directory Pattern do you wish to use for Structured RRD Paths?  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "Àpẹẹrẹ Fódà wo ni o fẹ́ lò fún Àwọn Ọ̀nà RRD Tí A Ṣètò. 'ID Ẹ̀rọ' ni àìyípadà. A gbọ́dọ̀ lo ètò 'ID Ẹ̀rọ/ID Ìbéèrè Dátà' nígbà tí o bá ní Àwọn Ẹ̀rọ pẹ̀lú ẹgbẹẹgbẹ̀rún Àwọn Gíráfù. Lẹ́yìn Yíyí Àpẹẹrẹ Fódà Padà, o gbọ́dọ̀ tún síkíríìtì CLI Ọ̀nà Tí A Ṣètò ṣiṣẹ́ láti ṣàtúnṣe àwọn ọ̀nà RRDfile sí Àpẹẹrẹ tuntun."
 
 #: include/global_settings.php
-msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
+msgid "Which Graph mode do you want displayed by default when you first visit the Graphs page?"
 msgstr "Ipò Gíráfù wo ni o fẹ́ kí a fi hàn nípa àìyípadà nígbà tí o bá kọ́kọ́ ṣàbẹ̀wò sí ojú-òpó Àwọn Gíráfù?"
 
 #: include/global_settings.php
@@ -10674,7 +10674,7 @@ msgid "Warnings++"
 msgstr "Àwọn Ìkìlọ̀++"
 
 #: lib/data_query.php
-msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
+msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; wà nínú fáìlì XML ṣùgbọ́n kò sí dátà tí ó padà wá., 'Ìyípadà Iye Àtọ́ka' kò sí lọ́wọ́"
 
 #: lib/data_query.php
@@ -10843,7 +10843,7 @@ msgstr "Ń tún ààyè 'method' tí kò tọ́ ṣe fún '%s' nítorí pé a ti
 
 #: lib/data_query.php
 #, php-format
-msgid "Found %s Local Data ID's to Verify"
+msgid "Found %s Local Data IDs to Verify"
 msgstr "A rí %s Àwọn ID Dátà Abẹ́lé láti Fìdí Múlẹ̀"
 
 #: lib/data_query.php
@@ -10960,7 +10960,7 @@ msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt
 msgstr "Gbọ́dọ̀ ní àwọn ààyè &lt;direction&gt;input&lt;/direction&gt; tàbí &lt;direction&gt;input-output&lt;/direction&gt; nìkan"
 
 #: lib/data_query.php
-msgid "New Sort Field validated.  Sort Field be updated."
+msgid "New Sort Field validated.  Sort Field will be updated."
 msgstr "A fìdí Ààyè Ìtòlésẹẹsẹ Tuntun múlẹ̀. Ààyè Ìtòlésẹẹsẹ yóò di títúnṣe."
 
 #: lib/data_query.php
@@ -11060,7 +11060,7 @@ msgstr "Ìmúdọ̀tun káàṣì ìbéèrè dátà gíráfù ti parí"
 
 #: lib/data_query.php
 #, php-format
-msgid "Verification of %s Local Data ID's Complete"
+msgid "Verification of %s Local Data IDs Complete"
 msgstr "Ìfìdí Múlẹ̀ ti %s Local Data IDs Ti Parí"
 
 #: lib/data_query.php
@@ -11077,7 +11077,7 @@ msgid "You must select an XML output column for Data Source '%s' and toggle the 
 msgstr "O gbọ́dọ̀ yan ọ̀wọ̀n àbájáde XML kan fún Orísun Dátà '%s' kí o sì yí àpótí àmì sí apá ọ̀tún rẹ̀"
 
 #: lib/data_query.php
-msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
+msgid "Your Graph Template has no Data Templates in use.  Please correct your Graph Template"
 msgstr "Àdàkọ Gíráfù rẹ kò ní Àwọn Àdàkọ Dátà tí ó wà ní lílò. Jọ̀wọ́ ṣàtúnṣe Àdàkọ Gíráfù rẹ"
 
 #: lib/data_query.php
@@ -11091,11 +11091,11 @@ msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
 #: lib/database.php
-msgid "Failed to alter password field length, can not continue as may corrupt password"
+msgid "Failed to alter password field length, cannot continue as it may corrupt password"
 msgstr "Kùnà láti yí gígùn pápá ọ̀rọ̀ aṣínà padà, kò lè tẹ̀síwájú nítorí ó lè ba ọ̀rọ̀ aṣínà jẹ́"
 
 #: lib/database.php
-msgid "Failed to determine password field length, can not continue as may corrupt password"
+msgid "Failed to determine password field length, cannot continue as it may corrupt password"
 msgstr "Kùnà láti pinnu gígùn pápá ọ̀rọ̀ aṣínà, kò lè tẹ̀síwájú nítorí ó lè ba ọ̀rọ̀ aṣínà jẹ́"
 
 #: lib/dsdebug.php
@@ -11212,10 +11212,6 @@ msgid "Link %s"
 msgstr "Ìjápọ̀ %s"
 
 #: lib/functions.php
-msgid "Logged in a Guest"
-msgstr "Ti wọlé gẹ́gẹ́ bí Àlejò"
-
-#: lib/functions.php
 msgid "Logged in as"
 msgstr "Ti wọlé gẹ́gẹ́ bí"
 
@@ -11223,6 +11219,10 @@ msgstr "Ti wọlé gẹ́gẹ́ bí"
 #, php-format
 msgid "Logged in as %s"
 msgstr "Ti wọlé gẹ́gẹ́ bí %s"
+
+#: lib/functions.php
+msgid "Logged in as Guest"
+msgstr "Ti wọlé gẹ́gẹ́ bí Àlejò"
 
 #: lib/functions.php
 msgid "Login as Regular User"
@@ -11233,7 +11233,7 @@ msgid "Logout"
 msgstr "Ìjáde"
 
 #: lib/functions.php
-msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
+msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Àṣìṣe Olùfiránṣẹ́: Kò sí àdírẹ́sì olùgbà tí a ṣètò!!<br>Tí o bá ń lo ìjápọ̀ <i>Test Mail</i>, jọ̀wọ́ ṣètò ètò <b>Alert e-mail</b>."
 
 #: lib/functions.php
@@ -11312,7 +11312,7 @@ msgstr "ÌKÌLỌ̀: Fáìlì Include Pàtàkì Kadupul %s sọnù. Jọ̀wọ́
 
 #: lib/functions.php
 #, php-format
-msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
+msgid "WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!"
 msgstr "ÌKÌLỌ̀: PollerID:%s ní orúkọ agbàlejò àìpéye:%s. Kò ṣeé dé nípasẹ̀ DNS!"
 
 #: lib/functions.php
@@ -11402,7 +11402,7 @@ msgid "All %d %s"
 msgstr "Gbogbo %d %s"
 
 #: lib/html.php
-msgid "Allow or limit the table columns to extend beyond the current windows limits."
+msgid "Allow or limit the table columns to extend beyond the current window's limits."
 msgstr "Gbà láàyè tàbí dín àwọn òpó tábìlì kù láti gùn rékọjá àwọn ààlà fèrèsé lọ́wọ́lọ́wọ́."
 
 #: lib/html.php
@@ -12058,7 +12058,7 @@ msgid "Cascade to Branches"
 msgstr "Ìtànkálẹ̀ sí Àwọn Ẹ̀ka"
 
 #: lib/html_reports.php
-msgid "Check this box if you want to use custom html and CSS for the report."
+msgid "Check this box if you want to use custom HTML and CSS for the report."
 msgstr "Ṣàmì sí àpótí yìí tí o bá fẹ́ lo html àti CSS àkànṣe fún ìròyìn náà."
 
 #: lib/html_reports.php
@@ -12066,7 +12066,7 @@ msgid "Check this box to enable this Report."
 msgstr "Ṣàmì sí àpótí yìí láti mú Ìròyìn yìí ṣiṣẹ́."
 
 #: lib/html_reports.php
-msgid "Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
+msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
 msgstr "Yan àpò html àkànṣe àti fáìlì CSS láti lò. Fáìlì yìí ní html àti CSS láti dì yí ìròyìn rẹ ká. Tí ó bá ní ju CSS nìkan lọ, o nílò láti fi àmì <REPORT> àkànṣe sí inú fáìlì náà. Àkóónú ìròyìn yóò rọ́pò àmì ìṣètò yìí. Àwọn fáìlì wọ̀nyí wà nínú àpò 'formats'."
 
 #: lib/html_reports.php
@@ -12323,7 +12323,7 @@ msgid "Select a Device Template to use to filter for Devices or Graphs."
 msgstr "Yan Àdàkọ Ẹ̀rọ láti fi ṣe àlẹ̀mọ́ fún Àwọn Ẹ̀rọ tàbí Àwọn Gíráfù."
 
 #: lib/html_reports.php
-msgid "Select a Device to be used to filter for of select for Graphs in the case of a Device Type."
+msgid "Select a Device to be used to filter for or select Graphs in the case of a Device Type."
 msgstr "Yan Ẹ̀rọ láti fi ṣe àlẹ̀mọ́ tàbí láti yan fún Àwọn Gíráfù nígbà tí ó bá jẹ́ Irú Ẹ̀rọ."
 
 #: lib/html_reports.php
@@ -12395,11 +12395,11 @@ msgid "The number of Graph columns."
 msgstr "Nọ́ńbà àwọn ọ̀wọ̀n Gíráfù."
 
 #: lib/html_reports.php
-msgid "This Address will be used as the E-mail Senders address"
+msgid "This Address will be used as the Email Sender's address"
 msgstr "A ó lo Àdírẹ́sì yìí gẹ́gẹ́ bí àdírẹ́sì Olùfiránṣẹ́ Ímeèlì"
 
 #: lib/html_reports.php
-msgid "This Name will be used as the default E-mail Sender"
+msgid "This Name will be used as the default Email Sender"
 msgstr "A ó lo Orúkọ yìí gẹ́gẹ́ bí Olùfiránṣẹ́ Ímeèlì àìyípadà"
 
 #: lib/html_reports.php
@@ -12417,22 +12417,22 @@ msgstr "Igi: %s"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail From Name"
+msgid "Unable to send Report '%s'.  Please set an Email From Name"
 msgstr "Kò ṣeé ṣe láti fi Ìròyìn '%s' ránṣẹ́. Jọ̀wọ́ ṣètò Orúkọ Olùfiránṣẹ́ ímeèlì"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail from address"
+msgid "Unable to send Report '%s'.  Please set an Email from address"
 msgstr "Kò ṣeé ṣe láti fi Ìròyìn '%s' ránṣẹ́. Jọ̀wọ́ ṣètò àdírẹ́sì olùfiránṣẹ́ ímeèlì"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set an e-mail subject"
+msgid "Unable to send Report '%s'.  Please set an Email subject"
 msgstr "Kò ṣeé ṣe láti fi Ìròyìn '%s' ránṣẹ́. Jọ̀wọ́ ṣètò kókó-ọ̀rọ̀ ímeèlì"
 
 #: lib/html_reports.php
 #, php-format
-msgid "Unable to send Report '%s'.  Please set destination e-mail addresses"
+msgid "Unable to send Report '%s'.  Please set destination Email addresses"
 msgstr "Kò ṣeé ṣe láti fi Ìròyìn '%s' ránṣẹ́. Jọ̀wọ́ ṣètò àwọn àdírẹ́sì ímeèlì olùgbà"
 
 #: lib/html_reports.php
@@ -12528,7 +12528,7 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "Àwọn regular expressions Kadupul wà ní ààlà sí àwọn lẹ́tà/àmì 50 nìkan fún àwọn ìdí ààbò."
 
 #: lib/html_utility.php
-msgid "Kadupul regular expressions can not includes the semi-color character."
+msgid "Kadupul regular expressions cannot include the semicolon character."
 msgstr "Àwọn regular expressions Kadupul kò lè ní àmì semicolon."
 
 #: lib/html_utility.php
@@ -12984,12 +12984,12 @@ msgstr "Kò lè ṣètò àṣàyàn PHP %s, ó jẹ́ %s (ó yẹ kó jẹ́ %s
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to set specified %sRRDTool version: %s"
-msgstr "Kò lè ṣètò ẹ̀yà %sRRDTool tí a tọ́ka sí: %s"
+msgid "Failed to set specified %sRRDtool version: %s"
+msgstr "Kò lè ṣètò ẹ̀yà %sRRDtool tí a tọ́ka sí: %s"
 
 #: lib/installer.php
 #, php-format
-msgid "Failed to updated Automation Option Set %s"
+msgid "Failed to update Automation Option Set %s"
 msgstr "Kò lè ṣe àtúnṣe Àkójọ Àṣàyàn Adáṣe %s"
 
 #: lib/installer.php
@@ -13062,7 +13062,7 @@ msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Ìkówọlé Páàkẹ́ẹ̀tì #%s '%s' lábẹ́ Prófáìlì '%s' yọrí sí rere"
 
 #: lib/installer.php
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgid "In the event of issues, it is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Ní ìṣẹ̀lẹ̀ àwọn ìṣòro, A gbà ọ́ níyànjú gidigidi pé kí o pa àkójọpọ̀ ìrántí aṣàwárí rẹ rẹ́, kí o ti aṣàwárí rẹ pa lẹ́yìn náà kí o sì tún ṣí i (kì í ṣe táàbù tí Kadupul wà nìkan) kí o sì tún gbìyànjú, kí o tó gbé ìṣòro kalẹ̀ fún Kadupul"
 
 #: lib/installer.php
@@ -13240,7 +13240,7 @@ msgid "On rare occasions, we have had reports from users who experience some min
 msgstr "Ní àwọn ìgbà díẹ̀, a ti ní àwọn ìjábọ̀ láti ọ̀dọ̀ àwọn olùmúlò tí wọ́n ní àwọn ìṣòro kéékèèké kan nítorí àwọn àyípadà nínú kóòdù. Àwọn ìṣòro wọ̀nyí jẹ́ nítorí pé aṣàwárí ń di kóòdù ṣáájú-ìgbéga mú, àti bí a tilẹ̀ ti gbé àwọn ìgbésẹ̀ láti dín àǹfààní èyí kù, ó ṣì lè ṣẹlẹ̀. Tí o bá nílò àwọn ìtọ́ni lórí bí a ṣe lè fọ àkójọpọ̀ ìrántí aṣàwárí rẹ mọ́, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> jẹ́ ibi ìbẹ̀rẹ̀ tí ó dára."
 
 #: lib/installer.php
-msgid "Once installation has completed the CSRF path, should be set to read-only."
+msgid "Once installation has completed, the CSRF path should be set to read-only."
 msgstr "Ní kété tí ìfisori ẹ̀rọ bá ti parí ọ̀nà CSRF, yẹ kí a ṣètò rẹ̀ sí kíkà nìkan."
 
 #: lib/installer.php
@@ -13317,7 +13317,7 @@ msgid "Please select the Device Templates that you wish to update during the Upg
 msgstr "Jọ̀wọ́ yan Àwọn Àdàkọ Ẹ̀rọ tí o fẹ́ ṣe àtúnṣe nígbà Ìgbéga."
 
 #: lib/installer.php
-msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
+msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Jọ̀wọ́ yan Àwọn Àdàkọ Ẹ̀rọ tí o fẹ́ lò lẹ́yìn Ìfisori Ẹ̀rọ. Tí Ètò Ìṣiṣẹ́ rẹ bá jẹ́ Windows, o nílò láti rí i dájú pé o yan Àdàkọ 'Windows Device'. Tí Ètò Ìṣiṣẹ́ rẹ bá jẹ́ Linux/UNIX, rí i dájú pé o yan Àdàkọ Ẹ̀rọ 'Local Linux Machine'."
 
 #: lib/installer.php
@@ -13574,7 +13574,7 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Àwọn onírúurú tí a gbọ́dọ̀ ṣètò nínú fáìlì config.php ní ìwọ̀nyí nínú:"
 
 #: lib/installer.php
-msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
+msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and/or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Ọ̀nà tí Àtòjọ Àṣẹ fi ń ṣiṣẹ́ ni pé nígbà tí o bá kọ́kọ́ gbé Ọ̀nà Ìtẹ̀wọlé Dátà wọlé, tàbí tí o bá tún gbé Ọ̀nà Ìtẹ̀wọlé Dátà wọlé, tí síkíríìtì àti tàbí àwọn àríyànjiyàn bá yí padà lọ́nàkọnà, a ó dá Ọ̀nà Ìtẹ̀wọlé Dátà, àti gbogbo Àwọn Orísun Dátà tó báramu dúró lẹ́sẹ̀kẹsẹ̀ títí olùṣàkóso yóò fi fìdí rẹ̀ múlẹ̀ pé Ọ̀nà Ìtẹ̀wọlé Dátà náà péye."
 
 #: lib/installer.php
@@ -13582,7 +13582,7 @@ msgid "Then run the following within MySQL as an administrator:"
 msgstr "Lẹ́yìn náà ṣiṣẹ́ èyí ní ìsàlẹ̀ nínú MySQL gẹ́gẹ́ bí olùṣàkóso:"
 
 #: lib/installer.php
-msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
+msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Nítorí náà, ní ọ̀pọ̀ ẹ̀dà sẹ́yìn, a mú Kadupul dára sí i láti pèsè agbára Àtòjọ Àṣẹ lórí irú Àwọn Ọ̀nà Ìtẹ̀wọlé Dátà wọ̀nyí. Bó tilẹ̀ jẹ́ pé èyí ń dáàbò bo Kadupul dáadáa sí i, ó ń mú iṣẹ́ tí olùṣàkóso Kadupul nílò láti ṣe pọ̀ sí i láti gbé wọlé àti ṣàkóso Àwọn Àdàkọ àti Àwọn Ìdìpọ̀."
 
 #: lib/installer.php
@@ -13615,10 +13615,6 @@ msgid "This program is free software; you can redistribute it and/or modify it u
 msgstr "Ètò yìí jẹ́ sọ́fítíwèà ọ̀fẹ́; o lè tún pín in àti/tàbí ṣàtúnṣe rẹ̀ lábẹ́ àwọn òfin Ìwé-àṣẹ Gbogbogbòò GNU gẹ́gẹ́ bí Free Software Foundation ṣe tẹ̀ ẹ́ jáde; yálà ẹ̀dà 2 ti Ìwé-àṣẹ náà, tàbí (ní àṣàyàn rẹ) èyíkéyìí ẹ̀dà tó kẹ́yìn."
 
 #: lib/installer.php
-msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Àṣàyàn síkíríìtì yìí yóò mú ìdènà kúrò lórí Àwọn Ọ̀nà Ìtẹ̀wọlé Dátà tí a dènà lọ́wọ́lọ́wọ́."
-
-#: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Àṣàyàn síkíríìtì yìí yóò tún mú èyíkéyìí Àwọn Orísun Dátà tí a dá dúró ṣiṣẹ́."
 
@@ -13627,16 +13623,20 @@ msgid "This script option will search for any Data Input Methods that are curren
 msgstr "Àṣàyàn síkíríìtì yìí yóò wá èyíkéyìí Àwọn Ọ̀nà Ìtẹ̀wọlé Dátà tí a dènà lọ́wọ́lọ́wọ́ yóò sì pèsè àlàyé nípa ìdí rẹ̀."
 
 #: lib/installer.php
+msgid "This script option will un-ban the Data Input Methods that are currently banned."
+msgstr "Àṣàyàn síkíríìtì yìí yóò mú ìdènà kúrò lórí Àwọn Ọ̀nà Ìtẹ̀wọlé Dátà tí a dènà lọ́wọ́lọ́wọ́."
+
+#: lib/installer.php
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Ẹ̀dà Kadupul yìí (%s) kò dà bí ẹni pé ó ní kóòdù ẹ̀dà tó péye, jọ̀wọ́ kàn sí Ẹgbẹ́ Ìdàgbàsókè Kadupul láti rí i dájú pé a ṣàtúnṣe èyí. Tí o bá ń rí àṣìṣe yìí nínú ìtújáde kan, jọ̀wọ́ fi ìròyìn sókè lẹ́sẹ̀kẹsẹ̀ lórí GitHub"
 
 #: lib/installer.php
-msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
+msgid "To be able to continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Láti lè tẹ̀síwájú, o <b>GBỌ́DỌ̀</b> ṣẹ̀dá dátàbéèsì tuntun, kí o gbé \"cacti.sql\" wọlé sí i:"
 
 #: lib/installer.php
-msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
+msgid "To make identifying Data Input Methods in this state easier, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Láti jẹ́ kí dídá Àwọn Ọ̀nà Ìtẹ̀wọlé Dátà mọ̀ ní ipò yìí rọrùn, a ti pèsè síkíríìtì ìfìdí múlẹ̀ nínú fódà CLI Kadupul tí a lè ṣiṣẹ́ pẹ̀lú àwọn àṣàyàn wọ̀nyí:"
 
 #: lib/installer.php
@@ -13670,7 +13670,7 @@ msgid "Updating Automation Option Set %s"
 msgstr "Ń sọ Àtòjọ Àṣàyàn Àdáṣe %s dọ̀tun"
 
 #: lib/installer.php
-msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
+msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any effect.  In that case, you would have to 'Sync Graphs' from the Templates after update."
 msgstr "Sísọ Àwọn Àdàkọ tí o ti ṣe àtúnṣe sí tẹ́lẹ̀ dọ̀tun kò dára. Ìgbésókè Àwọn Àdàkọ KÒ ní pa àwọn àtúnṣe sí Àwọn Àdàkọ Gíráfù àti Dátà rẹ́, ó sì lè yọrí sí ìṣẹ́ àìròtẹ́lẹ̀. Síbẹ̀síbẹ̀, tí o kò bá ṣe àtúnṣe sí èyíkéyìí Gíráfù, Ìbéèrè Dátà, tàbí Àdàkọ Dátà, títún gbé Ìdìpọ̀ wọlé kò gbọ́dọ̀ ní ìpalára kankan. Ní irú ìgbà bẹ́ẹ̀, o ó ní láti 'Mú Àwọn Gíráfù Báramu' sí Àwọn Àdàkọ lẹ́yìn ìmúdọ̀tun."
 
 #: lib/installer.php
@@ -13726,7 +13726,7 @@ msgstr "Ó dà bí ẹni pé o ń sọ̀kalẹ̀ sí ẹ̀dà tẹ́lẹ̀. Àw�
 
 #: lib/installer.php
 #, php-format
-msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
+msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this cannot be performed."
 msgstr "O ń gbìyànjú láti fi Kadupul %s sori dátàbéèsì 0.6.x. Ó ṣeni láàánú, èyí kò ṣeé ṣe."
 
 #: lib/installer.php
@@ -13757,7 +13757,7 @@ msgid "Your Kadupul Server v%s has been installed/updated.  You may now start us
 msgstr "A ti fi Olupin Kadupul rẹ v%s sori ẹ̀rọ/ṣàtúnṣe rẹ̀. O lè bẹ̀rẹ̀ sí í lo sọ́fítíwèà náà báyìí."
 
 #: lib/installer.php
-msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
+msgid "Your Kadupul configuration has the correct relative path (url_path) in config.php."
 msgstr "Ìṣètò Kadupul rẹ ní ọ̀nà ìbámu tó tọ́ (url_path) nínú config.php."
 
 #: lib/installer.php
@@ -13785,7 +13785,7 @@ msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Ìtòlẹ́sẹẹsẹ lẹ́tà àìyípadà dátàbéèsì rẹ dà bí ẹni pé ó bá UTF8 mu"
 
 #: lib/installer.php
-msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
+msgid "Your database default collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Ìtòlẹ́sẹẹsẹ lẹ́tà àìyípadà dátàbéèsì rẹ KÒ dà bí ẹni pé ó bá UTF8 mu ní kíkún. "
 
 #: lib/installer.php
@@ -13884,13 +13884,13 @@ msgid "Unable to find user from DN"
 msgstr "Kò ṣeé ṣe láti rí olùlò láti DN"
 
 #: lib/ldap.php
-msgid "Unable to find users DN"
+msgid "Unable to find user's DN"
 msgstr "Kò ṣeé ṣe láti rí DN àwọn olùlò"
 
 #: lib/ldap.php
 #, php-format
-msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
-msgstr "Àṣìṣe àìròtẹ́lẹ̀ %s (Àṣìṣe Ldap: %s) lórí Olupin (%s)"
+msgid "Unexpected error %s (LDAP Error: %s) on Server (%s)"
+msgstr "Àṣìṣe àìròtẹ́lẹ̀ %s (Àṣìṣe LDAP: %s) lórí Olupin (%s)"
 
 #: lib/ping.php
 msgid "Destination address not specified"
@@ -13997,13 +13997,13 @@ msgstr "A nílò láti tún orúkọ fódà Àfikún '%s' sọ láti yọ 'plugi
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Àfikún tó wà nínú fódà '%s' kò ní iṣẹ́ ìfi-sori-ẹ̀rọ '%s()'. Iṣẹ́ yìí gbọ́dọ̀ wà kí a tó lè fi àfikún náà sori ẹ̀rọ."
+msgid "The Plugin in the directory '%s' does not include a version function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Àfikún tó wà nínú fódà '%s' kò ní iṣẹ́ ẹ̀dà '%s()'. Iṣẹ́ yìí gbọ́dọ̀ wà kí a tó lè fi àfikún náà sori ẹ̀rọ."
 
 #: lib/plugins.php
 #, php-format
-msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "Àfikún tó wà nínú fódà '%s' kò ní iṣẹ́ ẹ̀dà '%s()'. Iṣẹ́ yìí gbọ́dọ̀ wà kí a tó lè fi àfikún náà sori ẹ̀rọ."
+msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
+msgstr "Àfikún tó wà nínú fódà '%s' kò ní iṣẹ́ ìfi-sori-ẹ̀rọ '%s()'. Iṣẹ́ yìí gbọ́dọ̀ wà kí a tó lè fi àfikún náà sori ẹ̀rọ."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
@@ -14063,7 +14063,7 @@ msgstr "Àkókò Àtẹ àwòrán:"
 
 #: lib/reports.php
 #, php-format
-msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
+msgid "Problems sending Report '%s' Problem with Email Subsystem Error is '%s'"
 msgstr "Ìṣòro wà ní fífiránṣẹ́ Ìjábọ̀ '%s' Ìṣòro pẹ̀lú Ẹ̀ka Ímeèlì Àṣìṣe ni '%s'"
 
 #: lib/reports.php
@@ -14117,7 +14117,7 @@ msgstr "ÀṢÌṢE: Fáìlì RRD kò sí: %s"
 
 #: lib/rrd.php
 #, php-format
-msgid "ERROR: RRDfile %s not writeable"
+msgid "ERROR: RRDfile %s not writable"
 msgstr "ÀṢÌṢE: RRDfile %s kò ṣeé kọ sí"
 
 #: lib/rrd.php
@@ -14239,7 +14239,7 @@ msgstr "XFF fún ID RRA Kadupul jẹ́ '%s' ṣùgbọ́n ó yẹ kó jẹ́ '%s
 
 #: lib/rrd.php
 #, php-format
-msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
+msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'"
 msgstr "Nọ́ńbà àwọn ìlà fún ID RRA Kadupul '%s' kò tọ́. Nọ́ńbà àwọn ìlà jẹ́ '%s' ṣùgbọ́n ó yẹ kó jẹ́ '%s'"
 
 #: lib/rrd.php
@@ -14399,7 +14399,7 @@ msgstr "PÀTÀKÌ: Àwọn àríyànjiyàn outlier-start àti outlier-end gbọ�
 
 #: lib/spikekill.php
 #, php-format
-msgid "FATAL: Unable to backup '%s'"
+msgid "FATAL: Unable to back up '%s'"
 msgstr "PÀTÀKÌ: Kò lè ṣe àtìlẹ́yìn '%s'"
 
 #: lib/spikekill.php
@@ -14614,12 +14614,12 @@ msgstr "Ìtúnṣe ìṣiṣẹ́ %s"
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s yóò pín innodb_buffer_pool sí àwọn agbègbè ìrántí láti mú ìṣiṣẹ́ dára sí i fún àwọn ẹ̀yà MariaDB tí ó kéré sí 10.5. Iye tó pọ̀ jùlọ ni 64, ṣùgbọ́n kò gbọ́dọ̀ ju iye àwọn kọ́ọ̀rù/okùn ìṣiṣẹ́ CPU lọ. Tí innodb_buffer_pool rẹ bá kéré sí 1GB, o gbọ́dọ̀ lo ìwọ̀n àkójọpọ̀ tí a pín pẹ̀lú 128MB. Máa lo ìṣirò yìí títí dé iye tó pọ̀ jùlọ ti kọ́ọ̀rù CPU tàbí 64."
 
 #: lib/utility.php
 #, php-format
-msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
+msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s yóò pín innodb_buffer_pool sí àwọn agbègbè ìrántí láti mú ìṣiṣẹ́ dára sí i fún àwọn ẹ̀yà MySQL títí dé àti pẹ̀lú MySQL 8.0. Iye tó pọ̀ jùlọ ni 64, ṣùgbọ́n kò gbọ́dọ̀ ju iye àwọn kọ́ọ̀rù/okùn ìṣiṣẹ́ CPU lọ. Tí innodb_buffer_pool rẹ bá kéré sí 1GB, o gbọ́dọ̀ lo ìwọ̀n àkójọpọ̀ tí a pín pẹ̀lú 128MB. Máa lo ìṣirò yìí títí dé iye tó pọ̀ jùlọ ti kọ́ọ̀rù CPU tàbí 64."
 
 #: lib/utility.php
@@ -14638,7 +14638,7 @@ msgstr "Agbègbè àkókò tó tọ́ tí ó bá MySQL àti ètò náà mu"
 
 #: lib/utility.php
 #, php-format
-msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
+msgid "As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Láti ìgbà %s %s, o lè ṣàkóso bí %s ṣe máa ń tú àwọn ìṣòwò jáde sí díískì léraléra. Ìpilẹ̀ṣẹ̀ ni ìṣẹ́jú-àáyá 1, ṣùgbọ́n nínú àwọn ètò I/O gíga ṣíṣètò sí iye tó ju 1 lọ lè jẹ́ kí I/O díískì tẹ̀lé ara wọn dáadáa"
 
 #: lib/utility.php
@@ -14672,12 +14672,12 @@ msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this se
 msgstr "Tí o bá ní àwọn àwo SSD, lo àbá yìí. Bí bẹ́ẹ̀ kọ́, má ṣe ṣètò ètò yìí."
 
 #: lib/utility.php
-msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
+msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables."
 msgstr "Tí àwọn tábìlì rẹ bá ní àwọn àtọ́ka tí ó tóbi gan-an, o gbọ́dọ̀ ṣiṣẹ́ pẹ̀lú Barracuda innodb_file_format àti innodb_large_prefix tí ó dọ́gba pẹ̀lú 1. Àìṣe èyí lè yọrí sí àwọn plugins tí kò lè ṣẹ̀dá àwọn tábìlì dáadáa."
 
 #: lib/utility.php
 #, php-format
-msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
+msgid "InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system's total memory, but your requirements will vary depending on your system's size."
 msgstr "InnoDB yóò di àwọn tábìlì àti àwọn àtọ́ka púpọ̀ bí ó ti ṣe é ṣe tó mú nínú ìrántí ètò. Nítorí náà, o gbọ́dọ̀ mú kí innodb_buffer_pool tóbi tó láti di púpọ̀ nínú àwọn tábìlì àti àtọ́ka mú nínú ìrántí. Ṣíṣàyẹ̀wò ìwọ̀n fódà /var/lib/mysql/cacti yóò ràn ọ́ lọ́wọ́ láti mọ ìníyelórí yìí. A ń dámọ̀ràn 25%% ti gbogbo ìrántí ètò rẹ, ṣùgbọ́n àwọn ohun tí o nílò yóò yàtọ̀ ní ìbámu pẹ̀lú ìwọ̀n ètò rẹ."
 
 #: lib/utility.php
@@ -14691,7 +14691,7 @@ msgid "It is recommended that you enable InnoDB in any %s version greater than 5
 msgstr "A gbà ọ́ níyànjú pé kí o mú InnoDB ṣiṣẹ́ nínú èyíkéyìí ẹ̀yà %s tí ó tóbi ju 5.1 lọ."
 
 #: lib/utility.php
-msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
+msgid "Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table."
 msgstr "Fífẹ̀ àkójọpọ̀ ìrántí tábìlì túmọ̀ sí àwọn iṣẹ́ ṣíṣí/títì fáìlì tí ó dín kù nígbà lílo innodb_file_per_table."
 
 #: lib/utility.php
@@ -14716,7 +14716,7 @@ msgid "Recommended Value"
 msgstr "Ìníyelórí Tí A Dámọ̀ràn"
 
 #: lib/utility.php
-msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
+msgid "Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Àwọn ìbéèrè apànìyàn kò gbọ́dọ̀ fa kí ibi-ìpamọ́ dátà lọ sí offline fún àwọn mìíràn. Pa àwọn ìbéèrè wọ̀nyí kí wọ́n tó pa ètò rẹ."
 
 #: lib/utility.php
@@ -14729,7 +14729,7 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "Èyí ni ibi tí a ti ń tọ́jú metadata. Tí o bá ní ọ̀pọ̀ tábìlì, yóò wúlò láti mú èyí pọ̀ sí i."
 
 #: lib/utility.php
-msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
+msgid "This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Àwọn ètò yìí gbọ́dọ̀ wà ní TÍTÀN àyàfi bí àpẹẹrẹ Kadupul rẹ bá ń ṣiṣẹ́ lórí yálà ZFS tàbí FusionI/O tí àwọn méjèèjì ní àkọsílẹ̀ inú láti gbà fún ìfọ́ ètò òjijì. Síbẹ̀síbẹ̀, tí o bá ní iná tó dára gan-an, tí àwọn ètò rẹ kì í sì í lọ sílẹ̀ láìròtẹ́lẹ̀ tí o sì ní àfikún ìpamọ́, pípa ètò yìí sí PÍPA lè fún ọ ní ìdàgbàsókè iṣẹ́ dátàbéèsì tó fẹ́rẹ̀ẹ́ tó 50%."
 
 #: lib/utility.php
@@ -14737,11 +14737,11 @@ msgid "Variable"
 msgstr "Onírúurú"
 
 #: lib/utility.php
-msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
+msgid "When executing subqueries, having a larger temporary table size keeps those temporary tables in memory."
 msgstr "Nígbà tí a bá ń ṣiṣẹ́ àwọn ìbéèrè abẹ́lẹ̀, níní ìwọ̀n tábìlì ìgbà díẹ̀ tó tóbi jù ń pa àwọn tábìlì ìgbà díẹ̀ wọ̀nyẹn mọ́ sínú ìrántí."
 
 #: lib/utility.php
-msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
+msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr "Nígbà tí a bá ń ṣe àwọn ìdàpọ̀ (joins), tí wọ́n bá kéré sí ìwọ̀n yìí, a ó pa wọ́n mọ́ sínú ìrántí a kò sì ní kọ wọ́n sí fáìlì ìgbà díẹ̀ rí. Nítorí pé èyí jẹ́ ìpín ìrántí fún ìsopọ̀ kọ̀ọ̀kan, a gbọ́dọ̀ ṣọ́ra láti má ṣe mú un pọ̀ sí i jù. Àpapọ̀ join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Ìrántí Pàtàkì MySQL/MariaDB gbọ́dọ̀ wà lábẹ́ 80%. Tí àbá náà bá jẹ́ òdì, o gbọ́dọ̀ dín èyí àti tàbí sort_buffer_size kù títí àbá náà yóò fi wọ inú ìrántí tí a gbà láàyè."
 
 #: lib/utility.php
@@ -14984,7 +14984,7 @@ msgstr "Àwọn Olùgbà Ìfitónilétí %s"
 
 #: managers.php
 msgid "Click 'Continue' to delete the following Notification Receiver"
-msgid_plural "Click 'Continue' to delete following Notification Receiver"
+msgid_plural "Click 'Continue' to delete the following Notification Receivers"
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Olùgbà Ìfitónilétí tó tẹ̀lé e rẹ́"
 
 #: managers.php
@@ -14993,12 +14993,12 @@ msgstr "Tẹ 'Tẹ̀síwájú' láti pa fífiránṣẹ́ Àwọn Ohun Ìfitóni
 
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
-msgid_plural "Click 'Continue' to disable following Notification Receiver"
+msgid_plural "Click 'Continue' to disable the following Notification Receivers"
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Olùgbà Ìfitónilétí tó tẹ̀lé e lẹ́nu iṣẹ́"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
-msgid_plural "Click 'Continue' to enable following Notification Receiver"
+msgid_plural "Click 'Continue' to enable the following Notification Receivers"
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti mú Olùgbà Ìfitónilétí tó tẹ̀lé e ṣiṣẹ́"
 
 #: managers.php
@@ -15103,7 +15103,7 @@ msgid "Automatically Trust Signer"
 msgstr "Gbẹ́kẹ̀lé Olùfọwọ́sí Lọ́nà Aládàáṣe"
 
 #: package_import.php templates_import.php
-msgid "Changes/Diffferences"
+msgid "Changes/Differences"
 msgstr "Àwọn Àtúnṣe/Ìyàtọ̀"
 
 #: package_import.php
@@ -15171,6 +15171,10 @@ msgid "Package"
 msgstr "Páàkẹ́ẹ̀tì"
 
 #: package_import.php
+msgid "Package Details"
+msgstr "Àlàyé Kíkún Àwọn Páàkẹ́ẹ̀tì"
+
+#: package_import.php
 msgid "Package Import"
 msgstr "Ìkówọlé Páàkẹ́ẹ̀tì"
 
@@ -15183,19 +15187,15 @@ msgid "Package XML File Damaged."
 msgstr "Fáìlì XML Páàkẹ́ẹ̀tì Ti Bàjẹ́."
 
 #: package_import.php
-msgid "Packages Details"
-msgstr "Àlàyé Kíkún Àwọn Páàkẹ́ẹ̀tì"
-
-#: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Rọ́pò Àwọn Àkọsílẹ̀ Ìníyelórí Àbá Orísun Dátà àti Àdàkọ Àtẹ àwòrán. Àwọn Àtẹ àwòrán àti Àwọn Orísun Dátà yóò gba àwọn orúkọ tuntun lẹ́yìn yálà Àtún-àtọ́ka Ìbéèrè Dátà kan tàbí nípa lílo ìṣiṣẹ́ Rọ́pò Àwọn Ìníyelórí Àbá tí a fi agbára mú."
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available"
 msgstr "Wo cacti.log fún àlàyé sí i. Ó ṣeé ṣe kí o ní àṣìṣe Kọ́kọ́rọ́ API tàbí kí a ti ba ìdìpọ̀ náà jẹ́, tàbí kí ipò náà máà sí"
 
 #: package_import.php
-msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
+msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tampered with, or the location is not available."
 msgstr "Wo cacti.log fún àlàyé sí i. Ó ṣeé ṣe kí o ní àṣìṣe Kọ́kọ́rọ́ API tàbí kí a ti ba ìdìpọ̀ náà jẹ́, tàbí kí ipò náà máà sí."
 
 #: package_import.php templates_import.php
@@ -15217,11 +15217,11 @@ msgid "The Package %s Imported Successfully"
 msgstr "A ti Gbé Ìdìpọ̀ %s Wọlé Ní Àṣeyọrí"
 
 #: package_import.php
-msgid "The XML files appears to be invalid.  Please contact the package author"
+msgid "The XML file appears to be invalid.  Please contact the package author"
 msgstr "Àwọn fáìlì XML dà bí ẹni pé kò péye. Jọ̀wọ́ kàn sí olùkọ ìdìpọ̀"
 
 #: package_import.php
-msgid "The XML files for the package does not exist"
+msgid "The XML files for the package do not exist"
 msgstr "Àwọn fáìlì XML fún ìdìpọ̀ náà kò sí"
 
 #: package_import.php
@@ -15242,7 +15242,7 @@ msgid "You have not Trusted this Package Author.  If you wish to import, check t
 msgstr "O kò ì Gbẹ́kẹ̀lé Olùkọ Ìdìpọ̀ yìí. Tí o bá fẹ́ gbé wọlé, ṣàmì sí àpótí Gbẹ́kẹ̀lé Olùkọ Fúnra Rẹ̀"
 
 #: plugins.php
-msgid "A description that the Plugins author has given to the Plugin."
+msgid "A description that the Plugin's author has given to the Plugin."
 msgstr "Àpèjúwe tí òǹkọ̀wé Àfikún náà fún Àfikún náà."
 
 #: plugins.php
@@ -15335,7 +15335,7 @@ msgid "Plugin Name"
 msgstr "Orúkọ Àfikún"
 
 #: plugins.php
-msgid "Plugin directories can not include spaces"
+msgid "Plugin directories cannot include spaces"
 msgstr "Àwọn fódà àfikún kò lè ní àwọn àlàfo"
 
 #: plugins.php
@@ -15425,12 +15425,12 @@ msgstr "Yíyọ Àfikún yìí sori ẹ̀rọ yóò pa gbogbo Dátà àti Ètò 
 
 #: poller.php
 #, php-format
-msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "ÀṢÌṢE: Ipa-ọ̀nà aláìkààwé PHP: %s kò tọ́ fún id olùṣàyẹ̀wò %d. Olùṣàyẹ̀wò kò lè tẹ̀síwájú!"
 
 #: poller.php
 #, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!"
 msgstr "ÀṢÌṢE: Ipa-ọ̀nà spine: %s kò tọ́ fún id olùṣàyẹ̀wò %d. Olùṣàyẹ̀wò kò lè tẹ̀síwájú!"
 
 #: poller.php
@@ -15452,7 +15452,7 @@ msgstr "Poller ní Ipò Heartbeat"
 
 #: poller.php
 #, php-format
-msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
+msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!"
 msgstr "ÌKÌLỌ̀: %s kò báramu pẹ̀lú Àkókò Olùṣàkójọ fún ID olùṣàkójọ %d! Àkókò Olùṣàkójọ jẹ́ ìṣẹ́jú-àáyá %d, pẹ̀lú pípọ̀jù ìṣẹ́jú-àáyá %d, ṣùgbọ́n ìṣẹ́jú-àáyá %d ti kọjá láti ìgbà ìṣàkójọ tó kẹ́yìn!"
 
 #: poller.php
@@ -15506,7 +15506,7 @@ msgstr[0] "Nu Àwọn Ìṣirò Kúrò fún Olùkó Dátà"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
-msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
+msgid_plural "Click 'Continue' to Clear Data Collector Statistics for the Data Collectors."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti Nu Àwọn Ìṣirò Olùkó Dátà Kúrò fún Olùkó Dátà náà."
 
 #: pollers.php
@@ -15601,7 +15601,7 @@ msgid "No Data Collectors Found"
 msgstr "Kò Rí Àwọn Olùkó Dátà Kankan"
 
 #: pollers.php
-msgid "Notes for this Data Collectors Database."
+msgid "Notes for this Data Collector's Database."
 msgstr "Àwọn àkọsílẹ̀ fún Ibi-Ìpamọ́ Dátà Àwọn Olùkó Dátà yìí."
 
 #: pollers.php
@@ -15730,12 +15730,12 @@ msgid "The file holding the SSL Key to use to connect to the remote database."
 msgstr "Fáìlì tí ó ní Kọ́kọ́rọ́ SSL láti lò láti sopọ̀ mọ́ dátàbéèsì jíjìn."
 
 #: pollers.php
-msgid "The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
-msgstr "Orúkọ agbàlejò fún Olùkójọ Dátà. Ó lè nílò láti jẹ́ Orúkọ Agbègbè Tó Péye Kíkún fún àwọn Olùṣàkójọ jíjìn láti kàn sí i fún àwọn iṣẹ́ bíi àtúnṣe àtọ́ka, ìyàwòrán Àkókò-gidi, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
-
-#: pollers.php
 msgid "The hostname for the remote database server."
 msgstr "Orúkọ agbàlejò fún olupin dátàbéèsì jíjìn."
+
+#: pollers.php
+msgid "The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc."
+msgstr "Orúkọ agbàlejò fún Olùkójọ Dátà. Ó lè nílò láti jẹ́ Orúkọ Agbègbè Tó Péye Kíkún fún àwọn Olùṣàkójọ jíjìn láti kàn sí i fún àwọn iṣẹ́ bíi àtúnṣe àtọ́ka, ìyàwòrán Àkókò-gidi, àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
 
 #: pollers.php
 msgid "The last data collection time for this Data Collector."
@@ -15750,7 +15750,7 @@ msgid "The last time this Data Collector completed."
 msgstr "Ìgbà tó kẹ́yìn tí Olùkójọ Dátà yìí parí iṣẹ́."
 
 #: pollers.php
-msgid "The last time this Data Collector was full synced with main Kadupul site."
+msgid "The last time this Data Collector was full synced with the main Kadupul site."
 msgstr "Ìgbà tó kẹ́yìn tí Olùkójọ Dátà yìí ṣe ìbáramu kíkún pẹ̀lú ibùdó àkọ́kọ́ Kadupul."
 
 #: pollers.php
@@ -15933,7 +15933,7 @@ msgid "Changing Permission Model Warning"
 msgstr "Ìkìlọ̀ Yíyí Àwòṣe Àṣẹ Padà"
 
 #: settings.php
-msgid "Changing Permission Model will alter a users effective Graph permissions."
+msgid "Changing Permission Model will alter a user's effective Graph permissions."
 msgstr "Yíyí Àwòṣe Àṣẹ padà yóò yí àwọn àṣẹ Àwòrán ìtọ́ka tó munádóko ti olùlò padà."
 
 #: settings.php
@@ -16252,7 +16252,7 @@ msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have be
 msgstr "<strong>ÀKÍYÈSÍ:</strong> Kò sí ọ̀kan nínú àwọn Àfikún Pàtàkì Kadupul, títí di òní, tí a ti tún ṣe láti ṣiṣẹ́ pẹ̀lú àwọn Olùkó Dátà Jíjìn. Nítorí náà, àwọn Àfikún bíi MacTrack, àti HMIB, tí ó nílò ìráyè tààrà sí àwọn ẹ̀rọ kò ní ṣiṣẹ́ pẹ̀lú àwọn Olùkó Dátà Jíjìn lọ́wọ́lọ́wọ́. Síbẹ̀síbẹ̀, àwọn àfikún bíi Thold yóò ṣiṣẹ́ níwọ̀n ìgbà tí Olùkó Dátà Jíjìn bá wà ní ipò <b>'online'</b>."
 
 #: templates/platform/console_home_body.html.twig
-msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
+msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collector's Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump its Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>ÀKÍYÈSÍ:</strong> O ti wọlé sí Olùkó Dátà Jíjìn kan. Nígbà tí ó bá wà ní <b>'online'</b>, ìwọ yóò lè wo àti ṣàkóso púpọ̀ nínú Ojú-ọ̀nà Wẹ́ẹ̀bù Pàtàkì Kadupul bíi pé o wọlé sí i gẹ́gẹ́. Bákan náà, ó ṣe pàtàkì láti kíyèsí pé a nílò àwọn Olùkó Dátà Jíjìn láti lo ẹ̀yà <b>'Ìtúnṣe Lórí Ìbéèrè'</b> ti Àwọn Iṣẹ́ Ìmúdàgbàsókè Iṣẹ́ Kadupul, a sì máa ń gbani níyànjú nígbà gbogbo láti lo Spine. Nígbà tí Olùkó Dátà Jíjìn bá wà ní <b>'offline'</b>, Ojú-ọ̀nà Wẹ́ẹ̀bù Olùkó Dátà Jíjìn yóò ní ìròyìn tó kéré púpọ̀. Síbẹ̀síbẹ̀, yóò fi gbogbo ìtúnṣe pamọ́ sí àkójọ ìgbà díẹ̀ títí Ilé-ìkópamọ́ Dátà Pàtàkì Kadupul àti Olùpèsè Wẹ́ẹ̀bù yóò fi ṣeé dé bá. Lẹ́yìn náà yóò da àbájáde tábìlì Boost rẹ̀ padà sí Ilé-ìkópamọ́ Dátà Pàtàkì Kadupul fún ìtúnṣe."
 
 #: templates/platform/console_home_body.html.twig
@@ -16427,22 +16427,22 @@ msgstr "Àwọn Ẹ̀ka"
 
 #: tree.php
 msgid "Click 'Continue' to delete the following Tree."
-msgid_plural "Click 'Continue' to delete following Trees."
+msgid_plural "Click 'Continue' to delete the following Trees."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Igi tó tẹ̀lé e rẹ́."
 
 #: tree.php
 msgid "Click 'Continue' to publish the following Tree."
-msgid_plural "Click 'Continue' to publish following Trees."
+msgid_plural "Click 'Continue' to publish the following Trees."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti tẹ Igi tó tẹ̀lé e jáde."
 
 #: tree.php
 msgid "Click 'Continue' to un-lock the following Tree."
-msgid_plural "Click 'Continue' to un-lock following Trees."
+msgid_plural "Click 'Continue' to un-lock the following Trees."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti tú Igi tó tẹ̀lé e sílẹ̀."
 
 #: tree.php
 msgid "Click 'Continue' to un-publish the following Tree."
-msgid_plural "Click 'Continue' to un-publish following Trees."
+msgid_plural "Click 'Continue' to un-publish the following Trees."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti dá títẹ Igi tó tẹ̀lé e jáde dúró."
 
 #: tree.php
@@ -16537,7 +16537,7 @@ msgid "The last user to have modified this Tree."
 msgstr "Olùlò tó kẹ́yìn tí ó ṣàtúnṣe Igi yìí."
 
 #: tree.php
-msgid "The name by which this Tree will be referred to as."
+msgid "The name by which this Tree will be referred to."
 msgstr "Orúkọ tí a ó máa pè Igi yìí."
 
 #: tree.php
@@ -16728,7 +16728,7 @@ msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Tẹ 'Tẹ̀síwájú' láti mú (Àwọn) Olùlò tí a yàn ṣiṣẹ́."
 
 #: user_admin.php
-msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
+msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user's Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Tẹ 'Tẹ̀síwájú' láti kọ sórí àwọn ètò (Àwọn) Olùlò pẹ̀lú àwọn ètò àti àṣẹ Olùlò àdàkọ tí a yàn. Orúkọ Kíkún, Ọ̀rọ̀ Aṣínà, Agbègbè àti ipò Mímú-ṣiṣẹ́ ti àwọn olùlò àtìlẹ̀wá yóò dúró, gbogbo àwọn pápá mìíràn ni a óò kọ sórí láti ọ̀dọ̀ Olùlò Àdàkọ."
 
 #: user_admin.php
@@ -17048,12 +17048,12 @@ msgstr "Yan irú agbègbè tí èyí jẹ́."
 
 #: user_domains.php
 msgid "Click 'Continue' to delete the following User Domain."
-msgid_plural "Click 'Continue' to delete following User Domains."
+msgid_plural "Click 'Continue' to delete the following User Domains."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Agbègbè Olùlò tó tẹ̀lé e rẹ́."
 
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
-msgid_plural "Click 'Continue' to disable following User Domains."
+msgid_plural "Click 'Continue' to disable the following User Domains."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Agbègbè Olùlò tó tẹ̀lé e lẹ́nu iṣẹ́."
 
 #: user_domains.php
@@ -17061,7 +17061,7 @@ msgid "Click 'Continue' to enable the following User Domain."
 msgstr "Tẹ 'Tẹ̀síwájú' láti mú Agbègbè Olùlò tó tẹ̀lé e ṣiṣẹ́."
 
 #: user_domains.php
-msgid "Click 'Continue' to make the following the following User Domain the default one."
+msgid "Click 'Continue' to make the following User Domain the default one."
 msgstr "Tẹ 'Tẹ̀síwájú' láti sọ Agbègbè Olùlò tó tẹ̀lé e di èyí ìpilẹ̀ṣẹ̀."
 
 #: user_domains.php
@@ -17091,15 +17091,11 @@ msgid "Domains"
 msgstr "Àwọn Agbègbè"
 
 #: user_domains.php
-msgid "Domains Type"
-msgstr "Irú Àwọn Agbègbè"
-
-#: user_domains.php
 msgid "Effective User"
 msgstr "Olùlò Tó Munádóko"
 
 #: user_domains.php
-msgid "Enabled User Domain"
+msgid "Enable User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "Mú Agbègbè Olùlò Ṣiṣẹ́"
 
@@ -17116,16 +17112,12 @@ msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "Ààyè tí yóò rọ́pò ímeèlì tí a mú láti inú LDAP. (lórí Windows: mail) "
 
 #: user_domains.php
-msgid "If this checkbox is checked, users will be able to login using this domain."
+msgid "If this checkbox is checked, users will be able to log in using this domain."
 msgstr "Tí a bá ṣàmì sí àpótí àyẹ̀wò yìí, àwọn olùmúlò yóò lè wọlé nípa lílo agbègbè yìí."
 
 #: user_domains.php
 msgid "Make Selected Domain Default"
 msgstr "Sọ Agbègbè Tí A Yàn Di Àìyípadà"
-
-#: user_domains.php
-msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Ipò iṣẹ́ tí cacti yóò gbìyànjú láti fìdí ìdánimọ̀ múlẹ̀ sí sẹ́fà LDAP.<blockquote><i>No Searching</i> - Kò sí àwárí Distinguished Name (DN) tí ó ń ṣẹlẹ̀, kàn gbìyànjú láti so pọ̀ pẹ̀lú ọ̀nà ìṣètò Distinguished Name (DN) tí a pèsè.<br><br><i>Anonymous Searching</i> - Ó máa ń gbìyànjú láti wá orúkọ olùmúlò lára ìtòjọ LDAP nípasẹ̀ ìsopọ̀ àìmọ̀ láti wá Distinguished Name (DN) àwọn olùmúlò náà.<br><br><i>Specific Searching</i> - Ó máa ń gbìyànjú àwárí fún orúkọ olùmúlò lára ìtòjọ LDAP nípasẹ̀ Specific Distinguished Name (DN) àti Specific Password fún ìsopọ̀ láti wá Distinguished Name (DN) àwọn olùmúlò náà."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17191,22 +17183,22 @@ msgstr "Nu kúrò"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
-msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
+msgid_plural "Click 'Continue' to Copy the following User Groups to new User Groups."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti Ṣe Ẹ̀dà Ẹgbẹ́ Olùlò tó tẹ̀lé e sí Ẹgbẹ́ Olùlò tuntun."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
-msgid_plural "Click 'Continue' to delete following User Groups"
+msgid_plural "Click 'Continue' to delete the following User Groups"
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Ẹgbẹ́ Olùlò tó tẹ̀lé e rẹ́"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
-msgid_plural "Click 'Continue' to disable following User Groups."
+msgid_plural "Click 'Continue' to disable the following User Groups."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti pa Ẹgbẹ́ Olùlò tó tẹ̀lé e lẹ́nu iṣẹ́."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
-msgid_plural "Click 'Continue' to enable following User Groups."
+msgid_plural "Click 'Continue' to enable the following User Groups."
 msgstr[0] "Tẹ 'Tẹ̀síwájú' láti mú Ẹgbẹ́ Olùlò tó tẹ̀lé e ṣiṣẹ́."
 
 #: user_group_admin.php
@@ -17227,7 +17219,7 @@ msgid "Default Tree Policy for this User Group"
 msgstr "Ìlànà Igi Ìpilẹ̀ṣẹ̀ fún Ẹgbẹ́ Olùlò yìí"
 
 #: user_group_admin.php
-msgid "Defer to the Users Setting"
+msgid "Defer to the User's Setting"
 msgstr "Fi sí Ètò Àwọn Olùlò"
 
 #: user_group_admin.php
@@ -17558,11 +17550,11 @@ msgid "Detailed Runtime Statistics"
 msgstr "Àwọn Ìṣirò Àkókò-Ìṣiṣẹ́ Kíkún"
 
 #: utilities.php
-msgid "Different version of Kadupul and Spine!"
+msgid "Different versions of Kadupul and Spine!"
 msgstr "Ẹ̀yà Kadupul àti Spine tí ó yàtọ̀!"
 
 #: utilities.php
-msgid "Directory Does NOT Exist!!"
+msgid "Directory Does NOT Exist!"
 msgstr "Àpò KÒ SÍ!!"
 
 #: utilities.php
@@ -17576,11 +17568,11 @@ msgstr "ÀṢÌṢE: Ẹ̀yà RRDtool tí a fi sori ẹ̀rọ kò kọjá ẹ̀y
 
 #: utilities.php
 #, php-format
-msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
+msgid "ERROR: RRDtool 1.2.x+ does not support the GIF image format, but %d graph(s) and/or templates have GIF set as the image format."
 msgstr "ÀṢÌṢE: RRDtool 1.2.x+ kò ṣètìlẹ́yìn fún ọ̀nà àwòrán GIF, ṣùgbọ́n àwọn àwòrán ìtọ́ka %d\" àti/tàbí àwọn àdàkọ ní GIF gẹ́gẹ́ bí ọ̀nà àwòrán."
 
 #: utilities.php
-msgid "Each browser tab can use upto 10 connections depending on the browser."
+msgid "Each browser tab can use up to 10 connections depending on the browser."
 msgstr "Taàbù aṣàwárí kọ̀ọ̀kan lè lo títí dé àsopọ̀ 10 ní ìbámu pẹ̀lú aṣàwárí náà."
 
 #: utilities.php
@@ -17638,7 +17630,7 @@ msgstr "Ti Fi Sori Ẹ̀rọ. <span class=\"deviceDown\">Note: Tí o bá ń gbè
 
 #: utilities.php
 #, php-format
-msgid "It is highly suggested that you alter you php.ini memory_limit to %s or higher."
+msgid "It is highly suggested that you alter your php.ini memory_limit to %s or higher."
 msgstr "A gbà ọ́ níyànjú gidigidi pé kí o yí php.ini memory_limit rẹ padà sí %s tàbí jù bẹ́ẹ̀ lọ."
 
 #: utilities.php
@@ -18041,11 +18033,11 @@ msgid "Technical Support [%s]"
 msgstr "Ìrànlọ́wọ́ Ìmọ̀-ẹ̀rọ [%s]"
 
 #: utilities.php
-msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
+msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTs as well as in CDEFs."
 msgstr "Káàṣì Ìbéèrè Dátà ń tọ́jú àlàyé tí a kó jọ láti inú àwọn irú ìtẹ̀wọlé Ìbéèrè Dátà. A lè lo àwọn iye láti inú àwọn ààyè wọ̀nyí nínú ààyè ọ̀rọ̀ Àwọn Gíráfù fún Àlàyé àwòrán, Àwọn Àmì Inaro, àti GPRINTs àti nínú àwọn CDEF."
 
 #: utilities.php
-msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
+msgid "The Kadupul Log stores statistics, error and other messages depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Àkọsílẹ̀ Kadupul ń tọ́jú ìṣirò, àṣìṣe àti ìránṣẹ́ mìíràn ní ìbámu pẹ̀lú àwọn ètò ètò. A lè lo àlàyé yìí láti mọ àwọn ìṣòro pẹ̀lú olùṣàkójọ àti ohun èlò."
 
 #: utilities.php
@@ -18081,7 +18073,7 @@ msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Èyí ń fi gbogbo àwọn ohun tí Aṣojú SNMP ń ṣiṣẹ́ lé lórí hàn."
 
 #: utilities.php
-msgid "This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
+msgid "This suggested memory value is calculated based on the number of data sources present and is only to be used as a suggestion, actual values may vary system to system based on requirements."
 msgstr "A ṣírò iye ìrántí tí a dábàá yìí tó dá lórí nọ́ńbà orísun dátà tó wà, ó sì wà láti lò gẹ́gẹ́ bí àbá nìkan, àwọn iye gidi lè yàtọ̀ láti ètò sí ètò ní ìbámu pẹ̀lú àwọn ohun tí a béèrè."
 
 #: utilities.php
@@ -18118,7 +18110,7 @@ msgid "Update Frequency:"
 msgstr "Ìgbàgbọ̀ Ìmúdọ̀tun:"
 
 #: utilities.php
-msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
+msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need to enable rrdcheck in Configuration->Settings->Data"
 msgstr "Lo ohun èlò yìí láti fi àwọn ìṣòro hàn pẹ̀lú àwọn fáìlì rrd tó sọnù tàbí àwọn iye tó sọnù nínú àwọn rrdfile. O nílò láti mú rrdcheck ṣiṣẹ́ nínú Configuration->Settings->Data"
 
 #: utilities.php

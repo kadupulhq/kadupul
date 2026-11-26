@@ -289,6 +289,10 @@ final class TranslationCatalogTest extends TestCase
         if ($colon($message) !== $colon($source)) {
             $problems[] = $colon($source) ? 'drops the trailing colon of the source' : 'adds a trailing colon the source lacks';
         }
+        $ending = static fn(string $value): string => (string) preg_replace('/^.*?([?!\x{FF1F}\x{FF01}][.\x{3002}])' . self::SPACE . '*\z/us', '$1', $value);
+        if (preg_match('/[?!\x{FF1F}\x{FF01}][.\x{3002}]' . self::SPACE . '*\z/u', $message) === 1 && $ending($message) !== $ending($source)) {
+            $problems[] = 'ends with a period after "?" or "!" that the source does not have';
+        }
         $invisible = static fn(string $value): bool => preg_match('/^' . self::INVISIBLE . '|' . self::INVISIBLE . '\z/u', $value) === 1;
         if ($invisible($message) && !$invisible($source)) {
             $problems[] = 'starts or ends with an invisible directional or byte order mark';
@@ -323,6 +327,9 @@ final class TranslationCatalogTest extends TestCase
         self::assertStringContainsString('adds a trailing colon', $reasons('ko_KR', 'Color Name', '색상명:'));
         self::assertStringContainsString('drops the trailing colon', $reasons('ja_JP', 'Licensed under the GPL:', 'GPLの下でライセンスされています。'));
         self::assertSame('', $reasons('ja_JP', 'Licensed under the GPL:', 'GPLの下でライセンスされています：'));
+        self::assertStringContainsString('period after "?" or "!"', $reasons('uk_UA', 'Disable Network %name%!', 'Вимкнути мережу %name%!.'));
+        self::assertStringContainsString('period after "?" or "!"', $reasons('zh_CN', 'Continue?', '继续？。'));
+        self::assertSame('', $reasons('de_DE', 'Continue?', 'Fortfahren?'));
         self::assertStringContainsString('invisible', $reasons('he_IL', 'ROOT', "\u{202B}Root"));
         self::assertStringContainsString('invisible', $reasons('sv_SE', 'Numeric', "\u{FEFF}Numerisk"));
         self::assertStringContainsString('repeats the symbolic key', $reasons('nl_NL', 'csrf', 'csrf', 'The form could not be verified.'));

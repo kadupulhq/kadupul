@@ -256,7 +256,7 @@ $settings = array(
         ),
         'path_stderrlog' => array(
             'friendly_name' => __('Poller Standard Error Log Path'),
-            'description' => __('If you are having issues with Kadupul\'s Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file'),
+            'description' => __('If you are having issues with Kadupul\'s Data Collectors, set this file path and the Data Collectors\' standard error will be redirected to this file'),
             'method' => 'filepath',
             'file_type' => 'ascii',
             'default' => $config['base_path'] . '/log/cacti_stderr.log',
@@ -343,14 +343,14 @@ $settings = array(
         ),
         'log_destination' => array(
             'friendly_name' => __('Log Destination'),
-            'description' => __('How will Kadupul handle event logging.'),
+            'description' => __('How will Kadupul handle event logging?'),
             'method' => 'drop_array',
             'default' => 1,
             'array' => $logfile_options,
         ),
         'log_verbosity' => array(
             'friendly_name' => __('Generic Log Level'),
-            'description' => __('What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly.'),
+            'description' => __('What level of detail do you want sent to the log file?  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly.'),
             'method' => 'drop_array',
             'default' => POLLER_VERBOSITY_LOW,
             'array' => $logfile_verbosity,
@@ -383,7 +383,7 @@ $settings = array(
         ),
         'selective_device_debug' => array(
             'friendly_name' => __('Selective Device Debug'),
-            'description' => __('A comma delimited list of Device ID\'s that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process.'),
+            'description' => __('A comma delimited list of Device IDs that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process.'),
             'method' => 'textbox',
             'size' => '30',
             'max_length' => 30,
@@ -416,7 +416,7 @@ $settings = array(
         ),
         'i18n_language_support' => array(
             'friendly_name' => __('Language Support'),
-            'description' => __('Choose \'enabled\' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that\'s not the fact everything will be displayed in English.'),
+            'description' => __('Choose \'enabled\' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that is not the case, everything will be displayed in English.'),
             'method' => 'drop_array',
             'default' => '1',
             'array' => $i18n_modes
@@ -447,7 +447,7 @@ $settings = array(
         ),
         'client_timezone_support' => array(
             'friendly_name' => __('Client TimeZone Support'),
-            'description' => __('How should Kadupul support Client Dates based upon the Client browsers timezone.'),
+            'description' => __('How should Kadupul support Client Dates based upon the Client browser\'s timezone.'),
             'method' => 'drop_array',
             'array' => array(
                 '0' => __('Disabled'),
@@ -476,13 +476,13 @@ $settings = array(
         ),
         'site_location_filter' => array(
             'friendly_name' => __('Show only site specific locations'),
-            'description' => __('Show only locations that are available at a devices selected site.'),
+            'description' => __('Show only locations that are available at a device\'s selected site.'),
             'method' => 'checkbox',
             'default' => '',
         ),
         'default_has' => array(
             'friendly_name' => __('Has Graphs/Data Sources Checked'),
-            'description' => __('Should the Has Graphs and Has Data Sources be Checked by Default.'),
+            'description' => __('Should the Has Graphs and Has Data Sources be Checked by Default?'),
             'method' => 'checkbox',
             'default' => ''
         ),
@@ -495,7 +495,7 @@ $settings = array(
         ),
         'enable_rrdtool_gradient_support' => array(
             'friendly_name' => __('Enable Gradient Support'),
-            'description' => __('Enabled Gradient Support for AREA and STACK charts.'),
+            'description' => __('Enables Gradient Support for AREA and STACK charts.'),
             'default' => '',
             'method' => 'checkbox',
         ),
@@ -523,13 +523,13 @@ $settings = array(
         ),
         'hide_form_description' => array(
             'friendly_name' => __('Show Form/Setting Help Inline'),
-            'description' => __('When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button.'),
+            'description' => __('When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button.'),
             'default' => '',
             'method' => 'checkbox',
         ),
         'local_documentation' => array(
             'friendly_name' => __('Local Page Help Only'),
-            'description' => __('By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the \'docs\' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox.'),
+            'description' => __('By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the \'docs\' location of your Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox.'),
             'default' => '',
             'method' => 'checkbox',
         ),
@@ -547,7 +547,7 @@ $settings = array(
         ),
         'graphs_auto_unlock' => array(
             'friendly_name' => __('Graphs Auto Unlock'),
-            'description' => __('When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph.'),
+            'description' => __('When enabled, Kadupul will not lock Graphs.  This allows a faster manual modification of Data Sources related to a Graph.'),
             'method' => 'checkbox',
             'default' => ''
         ),
@@ -559,7 +559,7 @@ $settings = array(
         ),
         'drag_and_drop' => array(
             'friendly_name' => __('Enable Drag-N-Drop'),
-            'description' => __('Some of Kadupul\'s interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled.'),
+            'description' => __('Some of Kadupul\'s interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired users, this option may be disabled.'),
             'method' => 'checkbox',
             'default' => 'on',
         ),
@@ -606,7 +606,7 @@ $settings = array(
         ),
         'content_security_alternate_sources' => array(
             'friendly_name' => __('Content-Security Alternate Sources'),
-            'description' => __('Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only.'),
+            'description' => __('Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can include wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only.'),
             'method' => 'textbox',
             'default' => '',
             'size' => '100',
@@ -638,14 +638,14 @@ $settings = array(
         ),
         'automation_email' => array(
             'friendly_name' => __('Automation Notification To Email'),
-            'description' => __('The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account.'),
+            'description' => __('The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admin\'s Email account.'),
             'method' => 'textbox',
             'default' => '',
             'max_length' => '128',
         ),
         'automation_fromname' => array(
             'friendly_name' => __('Automation Notification From Name'),
-            'description' => __('The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name.'),
+            'description' => __('The Email Name to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name.'),
             'method' => 'textbox',
             'default' => '',
             'max_length' => '32',
@@ -653,7 +653,7 @@ $settings = array(
         ),
         'automation_fromemail' => array(
             'friendly_name' => __('Automation Notification From Email'),
-            'description' => __('The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address.'),
+            'description' => __('The Email Address to use for Automation Notification Emails if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address.'),
             'method' => 'textbox',
             'default' => '',
             'max_length' => '100',
@@ -750,7 +750,7 @@ $settings = array(
         ),
         'default_interface_speed' => array(
             'friendly_name' => __('Default Interface Speed'),
-            'description' => __('If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles.'),
+            'description' => __('If Kadupul cannot determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles.'),
             'method' => 'drop_array',
             'default' => '1000',
             'array' => array(
@@ -839,7 +839,7 @@ $settings = array(
         'snmp_engine_id' => array(
             'method' => 'textbox',
             'friendly_name' => __('SNMP Engine ID (v3)'),
-            'description' => __('Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver.'),
+            'description' => __('Default SNMP v3 Engine ID for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver.'),
             'value' => '|arg1:snmp_engine_id|',
             'default' => '',
             'max_length' => '64',
@@ -954,7 +954,7 @@ $settings = array(
         ),
         'num_rows_table' => array(
             'friendly_name' => __('Rows Per Page'),
-            'description' => __('The default number of rows to display on for a table.'),
+            'description' => __('The default number of rows to display for a table.'),
             'method' => 'drop_array',
             'default' => '30',
             'array' => $item_rows
@@ -1004,7 +1004,7 @@ $settings = array(
         ),
         'strip_domain' => array(
             'friendly_name' => __('Strip Domains from Device Dropdowns'),
-            'description' => __('When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname.'),
+            'description' => __('When viewing Device name filter dropdowns, checking this option will strip the domain from the hostname.'),
             'method' => 'checkbox',
             'default' => ''
         ),
@@ -1066,7 +1066,7 @@ $settings = array(
         ),
         'log_refresh_interval' => array(
             'friendly_name' => __('Log Tail Refresh'),
-            'description' => __('How often do you want the Kadupul log display to update.'),
+            'description' => __('How often do you want the Kadupul log display to update?'),
             'method' => 'drop_array',
             'default' => 60,
             'array' => $page_refresh_interval,
@@ -1097,7 +1097,7 @@ $settings = array(
         ),
         'realtime_gwindow' => array(
             'friendly_name' => __('Graph Timespan'),
-            'description' => __('This timespan you wish to see on the default graph.'),
+            'description' => __('The timespan you wish to see on the default graph.'),
             'method' => 'drop_array',
             'default' => 60,
             'array' => $realtime_window,
@@ -1232,7 +1232,7 @@ $settings = array(
         ),
         'poller_type' => array(
             'friendly_name' => __('Poller Type'),
-            'description' => __('The poller type to use.  This setting will take affect at next polling interval.'),
+            'description' => __('The poller type to use.  This setting will take effect at next polling interval.'),
             'method' => 'drop_array',
             'default' => 1,
             'array' => $poller_options,
@@ -1290,7 +1290,7 @@ $settings = array(
         ),
         'snmp_bulk_walk_size' => array(
             'friendly_name' => __('SNMP Bulkwalk Fetch Size'),
-            'description' => __('How many OID\'s should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN.'),
+            'description' => __('How many OIDs should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN.'),
             'method' => 'drop_array',
             'default' => '10',
             'array' => array(
@@ -1384,7 +1384,7 @@ $settings = array(
                 '0' => __('Disabled'),
                 '1' => __('Daily'),
                 '2' => __('Weekly on Sunday'),
-                '3' => __('Monthly on Sunady')
+                '3' => __('Monthly on Sunday')
             )
         ),
         'timeouts_header' => array(
@@ -1448,7 +1448,7 @@ $settings = array(
         ),
         'commands_processes' => array(
             'friendly_name' => __('Poller Command Concurrent Processes'),
-            'description' => __('The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool.'),
+            'description' => __('The number of concurrent Poller Command processes.  There will be at most one concurrent command per host within the Poller Command pool.'),
             'default' => '1',
             'method' => 'drop_array',
             'array' => array(
@@ -1476,7 +1476,7 @@ $settings = array(
         ),
         'maintenance_timeout' => array(
             'friendly_name' => __('Maintenance Background Generation Timeout'),
-            'description' => __('The maximum amount of time a Kadupul\'s Maintenance script can run without generating a timeout error and being killed.'),
+            'description' => __('The maximum amount of time Kadupul\'s Maintenance script can run without generating a timeout error and being killed.'),
             'method' => 'drop_array',
             'default' => '300',
             'array' => array(
@@ -1490,7 +1490,7 @@ $settings = array(
         ),
         'spikekill_timeout' => array(
             'friendly_name' => __('Spikekill Background Generation Timeout'),
-            'description' => __('The maximum amount of time a Kadupul\'s Spikekill script can run without generating a timeout error and being killed.'),
+            'description' => __('The maximum amount of time Kadupul\'s Spikekill script can run without generating a timeout error and being killed.'),
             'method' => 'drop_array',
             'default' => '3600',
             'array' => array(
@@ -1536,7 +1536,7 @@ $settings = array(
         ),
         'auth_method' => array(
             'friendly_name' => __('Authentication Method'),
-            'description' => __('<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>'),
+            'description' => __('<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against an LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP\'s LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>'),
             'method' => 'drop_array',
             'default' => 1,
             'array' => $auth_methods
@@ -1607,7 +1607,7 @@ $settings = array(
         ),
         'secpass_minlen' => array(
             'friendly_name' => __('Minimum Length'),
-            'description' => __('This is minimal length of allowed passwords.'),
+            'description' => __('This is the minimal length of allowed passwords.'),
             'method' => 'textbox',
             'default' => '8',
             'max_length' => 2,
@@ -1615,7 +1615,7 @@ $settings = array(
         ),
         'secpass_reqmixcase' => array(
             'friendly_name' => __('Require Mix Case'),
-            'description' => __('This will require new passwords to contains both lower and upper-case characters.'),
+            'description' => __('This will require new passwords to contain both lower and upper-case characters.'),
             'method' => 'checkbox',
             'default' => 'on',
         ),
@@ -1639,7 +1639,7 @@ $settings = array(
         ),
         'secpass_expireaccount' => array(
             'friendly_name' => __('Expire Inactive Accounts'),
-            'description' => __('This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy.'),
+            'description' => __('This is the maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy.'),
             'method' => 'drop_array',
             'default' => '0',
             'array' => array(
@@ -1653,7 +1653,7 @@ $settings = array(
         ),
         'secpass_expirepass' => array(
             'friendly_name' => __('Expire Password'),
-            'description' => __('This is maximum number of days before a password is set to expire.'),
+            'description' => __('This is the maximum number of days before a password is set to expire.'),
             'method' => 'drop_array',
             'default' => '0',
             'array' => array(
@@ -1729,7 +1729,7 @@ $settings = array(
         ),
         'ldap_server' => array(
             'friendly_name' => __('Server(s)'),
-            'description' => __('A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user.'),
+            'description' => __('A space delimited list of DNS hostnames or IP addresses for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user.'),
             'method' => 'textbox',
             'size' => '80',
             'max_length' => '255'
@@ -1805,7 +1805,7 @@ $settings = array(
         ),
         'ldap_mode' => array(
             'friendly_name' => __('Mode'),
-            'description' => __('Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user\'s Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user\'s Distinguished Name (DN).'),
+            'description' => __('Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user\'s Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user\'s Distinguished Name (DN).'),
             'method' => 'drop_array',
             'default' => '0',
             'array' => $ldap_modes
@@ -1904,7 +1904,7 @@ $settings = array(
         ),
         'base_url' => array(
             'friendly_name' => __('Server Base URL'),
-            'description' => __('This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder.'),
+            'description' => __('This is the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder.'),
             'method' => 'textbox',
             'max_length' => 255,
             'size' => '60',
@@ -1922,7 +1922,7 @@ $settings = array(
         ),
         'settings_test_email' => array(
             'friendly_name' => __('Test Email'),
-            'description' => __('This is a Email account used for sending a test message to ensure everything is working properly.'),
+            'description' => __('This is an Email account used for sending a test message to ensure everything is working properly.'),
             'method' => 'textbox',
             'max_length' => 255,
         ),
@@ -2035,21 +2035,21 @@ $settings = array(
         ),
         'reports_default_image_format' => array(
             'friendly_name' => __('Default Graph Image Format'),
-            'description' => __('When creating a new report, what image type should be used for the inline graphs.'),
+            'description' => __('When creating a new report, what image type should be used for the inline graphs?'),
             'method' => 'drop_array',
             'default' => REPORTS_TYPE_INLINE_PNG,
             'array' => $attach_types
         ),
         'reports_max_attach' => array(
-            'friendly_name' => __('Maximum E-Mail Size'),
-            'description' => __('The maximum size of the E-Mail message including all attachments.'),
+            'friendly_name' => __('Maximum Email Size'),
+            'description' => __('The maximum size of the Email message including all attachments.'),
             'method' => 'drop_array',
             'default' => REPORTS_DEFAULT_MAX_SIZE,
             'array' => $attachment_sizes
         ),
         'reports_log_verbosity' => array(
             'friendly_name' => __('Poller Logging Level for Kadupul Reporting'),
-            'description' => __('What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly.'),
+            'description' => __('What level of detail do you want sent to the log file? WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly.'),
             'method' => 'drop_array',
             'default' => POLLER_VERBOSITY_LOW,
             'array' => $logfile_verbosity,
@@ -2096,7 +2096,7 @@ $settings = array(
         ),
         'boost_rrd_update_enable' => array(
             'friendly_name' => __('Enable On-demand RRD Updating'),
-            'description' => __('Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on.'),
+            'description' => __('Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take effect until after the next polling cycle.  When you have Remote Data Collectors, this setting is required to be on.'),
             'method' => 'checkbox',
             'default' => ''
         ),
@@ -2115,7 +2115,7 @@ $settings = array(
         ),
         'boost_parallel' => array(
             'friendly_name' => __('Number of Boost Processes'),
-            'description' => __('The number of concurrent boost processes to use to use to process all of the RRDs in the boost table.'),
+            'description' => __('The number of concurrent boost processes to use to process all of the RRDs in the boost table.'),
             'default' => '1',
             'method' => 'drop_array',
             'array' => array(
@@ -2168,7 +2168,7 @@ $settings = array(
         ),
         'boost_rrd_update_string_length' => array(
             'friendly_name' => __('Maximum Argument Length'),
-            'description' => __('When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited'),
+            'description' => __('When boost sends update commands to RRDtool, it must not exceed the operating system\'s Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited'),
             'method' => 'textbox',
             'default' => '2000',
             'max_length' => '20',
@@ -2183,20 +2183,20 @@ $settings = array(
         ),
         'boost_rrd_update_max_runtime' => array(
             'friendly_name' => __('Maximum RRD Update Script Run Time'),
-            'description' => __('If the boost poller exceeds this runtime, a warning will be placed in the cacti log,'),
+            'description' => __('If the boost poller exceeds this runtime, a warning will be placed in the cacti log.'),
             'method' => 'drop_array',
             'default' => '1200',
             'array' => $boost_max_runtime
         ),
         'boost_redirect' => array(
             'friendly_name' => __('Enable direct population of poller_output_boost table'),
-            'description' => __('Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle.'),
+            'description' => __('Enables direct insert of records into poller output boost which results in a 25% time reduction in each poll cycle.'),
             'method' => 'checkbox',
             'default' => ''
         ),
         'path_boost_log' => array(
             'friendly_name' => __('Boost Debug Log'),
-            'description' => __('If this field is non-blank, Boost will log RRDUpdate output from the boost	poller process.'),
+            'description' => __('If this field is non-blank, Boost will log RRDUpdate output from the boost poller process.'),
             'method' => 'filepath',
             'file_type' => 'ascii',
             'default' => '',
@@ -2235,7 +2235,7 @@ $settings = array(
         ),
         'dsstats_parallel' => array(
             'friendly_name' => __('Number of DSStats Processes'),
-            'description' => __('The number of concurrent DSStats processes to use to use to process all of the Data Sources.'),
+            'description' => __('The number of concurrent DSStats processes to use to process all of the Data Sources.'),
             'default' => '1',
             'method' => 'drop_array',
             'array' => array(
@@ -2263,7 +2263,7 @@ $settings = array(
         ),
         'dsstats_daily_interval' => array(
             'friendly_name' => __('Daily Update Frequency'),
-            'description' => __('How frequent should Daily Stats be updated?'),
+            'description' => __('How frequently should Daily Stats be updated?'),
             'default' => '60',
             'method' => 'drop_array',
             'array' => $dsstats_refresh_interval
@@ -2341,7 +2341,7 @@ $settings = array(
         ),
         'rrdcheck_parallel' => array(
             'friendly_name' => __('Number of RRDfile Check Processes'),
-            'description' => __('The number of concurrent RRDfile check processes to use to use to process all of rrd files.'),
+            'description' => __('The number of concurrent RRDfile check processes to use to process all of rrd files.'),
             'default' => '1',
             'method' => 'drop_array',
             'array' => array(
@@ -2369,7 +2369,7 @@ $settings = array(
         ),
         'rrdcheck_interval' => array(
             'friendly_name' => __('Check Frequency'),
-            'description' => __('How frequent should RRD be checked ?'),
+            'description' => __('How frequently should RRD be checked?'),
             'default' => '240',
             'method' => 'drop_array',
             'array' => $rrdcheck_intervals
@@ -2396,12 +2396,12 @@ $settings = array(
         ),
         'extended_paths' => array(
             'friendly_name' => __('Enable Structured Paths'),
-            'description' => __('Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script.'),
+            'description' => __('Use a separate subfolder for each host\'s RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script.'),
             'method' => 'checkbox'
         ),
         'extended_paths_type' => array(
             'friendly_name' => __('Directory Pattern'),
-            'description' => __('Which Directory Pattern do you wish to use for Structured RRD Paths.  \'Device ID\' is the default.  The setting \'Device ID/Data Query ID\' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern.'),
+            'description' => __('Which Directory Pattern do you wish to use for Structured RRD Paths?  \'Device ID\' is the default.  The setting \'Device ID/Data Query ID\' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern.'),
             'method' => 'drop_array',
             'default' => 'device',
             'array' => array(
@@ -2413,7 +2413,7 @@ $settings = array(
         ),
         'extended_paths_hashes' => array(
             'friendly_name' => __('Max Device Hash Directories'),
-            'description' => __('The maximum number of Device Directories to be created based upon hashed Device ID\'s.'),
+            'description' => __('The maximum number of Device Directories to be created based upon hashed Device IDs.'),
             'method' => 'textbox',
             'max_length' => '5',
             'size' => '5',
@@ -2472,7 +2472,7 @@ $settings = array(
         ),
         'rrdp_fingerprint_backup' => array(
             'friendly_name' => __('RSA Fingerprint'),
-            'description' => __('The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection.'),
+            'description' => __('The fingerprint of the current public RSA key the backup proxy is using. This is required to establish a trusted connection.'),
             'method' => 'textbox',
             'max_length' => '47',
             'default' => '',
@@ -2502,7 +2502,7 @@ $settings = array(
             'default' => 'last',
             'array' => array(
                 'avg'  => __('Average'),
-                'nan'  => __('NaN\'s'),
+                'nan'  => __('NaNs'),
                 'last' => __('Last Known Good'),
             )
         ),
@@ -2553,7 +2553,7 @@ $settings = array(
         ),
         'spikekill_outliers' => array(
             'friendly_name' => __('Variance Number of Outliers'),
-            'description' => __('This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed.'),
+            'description' => __('This value represents the number of high and low average samples that will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed.'),
             'method' => 'drop_array',
             'default' => '5',
             'array' => array(
@@ -2654,7 +2654,7 @@ $settings_user = array(
         ),
         'default_view_mode' => array(
             'friendly_name' => __('Default View Mode'),
-            'description' => __('Which Graph mode you want displayed by default when you first visit the Graphs page?'),
+            'description' => __('Which Graph mode do you want displayed by default when you first visit the Graphs page?'),
             'method' => 'drop_array',
             'array' => $graph_views,
             'default' => '1'
@@ -2665,7 +2665,7 @@ $settings_user = array(
             'method' => 'drop_array',
             'array' => array(
                 '0' => __('Kadupul Server Timezone'),
-                '1' => __('My Browsers Timezone')
+                '1' => __('My Browser\'s Timezone')
             ),
             'default' => '0'
         ),
@@ -2953,7 +2953,7 @@ if (!$config['is_web'] || is_realm_allowed(8)) {
 
         $settings_user['general']['user_auto_logout_time'] = array(
             'friendly_name' => __('Auto Log Out Time'),
-            'description' => __('For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled.'),
+            'description' => __('For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no effect when Authentication Cookies are enabled.'),
             'method' => 'drop_array',
             'default' => $max_life,
             'array' => $auto_array

@@ -4644,7 +4644,7 @@ function rrdtool_cacti_compare($data_source_id, &$info)
                         }
 
                         if ($cacti_rra['rows'] != $file_rra['rows'] && $resize) {
-                            $diff['rra'][$file_rra_id]['rows'] = __("The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'", $cacti_rra_id, $file_rra['rows'], $cacti_rra['rows']);
+                            $diff['rra'][$file_rra_id]['rows'] = __("The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows is '%s' but should be '%s'", $cacti_rra_id, $file_rra['rows'], $cacti_rra['rows']);
                             if ($cacti_rra['rows'] > $file_rra['rows']) {
                                 $diff['resize'][] = $info['filename'] . ' ' . $file_rra_id . ' GROW ' . ($cacti_rra['rows'] - $file_rra['rows']);
                             } else {
@@ -5013,7 +5013,7 @@ function rrd_xml_transform($file_array, $debug, $parse_error, $logged, $mutate)
                         unlink($xml_file);
                         cacti_log($logged . $file, false, 'UTIL');
                     } else {
-                        return array('err_msg' => __('ERROR: RRDfile %s not writeable', $file));
+                        return array('err_msg' => __('ERROR: RRDfile %s not writable', $file));
                     }
                 }
             }

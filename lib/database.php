@@ -2576,14 +2576,14 @@ function db_check_password_length()
     $len = db_get_column_length('user_auth', 'password');
 
     if ($len === false) {
-        die(__('Failed to determine password field length, can not continue as may corrupt password'));
+        die(__('Failed to determine password field length, cannot continue as it may corrupt password'));
     } elseif ($len < 80) {
         /* Ensure that the password length is increased before we start updating it */
         db_execute("ALTER TABLE user_auth MODIFY COLUMN password varchar(256) NOT NULL default ''");
 
         $len = db_get_column_length('user_auth', 'password');
         if ($len < 80) {
-            die(__('Failed to alter password field length, can not continue as may corrupt password'));
+            die(__('Failed to alter password field length, cannot continue as it may corrupt password'));
         }
     }
 }

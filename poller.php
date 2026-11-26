@@ -227,10 +227,10 @@ if (read_config_option('poller_enabled') == 'on') {
     if ($collector_error !== null) {
         if ($collector_error[0] == 'path_spine') {
             cacti_log('ERROR: The spine path: ' . $collector_error[1] . ' is invalid.  Poller can not continue!', true, 'POLLER');
-            admin_email(__('Kadupul System Warning'), __('ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!', $collector_error[1], $poller_id));
+            admin_email(__('Kadupul System Warning'), __('ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!', $collector_error[1], $poller_id));
         } else {
             cacti_log('ERROR: The PHP binary path: ' . $collector_error[1] . ' is invalid.  Poller can not continue!', true, 'POLLER');
-            admin_email(__('Kadupul System Warning'), __('ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!', $collector_error[1], $poller_id));
+            admin_email(__('Kadupul System Warning'), __('ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller cannot continue!', $collector_error[1], $poller_id));
         }
 
         exit(1);
@@ -432,7 +432,7 @@ if ((isset($poller_lastrun) && isset($poller_interval) && $poller_lastrun > 0) &
  */
 if ((($poller_start - $poller_lastrun - 10) > MAX_POLLER_RUNTIME) && ($poller_lastrun > 0)) {
     cacti_log("WARNING: $task_type is out of sync with the Poller Interval!  The Poller Interval is '$poller_interval' seconds, with a maximum of a '$min_period' second $task_type, but " . number_format_i18n($poller_start - $poller_lastrun, 1) . ' seconds have passed since the last poll!', true, 'POLLER');
-    admin_email(__('Kadupul System Warning'), __('WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!', $task_type, $poller_id, $poller_interval, $min_period, number_format_i18n($poller_start - $poller_lastrun, 1)));
+    admin_email(__('Kadupul System Warning'), __('WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of %d seconds, but %d seconds have passed since the last poll!', $task_type, $poller_id, $poller_interval, $min_period, number_format_i18n($poller_start - $poller_lastrun, 1)));
 }
 
 /* used for current implementation for individual pollers */
@@ -734,7 +734,7 @@ while ($poller_runs_completed < $poller_runs) {
         // exit poller if spine is selected and file does not exist
         if (($poller_type == '2') && (!file_exists(read_config_option('path_spine')))) {
             cacti_log('ERROR: The spine path: ' . read_config_option('path_spine') . ' is invalid.  Poller can not continue!', true, 'POLLER');
-            admin_email(__('Kadupul System Warning'), __('ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!', read_config_option('path_spine'), $poller_id));
+            admin_email(__('Kadupul System Warning'), __('ERROR: The spine path: %s is invalid for poller id %d.  Poller cannot continue!', read_config_option('path_spine'), $poller_id));
             exit;
         }
 

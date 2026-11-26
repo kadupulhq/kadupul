@@ -1358,7 +1358,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Setelah kegagalan awal, jumlah percobaan ulang ping yang akan dilakukan Kadupul sebelum dinyatakan gagal."
+            "msgstr": "Informasi Tambahan"
           },
           "flags": []
         },
@@ -2273,7 +2273,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Grafik Agregat yang Diakses Tidak Ada"
+            "msgstr": "Area tambahan yang digunakan untuk catatan acak terkait Situs ini."
           },
           "flags": []
         },
@@ -2578,7 +2578,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Pengaturan Grafik Agregat"
+            "msgstr": "Informasi Alamat"
           },
           "flags": []
         },
@@ -2883,7 +2883,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Grafik Agregat tidak Ada"
+            "msgstr": "Alamat1"
           },
           "flags": []
         },
@@ -3188,7 +3188,7 @@
         },
         "id-ID": {
           "fields": {
-            "msgstr": "Item Agregat tidak dapat diedit"
+            "msgstr": "Alamat2"
           },
           "flags": []
         },

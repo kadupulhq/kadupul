@@ -618,7 +618,7 @@ function update_show_current()
             'display' => __('Plugin Description'),
             'align' => 'left',
             'sort' => 'ASC',
-            'tip' => __('A description that the Plugins author has given to the Plugin.')
+            'tip' => __('A description that the Plugin\'s author has given to the Plugin.')
         ),
         'status' => array(
             'display' => $config['poller_id'] == 1 ? __('Status') : __('Main / Remote Status'),
@@ -894,7 +894,7 @@ function plugin_actions($plugin, $table)
             $link .= "<a class='pierror' href='#' title='" . __esc('Plugin is not compatible (Pre-1.x)') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
             break;
         case '-3': // Plugins can have spaces in their names
-            $link .= "<a class='pierror' href='#' title='" . __esc('Plugin directories can not include spaces') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
+            $link .= "<a class='pierror' href='#' title='" . __esc('Plugin directories cannot include spaces') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
             break;
         case '-2': // Naming issues
             $link .= "<a class='pierror' href='#' title='" . __esc('Plugin directory is not correct.  Should be \'%s\' but is \'%s\'', strtolower($plugin['infoname']), $plugin['directory']) . "' class='linkEditMain'><img src='images/cog_error.png'></a>";

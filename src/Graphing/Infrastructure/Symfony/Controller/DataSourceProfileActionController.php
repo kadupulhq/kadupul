@@ -70,7 +70,7 @@ final class DataSourceProfileActionController
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'data_source_profile')));
             }
             if ($used !== []) {
-                $form->addError(new FormError($translator->trans('The default profile and profiles in use by Data Templates or Data Sources can not be deleted.', [], 'data_source_profile')));
+                $form->addError(new FormError($translator->trans('The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.', [], 'data_source_profile')));
             }
             if ($form->isValid()) {
                 try {

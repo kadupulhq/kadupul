@@ -905,7 +905,7 @@ function form_actions()
         } elseif (get_request_var('drp_action') == '2') { // change graph template
             print "<tr>
 				<td class='textArea'>
-					<p>" . __('Choose a Graph Template and click \'Continue\' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources.') . "</p>
+					<p>" . __('Choose a Graph Template and click \'Continue\' to change the Graph Template for the following Graph(s). Please note that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources.') . "</p>
 					<div class='itemlist'><ul>$graph_list</ul></div>
 					<p>" . __('New Graph Template') . "<br>";
 
@@ -1237,7 +1237,7 @@ function form_actions()
                 } else {
                     print "<tr>
 						<td class='textArea'>
-							<p>" . __('There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph.') . "</p>
+							<p>" . __('There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs\' Graph Template and try again, or simply create an un-templated Aggregate Graph.') . "</p>
 							<p>" . __('Press \'Return\' to return and select different Graphs.') . "</p>
 						</td>
 					</tr>";

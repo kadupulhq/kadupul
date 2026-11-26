@@ -977,11 +977,11 @@ function form_actions()
 
             if (cacti_sizeof($selected_items)) {
                 if (get_nfilter_request_var('drp_action') == '1') { // delete
-                    $msg = __n('Click \'Continue\' to delete the following Notification Receiver', 'Click \'Continue\' to delete following Notification Receiver', cacti_sizeof($selected_items));
+                    $msg = __n('Click \'Continue\' to delete the following Notification Receiver', 'Click \'Continue\' to delete the following Notification Receivers', cacti_sizeof($selected_items));
                 } elseif (get_nfilter_request_var('drp_action') == '2') { // enable
-                    $msg = __n('Click \'Continue\' to enable the following Notification Receiver', 'Click \'Continue\' to enable following Notification Receiver', cacti_sizeof($selected_items));
+                    $msg = __n('Click \'Continue\' to enable the following Notification Receiver', 'Click \'Continue\' to enable the following Notification Receivers', cacti_sizeof($selected_items));
                 } elseif (get_nfilter_request_var('drp_action') == '3') { // disable
-                    $msg = __n('Click \'Continue\' to disable the following Notification Receiver', 'Click \'Continue\' to disable following Notification Receiver', cacti_sizeof($selected_items));
+                    $msg = __n('Click \'Continue\' to disable the following Notification Receiver', 'Click \'Continue\' to disable the following Notification Receivers', cacti_sizeof($selected_items));
                 }
 
                 print "<tr>

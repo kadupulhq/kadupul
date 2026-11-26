@@ -54,7 +54,7 @@ final readonly class DataSourceProfileText
     #[AsTwigFunction('profile_size')]
     public function profileSize(int $rows, int $functions): string
     {
-        return $this->translator->trans('%size% KBytes per Data Sources and %header% Bytes for the Header', [
+        return $this->translator->trans('%size% KBytes per Data Source and %header% Bytes for the Header', [
             '%size%' => $this->number(DataSourceProfileSizing::profileKilobytes($rows, $functions)),
             '%header%' => DataSourceProfileSizing::FILE_HEADER_BYTES,
         ], self::DOMAIN);

@@ -1253,7 +1253,7 @@ function utilities_get_mysql_recommendations()
         'table_cache' => array(
             'value'   => '200',
             'measure' => 'ge',
-            'comment' => __('Keeping the table cache larger means less file open/close operations when using innodb_file_per_table.')
+            'comment' => __('Keeping the table cache larger means fewer file open/close operations when using innodb_file_per_table.')
         ),
         'max_allowed_packet' => array(
             'value'   => 16777216,
@@ -1270,19 +1270,19 @@ function utilities_get_mysql_recommendations()
             'value'   => '1.6',
             'measure' => 'pmem',
             'class'   => 'warning',
-            'comment' => __('When executing subqueries, having a larger temporary table size, keep those temporary tables in memory.')
+            'comment' => __('When executing subqueries, having a larger temporary table size keeps those temporary tables in memory.')
         ),
         'join_buffer_size' => array(
             'value'   => '80',
             'measure' => 'cmem',
             'class'   => 'warning',
-            'comment' => __('When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory.')
+            'comment' => __('When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory.')
         ),
         'sort_buffer_size' => array(
             'value'   => '80',
             'measure' => 'cmem',
             'class'   => 'warning',
-            'comment' => __('When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory.')
+            'comment' => __('When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and/or the sort_buffer_size until the recommendation fits within the allowable memory.')
         ),
         'innodb_file_per_table' => array(
             'value'   => 'ON',
@@ -1300,19 +1300,19 @@ function utilities_get_mysql_recommendations()
             'value'   => '1',
             'measure' => 'equalint',
             'class'   => 'error',
-            'comment' => __('If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables.')
+            'comment' => __('If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that cannot properly create tables.')
         ),
         'innodb_buffer_pool_size' => array(
             'value'   => '25',
             'measure' => 'pmem',
             'class' => 'warning',
-            'comment' => __('InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size.')
+            'comment' => __('InnoDB will hold as many tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your system\'s total memory, but your requirements will vary depending on your system\'s size.')
         ),
         'innodb_doublewrite' => array(
             'value'   => 'ON',
             'measure' => 'equalint',
             'class' => 'error',
-            'comment' => __('This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance.')
+            'comment' => __('This setting should remain ON unless your Kadupul instance is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance.')
         ),
         'innodb_additional_mem_pool_size' => array(
             'value'   => '80M',
@@ -1322,7 +1322,7 @@ function utilities_get_mysql_recommendations()
         'innodb_lock_wait_timeout' => array(
             'value'   => '50',
             'measure' => 'ge',
-            'comment' => __('Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system.')
+            'comment' => __('Rogue queries should not cause the database to go offline to others.  Kill these queries before they kill your system.')
         ),
         'innodb_flush_method' => array(
             'value'   => 'O_DIRECT',
@@ -1350,7 +1350,7 @@ function utilities_get_mysql_recommendations()
                 'innodb_flush_log_at_timeout' => array(
                     'value'   => '3',
                     'measure'  => 'ge',
-                    'comment'  => __('As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential', $database, $version, $database),
+                    'comment'  => __('As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential', $database, $version, $database),
                 ),
                 'innodb_read_io_threads' => array(
                     'value'   => '32',
@@ -1366,7 +1366,7 @@ function utilities_get_mysql_recommendations()
                     'value' => '16',
                     'measure' => 'pinst',
                     'class' => 'warning',
-                    'comment' => ($database == 'MySQL' ? __('%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64.', $database) : __('%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64.', $database))
+                    'comment' => ($database == 'MySQL' ? __('%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL up to and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64.', $database) : __('%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64.', $database))
                 ),
                 'innodb_io_capacity' => array(
                     'value' => '5000',
@@ -1392,7 +1392,7 @@ function utilities_get_mysql_recommendations()
                 'innodb_flush_log_at_timeout' => array(
                     'value'   => '3',
                     'measure'  => 'ge',
-                    'comment'  => __('As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential', $database, $version, $database),
+                    'comment'  => __('As of %s %s, you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential', $database, $version, $database),
                 ),
                 'innodb_read_io_threads' => array(
                     'value'   => '32',

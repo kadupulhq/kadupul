@@ -113,7 +113,7 @@ final class DataSourceProfileRoutesTest extends TestCase
         self::assertSame(0, $xpath->query('//*[@name="data_source_profile[heartbeat]" and @disabled]')->length);
         self::assertSame(0, $xpath->query('//a[contains(@href, "/rras/new") or contains(@href, "/delete")]')->length);
         self::assertSame(['2 Days, 2 Hours', '2 Weeks, 14 Hours'], array_map(static fn(\DOMNode $cell): string => trim($cell->textContent), iterator_to_array($xpath->query('//section//tbody/tr/td[2]'))));
-        self::assertStringContainsString('42 KBytes per Data Sources and 284 Bytes for the Header', (string) $xpath->document->saveHTML());
+        self::assertStringContainsString('42 KBytes per Data Source and 284 Bytes for the Header', (string) $xpath->document->saveHTML());
 
         $open = $this->xpath($this->get('/graphing/data-source-profiles/3/edit'));
         self::assertSame(0, $open->query('//*[@disabled and starts-with(@name, "data_source_profile[")]')->length);
@@ -220,7 +220,7 @@ final class DataSourceProfileRoutesTest extends TestCase
         $body = (string) $this->get('/graphing/data-source-profiles/actions/delete?ids[]=1&ids[]=3')->getContent();
         self::assertStringContainsString('5 Minute &lt;b&gt; (default)', $body);
         self::assertStringContainsString('used by 0 data sources and 4 templates', $body);
-        self::assertStringContainsString('can not be deleted', $body);
+        self::assertStringContainsString('cannot be deleted', $body);
         self::assertSame(422, $this->postAction('/graphing/data-source-profiles/actions/delete?ids[]=3', '[3]', [3 => 'revision-3'])->getStatusCode());
     }
 
@@ -277,8 +277,8 @@ final class DataSourceProfileRoutesTest extends TestCase
             'span without rows' => ['action=ajax_span&profile_id=1&span=1&rows=', 200, 'N/A'],
             'span with zero rows' => ['action=ajax_span&profile_id=1&span=1&rows=0', 200, 'N/A'],
             'span of a missing profile' => ['action=ajax_span&profile_id=9&span=1&rows=600', 200, ''],
-            'profile size from stored functions' => ['action=ajax_size&type=profile&id=1&cfs=0', 200, '42 KBytes per Data Sources and 284 Bytes for the Header'],
-            'profile size from checked functions' => ['action=ajax_size&type=profile&id=1&cfs=1', 200, '11 KBytes per Data Sources and 284 Bytes for the Header'],
+            'profile size from stored functions' => ['action=ajax_size&type=profile&id=1&cfs=0', 200, '42 KBytes per Data Source and 284 Bytes for the Header'],
+            'profile size from checked functions' => ['action=ajax_size&type=profile&id=1&cfs=1', 200, '11 KBytes per Data Source and 284 Bytes for the Header'],
             'archive size' => ['action=ajax_size&type=rra&id=3&rows=1500', 200, '24 KBytes per Data Source'],
             'archive size without rows' => ['action=ajax_size&type=rra&id=3&rows=', 200, 'Enter a valid number of Rows to obtain the RRA size.'],
             'non-integer rows' => ['action=ajax_span&profile_id=1&span=1&rows=abc', 400, 'Invalid profile request.'],

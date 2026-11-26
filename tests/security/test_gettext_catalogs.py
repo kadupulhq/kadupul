@@ -100,6 +100,22 @@ class GettextCatalogIntegrityTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "historical translation differs"):
             verify(ROOT, self.catalogs)
 
+    def test_translation_defects_are_rejected(self):
+        cases = (
+            ("de-DE.po", ("", "Delete", ""), "Löschen", "Löschen!.", "ends with '!.'"),
+            ("de-DE.po", ("", "Delete", ""), "Löschen", "Löschen?.", "ends with '\\?.'"),
+            ("de-DE.po", ("", "Width (--width)", ""), "Breite (--width)", "Breite (--Breite)", "drops the RRDtool option --width"),
+            ("fr-FR.po", ("", "Uptime:", ""), "&#160;:", "& #160;:", "splits an HTML entity"),
+        )
+        for name, key, old, new, reason in cases:
+            with self.subTest(name=name, new=new):
+                po = self.catalogs / "po" / name
+                original = po.read_text()
+                self.mutate(po, key, lambda block: block.replace(old, new))
+                with self.assertRaisesRegex(ValueError, reason):
+                    verify(ROOT, self.catalogs)
+                po.write_text(original)
+
     def test_mismatched_compiled_catalog_is_rejected(self):
         path = self.catalogs / "LC_MESSAGES/fr-FR.mo"
         path.write_bytes(path.read_bytes() + b"changed")

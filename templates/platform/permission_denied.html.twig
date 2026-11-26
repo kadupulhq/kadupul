@@ -17,7 +17,7 @@
         <h1 class="loginHeading">{{ 'Permission Denied'|trans }}</h1>
         <div class="logoutTitle">
             <p>{{ 'You are not permitted to access this section of Kadupul.'|trans }}</p>
-            <p>{{ 'If you feel that this is an error. Please contact your Kadupul Administrator.'|trans }}</p>
+            <p>{{ 'If you feel that this is an error, please contact your Kadupul Administrator.'|trans }}</p>
             {# validate_redirect_url() returns a local path or its relative default; anchor the default below the installation. #}
             {% set return_to = denied.returnTo is null ? null : (denied.returnTo starts with '/' ? denied.returnTo : installation_path(denied.returnTo)) %}
             <p class="center">[{% if return_to is not null %}{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- validate_redirect_url() output rechecked by LegacyPermissionDeniedContent; Twig escapes the attribute. #}<a href="{{ return_to }}">{{ 'Return'|trans }}</a>{% else %}<a class="returnTo" href="#">{{ 'Return'|trans }}</a>{% endif %} | {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed script below the validated installation path. #}<a href="{{ installation_path('logout.php') }}">{{ 'Login Again'|trans }}</a>]</p>

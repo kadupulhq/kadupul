@@ -53,7 +53,7 @@ $fields_poller_edit = array(
 	'hostname' => array(
 		'method' => 'textbox',
 		'friendly_name' => __('Data Collector Hostname'),
-		'description' => __('The hostname for Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc.'),
+		'description' => __('The hostname for this Data Collector.  It may have to be a Fully Qualified Domain name for the remote Pollers to contact it for activities such as re-indexing, Real-time graphing, etc.'),
 		'value' => '|arg1:hostname|',
 		'size' => '50',
 		'default' => '',
@@ -71,7 +71,7 @@ $fields_poller_edit = array(
 	'notes' => array(
 		'method' => 'textarea',
 		'friendly_name' => __('Notes'),
-		'description' => __('Notes for this Data Collectors Database.'),
+		'description' => __('Notes for this Data Collector\'s Database.'),
 		'value' => '|arg1:notes|',
 		'textarea_rows' => 4,
 		'textarea_cols' => 50
@@ -577,7 +577,7 @@ function form_actions() {
 		} elseif (get_request_var('drp_action') == '5') { // clear statistics
 			print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to Clear Data Collector Statistics for the Data Collector.', 'Click \'Continue\' to Clear DAta Collector Statistics for the Data Collectors.', cacti_sizeof($poller_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to Clear Data Collector Statistics for the Data Collector.', 'Click \'Continue\' to Clear Data Collector Statistics for the Data Collectors.', cacti_sizeof($poller_array)) . "</p>
 					<div class='itemlist'><ul>$pollers</ul></div>
 				</td>
 			</tr>\n";
@@ -1067,7 +1067,7 @@ function pollers() {
 			'display' => __('Last Sync'),
 			'align' => 'right',
 			'sort' => 'DESC',
-			'tip' => __('The last time this Data Collector was full synced with main Kadupul site.')
+			'tip' => __('The last time this Data Collector was full synced with the main Kadupul site.')
 		)
 	);
 

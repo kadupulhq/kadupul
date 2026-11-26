@@ -319,7 +319,7 @@ function form_actions()
 
             print "<tr>
 				<td class='textArea'>
-					<p>" . __('Click \'Continue\' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User.') . "<br><br></td>
+					<p>" . __('Click \'Continue\' to overwrite the User(s) settings with the selected template User settings and permissions.  The original user\'s Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User.') . "<br><br></td>
 				</tr>
 				<tr>
 					<td class='textArea'>

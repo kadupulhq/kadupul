@@ -139,7 +139,7 @@ Error codes:
 0    Authentication Success
 1    No username defined
 2    Unable to create LDAP connection object
-3    Unable to find users DN
+3    Unable to find user's DN
 4    Protocol error, unable to set version
 5    Protocol error, unable to start TLS communications
 6    Protocol error
@@ -244,7 +244,7 @@ Error codes:
 0       User found
 1       No username defined
 2       Unable to create LDAP connection object
-3       Unable to find users DN
+3       Unable to find user's DN
 4       Protocol error, unable to set version
 5       Protocol error, unable to start TLS communications
 6       Protocol error
@@ -405,7 +405,7 @@ abstract class LdapError
                 break;
 
             case LdapError::SearchFoundNoUser:
-                $error_text = __('Unable to find users DN');
+                $error_text = __('Unable to find user\'s DN');
                 break;
 
             case LdapError::MissingLdapObject:
@@ -421,7 +421,7 @@ abstract class LdapError
                 break;
 
             default:
-                $error_text = __('Unexpected error %s (Ldap Error: %s) on Server (%s)', $returnError, $ldapError, $ldapServer);
+                $error_text = __('Unexpected error %s (LDAP Error: %s) on Server (%s)', $returnError, $ldapError, $ldapServer);
                 break;
         }
 

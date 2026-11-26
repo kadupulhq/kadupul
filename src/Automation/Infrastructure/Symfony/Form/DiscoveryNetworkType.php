@@ -75,8 +75,8 @@ final class DiscoveryNetworkType extends AbstractType
             ->add('rerun_data_queries', CheckboxType::class, self::flag('Rerun Data Queries', 'If a device previously added is found, rerun its data queries.'))
             ->add('notification_enabled', CheckboxType::class, self::flag('Notification Enabled', 'If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.'))
             ->add('notification_email', TextType::class, self::text('Notification Email', 'The Email account to be used to send the Notification Email to.', 'notification_email'))
-            ->add('notification_fromname', TextType::class, self::text('Notification From Name', 'The Email account name to be used as the senders name for the Notification Email.  If left blank, the default Automation Notification Name is used.', 'notification_fromname'))
-            ->add('notification_fromemail', TextType::class, self::text('Notification From Email Address', 'The Email Address to be used as the senders Email for the Notification Email.  If left blank, the default Automation Notification Email Address is used.', 'notification_fromemail'))
+            ->add('notification_fromname', TextType::class, self::text('Notification From Name', 'The Email account name to be used as the sender\'s name for the Notification Email.  If left blank, the default Automation Notification Name is used.', 'notification_fromname'))
+            ->add('notification_fromemail', TextType::class, self::text('Notification From Email Address', 'The Email Address to be used as the sender\'s Email for the Notification Email.  If left blank, the default Automation Notification Email Address is used.', 'notification_fromemail'))
             ->add('start_at', TextType::class, self::text('Starting Date/Time', 'What time will this Network discover item start?  Enter it as YYYY-MM-DD HH:MM.', 'start_at'))
             ->add('recur_every', ChoiceType::class, self::choices(
                 'Rerun Every',
@@ -84,15 +84,15 @@ final class DiscoveryNetworkType extends AbstractType
                 array_combine(DiscoveryNetworkChange::CHOICES['recur_every'], array_map('strval', DiscoveryNetworkChange::CHOICES['recur_every'])),
                 false
             ))
-            ->add('day_of_week', ChoiceType::class, self::many('Days of Week', 'What Day(s) of the week will this Network Range be discovered.', self::WEEKDAYS))
-            ->add('month', ChoiceType::class, self::many('Months of Year', 'What Months(s) of the Year will this Network Range be discovered.', self::MONTHS))
+            ->add('day_of_week', ChoiceType::class, self::many('Days of Week', 'What Day(s) of the week will this Network Range be discovered?', self::WEEKDAYS))
+            ->add('month', ChoiceType::class, self::many('Months of Year', 'What Month(s) of the Year will this Network Range be discovered?', self::MONTHS))
             ->add('day_of_month', ChoiceType::class, self::many(
                 'Days of Month',
-                'What Day(s) of the Month will this Network Range be discovered.',
+                'What Day(s) of the Month will this Network Range be discovered?',
                 array_combine(range(1, 31), array_map('strval', range(1, 31))) + [32 => 'Last']
             ))
-            ->add('monthly_week', ChoiceType::class, self::many('Week(s) of Month', 'What Week(s) of the Month will this Network Range be discovered.', [1 => 'First', 2 => 'Second', 3 => 'Third', 32 => 'Last']))
-            ->add('monthly_day', ChoiceType::class, self::many('Day(s) of Week', 'What Day(s) of the week will this Network Range be discovered.', self::WEEKDAYS))
+            ->add('monthly_week', ChoiceType::class, self::many('Week(s) of Month', 'What Week(s) of the Month will this Network Range be discovered?', [1 => 'First', 2 => 'Second', 3 => 'Third', 32 => 'Last']))
+            ->add('monthly_day', ChoiceType::class, self::many('Day(s) of Week', 'What Day(s) of the week will this Network Range be discovered?', self::WEEKDAYS))
             ->add('snmp_id', ChoiceType::class, self::records('SNMP Options', 'Select the SNMP Options to use for discovery of this Network Range.', $snmp))
             ->add('ping_method', ChoiceType::class, self::choices('Ping Method', 'The type of ping packet to send.', [1 => 'ICMP Ping', 3 => 'TCP Ping', 5 => 'TCP Ping Closed', 2 => 'UDP Ping', 4 => 'SNMP Get']))
             ->add('ping_port', IntegerType::class, self::number('Ping Port', 'TCP or UDP port to attempt connection.'))

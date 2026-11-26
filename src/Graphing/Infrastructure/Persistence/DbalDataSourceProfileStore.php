@@ -296,7 +296,7 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
             // Under the parent locks, a locking read also covers the index gap,
             // so no new template or data source can take a selected profile.
             if ($this->database->fetchOne("SELECT data_source_profile_id FROM data_template_data WHERE data_source_profile_id IN ($marks) LIMIT 1" . $this->forUpdate(), $ids) !== false) {
-                throw new \InvalidArgumentException('Data Source Profiles in use by Data Templates or Data Sources can not be deleted.');
+                throw new \InvalidArgumentException('Data Source Profiles in use by Data Templates or Data Sources cannot be deleted.');
             }
             $this->database->executeStatement("DELETE FROM data_source_profiles_cf WHERE data_source_profile_id IN ($marks)", $ids);
             $this->database->executeStatement("DELETE FROM data_source_profiles_rra WHERE data_source_profile_id IN ($marks)", $ids);

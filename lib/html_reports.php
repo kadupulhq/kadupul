@@ -39,7 +39,7 @@ $fields_reports_edit = array(
         'friendly_name' => __('Use Custom Format HTML'),
         'method' => 'checkbox',
         'default' => '',
-        'description' => __('Check this box if you want to use custom html and CSS for the report.'),
+        'description' => __('Check this box if you want to use custom HTML and CSS for the report.'),
         'value' => '|arg1:cformat|',
         'form_id' => false
     ),
@@ -47,7 +47,7 @@ $fields_reports_edit = array(
         'friendly_name' => __('Format File to Use'),
         'method' => 'drop_array',
         'default' => 'default.format',
-        'description' => __('Choose the custom html wrapper and CSS file to use.  This file contains both html and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the \'formats\' directory.'),
+        'description' => __('Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the \'formats\' directory.'),
         'value' => '|arg1:format_file|',
         'array' => $formats
     ),
@@ -160,7 +160,7 @@ $fields_reports_edit = array(
         'friendly_name' => __('From Name'),
         'method' => 'textbox',
         'default' => read_config_option('settings_from_name'),
-        'description' => __('This Name will be used as the default E-mail Sender'),
+        'description' => __('This Name will be used as the default Email Sender'),
         'max_length' => 255,
         'value' => '|arg1:from_name|'
     ),
@@ -168,7 +168,7 @@ $fields_reports_edit = array(
         'friendly_name' => __('From Email Address'),
         'method' => 'textbox',
         'default' => read_config_option('settings_from_email'),
-        'description' => __('This Address will be used as the E-mail Senders address'),
+        'description' => __('This Address will be used as the Email Sender\'s address'),
         'max_length' => 255,
         'value' => '|arg1:from_email|'
     ),
@@ -670,13 +670,13 @@ function reports_send($id)
         }
 
         if ($report['email'] == '') {
-            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set destination e-mail addresses', $report['name']), MESSAGE_LEVEL_ERROR);
+            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set destination Email addresses', $report['name']), MESSAGE_LEVEL_ERROR);
         } elseif ($report['subject'] == '') {
-            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail subject', $report['name']), MESSAGE_LEVEL_ERROR);
+            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an Email subject', $report['name']), MESSAGE_LEVEL_ERROR);
         } elseif ($report['from_name'] == '') {
-            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail From Name', $report['name']), MESSAGE_LEVEL_ERROR);
+            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an Email From Name', $report['name']), MESSAGE_LEVEL_ERROR);
         } elseif ($report['from_email'] == '') {
-            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail from address', $report['name']), MESSAGE_LEVEL_ERROR);
+            raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an Email from address', $report['name']), MESSAGE_LEVEL_ERROR);
         } else {
             generate_report($report, true);
         }
@@ -1169,7 +1169,7 @@ function reports_item_edit()
         'host_id' => array(
             'friendly_name' => __('Device'),
             'method' => 'drop_callback',
-            'description' => __('Select a Device to be used to filter for of select for Graphs in the case of a Device Type.'),
+            'description' => __('Select a Device to be used to filter for or select Graphs in the case of a Device Type.'),
             'sql' => 'SELECT id, description as name FROM host ORDER BY name',
             'action' => 'ajax_hosts',
             'none_value' => __('None'),
