@@ -301,7 +301,58 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteEditor
 
     Kadupul\IdentityAccess\Contract\LocalePreference:
-        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyLocalePreference
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalLocalePreference
+    Kadupul\IdentityAccess\Infrastructure\Persistence\DbalLocalePreference:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+
+    Kadupul\IdentityAccess\Infrastructure\Ldap\SymfonyLdapDirectoryAuthenticator:
+        arguments:
+            $clientFactory: null
+    Kadupul\IdentityAccess\Application\Port\DirectoryAuthenticator:
+        alias: Kadupul\IdentityAccess\Infrastructure\Ldap\SymfonyLdapDirectoryAuthenticator
+
+    Kadupul\IdentityAccess\Infrastructure\Symfony\Security\SymfonyLoginRateLimiter:
+        arguments:
+            $addressLimiter: '@limiter.identity_login_address'
+            $accountLimiter: '@limiter.identity_login_account'
+    Kadupul\IdentityAccess\Application\Port\LoginRateLimiter:
+        alias: Kadupul\IdentityAccess\Infrastructure\Symfony\Security\SymfonyLoginRateLimiter
+
+    Kadupul\IdentityAccess\Infrastructure\Symfony\Security\SymfonyPasswordVerifier:
+        arguments:
+            $hasher: '@Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyPasswordHasher'
+    Kadupul\IdentityAccess\Application\Port\PasswordVerifier:
+        alias: Kadupul\IdentityAccess\Infrastructure\Symfony\Security\SymfonyPasswordVerifier
+
+    Kadupul\IdentityAccess\Infrastructure\Persistence\DbalSessionRevocation:
+        arguments:
+            $database: '@doctrine.dbal.main_connection'
+    Kadupul\IdentityAccess\Application\Port\SessionCredentialRevoker:
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalSessionRevocation
+
+    Kadupul\IdentityAccess\Infrastructure\Persistence\DbalPasswordCredentialStore:
+        arguments:
+            $database: '@doctrine.dbal.main_connection'
+    Kadupul\IdentityAccess\Application\Port\PasswordCredentialStore:
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalPasswordCredentialStore
+
+    Kadupul\IdentityAccess\Infrastructure\Persistence\DbalAuthDomainRepository:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\IdentityAccess\Application\Port\AuthDomainRepository:
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalAuthDomainRepository
+
+    Kadupul\IdentityAccess\Infrastructure\Persistence\DbalRealmAccessChecker:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\IdentityAccess\Application\Port\RealmAccessChecker:
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalRealmAccessChecker
+
+    Kadupul\IdentityAccess\Application\Command\AuthenticateDirectoryUser: ~
+    Kadupul\IdentityAccess\Application\Command\AuthenticateLocalUser: ~
+    Kadupul\IdentityAccess\Application\Command\ChangePassword: ~
+    Kadupul\IdentityAccess\Application\Command\RevokeAllUserSessions: ~
 
     # Adapters bind their ports with #[AsAlias]. Value objects, the enum and
     # the per-message transport are constructed in code, never by the container.
@@ -1049,4 +1100,46 @@ when@test:
             public: true
         test.phase0.realm_grant_manager:
             alias: Kadupul\IdentityAccess\Contract\RealmGrantManager
+            public: true
+        test.phase1a.directory_authenticator:
+            alias: Kadupul\IdentityAccess\Application\Port\DirectoryAuthenticator
+            public: true
+        test.phase1a.login_rate_limiter:
+            alias: Kadupul\IdentityAccess\Application\Port\LoginRateLimiter
+            public: true
+        test.phase1a.session_credential_revoker:
+            alias: Kadupul\IdentityAccess\Application\Port\SessionCredentialRevoker
+            public: true
+        test.phase1a.password_verifier:
+            alias: Kadupul\IdentityAccess\Application\Port\PasswordVerifier
+            public: true
+        test.phase1a.password_credential_store:
+            alias: Kadupul\IdentityAccess\Application\Port\PasswordCredentialStore
+            public: true
+        test.phase1a.auth_domain_repository:
+            alias: Kadupul\IdentityAccess\Application\Port\AuthDomainRepository
+            public: true
+        test.phase1a.realm_access_checker:
+            alias: Kadupul\IdentityAccess\Application\Port\RealmAccessChecker
+            public: true
+        test.phase1a.authenticate_directory_user:
+            alias: Kadupul\IdentityAccess\Application\Command\AuthenticateDirectoryUser
+            public: true
+        test.phase1a.authenticate_local_user:
+            alias: Kadupul\IdentityAccess\Application\Command\AuthenticateLocalUser
+            public: true
+        test.phase1a.change_password:
+            alias: Kadupul\IdentityAccess\Application\Command\ChangePassword
+            public: true
+        test.phase1a.revoke_all_user_sessions:
+            alias: Kadupul\IdentityAccess\Application\Command\RevokeAllUserSessions
+            public: true
+        test.phase1a.input_validator:
+            alias: Kadupul\IdentityAccess\Infrastructure\Symfony\Validation\SymfonyIdentityInputValidator
+            public: true
+        test.phase1a.realm_voter:
+            alias: Kadupul\IdentityAccess\Infrastructure\Symfony\Security\RealmVoter
+            public: true
+        test.phase1a.resource_access_voter:
+            alias: Kadupul\IdentityAccess\Infrastructure\Symfony\Security\ResourceAccessVoter
             public: true

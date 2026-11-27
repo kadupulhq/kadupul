@@ -139,7 +139,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
     'src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php' => 'f2fdce34944fc5cd44f4f181b6fefdf2140d71d73a0d45306c2c9646e4375348',
     'include/csrf.php' => '504f215b1c0fd3f671fe34def1b4c9c3653f2e51c03d76b22c63f969e2577268',
-    'config/services.yaml' => '6caaf491407db9b7229503db69169c2d55ec65cdcacc797c960d50e7fff3f6af',
+    'config/services.yaml' => 'ab4969aff39e12305a6ab34a8f9af18b58892aa397a25c6acb3ff339666f1899',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -170,10 +170,10 @@ const ASSET_AUTHENTICATION_SOURCES = [
     'src/AssetManagement/Infrastructure/Console/CliAssetAccess.php' => '36ecdfc785c4fdd777a905a15b17836374704a73b4ace7df95fda0a36855be86',
     'src/AssetManagement/Infrastructure/Console/AssetCommand.php' => '0a6d1e5a8765873b494ce45109db28a0e781c2f9b3308b5cb708e4052f2424b1',
     'src/AssetManagement/Application/AssetRegistry.php' => '67bdd6eff21f91c4abe46ef84685cfb27dcad8efa748ff92a5502aa6fdd86400',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
-    'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '9369368404612619830fdee03d00af6dacd4f55daa2eb8c80d97507c61271a7a',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '4a40bb40e36f0b1ccdd095b8e387acc9937899787a1d09f97b0d2f6bbe1c2e25',
+    'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => 'edfe9da71e4f5d68ed466ad87f67af03f16e50d652b01df0bca28ea3d7200106',
     'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
-    'config/services.yaml' => '6caaf491407db9b7229503db69169c2d55ec65cdcacc797c960d50e7fff3f6af',
+    'config/services.yaml' => 'ab4969aff39e12305a6ab34a8f9af18b58892aa397a25c6acb3ff339666f1899',
 ];
 
 function asset_authentication_review(string $root): ?string
@@ -325,14 +325,14 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
     'src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php' => 'f2fdce34944fc5cd44f4f181b6fefdf2140d71d73a0d45306c2c9646e4375348',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '8b3e73aaf5a3ca081c74cfe8228dfe7daa7ddf9c982af7d3289ace04695d83f6',
-    'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '6b4f4628955a249f17f1ddd86fa89607efbeb5ac0954eb38957dff2a89f52b71',
+    'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4ea5051e7f3c5a3811fc5a451cf29caa5cb448c74bdfcfbd3fb7544076d89146',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '99fc9466a26a1acbdd3063dc16193cf7020c885eab30be97c962e17b59f9b2bf',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
-    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
-    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'c2b1a492167bb5e73b4b23ceb9869574f21393f6d6369a662e40d50f2f749944',
-    'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '6caaf491407db9b7229503db69169c2d55ec65cdcacc797c960d50e7fff3f6af',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => '441e248c750fb0aade8791c3359addf72c7974fd1f10d14db7a9b3319aa403b4',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '772346742252566b3d5103159b0ed20d8bfa74d68c9337b286204942524d9b07',
+    'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '20a937028f23c90d9b4d128f793111becd6ffafac82531096684882eaf3263e9',
+    'config/services.yaml' => 'ab4969aff39e12305a6ab34a8f9af18b58892aa397a25c6acb3ff339666f1899',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2343,11 +2343,11 @@ function authenticated_access_adapter(string $root): string
 const NATIVE_SESSION_FIREWALL_SOURCES = [
     'config/bundles.php' => '0432519a4e3cd6030979a2b8b26e8660b46fae9fade5a80c1186a6508cfb920c',
     'config/packages/framework.yaml' => 'de8c463f0d86b9513973471ad2bacfa963639e1861451d0e9f53b1eb790ac3a7',
-    'config/packages/security.yaml' => '089678fa4801a6efa5872f256b282415d9c1bd9fbf99908948b9dae5eabea914',
+    'config/packages/security.yaml' => 'de6bcda8a99c6c8e5541db70b46dc328170b3e7dfe9105804f009ec85fc57a20',
     'config/routes.yaml' => '2f0f862c7962adc779c325cd4b138d07fc7a9364c0f0f545f7bdc60409918e5e',
     'src/Kernel.php' => '030b9f7a8b0bbd936cde923d58a1a652faeebedb4541de9116f89917325eb14b',
-    'src/IdentityAccess/Application/Query/CurrentActor.php' => '8d88f75c2ee5361f682fb3f499711a59d2d49bc893e8ef7780d896844654cbb5',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
+    'src/IdentityAccess/Application/Query/CurrentActor.php' => '30e90e34b52f2112794ae68c894fc3fb8ff599ff75fe0d49a90727de153f7a73',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '4a40bb40e36f0b1ccdd095b8e387acc9937899787a1d09f97b0d2f6bbe1c2e25',
     'src/IdentityAccess/Infrastructure/Symfony/Controller/SessionController.php' => '01f99f2bba9cf4d2aae8bf46e92fd42cc9a7f4fd236442898d1910dcfade2c0f',
     'src/Platform/Infrastructure/Symfony/Controller/AboutController.php' => '1d37faf43b29a69b37b2059ff0e593f10784f1b85308a238293ecfe2cddbaac6',
     'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php' => '7085680d76b359c646c97123aa78258117cb28347a7198faba1f86d8d1e93821',

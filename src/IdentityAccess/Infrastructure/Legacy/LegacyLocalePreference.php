@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -17,7 +19,8 @@ final readonly class LegacyLocalePreference implements LocalePreference
     public function preferredLocale(): ?string
     {
         $snapshot = $this->session->read();
-        $id = (int) ($snapshot['sess_user_id'] ?? 0);
+        $rawId = $snapshot['sess_user_id'] ?? 0;
+        $id = is_int($rawId) || (is_string($rawId) && is_numeric($rawId)) ? (int) $rawId : 0;
         if ($id <= 0 || isset($snapshot['sess_change_password'])) {
             return null;
         }

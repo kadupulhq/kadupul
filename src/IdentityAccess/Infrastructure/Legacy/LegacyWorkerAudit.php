@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -34,7 +36,7 @@ final class LegacyWorkerAudit
 
     public function correlate(mixed $candidate): void
     {
-        if (!is_string($candidate) || !preg_match('/^[a-f0-9]{32}$/D', $candidate)) {
+        if (!is_string($candidate) || preg_match('/^[a-f0-9]{32}$/D', $candidate) !== 1) {
             throw new \InvalidArgumentException('Invalid command');
         }
         $this->correlationId = $candidate;

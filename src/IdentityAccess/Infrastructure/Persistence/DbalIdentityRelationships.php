@@ -40,7 +40,7 @@ final readonly class DbalIdentityRelationships implements RelationshipCatalog
         $ownerId = $user ? 'user_id' : 'group_id';
         $permissionTable = $user ? 'user_auth_perms' : 'user_auth_group_perms';
         $parent = $this->database->fetchOne("SELECT $ownerName FROM $ownerTable WHERE id = ?", [$parentId]);
-        if ($parent === false) {
+        if (!is_string($parent)) {
             throw new RelationshipParentNotFound();
         }
         $source = match (true) {
@@ -58,9 +58,17 @@ final readonly class DbalIdentityRelationships implements RelationshipCatalog
             $search = '(' . $search . ' OR listing.value LIKE ?)';
             $parameters[] = '%' . $filters->filter . '%';
         }
-        $records = $this->database->fetchAllAssociative('SELECT listing.* FROM (' . $source . ') listing
+        $rawRecords = $this->database->fetchAllAssociative('SELECT listing.* FROM (' . $source . ') listing
             WHERE ' . $search . ' ORDER BY listing.`' . $filters->sortColumn . '` ' . $filters->sortDirection
             . ', listing.id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows), $parameters);
+        $records = [];
+        foreach ($rawRecords as $row) {
+            $clean = [];
+            foreach ($row as $key => $value) {
+                $clean[$key] = is_int($value) || is_float($value) || is_string($value) || $value === null ? $value : null;
+            }
+            $records[] = $clean;
+        }
         return new RelationshipPage($parent, $records);
     }
 

@@ -3548,168 +3548,6 @@ parameters:
 			path: src/Graphing/Infrastructure/Symfony/Form/PaletteColorType.php
 
 		-
-			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 4
-			path: src/IdentityAccess/Contract/AuditEvent.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 3
-			path: src/IdentityAccess/Contract/VisibilitySql.php
-
-		-
-			message: '#^Match expression does not handle remaining values\: int\<min, 0\>\|int\<5, max\>$#'
-			identifier: match.unhandled
-			count: 1
-			path: src/IdentityAccess/Contract/VisibilitySql.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 3
-			path: src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\AuthenticationDatabaseSessionHandler\:\:gc\(\) never returns false so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\AuthenticationDatabaseSessionHandler\:\:read\(\) never returns false so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\BrowserAuthenticationSql\:\:execute\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\BrowserAuthenticationSql\:\:failure\(\) has parameter \$info with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\BrowserAuthenticationSql\:\:row\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php
-
-		-
-			message: '#^Cannot access offset ''hash'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Cannot access offset ''name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Cannot access offset ''user_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Cannot access offset ''value'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Cannot call method fetchAll\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/InstallationRowCache.php
-
-		-
-			message: '#^Cannot access offset ''enabled'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Cannot access offset ''locked'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Cannot access offset ''password'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Cannot access offset ''username'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Parameter \#2 \$username of class Kadupul\\IdentityAccess\\Contract\\Actor constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
 			message: '#^Binary operation "\." between ''SHOW CREATE TABLE `'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -3725,60 +3563,6 @@ parameters:
 			message: '#^Cannot access offset ''hash'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''id'' on array\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''must_change_password'' on array\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''password'' on array\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''password'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''realm'' on array\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''realm'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''username'' on array\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Cannot access offset ''username'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
 
 		-
@@ -3800,19 +3584,7 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
 
 		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\LegacyBrowserAuthentication\:\:eligible\(\) has parameter \$user with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
 			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\LegacyBrowserAuthentication\:\:nativeIp\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\LegacyBrowserAuthentication\:\:remembered\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
@@ -3845,12 +3617,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function trim expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Parameter \#2 \$user of method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\LegacyBrowserAuthentication\:\:eligible\(\) expects array\|false, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
 
 		-
@@ -3890,40 +3656,10 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserSession.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php
-
-		-
-			message: '#^Cannot access offset ''email_address'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyUserContacts.php
-
-		-
-			message: '#^Cannot access offset ''full_name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyUserContacts.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyUserContacts.php
-
-		-
 			message: '#^Function db_fetch_row_prepared not found\.$#'
 			identifier: function.notFound
 			count: 1
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyUserContacts.php
-
-		-
-			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyWorkerAudit.php
 
 		-
 			message: '#^Cannot cast mixed to string\.$#'
@@ -4256,32 +3992,8 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php
 
 		-
-			message: '#^Cannot access offset ''realm_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php
-
-		-
 			message: '#^Function db_fetch_assoc_prepared not found\.$#'
 			identifier: function.notFound
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\PermissionRealms\:\:selected\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php
-
-		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
-			identifier: if.condNotBoolean
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php
 
@@ -4298,18 +4010,6 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php
-
-		-
 			message: '#^Function db_fetch_cell_prepared not found\.$#'
 			identifier: function.notFound
 			count: 1
@@ -4320,30 +4020,6 @@ parameters:
 			identifier: function.notFound
 			count: 3
 			path: src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php
-
-		-
-			message: '#^Only booleans are allowed in a ternary operator condition, list\<string\> given\.$#'
-			identifier: ternary.condNotBoolean
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\ReadOnlyDatabaseSessionHandler\:\:gc\(\) never returns false so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\ReadOnlyDatabaseSessionHandler\:\:read\(\) never returns false so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php
 
 		-
 			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
@@ -4428,48 +4104,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/IdentityAccess/Infrastructure/Legacy/SharedSession.php
-
-		-
-			message: '#^Match arm comparison between Kadupul\\Navigation\\Contract\\Administration\\ListScreen\:\:LoginHistory and Kadupul\\Navigation\\Contract\\Administration\\ListScreen\:\:LoginHistory is always true\.$#'
-			identifier: match.alwaysTrue
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Persistence/DbalIdentityAccessAdministrationCatalog.php
-
-		-
-			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Persistence\\DbalIdentityAccessAdministrationCatalog\:\:read\(\) should return list\<array\<string, float\|int\|string\|null\>\> but returns list\<array\<string, mixed\>\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Persistence/DbalIdentityAccessAdministrationCatalog.php
-
-		-
-			message: '#^Parameter \#1 \$parentName of class Kadupul\\Navigation\\Contract\\Relationships\\RelationshipPage constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Persistence/DbalIdentityRelationships.php
-
-		-
-			message: '#^Parameter \#2 \$records of class Kadupul\\Navigation\\Contract\\Relationships\\RelationshipPage constructor expects list\<array\<string, float\|int\|string\|null\>\>, list\<array\<string, mixed\>\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Persistence/DbalIdentityRelationships.php
-
-		-
-			message: '#^Only booleans are allowed in a ternary operator condition, mixed given\.$#'
-			identifier: ternary.condNotBoolean
-			count: 4
-			path: src/IdentityAccess/Infrastructure/Symfony/RowCacheCommand.php
-
-		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
-			identifier: if.condNotBoolean
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Symfony/RowCacheCommand.php
-
-		-
-			message: '#^Parameter \#2 \$json of method Kadupul\\IdentityAccess\\Infrastructure\\Symfony\\RowCacheCommand\:\:failure\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/IdentityAccess/Infrastructure/Symfony/RowCacheCommand.php
 
 		-
 			message: '#^Method Kadupul\\Inventory\\Application\\Command\\CreateDevice\:\:__invoke\(\) has parameter \$fields with no value type specified in iterable type array\.$#'

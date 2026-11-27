@@ -74,16 +74,24 @@ SQL,
             ListScreen::UserGroups => ['name', 'description'],
             ListScreen::UserDomains => ['name', 'domain_type'],
             ListScreen::LoginHistory => ['name', 'full_name', 'login_time', 'ip'],
-            default => ['name'],
         };
         $where = implode(' OR ', array_map(static fn(string $column): string => 'listing.' . $column . ' LIKE ?', $search));
         $params = array_fill(0, count($search), '%' . $filters->filter . '%');
         $types = array_fill(0, count($search), ParameterType::STRING);
-        return $this->database->fetchAllAssociative(
+        $rawRows = $this->database->fetchAllAssociative(
             'SELECT listing.* FROM (' . $source . ') listing WHERE (' . $where . ') ORDER BY listing.'
                 . $filters->sortColumn . ' ' . $filters->sortDirection . ', listing.id ASC LIMIT ? OFFSET ?',
             [...$params, $filters->rows + 1, ($filters->page - 1) * $filters->rows],
             [...$types, ParameterType::INTEGER, ParameterType::INTEGER],
         );
+        $rows = [];
+        foreach ($rawRows as $row) {
+            $clean = [];
+            foreach ($row as $key => $value) {
+                $clean[$key] = is_int($value) || is_float($value) || is_string($value) || $value === null ? $value : null;
+            }
+            $rows[] = $clean;
+        }
+        return $rows;
     }
 }

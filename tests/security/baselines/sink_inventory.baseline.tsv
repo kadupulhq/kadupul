@@ -542,7 +542,7 @@ fs_write	./snmpagent_mibcachechild.php:79	        file_put_contents($path_mibcac
 fs_write	./src/AssetManagement/Infrastructure/Console/AssetCommand.php:60	                $stream = fopen('php://stdin', 'rb');
 fs_write	./src/Graphing/Domain/PaletteCsv.php:101	        $stream = fopen('php://temp', 'w+');
 fs_write	./src/Graphing/Domain/PaletteCsv.php:25	        $stream = fopen('php://temp', 'w+');
-fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:58	            $handle = fopen($path, 'r+b');
+fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:60	            $handle = fopen($path, 'r+b');
 fs_write	./src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php:65	                $this->files->dumpFile($path, $updated);
 fs_write	./src/Platform/Infrastructure/Legacy/InstallerColorImport.php:26	        $file = @fopen($path, 'rb');
 fs_write	./src/Platform/Infrastructure/Legacy/InstallerCsrfSecret.php:43	            $this->files->dumpFile($temporary, $secret);

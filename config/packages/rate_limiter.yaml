@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+framework:
+    rate_limiter:
+        identity_login_address:
+            policy: sliding_window
+            limit: 30
+            interval: '1 minute'
+            cache_pool: cache.login_rate_limiter
+        identity_login_account:
+            policy: sliding_window
+            limit: 10
+            interval: '1 minute'
+            cache_pool: cache.login_rate_limiter

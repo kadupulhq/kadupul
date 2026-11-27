@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -29,18 +31,20 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
     public function authenticatedActor(): ?Actor
     {
         $snapshot = $this->session->read();
-        $id = (int) ($snapshot['sess_user_id'] ?? 0);
+        $rawId = $snapshot['sess_user_id'] ?? 0;
+        $id = is_int($rawId) || (is_string($rawId) && is_numeric($rawId)) ? (int) $rawId : 0;
         if ($id <= 0 || isset($snapshot['sess_change_password'])) {
             return null;
         }
-        $authMethod = $this->database->get()->query("SELECT value FROM settings WHERE name = 'auth_method'" . $this->readLock())->fetchColumn();
-        if ($authMethod !== false && !in_array((int) $authMethod, [1, 2, 3, 4], true)) {
+        $authMethodQuery = $this->database->get()->query("SELECT value FROM settings WHERE name = 'auth_method'" . $this->readLock());
+        $authMethod = $authMethodQuery === false ? false : $authMethodQuery->fetchColumn();
+        if ($authMethod !== false && (!is_scalar($authMethod) || !in_array((int) $authMethod, [1, 2, 3, 4], true))) {
             return null;
         }
         $query = $this->database->get()->prepare('SELECT id, username, enabled, locked, password FROM user_auth WHERE id = ?' . $this->readLock());
         $query->execute([$id]);
         $user = $query->fetch();
-        if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on') {
+        if (!is_array($user) || ($user['enabled'] ?? null) !== 'on' || ($user['locked'] ?? null) === 'on' || !is_string($user['password'] ?? null) || !is_string($user['username'] ?? null)) {
             $this->session->revoke();
             return null;
         }
@@ -50,8 +54,10 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
             $this->session->revoke();
             return null;
         }
-        $guest = $this->database->get()->query("SELECT value FROM settings WHERE name = 'guest_user'" . $this->readLock())->fetchColumn();
-        if ($id === (int) $guest || $user['username'] === $guest) {
+        $guestQuery = $this->database->get()->query("SELECT value FROM settings WHERE name = 'guest_user'" . $this->readLock());
+        $guest = $guestQuery === false ? false : $guestQuery->fetchColumn();
+        $guestId = is_scalar($guest) ? (int) $guest : 0;
+        if ($id === $guestId || $user['username'] === $guest) {
             return null;
         }
         return new Actor($id, $user['username']);

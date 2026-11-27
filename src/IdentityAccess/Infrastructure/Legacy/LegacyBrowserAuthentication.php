@@ -203,6 +203,7 @@ final readonly class LegacyBrowserAuthentication
         }
     }
 
+    /** @return ?array{user: array<string, mixed>, cache: int, hash: string} */
     private function remembered(\PDO $database, string $cookie, string $ip): ?array
     {
         $parts = explode(',', $cookie);
@@ -237,6 +238,10 @@ final readonly class LegacyBrowserAuthentication
         return $cached === false ? null : ['user' => $user, 'cache' => (int) $cached['id'], 'hash' => $hash];
     }
 
+    /**
+     * @param array<string, mixed>|false $user
+     * @phpstan-assert-if-true array<string, mixed> $user
+     */
     private function eligible(\PDO $database, array|false $user): bool
     {
         if ($user === false || (int) $user['id'] <= 0 || $user['enabled'] !== 'on' || $user['locked'] === 'on') {

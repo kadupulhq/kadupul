@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -30,18 +32,18 @@ final readonly class AuditEvent
         ?string $recordedAt = null,
     ) {
         $this->recordedAt = $recordedAt ?? gmdate('Y-m-d\\TH:i:s\\Z');
-        if (!preg_match('/^[a-f0-9]{32}$/D', $correlationId)) {
+        if (preg_match('/^[a-f0-9]{32}$/D', $correlationId) !== 1) {
             throw new \InvalidArgumentException('Invalid audit correlation identifier.');
         }
         if ($actorId !== null && $actorId <= 0) {
             throw new \InvalidArgumentException('Invalid audit actor.');
         }
         foreach ([$action, $targetType] as $name) {
-            if (!preg_match('/^[a-z][a-z0-9_.-]{0,63}$/D', $name)) {
+            if (preg_match('/^[a-z][a-z0-9_.-]{0,63}$/D', $name) !== 1) {
                 throw new \InvalidArgumentException('Invalid audit name.');
             }
         }
-        if (!preg_match('/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/D', $targetId)) {
+        if (preg_match('/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/D', $targetId) !== 1) {
             throw new \InvalidArgumentException('Invalid audit target.');
         }
         if (!in_array($decision, [self::ALLOWED, self::DENIED], true)) {
@@ -56,7 +58,7 @@ final readonly class AuditEvent
         if ($decision === self::ALLOWED && $outcome === self::DENIED) {
             throw new \InvalidArgumentException('An allowed audit decision cannot have a denied outcome.');
         }
-        if (!preg_match('/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/D', $this->recordedAt)) {
+        if (preg_match('/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/D', $this->recordedAt) !== 1) {
             throw new \InvalidArgumentException('Invalid audit timestamp.');
         }
     }
