@@ -104,8 +104,10 @@ final class LocaleResolver
 
     /**
      * The legacy repair_locale(): an exact known locale after `_` becomes `-`,
-     * else the first listed locale with the same first two characters, else ''.
-     * An empty value means en-US.
+     * else the first listed locale with the same language subtag (so fil means
+     * fil-PH), else the first with the first two characters as its language
+     * subtag, else ''. A two-character prefix never matches a three-letter
+     * locale, so fi stays fi-FI. An empty value means en-US.
      */
     public function repair(?string $language): string
     {
@@ -118,10 +120,12 @@ final class LocaleResolver
             return $locale;
         }
 
-        $wanted = substr($language, 0, 2);
-        foreach (array_keys(KnownLocales::ALL) as $known) {
-            if (substr($known, 0, 2) === $wanted) {
-                return $known;
+        $subtag = explode('-', $locale, 2)[0];
+        foreach ([$subtag, substr($language, 0, 2)] as $wanted) {
+            foreach (array_keys(KnownLocales::ALL) as $known) {
+                if (explode('-', $known, 2)[0] === $wanted) {
+                    return $known;
+                }
             }
         }
 
@@ -171,7 +175,7 @@ final class LocaleResolver
 
         foreach ($ranges as [$range]) {
             // Language tags are case-insensitive; the locale table is not.
-            $tag = preg_match('/\A([A-Za-z]{2})[-_]([A-Za-z]{2})\z/', $range, $match) === 1
+            $tag = preg_match('/\A([A-Za-z]{2,3})[-_]([A-Za-z]{2})\z/', $range, $match) === 1
                 ? strtolower($match[1]) . '-' . strtoupper($match[2])
                 : strtolower($range);
             $locale = $this->repair($tag);

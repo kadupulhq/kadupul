@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Spikker"
+"Access denied.": "Juurdepääs keelatud."
+"Choose a topic to open the Kadupul documentation.": "Vali teema, et avada Kadupuli dokumentatsioon."
+"Get started": "Alusta"
+"Graphs": "Graafikud"
+"Templates": "Mallid"
+"Data queries": "Andmepäringud"
+"Remote data collectors": "Kaugandmekogujad"
+"Users and permissions": "Kasutajad ja õigused"
+"Plugins": "Pistikprogrammid"
+"Troubleshoot missing data": "Tõrgete otsing puuduvate andmete korral"
+"Not available locally.": "Kohapeal pole saadaval."
+"Back to console": "Tagasi konsooli"

@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} oră} few {{number} ore} other {{number} de ore}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minut} few {{number} minute} other {{number} de minute}}"
+"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, one {{number} fir de execuție} few {{number} fire de execuție} other {{number} de fire de execuție}}"

@@ -71,8 +71,9 @@ final class TranslationTest extends TestCase
         yield 'unsupported user falls through' => [[], null, '../../secrets', 'fr-BE', 'fr'];
         yield 'Canadian French browser' => [[], null, null, 'fr-CA', 'fr_CA'];
         yield 'default without detection' => [['i18n_auto_detection' => '0', 'i18n_default_language' => 'fr-FR'], null, null, 'en', 'fr'];
-        yield 'unsupported browser uses default' => [['i18n_default_language' => 'fr'], null, null, 'fi', 'fr'];
-        yield 'English fallback and ignored query' => [[], null, null, 'fi', 'en'];
+        yield 'shipped Finnish browser selects Finnish' => [[], null, null, 'fi', 'fi_FI'];
+        yield 'unsupported browser uses default' => [['i18n_default_language' => 'fr'], null, null, 'is', 'fr'];
+        yield 'English fallback and ignored query' => [[], null, null, 'is', 'en'];
     }
 
     public function testVdefRoutesUseConfiguredLocale(): void

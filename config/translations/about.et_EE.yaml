@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Kadupulist"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul on sõltumatu avatud lähtekoodiga projekt võrgu seireks ja aegridade graafikute koostamiseks."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Arenduse, panuste ja väljalaskete otsuseid haldab Kadupuli organisatsioon."
+"For documentation and support, visit the Kadupul project.": "Dokumentatsiooni ja toe saamiseks külasta Kadupuli projekti."
+"License": "Litsents"
+"Kadupul is licensed under the GNU GPL:": "Kadupuli litsents on GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "See programm on vaba tarkvara; võid seda levitada ja/või muuta Free Software Foundationi avaldatud GNU General Public License'i tingimustel, kas litsentsi versiooni 2 või (sinu valikul) mis tahes hilisema versiooni alusel."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Seda programmi levitatakse lootuses, et see on kasulik, kuid ILMA IGASUGUSE GARANTIITA; isegi ilma KAUPLEMISKÕLBLIKKUSE või SOBIVUSE KAUDSE GARANTIITA KINDLAKS EESMÄRGIKS. Lisateavet vaata GNU General Public License'ist."
+"Access denied.": "Juurdepääs keelatud."
+"Open About Kadupul to view project information.": "Projekti teabe vaatamiseks ava jaotis Kadupulist."
+"Version %version%": "Versioon %version%"
+"- Beta %beta%": "- Beeta %beta%"
+"Kadupul organization": "Kadupuli organisatsioon"
+"Kadupul project": "Kadupuli projekt"

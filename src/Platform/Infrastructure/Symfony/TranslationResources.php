@@ -45,7 +45,7 @@ final class TranslationResources
         }
         $shipped = [];
         foreach ($locales as $locale) {
-            if (!is_string($locale) || preg_match('/\A[a-z]{2}-[A-Z]{2}\z/D', $locale) !== 1) {
+            if (!is_string($locale) || preg_match('/\A[a-z]{2,3}-[A-Z]{2}\z/D', $locale) !== 1) {
                 throw new \RuntimeException('Console language catalogue identity is invalid.');
             }
             $shipped[] = $locale;

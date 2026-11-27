@@ -79,8 +79,10 @@ final class ConsoleTranslationsTest extends TestCase
         yield 'Mexican Spanish YAML translates Save site' => ['es_MX', 'inventory', 'Save site', [], 'Guardar sitio'];
         yield 'Malagasy count placeholder' => ['mg_MG', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Isaky ny 6 ora'];
         yield 'Egyptian Arabic' => ['ar_EG', 'inventory', 'Devices', [], 'الأجهزة'];
+        yield 'Finnish from YAML' => ['fi_FI', 'inventory', 'Devices', [], 'Laitteet'];
+        yield 'Filipino from YAML' => ['fil_PH', 'inventory', 'Devices', [], 'Mga Device'];
         yield 'British English falls back to English' => ['en_GB', 'inventory', 'Devices', [], 'Devices'];
-        yield 'unshipped locale stays English' => ['fi', 'inventory', 'Devices', [], 'Devices'];
+        yield 'unshipped locale stays English' => ['is', 'inventory', 'Devices', [], 'Devices'];
     }
 
     /** @param array<string, int|string> $parameters */
@@ -148,8 +150,15 @@ final class ConsoleTranslationsTest extends TestCase
         yield 'Malagasy' => ['mg-MG', 'mg_MG'];
         yield 'Kinyarwanda' => ['rw-RW', 'rw_RW'];
         yield 'Somali' => ['so-SO', 'so_SO'];
-        yield 'unshipped language' => ['fi-FI', null];
-        yield 'legacy-listed unshipped language' => ['sr-RS', null];
+        yield 'Finnish' => ['fi-FI', 'fi_FI'];
+        yield 'bare Czech' => ['cs', 'cs_CZ'];
+        yield 'Norwegian Bokmål' => ['nb-NO', 'nb_NO'];
+        yield 'Serbian' => ['sr-RS', 'sr_RS'];
+        yield 'Filipino' => ['fil-PH', 'fil_PH'];
+        yield 'bare Filipino' => ['fil', 'fil_PH'];
+        yield 'unshipped language' => ['is-IS', null];
+        yield 'legacy-listed unshipped language' => ['mk-MK', null];
+        yield 'four-letter language' => ['fili-PH', null];
         yield 'script subtag' => ['zh-Hant-TW', null];
         yield 'charset suffix' => ['de_DE.UTF-8', null];
         yield 'path' => ['../../locales/po/ru-RU', null];

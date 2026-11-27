@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} tund} other {{number} tundi}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minut} other {{number} minutit}}"
+"{count, plural, one {{number} Thread} other {{number} Threads}}": "{count, plural, one {{number} lõim} other {{number} lõime}}"

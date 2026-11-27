@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 final class LocaleResolverTest extends TestCase
 {
-    private const SHIPPED = ['de-DE', 'fr-FR', 'pt-BR', 'pt-PT', 'ru-RU', 'zh-CN', 'zh-TW'];
+    private const SHIPPED = ['de-DE', 'fil-PH', 'fr-FR', 'pt-BR', 'pt-PT', 'ru-RU', 'zh-CN', 'zh-TW'];
 
     /** @param array<string, mixed> $values */
     private static function input(array $values = [], ?array &$calls = null): LocaleInput
@@ -76,13 +76,14 @@ final class LocaleResolverTest extends TestCase
         yield 'saved null is no preference' => [['saved' => null, 'accept' => 'de'], 'de-DE', false];
         yield 'bare zh is the first listed Chinese' => [['saved' => 'zh'], 'zh-CN', false];
         yield 'one character is no locale' => [['saved' => 'd', 'default' => 'ru-RU'], 'ru-RU', false];
-        yield 'a known locale without a catalog stops the search' => [['saved' => 'sr-RS', 'accept' => 'de'], 'sr-RS', true];
+        yield 'a known locale without a catalog stops the search' => [['saved' => 'is-IS', 'accept' => 'de'], 'is-IS', true];
         yield 'detection reads numeric one loosely' => [['detection' => ' 1', 'accept' => 'de'], 'de-DE', false];
         yield 'detection reads other values as off' => [['detection' => 'on', 'accept' => 'de', 'default' => 'ru'], 'ru-RU', false];
         yield 'unknown default uses the setting default' => [['default' => 'xx', 'settingDefault' => 'pt_BR'], 'pt-BR', false];
         yield 'unknown default and setting default select nothing' => [['default' => 'xx', 'settingDefault' => 'yy'], 'en-US', true];
         yield 'Accept-Language case does not matter' => [['accept' => 'PT-br'], 'pt-BR', false];
         yield 'Accept-Language underscore spelling' => [['accept' => 'pt_BR'], 'pt-BR', false];
+        yield 'Accept-Language three-letter language' => [['accept' => 'FIL-ph,de;q=0.9'], 'fil-PH', false];
         yield 'Accept-Language wildcard names nothing' => [['accept' => '*', 'default' => 'ru'], 'ru-RU', false];
         yield 'Accept-Language skips empty members' => [['accept' => ' , ,de;q=0.4'], 'de-DE', false];
         yield 'Accept-Language skips q=0' => [['accept' => 'fr;q=0,de;q=0.1'], 'de-DE', false];
@@ -150,6 +151,11 @@ final class LocaleResolverTest extends TestCase
         yield 'bare Portuguese' => ['pt', 'pt-PT'];
         yield 'other Portuguese region' => ['pt-AO', 'pt-PT'];
         yield 'listed without a catalog' => ['zh-HK', 'zh-HK'];
+        yield 'three-letter language' => ['fil', 'fil-PH'];
+        yield 'three-letter underscore' => ['fil_PH', 'fil-PH'];
+        yield 'two letters never pick a three-letter language' => ['fi', 'fi-FI'];
+        yield 'unknown three-letter language uses two letters' => ['deu', 'de-DE'];
+        yield 'legacy Czech spelling' => ['cs-GZ', 'cs-CZ'];
         yield 'case is significant' => ['DE-de', ''];
         yield 'zero' => ['0', ''];
         yield 'path' => ['../../locales/po/ru-RU', ''];
@@ -178,10 +184,10 @@ final class LocaleResolverTest extends TestCase
 
     public function testKnownLocalesAreTheLegacyTableInOrder(): void
     {
-        self::assertCount(73, KnownLocales::ALL);
+        self::assertCount(81, KnownLocales::ALL);
         self::assertSame(['pt-PT', 'pt-BR'], array_values(array_filter(array_keys(KnownLocales::ALL), static fn(string $locale): bool => str_starts_with($locale, 'pt-'))));
         foreach (KnownLocales::ALL as $locale => $properties) {
-            self::assertMatchesRegularExpression('/\A[a-z]{2}-[A-Z]{2}\z/', $locale);
+            self::assertMatchesRegularExpression('/\A[a-z]{2,3}-[A-Z]{2}\z/', $locale);
             self::assertSame(['language', 'direction', 'country', 'filename'], array_keys($properties));
         }
     }

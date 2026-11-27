@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Cada {number} dia} many {Cada {number} dies} other {Cada {number} dies}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} dia} many {{number} dies} other {{number} dies}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} hora} many {{number} hores} other {{number} hores}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minut} many {{number} minuts} other {{number} minuts}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} mes} many {{number} mesos} other {{number} mesos}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} segon} many {{number} segons} other {{number} segons}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} setmana} many {{number} setmanes} other {{number} setmanes}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} any} many {{number} anys} other {{number} anys}}"

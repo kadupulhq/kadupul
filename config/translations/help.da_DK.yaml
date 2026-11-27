@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Hjælp"
+"Access denied.": "Adgang nægtet."
+"Choose a topic to open the Kadupul documentation.": "Vælg et emne for at åbne Kadupul-dokumentationen."
+"Get started": "Kom i gang"
+"Graphs": "Grafer"
+"Templates": "Skabeloner"
+"Data queries": "Dataforespørgsler"
+"Remote data collectors": "Fjerndataindsamlere"
+"Users and permissions": "Brugere og tilladelser"
+"Plugins": "Plugins"
+"Troubleshoot missing data": "Fejlfind manglende data"
+"Not available locally.": "Ikke tilgængelig lokalt."
+"Back to console": "Tilbage til konsollen"

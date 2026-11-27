@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Minden {number}. nap} other {Minden {number}. nap}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} nap} other {{number} nap}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} óra} other {{number} óra}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} perc} other {{number} perc}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} hónap} other {{number} hónap}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} másodperc} other {{number} másodperc}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} hét} other {{number} hét}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} év} other {{number} év}}"

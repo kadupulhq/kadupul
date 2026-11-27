@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {La fiecare {number} zi} few {La fiecare {number} zile} other {La fiecare {number} de zile}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} zi} few {{number} zile} other {{number} de zile}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} oră} few {{number} ore} other {{number} de ore}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minut} few {{number} minute} other {{number} de minute}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} lună} few {{number} luni} other {{number} de luni}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} secundă} few {{number} secunde} other {{number} de secunde}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} săptămână} few {{number} săptămâni} other {{number} de săptămâni}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} an} few {{number} ani} other {{number} de ani}}"

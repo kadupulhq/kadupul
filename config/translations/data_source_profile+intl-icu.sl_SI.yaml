@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"{count, plural, one {Every {number} Day} other {Every {number} Days}}": "{count, plural, one {Vsak {number} dan} two {Vsakih {number} dni} few {Vsakih {number} dni} other {Vsakih {number} dni}}"
+"{count, plural, one {{number} Day} other {{number} Days}}": "{count, plural, one {{number} dan} two {{number} dneva} few {{number} dni} other {{number} dni}}"
+"{count, plural, one {{number} Hour} other {{number} Hours}}": "{count, plural, one {{number} ura} two {{number} uri} few {{number} ure} other {{number} ur}}"
+"{count, plural, one {{number} Minute} other {{number} Minutes}}": "{count, plural, one {{number} minuta} two {{number} minuti} few {{number} minute} other {{number} minut}}"
+"{count, plural, one {{number} Month} other {{number} Months}}": "{count, plural, one {{number} mesec} two {{number} meseca} few {{number} meseci} other {{number} mesecev}}"
+"{count, plural, one {{number} Second} other {{number} Seconds}}": "{count, plural, one {{number} sekunda} two {{number} sekundi} few {{number} sekunde} other {{number} sekund}}"
+"{count, plural, one {{number} Week} other {{number} Weeks}}": "{count, plural, one {{number} teden} two {{number} tedna} few {{number} tedni} other {{number} tednov}}"
+"{count, plural, one {{number} Year} other {{number} Years}}": "{count, plural, one {{number} leto} two {{number} leti} few {{number} leta} other {{number} let}}"

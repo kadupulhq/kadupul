@@ -48,7 +48,7 @@ final class ConsoleTranslations
 
     public static function normalize(mixed $locale, string $projectDir): ?string
     {
-        if (!is_string($locale) || preg_match('/\A([a-z]{2})(?:[-_]([a-z]{2}))?\z/iD', $locale, $match) !== 1) {
+        if (!is_string($locale) || preg_match('/\A([a-z]{2,3})(?:[-_]([a-z]{2}))?\z/iD', $locale, $match) !== 1) {
             return null;
         }
         $language = strtolower($match[1]);

@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Ajutor"
+"Access denied.": "Acces refuzat."
+"Choose a topic to open the Kadupul documentation.": "Alegeți un subiect pentru a deschide documentația Kadupul."
+"Get started": "Primii pași"
+"Graphs": "Grafice"
+"Templates": "Șabloane"
+"Data queries": "Interogări de date"
+"Remote data collectors": "Colectoare de date la distanță"
+"Users and permissions": "Utilizatori și permisiuni"
+"Plugins": "Pluginuri"
+"Troubleshoot missing data": "Depanarea datelor lipsă"
+"Not available locally.": "Indisponibil local."
+"Back to console": "Înapoi la consolă"
