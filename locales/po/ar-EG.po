@@ -18216,7 +18216,7 @@ msgstr "السجلات: %s (صفوف ds)، الوقت: %s (ثانية)، GetRows
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "تقليل ذاكرة MySQL / MariaDB إلى أقل من 80% of ذاكرة النظام.  الاحتفاظ بذاكرة التخزين المؤقت الإضافية لملفات RRD إذا كانت قاعدة البيانات على نفس نظام ملفات RRD.  انظر الإجماليات الأساسية والعملاء أدناه للحصول على شرح لطريقة الحساب."
+msgstr "تقليل ذاكرة MySQL / MariaDB إلى أقل من 80% من ذاكرة النظام.  الاحتفاظ بذاكرة التخزين المؤقت الإضافية لملفات RRD إذا كانت قاعدة البيانات على نفس نظام ملفات RRD.  انظر الإجماليات الأساسية والعملاء أدناه للحصول على شرح لطريقة الحساب."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"

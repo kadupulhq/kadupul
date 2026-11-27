@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Hala bilinen olarak kabul edilebilecek bilinmeyen veri miktarı."
 "The default Data Source Profile cannot be deleted.": "Varsayılan Veri Kaynağı Profili silinemez."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Varsayılan profil ve Veri Şablonları veya Veri Kaynakları tarafından kullanılan profiller silinemez."
-"The frequency that data will be collected from the Data Source.": "Verilerin Veri Kaynağından toplanma sıklığı?"
+"The frequency that data will be collected from the Data Source.": "Verilerin Veri Kaynağından toplanma sıklığı."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "RRA şartnamesinde bir satırı doldurmadan önce gereken örnek sayısı. İlk RRA her zaman 1 değerine sahip olmalıdır."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Yoklama aralığı, X-Files Faktörü, Birleştirme İşlevleri ve RRA'lar değiştirilemez."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Bu eski Veri Kaynağı Profili formunun süresi doldu. Veri Kaynağı Profillerini açın ve yeni bir form gönderin."

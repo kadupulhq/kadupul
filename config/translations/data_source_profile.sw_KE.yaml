@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Kiasi cha data isiyojulikana ambayo bado inaweza kuchukuliwa kuwa inajulikana."
 "The default Data Source Profile cannot be deleted.": "Wasifu chaguomsingi wa Chanzo cha Data hauwezi kufutwa."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Wasifu chaguomsingi na wasifu zinazotumiwa na Violezo vya Data au Vyanzo vya Data haziwezi kufutwa."
-"The frequency that data will be collected from the Data Source.": "Marudio ambayo data itakusanywa kutoka kwa Chanzo cha Data?"
+"The frequency that data will be collected from the Data Source.": "Marudio ambayo data itakusanywa kutoka kwa Chanzo cha Data."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Idadi ya sampuli zinazohitajika kabla ya kujaza safu katika vipimo vya RRA. RRA ya kwanza inapaswa kuwa na thamani ya 1 kila wakati."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Muda wa ukusanyaji, Kipengele cha X-Files, Vitendaji vya Uunganishaji na RRAs haziwezi kubadilishwa."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Fomu hii ya zamani ya Wasifu wa Chanzo cha Data imeisha muda wake. Fungua Wasifu za Vyanzo vya Data na uwasilishe fomu mpya."

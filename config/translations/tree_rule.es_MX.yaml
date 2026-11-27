@@ -60,7 +60,7 @@
 "Select at least one Tree Rule.": "Seleccione al menos una regla de árbol."
 "Select at most 100 Tree Rules at a time.": "Seleccione como máximo 100 reglas de árbol a la vez."
 "Select up to %count% rows at a time.": "Seleccione hasta %count% filas a la vez."
-"The Item Type that shall be dynamically added to the tree.": "El tipo de item que se añadirá dinámicamente al  árbol."
+"The Item Type that shall be dynamically added to the tree.": "El tipo de item que se añadirá dinámicamente al árbol."
 "The name format must give every copy a name of 1 to 255 characters.": "El formato de nombre debe asignar a cada copia un nombre de 1 a 255 caracteres."
 "The tree rule changed since you opened this form. Reload before saving.": "La regla de árbol cambió desde que abrió este formulario. Recargue antes de guardar."
 "Title Format": "Formato de título"

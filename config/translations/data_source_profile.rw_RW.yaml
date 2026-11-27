@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Ingano y'amakuru atazwi ashobora gukomeza gufatwa nk'azwi."
 "The default Data Source Profile cannot be deleted.": "Umwirondoro usanzwe w'isoko y'amakuru ntushobora gusibwa."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Umwirondoro usanzwe n'imyirondoro ikoreshwa n'inyandikorugero z'amakuru cyangwa amasoko y'amakuru ntibishobora gusibwa."
-"The frequency that data will be collected from the Data Source.": "Inshuro amakuru azajya akusanywa avuye ku nkomoko y'amakuru?"
+"The frequency that data will be collected from the Data Source.": "Inshuro amakuru azajya akusanywa avuye ku nkomoko y'amakuru."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Umubare w'ingero zikenewe mbere yo kuzuza umurongo mu bisobanuro bya RRA. RRA ya mbere igomba buri gihe kugira agaciro ka 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Intera y'isuzuma, X-Files Factor, imikorere y'ihuriza na RRA ntibishobora guhindurwa."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Iyi fomu ishaje y'umwirondoro w'isoko y'amakuru yarangiye. Fungura imyirondoro y'amasoko y'amakuru maze wohereze ifomu nshya."

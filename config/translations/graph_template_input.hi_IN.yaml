@@ -18,7 +18,7 @@
 "Delete Graph Item Input": "ग्राफ़ आइटम इनपुट हटाएं"
 "Delete outcome is uncertain. Reload before retrying.": "हटाने का परिणाम अनिश्चित है। पुनः प्रयास करने से पहले पुनः लोड करें।"
 "Description": "विवरण"
-"Enter a description for this graph item input to describe what this input is used for.": "इस ग्राफ़ आइटम इनपुट के लिए एक विवरण दर्ज करें कि यह इनपुट किस लिए उपयोग किया जाता है"
+"Enter a description for this graph item input to describe what this input is used for.": "इस ग्राफ़ आइटम इनपुट के लिए एक विवरण दर्ज करें कि यह इनपुट किस लिए उपयोग किया जाता है।"
 "Enter a description of at most 65535 bytes.": "अधिकतम 65535 बाइट्स का विवरण दर्ज करें।"
 "Enter a name for this graph item input, make sure it is something you recognize.": "इस ग्राफ़ आइटम इनपुट के लिए एक नाम दर्ज करें, सुनिश्चित करें कि यह कुछ ऐसा है जिसे आप पहचानते हैं।"
 "Enter a name of 1 to 255 characters.": "1 से 255 वर्णों का नाम दर्ज करें।"

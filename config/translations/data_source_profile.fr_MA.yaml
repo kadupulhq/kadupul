@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "La proportion de données inconnues pouvant encore être considérée comme connue."
 "The default Data Source Profile cannot be deleted.": "Le profil de source de données par défaut ne peut pas être supprimé."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Le profil par défaut et les profils utilisés par des modèles de données ou des sources de données ne peuvent pas être supprimés."
-"The frequency that data will be collected from the Data Source.": "La fréquence à laquelle les données seront collectées depuis la source de données ?"
+"The frequency that data will be collected from the Data Source.": "La fréquence à laquelle les données seront collectées depuis la source de données."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Le nombre d'échantillons requis avant de remplir une ligne dans la spécification RRA.  Le premier RRA doit toujours avoir une valeur de 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "L'intervalle d'interrogation, le facteur X-Files, les fonctions de consolidation et les RRA ne peuvent pas être modifiés."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Ce formulaire de profil de source de données hérité a expiré. Ouvrez les profils de source de données et soumettez un nouveau formulaire."

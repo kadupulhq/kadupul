@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "अज्ञात डेटा की मात्रा जिसे अभी भी ज्ञात माना जा सकता है।"
 "The default Data Source Profile cannot be deleted.": "डिफ़ॉल्ट डेटा स्रोत प्रोफ़ाइल हटाई नहीं जा सकती।"
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "डिफ़ॉल्ट प्रोफ़ाइल और डेटा टेम्पलेट या डेटा स्रोतों द्वारा उपयोग की जा रही प्रोफ़ाइलें हटाई नहीं जा सकतीं।"
-"The frequency that data will be collected from the Data Source.": "वह आवृत्ति जो डेटा डेटा स्रोत से एकत्र की जाएगी?"
+"The frequency that data will be collected from the Data Source.": "वह आवृत्ति जो डेटा डेटा स्रोत से एकत्र की जाएगी।"
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "आरआरए विनिर्देश में एक पंक्ति को भरने से पहले आवश्यक नमूनों की संख्या। पहले RRA में हमेशा 1 का मान होना चाहिए।"
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "पोलिंग अंतराल, X-Files Factor, समेकन फ़ंक्शन और RRAs बदले नहीं जा सकते।"
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "यह लीगेसी डेटा स्रोत प्रोफ़ाइल फ़ॉर्म समाप्त हो गया है। डेटा स्रोत प्रोफ़ाइलें खोलें और एक नया फ़ॉर्म सबमिट करें।"

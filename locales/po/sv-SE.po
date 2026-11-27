@@ -289,7 +289,7 @@ msgstr "För att migrera de aggregerade graferna nedan till en mallbaserad aggre
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
-msgstr "För att migrera Aggregatgraferna nedan till ett Mallbaserat aggregat måste de bara använda en grafmall. Vänligen tryck på &#39;Retur&#39; och välj sedan endast Aggregatgraf som använder samma grafmall."
+msgstr "För att migrera Aggregatgraferna nedan till ett Mallbaserat aggregat måste de bara använda en grafmall. Vänligen tryck på 'Retur' och välj sedan endast Aggregatgraf som använder samma grafmall."
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
@@ -3249,7 +3249,7 @@ msgstr "Vänligen bekräfta"
 
 #: graphs.php
 msgid "Press 'Return' to return and select different Graphs."
-msgstr "Tryck på &#39;Return&#39; för att återvända och välj olika Grafer."
+msgstr "Tryck på 'Return' för att återvända och välj olika Grafer."
 
 #: graphs.php
 msgid "Reapply Suggested Naming to Graph(s)"
@@ -8681,7 +8681,7 @@ msgstr "Läge"
 
 #: include/global_settings.php user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Läge vilken Kadupul försöker autentisera mot LDAP-servern. <blockquote> <i>Ingen sökning</i> - <i>Sökning utan</i> Distinguished Name (DN) sker, försök bara binda med det angivna Distinguished Name-formatet (DN). <br><br> <i>Anonym Sökning</i> - Försök att söka efter användarnamn mot LDAP-katalog via anonym bindning för att lokalisera användarens Distinguished Name (DN). <br><br> <i>Särskild</i> sökning - Försök att söka efter användarnamn mot LDAP-katalog via Specifikt Distinguished Name (DN) och Specifikt lösenord för bindning för att lokalisera användarens Distinguished Name (DN)."
+msgstr "Läge vilken Kadupul försöker autentisera mot LDAP-servern. <blockquote> <i>Ingen sökning</i> - Sökning utan Distinguished Name (DN) sker, försök bara binda med det angivna Distinguished Name-formatet (DN). <br><br> <i>Anonym Sökning</i> - Försök att söka efter användarnamn mot LDAP-katalog via anonym bindning för att lokalisera användarens Distinguished Name (DN). <br><br> <i>Särskild</i> sökning - Försök att söka efter användarnamn mot LDAP-katalog via Specifikt Distinguished Name (DN) och Specifikt lösenord för bindning för att lokalisera användarens Distinguished Name (DN)."
 
 #: include/global_settings.php
 msgid "Monthly on Sunday"
@@ -10203,7 +10203,7 @@ msgstr "Åsidosätt detta värde"
 
 #: lib/api_aggregate.php
 msgid "Press 'Return' to return and select different Graphs"
-msgstr "Tryck på &#39;Retur&#39; för att återvända och välj olika Grafer"
+msgstr "Tryck på 'Retur' för att återvända och välj olika Grafer"
 
 #: lib/api_aggregate.php
 msgid "Skip"
@@ -17982,7 +17982,7 @@ msgstr "Poster: %s (ds rader), Tid: %s (sekunder), GetRows: %s (secs), ResultsCy
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Minska MySQL/MariaDB-minnet till mindre än 80% of systemminne.  Bevara ytterligare cacheminne för RRD-filer om databasen finns på samma system som RRD-filerna.  Se Core och Client Totals nedan för en förklaring av beräkningsmetoden."
+msgstr "Minska MySQL/MariaDB-minnet till mindre än 80% av systemminnet.  Bevara ytterligare cacheminne för RRD-filer om databasen finns på samma system som RRD-filerna.  Se Core och Client Totals nedan för en förklaring av beräkningsmetoden."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"

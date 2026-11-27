@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "알려진 것으로 간주 될 수있는 알 수없는 데이터의 양."
 "The default Data Source Profile cannot be deleted.": "기본 데이터 소스 프로필은 삭제할 수 없습니다."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "기본 프로필 및 데이터 템플릿이나 데이터 소스에서 사용 중인 프로필은 삭제할 수 없습니다."
-"The frequency that data will be collected from the Data Source.": "데이터가 데이터 소스에서 수집되는 빈도"
+"The frequency that data will be collected from the Data Source.": "데이터가 데이터 소스에서 수집되는 빈도."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "RRA 사양에서 행을 채우기 전에 필요한 샘플 수입니다. 첫 번째 RRA는 항상 1의 값을 가져야합니다."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "폴링 간격, X-Files 계수, 통합 함수 및 RRA는 변경할 수 없습니다."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "이 레거시 데이터 소스 프로필 양식이 만료되었습니다. 데이터 소스 프로필을 열어 새 양식을 제출하세요."

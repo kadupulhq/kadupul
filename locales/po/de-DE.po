@@ -8696,7 +8696,7 @@ msgstr "Modus"
 
 #: include/global_settings.php user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Modus, bei dem Kadupul versucht, sich gegen den LDAP-Server zu authentifizieren.<blockquote><i>No Searching</i> - Es erfolgt keine Suche nach dem Distinguished Name (DN), versuchen Sie einfach, sich mit dem angegebenen Distinguished Name (DN)-Format zu verbinden.<br><br><br><i> Anonyme Suche</i> - Versucht, nach Benutzernamen im LDAP-Verzeichnis über anonyme Bindung zu suchen, um den Distinguished Name (DN) des Benutzers zu finden.<br><br><br><i>Spezifische Suche</i> - Versucht, nach Benutzernamen im LDAP-Verzeichnis über Specific Distinguished Name (DN) und Specific Password for binding zu suchen, um den Distinguished Name (DN) des Benutzers zu finden."
+msgstr "Modus, bei dem Kadupul versucht, sich gegen den LDAP-Server zu authentifizieren.<blockquote><i>No Searching</i> - Es erfolgt keine Suche nach dem Distinguished Name (DN), versuchen Sie einfach, sich mit dem angegebenen Distinguished Name (DN)-Format zu verbinden.<br><br><i> Anonyme Suche</i> - Versucht, nach Benutzernamen im LDAP-Verzeichnis über anonyme Bindung zu suchen, um den Distinguished Name (DN) des Benutzers zu finden.<br><br><i>Spezifische Suche</i> - Versucht, nach Benutzernamen im LDAP-Verzeichnis über Specific Distinguished Name (DN) und Specific Password for binding zu suchen, um den Distinguished Name (DN) des Benutzers zu finden."
 
 #: include/global_settings.php
 msgid "Monthly on Sunday"
@@ -11044,7 +11044,7 @@ msgstr "Übersprungenes Ergebnis für Daten @'%s' [key='%s', value='%s']"
 #: lib/data_query.php
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
-msgstr "Das Sortierfeld lieferte keine Daten.  Re-Index für OID[%s] kann nicht fortgesetzt werden."
+msgstr "Das Sortierfeld lieferte keine Daten. Re-Index für OID[%s] kann nicht fortgesetzt werden."
 
 #: lib/data_query.php
 #, php-format
@@ -17202,7 +17202,7 @@ msgstr "Suchbasis für die Suche im LDAP-Verzeichnis, wie z.B. <i>\"dc=win2kdoma
 
 #: user_domains.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
-msgstr "Suchfilter, mit dem der Benutzer im LDAP-Verzeichnis gefunden werden kann, z. B. für Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*)))\"</i> oder für OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt)))\"</i>.  \"&lt;username&gt\" wird durch den Benutzernamen ersetzt, der bei der Anmeldeaufforderung angegeben wurde."
+msgstr "Suchfilter, mit dem der Benutzer im LDAP-Verzeichnis gefunden werden kann, z. B. für Windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> oder für OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" wird durch den Benutzernamen ersetzt, der bei der Anmeldeaufforderung angegeben wurde."
 
 #: user_domains.php
 msgid "TCP/UDP port for Non SSL communications."

@@ -8728,7 +8728,7 @@ msgstr "Режим"
 
 #: include/global_settings.php user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts to search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Режим, в котором кактусы будут пытаться аутентифицироваться на сервере LDAP.<blockquote><i>Нет поиска</i> - Не происходит поиск по различающимся именам (DN), просто попытайтесь связать с предоставленным форматом Distinguished Name (DN).<br><br><i>Анонимный поиск</i> - Попытки найти имя пользователя в директории LDAP путем анонимной привязки для определения местоположения различающегося имени пользователя (DN).<br><br><br><i>Специальный поиск</i> - Попытки найти имя пользователя в директории LDAP посредством привязки конкретного различаемого имени пользователя (DN и конкретного пароля)."
+msgstr "Режим, в котором Kadupul будет пытаться аутентифицироваться на сервере LDAP.<blockquote><i>Нет поиска</i> - Не происходит поиск по различающимся именам (DN), просто попытайтесь связать с предоставленным форматом Distinguished Name (DN).<br><br><i>Анонимный поиск</i> - Попытки найти имя пользователя в директории LDAP путем анонимной привязки для определения местоположения различающегося имени пользователя (DN).<br><br><i>Специальный поиск</i> - Попытки найти имя пользователя в директории LDAP посредством привязки конкретного различаемого имени пользователя (DN) и конкретного пароля)."
 
 #: include/global_settings.php
 msgid "Monthly on Sunday"
@@ -10841,7 +10841,7 @@ msgstr "Выполнение SNMP get for %s oids (%s)"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Выполнение команды SNMP get для данных @ '%s' [value='$value']]"
+msgstr "Выполнение команды SNMP get для данных @ '%s' [value='$value']"
 
 #: lib/data_query.php
 #, php-format
@@ -11066,7 +11066,7 @@ msgstr "Сохранение размера группового обхода н
 #: lib/data_query.php
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
-msgstr "Результат настройки для данных @ '%s' [ключ='%s', значение='%s']]"
+msgstr "Результат настройки для данных @ '%s' [ключ='%s', значение='%s']"
 
 #: lib/data_query.php
 #, php-format
@@ -13715,7 +13715,7 @@ msgstr "Не удалось обновить значения по умолча�
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "В разделе [mysqld] найдите записи с именами 'character#8209;set&#8209;server' и 'collation#8209;server' и задайте их следующим образом:"
+msgstr "В разделе [mysqld] найдите записи с именами 'character-set-server' и 'collation-server' и задайте их следующим образом:"
 
 #: lib/installer.php
 msgid "Unexpected path parameter"
@@ -18198,7 +18198,7 @@ msgstr "В журнале Kadupul сохраняются статистичес�
 
 #: utilities.php
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
-msgstr "Кэш Poller Cache будет сгенерирован заново, если вы выберете эту опцию. Используйте эту опцию только в случае сбоя базы данных, если у вас возникли проблемы после сбоя и вы уже запустили инструменты для восстановления базы данных.  В качестве альтернативы, если у вас возникли проблемы с конкретным устройством, просто сохраните это устройство для восстановления кэша Poller.  Существует также интерфейс командной строки, эквивалентный этой команде, который рекомендуется для больших систем.  <i class=\"deviceDown\">NOTE: На больших системах выполнение этой команды может занять от нескольких минут до нескольких часов и поэтому ее не следует запускать из интерфейса Kadupul UI.  Вы можете просто запустить 'php -q cli/rebuild_poller_cache.php --help' в командной строке для получения дополнительной информации.</i>."
+msgstr "Кэш Poller Cache будет сгенерирован заново, если вы выберете эту опцию. Используйте эту опцию только в случае сбоя базы данных, если у вас возникли проблемы после сбоя и вы уже запустили инструменты для восстановления базы данных.  В качестве альтернативы, если у вас возникли проблемы с конкретным устройством, просто сохраните это устройство для восстановления кэша Poller.  Существует также интерфейс командной строки, эквивалентный этой команде, который рекомендуется для больших систем."
 
 #: utilities.php
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."

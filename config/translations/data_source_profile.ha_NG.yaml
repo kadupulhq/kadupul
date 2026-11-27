@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Adadin bayanan da ba a sani ba wanda har yanzu za a iya ɗauka a matsayin sananne."
 "The default Data Source Profile cannot be deleted.": "Ba za a iya share Bayanin Tushen Bayanai na asali ba."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Ba za a iya share bayanin martaba na asali da bayanan martaba da Samfuran Bayanai ko Tushen Bayanai ke amfani da su ba."
-"The frequency that data will be collected from the Data Source.": "Yawan lokacin da za a tattara bayanai daga Tushen Bayanan?"
+"The frequency that data will be collected from the Data Source.": "Yawan lokacin da za a tattara bayanai daga Tushen Bayanan."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Adadin samfuran da ake buƙata kafin cika layi a cikin ƙayyadaddun RRA.  RRA na farko ya kamata koyaushe ya kasance yana da ƙimar 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Ba za a iya canza tazarar tattarawa, X-Files Factor, Ayyukan Haɗa Bayanai da RRAs ba."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Wannan tsohon fom ɗin Bayanin Tushen Bayanai ya ƙare. Buɗe Bayanan Tushen Bayanai kuma gabatar da sabon fom."

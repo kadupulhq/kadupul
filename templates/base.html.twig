@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ (app.request ? app.request.locale : 'en')|replace({'_': '-'}) }}">
+{% set html_locale = (app.request ? app.request.locale : 'en')|replace({'_': '-'}) %}
+<html lang="{{ html_locale }}"{% if locale_direction(html_locale) == 'rtl' %} dir="rtl"{% endif %}>
     <head>
         {% block head %}
         <meta charset="UTF-8">

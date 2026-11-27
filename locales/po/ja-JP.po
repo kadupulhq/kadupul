@@ -289,7 +289,7 @@ msgstr "以下の集計グラフをテンプレートベースの集計に移行
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graphs that utilize the same Graph Template."
-msgstr "以下の集計グラフをテンプレートベースの集計に移行するには、1つのグラフテンプレートのみを使用している必要があります。 &#39;Return&#39;を押してから、同じグラフテンプレートを利用するAggregate Graphのみを選択してください。"
+msgstr "以下の集計グラフをテンプレートベースの集計に移行するには、1つのグラフテンプレートのみを使用している必要があります。 'Return'を押してから、同じグラフテンプレートを利用するAggregate Graphのみを選択してください。"
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below to use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
@@ -2942,7 +2942,7 @@ msgstr "このグラフが基づいていたグラフテンプレートまたは
 
 #: graph_view.php graphs.php
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
-msgstr "このグラフのタイトル。通常は、グラフテンプレート定義または推奨命名規則からプログラム的に生成されます。タイトルの最大長は、設定 - &gt;ビジュアルで制御します。"
+msgstr "このグラフのタイトル。通常は、グラフテンプレート定義または推奨命名規則からプログラム的に生成されます。タイトルの最大長は、設定 ->ビジュアルで制御します。"
 
 #: graph_view.php
 msgid "The device for this Graph."
@@ -3236,7 +3236,7 @@ msgstr "グラフに推奨される名前を付け直す"
 
 #: graphs.php
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
-msgstr "使用する集約テンプレートを選択し、[続行]をクリックして集約グラフを作成します。さもなければ戻るために &#39;Cancel&#39;を押してください。"
+msgstr "使用する集約テンプレートを選択し、[続行]をクリックして集約グラフを作成します。さもなければ戻るために 'Cancel'を押してください。"
 
 #: graphs.php
 msgid "Selected Graph Template"
@@ -3984,7 +3984,7 @@ msgstr "ブーストステータス"
 
 #: include/global_arrays.php
 msgid "Bottom -> Up"
-msgstr "下 - &gt;上へ"
+msgstr "下 ->上へ"
 
 #: include/global_arrays.php
 msgid "Builtin Authentication"
@@ -4149,7 +4149,7 @@ msgstr "カスタム文字列"
 
 #: include/global_arrays.php
 msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
-msgstr "DEBUG  - 統計、エラー、結果、I / O、プログラムフロー"
+msgstr "DEBUG - 統計、エラー、結果、I / O、プログラムフロー"
 
 #: include/global_arrays.php
 msgid "DES"
@@ -4157,7 +4157,7 @@ msgstr "DES"
 
 #: include/global_arrays.php
 msgid "DEVEL - Developer DEBUG Level"
-msgstr "DEVEL  - 開発者向けDEBUGレベル"
+msgstr "DEVEL - 開発者向けDEBUGレベル"
 
 #: include/global_arrays.php
 msgid "Dark"
@@ -4541,7 +4541,7 @@ msgstr "ギリシャ語"
 
 #: include/global_arrays.php
 msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
-msgstr "HIGH  - 統計、エラー、結果、および主要なI / Oイベント"
+msgstr "HIGH - 統計、エラー、結果、および主要なI / Oイベント"
 
 #: include/global_arrays.php
 msgid "HPC/Grid Computing"
@@ -4724,7 +4724,7 @@ msgstr "LDAP"
 
 #: include/global_arrays.php
 msgid "LOW - Statistics and Errors"
-msgstr "LOW  - 統計とエラー"
+msgstr "LOW - 統計とエラー"
 
 #: include/global_arrays.php
 #, php-format
@@ -4833,7 +4833,7 @@ msgstr "MD5"
 
 #: include/global_arrays.php
 msgid "MEDIUM - Statistics, Errors and Results"
-msgstr "MEDIUM  - 統計、エラー、結果"
+msgstr "MEDIUM - 統計、エラー、結果"
 
 #: include/global_arrays.php
 msgid "Main Console"
@@ -4912,7 +4912,7 @@ msgstr "NAS/SAN関連"
 
 #: include/global_arrays.php
 msgid "NONE - Syslog Only if Selected"
-msgstr "NONE  - 選択した場合のみSyslog"
+msgstr "NONE - 選択した場合のみSyslog"
 
 #: include/global_arrays.php
 msgid "Natural Ordering"
@@ -5455,7 +5455,7 @@ msgstr "タイムスタンプ"
 
 #: include/global_arrays.php
 msgid "Top -> Down"
-msgstr "上 - &gt;下"
+msgstr "上 ->下"
 
 #: include/global_arrays.php
 msgid "Total All Data Sources"
@@ -6496,7 +6496,7 @@ msgstr "このフィールドをホスト用テンプレートで特別に扱う
 
 #: include/global_form.php
 msgid "If this graph item is a GPRINT, you can optionally choose another format here. You can define additional types under \"GPRINT Presets\"."
-msgstr "このグラフ項目がGPRINTの場合は、ここで別のフォーマットを選択できます。あなたは &quot;GPRINTプリセット&quot;の下で追加のタイプを定義することができます。"
+msgstr "このグラフ項目がGPRINTの場合は、ここで別のフォーマットを選択できます。あなたは \"GPRINTプリセット\"の下で追加のタイプを定義することができます。"
 
 #: include/global_form.php
 msgid "If you want to require a certain regular expression to be matched against input data, enter it here (preg_match format)."
@@ -6644,7 +6644,7 @@ msgstr "収集スレッド数"
 
 #: include/global_form.php
 msgid "Offset your data on the time axis (x-axis) by the amount specified in the 'value' field."
-msgstr "&#39;value&#39;フィールドで指定した量だけ時間軸（x軸）上のデータをオフセットしてください。"
+msgstr "'value'フィールドで指定した量だけ時間軸（x軸）上のデータをオフセットしてください。"
 
 #: include/global_form.php
 msgid "Only used if you have LDAP or Web Basic Authentication enabled.  Changing this to a non-enabled realm will effectively disable the user."
@@ -7208,7 +7208,7 @@ msgstr "--alt-autoscale-minを使用してください（上限を受け入れ�
 
 #: include/global_form.php
 msgid "Use <br> --alt-autoscale to scale to the absolute minimum and maximum <br> --alt-autoscale-max to scale to the maximum value, using a given lower limit <br> --alt-autoscale-min to scale to the minimum value, using a given upper limit <br> --alt-autoscale (with limits) to scale using both lower and upper limits (RRDtool default) <br>"
-msgstr "つかいます<br> --alt-autoscaleで絶対最小値と最大値に合わせます<br> --alt-autoscale-maxは、与えられた下限を使って最大値にスケールします<br> --alt-autoscale-min  - 与えられた上限を使って最小値にスケールする<br>下限と上限の両方を使用して拡大縮小する--alt-autoscale（制限あり）（RRDtoolのデフォルト） <br>"
+msgstr "つかいます<br> --alt-autoscaleで絶対最小値と最大値に合わせます<br> --alt-autoscale-maxは、与えられた下限を使って最大値にスケールします<br> --alt-autoscale-min - 与えられた上限を使って最小値にスケールする<br>下限と上限の両方を使用して拡大縮小する--alt-autoscale（制限あり）（RRDtoolのデフォルト） <br>"
 
 #: include/global_form.php
 msgid "Use Logarithmic y-axis scaling"
@@ -7712,7 +7712,7 @@ msgstr "独自のカスタムフォントとフォントサイズを使用する
 
 #: include/global_settings.php
 msgid "Client TimeZone Support"
-msgstr "MySQL  -  TimeZoneのサポート"
+msgstr "MySQL - TimeZoneのサポート"
 
 #: include/global_settings.php
 msgid "Color to use for business hours"
@@ -8372,7 +8372,7 @@ msgstr "Kadupulで日付をどのように提示しますか？この設定は�
 
 #: include/global_settings.php
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
-msgstr "Spineの出力エラーをどのように記録しますか。オプションは以下のとおりです。 &#39;Detailed&#39;これはcmd.phpロギングに似ています。デバイスごとの出力エラー数を提供する &#39;Summary&#39;。エラーカウントは表示されません。"
+msgstr "Spineの出力エラーをどのように記録しますか。オプションは以下のとおりです。 'Detailed'これはcmd.phpロギングに似ています。デバイスごとの出力エラー数を提供する 'Summary'。エラーカウントは表示されません。"
 
 #: include/global_settings.php
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
@@ -8672,7 +8672,7 @@ msgstr "マイブラウザのタイムゾーン"
 
 #: include/global_settings.php lib/html.php
 msgid "NaNs"
-msgstr "NaN&#39;s"
+msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
@@ -9360,7 +9360,7 @@ msgstr "OpenLDAP および Windows AD の両方の設定に適用可能な「識
 
 #: include/global_settings.php
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
-msgstr "スパイク除去が発生する基準時間。たとえば、 &#39;12：00am&#39;を使用していて1日に1回選択した場合、バッチの削除は毎日およそ午前0時に開始されます。"
+msgstr "スパイク除去が発生する基準時間。たとえば、 '12：00am'を使用していて1日に1回選択した場合、バッチの削除は毎日およそ午前0時に開始されます。"
 
 #: include/global_settings.php
 msgid "The Bind Timeout in seconds."
@@ -9612,7 +9612,7 @@ msgstr "1 つのデータソースがキューに保持できる拒否済みサ�
 
 #: include/global_settings.php
 msgid "The name of the guest user for viewing graphs; is 'No User' by default."
-msgstr "グラフを表示するためのゲストユーザの名前。デフォルトは &#39;No User&#39;です。"
+msgstr "グラフを表示するためのゲストユーザの名前。デフォルトは 'No User'です。"
 
 #: include/global_settings.php
 msgid "The name of the primary administrative account that will automatically receive Emails when the Kadupul system experiences issues.  To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set."
@@ -9620,7 +9620,7 @@ msgstr "Kadupulシステムに問題が発生したときに自動的にEメー�
 
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
-msgstr "Kadupulが新しいWeb BasicおよびLDAPユーザーのテンプレートとして使用するユーザーの名前。デフォルトでは &#39;guest&#39;です。このユーザーアカウントは選択されるとログインできなくなります。"
+msgstr "Kadupulが新しいWeb BasicおよびLDAPユーザーのテンプレートとして使用するユーザーの名前。デフォルトでは 'guest'です。このユーザーアカウントは選択されるとログインできなくなります。"
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
@@ -9784,7 +9784,7 @@ msgstr "テーマ設定"
 
 #: include/global_settings.php
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
-msgstr "交換方法は3つあります。最初の方法では、スパイクを問題のデータソースの平均に置き換えます。 2番目の方法は、スパイクを &#39;NaN&#39;に置き換えます。最後はスパイクを最後に見つかった既知の良好な値で置き換えます。"
+msgstr "交換方法は3つあります。最初の方法では、スパイクを問題のデータソースの平均に置き換えます。 2番目の方法は、スパイクを 'NaN'に置き換えます。最後はスパイクを最後に見つかった既知の良好な値で置き換えます。"
 
 #: include/global_settings.php
 msgid "There are two removal methods.  The first, Standard Deviation, will remove any sample that is X number of standard deviations away from the average of samples.  The second method, Variance, will remove any sample that is X% more than the Variance average.  The Variance method takes into account a certain number of 'outliers'.  Those are exceptional samples, like the spike, that need to be excluded from the Variance Average calculation."
@@ -9909,7 +9909,7 @@ msgstr "タイムスパン/シフト"
 
 #: include/global_settings.php
 msgid "TimeZone Support"
-msgstr "MySQL  -  TimeZoneのサポート"
+msgstr "MySQL - TimeZoneのサポート"
 
 #: include/global_settings.php
 msgid "Timeout"
@@ -10033,7 +10033,7 @@ msgstr "オプションがチェックされると、ユーザーはKadupulを�
 
 #: include/global_settings.php
 msgid "When boost sends update commands to RRDtool, it must not exceed the operating system's Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
-msgstr "boostがRRDtoolに更新コマンドを送るとき、それはオペレーティングシステムの最大引数長を超えてはならない。これはオペレーティングシステムとカーネルレベルによって異なります。例：Windows 2000 &lt;= 2048、FreeBSD &lt;= 65535、Linux 2.6.22-- &lt;= 131072、Linux 2.6.23 ++無制限"
+msgstr "boostがRRDtoolに更新コマンドを送るとき、それはオペレーティングシステムの最大引数長を超えてはならない。これはオペレーティングシステムとカーネルレベルによって異なります。例：Windows 2000 <= 2048、FreeBSD <= 65535、Linux 2.6.22-- <= 131072、Linux 2.6.23 ++無制限"
 
 #: include/global_settings.php
 msgid "When checked, Form and Setting Help will be shown inline.  Otherwise it will be presented when hovering over the help button."
@@ -10677,15 +10677,15 @@ msgstr "XMLファイルに&lt;arg_num_indexes&gt;が存在しますが、デー�
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
-msgstr "XMLファイルに&lt;arg_num_indexes&gt;がありません、 &#39;Index Count Changed&#39;はarg_indexエントリーをカウントすることによってエミュレート"
+msgstr "XMLファイルに&lt;arg_num_indexes&gt;がありません、 'Index Count Changed'はarg_indexエントリーをカウントすることによってエミュレート"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
-msgstr "XMLファイルに&lt;arg_num_indexes&gt;がありません、 &#39;Index Count Changed&#39;はサポートされていません"
+msgstr "XMLファイルに&lt;arg_num_indexes&gt;がありません、 'Index Count Changed'はサポートされていません"
 
 #: lib/data_query.php
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
-msgstr "XMLファイルに&lt;oid_num_indexes&gt;がありません、 &#39;Index Count Changed&#39;はoid_indexエントリをカウントすることによってエミュレートされました"
+msgstr "XMLファイルに&lt;oid_num_indexes&gt;がありません、 'Index Count Changed'はoid_indexエントリをカウントすることによってエミュレートされました"
 
 #: lib/data_query.php
 msgid "Auto Bulk Walk Size Selected."
@@ -10720,7 +10720,7 @@ msgstr "ソートフィールドの変更を確認しています。変更は検
 
 #: lib/data_query.php
 msgid "Click to show Data Query output for 'index'"
-msgstr "クリックして &#39;index&#39;のデータクエリ出力を表示する"
+msgstr "クリックして 'index'のデータクエリ出力を表示する"
 
 #: lib/data_query.php
 #, php-format
@@ -12065,7 +12065,7 @@ msgstr "このレポートを有効にするには、このボックスをオン
 
 #: lib/html_reports.php
 msgid "Choose the custom HTML wrapper and CSS file to use.  This file contains both HTML and CSS to wrap around your report.  If it contains more than simply CSS, you need to place a special <REPORT> tag inside of the file.  This format tag will be replaced by the report content.  These files are located in the 'formats' directory."
-msgstr "使用するカスタムHTMLラッパーとCSSファイルを選択します。このファイルには、レポートをまとめるためのHTMLとCSSの両方が含まれています。それが単なるCSS以上のものを含んでいるなら、特別なものを置く必要があります<REPORT>ファイル内のタグ。このフォーマットタグはレポートの内容に置き換えられます。これらのファイルは &#39;format&#39;ディレクトリにあります。"
+msgstr "使用するカスタムHTMLラッパーとCSSファイルを選択します。このファイルには、レポートをまとめるためのHTMLとCSSの両方が含まれています。それが単なるCSS以上のものを含んでいるなら、特別なものを置く必要があります<REPORT>ファイル内のタグ。このフォーマットタグはレポートの内容に置き換えられます。これらのファイルは 'format'ディレクトリにあります。"
 
 #: lib/html_reports.php
 msgid "Click 'Continue' to delete the following Report(s)."
@@ -12451,11 +12451,11 @@ msgstr "[新規]"
 
 #: lib/html_reports.php
 msgid "e.g. 'Week(s)' represents a weekly Reporting Interval."
-msgstr "例えば、 &#39;Week（s）&#39;は毎週の報告間隔を表します。"
+msgstr "例えば、 'Week（s）'は毎週の報告間隔を表します。"
 
 #: lib/html_reports.php
 msgid "e.g. If the Report Interval is 'Month(s)', then '2' indicates Every '2 Month(s) from the next Mailtime.' Lastly, if using the Month(s) Report Intervals, the 'Day of Week' and the 'Day of Month' are both calculated based upon the Mailtime you specify above."
-msgstr "たとえば、レポート間隔が「月」の場合、「2」は「次のメールタイムから2ヶ月ごと」を示します。最後に、月のレポート間隔を使用している場合、 &#39;Day of Week&#39;と &#39;Day of Month&#39;はどちらも上記で指定したMailtimeに基づいて計算されます。"
+msgstr "たとえば、レポート間隔が「月」の場合、「2」は「次のメールタイムから2ヶ月ごと」を示します。最後に、月のレポート間隔を使用している場合、 'Day of Week'と 'Day of Month'はどちらも上記で指定したMailtimeに基づいて計算されます。"
 
 #: lib/html_tree.php
 msgid "(Non Graph Template)"
@@ -13165,11 +13165,11 @@ msgstr "デバイステンプレート'%s'のマッピング自動化テンプ�
 
 #: lib/installer.php
 msgid "MySQL - Settings"
-msgstr "MySQL  - 設定"
+msgstr "MySQL - 設定"
 
 #: lib/installer.php
 msgid "MySQL - TimeZone Support"
-msgstr "MySQL  -  TimeZoneのサポート"
+msgstr "MySQL - TimeZoneのサポート"
 
 #: lib/installer.php
 #, php-format
@@ -13267,11 +13267,11 @@ msgstr "または structure_rra_paths.php --proceed を使用して RRA ディ�
 
 #: lib/installer.php
 msgid "PHP - Module Support (Optional)"
-msgstr "PHP  - モジュールサポート（オプション）"
+msgstr "PHP - モジュールサポート（オプション）"
 
 #: lib/installer.php
 msgid "PHP - Module Support (Required)"
-msgstr "PHP  - モジュールサポート（必須）"
+msgstr "PHP - モジュールサポート（必須）"
 
 #: lib/installer.php
 #, php-format
@@ -13300,7 +13300,7 @@ msgstr "パスは書き込み不可でした"
 
 #: lib/installer.php
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
-msgstr "先に進む前に、以下のディレクトリのアクセス権が正しいことを確認してください。インストール中、これらのディレクトリはWeb Serverユーザーが所有する必要があります。これらの権限の変更は、これらのディレクトリに配置されるXMLおよびスクリプトファイルを含むデバイステンプレートパッケージをインストーラがインストールすることを許可するために必要です。パッケージをインストールしないことを選択した場合、インストール完了後にコマンドラインから使用できる &#39;install_package.php&#39; cliスクリプトがあります。"
+msgstr "先に進む前に、以下のディレクトリのアクセス権が正しいことを確認してください。インストール中、これらのディレクトリはWeb Serverユーザーが所有する必要があります。これらの権限の変更は、これらのディレクトリに配置されるXMLおよびスクリプトファイルを含むデバイステンプレートパッケージをインストーラがインストールすることを許可するために必要です。パッケージをインストールしないことを選択した場合、インストール完了後にコマンドラインから使用できる 'install_package.php' cliスクリプトがあります。"
 
 #: lib/installer.php
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
@@ -13528,7 +13528,7 @@ msgstr "次のPHP拡張モジュールが推奨されており、Kadupulのイ�
 
 #: lib/installer.php
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
-msgstr "次の情報はKadupulの設定ファイルから決定されました。正しくない場合は、続行する前に &quot;include / config.php&quot;を編集してください。"
+msgstr "次の情報はKadupulの設定ファイルから決定されました。正しくない場合は、続行する前に \"include / config.php\"を編集してください。"
 
 #: lib/installer.php
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
@@ -13716,7 +13716,7 @@ msgstr "MySQL に MySQL TimeZone 情報をインポートし、Kadupul ユーザ
 
 #: lib/installer.php
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
-msgstr "新しいデータベースを指すように &quot;include / config.php&quot;を更新し<b>なければなりません</b> 。"
+msgstr "新しいデータベースを指すように \"include / config.php\"を更新し<b>なければなりません</b> 。"
 
 #: lib/installer.php
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
@@ -13764,7 +13764,7 @@ msgstr "あなたのKadupulデータベースアカウントはMySQL TimeZoneデ
 
 #: lib/installer.php
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
-msgstr "Kadupulデータベースのログインアカウントは、MySQL TimeZoneデータベースにアクセスできません。 &quot;mysql&quot;データベースの &quot;time_zone_name&quot;テーブルへのKadupulデータベースアカウントの &quot;select&quot;アクセスを提供し、先に進む前にMySQLのTimeZone情報を入力してください。"
+msgstr "Kadupulデータベースのログインアカウントは、MySQL TimeZoneデータベースにアクセスできません。 \"mysql\"データベースの \"time_zone_name\"テーブルへのKadupulデータベースアカウントの \"select\"アクセスを提供し、先に進む前にMySQLのTimeZone情報を入力してください。"
 
 #: lib/installer.php
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
@@ -18011,7 +18011,7 @@ msgstr "成功 - パスワード"
 
 #: utilities.php
 msgid "Success - Password Change"
-msgstr "成功 -  PSWD"
+msgstr "成功 - PSWD"
 
 #: utilities.php
 msgid "Success - Token"

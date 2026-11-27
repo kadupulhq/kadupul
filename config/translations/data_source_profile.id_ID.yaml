@@ -120,7 +120,7 @@
 "The amount of unknown data that can still be regarded as known.": "Jumlah data tidak diketahui yang masih dapat dianggap sebagai data diketahui."
 "The default Data Source Profile cannot be deleted.": "Profil Sumber Data bawaan tidak dapat dihapus."
 "The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.": "Profil bawaan dan profil yang sedang digunakan oleh Templat Data atau Sumber Data tidak dapat dihapus."
-"The frequency that data will be collected from the Data Source.": "Frekuensi pengumpulan data dari Sumber Data?"
+"The frequency that data will be collected from the Data Source.": "Frekuensi pengumpulan data dari Sumber Data."
 "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.": "Jumlah sampel yang diperlukan sebelum mengisi satu baris dalam spesifikasi RRA. RRA pertama harus selalu bernilai 1."
 "The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.": "Interval polling, X-Files Factor, Fungsi Konsolidasi, dan RRA tidak dapat diubah."
 "This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.": "Formulir Profil Sumber Data lama ini telah kedaluwarsa. Buka Profil Sumber Data dan kirim formulir baru."

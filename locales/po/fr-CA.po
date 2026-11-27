@@ -947,7 +947,7 @@ msgstr "Réseau"
 
 #: automation_devices.php
 msgid "No Devices Found"
-msgstr "Aucun périphérique n&apos;a été trouvé"
+msgstr "Aucun périphérique n'a été trouvé"
 
 #: automation_devices.php
 msgid "Not Detected"
@@ -2566,7 +2566,7 @@ msgstr "Modèle(s) de données en double"
 
 #: data_templates.php
 msgid "Edit Data Input Method."
-msgstr "PROCEDE D&#39;INTRODUCTION DE DONNEES."
+msgstr "PROCEDE D'INTRODUCTION DE DONNEES."
 
 #: data_templates.php
 #, php-format
@@ -5909,7 +5909,7 @@ msgstr "corresponds"
 
 #: include/global_arrays.php
 msgid "matches regular expression"
-msgstr "correspond à l&apos;expression rationnelle"
+msgstr "correspond à l'expression rationnelle"
 
 #: include/global_arrays.php
 msgid "mins"
@@ -6158,7 +6158,7 @@ msgstr "Choisissez une requête de données à appliquer à cette règle."
 
 #: include/global_form.php
 msgid "Choose a Sub-Tree Item to hook in.<br>Make sure that it is still there when this rule is executed!"
-msgstr "Choisissez un élément Sub-Tree à accrocher.<br>Assurez-vous qu'il est toujours là lorsque cette règle est exécutée&nbsp;!"
+msgstr "Choisissez un élément Sub-Tree à accrocher.<br>Assurez-vous qu'il est toujours là lorsque cette règle est exécutée !"
 
 #: include/global_form.php
 msgid "Choose a Tree for the new Tree Items."
@@ -6539,7 +6539,7 @@ msgstr "Si LA LIGNE a été choisie, spécifiez la largeur de la ligne ici.  Vou
 
 #: include/global_form.php
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
-msgstr "Afin d'éviter les effets de flou anti-aliasing, RRDtool accroche les points aux pixels de résolution de l'appareil, ce qui donne une apparence plus nette. Si cela ne vous convient pas, vous pouvez utiliser cet interrupteur pour désactiver ce comportement.<br><strong>Remarque&nbsp;: </strong>le Gridfitting est désactivé par défaut pour les sorties PDF, EPS, SVG."
+msgstr "Afin d'éviter les effets de flou anti-aliasing, RRDtool accroche les points aux pixels de résolution de l'appareil, ce qui donne une apparence plus nette. Si cela ne vous convient pas, vous pouvez utiliser cet interrupteur pour désactiver ce comportement.<br><strong>Remarque : </strong>le Gridfitting est désactivé par défaut pour les sorties PDF, EPS, SVG."
 
 #: include/global_form.php
 msgid "Include Prefix Text"
@@ -6763,7 +6763,7 @@ msgstr "Publier"
 
 #: include/global_form.php
 msgid "RRA Size (in Bytes)"
-msgstr "Taille (en octets) ;"
+msgstr "Taille (en octets)"
 
 #: include/global_form.php
 msgid "RRDfile Size (in Bytes)"
@@ -7011,11 +7011,11 @@ msgstr "Le motif à assortir."
 
 #: include/global_form.php
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "Le modèle de chaîne de remplacement à utiliser comme en-tête d'arbre.<br>Reportez-vous à un match par exemple<strong>\\${1}</strong> pour le premier match&nbsp;!"
+msgstr "Le modèle de chaîne de remplacement à utiliser comme en-tête d'arbre.<br>Reportez-vous à un match par exemple<strong>\\${1}</strong> pour le premier match !"
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "Le modèle de chaîne (expression régulière) contre lequel correspondre.<br>L'inclusion de «/» <strong>NE DOIT PAS</strong> être fournie&nbsp;!"
+msgstr "Le modèle de chaîne (expression régulière) contre lequel correspondre.<br>L'inclusion de «/» <strong>NE DOIT PAS</strong> être fournie !"
 
 #: include/global_form.php package_import.php
 msgid "The Width to be used when importing or updating Graph Templates."
@@ -7023,7 +7023,7 @@ msgstr "La largeur à utiliser lors de l'importation ou de la mise à jour des m
 
 #: include/global_form.php
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
-msgstr "L'algorithme garantit que vous avez toujours une grille, qu'il y a suffisamment mais pas trop de lignes de grille, et que la grille est métrique. Ce paramètre veillera également à ce que vous obteniez suffisamment de décimales affichées même si votre graphique passe de 69,998 à 70,001.<br><strong>Remarque&nbsp;: </strong>ce paramètre peut interférer avec les options --alt-autoscale."
+msgstr "L'algorithme garantit que vous avez toujours une grille, qu'il y a suffisamment mais pas trop de lignes de grille, et que la grille est métrique. Ce paramètre veillera également à ce que vous obteniez suffisamment de décimales affichées même si votre graphique passe de 69,998 à 70,001.<br><strong>Remarque : </strong>ce paramètre peut interférer avec les options --alt-autoscale."
 
 #: include/global_form.php
 msgid "The amount of time in seconds between expected updates."
@@ -7175,7 +7175,7 @@ msgstr "Le type de graphique généré ; PNG, GIF ou SVG.  La sélection du typ
 
 #: include/global_form.php
 msgid "The type of ping packet to send.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "Le type de paquet ping à envoyer.  <br><i>REMARQUE&nbsp;: ICMP sur Linux/Unix nécessite des privilèges root.</i>  <br><i>REMARQUE&nbsp;: TCP Ping fermé - Même si le ping tcp ne réussit pas, l'appareil peut être considéré comme UP.</i>"
+msgstr "Le type de paquet ping à envoyer.  <br><i>REMARQUE : ICMP sur Linux/Unix nécessite des privilèges root.</i>  <br><i>REMARQUE : TCP Ping fermé - Même si le ping tcp ne réussit pas, l'appareil peut être considéré comme UP.</i>"
 
 #: include/global_form.php
 msgid "The width (in pixels) of the graph area within the graph. This area does not include the legend, axis legends, or title."
@@ -7239,7 +7239,7 @@ msgstr "Utiliser une mise à l'échelle logarithmique sur l'axe des y"
 
 #: include/global_form.php
 msgid "Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default."
-msgstr "Utilisez les unités SI pour la mise à l'échelle logarithmique au lieu d'utiliser la notation exponentielle.<br> Remarque&nbsp;: les graphiques linéaires utilisent la notation SI par défaut."
+msgstr "Utilisez les unités SI pour la mise à l'échelle logarithmique au lieu d'utiliser la notation exponentielle.<br> Remarque : les graphiques linéaires utilisent la notation SI par défaut."
 
 #: include/global_form.php
 msgid "Use this Option to create e.g. STACKed graphs.<br>AREA/STACK: 1st graph keeps AREA/STACK items, others convert to STACK<br>LINE1: all items convert to LINE1 items<br>LINE2: all items convert to LINE2 items<br>LINE3: all items convert to LINE3 items"
@@ -7491,7 +7491,7 @@ msgstr "Avancé"
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé&nbsp;: 62 jours"
+msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé : 62 jours"
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
@@ -7543,7 +7543,7 @@ msgstr "Un compte sera automatiquement déverrouillé après ces nombreuses minu
 
 #: include/global_settings.php
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
-msgstr "Toutes les chaînes qui correspondent à ce regex seront exclues de l'affichage utilisateur.  <strong>Par exemple, si vous souhaitez exclure toutes les lignes de journal qui incluent les mots «&nbsp;Admin&nbsp;» ou «&nbsp;Connexion&nbsp;», vous devez taper «&nbsp;(Admin || Connexion)&nbsp;»</strong>"
+msgstr "Toutes les chaînes qui correspondent à ce regex seront exclues de l'affichage utilisateur.  <strong>Par exemple, si vous souhaitez exclure toutes les lignes de journal qui incluent les mots « Admin » ou « Connexion », vous devez taper « (Admin || Connexion) »</strong>"
 
 #: include/global_settings.php
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
@@ -7783,7 +7783,7 @@ msgstr "Options DNS"
 
 #: include/global_settings.php
 msgid "DNS Timeout"
-msgstr "D&#233;lai"
+msgstr "Délai"
 
 #: include/global_settings.php
 msgid "Daily Update Frequency"
@@ -8587,7 +8587,7 @@ msgstr "Actualisation de la queue du journal"
 
 #: include/global_settings.php
 msgid "Log Viewer Settings"
-msgstr "Paramètres d&apos; affichage"
+msgstr "Paramètres d' affichage"
 
 #: include/global_settings.php
 msgid "Logging"
@@ -9083,7 +9083,7 @@ msgstr "Port SMTP"
 
 #: include/global_settings.php
 msgid "SMTP Security"
-msgstr "SMTP  Sécurité"
+msgstr "SMTP Sécurité"
 
 #: include/global_settings.php
 msgid "SMTP Timeout"
@@ -9231,7 +9231,7 @@ msgstr "Titre du graphique"
 
 #: include/global_settings.php
 msgid "Show business hours"
-msgstr "Montrer les heures d’ouverture?"
+msgstr "Montrer les heures d’ouverture"
 
 #: include/global_settings.php
 msgid "Show only locations that are available at a device's selected site."
@@ -9743,7 +9743,7 @@ msgstr "Le chemin vers votre binaire snmptrap."
 
 #: include/global_settings.php
 msgid "The path to your snmpwalk binary."
-msgstr "Chemin de l'exécutable  snmpwalk."
+msgstr "Chemin de l'exécutable snmpwalk."
 
 #: include/global_settings.php
 msgid "The poller type to use.  This setting will take effect at next polling interval."
@@ -10455,7 +10455,7 @@ msgstr "Impossible de supprimer l'appareil %s parce que ses enregistrements en b
 
 #: lib/api_device.php
 msgid "Uptime:"
-msgstr "Temps d&apos;activation &#160;:"
+msgstr "Temps d'activation :"
 
 #: lib/api_tree.php
 msgid "New Branch"
@@ -11255,7 +11255,7 @@ msgstr "Se déconnecter"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Erreur de messagerie&nbsp;: Aucune adresse de destinataire définie!!<br>Si vous utilisez le lien <i>Courriel test</i>, veuillez définir le paramètre <b>Courriel d'alerte</b>."
+msgstr "Erreur de messagerie : Aucune adresse de destinataire définie!!<br>Si vous utilisez le lien <i>Courriel test</i>, veuillez définir le paramètre <b>Courriel d'alerte</b>."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11581,7 +11581,7 @@ msgstr "Erreur :"
 
 #: lib/html.php
 msgid "Execute Action"
-msgstr "Exécuter une action…"
+msgstr "Exécuter une action"
 
 #: lib/html.php
 msgid "Failed to find data to copy!"
@@ -12881,7 +12881,7 @@ msgstr "Utilisateur de la base de données : <b>%s</b> Utilisateur de la base de
 #: lib/installer.php
 #, php-format
 msgid "Database: <b>%s</b>"
-msgstr "Base de données&nbsp;: <b>%s</b>"
+msgstr "Base de données : <b>%s</b>"
 
 #: lib/installer.php
 msgid "Default Automation Network"
@@ -13347,7 +13347,7 @@ msgstr "Veuillez sélectionner le profil de source de données par défaut à ut
 
 #: lib/installer.php
 msgid "Please select the type of installation"
-msgstr "Sélectionnez le type d&apos;installation"
+msgstr "Sélectionnez le type d'installation"
 
 #: lib/installer.php
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
@@ -13356,7 +13356,7 @@ msgstr "Veuillez mettre à jour config.php avec l'emplacement URI relatif exact 
 #: lib/installer.php
 #, php-format
 msgid "Port: <b>%s</b>"
-msgstr "Port&nbsp;: <b>%s</b>"
+msgstr "Port : <b>%s</b>"
 
 #: lib/installer.php
 msgid "Potential permission issues"
@@ -13473,7 +13473,7 @@ msgstr "classement du serveur"
 #: lib/installer.php
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
-msgstr "Type de système d'exploitation du serveur&nbsp;: <b>%s</b>"
+msgstr "Type de système d'exploitation du serveur : <b>%s</b>"
 
 #: lib/installer.php
 #, php-format
@@ -15885,7 +15885,7 @@ msgstr "ID DS"
 
 #: rrdcleaner.php
 msgid "DS Name"
-msgstr "Nom du  DS"
+msgstr "Nom du DS"
 
 #: rrdcleaner.php tree.php
 msgctxt "dropdown action"
@@ -16401,7 +16401,7 @@ msgstr "Satisfait : %d"
 
 #: templates_import.php
 msgid "Not Readable"
-msgstr "Pas lisible ?"
+msgstr "Pas lisible"
 
 #: templates_import.php
 #, php-format
@@ -16702,19 +16702,19 @@ msgstr "Il ya 1 semaine"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la politique du graphique système est «&nbsp;Appareil&nbsp;», ce qui signifie que l'utilisateur doit avoir accès au graphique ou à l'appareil pour accéder au graphique"
+msgstr "<b>Remarque :</b> la politique du graphique système est « Appareil », ce qui signifie que l'utilisateur doit avoir accès au graphique ou à l'appareil pour accéder au graphique"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la stratégie de graphique système est un «&nbsp;modèle de graphique&nbsp;», ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de graphique pour accéder au graphique"
+msgstr "<b>Remarque :</b> la stratégie de graphique système est un « modèle de graphique », ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de graphique pour accéder au graphique"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la stratégie de graphique système est «&nbsp;Permissive&nbsp;», ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, un périphérique ou un modèle de graphique pour accéder au graphique"
+msgstr "<b>Remarque :</b> la stratégie de graphique système est « Permissive », ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, un périphérique ou un modèle de graphique pour accéder au graphique"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la stratégie de graphique système est «&nbsp;restrictive&nbsp;», ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de périphérique et de graphique pour accéder au graphique"
+msgstr "<b>Remarque :</b> la stratégie de graphique système est « restrictive », ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de périphérique et de graphique pour accéder au graphique"
 
 #: user_admin.php
 msgid "> 1 Month Ago"
@@ -16905,7 +16905,7 @@ msgstr "Dernière connection"
 
 #: user_admin.php user_group_admin.php
 msgid "Legacy Permissions"
-msgstr "Autorisations  antérieures"
+msgstr "Autorisations antérieures"
 
 #: user_admin.php
 msgid "Member"
@@ -16961,7 +16961,7 @@ msgstr "Royaume :"
 
 #: user_admin.php
 msgid "Remove Membership"
-msgstr "Supprimer l'appartenance ?"
+msgstr "Supprimer l'appartenance"
 
 #: user_admin.php
 msgid "Reset User(s) Settings"
@@ -18058,12 +18058,12 @@ msgstr "Niveau de gravité : %s"
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime&nbsp;: %s (secondes), PrevProcessed&nbsp;: %10s (lignes ds)"
+msgstr "Statut : <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime : %s (secondes), PrevProcessed : %10s (lignes ds)"
 
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant&nbsp;: %s (dses), CurrentRuntime&nbsp;: %s (secs), PrevRuntime&nbsp;: %s (secs), PrevProcessed&nbsp;: %10s (ds lignes)"
+msgstr "Statut : <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant : %s (dses), CurrentRuntime : %s (secs), PrevRuntime : %s (secs), PrevProcessed : %10s (ds lignes)"
 
 #: utilities.php
 msgid "Success - Password"

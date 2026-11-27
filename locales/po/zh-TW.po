@@ -7715,7 +7715,7 @@ msgstr "選擇要使用您自己的自訂字型與字型大小，或使用系統
 
 #: include/global_settings.php
 msgid "Client TimeZone Support"
-msgstr "MySQL  -  TimeZone支持"
+msgstr "MySQL - TimeZone支持"
 
 #: include/global_settings.php
 msgid "Color to use for business hours"
@@ -9119,7 +9119,7 @@ msgstr "用於搜索LDAP目錄的搜索庫，例如<i>“dc = win2kdomain，dc =
 
 #: include/global_settings.php
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
-msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>&#39;（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））&#39;</i>或OpenLDAP： <i>&#39;（＆（objectClass） = account）（uid = &lt;username&gt;））&#39;</i> 。 &#39;&lt;username&gt;&#39;將替換為登錄提示符下提供的用戶名。 "
+msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>'（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））'</i>或OpenLDAP： <i>'（＆（objectClass） = account）（uid = &lt;username&gt;））'</i> 。 '&lt;username&gt;'將替換為登錄提示符下提供的用戶名。 "
 
 #: include/global_settings.php
 msgid "Secondary DNS IP Address"
@@ -9912,7 +9912,7 @@ msgstr "時間範圍/位移"
 
 #: include/global_settings.php
 msgid "TimeZone Support"
-msgstr "MySQL  -  TimeZone支持"
+msgstr "MySQL - TimeZone支持"
 
 #: include/global_settings.php
 msgid "Timeout"

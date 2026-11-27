@@ -635,7 +635,7 @@ msgstr "Veuillez entrer votre mot de passe courant et votre nouveau<br>mot de pa
 
 #: auth_changepassword.php
 msgid "Please enter your new Kadupul password."
-msgstr "Veuillez entrer votre mot de passe actuel et votre nouveau mot de passe <br>Kadupul."
+msgstr "Veuillez saisir votre nouveau mot de passe Kadupul."
 
 #: auth_changepassword.php auth_profile.php graphs_new.php lib/html_form.php
 #: lib/html_graph.php lib/html_tree.php settings.php
@@ -945,7 +945,7 @@ msgstr "Réseau"
 
 #: automation_devices.php
 msgid "No Devices Found"
-msgstr "Aucun périphérique n&apos;a été trouvé"
+msgstr "Aucun périphérique n'a été trouvé"
 
 #: automation_devices.php
 msgid "Not Detected"
@@ -2999,11 +2999,11 @@ msgstr "VOUS N'AVEZ PAS LES DROITS POUR CONSULTER L'ARBRE DES VUES"
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filter FROM List ]"
-msgstr "Liste graphique personnalisée appliquée - Filtre de la liste ]"
+msgstr "[ Liste graphique personnalisée appliquée - Filtre de la liste ]"
 
 #: graph_view.php
 msgid "[ Custom Graph List Applied - Filtering from List ]"
-msgstr "Liste graphique personnalisée appliquée - Filtrage à partir d'une liste ]"
+msgstr "[ Liste graphique personnalisée appliquée - Filtrage à partir d'une liste ]"
 
 #: graph_xport.php utilities.php
 msgid "Date"
@@ -5907,7 +5907,7 @@ msgstr "corresponds"
 
 #: include/global_arrays.php
 msgid "matches regular expression"
-msgstr "correspond à l&apos;expression rationnelle"
+msgstr "correspond à l'expression rationnelle"
 
 #: include/global_arrays.php
 msgid "mins"
@@ -7489,7 +7489,7 @@ msgstr "Avancé"
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé&nbsp;: 62 jours"
+msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé : 62 jours"
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
@@ -9081,7 +9081,7 @@ msgstr "Port SMTP"
 
 #: include/global_settings.php
 msgid "SMTP Security"
-msgstr "SMTP  Sécurité"
+msgstr "SMTP Sécurité"
 
 #: include/global_settings.php
 msgid "SMTP Timeout"
@@ -9741,7 +9741,7 @@ msgstr "Le chemin vers votre binaire snmptrap."
 
 #: include/global_settings.php
 msgid "The path to your snmpwalk binary."
-msgstr "Chemin de l'exécutable  snmpwalk."
+msgstr "Chemin de l'exécutable snmpwalk."
 
 #: include/global_settings.php
 msgid "The poller type to use.  This setting will take effect at next polling interval."
@@ -10453,7 +10453,7 @@ msgstr "Impossible de supprimer le périphérique %s car ses enregistrements en 
 
 #: lib/api_device.php
 msgid "Uptime:"
-msgstr "Temps d&apos;activation &#160;:"
+msgstr "Temps d'activation :"
 
 #: lib/api_tree.php
 msgid "New Branch"
@@ -13668,7 +13668,7 @@ msgstr "Impossible de mettre à jour les paramètres par défaut de l'applicatio
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
-msgstr "Dans la section[mysqld], localisez les entrées nommées'character&#8209;set&#8209;server' et'collation&#8209;server' et réglez-les comme suit :"
+msgstr "Dans la section[mysqld], localisez les entrées nommées'character-set-server' et'collation-server' et réglez-les comme suit :"
 
 #: lib/installer.php
 msgid "Unexpected path parameter"
@@ -17982,7 +17982,7 @@ msgstr "Enregistrements : %s (lignes ds), Time : %s (secs), GetRows : %s (sec
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Réduisez la mémoire MySQL/MariaDB à moins de 80% of de mémoire système.  Conservez une mémoire cache supplémentaire pour les fichiers RRD si la base de données est sur le même système que les fichiers RRD.  Voir les Totaux de base et de clients ci-dessous pour une explication de la méthode de calcul."
+msgstr "Réduisez la mémoire MySQL/MariaDB à moins de 80% de la mémoire système.  Conservez une mémoire cache supplémentaire pour les fichiers RRD si la base de données est sur le même système que les fichiers RRD.  Voir les Totaux de base et de clients ci-dessous pour une explication de la méthode de calcul."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"
@@ -18056,12 +18056,12 @@ msgstr "Niveau de gravité : %s"
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime&nbsp;: %s (secondes), PrevProcessed&nbsp;: %10s (lignes ds)"
+msgstr "Statut : <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime : %s (secondes), PrevProcessed : %10s (lignes ds)"
 
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant&nbsp;: %s (dses), CurrentRuntime&nbsp;: %s (secs), PrevRuntime&nbsp;: %s (secs), PrevProcessed&nbsp;: %10s (ds lignes)"
+msgstr "Statut : <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant : %s (dses), CurrentRuntime : %s (secs), PrevRuntime : %s (secs), PrevProcessed : %10s (ds lignes)"
 
 #: utilities.php
 msgid "Success - Password"

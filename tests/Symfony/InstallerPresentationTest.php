@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace Kadupul\Tests;
 
+use Kadupul\Platform\Infrastructure\Symfony\LocaleDirection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 final class InstallerPresentationTest extends TestCase
 {
@@ -26,6 +28,7 @@ final class InstallerPresentationTest extends TestCase
         $translator->addResource('yaml', $root . '/config/translations/installer.' . $locale . '.yaml', $locale, 'installer');
         $twig = new Environment(new FilesystemLoader($root . '/templates'), ['strict_variables' => true]);
         $twig->addExtension(new TranslationExtension($translator));
+        $twig->addFunction(new TwigFunction('locale_direction', (new LocaleDirection())->direction(...)));
         $plan = array_replace([
             'mode' => 'install', 'target' => '1.2.38', 'schema' => 'new_install', 'collector' => 1,
             'job' => ['state' => 'not_started', 'phase' => 'Starting', 'progress' => 0, 'error' => null, 'attempt' => 0],
@@ -110,5 +113,16 @@ final class InstallerPresentationTest extends TestCase
         self::assertSame('La restauration des sauvegardes n’a pas été testée.', $xpath->evaluate('string(//section[h2[@id="health"]]//tbody/tr[3]/td[2])'));
         $xpath = $this->render(['mode' => 'complete', 'job' => ['state' => 'succeeded', 'phase' => 'Finished', 'progress' => 100, 'error' => null]]);
         self::assertStringContainsString('Operational checks still require operator verification.', $xpath->evaluate('string(//section[h2[@id="health"]])'));
+    }
+
+    public function testHtmlRootSetsRtlDirectionOnlyForRtlLocales(): void
+    {
+        $ltr = $this->render([], 'en');
+        self::assertSame('en', $ltr->evaluate('string(/html/@lang)'));
+        self::assertSame('', $ltr->evaluate('string(/html/@dir)'));
+
+        $rtl = $this->render([], 'ar_SA');
+        self::assertSame('ar_SA', $rtl->evaluate('string(/html/@lang)'));
+        self::assertSame('rtl', $rtl->evaluate('string(/html/@dir)'));
     }
 }

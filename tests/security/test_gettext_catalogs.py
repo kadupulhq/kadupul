@@ -105,7 +105,7 @@ class GettextCatalogIntegrityTest(unittest.TestCase):
             ("de-DE.po", ("", "Delete", ""), "Löschen", "Löschen!.", "ends with '!.'"),
             ("de-DE.po", ("", "Delete", ""), "Löschen", "Löschen?.", "ends with '\\?.'"),
             ("de-DE.po", ("", "Width (--width)", ""), "Breite (--width)", "Breite (--Breite)", "drops the RRDtool option --width"),
-            ("fr-FR.po", ("", "Uptime:", ""), "&#160;:", "& #160;:", "splits an HTML entity"),
+            ("fr-FR.po", ("", "Uptime:", ""), "\u00a0:", "& #160;:", "splits an HTML entity"),
         )
         for name, key, old, new, reason in cases:
             with self.subTest(name=name, new=new):
