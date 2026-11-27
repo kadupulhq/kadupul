@@ -11,6 +11,7 @@ use Doctrine\DBAL\Connection;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleOperator;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
+use Kadupul\IdentityAccess\Infrastructure\Persistence\DbalSessionCredentialGeneration;
 
 /**
  * The command line has no session. Shell access with a readable config.php
@@ -165,13 +166,14 @@ final class CliConsoleAccess implements ConsoleOperator
     /** The credential generation the web session was bound to, as LegacyAuthenticatedSession checks it. */
     private function sessionCredentialMatches(int $id, mixed $password): bool
     {
-        $native = $this->database()->getNativeConnection();
-        if (!$native instanceof \PDO || !is_string($password) || !is_string($this->sessionCredential)) {
+        if (!is_string($password) || !is_string($this->sessionCredential)) {
             return false;
         }
-        require_once dirname(__DIR__, 4) . '/lib/auth.php';
 
-        return hash_equals(\auth_session_credential_generation($id, $password, $native), $this->sessionCredential);
+        return hash_equals(
+            DbalSessionCredentialGeneration::forAccount($this->database(), $id, $password),
+            $this->sessionCredential,
+        );
     }
 
     private function hasDirectRealm(int $id, int $realm): bool

@@ -62,7 +62,6 @@ return (new Configuration())
     ], [ErrorType::UNUSED_DEPENDENCY])
     // Loaded by the framework from config/packages, not by a class reference.
     ->ignoreErrorsOnPackages([
-        'symfony/http-client',
         'symfony/yaml',
     ], [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackages([

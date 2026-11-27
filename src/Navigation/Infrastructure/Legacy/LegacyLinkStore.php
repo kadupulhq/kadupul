@@ -13,6 +13,7 @@ use Kadupul\Navigation\Domain\ExternalLink;
 use Kadupul\Navigation\Domain\LinkConflict;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
+use Kadupul\IdentityAccess\Contract\RealmGrantManager;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Platform\Contract\PlatformConfiguration;
@@ -20,13 +21,14 @@ use Kadupul\Platform\Contract\PlatformConfiguration;
 /** External links in the legacy external_links table. Every write runs in one audited transaction, is checked against the list revision and keeps the per-link permission realm (10000 plus the link id) in step. */
 final readonly class LegacyLinkStore implements LinkStore
 {
-    /** Wires the database, access check, audit trail and configuration. */
+    /** Wires the database, access check, audit trail, configuration and realm grant manager. */
     public function __construct(
         private DatabaseConnection $database,
         private LinkAccess $access,
         private AuditTrail $audit,
         private LegacyConfiguration $configuration,
-        private PlatformConfiguration $platform
+        private PlatformConfiguration $platform,
+        private RealmGrantManager $realmGrants,
     ) {}
     /** Lists the regular files in include/content, sorted by name, skipping links, README and index.php. */
     public function files(): array
@@ -117,26 +119,8 @@ final readonly class LegacyLinkStore implements LinkStore
             if ($id < 1 || $id > 16767215) {
                 throw new \RuntimeException('Link authorization realm capacity exceeded.');
             }
-            $db->prepare('REPLACE INTO user_auth_realm (user_id, realm_id) VALUES (?, ?)')->execute([$actorId, $id + 10000]);
-            // The viewer caches denied realms too. Commit its new grant and a
-            // different nonzero uint32 permission generation as one operation.
-            $current = $db->prepare('SELECT reset_perms FROM user_auth WHERE id = ?');
-            $current->execute([$actorId]);
-            $previous = $current->fetchColumn();
-            if ($previous === false || filter_var($previous, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 4294967295]]) === false) {
-                throw new \RuntimeException('Link permission generation unavailable.');
-            }
-            $expected = (int) $previous === 4294967295 ? 1 : (int) $previous + 1;
-            $current->closeCursor();
-            $epoch = $db->prepare('UPDATE user_auth SET reset_perms = (reset_perms % 4294967295) + 1 WHERE id = ?');
-            if (!$epoch->execute([$actorId]) || $epoch->rowCount() !== 1) {
-                throw new \RuntimeException('Link permission invalidation was not confirmed.');
-            }
-            $current->execute([$actorId]);
-            if ((int) $current->fetchColumn() !== $expected) {
-                throw new \RuntimeException('Link permission invalidation readback changed.');
-            }
-            $current->closeCursor();
+            // The viewer caches denied realms too; delegate grant and epoch bump to IdentityAccess.
+            $this->realmGrants->grantRealmAndInvalidateCache($actorId, $id + 10000);
             return $id;
         });
     }
@@ -175,8 +159,7 @@ final readonly class LegacyLinkStore implements LinkStore
             foreach ($ids as $id) {
                 if ($operation === 'delete') {
                     $db->prepare('DELETE FROM external_links WHERE id = ?')->execute([$id]);
-                    $db->prepare('DELETE FROM user_auth_realm WHERE realm_id = ?')->execute([$id + 10000]);
-                    $db->prepare('DELETE FROM user_auth_group_realm WHERE realm_id = ?')->execute([$id + 10000]);
+                    $this->realmGrants->revokeRealm($id + 10000);
                 } else {
                     $db->prepare('UPDATE external_links SET enabled = ? WHERE id = ?')->execute([$operation === 'enable' ? 'on' : '', $id]);
                 }
@@ -200,13 +183,7 @@ final readonly class LegacyLinkStore implements LinkStore
             if ($action === 'save') {
                 // Acquire the actor's exclusive lock before authorization's
                 // shared reads, avoiding a shared-to-exclusive lock upgrade.
-                $suffix = $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
-                $actor = $db->prepare('SELECT id FROM user_auth WHERE id = ?' . $suffix);
-                if (!$actor->execute([$actorId])) {
-                    throw new \RuntimeException('Link actor lock was not confirmed.');
-                }
-                $actor->fetchColumn();
-                $actor->closeCursor();
+                $this->realmGrants->lockActorForGrant($actorId);
             }
             $this->access->assertCurrent($actorId);
             $decision = AuditEvent::ALLOWED;

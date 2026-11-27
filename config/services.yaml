@@ -872,6 +872,64 @@ services:
         arguments:
             $database: '@doctrine.dbal.local_connection'
 
+    Kadupul\Platform\Infrastructure\Persistence\DbalSettingsWriter:
+        arguments:
+            $connection: '@doctrine.dbal.main_connection'
+    Kadupul\Platform\Contract\SettingsWriter:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalSettingsWriter
+
+    Kadupul\Platform\Infrastructure\Persistence\DbalUserPreferenceStore:
+        arguments:
+            $connection: '@doctrine.dbal.main_connection'
+    Kadupul\Platform\Contract\UserPreferenceStore:
+        alias: Kadupul\Platform\Infrastructure\Persistence\DbalUserPreferenceStore
+
+    Kadupul\Platform\Infrastructure\Http\SymfonyHttpClient:
+        arguments:
+            $client: '@http_client'
+    Kadupul\Platform\Contract\HttpClient:
+        alias: Kadupul\Platform\Infrastructure\Http\SymfonyHttpClient
+
+    Kadupul\IdentityAccess\Contract\RealmGrantManager:
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\InstallationRealmGrantManager
+
+    Kadupul\Extensions\Infrastructure\:
+        resource: '../src/Extensions/Infrastructure/'
+        exclude:
+            - '../src/Extensions/Infrastructure/Symfony/DispatchedHookEvent.php'
+    Kadupul\Extensions\Infrastructure\Persistence\DbalPluginRegistry:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\Extensions\Application\Port\PluginStore:
+        alias: Kadupul\Extensions\Infrastructure\Persistence\DbalPluginRegistry
+    Kadupul\Extensions\Application\Port\HookBus:
+        alias: Kadupul\Extensions\Infrastructure\Symfony\SymfonyEventHookDispatcher
+    Kadupul\Extensions\Application\UseCase\DispatchHook: ~
+    Kadupul\Extensions\Application\UseCase\ListPlugins: ~
+    Kadupul\Extensions\Contract\HookDispatcher:
+        alias: Kadupul\Extensions\Application\UseCase\DispatchHook
+    Kadupul\Extensions\Contract\PluginRegistry:
+        alias: Kadupul\Extensions\Application\UseCase\ListPlugins
+
+    Kadupul\Collection\Infrastructure\:
+        resource: '../src/Collection/Infrastructure/'
+    Kadupul\Collection\Infrastructure\Persistence\DbalCollectorCatalog:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\Collection\Infrastructure\Persistence\DbalPollerCacheInvalidator:
+        arguments:
+            $database: '@doctrine.dbal.main_connection'
+    Kadupul\Collection\Application\Port\CollectorStore:
+        alias: Kadupul\Collection\Infrastructure\Persistence\DbalCollectorCatalog
+    Kadupul\Collection\Application\Port\PollerCacheStore:
+        alias: Kadupul\Collection\Infrastructure\Persistence\DbalPollerCacheInvalidator
+    Kadupul\Collection\Application\UseCase\ListCollectors: ~
+    Kadupul\Collection\Application\UseCase\InvalidatePollerCache: ~
+    Kadupul\Collection\Contract\CollectorCatalog:
+        alias: Kadupul\Collection\Application\UseCase\ListCollectors
+    Kadupul\Collection\Contract\PollerCacheInvalidator:
+        alias: Kadupul\Collection\Application\UseCase\InvalidatePollerCache
+
 when@test:
     services:
         test.platform.database_target:
@@ -967,4 +1025,28 @@ when@test:
             public: true
         test.model_driven.main_connection:
             alias: doctrine.dbal.main_connection
+            public: true
+        test.phase0.hook_dispatcher:
+            alias: Kadupul\Extensions\Contract\HookDispatcher
+            public: true
+        test.phase0.plugin_registry:
+            alias: Kadupul\Extensions\Contract\PluginRegistry
+            public: true
+        test.phase0.collector_catalog:
+            alias: Kadupul\Collection\Contract\CollectorCatalog
+            public: true
+        test.phase0.poller_cache_invalidator:
+            alias: Kadupul\Collection\Contract\PollerCacheInvalidator
+            public: true
+        test.phase0.http_client:
+            alias: Kadupul\Platform\Contract\HttpClient
+            public: true
+        test.phase0.settings_writer:
+            alias: Kadupul\Platform\Contract\SettingsWriter
+            public: true
+        test.phase0.user_preference_store:
+            alias: Kadupul\Platform\Contract\UserPreferenceStore
+            public: true
+        test.phase0.realm_grant_manager:
+            alias: Kadupul\IdentityAccess\Contract\RealmGrantManager
             public: true

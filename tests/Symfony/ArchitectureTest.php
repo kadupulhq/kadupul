@@ -39,13 +39,17 @@ final class ArchitectureTest extends TestCase
             }
             $relative = substr($file->getPathname(), strlen($root));
             [$module, $layer] = explode('/', $relative);
+            $isLegacyInfrastructure = str_starts_with($relative, $module . '/Infrastructure/Legacy/');
             foreach (token_get_all(file_get_contents($file->getPathname())) as $token) {
                 if (!is_array($token)) {
                     continue;
                 }
                 [$kind, $value] = $token;
+                if (!$isLegacyInfrastructure) {
+                    self::assertNotContains($kind, [T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE], $relative);
+                }
                 if ($layer !== 'Infrastructure') {
-                    self::assertNotContains($kind, [T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE, T_GLOBAL], $relative);
+                    self::assertNotSame(T_GLOBAL, $kind, $relative);
                     if ($kind === T_VARIABLE) {
                         self::assertNotContains($value, ['$_SESSION', '$_SERVER', '$_GET', '$_POST', '$_COOKIE', '$_REQUEST', '$_FILES', '$_ENV', '$GLOBALS'], $relative);
                     }

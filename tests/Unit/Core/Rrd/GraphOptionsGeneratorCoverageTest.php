@@ -62,10 +62,6 @@ function rrdtool_function_theme_font_options($graph_data_array)
 require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php';
 
 \test('graph options generator covers scale, display, axis and export branches', function () {
-    $includePath = sys_get_temp_dir() . '/rrd-graph-options-' . bin2hex(random_bytes(8));
-    mkdir($includePath, 0700);
-    file_put_contents($includePath . '/global_arrays.php', '<?php $image_types = array(1 => "PNG", 2 => "SVG");');
-    $GLOBALS['config'] = array('include_path' => $includePath);
     $GLOBALS['rrd_graph_options_config'] = array('rrdtool_watermark' => 'on', 'graph_watermark' => 'Kadupul');
     $generator = new GraphOptionsGenerator();
 
@@ -74,7 +70,7 @@ require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphOption
             'auto_scale' => 'on', 'auto_scale_opts' => '3', 'upper_limit' => '100', 'lower_limit' => '',
             'auto_scale_log' => 'on', 'scale_log_units' => 'on', 'auto_scale_rigid' => 'on',
             'unit_value' => '1:5', 'unit_exponent_value' => '3', 'height' => '400', 'width' => '600',
-            'graph_nolegend' => 'on', 'image_format_id' => 2, 'title_cache' => 'Traffic', 'alt_y_grid' => 'on',
+            'graph_nolegend' => 'on', 'image_format_id' => 3, 'title_cache' => 'Traffic', 'alt_y_grid' => 'on',
             'base_value' => '1024', 'vertical_label' => 'bits', 'slope_mode' => 'on', 'right_axis' => '2:0',
             'right_axis_label' => 'out', 'right_axis_format' => '7', 'no_gridfit' => 'on', 'unit_length' => '10',
             'tab_width' => '20', 'dynamic_labels' => 'on', 'force_rules_legend' => 'on', 'legend_position' => 'south',
@@ -136,8 +132,6 @@ require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/GraphOption
             expect($rendered)->not->toContain('--units-exponent=');
         }
     } finally {
-        unlink($includePath . '/global_arrays.php');
-        rmdir($includePath);
-        unset($GLOBALS['config'], $GLOBALS['rrd_graph_options_config'], $GLOBALS['rrd_graph_options_version']);
+        unset($GLOBALS['rrd_graph_options_config'], $GLOBALS['rrd_graph_options_version']);
     }
 });

@@ -7,6 +7,7 @@
 
 namespace Kadupul\Platform\Infrastructure\Symfony\Console;
 
+use Kadupul\Platform\Infrastructure\Legacy\LegacyKernelBootstrap;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -41,8 +42,7 @@ final class LegacyCli
 
             return 1;
         }
-        // src/Platform/Infrastructure/Symfony/Console -> src -> repository root is 5 levels up.
-        $kernel = require dirname(__DIR__, 5) . '/config/bootstrap.php';
+        $kernel = LegacyKernelBootstrap::create();
         // Boot before building the Application so the presentation set here is on the
         // same container the Application later reads its commands from: Application
         // boots the kernel lazily too, but boot() is a no-op once it's already booted.

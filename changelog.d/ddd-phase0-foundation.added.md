@@ -1,0 +1,1 @@
+- Add the `Extensions` and `Collection` bounded contexts, wire `symfony/http-client` behind an outbound URL policy, introduce cross-context settings and realm-grant contracts, remove non-legacy `include`/`require` leaks in `src/`, and remove deprecated `E_STRICT` and `libxml_disable_entity_loader()` branches in non-overlapping legacy libraries.
