@@ -694,14 +694,14 @@ function update_show_current () {
 
 			var btnUninstall = {
 				'Cancel': {
-					text: '<?php print __('Cancel');?>',
+					text: <?php print json_encode(__('Cancel'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>,
 					id: 'btnCancel',
 					click: function() {
 						$(this).dialog('close');
 					}
 				},
 				'Uninstall': {
-					text: '<?php print __('Uninstall');?>',
+					text: <?php print json_encode(__('Uninstall'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>,
 					id: 'btnUninstall',
 					click: function() {
 						$('#uninstalldialog').dialog('close');
@@ -713,7 +713,7 @@ function update_show_current () {
 			$('body').remove('#uninstalldialog').append("<div id='uninstalldialog'><h4><?php print $uninstall_msg;?></h4></div>");
 
 			$('#uninstalldialog').dialog({
-				title: '<?php print $uninstall_title;?>',
+				title: <?php print json_encode($uninstall_title, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>,
 				minHeight: 80,
 				minWidth: 500,
 				buttons: btnUninstall

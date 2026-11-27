@@ -1259,7 +1259,7 @@ msgstr "Pas enregistré"
 
 #: automation_devices.php:337 host.php:2045
 msgid "No Devices Found"
-msgstr "Aucun périphérique n&apos;a été trouvé"
+msgstr "Aucun périphérique n'a été trouvé"
 
 #: automation_devices.php:488
 msgid "Discovery Filters"
@@ -2530,7 +2530,7 @@ msgstr "Sélection des règles de l'arborescence[Modifier : %s]"
 
 #: automation_tree_rules.php:641
 msgid "Tree Rules Selection [new]"
-msgstr "Sélection des règles de l'arbre[new][Tree Rules Selection"
+msgstr "Sélection des règles de l'arbre [nouveau]"
 
 #: automation_tree_rules.php:692
 msgid "Object Selection Criteria"
@@ -4870,7 +4870,7 @@ msgstr "Filtres de prévisualisation graphique"
 
 #: graph_view.php:419
 msgid "[ Custom Graph List Applied - Filtering from List ]"
-msgstr "Liste graphique personnalisée appliquée - Filtrage à partir d'une liste ]"
+msgstr "[ Liste graphique personnalisée appliquée - Filtrage à partir d'une liste ]"
 
 #: graph_view.php:520
 msgid "YOU DO NOT HAVE RIGHTS FOR LIST VIEW"
@@ -4882,7 +4882,7 @@ msgstr "Filtres d'affichage des listes de graphiques"
 
 #: graph_view.php:647
 msgid "[ Custom Graph List Applied - Filter FROM List ]"
-msgstr "Liste graphique personnalisée appliquée - Filtre de la liste ]"
+msgstr "[ Liste graphique personnalisée appliquée - Filtre de la liste ]"
 
 #: graph_view.php:669 graph_view.php:916
 msgid "View"
@@ -7688,7 +7688,7 @@ msgstr "n'est pas vide"
 
 #: include/global_arrays.php:1787
 msgid "matches regular expression"
-msgstr "correspond à l&apos;expression rationnelle"
+msgstr "correspond à l'expression rationnelle"
 
 #: include/global_arrays.php:1788
 msgid "does not match regular expression"
@@ -8989,7 +8989,7 @@ msgstr "LINE1, LINE2 et LINE3 utilisent des largeurs fixes. Pour LINE:STACK, sai
 
 #: include/global_form.php:1077
 msgid "Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"
-msgstr "tirets (tirets (tirets[=on_s[,off_s[,on_s,off_s[,on_s,off_s]...]]))"
+msgstr "Tirets (dashes[=on_s[,off_s[,on_s,off_s]...]])"
 
 #: include/global_form.php:1082
 msgid "The dashes modifier enables dashed line style."
@@ -9677,7 +9677,7 @@ msgstr "Chemin de l'exécutable snmpwalk"
 
 #: include/global_settings.php:128
 msgid "The path to your snmpwalk binary."
-msgstr "Chemin de l'exécutable  snmpwalk."
+msgstr "Chemin de l'exécutable snmpwalk."
 
 #: include/global_settings.php:134
 msgid "snmpget Binary Path"
@@ -10786,7 +10786,7 @@ msgstr "Nombre maximum de lignes par page"
 
 #: include/global_settings.php:1200
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé&nbsp;: 62 jours"
+msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé : 62 jours"
 
 #: include/global_settings.php:1215
 msgid "Data Collection Enabled"
@@ -11629,7 +11629,7 @@ msgstr "Le mot de passe à utiliser pour s'authentifier lors d'un envoi via SMTP
 
 #: include/global_settings.php:2037
 msgid "SMTP Security"
-msgstr "SMTP  Sécurité"
+msgstr "SMTP Sécurité"
 
 #: include/global_settings.php:2038
 msgid "The encryption method to use for the Email."
@@ -12556,7 +12556,7 @@ msgstr "Initialisation"
 #: install/install.php:114
 #, php-format
 msgid "Please wait while the installation system for Cacti Version %s initializes. You must have JavaScript enabled for this to work."
-msgstr "Veuillez patienter pendant que le système d'installation de Cacti Version %s s'initialise.  JavaScript doit être activé pour que cela fonctionne."
+msgstr "Veuillez patienter pendant que le système d'installation de Cacti Version %s s'initialise. JavaScript doit être activé pour que cela fonctionne."
 
 #: install/install.php:118
 msgid "FATAL: We are unable to continue with this installation. In order to install Cacti, PHP must be at version 5.4 or later."
@@ -12811,7 +12811,7 @@ msgstr "Système:"
 
 #: lib/api_device.php:1595 lib/api_device.php:1603
 msgid "Uptime:"
-msgstr "Temps d&apos;activation&#160;:"
+msgstr "Temps d'activation :"
 
 #: lib/api_device.php:1606
 msgid "Hostname:"
@@ -12980,7 +12980,7 @@ msgstr "%s - REMARQUE WEBUI : journal Cacti effacé de l'interface de gestion W
 
 #: lib/clog_webapi.php:257
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Cacti and Syslog, the log information will remain in Syslog."
-msgstr "Cliquez sur 'Continuer' pour supprimer le fichier des logs.<br><br><br><br>Note : si l'enregistrement des logs a été mis en place sur Cacti et Syslog, les informations des logs dans Syslog ne sont pas altérées."
+msgstr "Cliquez sur 'Continuer' pour supprimer le fichier des logs.<br><br><br>Note : si l'enregistrement des logs a été mis en place sur Cacti et Syslog, les informations des logs dans Syslog ne sont pas altérées."
 
 #: lib/clog_webapi.php:263 utilities.php:1489
 msgid "Purge Log"
@@ -13647,7 +13647,7 @@ msgstr "Lien %s"
 
 #: lib/functions.php:6013
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Erreur d'expéditeur : Si vous utilisez le lien <i>Test Mail</i>, réglez le paramètre <b>Alerter e-mail</b>."
+msgstr "Erreur d'expéditeur : aucune adresse de destinataire définie !<br>Si vous utilisez le lien <i>Test Mail</i>, réglez le paramètre <b>Alerter e-mail</b>."
 
 #: lib/functions.php:6384
 #, php-format
@@ -19978,7 +19978,7 @@ msgstr "Mémoire totale maximale possible"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Réduisez la mémoire MySQL/MariaDB à moins de 80% of de mémoire système.  Conservez une mémoire cache supplémentaire pour les fichiers RRD si la base de données est sur le même système que les fichiers RRD.  Voir les Totaux de base et de clients ci-dessous pour une explication de la méthode de calcul."
+msgstr "Réduisez la mémoire MySQL/MariaDB à moins de 80% de la mémoire système.  Conservez une mémoire cache supplémentaire pour les fichiers RRD si la base de données est sur le même système que les fichiers RRD.  Voir les Totaux de base et de clients ci-dessous pour une explication de la méthode de calcul."
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"
@@ -20501,12 +20501,12 @@ msgstr "Processus: %d"
 #: utilities.php:2953
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant&nbsp;: %s (dses), CurrentRuntime&nbsp;: %s (secs), PrevRuntime&nbsp;: %s (secs), PrevProcessed&nbsp;: %10s (ds lignes)"
+msgstr "Statut : <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant : %s (dses), CurrentRuntime : %s (secs), PrevRuntime : %s (secs), PrevProcessed : %10s (ds lignes)"
 
 #: utilities.php:2955
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime&nbsp;: %s (secondes), PrevProcessed&nbsp;: %10s (lignes ds)"
+msgstr "Statut : <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime : %s (secondes), PrevProcessed : %10s (lignes ds)"
 
 #: utilities.php:2961
 msgid "Run Time Configuration"

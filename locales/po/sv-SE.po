@@ -227,7 +227,7 @@ msgstr "De valda aggregerade graferna representerar element från mer än en gra
 
 #: aggregate_graphs.php:391
 msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
-msgstr "För att migrera Aggregatgraferna nedan till ett Mallbaserat aggregat måste de bara använda en grafmall. Vänligen tryck på &#39;Retur&#39; och välj sedan endast Aggregatgraf som använder samma grafmall."
+msgstr "För att migrera Aggregatgraferna nedan till ett Mallbaserat aggregat måste de bara använda en grafmall. Vänligen tryck på 'Retur' och välj sedan endast Aggregatgraf som använder samma grafmall."
 
 #: aggregate_graphs.php:396 aggregate_graphs.php:444 aggregate_graphs.php:490
 #: auth_changepassword.php:372 auth_profile.php:572 automation_networks.php:425
@@ -1338,11 +1338,11 @@ msgstr "Ett försök gjordes att utföra en SQL-injektion i Graph-automatisering
 
 #: automation_graph_rules.php:317
 msgid "Press 'Continue' to delete the following Graph Rules."
-msgstr "Tryck på &quot;Fortsätt&quot; för att radera följande grafregler."
+msgstr "Tryck på \"Fortsätt\" för att radera följande grafregler."
 
 #: automation_graph_rules.php:324
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
-msgstr "Klicka på &quot;Fortsätt&quot; för att duplicera följande regel (er). Du kan valfritt ändra titelformat för de nya grafreglerna."
+msgstr "Klicka på \"Fortsätt\" för att duplicera följande regel (er). Du kan valfritt ändra titelformat för de nya grafreglerna."
 
 #: automation_graph_rules.php:326 automation_tree_rules.php:302 graphs.php:1011
 #: graphs.php:1022
@@ -1355,7 +1355,7 @@ msgstr "regel_namn"
 
 #: automation_graph_rules.php:332 automation_tree_rules.php:308
 msgid "Click 'Continue' to enable the following Rule(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att aktivera följande regel (er)."
+msgstr "Klicka på \"Fortsätt\" för att aktivera följande regel (er)."
 
 #: automation_graph_rules.php:334 automation_tree_rules.php:310
 msgid "Make sure, that those rules have successfully been tested!"
@@ -1363,7 +1363,7 @@ msgstr "Se till att de reglerna har testats!"
 
 #: automation_graph_rules.php:340 automation_tree_rules.php:316
 msgid "Click 'Continue' to disable the following Rule(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att inaktivera följande regel (er)."
+msgstr "Klicka på \"Fortsätt\" för att inaktivera följande regel (er)."
 
 #: automation_graph_rules.php:351 automation_tree_rules.php:327
 msgid "Apply requested action"
@@ -1520,7 +1520,7 @@ msgstr "FEL: Du måste ange månadar, veckor av månader och veckodagar. Inaktiv
 #: automation_networks.php:250
 #, php-format
 msgid "ERROR: Network '%s' is Invalid."
-msgstr "FEL: Nätverket &#39; %s&#39; är ogiltigt."
+msgstr "FEL: Nätverket ' %s' är ogiltigt."
 
 #: automation_networks.php:369
 msgid "Click 'Continue' to delete the following Network(s)."
@@ -2195,11 +2195,11 @@ msgstr "Klar Filtrerad"
 
 #: automation_snmp.php:235
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera följande SNMP-alternativ (er)."
+msgstr "Klicka på \"Fortsätt\" för att radera följande SNMP-alternativ (er)."
 
 #: automation_snmp.php:242
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
-msgstr "Klicka på &quot;Fortsätt&quot; för att duplicera följande SNMP-alternativ. Du kan valfritt ändra titelformat för de nya SNMP-alternativen."
+msgstr "Klicka på \"Fortsätt\" för att duplicera följande SNMP-alternativ. Du kan valfritt ändra titelformat för de nya SNMP-alternativen."
 
 #: automation_snmp.php:244
 msgid "Name Format"
@@ -2219,7 +2219,7 @@ msgstr "Automationsobjektet finns inte. Kan inte duplicera."
 
 #: automation_snmp.php:367
 msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera följande SNMP-alternativ."
+msgstr "Klicka på \"Fortsätt\" för att radera följande SNMP-alternativ."
 
 #: automation_snmp.php:368
 msgid "SNMP Option:"
@@ -2408,7 +2408,7 @@ msgstr "Inga SNMP-alternativsatser hittades"
 
 #: automation_templates.php:169
 msgid "Click 'Continue' to delete the following Automation Template(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att ta bort folling Automation Template (s)."
+msgstr "Klicka på \"Fortsätt\" för att ta bort folling Automation Template (s)."
 
 #: automation_templates.php:174
 msgid "Delete Automation Template(s)"
@@ -2501,11 +2501,11 @@ msgstr "Ogiltigt fältnamn angivet för trädregelobjekt."
 
 #: automation_tree_rules.php:293
 msgid "Click 'Continue' to delete the following Rule(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera följande regel (er)."
+msgstr "Klicka på \"Fortsätt\" för att radera följande regel (er)."
 
 #: automation_tree_rules.php:300
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
-msgstr "Klicka på &quot;Fortsätt&quot; för att duplicera följande regel (er). Du kan valfritt ändra titelformat för de nya reglerna."
+msgstr "Klicka på \"Fortsätt\" för att duplicera följande regel (er). Du kan valfritt ändra titelformat för de nya reglerna."
 
 #: automation_tree_rules.php:455
 msgid "Created Trees"
@@ -2548,7 +2548,7 @@ msgstr "VARNING:"
 
 #: automation_tree_rules.php:802
 msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Du ändrar bladtypen till &quot;Enhet&quot; som inte stödjer grafbaserad objekt matchning / skapande."
+msgstr "Du ändrar bladtypen till \"Enhet\" som inte stödjer grafbaserad objekt matchning / skapande."
 
 #: automation_tree_rules.php:803
 msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
@@ -2614,8 +2614,8 @@ msgstr "En eller flera CDEF:er används och kan inte tas bort."
 #: cdef.php:302
 msgid "Click 'Continue' to delete the following CDEF."
 msgid_plural "Click 'Continue' to delete all following CDEFs."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att radera följande CDEF."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att radera alla följande CDEF-filer."
+msgstr[0] "Klicka på \"Fortsätt\" för att radera följande CDEF."
+msgstr[1] "Klicka på \"Fortsätt\" för att radera alla följande CDEF-filer."
 
 #: cdef.php:307
 msgid "Delete CDEF"
@@ -2626,8 +2626,8 @@ msgstr[1] "Radera CDEFs"
 #: cdef.php:311
 msgid "Click 'Continue' to duplicate the following CDEF. You can optionally change the title format for the new CDEF."
 msgid_plural "Click 'Continue' to duplicate the following CDEFs. You can optionally change the title format for the new CDEFs."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att duplicera följande CDEF. Du kan valfritt ändra titelformat för den nya CDEF."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att duplicera följande CDEF-filer. Du kan valfritt ändra titelformat för de nya CDEF-filerna."
+msgstr[0] "Klicka på \"Fortsätt\" för att duplicera följande CDEF. Du kan valfritt ändra titelformat för den nya CDEF."
+msgstr[1] "Klicka på \"Fortsätt\" för att duplicera följande CDEF-filer. Du kan valfritt ändra titelformat för de nya CDEF-filerna."
 
 #: cdef.php:313 color_templates.php:249 data_source_profiles.php:392
 #: data_templates.php:522 graph_templates.php:417 host_templates.php:286
@@ -2643,7 +2643,7 @@ msgstr[1] "Kopiera CDEFs"
 
 #: cdef.php:373
 msgid "Click 'Continue' to delete the following CDEF Item."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera följande CDEF-objekt."
+msgstr "Klicka på \"Fortsätt\" för att radera följande CDEF-objekt."
 
 #: cdef.php:374
 #, php-format
@@ -2909,8 +2909,8 @@ msgstr "Inga objekt"
 #: color_templates.php:238
 msgid "Click 'Continue' to delete the following Color Template"
 msgid_plural "Click 'Continue' to delete following Color Templates"
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att radera följande färgmall"
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att radera följande färgmallar"
+msgstr[0] "Klicka på \"Fortsätt\" för att radera följande färgmall"
+msgstr[1] "Klicka på \"Fortsätt\" för att radera följande färgmallar"
 
 #: color_templates.php:243
 msgid "Delete Color Template"
@@ -2921,8 +2921,8 @@ msgstr[1] "Radera färgmallar"
 #: color_templates.php:247
 msgid "Click 'Continue' to duplicate the following Color Template. You can optionally change the title format for the new color template."
 msgid_plural "Click 'Continue' to duplicate following Color Templates. You can optionally change the title format for the new color templates."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att duplicera följande färgmall. Du kan valfritt ändra titelformat för den nya färgmallen."
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att duplicera följande Färgmallar. Du kan valfritt ändra titelformat för de nya färgmallarna."
+msgstr[0] "Klicka på \"Fortsätt\" för att duplicera följande färgmall. Du kan valfritt ändra titelformat för den nya färgmallen."
+msgstr[1] "Klicka på \"Fortsätt\" för att duplicera följande Färgmallar. Du kan valfritt ändra titelformat för de nya färgmallarna."
 
 #: color_templates.php:255
 msgid "Duplicate Color Template"
@@ -2997,7 +2997,7 @@ msgstr "Färgmall eller objekt hittades inte."
 
 #: color_templates_items.php:292
 msgid "Click 'Continue' to delete the following Color Template Color."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera följande färgmallfärg."
+msgstr "Klicka på \"Fortsätt\" för att radera följande färgmallfärg."
 
 #: color_templates_items.php:293
 msgid "Color Name:"
@@ -3782,8 +3782,8 @@ msgstr "Profiler som används av datakällor blir skrivskyddade tills vidare."
 #: data_source_profiles.php:381
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att radera följande datakällaprofil"
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att radera följande datakällaprofiler"
+msgstr[0] "Klicka på \"Fortsätt\" för att radera följande datakällaprofil"
+msgstr[1] "Klicka på \"Fortsätt\" för att radera följande datakällaprofiler"
 
 #: data_source_profiles.php:386
 msgid "Delete Data Source Profile"
@@ -3794,8 +3794,8 @@ msgstr[1] "Ta bort datakällaprofiler"
 #: data_source_profiles.php:390
 msgid "Click 'Continue' to duplicate the following Data Source Profile. You can optionally change the title format for the new Data Source Profile"
 msgid_plural "Click 'Continue' to duplicate following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles."
-msgstr[0] "Klicka på &quot;Fortsätt&quot; för att duplicera följande datakällaprofil. Du kan valfritt ändra titelformat för den nya datakällaprofilen"
-msgstr[1] "Klicka på &quot;Fortsätt&quot; för att duplicera följande datakällaprofiler. Du kan valfritt ändra titelformat för de nya datakällaprofilerna."
+msgstr[0] "Klicka på \"Fortsätt\" för att duplicera följande datakällaprofil. Du kan valfritt ändra titelformat för den nya datakällaprofilen"
+msgstr[1] "Klicka på \"Fortsätt\" för att duplicera följande datakällaprofiler. Du kan valfritt ändra titelformat för de nya datakällaprofilerna."
 
 #: data_source_profiles.php:396
 msgid "Duplicate Data Source Profile"
@@ -3817,7 +3817,7 @@ msgstr "Det går inte att duplicera datakällsprofilen.  Kontrollera Cacti-logge
 
 #: data_source_profiles.php:540
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera följande RRA för datakällaprofil."
+msgstr "Klicka på \"Fortsätt\" för att radera följande RRA för datakällaprofil."
 
 #: data_source_profiles.php:541
 #, php-format
@@ -4496,7 +4496,7 @@ msgstr "GPRINT-förinställningar som refereras av en graf eller grafmall togs i
 
 #: gprint_presets.php:219
 msgid "Click 'Continue' to delete the following GPRINT Preset(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera de förinställda GPRINT-förinställningarna."
+msgstr "Klicka på \"Fortsätt\" för att radera de förinställda GPRINT-förinställningarna."
 
 #: gprint_presets.php:224
 msgid "Delete GPRINT Preset(s)"
@@ -5151,7 +5151,7 @@ msgstr "Det finns för närvarande inga aggregerade mallar definierade för denn
 
 #: graphs.php:1316
 msgid "Press 'Return' to return and select different Graphs."
-msgstr "Tryck på &#39;Return&#39; för att återvända och välj olika Grafer."
+msgstr "Tryck på 'Return' för att återvända och välj olika Grafer."
 
 #: graphs.php:1328
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
@@ -5486,7 +5486,7 @@ msgstr "Det går inte att lägga till vissa enheter i rapporten \"%s\""
 
 #: host.php:460
 msgid "Click 'Continue' to enable the following Device(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att aktivera följande enhet (er)."
+msgstr "Klicka på \"Fortsätt\" för att aktivera följande enhet (er)."
 
 #: host.php:465
 msgid "Enable Device(s)"
@@ -5494,7 +5494,7 @@ msgstr "Aktivera enhet (er)"
 
 #: host.php:469
 msgid "Click 'Continue' to disable the following Device(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att inaktivera följande enhet (er)."
+msgstr "Klicka på \"Fortsätt\" för att inaktivera följande enhet (er)."
 
 #: host.php:474
 msgid "Disable Device(s)"
@@ -5502,7 +5502,7 @@ msgstr "Inaktivera enhet (er)"
 
 #: host.php:478
 msgid "Click 'Continue' to change the Device options below for multiple Device(s).  Please check the box next to the fields you want to update, and then fill in the new value."
-msgstr "Klicka på &quot;Fortsätt&quot; för att ändra Enhetsalternativen nedan för flera enheter. Markera rutan bredvid de fält du vill uppdatera och fyll i det nya värdet."
+msgstr "Klicka på \"Fortsätt\" för att ändra Enhetsalternativen nedan för flera enheter. Markera rutan bredvid de fält du vill uppdatera och fyll i det nya värdet."
 
 #: host.php:498
 msgid "Update this Field"
@@ -5514,7 +5514,7 @@ msgstr "Ändra enhet (er) SNMP-alternativ"
 
 #: host.php:525
 msgid "Click 'Continue' to clear the counters for the following Device(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att rensa räknarna för följande enhet (er)."
+msgstr "Klicka på \"Fortsätt\" för att rensa räknarna för följande enhet (er)."
 
 #: host.php:530
 msgid "Clear Statistics on Device(s)"
@@ -5522,7 +5522,7 @@ msgstr "Rensa statistik på enhet (er)"
 
 #: host.php:534
 msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
-msgstr "Klicka på &quot;Fortsätt&quot; för att synkronisera följande enhet (er) till deras enhetsmall."
+msgstr "Klicka på \"Fortsätt\" för att synkronisera följande enhet (er) till deras enhetsmall."
 
 #: host.php:539
 msgid "Synchronize Device(s)"
@@ -5530,7 +5530,7 @@ msgstr "Synkronisera enhet (er)"
 
 #: host.php:543
 msgid "Click 'Continue' to delete the following Device(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att radera följande enhet (er)."
+msgstr "Klicka på \"Fortsätt\" för att radera följande enhet (er)."
 
 #: host.php:546
 msgid "Leave all Graph(s) and Data Source(s) untouched.  Data Source(s) will be disabled however."
@@ -5542,7 +5542,7 @@ msgstr "Ta bort all tillhörande grafik (er) och datakälla (er)."
 
 #: host.php:557
 msgid "Click 'Continue' to place the following Device(s) under the branch selected below."
-msgstr "Klicka på &quot;Fortsätt&quot; för att placera följande enhet (er) under filialen vald nedan."
+msgstr "Klicka på \"Fortsätt\" för att placera följande enhet (er) under filialen vald nedan."
 
 #: host.php:567
 msgid "Place Device(s) on Tree"
@@ -5550,7 +5550,7 @@ msgstr "Placera enhet (er) på träd"
 
 #: host.php:571
 msgid "Click 'Continue' to apply Automation Rules to the following Devices(s)."
-msgstr "Klicka på &quot;Fortsätt&quot; för att tillämpa automationsregler på följande enheter."
+msgstr "Klicka på \"Fortsätt\" för att tillämpa automationsregler på följande enheter."
 
 #: host.php:576
 msgid "Run Automation on Device(s)"
@@ -5776,7 +5776,7 @@ msgstr "Det totala antalet datakällor som genereras från den här enheten."
 
 #: host.php:1614
 msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
-msgstr "Övervakningsstatus för enheten baserat på pingresultat. Om den här enheten är en speciell typ av enhet, använder du värdnamnet &quot;localhost&quot; eller på grund av att inställningen inte utför en tillgänglighetskontroll, fortsätter den alltid upp. När du använder cmd.php-datasamlare, pingas inte en enhet utan grafer av datainsamlaren och kommer att förbli i ett &quot;okänt&quot; tillstånd."
+msgstr "Övervakningsstatus för enheten baserat på pingresultat. Om den här enheten är en speciell typ av enhet, använder du värdnamnet \"localhost\" eller på grund av att inställningen inte utför en tillgänglighetskontroll, fortsätter den alltid upp. När du använder cmd.php-datasamlare, pingas inte en enhet utan grafer av datainsamlaren och kommer att förbli i ett \"okänt\" tillstånd."
 
 #: host.php:1617
 msgid "In State"
@@ -11402,7 +11402,7 @@ msgstr "Läge"
 
 #: include/global_settings.php:1832
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Läge vilken Cacti försöker autentisera mot LDAP-servern. <blockquote> <i>Ingen sökning</i> - <i>Sökning utan</i> Distinguished Name (DN) sker, försök bara binda med det angivna Distinguished Name-formatet (DN). <br><br> <i>Anonym Sökning</i> - Försök att söka efter användarnamn mot LDAP-katalog via anonym bindning för att lokalisera användarens Distinguished Name (DN). <br><br> <i>Särskild</i> sökning - Försök att söka efter användarnamn mot LDAP-katalog via Specifikt Distinguished Name (DN) och Specifikt lösenord för bindning för att lokalisera användarens Distinguished Name (DN)."
+msgstr "Läge vilken Cacti försöker autentisera mot LDAP-servern. <blockquote> <i>Ingen sökning</i> - Sökning utan Distinguished Name (DN) sker, försök bara binda med det angivna Distinguished Name-formatet (DN). <br><br> <i>Anonym Sökning</i> - Försök att söka efter användarnamn mot LDAP-katalog via anonym bindning för att lokalisera användarens Distinguished Name (DN). <br><br> <i>Särskild</i> sökning - Försök att söka efter användarnamn mot LDAP-katalog via Specifikt Distinguished Name (DN) och Specifikt lösenord för bindning för att lokalisera användarens Distinguished Name (DN)."
 
 #: include/global_settings.php:1838 user_domains.php:511
 msgid "Distinguished Name (DN)"
@@ -12585,7 +12585,7 @@ msgstr "De grafer som valts för den aggregerade grafen nedan representerar graf
 
 #: lib/api_aggregate.php:1768 lib/api_aggregate.php:1787
 msgid "Press 'Return' to return and select different Graphs"
-msgstr "Tryck på &#39;Retur&#39; för att återvända och välj olika Grafer"
+msgstr "Tryck på 'Retur' för att återvända och välj olika Grafer"
 
 #: lib/api_aggregate.php:1786
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
@@ -19975,7 +19975,7 @@ msgstr "Max Totalt Minne Möjligt"
 
 #: utilities.php:690
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr "Minska MySQL/MariaDB-minnet till mindre än 80% of systemminne.  Bevara ytterligare cacheminne för RRD-filer om databasen finns på samma system som RRD-filerna.  Se Core och Client Totals nedan för en förklaring av beräkningsmetoden."
+msgstr "Minska MySQL/MariaDB-minnet till mindre än 80% av systemminnet.  Bevara ytterligare cacheminne för RRD-filer om databasen finns på samma system som RRD-filerna.  Se Core och Client Totals nedan för en förklaring av beräkningsmetoden."
 
 #: utilities.php:708 utilities.php:713 utilities.php:741
 msgid "Max Core Memory Possible"

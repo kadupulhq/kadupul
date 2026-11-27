@@ -386,7 +386,11 @@ class spikekill {
 		if ($this->method == SPIKE_METHOD_STDDEV) {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . __esc('Standard Devs: %s', $this->stddev) . ($this->html ? '</p>': PHP_EOL);
 		} elseif ($this->method == SPIKE_METHOD_VARIANCE) {
-			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . __esc('Variance %%:    %s %%', number_format_i18n($this->percent * 100, 2)) . ($this->html ? '</p>': PHP_EOL);
+			/* Substitute after translation because __gettext() expands %% before sprintf() runs. */
+			$percent = htmlspecialchars(number_format_i18n($this->percent * 100, 2), ENT_QUOTES, 'UTF-8');
+			$this->strout .= ($this->html ? "<p class='spikekillNote'>" : '')
+				. str_replace('%s', $percent, __esc('Variance %%:    %s %%'))
+				. ($this->html ? '</p>' : PHP_EOL);
 		}
 
 		if ($this->out_start > 0) {

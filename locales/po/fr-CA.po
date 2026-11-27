@@ -1259,7 +1259,7 @@ msgstr "Non détecté"
 
 #: automation_devices.php:337 host.php:2045
 msgid "No Devices Found"
-msgstr "Aucun périphérique n&apos;a été trouvé"
+msgstr "Aucun périphérique n'a été trouvé"
 
 #: automation_devices.php:488
 msgid "Discovery Filters"
@@ -2236,7 +2236,7 @@ msgstr "Version SNMP : <b>%s</b>"
 #: automation_snmp.php:370
 #, php-format
 msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "Communauté SNMP/Nom d'utilisateur&nbsp;: <b>%s</b>"
+msgstr "Communauté SNMP/Nom d'utilisateur : <b>%s</b>"
 
 #: automation_snmp.php:376
 msgid "Remove SNMP Item"
@@ -2317,7 +2317,7 @@ msgstr "Auth. username"
 
 #: automation_snmp.php:558
 msgid "Auth Password"
-msgstr "Mot de passe d&apos;authentification"
+msgstr "Mot de passe d'authentification"
 
 #: automation_snmp.php:559
 msgid "Auth Protocol"
@@ -2788,7 +2788,7 @@ msgstr "Sélectionner un fichier"
 
 #: color.php:440
 msgid "Overwrite Existing Data?"
-msgstr "Écraser les données existantes"
+msgstr "Écraser les données existantes ?"
 
 #: color.php:441
 msgid "Should the import process be allowed to overwrite existing data?  Please note, this does not mean delete old rows, only update duplicate rows."
@@ -3441,7 +3441,7 @@ msgstr "Méthode de saisie des données [edit : %s]"
 
 #: data_input.php:670
 msgid "Data Input Method [new]"
-msgstr "PROCEDE D&#39;ENTREE DE DONNEES"
+msgstr "PROCEDE D'ENTREE DE DONNEES"
 
 #: data_input.php:689 include/global_arrays.php:529
 msgid "SNMP Query"
@@ -4397,7 +4397,7 @@ msgstr "Modèles de données [modifier : %s]"
 
 #: data_templates.php:769
 msgid "Edit Data Input Method."
-msgstr "PROCEDE D&#39;INTRODUCTION DE DONNEES."
+msgstr "PROCEDE D'INTRODUCTION DE DONNEES."
 
 #: data_templates.php:778
 msgid "Data Templates [new]"
@@ -7688,7 +7688,7 @@ msgstr "n'est pas vide"
 
 #: include/global_arrays.php:1787
 msgid "matches regular expression"
-msgstr "correspond à l&apos;expression rationnelle"
+msgstr "correspond à l'expression rationnelle"
 
 #: include/global_arrays.php:1788
 msgid "does not match regular expression"
@@ -8415,7 +8415,7 @@ msgstr "En fonction du niveau d'agrégation, des lignes et de l'intervalle d'int
 
 #: include/global_form.php:320
 msgid "RRA Size (in Bytes)"
-msgstr "Taille (en octets) ;"
+msgstr "Taille (en octets)"
 
 #: include/global_form.php:321
 msgid "Based upon the number of Rows and the number of Consolidation Functions selected, the size of this RRA in the RRDfile."
@@ -8720,7 +8720,7 @@ msgstr "Unités SI pour la mise à l'échelle logarithmique (--units=si)"
 
 #: include/global_form.php:806
 msgid "Use SI Units for Logarithmic Scaling instead of using exponential notation.<br> Note: Linear graphs use SI notation by default."
-msgstr "Utilisez les unités SI pour la mise à l'échelle logarithmique au lieu d'utiliser la notation exponentielle.<br> Remarque&nbsp;: les graphiques linéaires utilisent la notation SI par défaut."
+msgstr "Utilisez les unités SI pour la mise à l'échelle logarithmique au lieu d'utiliser la notation exponentielle.<br> Remarque : les graphiques linéaires utilisent la notation SI par défaut."
 
 #: include/global_form.php:809
 msgid "Rigid Boundaries Mode (--rigid)"
@@ -8780,7 +8780,7 @@ msgstr "Pas de Gridfit (--no-gridfit)"
 
 #: include/global_form.php:863
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
-msgstr "Afin d'éviter les effets de flou anti-aliasing, RRDtool accroche les points aux pixels de résolution de l'appareil, ce qui donne une apparence plus nette. Si cela ne vous convient pas, vous pouvez utiliser cet interrupteur pour désactiver ce comportement.<br><strong>Remarque&nbsp;: </strong>le Gridfitting est désactivé par défaut pour les sorties PDF, EPS, SVG."
+msgstr "Afin d'éviter les effets de flou anti-aliasing, RRDtool accroche les points aux pixels de résolution de l'appareil, ce qui donne une apparence plus nette. Si cela ne vous convient pas, vous pouvez utiliser cet interrupteur pour désactiver ce comportement.<br><strong>Remarque : </strong>le Gridfitting est désactivé par défaut pour les sorties PDF, EPS, SVG."
 
 #: include/global_form.php:866
 msgid "Alternative Y Grid (--alt-y-grid)"
@@ -8788,7 +8788,7 @@ msgstr "Grille Y alternative (--alt-y-grid)"
 
 #: include/global_form.php:869
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
-msgstr "L'algorithme garantit que vous avez toujours une grille, qu'il y a suffisamment mais pas trop de lignes de grille, et que la grille est métrique. Ce paramètre veillera également à ce que vous obteniez suffisamment de décimales affichées même si votre graphique passe de 69,998 à 70,001.<br><strong>Remarque&nbsp;: </strong>ce paramètre peut interférer avec les options --alt-autoscale."
+msgstr "L'algorithme garantit que vous avez toujours une grille, qu'il y a suffisamment mais pas trop de lignes de grille, et que la grille est métrique. Ce paramètre veillera également à ce que vous obteniez suffisamment de décimales affichées même si votre graphique passe de 69,998 à 70,001.<br><strong>Remarque : </strong>ce paramètre peut interférer avec les options --alt-autoscale."
 
 #: include/global_form.php:872
 msgid "Axis Options"
@@ -9101,7 +9101,7 @@ msgstr "C'est la méthode que Cacti utilisera pour vérifier qu'un hôte est dis
 
 #: include/global_form.php:1277
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "Le type de paquet ping à envoyer.  <br><i>REMARQUE&nbsp;: ICMP sur Linux/Unix nécessite des privilèges root.</i>  <br><i>REMARQUE&nbsp;: TCP Ping fermé - Même si le ping tcp ne réussit pas, l'appareil peut être considéré comme UP.</i>"
+msgstr "Le type de paquet ping à envoyer.  <br><i>REMARQUE : ICMP sur Linux/Unix nécessite des privilèges root.</i>  <br><i>REMARQUE : TCP Ping fermé - Même si le ping tcp ne réussit pas, l'appareil peut être considéré comme UP.</i>"
 
 #: include/global_form.php:1314 include/global_form.php:1806
 msgid "Additional Options"
@@ -9557,7 +9557,7 @@ msgstr "Facultatif : article sous-arbre"
 
 #: include/global_form.php:2301
 msgid "Choose a Sub-Tree Item to hook in.<br>Make sure, that it is still there when this rule is executed!"
-msgstr "Choisissez un élément Sub-Tree à accrocher.<br>Assurez-vous qu'il est toujours là lorsque cette règle est exécutée&nbsp;!"
+msgstr "Choisissez un élément Sub-Tree à accrocher.<br>Assurez-vous qu'il est toujours là lorsque cette règle est exécutée !"
 
 #: include/global_form.php:2321
 msgid "Header Type"
@@ -9577,7 +9577,7 @@ msgstr "Propagez toutes les options de ce formulaire (à l'exception de « Titr
 
 #: include/global_form.php:2347
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "Le modèle de chaîne (expression régulière) contre lequel correspondre.<br>L'inclusion de «/» <strong>NE DOIT PAS</strong> être fournie&nbsp;!"
+msgstr "Le modèle de chaîne (expression régulière) contre lequel correspondre.<br>L'inclusion de «/» <strong>NE DOIT PAS</strong> être fournie !"
 
 #: include/global_form.php:2354
 msgid "Replacement Pattern"
@@ -9585,7 +9585,7 @@ msgstr "Modèle de remplacement"
 
 #: include/global_form.php:2355
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "Le modèle de chaîne de remplacement à utiliser comme en-tête d'arbre.<br>Reportez-vous à un match par exemple<strong>\\${1}</strong> pour le premier match&nbsp;!"
+msgstr "Le modèle de chaîne de remplacement à utiliser comme en-tête d'arbre.<br>Reportez-vous à un match par exemple<strong>\\${1}</strong> pour le premier match !"
 
 #: include/global_languages.php:1052
 msgid " T"
@@ -9677,7 +9677,7 @@ msgstr "Chemin de l'exécutable snmpwalk"
 
 #: include/global_settings.php:128
 msgid "The path to your snmpwalk binary."
-msgstr "Chemin de l'exécutable  snmpwalk."
+msgstr "Chemin de l'exécutable snmpwalk."
 
 #: include/global_settings.php:134
 msgid "snmpget Binary Path"
@@ -10391,7 +10391,7 @@ msgstr "Disponibilité/Accessibilité"
 
 #: include/global_settings.php:812
 msgid "Default Availability/Reachability for all new Devices.  The method Cacti will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "Disponibilité/accessibilité par défaut pour tous les nouveaux appareils.  La méthode que Cacti utilisera pour déterminer si un appareil est disponible pour l'interrogation.  <br><i>NOTE&nbsp;: Il est recommandé que, au minimum, SNMP soit toujours sélectionné.</i>"
+msgstr "Disponibilité/accessibilité par défaut pour tous les nouveaux appareils.  La méthode que Cacti utilisera pour déterminer si un appareil est disponible pour l'interrogation.  <br><i>NOTE : Il est recommandé que, au minimum, SNMP soit toujours sélectionné.</i>"
 
 #: include/global_settings.php:818
 msgid "Ping Type"
@@ -10576,7 +10576,7 @@ msgstr "À quelle fréquence souhaitez-vous que l'affichage du journal Cacti soi
 
 #: include/global_settings.php:1008
 msgid "Log Viewer Settings"
-msgstr "Paramètres d&apos; affichage"
+msgstr "Paramètres d' affichage"
 
 #: include/global_settings.php:1013
 msgid "Exclusion Regex"
@@ -10584,7 +10584,7 @@ msgstr "Exclusion Regex"
 
 #: include/global_settings.php:1014
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
-msgstr "Toutes les chaînes qui correspondent à ce regex seront exclues de l'affichage utilisateur.  <strong>Par exemple, si vous souhaitez exclure toutes les lignes de journal qui incluent les mots «&nbsp;Admin&nbsp;» ou «&nbsp;Connexion&nbsp;», vous devez taper «&nbsp;(Admin || Connexion)&nbsp;»</strong>"
+msgstr "Toutes les chaînes qui correspondent à ce regex seront exclues de l'affichage utilisateur.  <strong>Par exemple, si vous souhaitez exclure toutes les lignes de journal qui incluent les mots « Admin » ou « Connexion », vous devez taper « (Admin || Connexion) »</strong>"
 
 #: include/global_settings.php:1021
 msgid "Real-time Graphs"
@@ -10766,7 +10766,7 @@ msgstr "Afficher uniquement les heures d'ouverture en semaine."
 
 #: include/global_settings.php:1185
 msgid "Show business hours"
-msgstr "Montrer les heures d’ouverture?"
+msgstr "Montrer les heures d’ouverture"
 
 #: include/global_settings.php:1186
 msgid "Display business hours on rrd graphs."
@@ -10786,7 +10786,7 @@ msgstr "Nombre maximum de jours pour afficher les heures d'ouverture"
 
 #: include/global_settings.php:1200
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé&nbsp;: 62 jours"
+msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées au graphique. <br/>Recommandé : 62 jours"
 
 #: include/global_settings.php:1215
 msgid "Data Collection Enabled"
@@ -11629,7 +11629,7 @@ msgstr "Le mot de passe avec lequel s'authentifier lors de l'envoi via SMTP. (La
 
 #: include/global_settings.php:2037
 msgid "SMTP Security"
-msgstr "SMTP  Sécurité"
+msgstr "SMTP Sécurité"
 
 #: include/global_settings.php:2038
 msgid "The encryption method to use for the Email."
@@ -11709,7 +11709,7 @@ msgstr "Entrez l'adresse IP DNS secondaire à utiliser pour les recherches inver
 
 #: include/global_settings.php:2107
 msgid "DNS Timeout"
-msgstr "D&#233;lai"
+msgstr "Délai"
 
 #: include/global_settings.php:2108
 msgid "Please enter the DNS timeout in milliseconds.  Cacti uses a PHP based DNS resolver."
@@ -12564,7 +12564,7 @@ msgstr "FATAL : Nous ne pouvons pas continuer cette installation. Pour installer
 
 #: install/install.php:121
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."
-msgstr "Voir le manuel PHP&nbsp;: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."
+msgstr "Voir le manuel PHP : <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."
 
 #: install/install.php:121
 msgid "The php-json module must also be installed."
@@ -12572,7 +12572,7 @@ msgstr "Le module php-json doit également être installé."
 
 #: install/install.php:125
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/ini.core.php#ini.disable-functions\">Disable Functions</a>."
-msgstr "Voir le manuel PHP&nbsp;: <a href=\"http://php.net/manual/en/ini.core.php#ini.disable-functions\">Désactiver les fonctions</a>."
+msgstr "Voir le manuel PHP : <a href=\"http://php.net/manual/en/ini.core.php#ini.disable-functions\">Désactiver les fonctions</a>."
 
 #: install/install.php:125
 msgid "The shell_exec() and/or exec() functions are currently blocked."
@@ -12811,7 +12811,7 @@ msgstr "Système:"
 
 #: lib/api_device.php:1595 lib/api_device.php:1603
 msgid "Uptime:"
-msgstr "Temps d&apos;activation&#160;:"
+msgstr "Temps d'activation :"
 
 #: lib/api_device.php:1606
 msgid "Hostname:"
@@ -13647,7 +13647,7 @@ msgstr "Lien %s"
 
 #: lib/functions.php:6013
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Erreur de messagerie&nbsp;: Aucune adresse de destinataire définie!!<br>Si vous utilisez le lien <i>Courriel test</i>, veuillez définir le paramètre <b>Courriel d'alerte</b>."
+msgstr "Erreur de messagerie : Aucune adresse de destinataire définie!!<br>Si vous utilisez le lien <i>Courriel test</i>, veuillez définir le paramètre <b>Courriel d'alerte</b>."
 
 #: lib/functions.php:6384
 #, php-format
@@ -13850,7 +13850,7 @@ msgstr "Choisissez une action"
 
 #: lib/html.php:1951
 msgid "Execute Action"
-msgstr "Exécuter une action…"
+msgstr "Exécuter une action"
 
 #: lib/html.php:2124 lib/html.php:2126 lib/html.php:2206 managers.php:41
 #: managers.php:234
@@ -15452,7 +15452,7 @@ msgstr "Vous semblez passer à une version antérieure. Les modifications apport
 
 #: lib/installer.php:2183
 msgid "Please select the type of installation"
-msgstr "Sélectionnez le type d&apos;installation"
+msgstr "Sélectionnez le type d'installation"
 
 #: lib/installer.php:2184
 msgid "Installation options:"
@@ -15485,7 +15485,7 @@ msgstr "Informations de connexion à la base de données locale"
 #: lib/installer.php:2251 lib/installer.php:2263
 #, php-format
 msgid "Database: <b>%s</b>"
-msgstr "Base de données&nbsp;: <b>%s</b>"
+msgstr "Base de données : <b>%s</b>"
 
 #: lib/installer.php:2252 lib/installer.php:2264
 #, php-format
@@ -15500,12 +15500,12 @@ msgstr "Nom d'hôte de la base de données : <b>%s</b>"
 #: lib/installer.php:2254 lib/installer.php:2266
 #, php-format
 msgid "Port: <b>%s</b>"
-msgstr "Port&nbsp;: <b>%s</b>"
+msgstr "Port : <b>%s</b>"
 
 #: lib/installer.php:2255 lib/installer.php:2267
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
-msgstr "Type de système d'exploitation du serveur&nbsp;: <b>%s</b>"
+msgstr "Type de système d'exploitation du serveur : <b>%s</b>"
 
 #: lib/installer.php:2260
 msgid "Central Database Connection Information"
@@ -18293,7 +18293,7 @@ msgstr "Nom de fichier"
 
 #: rrdcleaner.php:424
 msgid "DS Name"
-msgstr "Nom du  DS"
+msgstr "Nom du DS"
 
 #: rrdcleaner.php:425
 msgid "DS ID"
@@ -18735,7 +18735,7 @@ msgstr "Nom du fichier"
 
 #: templates_import.php:250
 msgid "Not Readable"
-msgstr "Pas lisible ?"
+msgstr "Pas lisible"
 
 #: templates_import.php:267
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
@@ -19123,19 +19123,19 @@ msgstr "Refuser"
 
 #: user_admin.php:835 user_group_admin.php:899
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la stratégie de graphique système est «&nbsp;Permissive&nbsp;», ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, un périphérique ou un modèle de graphique pour accéder au graphique"
+msgstr "<b>Remarque :</b> la stratégie de graphique système est « Permissive », ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, un périphérique ou un modèle de graphique pour accéder au graphique"
 
 #: user_admin.php:837 user_group_admin.php:901
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la stratégie de graphique système est «&nbsp;restrictive&nbsp;», ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de périphérique et de graphique pour accéder au graphique"
+msgstr "<b>Remarque :</b> la stratégie de graphique système est « restrictive », ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de périphérique et de graphique pour accéder au graphique"
 
 #: user_admin.php:839 user_group_admin.php:903
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la politique du graphique système est «&nbsp;Appareil&nbsp;», ce qui signifie que l'utilisateur doit avoir accès au graphique ou à l'appareil pour accéder au graphique"
+msgstr "<b>Remarque :</b> la politique du graphique système est « Appareil », ce qui signifie que l'utilisateur doit avoir accès au graphique ou à l'appareil pour accéder au graphique"
 
 #: user_admin.php:841 user_group_admin.php:905
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>Remarque&nbsp;:</b> la stratégie de graphique système est un «&nbsp;modèle de graphique&nbsp;», ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de graphique pour accéder au graphique"
+msgstr "<b>Remarque :</b> la stratégie de graphique système est un « modèle de graphique », ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de graphique pour accéder au graphique"
 
 #: user_admin.php:845 user_group_admin.php:913
 msgid "Default Graph Policy"
@@ -19220,7 +19220,7 @@ msgstr "Attribuer l'adhésion"
 
 #: user_admin.php:1108
 msgid "Remove Membership"
-msgstr "Supprimer l'appartenance ?"
+msgstr "Supprimer l'appartenance"
 
 #: user_admin.php:1128 user_group_admin.php:1099
 msgid "Default Device Policy"
@@ -19292,7 +19292,7 @@ msgstr "Autorisations de l’extension"
 
 #: user_admin.php:1737 user_group_admin.php:1691
 msgid "Legacy Permissions"
-msgstr "Autorisations  antérieures"
+msgstr "Autorisations antérieures"
 
 #: user_admin.php:1799 user_group_admin.php:1757
 #, php-format
@@ -20501,12 +20501,12 @@ msgstr "Processus: %d"
 #: utilities.php:2953
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant&nbsp;: %s (dses), CurrentRuntime&nbsp;: %s (secs), PrevRuntime&nbsp;: %s (secs), PrevProcessed&nbsp;: %10s (ds lignes)"
+msgstr "Statut : <span class=\"deviceUp\"><b>En cours d'exécution</b></span>, restant : %s (dses), CurrentRuntime : %s (secs), PrevRuntime : %s (secs), PrevProcessed : %10s (ds lignes)"
 
 #: utilities.php:2955
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr "Statut&nbsp;: <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime&nbsp;: %s (secondes), PrevProcessed&nbsp;: %10s (lignes ds)"
+msgstr "Statut : <span class=\"deviceRecovering\"><b>inactif</b></span>, PrevRuntime : %s (secondes), PrevProcessed : %10s (lignes ds)"
 
 #: utilities.php:2961
 msgid "Run Time Configuration"

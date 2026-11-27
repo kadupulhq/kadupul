@@ -2268,7 +2268,7 @@ msgstr "Послідовність елементів."
 #: automation_snmp.php:508
 #, php-format
 msgid "SNMP Option Set [edit: %s]"
-msgstr "Набір SNMP Опцій  [редагування: %s]"
+msgstr "Набір SNMP Опцій [редагування: %s]"
 
 #: automation_snmp.php:510
 msgid "SNMP Option Set [new]"
@@ -3052,7 +3052,7 @@ msgstr "Відлагодження Джерела Даних запущено."
 
 #: data_debug.php:73
 msgid "Data Source debug received an invalid Data Source ID."
-msgstr "Відлагодженням Джерела Даних отримало невірний  ID Джерела Даних."
+msgstr "Відлагодженням Джерела Даних отримало невірний ID Джерела Даних."
 
 #: data_debug.php:84
 msgid "All RRDfile repairs succeeded."
@@ -4097,16 +4097,16 @@ msgstr[2] "Не чіпати всі <strong>Графіки</strong>."
 #: data_sources.php:541
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Видалити всі  <strong>Елементи Графіків</strong> що посилаються на це Джерело Даних."
-msgstr[1] "Видалити всі  <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
-msgstr[2] "Видалити всі  <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
+msgstr[0] "Видалити всі <strong>Елементи Графіків</strong> що посилаються на це Джерело Даних."
+msgstr[1] "Видалити всі <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
+msgstr[2] "Видалити всі <strong>Елементи Графіків</strong> що посилаються на ці Джерела Даних."
 
 #: data_sources.php:542
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
-msgstr[0] "Видалити всі  <strong>Графіки</strong> що посилаються на це Джерело Даних."
-msgstr[1] "Видалити всі  <strong>Графіки</strong> що посилаються на ці Джерела Даних."
-msgstr[2] "Видалити всі  <strong>Графіки</strong> що посилаються на ці Джерела Даних."
+msgstr[0] "Видалити всі <strong>Графіки</strong> що посилаються на це Джерело Даних."
+msgstr[1] "Видалити всі <strong>Графіки</strong> що посилаються на ці Джерела Даних."
+msgstr[2] "Видалити всі <strong>Графіки</strong> що посилаються на ці Джерела Даних."
 
 #: data_sources.php:549
 msgid "Delete Data Source"
@@ -5332,7 +5332,7 @@ msgstr "Нові Графіки для [ %s ] (%s %s)"
 
 #: graphs_new.php:350
 msgid "New Graphs for [ All Devices ]"
-msgstr "Нові Графіки для  [ Всіх Пристроїв ]"
+msgstr "Нові Графіки для [ Всіх Пристроїв ]"
 
 #: graphs_new.php:357
 msgid "New Graphs for None Host Type"
