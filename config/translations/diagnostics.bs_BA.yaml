@@ -1,0 +1,92 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'Access denied.': 'Pristup odbijen.'
+Action: Radnja
+'Advanced diagnostics and maintenance': 'Napredna dijagnostika i održavanje'
+'Allocated Storage Bytes': 'Dodijeljeni bajtovi pohrane'
+Any: 'Bilo koji'
+Apply: Primijeni
+'Average Row Length': 'Prosječna dužina reda'
+'Boost Status': 'Status Boosta'
+ChangeLog: 'Zapisnik promjena (ChangeLog)'
+'Choose a diagnostic view. Maintenance, exports and advanced filters remain available through the existing operation pages.': 'Odaberite dijagnostički prikaz. Održavanje, izvozi i napredni filtri ostaju dostupni preko postojećih stranica operacija.'
+Collation: Sortiranje
+'Command arguments and SNMP credentials are excluded.': 'Argumenti naredbe i SNMP vjerodajnice su izuzeti.'
+Comment: Komentar
+'Data Length': 'Dužina podataka'
+'Data Query': 'Upit podataka'
+'Data Query Cache': 'Keš upita podataka'
+'Data Query ID': 'ID upita podataka'
+'Data Source': 'Izvor podataka'
+'Data Sources': 'Izvori podataka'
+'Database Settings': 'Postavke baze podataka'
+'Database Status': 'Status baze podataka'
+'Database Tables': 'Tabele baze podataka'
+'Database Version': 'Verzija baze podataka'
+Device: Uređaj
+'Device ID': 'ID uređaja'
+Devices: Uređaji
+'Diagnostic filters': 'Dijagnostički filtri'
+'Diagnostic pages': 'Dijagnostičke stranice'
+Disabled: Onemogućeno
+Enabled: Omogućeno
+Engine: Pogon
+'Estimated Archived Records': 'Procijenjeni arhivirani zapisi'
+'Estimated Pending Records': 'Procijenjeni zapisi na čekanju'
+'Estimated Rows': 'Procijenjeni redovi'
+'Field Name': 'Naziv polja'
+'Field Value': 'Vrijednost polja'
+Graphs: Grafovi
+'Include Index': 'Uključi indeks'
+Index: Indeks
+'Index Length': 'Dužina indeksa'
+Installed: Instalirano
+'Invalid diagnostic filters.': 'Nevažeći dijagnostički filtri.'
+'Kadupul Version': 'Verzija Kadupula'
+'Local Data ID': 'Lokalni ID podataka'
+'Log Administration': 'Administracija zapisnika'
+Name: Naziv
+Next: Sljedeće
+'Next Step': 'Sljedeći korak'
+'No': Ne
+'No diagnostic records found.': 'Nema pronađenih dijagnostičkih zapisa.'
+'Numeric server counters are displayed.': 'Prikazani su numerički brojači servera.'
+OID: OID
+'Only approved diagnostic settings are displayed. Credentials and environment variables are excluded.': 'Prikazane su samo odobrene dijagnostičke postavke. Vjerodajnice i varijable okoline su izuzete.'
+'Operating System': 'Operativni sistem'
+'PHP Information': 'PHP informacije'
+'PHP SAPI': 'PHP SAPI'
+'PHP Version': 'PHP verzija'
+'Page %page%': 'Stranica %page%'
+'Pending Data Sources': 'Izvori podataka na čekanju'
+'Poller Cache': 'Keš pollera'
+'Poller Items': 'Stavke pollera'
+Previous: Prethodno
+'RRD Name': 'RRD naziv'
+'RRD Path': 'RRD putanja'
+'RRD Step': 'RRD korak'
+'RRDfile Checker': 'Provjera RRD datoteka'
+'RRDfile Cleaner': 'Čišćenje RRD datoteka'
+'Recorded Boost settings and database statistics. Row estimates are not exact queue counts. Refresh to read current values.': 'Zabilježene postavke Boosta i statistika baze podataka. Procjene redova nisu tačni brojevi redova čekanja. Osvježite za čitanje trenutnih vrijednosti.'
+'Recorded configuration and inventory counts. External tool probes and tuning recommendations are available in advanced diagnostics.': 'Zabilježeni brojevi konfiguracije i inventara. Provjere vanjskih alata i preporuke za podešavanje dostupne su u naprednoj dijagnostici.'
+'Row Format': 'Format reda'
+Rows: Redovi
+'Running Boost Processes': 'Pokrenuti procesi Boosta'
+SNMP: SNMP
+'SNMP Agent Cache': 'Keš SNMP agenta'
+'SNMP Notification History': 'Historija SNMP obavještenja'
+'SNMP Notification Receivers': 'Primaoci SNMP obavještenja'
+Script: Skripta
+'Script Server': 'Server skripti'
+Search: Traži
+Status: Status
+'System Utilities': 'Sistemski alati'
+Table: Tabela
+'Technical Support': 'Tehnička podrška'
+'Template ID': 'ID predloška'
+'Unable to load diagnostics. Reload before retrying.': 'Nije moguće učitati dijagnostiku. Ponovno učitajte stranicu prije novog pokušaja.'
+'Use -1 for any device, template or query. In the poller cache, device 0 selects records without a device.': 'Koristite -1 za bilo koji uređaj, šablon ili upit. U kešu pollera uređaj 0 bira zapise bez uređaja.'
+Value: Vrijednost
+'View User Log': 'Prikaži korisnički zapisnik'
+'Yes': Da

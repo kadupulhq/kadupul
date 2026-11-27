@@ -1,0 +1,101 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'A Color Template used by an aggregate graph or aggregate template must keep at least one color.': 'Šablon boja koji koristi agregatni grafikon ili agregatni šablon mora zadržati najmanje jednu boju.'
+'Access denied.': 'Pristup odbijen.'
+Action: Radnja
+'Action outcome is uncertain. Check the Color Template list before retrying.': 'Ishod radnje je neizvjestan. Provjerite spisak šablona boja prije novog pokušaja.'
+Actions: Radnje
+'Add Color Item': 'Dodaj stavku boje'
+'Add Color Template': 'Dodaj šablon boja'
+'Back to Color Template': 'Nazad na šablon boja'
+'Back to Color Templates': 'Natrag na predloške boja'
+Cancel: Otkaži
+Clear: Očisti
+'Click Continue to delete the following Color Template Color.': 'Kliknite Nastavi za brisanje sljedeće boje predloška boja.'
+'Click Continue to delete the following Color Templates.': 'Kliknite Nastavi za brisanje sljedećih šablona boja.'
+'Click Continue to duplicate the following Color Templates. You can optionally change the title format for the new Color Templates.': 'Kliknite Nastavi za dupliranje sljedećih šablona boja. Opciono možete promijeniti format naslova za nove šablone boja.'
+'Click Continue to synchronize all Aggregate Graphs with the selected Color Templates.': 'Kliknite Nastavi za sinhronizaciju svih agregatnih grafikona s odabranim šablonima boja.'
+Color: Boja
+'Color (%hex%)': 'Boja (%hex%)'
+'Color Hex: %hex%': 'Hex boje: %hex%'
+'Color Item': 'Stavka boje'
+"Color Template '%name%' had %templates% Aggregate Templates pushed out and %graphs% Non-Templated Aggregates pushed out": "Za šablon boja '%name%' proslijeđeno je %templates% agregatnih šablona i %graphs% agregata bez šablona"
+"Color Template '%name%' had no Aggregate Templates or Graphs using this Color Template.": "Šablon boja '%name%' nema agregatnih šablona ni grafikona koji ga koriste."
+'Color Template Items': 'Stavke predloška boja'
+'Color Template Items [edit: %name%]': 'Stavke predloška boja [uređivanje: %name%]'
+'Color Template Items [new: %name%]': 'Stavke predloška boja [novo: %name%]'
+'Color Template [edit: %name%]': 'Šablon boja [uređivanje: %name%]'
+'Color Template [new]': 'Šablon boja [novo]'
+'Color Template changed since you opened this form. Reload before saving.': 'Šablon boja se promijenio otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'Color Template name must contain 1 to 255 valid characters.': 'Naziv predloška boja mora sadržavati 1 do 255 važećih znakova.'
+'Color Template not found.': 'Šablon boja nije pronađen.'
+'Color Template pages': 'Stranice šablona boja'
+'Color Template saved.': 'Šablon boja je sačuvan.'
+'Color Template synchronization failed. Some aggregates may already have been updated; retry after reviewing the settings.': 'Sinhronizacija šablona boja nije uspjela. Neki agregati su možda već ažurirani; pokušajte ponovo nakon pregleda postavki.'
+'Color Template: %name%': 'Šablon boja: %name%'
+'Color Templates': 'Predlošci boja'
+'Color Templates deleted.': 'Predlošci boja su izbrisani.'
+'Color Templates duplicated.': 'Predlošci boja su duplicirani.'
+'Color Templates per page': 'Šablona boja po stranici'
+'Color Templates used by an aggregate graph or aggregate template cannot be deleted.': 'Šabloni boja koje koristi agregatni grafikon ili agregatni šablon ne mogu se obrisati.'
+'Color item changed since you opened this form. Reload before saving.': 'Stavka boje se promijenila otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'Color item not found.': 'Stavka boje nije pronađena.'
+'Color item order changed. Reload before reordering.': 'Redoslijed stavki boja se promijenio. Ponovno učitajte stranicu prije promjene redoslijeda.'
+Continue: Nastavi
+Default: Podrazumijevano
+'Default (%count%)': 'Podrazumijevano (%count%)'
+Deletable: 'Može se izbrisati'
+Delete: Izbriši
+'Delete Color Item': 'Izbriši stavku boje'
+'Delete Color Templates': 'Izbriši predloške boja'
+'Delete outcome is uncertain. Reload before retrying.': 'Ishod brisanja je neizvjestan. Ponovno učitajte stranicu prije novog pokušaja.'
+Duplicate: Dupliciraj
+'Duplicate Color Templates': 'Dupliciraj predloške boja'
+'Each Color Template is synchronized in turn. Synchronization stops at the first failure, and templates not started within %seconds% seconds are left for another run.': 'Svaki šablon boja se sinhronizuje redom. Sinhronizacija se zaustavlja pri prvom neuspjehu, a šabloni koji nisu započeti u roku od %seconds% sekundi ostavljaju se za sljedeće pokretanje.'
+Go: Idi
+Graphs: Grafovi
+'Has Graphs': 'Ima grafove'
+Hex: Hex
+'Invalid color item order.': 'Nevažeći redoslijed stavki boja.'
+'Invalid color template filters.': 'Neispravni filteri šablona boja.'
+'Invalid color template request.': 'Neispravan zahtjev za šablon boja.'
+'Invalid color template selection.': 'Neispravan izbor šablona boja.'
+'Item # %number%': 'Stavka # %number%'
+'Move Down': 'Pomakni dolje'
+'Move Up': 'Pomakni gore'
+Name: Naziv
+Next: Sljedeće
+'No': Ne
+'No Color Templates Found': 'Nema pronađenih šablona boja'
+'No Items': 'Nema stavki'
+'One or more selected Color Templates no longer exist.': 'Jedan ili više odabranih šablona boja više ne postoji.'
+'Open Color Templates and use its current forms.': 'Otvorite predloške boja i koristite njihove trenutne obrasce.'
+'Page %page%': 'Stranica %page%'
+Previous: Prethodno
+'Reorder outcome is uncertain. Reload before retrying.': 'Ishod promjene redoslijeda je neizvjestan. Ponovno učitajte stranicu prije novog pokušaja.'
+Save: Sačuvaj
+'Save outcome is uncertain. Reload before retrying.': 'Ishod čuvanja je neizvjestan. Ponovo učitajte prije novog pokušaja.'
+Search: Traži
+Select: Odaberi
+'Select %name%': 'Odaberi %name%'
+'Select a valid Color Template action.': 'Odaberite važeću radnju predloška boja.'
+'Select a valid color.': 'Odaberite važeću boju.'
+'Select up to %count% templates from the first %count% rows. Use %count% rows per page or search to select other templates.': 'Odaberite do %count% šablona iz prvih %count% redova. Koristite %count% redova po stranici ili pretragu za odabir drugih šablona.'
+'Sync Aggregates': 'Sinhronizuj agregate'
+'Sync Aggregates takes up to %count% templates at a time.': 'Sinhronizacija agregata prihvata do %count% šablona odjednom.'
+'Synchronize Color Templates': 'Sinhronizuj šablone boja'
+'Synchronize up to %count% Color Templates at a time.': 'Sinhronizujte do %count% šablona boja odjednom.'
+'Template Title': 'Naslov predloška'
+Templates: Predlošci
+'The selected Color Templates changed. Reload before continuing.': 'Odabrani predlošci boja su se promijenili. Ponovno učitajte stranicu prije nastavka.'
+'The time limit was reached before these Color Templates were synchronized. Select them again to synchronize them:': 'Vremensko ograničenje je dostignuto prije sinhronizacije ovih šablona boja. Odaberite ih ponovo da biste ih sinhronizovali:'
+'This legacy Color Template form has expired. Open Color Templates and submit a new form.': 'Ovaj zastarjeli obrazac predloška boja je istekao. Otvorite predloške boja i pošaljite novi obrazac.'
+'Title Format': 'Format naslova'
+'Unable to authorize Color Template access.': 'Nije moguće autorizirati pristup predlošku boja.'
+'Unable to load Color Template. Reload before retrying.': 'Nije moguće učitati šablon boja. Ponovo učitajte prije novog pokušaja.'
+'Unable to load Color Templates. Reload before retrying.': 'Nije moguće učitati predloške boja. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unable to prepare the Color Template action.': 'Nije moguće pripremiti radnju predloška boja.'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'
+'Yes': Da
+'used by %graphs% aggregate graph items and %templates% aggregate template items': 'koristi %graphs% stavki agregatnih grafikona i %templates% stavki agregatnih šablona'

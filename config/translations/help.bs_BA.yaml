@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+Help: Pomoć
+'Access denied.': 'Pristup odbijen.'
+'Choose a topic to open the Kadupul documentation.': 'Odaberite temu za otvaranje dokumentacije za Kadupul.'
+'Get started': 'Početak rada'
+Graphs: Grafovi
+Templates: Predlošci
+'Data queries': 'Upiti podataka'
+'Remote data collectors': 'Udaljeni prikupljači podataka'
+'Users and permissions': 'Korisnici i dozvole'
+Plugins: Dodaci
+'Troubleshoot missing data': 'Otklanjanje problema s nedostajućim podacima'
+'Not available locally.': 'Nije dostupno lokalno.'
+'Back to console': 'Natrag na konzolu'

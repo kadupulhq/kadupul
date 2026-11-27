@@ -1,0 +1,135 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'%size% KBytes per Data Source': '%size% KB po izvoru podataka'
+'%size% KBytes per Data Source and %header% Bytes for the Header': '%size% KB po izvoru podataka i %header% bajtova za zaglavlje'
+'A useful name for this Data Storage and Polling Profile.': 'Koristan naziv za ovaj profil pohrane i prikupljanja podataka.'
+'Access denied.': 'Pristup odbijen.'
+Actions: Radnje
+'Add Data Source Profile': 'Dodaj profil izvora podataka'
+'Add RRA': 'Dodaj RRA'
+'Aggregation Level': 'Nivo agregacije'
+'Back to Data Source Profile': 'Natrag na profil izvora podataka'
+'Back to Data Source Profiles': 'Natrag na profile izvora podataka'
+Cancel: Otkaži
+"Changing the Heartbeat from this page does not change the Heartbeat for your existing Data Sources.  Use RRDtool's 'tune' function to make that change to your existing RRDfiles' heartbeats, or run the CLI utility update_heartbeat.php to correct.": "Promjena heartbeata na ovoj stranici ne mijenja heartbeat postojećih izvora podataka. Koristite funkciju 'tune' alata RRDtool za promjenu heartbeata postojećih RRD datoteka ili pokrenite CLI alat update_heartbeat.php za ispravak."
+'Choose a default timespan.': 'Odaberite podrazumijevani vremenski raspon.'
+'Choose a listed polling interval and heartbeat.': 'Odaberite ponuđeni interval prikupljanja i heartbeat.'
+'Choose a polling interval, heartbeat and X-Files Factor.': 'Odaberite interval prikupljanja, heartbeat i X-Files Factor.'
+'Choose an aggregation level and a number of rows.': 'Odaberite nivo agregacije i broj redova.'
+'Choose an aggregation level that is a whole multiple of the polling interval.': 'Odaberite nivo agregacije koji je cjelobrojni višekratnik intervala prikupljanja.'
+'Choose valid consolidation functions.': 'Odaberite važeće funkcije konsolidacije.'
+Clear: Očisti
+"Click 'Continue' to delete the following Data Source Profile RRA.": "Kliknite 'Nastavi' za brisanje sljedećeg RRA-a profila izvora podataka."
+'Click Continue to delete the following Data Source Profiles.': 'Kliknite Nastavi za brisanje sljedećih profila izvora podataka.'
+'Click Continue to duplicate the following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles.': 'Kliknite Nastavi za dupliciranje sljedećih profila izvora podataka. Po želji možete promijeniti format naslova za nove profile izvora podataka.'
+'Consolidation Functions': 'Funkcije konsolidacije'
+Continue: Nastavi
+'Data Retention': 'Zadržavanje podataka'
+'Data Source Profile Name': 'Naziv profila izvora podataka'
+'Data Source Profile RRAs (Read Only)': 'RRA-ovi profila izvora podataka (samo za čitanje)'
+'Data Source Profile RRAs (press save to update timespans)': 'RRA-ovi profila izvora podataka (pritisnite sačuvaj da ažurirate vremenske raspone)'
+'Data Source Profile [edit: %name% (Read Only)]': 'Profil izvora podataka [uređivanje: %name% (samo za čitanje)]'
+'Data Source Profile [edit: %name%]': 'Profil izvora podataka [uređivanje: %name%]'
+'Data Source Profile [new]': 'Profil izvora podataka [novo]'
+'Data Source Profile not found.': 'Profil izvora podataka nije pronađen.'
+'Data Source Profile pages': 'Stranice profila izvora podataka'
+'Data Source Profile saved.': 'Profil izvora podataka je sačuvan.'
+'Data Source Profile: %name%': 'Profil izvora podataka: %name%'
+'Data Source Profiles': 'Profili izvora podataka'
+'Data Source Profiles deleted.': 'Profili izvora podataka su izbrisani.'
+'Data Source Profiles duplicated.': 'Profili izvora podataka su duplicirani.'
+'Data Source Profiles in use by Data Templates or Data Sources cannot be deleted.': 'Profili izvora podataka koje koriste predlošci podataka ili izvori podataka ne mogu se izbrisati.'
+'Data Sources Using': 'Izvori podataka koji koriste'
+Default: Podrazumijevano
+'Default (%count%)': 'Podrazumijevano (%count%)'
+'Default Timespan': 'Podrazumijevani vremenski raspon'
+Deletable: 'Može se izbrisati'
+Delete: Izbriši
+'Delete Data Source Profile Item': 'Izbriši stavku profila izvora podataka'
+'Delete Data Source Profiles': 'Izbriši profile izvora podataka'
+'Delete outcome is uncertain. Check the Data Source Profile list before retrying.': 'Ishod brisanja je neizvjestan. Provjerite spisak profila izvora podataka prije ponovnog pokušaja.'
+'Delete outcome is uncertain. Reload before retrying.': 'Ishod brisanja je neizvjestan. Ponovno učitajte stranicu prije novog pokušaja.'
+'Delete selected': 'Izbriši odabrano'
+'Duplicate Data Source Profiles': 'Dupliciraj profile izvora podataka'
+'Duplicate outcome is uncertain. Check the Data Source Profile list before retrying.': 'Ishod dupliciranja je neizvjestan. Provjerite spisak profila izvora podataka prije ponovnog pokušaja.'
+'Duplicate selected': 'Dupliciraj odabrano'
+'Each Insert is New Row': 'Svaki unos je novi red'
+'Edit Data Source Profile': 'Uredi profil izvora podataka'
+'Edit RRA': 'Uredi RRA'
+'Enter a number of rows from 1 to 4294967295.': 'Unesite broj redova od 1 do 4294967295.'
+'Enter a profile name of at most 255 characters.': 'Unesite naziv profila od najviše 255 znakova.'
+'Enter a valid number of Rows to obtain the RRA size.': 'Unesite ispravan broj redova da biste dobili veličinu RRA.'
+'Enter a valid title format.': 'Unesite važeći format naslova.'
+'Enter an RRA name of at most 255 characters.': 'Unesite naziv RRA-a od najviše 255 znakova.'
+'Enter an X-Files Factor from 0 up to but not including 1.': 'Unesite X-Files Factor od 0 do, ali ne uključujući, 1.'
+'Every %count% Hours': 'Svakih %count% sati'
+'Every %count% Minutes': 'Svakih %count% minuta'
+'Every %count% Seconds': 'Svakih %count% sekundi'
+'Every Hour': 'Svaki sat'
+'Every Minute': 'Svaku minutu'
+Go: Idi
+'Graph Timespan': 'Vremenski raspon grafa'
+'Has Data Sources': 'Ima izvore podataka'
+Heartbeat: Heartbeat
+'How data is to be entered in RRAs.': 'Kako se podaci unose u RRA-ove.'
+'How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time.': 'Koliko dugo podaci mogu nedostajati prije nego što RRDtool zabilježi nepoznate podatke. Povećajte ovu vrijednost ako je vaš izvor podataka nestabilan i želite prenijeti stare podatke umjesto prikaza praznina u grafovima. Ova se vrijednost množi s X-Files Factorom kako bi se odredila stvarna količina vremena.'
+'How many generations data is kept in the RRA.': 'Koliko se generacija podataka čuva u RRA-u.'
+'Invalid profile filters.': 'Nevažeći filtri profila.'
+'Invalid profile request.': 'Nevažeći zahtjev za profil.'
+'Invalid profile selection.': 'Nevažeći odabir profila.'
+'Is this the default Profile for all new Data Templates?': 'Da li je ovo podrazumijevani profil za sve nove šablone podataka?'
+'Is this the default storage profile?': 'Da li je ovo podrazumijevani profil pohrane?'
+N/A: N/D
+Name: Naziv
+'New Profile': 'Novi profil'
+'New Profile RRA': 'Novi RRA profila'
+Next: Sljedeće
+'No': Ne
+'No Data Source Profiles Found': 'Nema pronađenih profila izvora podataka'
+'No RRAs': 'Nema RRA-ova'
+'One or more selected Data Source Profiles no longer exist.': 'Jedan ili više odabranih profila izvora podataka više ne postoji.'
+'Open Data Source Profiles and use its current forms.': 'Otvorite profile izvora podataka i koristite njihove trenutne obrasce.'
+'Page %page% of %total% profiles': 'Stranica %page% od %total% profila'
+'Poller Interval': 'Interval pollera'
+'Polling Interval': 'Interval prikupljanja'
+Previous: Prethodno
+Profiles: Profili
+'Profiles that are in use by Data Sources become read only for now.': 'Profili koje koriste izvori podataka za sada postaju samo za čitanje.'
+'Profiles that are in use cannot be Deleted. In use is defined as being referenced by a Data Source or a Data Template.': 'Profili koji su u upotrebi ne mogu se izbrisati. U upotrebi znači da na njih upućuje izvor podataka ili šablon podataka.'
+'RRA Name: %name%': 'Naziv RRA-a: %name%'
+'RRA Size (in Bytes)': 'Veličina RRA-a (u bajtovima)'
+'RRA [edit: %name% (Some Elements Read Only)]': 'RRA [uređivanje: %name% (neki elementi samo za čitanje)]'
+'RRA [edit: %name%]': 'RRA [uređivanje: %name%]'
+'RRA [new]': 'RRA [novo]'
+'RRA not found.': 'RRA nije pronađen.'
+'RRDfile Size (in Bytes)': 'Veličina RRD datoteke (u bajtovima)'
+'Read Only': 'Samo za čitanje'
+Rows: Redovi
+Save: Sačuvaj
+'Save outcome is uncertain. Reload before retrying.': 'Ishod čuvanja je neizvjestan. Ponovo učitajte prije ponovnog pokušaja.'
+Search: Traži
+Select: Odaberi
+'Select %name%': 'Odaberi %name%'
+'Select up to %count% profiles at a time.': 'Odaberite najviše %count% profila odjednom.'
+'Selected Poller Interval': 'Odabrani interval pollera'
+Steps: Koraci
+'Templates Using': 'Predlošci koji koriste'
+'The Data Source Profile changed since you opened this form. Reload before saving.': 'Profil izvora podataka se promijenio otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'The RRA changed since you opened this form. Reload before saving.': 'RRA se promijenio otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'The amount of unknown data that can still be regarded as known.': 'Količina nepoznatih podataka koja se još uvijek smatra poznatom.'
+'The default Data Source Profile cannot be deleted.': 'Podrazumijevani profil izvora podataka ne može se izbrisati.'
+'The default profile and profiles in use by Data Templates or Data Sources cannot be deleted.': 'Podrazumijevani profil i profili koje koriste šabloni podataka ili izvori podataka ne mogu se izbrisati.'
+'The frequency that data will be collected from the Data Source.': 'Učestalost kojom se podaci prikupljaju iz izvora podataka.'
+'The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1.': 'Broj uzoraka potreban prije popunjavanja reda u RRA specifikaciji.  Prvi RRA uvijek treba imati vrijednost 1.'
+'The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.': 'Interval prikupljanja, X-Files Factor, funkcije konsolidacije i RRA-ovi ne mogu se mijenjati.'
+'This legacy Data Source Profile form has expired. Open Data Source Profiles and submit a new form.': 'Ovaj zastarjeli obrazac profila izvora podataka je istekao. Otvorite profile izvora podataka i pošaljite novi obrazac.'
+'Title Format': 'Format naslova'
+'To change the default, mark another profile as the default.': 'Da biste promijenili podrazumijevani, označite drugi profil kao podrazumijevani.'
+'Unable to load Data Source Profiles. Reload before retrying.': 'Nije moguće učitati profile izvora podataka. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'
+'When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph.': 'Prilikom pregleda grafikona zasnovanog na dotičnom RRA-u, podrazumijevani vremenski raspon koji se prikazuje za taj grafikon.'
+'X-Files Factor': 'X-Files Factor'
+'Yes': Da
+default: podrazumijevano
+'used by %sources% data sources and %templates% templates': 'koristi %sources% izvora podataka i %templates% šablona'

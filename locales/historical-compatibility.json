@@ -58,6 +58,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "(Nije u upotrebi)"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "(No s'utilitza)"
@@ -484,6 +490,12 @@
           "flags": []
         },
         "bn-BD": {
+          "fields": {
+            "msgstr": "0 - 23"
+          },
+          "flags": []
+        },
+        "bs-BA": {
           "fields": {
             "msgstr": "0 - 23"
           },
@@ -920,6 +932,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "<strong>hex</strong> - Heksadecimalna vrijednost"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "<strong>hex</strong> - el valor hexadecimal"
@@ -1348,6 +1366,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "<strong>name</strong> - রঙের নাম"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "<strong>name</strong> - Naziv boje"
           },
           "flags": []
         },
@@ -1782,6 +1806,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Dodatne informacije"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Informació addicional"
@@ -2210,6 +2240,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "অতিরিক্ত সাইট ঠিকানা সংক্রান্ত তথ্য"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Dodatne informacije o adresi lokacije"
           },
           "flags": []
         },
@@ -2644,6 +2680,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Dodatne informacije o adresi za lokaciju."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Informació addicional de l'adreça del lloc."
@@ -3072,6 +3114,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই সাইট সম্পর্কিত বিভিন্ন নোটের জন্য ব্যবহৃত অতিরিক্ত এলাকা।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Dodatno područje za slučajne bilješke vezane uz ovu lokaciju."
           },
           "flags": []
         },
@@ -3506,6 +3554,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Informacije o adresi"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Informació de l'adreça"
@@ -3934,6 +3988,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ঠিকানা ১"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Adresa 1"
           },
           "flags": []
         },
@@ -4368,6 +4428,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Adresa 2"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Adreça 2"
@@ -4796,6 +4862,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "বিদ্যমান সারিগুলো আপডেট করার অনুমতি দেবেন?"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Dozvoliti ažuriranje postojećih redova?"
           },
           "flags": []
         },
@@ -5230,6 +5302,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Alternativni naziv"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Nom alternatiu"
@@ -5658,6 +5736,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ফিল্টার প্রয়োগ করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Primijeni filter"
           },
           "flags": []
         },
@@ -6092,6 +6176,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Automatsko osvježavanje stranice"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Actualització automàtica de la pàgina"
@@ -6520,6 +6610,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "গড়:"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Prosj:"
           },
           "flags": []
         },
@@ -6954,6 +7050,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Dno stranice konzole"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Part inferior de la pàgina de la consola"
@@ -7382,6 +7484,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এটি কোন ধরনের VDEF আইটেম তা নির্বাচন করুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Odaberite vrstu ove VDEF stavke."
           },
           "flags": []
         },
@@ -7816,6 +7924,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Grad"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Ciutat"
@@ -8244,6 +8358,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "নিম্নলিখিত পৃষ্ঠা(সমূহ) মুছে ফেলতে 'Continue'-তে ক্লিক করুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kliknite 'Nastavi' za brisanje sljedećih stranica."
           },
           "flags": []
         },
@@ -8694,6 +8814,14 @@
           "fields": {
             "msgstr[0]": "নিম্নলিখিত সাইটটি মুছে ফেলতে 'Continue'-তে ক্লিক করুন। দ্রষ্টব্য, সকল ডিভাইস এই সাইট থেকে বিচ্ছিন্ন করা হবে।",
             "msgstr[1]": "নিম্নলিখিত সকল সাইট মুছে ফেলতে 'Continue'-তে ক্লিক করুন। দ্রষ্টব্য, সকল ডিভাইস এই সাইটগুলো থেকে বিচ্ছিন্ন করা হবে।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Kliknite 'Nastavi' da biste obrisali sljedeću lokaciju.  Napomena: svi uređaji će biti odvojeni od ove lokacije.",
+            "msgstr[1]": "Kliknite 'Nastavi' da biste obrisali sljedeće lokacije.  Napomena: svi uređaji će biti odvojeni od ove lokacije.",
+            "msgstr[2]": "Kliknite 'Nastavi' da biste obrisali sve sljedeće lokacije.  Napomena: svi uređaji će biti odvojeni od ove lokacije."
           },
           "flags": []
         },
@@ -9195,6 +9323,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kliknite 'Nastavi' za onemogućavanje sljedećih stranica."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Feu clic a «Continua» per desactivar les pàgines següents."
@@ -9642,6 +9776,14 @@
           "fields": {
             "msgstr[0]": "নিম্নলিখিত সাইটটি অনুলিপি করতে 'Continue'-তে ক্লিক করুন।",
             "msgstr[1]": "নিম্নলিখিত সকল সাইট অনুলিপি করতে 'Continue'-তে ক্লিক করুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Kliknite 'Nastavi' da biste duplirali sljedeću lokaciju.",
+            "msgstr[1]": "Kliknite 'Nastavi' da biste duplirali sljedeće lokacije.",
+            "msgstr[2]": "Kliknite 'Nastavi' da biste duplirali sve sljedeće lokacije."
           },
           "flags": []
         },
@@ -10143,6 +10285,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kliknite 'Nastavi' za omogućavanje sljedećih stranica."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Feu clic a «Continua» per activar les pàgines següents."
@@ -10590,6 +10738,14 @@
           "fields": {
             "msgstr[0]": "নিম্নলিখিত রঙটি মুছে ফেলতে 'Continue'-তে ক্লিক করুন",
             "msgstr[1]": "নিম্নলিখিত রঙগুলো মুছে ফেলতে 'Continue'-তে ক্লিক করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Kliknite 'Nastavi' da biste obrisali sljedeću boju",
+            "msgstr[1]": "Kliknite 'Nastavi' da biste obrisali sljedeće boje",
+            "msgstr[2]": "Kliknite 'Nastavi' da biste obrisali sljedeće boje"
           },
           "flags": []
         },
@@ -11091,6 +11247,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kliknite 'Nastavi' za brisanje sljedećeg polja unosa podataka."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Feu clic a «Continua» per suprimir el camp d'entrada de dades següent."
@@ -11538,6 +11700,14 @@
           "fields": {
             "msgstr[0]": "নিম্নলিখিত ডেটা ইনপুট মেথডটি মুছে ফেলতে 'Continue'-তে ক্লিক করুন",
             "msgstr[1]": "নিম্নলিখিত ডেটা ইনপুট মেথডগুলো মুছে ফেলতে 'Continue'-তে ক্লিক করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Kliknite 'Nastavi' da biste obrisali sljedeću metodu unosa podataka",
+            "msgstr[1]": "Kliknite 'Nastavi' da biste obrisali sljedeće metode unosa podataka",
+            "msgstr[2]": "Kliknite 'Nastavi' da biste obrisali sljedeće metode unosa podataka"
           },
           "flags": []
         },
@@ -12039,6 +12209,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kliknite 'Nastavi' za brisanje sljedećih VDEF-ova."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Feu clic a «Continua» per suprimir els VDEF següents."
@@ -12486,6 +12662,14 @@
           "fields": {
             "msgstr[0]": "নিম্নলিখিত VDEF-টি মুছে ফেলতে 'Continue'-তে ক্লিক করুন।",
             "msgstr[1]": "নিম্নলিখিত VDEF-গুলো মুছে ফেলতে 'Continue'-তে ক্লিক করুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Kliknite 'Nastavi' da biste obrisali sljedeći VDEF.",
+            "msgstr[1]": "Kliknite 'Nastavi' da biste obrisali sljedeće VDEF-ove.",
+            "msgstr[2]": "Kliknite 'Nastavi' da biste obrisali sljedeće VDEF-ove."
           },
           "flags": []
         },
@@ -12987,6 +13171,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kliknite 'Nastavi' za dupliciranje sljedećih metoda unosa podataka. Po želji možete promijeniti format naslova za nove metode unosa podataka."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Feu clic a «Continua» per duplicar els mètodes d'entrada de dades següents. Opcionalment podeu canviar el format del títol dels nous mètodes d'entrada de dades."
@@ -13434,6 +13624,14 @@
           "fields": {
             "msgstr[0]": "নিম্নলিখিত VDEF-টি অনুলিপি করতে 'Continue'-তে ক্লিক করুন। আপনি ঐচ্ছিকভাবে নতুন VDEF-এর জন্য শিরোনামের ফরম্যাট পরিবর্তন করতে পারেন।",
             "msgstr[1]": "নিম্নলিখিত VDEF-গুলো অনুলিপি করতে 'Continue'-তে ক্লিক করুন। আপনি ঐচ্ছিকভাবে নতুন VDEF-গুলোর জন্য শিরোনামের ফরম্যাট পরিবর্তন করতে পারেন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Kliknite 'Nastavi' da biste duplirali sljedeći VDEF. Po želji možete promijeniti format naslova za novi VDEF.",
+            "msgstr[1]": "Kliknite 'Nastavi' da biste duplirali sljedeće VDEF-ove. Po želji možete promijeniti format naslova za nove VDEF-ove.",
+            "msgstr[2]": "Kliknite 'Nastavi' da biste duplirali sljedeće VDEF-ove. Po želji možete promijeniti format naslova za nove VDEF-ove."
           },
           "flags": []
         },
@@ -13935,6 +14133,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv boje"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Nom del color"
@@ -14377,6 +14581,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "রঙসমূহ [সম্পাদনা: %s]"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Boje [uredi: %s]"
           },
           "flags": [
             "php-format"
@@ -14939,6 +15151,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Boje [nove]"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Colors [nou]"
@@ -15367,6 +15585,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ব্যবহৃত হচ্ছে এমন রঙ মুছে ফেলা যাবে না। ব্যবহৃত হচ্ছে বলতে কোনো গ্রাফ বা গ্রাফ টেমপ্লেট দ্বারা রেফারেন্স করা বোঝায়।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Boje koje su u upotrebi ne mogu biti obrisane.  U upotrebi znači da na njih upućuje grafikon ili šablon grafikona."
           },
           "flags": []
         },
@@ -15801,6 +16025,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Meni konzole"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Menú de la consola"
@@ -16229,6 +16459,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "কনসোল মেনু বিভাগ"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Odjeljak menija konzole"
           },
           "flags": []
         },
@@ -16663,6 +16899,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Datoteka/URL sadržaja"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Fitxer/URL de contingut"
@@ -17094,6 +17336,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Država"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "País"
@@ -17522,6 +17770,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "বর্তমান:"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Trenutno:"
           },
           "flags": []
         },
@@ -17967,6 +18221,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ডেটা ইনপুট মেথড [সম্পাদনা: %s]"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Metoda unosa podataka [uredi: %s]"
           },
           "flags": [
             "php-format"
@@ -18529,6 +18791,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Metoda unosa podataka [nova]"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Mètode d'entrada de dades [nou]"
@@ -18960,6 +19228,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv unosa podataka"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Nom de l'entrada de dades"
@@ -19388,6 +19662,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ব্যবহৃত হচ্ছে এমন ডেটা ইনপুট মুছে ফেলা যাবে না। ব্যবহৃত হচ্ছে বলতে কোনো ডেটা সোর্স অথবা ডেটা টেমপ্লেট দ্বারা রেফারেন্স করা বোঝায়।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unosi podataka koji su u upotrebi ne mogu se obrisati. U upotrebi znači da na njih upućuje izvor podataka ili šablon podataka."
           },
           "flags": []
         },
@@ -19838,6 +20118,14 @@
           "fields": {
             "msgstr[0]": "রঙ মুছুন",
             "msgstr[1]": "রঙসমূহ মুছুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Izbriši boju",
+            "msgstr[1]": "Izbriši boje",
+            "msgstr[2]": "Izbriši boje"
           },
           "flags": []
         },
@@ -20339,6 +20627,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Izbriši polje unosa podataka"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Suprimeix el camp d'entrada de dades"
@@ -20786,6 +21080,14 @@
           "fields": {
             "msgstr[0]": "ডেটা ইনপুট মেথড মুছুন",
             "msgstr[1]": "ডেটা ইনপুট মেথডসমূহ মুছুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Izbriši metod unosa podataka",
+            "msgstr[1]": "Izbriši metode unosa podataka",
+            "msgstr[2]": "Izbriši metode unosa podataka"
           },
           "flags": []
         },
@@ -21287,6 +21589,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Izbriši stranice"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Suprimeix les pàgines"
@@ -21734,6 +22042,14 @@
           "fields": {
             "msgstr[0]": "সাইট মুছুন",
             "msgstr[1]": "সাইটসমূহ মুছুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Izbriši lokaciju",
+            "msgstr[1]": "Izbriši lokacije",
+            "msgstr[2]": "Izbriši lokacije"
           },
           "flags": []
         },
@@ -22254,6 +22570,14 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Izbriši VDEF",
+            "msgstr[1]": "Izbriši VDEF-ove",
+            "msgstr[2]": "Izbriši VDEF-ove"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr[0]": "Suprimeix el VDEF",
@@ -22752,6 +23076,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Izbriši stavku VDEF-a"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Suprimeix l'element VDEF"
@@ -23194,6 +23524,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "উন্নয়ন, অবদান এবং রিলিজ সংক্রান্ত সিদ্ধান্ত %sKadupul organization%s দ্বারা পরিচালিত হয়।"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Razvojem, doprinosima i odlukama o izdanjima upravlja %sorganizacija Kadupul%s."
           },
           "flags": [
             "php-format"
@@ -23756,6 +24094,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Onemogući stranice"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Desactiva les pàgines"
@@ -24203,6 +24547,14 @@
           "fields": {
             "msgstr[0]": "সাইট অনুলিপি করুন",
             "msgstr[1]": "সাইটসমূহ অনুলিপি করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Dupliciraj lokaciju",
+            "msgstr[1]": "Dupliciraj lokacije",
+            "msgstr[2]": "Dupliciraj lokacije"
           },
           "flags": []
         },
@@ -24723,6 +25075,14 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr[0]": "Dupliciraj VDEF",
+            "msgstr[1]": "Dupliciraj VDEF-ove",
+            "msgstr[2]": "Dupliciraj VDEF-ove"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr[0]": "Duplica el VDEF",
@@ -25221,6 +25581,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Uredi stranicu"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Edita la pàgina"
@@ -25649,6 +26015,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "পৃষ্ঠা(সমূহ) সক্রিয় করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Omogući stranice"
           },
           "flags": []
         },
@@ -26083,6 +26455,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unesite vrijednost za ovu stavku VDEF-a."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Introduïu un valor per a aquest element VDEF."
@@ -26511,6 +26889,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইট সম্পর্কে কিছু প্রয়োজনীয় তথ্য লিখুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unesite neke korisne informacije o lokaciji."
           },
           "flags": []
         },
@@ -26945,6 +27329,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unesite grad ili mjesto"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Introduïu la ciutat o localitat"
@@ -27373,6 +27763,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইটের ঠিকানা লিখুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unesite adresu lokacije"
           },
           "flags": []
         },
@@ -27807,6 +28203,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unesite državu"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Introduïu el país"
@@ -28235,6 +28637,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "পোস্টাল কোড লিখুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unesite poštanski broj"
           },
           "flags": []
         },
@@ -28669,6 +29077,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Unesite državu/savezno područje"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Introduïu l'estat"
@@ -29097,6 +29511,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "কালারসমূহ এক্সপোর্ট করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Izvezi boje"
           },
           "flags": []
         },
@@ -29542,6 +29962,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "বাহ্যিক লিংকসমূহ [সম্পাদনা: %s]"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Vanjski linkovi [uredi: %s]"
           },
           "flags": [
             "php-format"
@@ -30104,6 +30532,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Vanjski linkovi [novi]"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Enllaços externs [nou]"
@@ -30546,6 +30980,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ফিল্ডের নাম: %s"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv polja: %s"
           },
           "flags": [
             "php-format"
@@ -31108,6 +31550,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Redoslijed polja"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Ordre dels camps"
@@ -31550,6 +31998,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ডকুমেন্টেশন এবং সহায়তার জন্য, %sKadupul project%s পরিদর্শন করুন।"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Za dokumentaciju i podršku posjetite %sKadupul projekt%s."
           },
           "flags": [
             "php-format"
@@ -32128,6 +32584,14 @@
             "php-format"
           ]
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Prikazni naziv: %s"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Nom descriptiu: %s"
@@ -32685,6 +33149,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Informacije o geolokaciji"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Informació de geolocalització"
@@ -33113,6 +33583,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "আপনি কত ঘন ঘন এই পৃষ্ঠাটি স্বয়ংক্রিয়ভাবে রিফ্রেশ করতে চান।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Koliko često želite da se ova stranica automatski osvježava."
           },
           "flags": []
         },
@@ -33547,6 +34023,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ako je označeno, stranica će odmah biti dostupna administratoru."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Si està marcat, la pàgina estarà disponible immediatament per a l'usuari administrador."
@@ -33975,6 +34457,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইটটি অন্য কোনো নামে পরিচিত হলে এখানে তা লিখুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ako je lokacija poznata pod drugim imenom, unesite ga ovdje."
           },
           "flags": []
         },
@@ -34409,6 +34897,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ako vam se ne sviđa nijedan od gore navedenih izbora, ovdje upišite novi naslov."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Si no us agrada cap de les opcions anteriors, escriviu aquí un títol nou."
@@ -34837,6 +35331,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "কালারসমূহ ইমপোর্ট করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Uvezi boje"
           },
           "flags": []
         },
@@ -35271,6 +35771,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Uvezi boje iz lokalne datoteke"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Importa els colors des d'un fitxer local"
@@ -35699,6 +36205,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "যদি LINE নির্বাচিত হয়ে থাকে, তবে এখানে লাইনের প্রস্থ উল্লেখ করুন। আপনাকে অবশ্যই দশমিক নির্ভুলতা অন্তর্ভুক্ত করতে হবে, উদাহরণস্বরূপ 2.00"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ako je odabran LINE, ovdje navedite širinu linije.  Morate uključiti decimalnu preciznost, na primjer 2.00"
           },
           "flags": []
         },
@@ -36133,6 +36645,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ulazno polje"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Camp d'entrada"
@@ -36561,6 +37079,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ইনপুট ফিল্ডসমূহ"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ulazna polja"
           },
           "flags": []
         },
@@ -37006,6 +37530,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ইনপুট ফিল্ডসমূহ [সম্পাদনা: %s]"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ulazna polja [uredi: %s]"
           },
           "flags": [
             "php-format"
@@ -37568,6 +38100,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Metode unosa"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Mètodes d'entrada"
@@ -37996,6 +38534,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ইনপুটের নাম:"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv unosa:"
           },
           "flags": []
         },
@@ -38430,6 +38974,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ulazni niz ne postoji na bijeloj listi.  Pokrenite CLI skriptu input_whitelist.php da biste to ispravili."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "La cadena d'entrada no existeix a la llista de permesos.  Executeu l'script de CLI input_whitelist.php per corregir-ho."
@@ -38858,6 +39408,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ইনপুট হোয়াইটলিস্টিং কার্যকর রয়েছে। এই ডেটা ইনপুট মেথডে পরিবর্তন করলে ডেটা সোর্স পুনরায় কোয়েরি হওয়ার আগে --audit এবং --update উভয় বিকল্প ব্যবহার করে ইনপুট হোয়াইটলিস্ট CLI স্ক্রিপ্ট (cli/input_whitelist.php) পুনরায় চালানো প্রয়োজন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Bijela lista unosa je na snazi.  Promjene u ovoj metodi unosa podataka zahtijevaju ponovno pokretanje CLI skripte bijele liste unosa (cli/input_whitelist.php) sa opcijama --audit i --update prije nego što se Izvor podataka ponovo upita."
           },
           "flags": []
         },
@@ -39292,6 +39848,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ulazni niz sadrži opasne znakove ljuske"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "La cadena d'entrada conté caràcters d'intèrpret d'ordres perillosos"
@@ -39720,6 +40282,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই রঙটি কি একটি নামযুক্ত রঙ যা কেবল পাঠযোগ্য।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Je li ova boja imenovana boja, a one su samo za čitanje."
           },
           "flags": []
         },
@@ -40154,6 +40722,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kadupul je uvezao sljedeće stavke:"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Kadupul ha importat els elements següents:"
@@ -40582,6 +41156,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "Kadupul হলো নেটওয়ার্ক মনিটরিং এবং টাইম-সিরিজ গ্রাফিংয়ের জন্য একটি স্বতন্ত্র ওপেন-সোর্স প্রকল্প।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kadupul je neovisan projekt otvorenog koda za nadzor mreže i prikaz vremenskih nizova grafovima."
           },
           "flags": []
         },
@@ -41016,6 +41596,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Kadupul je licenciran pod GNU GPL-om:"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Kadupul es distribueix sota la GNU GPL:"
@@ -41444,6 +42030,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "অক্ষাংশ"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Zemljopisna širina"
           },
           "flags": []
         },
@@ -41878,6 +42470,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naslijeđeni dodatak"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Connector heretat"
@@ -42306,6 +42904,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "লাইসেন্স"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Licenca"
           },
           "flags": []
         },
@@ -42740,6 +43344,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Širina linije (decimalna)"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Amplada de línia (decimal)"
@@ -43168,6 +43778,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "লিঙ্কসমূহ"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Veze"
           },
           "flags": []
         },
@@ -43602,6 +44218,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Zemljopisna dužina"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Longitud"
@@ -44030,6 +44652,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সর্বোচ্চ:"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Maks:"
           },
           "flags": []
         },
@@ -44464,6 +45092,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Min:"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Mín:"
@@ -44892,6 +45526,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "নামযুক্ত কালার"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Imenovana boja"
           },
           "flags": []
         },
@@ -45326,6 +45966,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Imenovane boje"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Colors amb nom"
@@ -45754,6 +46400,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "নতুন কনসোল বিভাগ"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Novi odjeljak konzole"
           },
           "flags": []
         },
@@ -46188,6 +46840,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nova lokacija"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Lloc nou"
@@ -46616,6 +47274,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "কোনো রঙ পাওয়া যায়নি"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nisu pronađene boje"
           },
           "flags": []
         },
@@ -47050,6 +47714,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nisu pronađene metode unosa podataka"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "No s'ha trobat cap mètode d'entrada de dades"
@@ -47478,6 +48148,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "কোনো ইনপুট ফিল্ড নেই"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nema ulaznih polja"
           },
           "flags": []
         },
@@ -47912,6 +48588,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nema izlaznih polja"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Cap camp de sortida"
@@ -48340,6 +49022,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "কোনো পৃষ্ঠা পাওয়া যায়নি"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nisu pronađene stranice"
           },
           "flags": []
         },
@@ -48774,6 +49462,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nisu pronađene lokacije"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "No s'ha trobat cap lloc"
@@ -49205,6 +49899,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nema VDEF-ova"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Cap VDEF"
@@ -49633,6 +50333,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "আউটপুট ফিল্ডসমূহ"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Izlazna polja"
           },
           "flags": []
         },
@@ -50078,6 +50784,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "আউটপুট ফিল্ডসমূহ [সম্পাদনা: %s]"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Izlazna polja [uredi: %s]"
           },
           "flags": [
             "php-format"
@@ -50640,6 +51354,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Izlazna polja ne mogu se ukloniti dok postoje izvori podataka"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Els camps de sortida no es poden eliminar quan hi ha fonts de dades"
@@ -51068,6 +51788,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "বিদ্যমান ডেটা ওভাররাইট করবেন?"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Prepisati postojeće podatke?"
           },
           "flags": []
         },
@@ -51502,6 +52228,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Stranica"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Pàgina"
@@ -51930,6 +52662,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "আপনার রঙের তথ্য সম্বলিত CSV ফাইলের অবস্থান অনুগ্রহ করে উল্লেখ করুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Navedite lokaciju CSV datoteke koja sadrži vaše informacije o bojama."
           },
           "flags": []
         },
@@ -52364,6 +53102,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Poštanski broj"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Codi postal"
@@ -52792,6 +53536,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "প্রতি চক্রে পোলার টেবিল রিফ্রেশ করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Osvježi tabelu Pollera po ciklusu"
           },
           "flags": []
         },
@@ -53226,6 +53976,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ukloni stavku VDEF-a"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Elimina l'element VDEF"
@@ -53654,6 +54410,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "আবশ্যক ফাইল ফরম্যাট নোট"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Napomene o potrebnom formatu datoteke"
           },
           "flags": []
         },
@@ -54088,6 +54850,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Poništi filtre"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Restableix els filtres"
@@ -54516,6 +55284,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ইমপোর্ট প্রক্রিয়াকে কি বিদ্যমান ডেটা ওভাররাইট করার অনুমতি দেওয়া হবে? অনুগ্রহ করে লক্ষ্য করুন, এর অর্থ পুরোনো সারি মুছে ফেলা নয়, শুধুমাত্র ডুপ্লিকেট সারিগুলো আপডেট করা।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Da li procesu uvoza treba dozvoliti da prepiše postojeće podatke?  Imajte na umu da to ne znači brisanje starih redova, već samo ažuriranje dupliranih redova."
           },
           "flags": []
         },
@@ -54950,6 +55724,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Informacije o lokaciji"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Informació del lloc"
@@ -55378,6 +56158,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইটের নাম:"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv lokacije:"
           },
           "flags": []
         },
@@ -55812,6 +56598,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Lokacija nije pronađena."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "No s'ha trobat el lloc."
@@ -56240,6 +57032,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ক্রমবিন্যাসের জন্য সাজান"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Sortiraj za redoslijed"
           },
           "flags": []
         },
@@ -56674,6 +57472,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Država/savezno područje"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Estat"
@@ -57102,6 +57906,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "শৈলী"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Stil"
           },
           "flags": []
         },
@@ -57536,6 +58346,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv kartice/menija"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Nom de la pestanya/menú"
@@ -57964,6 +58780,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "টেমপ্লেট সাইট পাওয়া যায়নি! ডুপ্লিকেট করা সম্ভব নয়।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Šablon lokacije nije pronađen! Nije moguće duplirati."
           },
           "flags": []
         },
@@ -58398,6 +59220,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Grad povezan s ovom lokacijom."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "La ciutat associada a aquest lloc."
@@ -58826,6 +59654,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "স্ক্রিনে প্রদর্শিত রঙ।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Boja kako se prikazuje na ekranu."
           },
           "flags": []
         },
@@ -59260,6 +60094,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Država povezana s ovom lokacijom."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El país associat a aquest lloc."
@@ -59688,6 +60528,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই রঙের জন্য হেক্স মান।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Heksadecimalna vrijednost ove boje."
           },
           "flags": []
         },
@@ -60122,6 +60968,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Zemljopisna širina ove lokacije."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "La latitud d'aquest lloc."
@@ -60550,6 +61402,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই সাইটের জন্য দ্রাঘিমাংশ (Longitude)।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Zemljopisna dužina ove lokacije."
           },
           "flags": []
         },
@@ -60984,6 +61842,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Država/savezno područje povezano s ovom lokacijom."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "L'estat associat a aquest lloc."
@@ -61412,6 +62276,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইটের জন্য সময় অঞ্চল (TimeZone)।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Vremenska zona lokacije."
           },
           "flags": []
         },
@@ -61846,6 +62716,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Grad ili mjesto lokacije."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "La ciutat o localitat del lloc."
@@ -62274,6 +63150,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইটের জন্য দেশ।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Država lokacije."
           },
           "flags": []
         },
@@ -62708,6 +63590,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Podrazumijevano uvećanje mape za ovu lokaciju. Vrijednosti mogu biti od 0 do 23. Imajte na umu da neke regije planete imaju maksimalno uvećanje 15."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El zoom per defecte del mapa per a aquest lloc.  Els valors poden anar de 0 a 23. Tingueu en compte que algunes regions del planeta tenen un zoom màxim de 15."
@@ -63136,6 +64024,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ফাইলটিতে অবশ্যই নিচের কলাম শিরোনামসহ একটি হেডার সারি থাকতে হবে।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Datoteka mora sadržavati red zaglavlja sa sljedećim naslovima kolona."
           },
           "flags": []
         },
@@ -63570,6 +64464,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Datoteka koja sadrži sadržaj ove stranice. Ta datoteka mora biti u Kadupul direktoriju 'include/content/'."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El fitxer que conté el contingut d'aquesta pàgina. Aquest fitxer ha d'estar al directori 'include/content/' de Kadupul."
@@ -63998,6 +64898,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই ডেটা ইনপুট মেথডের অভ্যন্তরীণ ডাটাবেস ID। অটোমেশন বা ডিবাগিং করার সময় উপকারী।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Interni ID baze podataka za ovu metodu unosa podataka.  Koristan pri automatizaciji ili otklanjanju pogrešaka."
           },
           "flags": []
         },
@@ -64432,6 +65338,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Metoda koja se koristi za prikupljanje informacija za ovu metodu unosa podataka."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El mètode utilitzat per recollir informació per a aquest mètode d'entrada de dades."
@@ -64860,6 +65772,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই রঙ সংজ্ঞার নাম।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv ove definicije boje."
           },
           "flags": []
         },
@@ -65294,6 +66212,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv ove metode unosa podataka."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El nom d'aquest mètode d'entrada de dades."
@@ -65722,6 +66646,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই সাইটের নাম।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv ove lokacije."
           },
           "flags": []
         },
@@ -66156,6 +67086,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv ovog VDEF-a."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El nom d'aquest VDEF."
@@ -66584,6 +67520,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই ডেটা ইনপুট মেথড ব্যবহারকারী ডেটা সোর্সের সংখ্যা।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Broj izvora podataka koji koriste ovu metodu unosa podataka."
           },
           "flags": []
         },
@@ -67018,6 +67960,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Broj šablona podataka koji koriste ovaj metod unosa podataka."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El nombre de plantilles de dades que utilitzen aquest mètode d'entrada de dades."
@@ -67446,6 +68394,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই সাইটের সাথে যুক্ত ডিভাইসের সংখ্যা।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Broj uređaja povezanih s ovom lokacijom."
           },
           "flags": []
         },
@@ -67880,6 +68834,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Broj šablona grafikona koji koriste ovu boju."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El nombre de plantilles de gràfic que utilitzen aquest color."
@@ -68308,6 +69268,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই রঙ ব্যবহারকারী গ্রাফের সংখ্যা।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Broj grafova koji koriste ovu boju."
           },
           "flags": []
         },
@@ -68742,6 +69708,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Broj šablona grafikona koji koriste ovaj VDEF."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El nombre de plantilles de gràfic que utilitzen aquest VDEF."
@@ -69170,6 +70142,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই VDEF ব্যবহারকারী গ্রাফের সংখ্যা।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Broj grafova koji koriste ovaj VDEF."
           },
           "flags": []
         },
@@ -69604,6 +70582,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Poštanski broj lokacije."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El codi postal del lloc."
@@ -70032,6 +71016,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইটের জন্য প্রাথমিক ঠিকানা।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Primarna adresa lokacije."
           },
           "flags": []
         },
@@ -70466,6 +71456,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Primarni naziv lokacije."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El nom principal del lloc."
@@ -70894,6 +71890,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "সাইটের জন্য রাজ্য/প্রদেশ।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Država/savezno područje lokacije."
           },
           "flags": []
         },
@@ -71328,6 +72330,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Tekst koji će se pojaviti na kartici ili u meniju."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El text que apareixerà a la pestanya o al menú."
@@ -71756,6 +72764,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই সাইটের সাথে যুক্ত অনন্য ID।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Jedinstveni ID povezan s ovom lokacijom."
           },
           "flags": []
         },
@@ -72190,6 +73204,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ispravan URL koji će se koristiti za ovaj vanjski link.  Mora uključivati tip, na primjer https://kadupul.org.  Imajte na umu da mnoge web stranice ne dozvoljavaju ugrađivanje u iframe sa strane lokacije, pa vanjsko povezivanje možda neće raditi."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "L'URL vàlid que s'ha d'utilitzar per a aquest enllaç extern.  Ha d'incloure el tipus, per exemple https://kadupul.org.  Tingueu en compte que molts llocs web no permeten incrustar-se en un iframe des d'un lloc aliè i, per tant, els enllaços externs poden no funcionar."
@@ -72618,6 +73638,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই প্রোগ্রামটি এই আশায় বিতরণ করা হয়েছে যে এটি উপকারী হবে, তবে কোনো ওয়ারেন্টি ছাড়াই; এমনকি বাণিজ্যিকযোগ্যতা বা কোনো নির্দিষ্ট উদ্দেশ্যে উপযুক্ততার অন্তর্নিহিত ওয়ারেন্টিও নেই। বিস্তারিত জানার জন্য GNU General Public License দেখুন।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ovaj program se distribuira u nadi da će biti koristan, ali BEZ IKAKVE GARANCIJE; čak i bez podrazumijevane garancije TRŽIŠNE VRIJEDNOSTI ili PRIKLADNOSTI ZA ODREĐENU SVRHU. Za više detalja pogledajte GNU Opću javnu licencu."
           },
           "flags": []
         },
@@ -73052,6 +74078,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Čini se da ova skripta nema ulaznih vrijednosti pa nema što dodati."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Aquest script sembla no tenir valors d'entrada, per tant no hi ha res a afegir."
@@ -73483,6 +74515,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ova postavka je namijenjena samo sistemima sa jednim pollerom za ponovnu izgradnju izlazne tabele pollera u svakom ciklusu prikupljanja kako bi se spriječilo da memorijska tabela koristi swap na vrlo velikim sistemima sa velikim bazama podataka."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Aquest paràmetre és només per a sistemes amb un sol poller, per reconstruir la taula de sortida del poller a cada cicle de sondeig i evitar que la taula en memòria faci swap en sistemes molt grans amb bases de dades grans que podrien utilitzar swap."
@@ -73911,6 +74949,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "কনসোল পৃষ্ঠার উপরে"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Vrh stranice konzole"
           },
           "flags": []
         },
@@ -74356,6 +75400,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "প্লাগইন ইনস্টল করতে অক্ষম। প্রথমে নিচের প্লাগইনগুলো ইনস্টল করতে হবে: %s"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Nije moguće instalirati dodatak.  Sljedeći dodaci moraju se prvo instalirati: %s"
           },
           "flags": [
             "php-format"
@@ -74918,6 +75970,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Pod kojim naslovom konzole treba biti prikazana ova stavka? (Svi meniji vanjskih linkova pojavit će se između Konfiguracije i Alata)"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Sota quin encapçalament de la consola ha d'aparèixer aquest element? (Tots els menús d'enllaços externs apareixeran entre Configuració i Utilitats)"
@@ -75346,6 +76404,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "নামবিহীন রঙ"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Neimenovana boja"
           },
           "flags": []
         },
@@ -75780,6 +76844,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ažuriraj RRA"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Actualitza l'RRA"
@@ -76208,6 +77278,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "হোয়াইটলিস্ট আপডেট করুন"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Ažuriraj spisak dozvoljenih"
           },
           "flags": []
         },
@@ -76642,6 +77718,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Koristi se u slučajevima kada lokacija ima alternativni naziv kojim se opisuje"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "S'utilitza en els casos en què un lloc té un nom alternatiu que serveix per descriure'l"
@@ -77073,6 +78155,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Vrsta stavke VDEF-a"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Tipus d'element VDEF"
@@ -77501,6 +78589,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "VDEF আইটেমের মান"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Vrijednost stavke VDEF-a"
           },
           "flags": []
         },
@@ -77946,6 +79040,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "VDEF আইটেমসমূহ [সম্পাদনা: %s]"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Stavke VDEF-a [uredi: %s]"
           },
           "flags": [
             "php-format"
@@ -78508,6 +79610,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Stavke VDEF-a [nove]"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Elements VDEF [nou]"
@@ -78936,6 +80044,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "VDEF-এর নাম"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv VDEF-a"
           },
           "flags": []
         },
@@ -79381,6 +80495,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "VDEF-এর নাম: %s"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Naziv VDEF-a: %s"
           },
           "flags": [
             "php-format"
@@ -79943,6 +81065,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Pregled VDEF-a"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Previsualització del VDEF"
@@ -80374,6 +81502,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "VDEF nije pronađen."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "No s'ha trobat el VDEF."
@@ -80802,6 +81936,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "VDEF বা VDEF আইটেম পাওয়া যায়নি।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "VDEF ili stavka VDEF-a nije pronađena."
           },
           "flags": []
         },
@@ -81247,6 +82387,14 @@
         "bn-BD": {
           "fields": {
             "msgstr": "VDEFs [সম্পাদনা: %s]"
+          },
+          "flags": [
+            "php-format"
+          ]
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "VDEF-ovi [uredi: %s]"
           },
           "flags": [
             "php-format"
@@ -81809,6 +82957,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "VDEF-ovi [novi]"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "VDEF [nou]"
@@ -82237,6 +83391,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "ব্যবহৃত হচ্ছে এমন VDEFs মুছে ফেলা যাবে না। ব্যবহৃত হচ্ছে বলতে কোনো গ্রাফ বা গ্রাফ টেমপ্লেট দ্বারা নির্দেশিত থাকাকে বোঝায়।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "VDEF-ovi koji su u upotrebi ne mogu se obrisati. U upotrebi znači da se na njih poziva grafikon ili šablon grafikona."
           },
           "flags": []
         },
@@ -82671,6 +83831,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Prikaži stranicu"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Mostra la pàgina"
@@ -83099,6 +84265,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "নিচে ওয়েব URL"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Web URL u nastavku"
           },
           "flags": []
         },
@@ -83533,6 +84705,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Lokacija web URL-a"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "Ubicació de l'URL web"
@@ -83961,6 +85139,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "এই পৃষ্ঠাটি কোথায় প্রদর্শিত হওয়া উচিত?"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Gdje se ova stranica treba pojaviti?"
           },
           "flags": []
         },
@@ -84395,6 +85579,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Verifikacija spiska dozvoljenih nije uspjela.  Pokrenite CLI skriptu input_whitelist.php za ispravku."
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "La verificació de la llista de permesos ha fallat.  Executeu l'script de CLI input_whitelist.php per corregir-ho."
@@ -84823,6 +86013,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "হোয়াইট লিস্ট যাচাইকরণ সফল হয়েছে।"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Verifikacija spiska dozvoljenih je uspjela."
           },
           "flags": []
         },
@@ -85257,6 +86453,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Vaša datoteka sadržaja nije ispravan URL.  Unesite ispravan URL"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "El fitxer de contingut no és un URL vàlid.  Introduïu un URL vàlid"
@@ -85685,6 +86887,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "জুম"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "Povećanje"
           },
           "flags": []
         },
@@ -86119,6 +87327,12 @@
           },
           "flags": []
         },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "primjer -77.0374678"
+          },
+          "flags": []
+        },
         "ca-ES": {
           "fields": {
             "msgstr": "exemple -77.0374678"
@@ -86547,6 +87761,12 @@
         "bn-BD": {
           "fields": {
             "msgstr": "উদাহরণ 38.889488"
+          },
+          "flags": []
+        },
+        "bs-BA": {
+          "fields": {
+            "msgstr": "primjer 38.889488"
           },
           "flags": []
         },

@@ -1,0 +1,162 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'A series needs a data source id of at least 1.': 'Serija zahtijeva ID izvora podataka od najmanje 1.'
+'A series needs a data source name of 1 to 19 bytes.': 'Serija zahtijeva naziv izvora podataka od 1 do 19 bajtova.'
+'above or below the band': 'iznad ili ispod pojasa'
+'above the band': 'iznad pojasa'
+'Above the band of mean + %k% deviations': 'Iznad pojasa srednje vrijednosti + %k% odstupanja'
+'Access denied.': 'Pristup odbijen.'
+Acknowledge: Potvrdi
+Acknowledged: Potvrđeno
+'Acknowledged by %user%': 'Potvrdio korisnik %user%'
+'Acknowledgement outcome is uncertain. Reload the incident before retrying.': 'Ishod potvrde je neizvjestan. Ponovno učitajte incident prije novog pokušaja.'
+Actions: Radnje
+'Active incident': 'Aktivan incident'
+'Alert incident not found.': 'Incident upozorenja nije pronađen.'
+'Alert incident pages': 'Stranice incidenata upozorenja'
+'Alert Incidents': 'Incidenti upozorenja'
+'Alert Incidents [%id%]': 'Incidenti upozorenja [%id%]'
+'Alert incidents on data sources you can view, newest first': 'Incidenti upozorenja na izvorima podataka koje možete vidjeti, najnoviji prvi'
+'Alert rule not found.': 'Pravilo upozorenja nije pronađeno.'
+'Alert rule pages': 'Stranice pravila upozorenja'
+'Alert Rules': 'Pravila upozorenja'
+'Alert Rules [edit: %id%]': 'Pravila upozorenja [uređivanje: %id%]'
+'Alert Rules [new]': 'Pravila upozorenja [novo]'
+'Alert rules on data sources you can view': 'Pravila upozorenja na izvorima podataka koje možete vidjeti'
+'Alerting is inactive: rate source unavailable. Turn on Data Source Statistics so rules can be evaluated.': 'Upozoravanje nije aktivno: izvor stope nije dostupan. Uključite statistiku izvora podataka kako bi se pravila mogla procjenjivati.'
+'Alerting is turned off (Settings > Alerting). Rules can be prepared, but none is evaluated and no notification is sent.': 'Upozoravanje je isključeno (Postavke > Upozoravanje). Pravila se mogu pripremiti, ali se nijedno ne procjenjuje i ne šalje se nijedna obavijest.'
+'All incidents': 'Svi incidenti'
+Apply: Primijeni
+Attempts: Pokušaji
+'Back to alert incidents': 'Natrag na incidente upozorenja'
+'Back to alert rules': 'Natrag na pravila upozorenja'
+'below the band': 'ispod pojasa'
+'Below the band of mean − %k% deviations': 'Ispod pojasa srednje vrijednosti − %k% odstupanja'
+Breaches: Prekoračenja
+'Breaches needed to open an incident, and recoveries needed to close it.': 'Prekoračenja potrebna za otvaranje incidenta i oporavci potrebni za njegovo zatvaranje.'
+'Breaches when the rate is': 'Prekoračenje nastaje kada je stopa'
+Cancel: Otkaži
+'Changing the data source, the RRD data source name or the kind ends incident %id% as orphaned without a notification.': 'Promjena izvora podataka, naziva RRD izvora podataka ili vrste završava incident %id% kao osirotjeli bez obavijesti.'
+'Choose a comparison.': 'Odaberite usporedbu.'
+'Choose a threshold or baseline rule.': 'Odaberite pravilo praga ili osnovne linije.'
+'Choose the side of the band that breaches.': 'Odaberite stranu pojasa na kojoj nastaje prekoračenje.'
+'Clear multiplier': 'Množitelj čišćenja'
+'Clear threshold': 'Prag čišćenja'
+'clears within %m% deviations, floor %floor%, at least %samples% sample weeks': 'poništava se unutar %m% odstupanja, donja granica %floor%, najmanje %samples% sedmica uzorka'
+Closed: Zatvoreno
+Condition: Uslov
+'Consecutive cycles': 'Uzastopni ciklusi'
+Continue: Nastavi
+'Create alert rule': 'Kreiraj pravilo upozorenja'
+'Data source %id% (%rrd%)': 'Izvor podataka %id% (%rrd%)'
+'Data source %id% (%rrd%) on %device%': 'Izvor podataka %id% (%rrd%) na uređaju %device%'
+'Data source ID': 'ID izvora podataka'
+Delete: Izbriši
+'Delete alert rule': 'Izbriši pravilo upozorenja'
+'Delete alert rule %id%': 'Izbriši pravilo upozorenja %id%'
+'Delete outcome is uncertain. Check the alert rule list before retrying.': 'Ishod brisanja je neizvjestan. Provjerite spisak pravila upozorenja prije ponovnog pokušaja.'
+'deleted account %id%': 'izbrisani račun %id%'
+'Deleting the rule deletes its evaluation state. An open or acknowledged incident ends as orphaned and no notification is sent for it; notifications already queued are still sent.': 'Brisanjem pravila briše se njegovo stanje procjene. Otvoreni ili potvrđeni incident završava kao osirotjeli i za njega se ne šalje obavijest; obavijesti koje su već u redu čekanja i dalje se šalju.'
+'Deviation floor': 'Donja granica odstupanja'
+'Deviation multiplier': 'Množitelj odstupanja'
+Edit: Uredi
+'Edit alert rule': 'Uredi pravilo upozorenja'
+'Edit alert rule %id%': 'Uredi pravilo upozorenja %id%'
+Ended: Završeno
+'Enter each threshold and multiplier as a finite decimal number.': 'Unesite svaki prag i množitelj kao konačan decimalni broj.'
+'Enter the data source ID as a whole number from 1 to 4294967295.': 'Unesite ID izvora podataka kao cijeli broj od 1 do 4294967295.'
+'Enter the minimum sample weeks as a whole number.': 'Unesite minimalan broj sedmica uzorka kao cijeli broj.'
+'Enter the number of cycles as a whole number from 1 to 65535.': 'Unesite broj ciklusa kao cijeli broj od 1 do 65535.'
+'Enter the RRD data source name: 1 to 19 letters, digits or underscores.': 'Unesite naziv RRD izvora podataka: 1 do 19 slova, znamenki ili podvlaka.'
+Failed: Neuspjelo
+'for %cycles% cycles': 'tokom %cycles% ciklusa'
+'for_cycles must be at least 1.': 'for_cycles mora biti najmanje 1.'
+'greater than': 'veće od'
+'greater than or equal to': 'veće ili jednako'
+'Greater than zero and no larger than the deviation multiplier.': 'Veće od nule i ne veće od množitelja odstupanja.'
+History: Historija
+'Hour-of-week baseline': 'Osnovna linija po satu u sedmici'
+'Hour-of-week baseline rule': 'Pravilo osnovne linije po satu u sedmici'
+ID: ID
+Incident: Incident
+'Incident %id%': 'Incident %id%'
+'Incident %id% is active and will end as orphaned.': 'Incident %id% je aktivan i završit će kao osirotjeli.'
+'Invalid alert incident list request.': 'Neispravan zahtjev za spisak incidenata upozorenja.'
+'Invalid alert incident request.': 'Nevažeći zahtjev za incident upozorenja.'
+'Invalid alert rule list request.': 'Neispravan zahtjev za spisak pravila upozorenja.'
+Kind: Vrsta
+'Last error': 'Posljednja greška'
+'less than': 'manje od'
+'less than or equal to': 'manje ili jednako'
+'Minimum sample weeks': 'Minimalan broj sedmica uzorka'
+Next: Sljedeće
+'Next attempt': 'Sljedeći pokušaj'
+'No alert incidents.': 'Nema incidenata upozorenja.'
+'No alert rules.': 'Nema pravila upozorenja.'
+'No data source with that ID and RRD data source name exists that you can view.': 'Ne postoji izvor podataka s tim ID-om i nazivom RRD izvora podataka koji možete vidjeti.'
+'No notifications.': 'Nema obavijesti.'
+None: Nema
+Notification: Obavijest
+Notifications: Obavijesti
+'On the non-breaching side of the trigger threshold, or equal to it.': 'Na strani praga okidanja koja nije prekoračenje ili jednako njemu.'
+Open: Otvoreno
+'Open and acknowledged incidents': 'Otvoreni i potvrđeni incidenti'
+Opened: Otvoren
+Orphaned: Osirotjelo
+'Outside the band of mean ± %k% deviations': 'Izvan pojasa srednje vrijednosti ± %k% odstupanja'
+'Page %page%, %total% incidents': 'Stranica %page%, incidenata: %total%'
+'Page %page%, %total% rules': 'Stranica %page%, pravila: %total%'
+Previous: Prethodno
+Queued: 'U redu čekanja'
+'Rate at or above %trigger%, clears below %clear%': 'Stopa na ili iznad %trigger%, čisti se ispod %clear%'
+'Rate at or below %trigger%, clears above %clear%': 'Stopa na ili ispod %trigger%, čisti se iznad %clear%'
+'Rate greater than %trigger%, clears below %clear%': 'Stopa veća od %trigger%, čisti se ispod %clear%'
+'Rate less than %trigger%, clears above %clear%': 'Stopa manja od %trigger%, čisti se iznad %clear%'
+Recovered: Oporavljeno
+Retrying: 'Ponovni pokušaj'
+'RRD data source name': 'Naziv RRD izvora podataka'
+Rule: Pravilo
+'Rule %id%': 'Pravilo %id%'
+'Rule kind': 'Vrsta pravila'
+Save: Sačuvaj
+'Save outcome is uncertain. Reload before retrying.': 'Ishod čuvanja je neizvjestan. Ponovo učitajte prije ponovnog pokušaja.'
+Sending: Slanje
+Sent: Poslano
+Series: Serija
+'Series gone': 'Serija nestala'
+Show: Prikaži
+Status: Status
+Suppressed: Potisnuto
+'The alert rule was deleted.': 'Pravilo upozorenja je izbrisano.'
+'The alert rule was saved.': 'Pravilo upozorenja je sačuvano.'
+'The alerting status could not be read.': 'Status upozoravanja nije moguće pročitati.'
+'The band is the mean plus or minus this many standard deviations.': 'Pojas je srednja vrijednost plus ili minus toliko standardnih odstupanja.'
+'The clear multiplier must be greater than zero and no larger than the deviation multiplier.': 'Množitelj čišćenja mora biti veći od nule i ne veći od množitelja odstupanja.'
+'The clear threshold must lie on the non-breaching side of the trigger threshold or equal it.': 'Prag čišćenja mora biti na strani praga okidanja koja nije prekoračenje ili jednak njemu.'
+'The data source item name, for example traffic_in.': 'Naziv stavke izvora podataka, na primjer traffic_in.'
+'The deviation floor must be a finite number greater than zero.': 'Donja granica odstupanja mora biti konačan broj veći od nule.'
+'The deviation multiplier must be a finite number greater than zero.': 'Množitelj odstupanja mora biti konačan broj veći od nule.'
+'The evaluator skips this rule: %reason%': 'Procjenjivač preskače ovo pravilo: %reason%'
+'The form was not submitted. Reload before retrying.': 'Obrazac nije poslan. Ponovno učitajte stranicu prije novog pokušaja.'
+'The ID shown on the Data Sources page.': 'ID prikazan na stranici Izvori podataka.'
+'The incident is acknowledged.': 'Incident je potvrđen.'
+'The minimum sample count must be between 2 and 8.': 'Minimalni broj uzoraka mora biti između 2 i 8.'
+'The rule changed since you opened this form. Reload before saving.': 'Pravilo se promijenilo otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+"The smallest deviation used, in the series' own unit; greater than zero.": 'Najmanje korišteno odstupanje, u jedinici same serije; veće od nule.'
+'This incident has ended and cannot be acknowledged.': 'Ovaj incident je završen i ne može se potvrditi.'
+'This incident record is unreadable and cannot be shown or acknowledged.': 'Zapis ovog incidenta je nečitljiv i ne može se prikazati ni potvrditi.'
+Threshold: Prag
+'Threshold rule': 'Pravilo praga'
+'Trigger and clear thresholds must be finite numbers.': 'Pragovi okidanja i čišćenja moraju biti konačni brojevi.'
+'Trigger threshold': 'Prag okidanja'
+'Unable to authorize alert rule access.': 'Nije moguće autorizirati pristup pravilu upozorenja.'
+'Unable to load alert incidents. Reload before retrying.': 'Nije moguće učitati incidente upozorenja. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unable to load alert rules. Reload before retrying.': 'Nije moguće učitati pravila upozorenja. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unable to load the alert incident. Reload before retrying.': 'Nije moguće učitati incident upozorenja. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unable to load the alert rule. Reload before retrying.': 'Nije moguće učitati pravilo upozorenja. Ponovno učitajte stranicu prije novog pokušaja.'
+Unknown: Nepoznato
+Unreadable: Nečitljivo
+Unusable: Neupotrebljivo
+'Unusable rule': 'Neupotrebljivo pravilo'
+'Weeks of the last 8 that must have this hour, 2 to 8.': 'Sedmice od posljednjih 8 koje moraju imati ovaj sat, od 2 do 8.'

@@ -1,0 +1,103 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'Data Input Methods': 'Metode unosa podataka'
+'Data Input Method': 'Metoda unosa podataka'
+'Data Input Field': 'Polje unosa podataka'
+'Create data input': 'Kreiraj unos podataka'
+Search: Traži
+Rows: Redovi
+Apply: Primijeni
+Clear: Očisti
+Name: Naziv
+ID: ID
+'Input type': 'Vrsta unosa'
+'Templates using': 'Predlošci koji koriste'
+'Data sources using': 'Izvori podataka koji koriste'
+Actions: Radnje
+Duplicate: Dupliciraj
+Delete: Izbriši
+'No Data Input Methods Found': 'Nema pronađenih metoda unosa podataka'
+Total: Ukupno
+Previous: Prethodno
+Next: Sljedeće
+'Back to data inputs': 'Natrag na unose podataka'
+'Back to data input': 'Natrag na unos podataka'
+'Data input saved.': 'Unos podataka je sačuvan.'
+Save: Sačuvaj
+'Input string': 'Ulazni niz'
+'Friendly name': 'Prikazni naziv'
+'Field name': 'Naziv polja'
+'Field order': 'Redoslijed polja'
+'Update RRA': 'Ažuriraj RRA'
+'Yes': Da
+'No': Ne
+'Input Fields': 'Ulazna polja'
+'Output Fields': 'Izlazna polja'
+'Add field': 'Dodaj polje'
+'(Not In Use)': '(Ne koristi se)'
+'Output fields in use cannot be removed.': 'Izlazna polja koja se koriste ne mogu se ukloniti.'
+'Confirm data input action': 'Potvrdite radnju unosa podataka'
+Cancel: Otkaži
+Continue: Nastavi
+Select: Odaberi
+'Delete selected': 'Izbriši odabrano'
+'Duplicate selected': 'Dupliciraj odabrano'
+'Name format': 'Format naziva'
+'Special type code': 'Šifra posebne vrste'
+'Regular expression': 'Regularni izraz'
+'Allow empty input': 'Dopusti prazan unos'
+'Access denied.': 'Pristup odbijen.'
+'Field not found.': 'Polje nije pronađeno.'
+'Invalid list filters.': 'Neispravni filteri spiska.'
+'Invalid field direction.': 'Nevažeći smjer polja.'
+'Invalid field.': 'Nevažeće polje.'
+'Field does not belong to this input.': 'Polje ne pripada ovom unosu.'
+'Invalid selection.': 'Nevažeći odabir.'
+'Data input changed. Reload before saving.': 'Unos podataka se promijenio. Ponovo učitajte prije čuvanja.'
+'Operation outcome is unknown. Reload before retrying.': 'Ishod operacije je nepoznat. Ponovno učitajte stranicu prije novog pokušaja.'
+'This legacy form has expired. Open Data Input Methods and submit a new form.': 'Ovaj zastarjeli obrazac je istekao. Otvorite metode unosa podataka i pošaljite novi obrazac.'
+'Use the current Data Input Methods forms.': 'Koristite trenutne obrasce metoda unosa podataka.'
+'Invalid data input request.': 'Nevažeći zahtjev za unos podataka.'
+'Local changes were saved. Collector or whitelist propagation is incomplete. Retry propagation; remote collectors may need a FullSync.': 'Lokalne promjene su sačuvane. Propagiranje na prikupljače ili bijelu listu je nepotpuno. Ponovite propagiranje; udaljeni prikupljači možda zahtijevaju FullSync.'
+'Whitelist verification succeeded.': 'Provjera bijele liste je uspjela.'
+'Whitelist requires an update.': 'Bijela lista zahtijeva ažuriranje.'
+'Update whitelist': 'Ažuriraj bijelu listu'
+'Retry collector propagation': 'Ponovi propagiranje na prikupljače'
+delete: izbriši
+duplicate: dupliciraj
+field_delete: 'Izbriši polje'
+propagate: propagiraj
+whitelist: 'bijela lista'
+Script/Command: Skripta/naredba
+'Script Server': 'Server skripti'
+'Script Query': 'Upit skripte'
+'Script Server Query': 'Upit servera skripti'
+'SNMP Get': 'SNMP Get'
+'SNMP Query': 'SNMP upit'
+Unknown: Nepoznato
+'Invalid data input value.': 'Nevažeća vrijednost unosa podataka.'
+'Invalid data input type.': 'Nevažeća vrsta unosa podataka.'
+'Invalid data input field.': 'Nevažeće polje unosa podataka.'
+'Invalid field option.': 'Nevažeća opcija polja.'
+'New inputs must use a script type.': 'Novi unosi moraju koristiti vrstu skripte.'
+'Invalid input type change.': 'Nevažeća promjena vrste unosa.'
+'Input string contains dangerous shell characters.': 'Ulazni niz sadrži opasne znakove ljuske.'
+'Field direction cannot change.': 'Smjer polja se ne može promijeniti.'
+'Input field must match a command placeholder.': 'Ulazno polje mora odgovarati rezerviranom mjestu naredbe.'
+'Field name is already in use.': 'Naziv polja se već koristi.'
+'Data inputs in use cannot be deleted.': 'Unosi podataka koji se koriste ne mogu se izbrisati.'
+'Data input not found.': 'Unos podataka nije pronađen.'
+'Output fields in use cannot be removed or renamed.': 'Izlazna polja koja se koriste ne mogu se ukloniti ni preimenovati.'
+'Select %name%': 'Odaberi %name%'
+'Update dependent Data Templates before collectors use new or changed input fields.': 'Ažurirajte ovisne predloške podataka prije nego što prikupljači počnu koristiti nova ili promijenjena ulazna polja.'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'
+Default: Podrazumijevano
+'Retry propagation for input %id%': 'Ponovi propagiranje za unos %id%'
+'Collector propagation completed.': 'Propagiranje na prikupljače je dovršeno.'
+'Collector propagation is incomplete. Retry propagation; remote collectors may need a FullSync.': 'Propagiranje na prikupljače nije dovršeno. Ponovite propagiranje; udaljenim prikupljačima možda je potreban FullSync.'
+'Whitelist verification and collector propagation completed.': 'Provjera bijele liste i propagiranje na prikupljače su završeni.'
+'Whitelist verification or collector propagation is incomplete. Retry the whitelist update; remote collectors may need a FullSync.': 'Provjera bijele liste ili propagiranje na prikupljače je nepotpuno. Ponovite ažuriranje bijele liste; udaljeni prikupljači možda zahtijevaju FullSync.'
+'Selected data input methods deleted.': 'Odabrane metode unosa podataka su izbrisane.'
+'Selected data input methods duplicated.': 'Odabrane metode unosa podataka su duplicirane.'
+'Selected data input methods duplicated. Collector or whitelist propagation is incomplete. Retry propagation; remote collectors may need a FullSync.': 'Odabrane metode unosa podataka su duplirane. Propagiranje na prikupljače ili bijelu listu je nepotpuno. Ponovite propagiranje; udaljeni prikupljači možda zahtijevaju FullSync.'

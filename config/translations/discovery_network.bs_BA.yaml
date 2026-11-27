@@ -1,0 +1,133 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names.': 'Spisak alternativnih DNS servera razdvojenih razmacima koji se koriste za DNS razrješavanje. Ako je prazno, za razrješavanje DNS naziva koristit će se OS pollera.'
+'Access denied.': 'Pristup odbijen.'
+'Add Discovery Network': 'Dodaj mrežu otkrivanja'
+'After an initial failure, the number of ping retries to attempt before failing.': 'Nakon početnog neuspjeha, broj ponovnih pokušaja pinga prije odustajanja.'
+'After the selected Run Limit, the discovery process will be terminated.': 'Nakon odabranog ograničenja izvođenja proces otkrivanja bit će prekinut.'
+'Allow same sysName on different hosts': 'Dozvoli isti sysName na različitim hostovima'
+'Alternate DNS Servers': 'Alternativni DNS serveri'
+April: April
+'Associated Site': 'Povezana lokacija'
+August: August
+'Automatically Add Devices': 'Automatski dodaj uređaje'
+'Back to Networks': 'Natrag na mreže'
+'Choose an existing Data Collector.': 'Odaberite postojeći prikupljač podataka.'
+'Choose an existing SNMP Option Set.': 'Odaberite postojeći skup SNMP opcija.'
+'Choose an existing Site.': 'Odaberite postojeću lokaciju.'
+'Choose one of the listed values.': 'Odaberite jednu od navedenih vrijednosti.'
+'Choose the Data Collector/Poller to be used to gather data from this Device.': 'Odaberite prikupljač podataka/poller koji će se koristiti za prikupljanje podataka s ovog uređaja.'
+'Choose the Site that you wish to associate discovered Devices with.': 'Odaberite lokaciju s kojom želite povezati otkrivene uređaje.'
+'Daily and Weekly schedules use the start and Rerun Every; Weekly also uses Days of Week. Monthly uses Months and Days of Month; Monthly on Day uses Months, Weeks of Month and Days of Week.': 'Dnevni i sedmični rasporedi koriste početak i Ponovo pokreni svakih; sedmični koristi i Dane u sedmici. Mjesečni koristi Mjesece i Dane u mjesecu; Mjesečno na dan koristi Mjesece, Sedmice u mjesecu i Dane u sedmici.'
+Daily: Dnevno
+'Data Collector': 'Prikupljač podataka'
+'Day(s) of Week': 'Dan(i) u sedmici'
+'Days of Month': 'Dani u mjesecu'
+'Days of Week': 'Dani u sedmici'
+December: Decembar
+'Define the collection frequency.': 'Definišite učestalost prikupljanja.'
+'Define the number of threads to use for discovering this Network Range.': 'Definišite broj niti koje se koriste za otkrivanje ovog mrežnog opsega.'
+'Discovery Threads': 'Niti otkrivanja'
+'Discovery Timing': 'Vremenski raspored otkrivanja'
+'Discovery network not found.': 'Mreža otkrivanja nije pronađena.'
+'Discovery network saved.': 'Mreža otkrivanja je sačuvana.'
+'Edit Discovery Network': 'Uredi mrežu otkrivanja'
+'Enable NetBIOS': 'Omogući NetBIOS'
+'Enable this Network Range.': 'Omogući ovaj mrežni raspon.'
+Enabled: Omogućeno
+'Enter DNS servers as IP addresses or host names separated by spaces.': 'Unesite DNS servere kao IP adrese ili nazive hostova razdvojene razmacima.'
+'Enter IPs or FQDNs of DNS Servers': 'Unesite IP adrese ili FQDN-ove DNS servera'
+'Enter a name.': 'Unesite naziv.'
+'Enter a valid email address.': 'Unesite važeću adresu e-pošte.'
+'Enter a whole number from %min% to %max%.': 'Unesite cijeli broj od %min% do %max%.'
+'Enter at most %count% bytes.': 'Unesite najviše %count% bajtova.'
+'Enter single-line text.': 'Unesite tekst u jednom redu.'
+'Enter the start as YYYY-MM-DD HH:MM.': 'Unesite početak u obliku GGGG-MM-DD HH:MM.'
+'Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcard notation such as 192.168.*.*': 'Unesite važeće mrežne raspone odvojene zarezima. Možete koristiti IP adresu, mrežni raspon poput 192.168.1.0/24 ili 192.168.1.0/255.255.255.0 ili zamjenske znakove poput 192.168.*.*'
+'Enter valid network ranges separated by commas.': 'Unesite važeće mrežne raspone odvojene zarezima.'
+February: Februar
+First: Prvi
+'For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them as Devices.': 'Za sve novootkrivene uređaje dostupne preko SNMP-a koji odgovaraju pravilu za uređaje, dodaj ih kao uređaje.'
+Friday: Petak
+'General Settings': 'Opće postavke'
+'Give this Network a meaningful name.': 'Dajte ovoj mreži smislen naziv.'
+'ICMP Ping': 'ICMP ping'
+'If a device previously added is found, rerun its data queries.': 'Ako se pronađe prethodno dodan uređaj, ponovno pokreni njegove upite podataka.'
+'If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.': 'Ako je označeno, prilikom skeniranja mreže automatizacije, izvještaj će biti poslan na nalog e-pošte za obavještenja.'
+January: Januar
+July: Juli
+June: Juni
+Last: Zadnji
+Manual: Ručno
+March: Mart
+May: Maj
+Monday: Ponedjeljak
+'Monthly on Day': 'Mjesečno na dan'
+Monthly: Mjesečno
+'Months of Year': 'Mjeseci u godini'
+Name: Naziv
+"Network '%network%' is invalid.": "Mreža '%network%' je nevažeća."
+'Network Discovery Range [edit: %name%]': 'Raspon mreže otkrivanja [uređivanje: %name%]'
+'Network Discovery Range [new]': 'Raspon mreže otkrivanja [novo]'
+'New Network Discovery Range': 'Novi raspon mreže otkrivanja'
+None: Nema
+'Notification Email': 'E-pošta za obavijesti'
+'Notification Enabled': 'Obavijesti omogućene'
+'Notification From Email Address': 'Adresa e-pošte pošiljaoca obavještenja'
+'Notification From Name': 'Ime pošiljaoca obavještenja'
+'Notification Settings': 'Postavke obavijesti'
+November: Novembar
+October: Oktobar
+'Ping Method': 'Metoda pinga'
+'Ping Port': 'Port pinga'
+'Ping Retry Count': 'Broj ponovnih pokušaja pinga'
+'Ping Timeout Value': 'Vrijeme isteka pinga'
+'Reachability Settings': 'Postavke dostupnosti'
+'Rerun Data Queries': 'Ponovno pokreni upite podataka'
+'Rerun Every': 'Ponovno pokreni svakih'
+'Rerun discovery for this Network Range every X days for a Daily schedule, or every X weeks for a Weekly one.': 'Ponovo pokrenite otkrivanje za ovaj mrežni opseg svakih X dana za dnevni raspored, ili svakih X sedmica za sedmični.'
+'Run Limit': 'Ograničenje izvođenja'
+'SNMP Get': 'SNMP Get'
+'SNMP Options': 'SNMP opcije'
+Saturday: Subota
+'Save outcome is uncertain. Reload before retrying.': 'Ishod čuvanja je neizvjestan. Ponovo učitajte prije ponovnog pokušaja.'
+Save: Sačuvaj
+'Schedule Type': 'Vrsta rasporeda'
+Second: Drugi
+'Select the SNMP Options to use for discovery of this Network Range.': 'Odaberite SNMP opcije koje će se koristiti za otkrivanje ovog mrežnog raspona.'
+September: Septembar
+'Starting Date/Time': 'Datum/vrijeme početka'
+'Subnet Range': 'Raspon podmreže'
+Sunday: Nedjelja
+'TCP Ping Closed': 'TCP ping zatvoren'
+'TCP Ping': 'TCP ping'
+'TCP or UDP port to attempt connection.': 'TCP ili UDP port na koji se pokušava spojiti.'
+"The Email Address to be used as the sender's Email for the Notification Email.  If left blank, the default Automation Notification Email Address is used.": 'Adresa e-pošte koja se koristi kao adresa pošiljaoca za e-poštu obavještenja.  Ako je prazno, koristi se podrazumijevana adresa e-pošte za obavještenja automatizacije.'
+"The Email account name to be used as the sender's name for the Notification Email.  If left blank, the default Automation Notification Name is used.": 'Naziv naloga e-pošte koji se koristi kao ime pošiljaoca za e-poštu obavještenja.  Ako je prazno, koristi se podrazumijevano ime za obavještenja automatizacije.'
+'The Email account to be used to send the Notification Email to.': 'Račun e-pošte na koji se šalje e-pošta za obavijesti.'
+'The discovery network changed since you opened this form. Reload before saving.': 'Mreža otkrivanja se promijenila otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'The discovery network form is incomplete.': 'Obrazac mreže otkrivanja nije potpun.'
+'The ranges cover more than %count% addresses.': 'Rasponi obuhvaćaju više od %count% adresa.'
+'The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings.': 'Vrijednost vremenskog ograničenja koja se koristi za ICMP i UDP pingovanje hosta.  Ova vrijednost SNMP vremenskog ograničenja hosta važi za SNMP pingove.'
+'The type of ping packet to send.': 'Vrsta paketa pinga koji se šalje.'
+Third: Treći
+Thursday: Četvrtak
+'Total IP Addresses: %count%': 'Ukupno IP adresa: %count%'
+Tuesday: Utorak
+'UDP Ping': 'UDP ping'
+'Unable to load the discovery network. Reload before retrying.': 'Nije moguće učitati mrežu otkrivanja. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'
+'Use NetBIOS to attempt to resolve the hostname of up hosts.': 'Koristite NetBIOS za pokušaj razrješavanja naziva dostupnih hostova.'
+Wednesday: Srijeda
+'Week(s) of Month': 'Sedmica(e) u mjesecu'
+Weekly: Sedmično
+'What Day(s) of the Month will this Network Range be discovered?': 'Kojim danima u mjesecu će se ovaj mrežni raspon otkrivati?'
+'What Day(s) of the week will this Network Range be discovered?': 'Kojim danom(ima) u sedmici će se otkrivati ovaj mrežni opseg?'
+'What Month(s) of the Year will this Network Range be discovered?': 'Kojim mjesecima u godini će se ovaj mrežni raspon otkrivati?'
+'What Week(s) of the Month will this Network Range be discovered?': 'Kojim sedmicama u mjesecu će se otkrivati ovaj mrežni opseg?'
+'What time will this Network discover item start?  Enter it as YYYY-MM-DD HH:MM.': 'Kada će započeti otkrivanje ove mreže? Unesite u obliku GGGG-MM-DD HH:MM.'
+'When discovering devices, allow duplicate sysnames to be added on different hosts': 'Prilikom otkrivanja uređaja, dozvolite dodavanje duplih sysname naziva na različitim hostovima'
+'You must specify both the Months and Days of Month.': 'Morate navesti i mjesece i dane u mjesecu.'
+'You must specify the Months, Weeks of Month, and Days of Week.': 'Morate navesti Mjesece, Sedmice u mjesecu i Dane u sedmici.'
+'You must specify the day of the week.': 'Morate navesti dan u sedmici.'

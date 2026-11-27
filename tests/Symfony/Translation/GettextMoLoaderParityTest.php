@@ -55,7 +55,7 @@ final class GettextMoLoaderParityTest extends TestCase
             $gettext = RenderedCorpus::shared();
             self::assertSameRendering($gettext, RenderedCorpus::render($root, RenderedCorpus::locales($root), $gettext->calls, self::$cache), 'cold');
             // One compiled catalogue per shipped locale, written by the cold pass.
-            self::assertSame(70, count(glob(self::$cache . '/catalogue.*.php') ?: []));
+            self::assertSame(71, count(glob(self::$cache . '/catalogue.*.php') ?: []));
             self::$warm = RenderedCorpus::render($root, RenderedCorpus::locales($root), $gettext->calls, self::$cache);
         }
 
@@ -115,6 +115,7 @@ final class GettextMoLoaderParityTest extends TestCase
             'nplurals=2; plural=(n > 1);',
             'nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;',
             'nplurals=2; plural=n != 1;',
+            'nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);',
             'nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;',
             'nplurals=2; plural=n > 1;',
             'nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && n % 10 == 0) ? 2 : 3));',

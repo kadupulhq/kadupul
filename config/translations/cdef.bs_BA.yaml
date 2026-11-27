@@ -1,0 +1,107 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+'A CDEF cannot include itself, directly or through another CDEF.': 'CDEF ne može uključivati samog sebe, direktno ili preko drugog CDEF-a.'
+'A useful name for this CDEF.': 'Smislen naziv za ovaj CDEF.'
+'Access denied.': 'Pristup odbijen.'
+Actions: Radnje
+'Add CDEF': 'Dodaj CDEF'
+'Add CDEF Item': 'Dodaj stavku CDEF-a'
+'All Data Sources (Do not Include Duplicates)': 'Svi izvori podataka (bez duplikata)'
+'All Data Sources (Include Duplicates)': 'Svi izvori podataka (s duplikatima)'
+'All Similar Data Sources (Do not Include Duplicates)': 'Svi slični izvori podataka (bez duplikata)'
+'All Similar Data Sources (Do not Include Duplicates) Polling Interval': 'Svi slični izvori podataka (bez duplikata) interval prikupljanja'
+'All Similar Data Sources (Include Duplicates)': 'Svi slični izvori podataka (s duplikatima)'
+'Another CDEF': 'Drugi CDEF'
+'Back to CDEF': 'Natrag na CDEF'
+'Back to CDEFs': 'Natrag na CDEF-ove'
+'CDEF Item Type': 'Vrsta stavke CDEF-a'
+'CDEF Item Value': 'Vrijednost stavke CDEF-a'
+'CDEF Items': 'Stavke CDEF-a'
+'CDEF Items [edit: %name%]': 'Stavke CDEF-a [uređivanje: %name%]'
+'CDEF Name': 'Naziv CDEF-a'
+'CDEF Name: %name%': 'Naziv CDEF-a: %name%'
+'CDEF Preview': 'Pregled CDEF-a'
+'CDEF [edit: %name%]': 'CDEF [uređivanje: %name%]'
+'CDEF [new]': 'CDEF [novo]'
+'CDEF item not found.': 'Stavka CDEF-a nije pronađena.'
+'CDEF not found.': 'CDEF nije pronađen.'
+'CDEF pages': 'Stranice CDEF-a'
+'CDEF saved.': 'CDEF je sačuvan.'
+CDEFs: CDEF-ovi
+'CDEFs Using': 'CDEF-ovi koji koriste'
+'CDEFs deleted.': 'CDEF-ovi su izbrisani.'
+'CDEFs duplicated.': 'CDEF-ovi su duplicirani.'
+'CDEFs in use by a graph, template, aggregate or another CDEF cannot be deleted.': 'CDEF-ovi koje koristi grafikon, šablon, agregat ili drugi CDEF ne mogu se obrisati.'
+Cancel: Otkaži
+'Choose a valid CDEF item type.': 'Odaberite važeću vrstu stavke CDEF-a.'
+'Choose type': 'Odaberite vrstu'
+Clear: Očisti
+'Click Continue to delete the following CDEF Item.': 'Kliknite Nastavi za brisanje sljedeće stavke CDEF-a.'
+'Click Continue to delete the following CDEFs.': 'Kliknite Nastavi za brisanje sljedećih CDEF-ova.'
+'Click Continue to duplicate the following CDEFs. You can optionally change the title format for the new CDEFs.': 'Kliknite Nastavi za dupliciranje sljedećih CDEF-ova. Po želji možete promijeniti format naslova za nove CDEF-ove.'
+Continue: Nastavi
+'Count of All Data Sources (Do not Include Duplicates)': 'Broj svih izvora podataka (bez duplikata)'
+'Count of All Data Sources (Include Duplicates)': 'Broj svih izvora podataka (s duplikatima)'
+'Count of All Similar Data Sources (Do not Include Duplicates)': 'Broj svih sličnih izvora podataka (bez duplikata)'
+'Count of All Similar Data Sources (Include Duplicates)': 'Broj svih sličnih izvora podataka (s duplikatima)'
+'Current Data Source Item: Maximum Value': 'Trenutna stavka izvora podataka: maksimalna vrijednost'
+'Current Data Source Item: Minimum Value': 'Trenutna stavka izvora podataka: minimalna vrijednost'
+'Current Graph Item Data Source': 'Izvor podataka trenutne stavke grafa'
+'Current Graph Item Polling Interval': 'Interval prikupljanja trenutne stavke grafa'
+'Custom String': 'Prilagođeni niz'
+'Default (%count%)': 'Podrazumijevano (%count%)'
+Deletable: 'Može se izbrisati'
+Delete: Izbriši
+'Delete CDEF Item': 'Izbriši stavku CDEF-a'
+'Delete CDEFs': 'Izbriši CDEF-ove'
+'Delete outcome is uncertain. Check the CDEF list before retrying.': 'Ishod brisanja je neizvjestan. Provjerite spisak CDEF-ova prije novog pokušaja.'
+'Delete outcome is uncertain. Reload before retrying.': 'Ishod brisanja je neizvjestan. Ponovno učitajte stranicu prije novog pokušaja.'
+'Delete selected': 'Izbriši odabrano'
+'Duplicate CDEFs': 'Dupliciraj CDEF-ove'
+'Duplicate outcome is uncertain. Check the CDEF list before retrying.': 'Ishod dupliranja je neizvjestan. Provjerite spisak CDEF-ova prije novog pokušaja.'
+'Duplicate selected': 'Dupliciraj odabrano'
+'Edit CDEF': 'Uredi CDEF'
+'Enter a CDEF name of at most 255 characters.': 'Unesite naziv CDEF-a od najviše 255 znakova.'
+'Enter a valid title format.': 'Unesite važeći format naslova.'
+'Enter a valid value for this CDEF item type.': 'Unesite važeću vrijednost za ovu vrstu stavke CDEF-a.'
+Function: Funkcija
+Go: Idi
+'Graph: Lower Limit': 'Graf: donja granica'
+'Graph: Upper Limit': 'Graf: gornja granica'
+'Graphs Using': 'Grafovi koji koriste'
+'Has Graphs': 'Ima grafove'
+'Invalid CDEF filters.': 'Nevažeći filtri CDEF-a.'
+'Invalid CDEF item order.': 'Nevažeći redoslijed stavki CDEF-a.'
+'Invalid CDEF selection.': 'Nevažeći odabir CDEF-a.'
+Item: Stavka
+'Item #%number%': 'Stavka #%number%'
+'Item Value': 'Vrijednost stavke'
+'Move Down': 'Pomakni dolje'
+'Move Up': 'Pomakni gore'
+'Move outcome is uncertain. Reload before retrying.': 'Ishod pomicanja je neizvjestan. Ponovno učitajte stranicu prije novog pokušaja.'
+Name: Naziv
+Next: Sljedeće
+'No': Ne
+'No CDEF Items': 'Nema stavki CDEF-a'
+'No CDEFs': 'Nema CDEF-ova'
+'One or more selected CDEFs no longer exist.': 'Jedan ili više odabranih CDEF-ova više ne postoji.'
+'Open CDEFs and use its current forms.': 'Otvorite CDEF-ove i koristite njihove trenutne obrasce.'
+Operator: Operator
+'Page %page% of %total% CDEFs': 'Stranica %page% od %total% CDEF-ova'
+Previous: Prethodno
+Save: Sačuvaj
+'Save outcome is uncertain. Reload before retrying.': 'Ishod čuvanja je neizvjestan. Ponovo učitajte prije novog pokušaja.'
+Search: Traži
+Select: Odaberi
+'Select %name%': 'Odaberi %name%'
+'Select up to %count% CDEFs at a time.': 'Odaberite najviše %count% CDEF-ova odjednom.'
+'Special Data Source': 'Posebni izvor podataka'
+'Templates Using': 'Predlošci koji koriste'
+'The CDEF changed since you opened this form. Reload before saving.': 'CDEF se promijenio otkako ste otvorili ovaj obrazac. Ponovo učitajte prije čuvanja.'
+'This legacy CDEF form has expired. Open CDEFs and submit a new form.': 'Ovaj zastarjeli obrazac CDEF-a je istekao. Otvorite CDEF-ove i pošaljite novi obrazac.'
+'Title Format': 'Format naslova'
+'Unable to load CDEFs. Reload before retrying.': 'Nije moguće učitati CDEF-ove. Ponovno učitajte stranicu prije novog pokušaja.'
+'Unexpected fields were submitted.': 'Poslana su neočekivana polja.'
+Unknown: Nepoznato
+'Yes': Da
