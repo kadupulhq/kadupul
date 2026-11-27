@@ -47,5 +47,5 @@ jobs:
       - name: Run gettext catalog validator unit tests
         run: python3 -m unittest discover -s tests/security -p 'test_verify_gettext_catalogs.py' -v
 
-      - name: Validate POT extraction, all 70 PO/MO catalogs, and translation guards
+      - name: Validate POT extraction, all 71 PO/MO catalogs, and translation guards
         run: python3 tests/security/verify_gettext_catalogs.py

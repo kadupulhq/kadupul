@@ -279,7 +279,7 @@ def extract_pot(source: Path, destination: Path) -> dict[tuple[str, str, str], d
     return extracted
 
 
-def verify(source: Path, catalogs: Path, expected_locale_count: int | None = 70) -> dict[str, int]:
+def verify(source: Path, catalogs: Path, expected_locale_count: int | None = 71) -> dict[str, int]:
     """Run all POT, PO, MO, and deterministic quality checks; raise ValueError on failure."""
     po_dir = catalogs / "po"
     mo_dir = catalogs / "LC_MESSAGES"
@@ -399,7 +399,7 @@ def main() -> None:
     parser.add_argument(
         "--expected-locales",
         type=int,
-        default=70,
+        default=71,
         help="Expected number of shipped PO/MO locale pairs (0 disables fixed count check).",
     )
     args = parser.parse_args()

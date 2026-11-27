@@ -754,6 +754,12 @@ function get_list_of_locales() {
 			'country'   => 'bd',
 			'filename'  => 'bengali_bangladesh'
 		),
+		'bs-BA' => array(
+			'language'  => 'Bosnian',
+			'direction' => 'ltr',
+			'country'   => 'ba',
+			'filename'  => 'bosnian_bosnia_herzegovina'
+		),
 		'bg-BG' => array('language' => 'Bulgarian',           'direction' => 'ltr', 'country' => 'bg', 'filename' => 'bulgarian_bulgaria'),
 		'ca-ES' => array(
 			'language'  => 'Catalan',

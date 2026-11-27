@@ -16,6 +16,7 @@ Cacti CHANGELOG
 -feature#1499: Add regional gettext catalogs for English (Britain) (en-GB), Spanish (Mexico) (es-MX), and French (Canada) (fr-CA) for 43 translated locales total
 -feature#1499: Add African and regional gettext catalogs for Arabic (Egypt) (ar-EG), Arabic (Morocco) (ar-MA), French (Morocco) (fr-MA), Kinyarwanda (rw-RW), Malagasy (mg-MG), and Somali (so-SO) for 49 translated locales total
 -feature#1499: Add 21 gettext catalogs and locale registrations (ca-ES, cs-CZ, da-DK, et-EE, fi-FI, fil-PH, gu-IN, hr-HR, hu-HU, ka-GE, kn-IN, lt-LT, ml-IN, ms-MY, nb-NO, ne-NP, pa-IN, ro-RO, sk-SK, sl-SI, sr-RS) for 70 translated locales total; the new catalogs are machine-drafted pending fluent review
+-feature#1499: Add Bosnian (bs-BA) gettext catalog and locale registration for 71 translated locales total
 -issue: Preserve automation discovery work across failures, isolate concurrent network runs, enforce deadlines, and acknowledge schedules only after completed discovery
 -issue: Retry the automation recovery regression tests with the run limit their work needs, so a slow runner no longer fails the deadline and later-batch retries intermittently
 -issue: Retry an automation discovery queue statement that InnoDB rolls back as a deadlock victim, so concurrent discovery workers no longer fail the whole run
