@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Match the PHP minor used by mise and Composer on main.
+php_version: '8.4'
+
+php_ini: |
+    memory_limit=512M
+    extension=gd.so
+    extension=gmp.so
+    extension=intl.so
+    extension=mbstring.so
+    extension=pdo_mysql.so
+
+# Composer installs dependencies outside the conventional root vendor directory.
+exclude_patterns:
+    - 'include/vendor/*'
